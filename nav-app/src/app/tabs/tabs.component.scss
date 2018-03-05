@@ -1,0 +1,226 @@
+@import "../../colors.scss";
+
+.tabs {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    // border-bottom: 1px solid #ddd; //horizontal line border
+    user-select: none;
+    margin-top: 0;
+
+    &>li {
+        bottom: 0;
+        position: relative;
+        display: block;
+        float: left;
+        margin-bottom: 0;
+        cursor: pointer;
+        height: 23px;
+
+        a { //non-datatable tab names
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            text-decoration: none;
+            color: black;
+        }
+
+        input[type=text] { //datatable tab name edit field
+            font-family: 'Roboto Mono', monospace;
+            font-size: 14px;
+            border: none;
+            background: none;
+            &:disabled {} //when the tab isn't active
+            &:not(:disabled) { //when the tab is active
+                &:focus { //when the input is selected (editing)
+                    background: $panel-light;
+                }
+            }
+
+        }
+
+
+        position: relative;
+        display: block;
+        padding: 10px 15px;
+
+        margin-right: 2px;
+        border: 1px solid transparent;
+        border-radius: 4px 4px 0 0;
+
+        // add new tab button
+        &.addTab {
+            font-size: 12pt;
+            cursor: pointer;
+            color: darken($panel-dark, 20%);
+            &:hover {
+                color: black;
+            }
+        }
+
+        &:hover, &:focus { //when the mouse is over a non-selected tab
+            &:not(.active) {
+                text-decoration: none;
+                &:not(.addTab) { //add tab should not behave like other tabs
+                    border-color: $panel-dark $panel-dark $panel-light $panel-dark;//black border bottom when hovered
+                    background-color: $panel-light;
+                }
+            }
+        }
+
+
+        //tab number that shows up when tab is highlighted
+        &>.tabEnumerator {
+            position: absolute;
+            top: -10px;
+            right: 5px;
+            padding: 2px 4px;
+            background: rgb(255,255,0);
+            border-radius: 5px;
+        }
+
+        &.active {
+            color: $tab-text-color;//text color
+            cursor: default; //cursor behavior
+            background-color: $panel-dark;
+            border: 1px solid transparent; //override border highlighting on hover
+        }
+
+
+    }
+
+    &:before {
+        display: table;
+        content: " ";
+    }
+    &:after {
+        display: table;
+        clear: both;
+        content: " ";
+    }
+}
+
+// close tab button
+.tab-close {
+    margin-left: 10px;
+    color: gray;
+    text-align: right;
+    cursor: pointer;
+    &:hover {
+        color: black
+    }
+}
+
+.newTab {
+    // text-align: center;
+    padding: 5% 20%;
+}
+
+.border {
+    border: 1px solid $panel-dark;
+}
+
+// button {
+//     padding: 5px;
+//     margin: 5px;
+//     width: 300px;
+//     // border: 1px solid black;
+//     background-color: $panel-light;
+//     border-radius: 0px;
+//     &:hover {
+//         background-color: $panel-dark;
+//     }
+// }
+
+// .layerOperationsPanel {
+//     // width: 50%;
+//     // border: 1px solid #ddd;
+//     margin: 0 auto;
+//     table {
+//         border-top: 1px solid #ddd;
+//         margin: 0 auto;
+//         border-collapse: collapse;
+//         td.rowName {
+//             text-align: right;
+//             border-right: 1px solid #ddd;
+//         }
+//         td {
+//             padding: 5px;
+//         }
+//     }
+// }
+
+.layerOpTable {
+    td {
+        padding: 5px;
+    }
+}
+
+.headers-align .mat-expansion-panel-header-title,
+.headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+input[type=file]{
+    padding: 5px;
+    margin: 5px;
+    width: 300px;
+    // border: 1px solid black;
+    background-color: $panel-light;
+    border-radius: 0px;
+    &:hover {
+        background-color: $panel-dark;
+    }
+}
+
+
+//button on new tab page
+.helpButtonContainer {
+    // border: 1px solid black;
+    text-align: center;
+    margin-top: 20px;
+}
+.help {
+    padding: 10px;
+}
+
+.header {
+
+
+    div {display: inline-block; cursor: pointer;
+    }
+    .logo {
+        position: absolute;
+        top: 0;
+        right: 0;
+        a {
+            text-decoration: none;
+            color: rgb(176, 26, 26);
+            font-weight:500;
+        }
+        margin-right: 40px;
+        padding: 5px;
+        height: 2ex;
+
+    }
+
+    .helpButton {
+        position: fixed;
+        top: 0;
+        right: 0;
+        background: white;
+        &:hover { background: $panel-light; }
+        border-style: solid;
+        border-color: $panel-dark;
+        border-width: 0 0 1px 1px;
+        border-radius: 0 0 0 50%;
+        text-align: center;
+        width: 2ex;
+        height: 2ex;
+        padding: 5px;
+    }
+}

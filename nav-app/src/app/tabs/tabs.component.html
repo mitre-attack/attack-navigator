@@ -1,0 +1,200 @@
+<link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500" rel="stylesheet">
+
+<div *ngIf="dynamicTabs.length > 0">
+    <ul class="tabs">
+        <!-- dynamic tabs (can be opened and closed) -->
+        <li *ngFor="let tab of dynamicTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
+            <!-- <input *ngIf="tab.dataContext" [disabled]="!tab.active" [style.cursor]="tab.active ? 'text' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : ''"> -->
+            <!-- <a   *ngIf="!tab.dataContext" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.title}}</a> -->
+
+            <!-- <input [disabled]="!tab.active || !tab.dataContext" (click)="!tab.active || !tab.dataContext ? selectTab(tab) : selectTab(tab)" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
+            <!-- <input [id]="'tabtitleinput' + $i" (click)="!tab.active || !tab.dataContext ? selectTab(tab, 'tabtitleinput' + $i) : continue" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
+
+            <a *ngIf="!tab.active || !tab.dataContext" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.dataContext ? tab.dataContext.name : tab.title}}</a>
+            <input *ngIf="!(!tab.active || !tab.dataContext)" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
+            <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
+
+            <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.dataContext && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+        </li>
+        <!-- open new tab button -->
+        <!-- <li (click)="openTab('new tab', blankTab, null, true, false, true)"> -->
+        <li *ngIf="dynamicTabs.length < 10" class="addTab" (click)="newBlankTab()">
+            +
+        </li>
+    </ul>
+</div>
+<div *ngIf="dynamicTabs.length == 0" class="newTab">
+    <!-- you shouldn't ever see this, but just in case -->
+    <button (click)="newBlankTab()">Start</button>
+</div>
+
+
+<ng-content></ng-content>
+<ng-template dynamic-tabs #container></ng-template>
+
+
+<ng-template #blankTab>
+    <!-- <div style="background-color: #ddd; height: 3px;">
+    </div> -->
+    <div class="newTab border">
+        <mat-accordion class="headers-align">
+            <mat-expansion-panel #newlayer hideToggle="true" (click)="newLayer(); newlayer.close()">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Create New Layer
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Create a new empty layer
+                    </mat-panel-description>
+
+                </mat-expansion-panel-header>
+                <!-- this content will never be shown because clicking opens a new layer tab -->
+            </mat-expansion-panel>
+
+            <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Upload Existing Layer
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Upload a layer from your computer
+                    </mat-panel-description>
+
+                </mat-expansion-panel-header>
+                <input id="uploader" type="file" style="display: none" (change)="loadLayer()"/>
+                <!-- this content will never be shown because clicking opens a new layer tab -->
+            </mat-expansion-panel>
+
+            <!-- <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                    Open Existing Layer
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Upload a layer from your computer, or load from online
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <button mat-button (click)="openUploadPrompt()">Upload from local</button>
+                <input id="uploader" type="file" style="display: none" (change)="loadLayer()"/>
+
+                <button mat-button>Load from remote</button> -->
+            <!-- </mat-expansion-panel> -->
+
+            <!-- <mat-expansion-panel [disabled]="viewModelsService.viewModels.length < 2"> -->
+            <mat-expansion-panel (opened)="getActiveTab().showScoreVariables = true" (closed)="getActiveTab().showScoreVariables = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Create Layer from other layers
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Choose layers to inherit properties from
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <table class="layerOpTable">
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <input type="text"
+                                       matInput
+                                       placeholder="score expression"
+                                       [(ngModel)]="scoreExpression"
+                                       (keyup)="scoreExpression = scoreExpression.toLowerCase()"
+                                       style="letter-spacing: 2px" />
+                                <mat-hint style="color: red" align="start">{{getScoreExpressionError()}}</mat-hint>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Use constants (numbers) and layer variables (yellow, above) to write an expression for the initial value of scores in the new layer. A full list of supported operations can be found <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to initialize scores to 0.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="coloring" [(ngModel)]="coloring">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose which layer to import manually assigned colors from. Leave blank to initialze with no colors.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="comments" [(ngModel)]="comments">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose which layer to import comments from. Leave blank to initialize with no comments.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="states" [(ngModel)]="enabledness">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="filters" [(ngModel)]="filters">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose which layer to import filters - stages and platforms - from. Leave blank to initialize with no filters.
+                        </td>
+                    </tr>
+                </table>
+
+                <button mat-button [disabled]="getScoreExpressionError()" (click)="layerByOperation(); showScoreVariables = false">Create</button>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <!-- <button (click)="showLayerOperations = !showLayerOperations">Create Layer from other layers</button> <br />
+        <div *ngIf="showLayerOperations" class="layerOperationsPanel">
+
+        </div> -->
+        <div class="helpButtonContainer">
+            <button mat-button (click)="newHelpTab(replace=false, forceNew=false)">help</button>
+        </div>
+
+    </div>
+
+</ng-template>
+
+<ng-template #layerTab let-data="data">
+    <DataTable [viewModel]=data></DataTable>
+</ng-template>
+
+<ng-template #helpTab>
+    <div class="border help">
+        <help></help>
+    </div>
+
+</ng-template>
+
+<div class="header" >
+    <div class="logo">
+        <a href="http://attack.mitre.org">MITRE ATT&CK<sup style="font-size: 6pt">TM</sup> Navigator</a>
+    </div>
+    <div class="helpButton" matTooltip="help" (click)="newHelpTab(forceNew=false)">
+        ?
+    </div>
+</div>

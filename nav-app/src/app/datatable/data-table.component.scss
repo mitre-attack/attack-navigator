@@ -1,0 +1,544 @@
+// $table-background-color: rgb(255, 255, 255);
+//
+// $column-hover-color: rgb(235, 235, 235);
+// $cell-highlight-color: rgb(96, 197, 255);
+// $hover-cell-font-color: rgb(0, 0, 0);
+@import "../../colors.scss";
+
+$cellSize: 15px;
+
+
+//  _  _ ___ ___ _  _ _    ___ ___ _  _ _____ ___ _  _  ___
+// | || |_ _/ __| || | |  |_ _/ __| || |_   _|_ _| \| |/ __|
+// | __ || | (_ | __ | |__ | | (_ | __ | | |  | || .` | (_ |
+// |_||_|___\___|_||_|____|___\___|_||_| |_| |___|_|\_|\___|
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+ //  __  __   _   ___ _  _   _____ _   ___ _    ___
+ // |  \/  | /_\ |_ _| \| | |_   _/_\ | _ ) |  | __|
+ // | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
+ // |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
+
+.dataTable {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    font-size: 9pt;
+    // table { border-collapse: collapse; table-layout: auto; width: 99%;}
+    table {
+        table-layout: fixed;
+    }
+
+    &.mini {
+        text-align: center;
+    }
+
+    td {
+        vertical-align: top;
+        // padding: 0 3px;
+        // width: 100%;
+    }
+
+    .column {
+        padding-right: 6px;
+        // border: 1px solid red;
+        // IMPORTANT: use 1% to make every cell equal size when expanding to fill space,
+        // and minimum width of their contents when collapsing
+        width: 1%;
+    }
+
+    .techniques:hover {
+        background: $column-hover-color;
+    }
+
+    .cell {
+        width: 100%;
+        display: inline-block;
+        padding: 2px;
+
+        &:not(.itemcount) {
+            border: 1px solid;
+
+            .editing { border-color: black; }
+            &:not(.editing) {
+                &:not(.mini) { border: none; padding: 3px; }
+                &.mini { border-color: $cell-border-color;}
+            }
+        }
+
+        &.itemcount {
+            border: 1px solid;
+            border-color: white white black white;
+         }
+        margin-top: 3px;
+    }
+
+    // conditional classes:
+
+    .editing {
+        border-color: black;
+    }
+
+    .header {
+        font-weight: bold;
+        &:hover {color: $cell-highlight-color; }
+    }
+
+    .highlight {
+        background: $cell-highlight-color;
+        span { color: black; }
+    }
+
+    .disabled:not(.highlight) {
+        span {color: $cell-border-color;} //span is required to make sure color doesn't affect border colors too
+        &.mini { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#cccccc' stroke-width='1' /></svg>"); }
+    }
+
+    .anti-highlight:not(.highlight) {
+        div:not(.editing) {
+            &:not(.has-score-background) {
+                &:not(:hover) { color: $cell-border-color; }
+            }
+        }
+    }
+
+    .has-comment:not(.disabled) {
+        span {
+            border-bottom: 2px solid yellow;
+        }
+    }
+}
+
+.link {
+    cursor: pointer;
+}
+
+// content of each tab
+.tableContainer {
+    // width: 100%;
+    border: 1px solid $panel-dark;
+    padding: 10px;
+    .full {
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+    .mini {
+        // overflow-x: hidden;
+    }
+
+}
+
+
+//   ___ ___  _  _ _____ ___  ___  _    ___
+//  / __/ _ \| \| |_   _| _ \/ _ \| |  / __|
+// | (_| (_) | .` | | | |   / (_) | |__\__ \
+//  \___\___/|_|\_| |_| |_|_\\___/|____|___/
+
+// $inputFontSize: 10pt;
+// panel with controls
+.controlsContainer {
+    background-color: $panel-dark;
+    // width: 100%;
+    text-align: right;
+    // padding: 0 3px;
+    // display: flex;
+    display: block;
+    ul { margin: 0; }
+    // justify-content: space-between;
+    // font: 400 12px system-ui;
+
+    .control-sections>li {
+        list-style: none;
+        display: inline-block;
+        // &:not(:last-child){
+        border-left: 1px solid darken($panel-dark, 8%);
+        padding: 0 5px 0 5px;
+        position: relative;
+        // text-align: center;
+        // label for a section of controls, e.g layer controls or technique controls
+        .section-label {
+            font-size: 8pt;
+            // height: 8px;
+            top: -13px;
+            position: absolute;
+            // border: 1px 1px 0 1px solid black;
+            border-color: white;
+            border-style: solid;
+            border-width: 1px 1px 0 1px;
+            // width:50%;
+            // left: 25%;
+            padding: 0 5px;
+            background-color: $panel-dark;
+            border-radius: 2px 2px 0 0;
+            text-align: center;
+            color: $tab-text-color;
+            cursor: default;
+            user-select: none;
+
+            // bottom: 10px;
+        }
+
+        .control-row-item {
+            vertical-align: middle;
+            display: inline-block;
+            position: relative;
+
+            .control-row-button {
+                border-radius: 3px;
+                padding: 5px;
+                height: 24px;
+                cursor: pointer;
+                &:hover { background-color: darken($panel-dark, 5%); }
+                &.dropdown::after {
+                    font-size: 5pt;
+                    content: "▼";
+                }
+            }
+        }
+    }
+}
+
+// dropdown controls container
+.dropdown-container {
+    &.left { right: 0 }
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    z-index: 100; //draw on top of other controls
+    width: max-content;
+
+    &.inputfield {
+        width:  150px;
+        padding: 0px 10px;
+        mat-form-field {
+            width: 100%;
+            &:first-child {
+                padding-top:5px;
+            }
+        }
+    }
+}
+
+.multiselect-dropdown{
+    display: inline-block;
+}
+
+.colorpicker {
+    width: ($cellSize + 5 + 2) * 4;
+    align-items: center;
+    text-align: center;
+    .color-block {
+        cursor: pointer;
+        border: 1px solid black;
+        margin: 2.5px;
+        &.square {
+            display: inline-block;
+            width: $cellSize;
+            height: $cellSize;
+        }
+        &.wide {
+            display: block;
+            height: $cellSize;
+            font-size: 10pt;
+            color: darken(white, 50%);
+        }
+    }
+}
+
+//gradient controls
+$panel-light: lighten($panel-dark, 8%);
+.gradients {
+    font-size: 8pt;
+    .display-buttons {
+        // width: 183px;
+        text-align: center;
+
+        .squarebutton {
+            border: 1px solid $panel-dark;
+            padding: 4px 0;
+            &:hover {
+                background: $panel-light;
+            }
+            &.gradient:hover {
+                text-decoration: underline; //since background color won't be seen on gradient buttons
+            }
+        }
+
+        .presetsmenu {
+            width: 90%;
+            display: inline-block;
+        }
+
+    }
+    .gradient-controls {
+        // width: 200px;
+
+        table {
+            padding:0; margin:0;
+            border-collapse: collapse;
+            // select, button {
+            //     font-family: 'Roboto Mono', monospace;
+            //     font-size: 8pt;
+            // }
+
+            // border: 1px solid black;
+            td {
+                &.buttons>div {
+                    // border: 1px solid black;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+                }
+                .left, .right { display: inline-block; }
+
+                .left {
+                    float: left
+                }
+
+                .right {
+                    text-align: left;
+                    select {
+                        width: 80px;
+                    }
+                    // width: 100%;
+                }
+
+                &.col2 {
+                    width: 45px;
+                    input[type=number] {
+                        // background-color: rgb(104, 60, 213);
+                        width: 40px
+                    }
+                }
+            }
+            .minmax {
+                text-align: center;
+                background-color: $panel-light;
+                // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
+                // &.bottom { border-top: 1px solid black}
+            }
+        }
+        // button {background: red;}
+        .addcolor {
+            width: 100%;
+            // background: red;
+        }
+    }
+}
+
+.contextMenu-cover {
+    // covers entire page
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    // background: rgba(0, 0, 0, 0.15);
+}
+.contextMenu-box {
+    position: absolute;
+    // background: white;
+    .contextMenu-section {
+        &:not(:first-child) {
+            border-top: 1px solid $panel-dark;
+            margin-top: 2px;
+            padding-top: 2px;
+
+        }
+        .contextMenu-button {
+            padding: 3px;
+            cursor: pointer;
+            &:hover {
+                background: $cell-highlight-color;
+            }
+        }
+    }
+
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 100; //draw on top of other controls
+
+    padding: 6px;
+    border-radius: 3px;
+    background: rgba(80, 80, 80, 0.75);
+
+    font-size: 8pt;
+    color: white;
+    max-width: 150px;
+    overflow-x: hidden;
+    // table {
+    //     border-collapse: collapse;
+    //     background: none;
+    //     // width: 100px;
+    //     td:first-child {
+    //         text-align: right;
+    //         width: 9ex;
+    //     }
+    // }
+}
+
+.mat-select{:focus {
+    color: #63961C;
+}}
+
+.filters {
+    padding: 4px;
+    .filter {
+        text-align: left;
+        &:not(:first-child) {
+            margin-top: 4px;
+        }
+        .filter-label {
+
+        }
+        .filter-option {
+            &:hover {
+                background: $cell-highlight-color;
+            }
+        }
+    }
+}
+
+.multiselect {
+    // padding: 4px;
+    text-align: center;
+    .multiselect-grouping {
+        .multiselect-grouping-label {
+            padding: 4px;
+            font-weight: bold;
+            // font-size: 14pt;
+        }
+        .multiselect-list {
+            text-align: left;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            height: 200px;
+            overflow-y: scroll;
+            table {
+                // table-layout:fixed; //fixes width
+                border-collapse: collapse;
+            }
+            .multiselect-list-item {
+                &:hover {
+                    background: $cell-highlight-color;
+                }
+                .multiselect-list-item-label {
+                    width: 25ex;
+                }
+                &.selected:not(:hover) {
+                    background: $panel-dark;
+                }
+            }
+        }
+    }
+}
+
+.search {
+    // padding: 4px;
+    text-align: center;
+    .search-list {
+        margin-top:2px;
+        text-align: left;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        height: 300px;
+        overflow-y: scroll;
+        table {
+            // table-layout:fixed; //fixes width
+            border-collapse: collapse;
+            width: 325px;
+        }
+        .search-list-item {
+            &:hover {
+                background: $cell-highlight-color;
+            }
+            .search-list-item-label {
+                width: 25ex;
+            }
+            &.selected:not(:hover) {
+                background: $panel-dark;
+            }
+        }
+    }
+}
+
+.search-button {
+    &:hover {
+        background: $cell-highlight-color;
+    }
+  }
+
+.button {
+    background-color: $panel-dark;
+    border: none;
+    padding: 4px 10px;
+    text-align: center;
+    //font-size: 16px;
+    margin: 2px 1px;
+    transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover {
+        background-color: $button-dark;
+    }
+  }
+
+//////////////////////
+// Checkbox Styling //
+//////////////////////
+
+.checkbox-custom {
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-custom, .checkbox-custom-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.checkbox-custom-label {
+    position: relative;
+}
+
+.checkbox-custom + .checkbox-custom-label:before {
+    content: '';
+    background: #fff;
+    border: 3px solid $panel-dark;
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    padding: 2px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.checkbox-custom:checked + .checkbox-custom-label:before {
+    background: $cell-highlight-color;
+    box-shadow: inset 0px 0px 0px 1px $cell-highlight-color;
+}
+
+.deselectNumber {
+    font-size: 5pt;
+    bottom: 2px;
+    right: 4px;
+    position: absolute;
+    text-align: right;
+}

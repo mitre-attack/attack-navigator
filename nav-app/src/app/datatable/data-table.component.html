@@ -1,0 +1,506 @@
+<div class="controlsContainer">
+    <ul class="control-sections">
+        <li >
+            <div class="section-label">
+                selection controls
+            </div>
+
+            <!-- Search -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
+                    matTooltipPosition="below"
+                    [matTooltip]="'search'">
+                    <img src="assets/ic_search_black_24px.svg"/>
+                </div>
+
+                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'">
+
+                    <mat-form-field style="width:100%; margin-top:5px; padding: 10px; padding-bottom:0px;">
+                        <input matInput
+
+                        [(ngModel)]="searchString"
+                        (input)="updateSearchDropdown()"
+                        placeholder="Search for techniques here...">
+
+                    </mat-form-field>
+                    <div><b>Properties searched:</b></div>
+
+                    <div>
+                        <div class="noselect">
+                            <input id="search-name-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingName" (change)="updateSearchDropdown()">
+                            <label for="search-name-checkbox" class="checkbox-custom-label">Name</label>
+                            <input id="search-id-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingID" (change)="updateSearchDropdown()">
+                            <label for="search-id-checkbox" class="checkbox-custom-label">ID</label>
+                            <input id="search-description-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingDescription" (change)="updateSearchDropdown()">
+                            <label for="search-description-checkbox" class="checkbox-custom-label">Description</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button  (click)="selectAllInSearch(); populateEditFields();" style="width:48.5%" class="button">select all</button>
+                        <button (click)="deselectAllInSearch(); populateEditFields();" style="width:48.5%; margin-left:2px;" class="button">deselect all</button>
+                    </div>
+
+                    <div class="search-list">
+                        <table>
+                            <tr  *ngFor="let result of searchResults" class="search-list-item">
+                                <td>
+                                    <div class="search-list-item-label">
+                                        {{result.name}}
+                                    </div>
+                                </td>
+                                <td><a style="margin-right:2px" [href]="result.external_references_url" target="_blank">view</a></td>
+                                <td><button  (click)="viewModel.addToTechniqueSelection(result); populateEditFields();" class="button">select</button></td>
+                                <td><button (click)="viewModel.removeFromTechniqueSelection(result); populateEditFields();" class="button">deselect</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Multi-select -->
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
+                    matTooltipPosition="below"
+                    [matTooltip]="'multi-select'">
+                    <img src="assets/ic_playlist_add_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'">
+                    <div class="multiselect-grouping" *ngFor="let multiSelectGroup of [{data: threatGroupList, label: 'Threat Groups'}, {data: softwareGroupList, label: 'Software'}]">
+                        <div class="multiselect-grouping-label">{{multiSelectGroup.label}}</div>
+                        <div class="multiselect-list">
+                            <table>
+                                <tr  *ngFor="let securityInstance of multiSelectGroup.data" class="multiselect-list-item" [class.selected]="isSecurityInstanceSelected(securityInstance)">
+                                    <td>
+                                        <div class="multiselect-list-item-label">
+                                            {{securityInstance.name}}
+                                        </div>
+                                    </td>
+                                    <td><a *ngIf="securityInstance.url" style="margin-right:2px" [href]="securityInstance.url" target="_blank">view</a><span *ngIf="!securityInstance.url">----</span></td>
+                                    <td><button (click)="selectSecurityInstance(securityInstance); populateEditFields();" class="multiselect-list-item-button button">select</button></td>
+                                    <td><button (click)="deselectSecurityInstance(securityInstance); populateEditFields();" class="multiselect-list-item-button button">deselect</button></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- stop editing -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
+                     matTooltipPosition="below"
+                     matTooltip="deselect {{this.viewModel.selectedTechniques.length}} techniques">
+                    <img src="assets/ic_clear_black_24px.svg" alt="deselect all"/>
+                    <span class="deselectNumber">{{this.viewModel.selectedTechniques.length}}</span>
+                </div>
+            </div>
+
+
+        </li>
+        <li>
+            <div class="section-label">
+                layer controls
+            </div>
+
+            <!-- layer description -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
+                     matTooltipPosition="below"
+                     matTooltip="layer information">
+                     <img src="assets/ic_description_black_24px.svg" alt="layer information" />
+                 </div>
+
+                 <!-- description input (invisible, absolute) -->
+                 <div class="dropdown-container inputfield"
+                      *ngIf="currentDropdown === 'description'">
+
+                    <!-- layer name field -->
+                    <mat-form-field>
+                        <input matInput
+                               type="text"
+                               placeholder="name"
+                               [(ngModel)]="viewModel.name" />
+                    </mat-form-field>
+
+                    <!-- layer description field -->
+                    <mat-form-field>
+                        <textarea matInput
+                                    matTextareaAutosize
+                                    placeholder="description"
+                                    [(ngModel)]="viewModel.description">
+                        </textarea>
+                    </mat-form-field>
+                 </div>
+             </div>
+
+
+
+            <!-- save locally -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                    (click)="saveLayerLocally()"
+                    matTooltipPosition="below"
+                    matTooltip="download layer">
+                    <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null;"
+                    matTooltipPosition="below"
+                    matTooltip="filters">
+                    <img src="assets/ic_filter_list_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'">
+                    <div class="filter" *ngFor="let filter of ['platforms', 'stages']">
+                        <b class="filter-label">{{filter}}</b>
+                        <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
+                            <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
+                            <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">
+                            <label for="{{filterOption}}" class="checkbox-custom-label noselect">{{filterOption}}</label>
+                        </div>
+                        <!-- <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()">
+                            {{filterOption}}  {{viewModel.filters.inFilter(filter, filterOption)}}
+                        </div> -->
+                    </div>
+                    <!-- <mat-select placeholder="platforms" [(ngModel)]="platformControl"
+                        multiple disableRipple autofocus (change)="filterTechniques(); viewModel.filters.platforms.selection = platformsControl">
+                        <mat-option *ngFor="let platformOption of viewModel.filters.platforms.options" [value]="platformOption">{{platformOption}}</mat-option>
+                    </mat-select> -->
+                    <!-- <filter-menu [dataTable]="this"></filter-menu> -->
+                </div>
+            </div>
+
+            <!-- sorting -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                    (click)="viewModel.sorting = (viewModel.sorting + 1) % 4; filterTechniques()"
+                    matTooltipPosition="below"
+                    [matTooltip]="['sorting alphabetically ascending', 'sorting alphabetically descending', 'sorting by score ascending', 'sorting by score descending'][viewModel.sorting]">
+                    <img [src]="['assets/ic_sort_alphabetically_ascending_black_24px.svg', 'assets/ic_sort_alphabetically_descending_black_24px.svg', 'assets/ic_sort_numerically_ascending_black_24px.svg', 'assets/ic_sort_numerically_descending_black_24px.svg'][viewModel.sorting]" alt="sorting"/>
+                </div>
+            </div>
+
+            <!-- set up gradients -->
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'gradients' ? 'gradients' : null; viewModel.updateGradient()"
+                    matTooltipPosition="below"
+                    matTooltip="scoring gradient setup">
+                    <img src="assets/ic_palette_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container gradients" *ngIf="currentDropdown === 'gradients'">
+                    <div class="gradient-controls">
+                        <table>
+                            <tr class="minmax top">
+                                <td>Low value:</td>
+                                <td class="col2"><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.minValue" [max]=viewModel.gradient.maxValue></td>
+                            </tr>
+                            <tr>
+                                <td class="buttons">
+                                    <div *ngFor="let gradientStep of viewModel.gradient.colors; let $i = index">
+                                        <div class="left">
+                                            <button (click)="viewModel.removeGradientColor($i)" [disabled]="viewModel.gradient.colors.length == 2">remove</button>
+                                        </div>
+                                        <div class="right">
+                                            <select [(ngModel)]="gradientStep.color" (ngModelChange)="viewModel.updateGradient()">
+                                                <option *ngFor="let color of viewModel.gradient.options" [ngValue]="color">{{color}}</option>
+                                                <!-- option shows up if a nonstandard option is selected, from uploading a custom layer -->
+                                                <option *ngIf="!(viewModel.gradient.labelToColor.hasOwnProperty(gradientStep.color))" [ngValue]=gradientStep.color>{{gradientStep.color}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col2" [style.background-image]="sanitize(viewModel.gradient.gradient.css('linear', 'to bottom'))"> </td>
+                            </tr>
+                            <tr>
+                                <td><button class="addcolor" (click)="viewModel.addGradientColor();">add another color</button></td>
+                            </tr>
+                            <tr class="minmax bottom">
+                                <td>High value: </td>
+                                <td class="col2 "><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.maxValue" [min]=viewModel.gradient.minValue></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="display-buttons">
+                        <div class="squarebutton dropdown noselect" (click)="presetsMenuVisible = !presetsMenuVisible">
+                            presets<span style="font-size:5pt">▼</span>
+                        </div >
+                        <div class="dropdown-container presetsmenu" *ngIf="presetsMenuVisible">
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redgreen'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redgreen'))">red to green</div>
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('greenred'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('greenred'))">green to red</div>
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('bluered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('bluered'))">blue to red</div>
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redblue'))">red to blue</div>
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whiteblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whiteblue'))">white to blue</div>
+                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whitered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whitered'))">white to red</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- show or hide disabled techniques -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="viewModel.hideDisabled = !viewModel.hideDisabled; filterTechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="show/hide disabled">
+                     <img [src]="viewModel.hideDisabled ? 'assets/ic_visibility_off_black_24px.svg' : 'assets/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
+                 </div>
+             </div>
+
+             <!-- mini/full view -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="viewModel.viewFullTable = !viewModel.viewFullTable"
+                     matTooltipPosition="below"
+                     matTooltip="view full/compact">
+                     <img [src]="viewModel.viewFullTable ? 'assets/ic_view_large_black_24px.svg' : 'assets/ic_view_small_black_24px.svg'" [alt]="viewModel.viewFullTable ? 'view compact' : 'view full'"/>
+                 </div>
+             </div>
+
+        </li>
+        <li>
+            <div class="section-label">
+                technique controls
+            </div>
+            <!-- TECHNIQUE CONTROLS -->
+            <!-- enable/disable technique -->
+            <div class="control-row-item">
+
+                <div class="control-row-button noselect"
+                     (click)="setSelectedState()"
+                     matTooltipPosition="below"
+                     matTooltip="toggle state"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_texture_black_24px.svg' : 'assets/ic_texture_gray_24px.svg'" alt="toggle state"/>
+                 </div>
+             </div>
+
+            <!-- background color -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null : continue"
+                     matTooltipPosition="below"
+                     matTooltip="background color"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                     [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
+
+                    <svg border="#dddddd" [attr.fill]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/>
+                        <path [attr.class]="viewModel.isCurrentlyEditing() ? viewModel.getEditingCommonValue('color') : none" d="M0 20h24v4H0z"/>
+                    </svg>
+                </div>
+                <!-- color picker (invisible, absolute)-->
+                <div class="colorpicker dropdown-container"
+                     *ngIf="currentDropdown === 'colorpicker'">
+
+                    <div class="color-block wide noselect dropdown"
+                         (click)="viewModel.editSelectedTechniques('color', '')">
+                        no color
+                    </div>
+                    <div class="color-block square"
+                         *ngFor="let color of ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9']"
+                         [style.background]="color"
+                         (click)="viewModel.editSelectedTechniques('color', color)"></div>
+                </div>
+            </div>
+
+
+            <!-- score -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
+                     matTooltipPosition="below"
+                     matTooltip="scoring"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                     [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_chart_black_24px.svg' : 'assets/ic_insert_chart_gray_24px.svg'" alt="score"/>
+                </div>
+                <div class="dropdown-container inputfield left"
+                     *ngIf="currentDropdown === 'score'">
+                     <mat-form-field>
+                         <!-- update data whenever it is typed in -->
+                         <input matInput
+                                type="text"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+                                [(ngModel)]="scoreEditField"
+                                placeholder="score"
+                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value)); filterTechniques()">
+                         <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
+                     </mat-form-field>
+                </div>
+            </div>
+
+
+            <!-- comment -->
+            <div class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'comment' ? 'comment' : null : continue"
+                     matTooltipPosition="below"
+                     matTooltip="comment"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                     [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_comment_black_24px.svg' : 'assets/ic_insert_comment_gray_24px.svg'" alt="comment" />
+                 </div>
+                 <!-- comment input (invisible, absolute) -->
+                 <div class="dropdown-container inputfield left"
+                      *ngIf="currentDropdown === 'comment'">
+
+                    <mat-form-field>
+                        <textarea matInput
+                                  matTextareaAutosize
+                                  placeholder="comment"
+                                  [(ngModel)]="commentEditField"
+                                  (input)="viewModel.editSelectedTechniques('comment', $event.target.value)">
+                        </textarea>
+                    </mat-form-field>
+                 </div>
+             </div>
+        </li>
+    </ul>
+</div>
+
+
+<div class="tableContainer" oncontextmenu="return false">
+    <div class="dataTable noselect" [class.mini]="!viewModel.viewFullTable">
+        <table>
+            <tr>
+                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
+                    class="header column"
+                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
+
+                    <div class="cell link header"
+                        [matTooltipDisabled]="viewModel.viewFullTable"
+                         matTooltip="{{tacticDisplayNames[tactic]}}"
+                         matTooltipPosition="right"
+                         (click)="clickTactic(tactic)"
+
+                         [class.mini]="!viewModel.viewFullTable">
+                         {{viewModel.viewFullTable ? tacticDisplayNames[tactic] : acronym(tacticDisplayNames[tactic])}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
+                    class="column"
+                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
+
+                    <div class="cell itemcount">
+                        {{tactics[tactic].length}}<span *ngIf="viewModel.viewFullTable"> items</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
+                    class="techniques column"
+                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
+
+                    <div *ngFor="let technique of tactics[tactic]"
+
+                         (click)="techniqueSelectEvent(technique, $event.shiftKey)"
+                         (contextmenu)="rightClickTechnique(technique, $event)"
+
+                         (mouseenter)="viewModel.highlightedTechnique = technique;"
+                         (mouseleave)="viewModel.highlightedTechnique = null"
+
+                         [class]="getClass(technique, !viewModel.viewFullTable)"
+                         [ngStyle]="getTechniqueBackground(technique)">
+                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{viewModel.viewFullTable ? technique.name : acronym(technique.name)}}</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<!--
+   ___ ___  _  _ _____ _____  _______   __  __ ___ _  _ _   _ ___     _   _  _ ___    _____ ___   ___  _  _____ ___ ___  ___
+  / __/ _ \| \| |_   _| __\ \/ /_   _| |  \/  | __| \| | | | / __|   /_\ | \| |   \  |_   _/ _ \ / _ \| ||_   _|_ _| _ \/ __|
+ | (_| (_) | .` | | | | _| >  <  | |   | |\/| | _|| .` | |_| \__ \  / _ \| .` | |) |   | || (_) | (_) | |__| |  | ||  _/\__ \
+  \___\___/|_|\_| |_| |___/_/\_\ |_|   |_|  |_|___|_|\_|\___/|___/ /_/ \_\_|\_|___/    |_| \___/ \___/|____|_| |___|_|  |___/
+ -->
+
+
+<!-- Context Menu: page cover -->
+<div *ngIf="contextMenuVisible"
+    (click)="contextMenuVisible = false; "
+    (contextmenu)="contextMenuVisible = false;"
+    class="contextMenu-cover">
+</div>
+<!-- Context Menu: Menu -->
+<div [hidden]="!contextMenuVisible"
+     class="contextMenu-box dropdown-container noselect"
+     [id]="'contextMenu'+viewModelsService.getViewModelUID(viewModel)">
+    <div class="contextMenu-section">
+        <div class="contextMenu-button" (click)="viewModel.replaceTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
+            select
+        </div>
+        <div class="contextMenu-button" (click)="viewModel.addToTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
+            add to selection
+        </div>
+        <div class="contextMenu-button" (click)="viewModel.removeFromTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
+            remove from selection
+        </div>
+    </div>
+    <div class="contextMenu-section">
+        <div class="contextMenu-button" (click)="viewModel.selectAllTechniques(); contextMenuVisible = false; populateEditFields();">
+            select all
+        </div>
+        <div class="contextMenu-button" (click)="viewModel.clearTechniqueSelection(); contextMenuVisible = false; populateEditFields();">
+            deselect all
+        </div>
+        <div class="contextMenu-button" (click)="viewModel.invertSelection(); contextMenuVisible = false; populateEditFields();">
+            invert selection
+        </div>
+    </div>
+    <div class="contextMenu-section">
+        <div class="contextMenu-button" (click)="openURL($event, contextMenuSelectedTechnique); contextMenuVisible = false; ">
+            view technique
+        </div>
+    </div>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip noselect" [id]="'tooltip'+viewModelsService.getViewModelUID(viewModel)">
+    <div *ngIf="viewModel.highlightedTechnique">
+        <div>
+            <span *ngIf="!viewModel.viewFullTable">{{viewModel.highlightedTechnique.name}} (</span>{{viewModel.highlightedTechnique.technique_id}}<span *ngIf="!viewModel.viewFullTable">)</span>
+        </div>
+        <!-- <table>
+            <tr *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
+                <td>Score:</td>
+                <td>{{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score}}</td>
+            </tr>
+            <tr *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
+                <td>Comment:</td>
+                <td>{{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}</td>
+            </tr>
+        </table> -->
+        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
+            <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score}}
+        </div>
+        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
+            <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}
+        </div>
+
+
+    </div>
+
+</div>
