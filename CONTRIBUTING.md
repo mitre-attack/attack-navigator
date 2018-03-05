@@ -2,7 +2,11 @@
 
 Thanks for contributing to `attack-navigator`!
 
-You are welcome to comment on issues, open new issues, and open pull requests. If you contribute any source code, we need you to agree to the following Developer's Certificate of Origin below.
+You are welcome to comment on issues, open new issues, and open pull requests.
+
+Pull requests should target the **develop** branch of the repository.
+
+Also, if you contribute any source code, we need you to agree to the following Developer's Certificate of Origin below.
 
 ## Developer's Certificate of Origin v1.1
 
