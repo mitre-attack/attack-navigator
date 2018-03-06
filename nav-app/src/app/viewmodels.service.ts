@@ -403,7 +403,14 @@ export class ViewModel {
      * 3: descending numerically
      */
     sorting: number = 0;
-    viewFullTable: boolean = true;
+    /*
+     * viewMode int meanings
+     * 0: full table
+     * 1: compact table (previosly: minitable)
+     * 2: mini table
+     */
+    viewMode: number = 0;
+
 
     hideDisabled: boolean = false; //are disabled techniques hidden?
 
@@ -611,7 +618,7 @@ export class ViewModel {
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
-        rep.viewFullTable = this.viewFullTable;
+        rep.viewFullTable = this.viewMode;
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
@@ -635,9 +642,9 @@ export class ViewModel {
             if (typeof(obj.sorting) === "number") this.sorting = obj.sorting;
             else console.error("TypeError: sorting field is not a number")
         }
-        if ("viewFullTable" in obj) {
-            if (typeof(obj.viewFullTable) === "boolean") this.viewFullTable = obj.viewFullTable;
-            else console.error("TypeError: viewFullTable field is not a boolean")
+        if ("viewMode" in obj) {
+            if (typeof(obj.viewMode) === "number") this.viewMode = obj.viewMode;
+            else console.error("TypeError: viewMode field is not a number")
         }
         if ("hideDisabled" in obj) {
             if (typeof(obj.hideDisabled) === "boolean") this.hideDisabled = obj.hideDisabled;
