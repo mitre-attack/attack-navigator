@@ -618,7 +618,7 @@ export class ViewModel {
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
-        rep.viewFullTable = this.viewMode;
+        rep.viewMode = this.viewMode;
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
