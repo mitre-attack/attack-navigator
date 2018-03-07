@@ -260,13 +260,13 @@
                  </div>
              </div>
 
-             <!-- mini/full view -->
+             <!-- view mode -->
             <div class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="viewModel.viewFullTable = !viewModel.viewFullTable"
+                     (click)="viewModel.viewMode = (viewModel.viewMode + 1) % 3"
                      matTooltipPosition="below"
-                     matTooltip="view full/compact">
-                     <img [src]="viewModel.viewFullTable ? 'assets/ic_view_large_black_24px.svg' : 'assets/ic_view_small_black_24px.svg'" [alt]="viewModel.viewFullTable ? 'view compact' : 'view full'"/>
+                     matTooltip="toggle view mode">
+                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][viewModel.viewMode]"/>
                  </div>
              </div>
 
@@ -378,37 +378,36 @@
 
 
 <div class="tableContainer" oncontextmenu="return false">
-    <div class="dataTable noselect" [class.mini]="!viewModel.viewFullTable">
+    <div [class]="'dataTable noselect ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
         <table>
             <tr>
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    class="header column"
+                    [class]="'header column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
 
-                    <div class="cell link header"
-                        [matTooltipDisabled]="viewModel.viewFullTable"
+                    <div
+                        [matTooltipDisabled]="viewModel.viewMode == 0"
                          matTooltip="{{tacticDisplayNames[tactic]}}"
                          matTooltipPosition="right"
                          (click)="clickTactic(tactic)"
-
-                         [class.mini]="!viewModel.viewFullTable">
-                         {{viewModel.viewFullTable ? tacticDisplayNames[tactic] : acronym(tacticDisplayNames[tactic])}}
+                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
+                         {{[tacticDisplayNames[tactic], acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
                     </div>
                 </td>
             </tr>
-            <tr>
+            <tr *ngIf="viewModel.viewMode != 2">
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    class="column"
+                    [class]="'column' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
 
                     <div class="cell itemcount">
-                        {{tactics[tactic].length}}<span *ngIf="viewModel.viewFullTable"> items</span>
+                        {{tactics[tactic].length}}<span *ngIf="viewModel.viewMode == 0"> items</span>
                     </div>
                 </td>
             </tr>
             <tr>
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    class="techniques column"
+                    [class]="'techniques column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
 
                     <div *ngFor="let technique of tactics[tactic]"
@@ -419,9 +418,9 @@
                          (mouseenter)="viewModel.highlightedTechnique = technique;"
                          (mouseleave)="viewModel.highlightedTechnique = null"
 
-                         [class]="getClass(technique, !viewModel.viewFullTable)"
+                         [class]="getClass(technique)"
                          [ngStyle]="getTechniqueBackground(technique)">
-                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{viewModel.viewFullTable ? technique.name : acronym(technique.name)}}</span>
+                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, acronym(technique.name), ''][viewModel.viewMode] }}</span>
                     </div>
                 </td>
             </tr>
@@ -481,7 +480,7 @@
 <div class="tooltip noselect" [id]="'tooltip'+viewModelsService.getViewModelUID(viewModel)">
     <div *ngIf="viewModel.highlightedTechnique">
         <div>
-            <span *ngIf="!viewModel.viewFullTable">{{viewModel.highlightedTechnique.name}} (</span>{{viewModel.highlightedTechnique.technique_id}}<span *ngIf="!viewModel.viewFullTable">)</span>
+            <span *ngIf="viewModel.viewMode != 0">{{viewModel.highlightedTechnique.name}} (</span>{{viewModel.highlightedTechnique.technique_id}}<span *ngIf="viewModel.viewMode != 0">)</span>
         </div>
         <!-- <table>
             <tr *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
