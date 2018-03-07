@@ -51,7 +51,7 @@
                 <!-- this content will never be shown because clicking opens a new layer tab -->
             </mat-expansion-panel>
 
-            <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">
+            <!-- <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Upload Existing Layer
@@ -63,22 +63,36 @@
                 </mat-expansion-panel-header>
                 <input id="uploader" type="file" style="display: none" (change)="loadLayer()"/>
                 <!-- this content will never be shown because clicking opens a new layer tab -->
-            </mat-expansion-panel>
+            <!--</mat-expansion-panel> -->
 
-            <!-- <mat-expansion-panel>
+            <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                     Open Existing Layer
                     </mat-panel-title>
                     <mat-panel-description>
-                        Upload a layer from your computer, or load from online
+                        Load a layer from your computer or a URL
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <button mat-button (click)="openUploadPrompt()">Upload from local</button>
-                <input id="uploader" type="file" style="display: none" (change)="loadLayer()"/>
+                <table class="uploadLayerTable">
+                    <tr>
+                        <td><button mat-button (click)="openUploadPrompt()">Upload from local</button>
+                        <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/></td>
 
-                <button mat-button>Load from remote</button> -->
-            <!-- </mat-expansion-panel> -->
+                        <td><b style="font-size: 8pt">OR</b></td>
+                        <td><mat-form-field>
+                            <input type="text"
+                                   matInput
+                                   placeholder="Load from URL"
+                                   [(ngModel)]="loadURL"/>
+                            <button mat-button matSuffix mat-icon-button aria-label="go" *ngIf="loadURL" (click)="loadLayerFromURL()">></button>
+                        </mat-form-field></td>
+                    </tr>
+                </table>
+
+
+
+            </mat-expansion-panel>
 
             <!-- <mat-expansion-panel [disabled]="viewModelsService.viewModels.length < 2"> -->
             <mat-expansion-panel (opened)="getActiveTab().showScoreVariables = true" (closed)="getActiveTab().showScoreVariables = false">
