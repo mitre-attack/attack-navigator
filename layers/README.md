@@ -2,7 +2,7 @@
 
 This folder contains a basic script that demonstrates how layer files can be generated for use in the ATT&CK Navigator. Sample layer files are also found in the **data/samples** sub-folder.
 
-If you want to learn more about the format of layer files, **LAYERFORMATv1.md** describes version 1 of the MITRE ATT&CK Navigator Layer file format.
+If you want to learn more about the format of layer files, **LAYERFORMATv1_1.md** describes version 1.1 of the MITRE ATT&CK Navigator Layer file format.
 
 *Also, feel free to come up with your own ideas for layer file generation, and contribute them to the community by making a pull request to the ATT&CK Navigator!*
 
@@ -29,7 +29,7 @@ The code excerpt below shows how **attack_layers_simple.py** adds scores to tech
 
 ```
 
-**attack_layers_simple.py** adds all of the required layer fields as outlined in **LAYERFORMATv1.md**. Additionally, a *gradient* field is added that specifies a color range that will be applied to the techniques based on their scores. In **attack_layers_simple.py**, we specify min/max values that match the min/max of the set of technique scores that were calculated.
+**attack_layers_simple.py** adds all of the required layer fields as outlined in **LAYERFORMATv1_1.md**. Additionally, a *gradient* field is added that specifies a color range that will be applied to the techniques based on their scores. In **attack_layers_simple.py**, we specify min/max values that match the min/max of the set of technique scores that were calculated.
 
 
 ```
