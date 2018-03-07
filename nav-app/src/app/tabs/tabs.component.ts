@@ -11,6 +11,7 @@ import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../
 
 import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
+import { Http } from '@angular/http'
 
 declare var math: any; //use mathjs
 
@@ -40,7 +41,7 @@ export class TabsComponent implements AfterContentInit {
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService) {
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http) {
         let self = this;
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
@@ -396,7 +397,7 @@ export class TabsComponent implements AfterContentInit {
     /**
      * Loads an existing layer into a tab
      */
-    loadLayer(): void {
+    loadFromFileLayer(): void {
         var input = (<HTMLInputElement>document.getElementById("uploader"));
         if(input.files.length < 1){
             alert("You must select a file to upload!")
@@ -429,6 +430,32 @@ export class TabsComponent implements AfterContentInit {
         }
         reader.readAsText(file);
     }
+
+    loadURL: string = "";
+    /**
+     * attempt an HTTP GET to loadURL, and load the response (if it exists) as a layer.
+     */
+    loadLayerFromURL(): void {
+        if (!this.loadURL.startsWith("http://") && !this.loadURL.startsWith("https://") && !this.loadURL.startsWith("FTP://")) this.loadURL = "https://" + this.loadURL;
+        this.http.get(this.loadURL).subscribe((res) => {
+            let viewModel = this.viewModelsService.newViewModel("loading layer...");
+            let content = res.text();
+            try {
+                viewModel.deSerialize(content)
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true)
+            } catch(err) {
+                console.log(err)
+                alert("ERROR: Failed to load layer file from URL")
+                this.viewModelsService.destroyViewModel(viewModel)
+            }
+        }, (err) => {
+            console.error(err)
+            alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
+        })
+
+    }
+
+
 
     /**
      * Return true if the text is only letters a-z, false otherwise
