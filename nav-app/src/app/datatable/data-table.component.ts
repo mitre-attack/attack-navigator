@@ -687,7 +687,7 @@ export class DataTableComponent implements AfterViewInit {
      * @param  {boolean}   mini is it the minitable?
      * @return {string}               the classes the technique should currently have
      */
-    getClass(technique, mini=false) {
+    getClass(technique) {
         let theclass = 'link noselect cell'
         if (!this.viewModel.getTechniqueVM(technique.technique_id).enabled)
             theclass += " disabled"
@@ -696,8 +696,7 @@ export class DataTableComponent implements AfterViewInit {
             theclass += " editing"
         if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
             theclass += " highlight"
-        if (mini)
-            theclass += " mini"
+        theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
         if (this.viewModel.getTechniqueVM(technique.technique_id).comment.length > 0)
             theclass += " has-comment"
         if (this.getTechniqueBackground(technique))

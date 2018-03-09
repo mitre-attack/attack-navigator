@@ -224,3 +224,14 @@ input[type=file]{
         padding: 5px;
     }
 }
+
+.uploadLayerTable {
+    width: 100%;
+    tr {
+        width: 109%;
+        td {
+            text-align: center;
+            width: 1%;
+        }
+    }
+}

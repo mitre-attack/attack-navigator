@@ -38,7 +38,7 @@ $cellSize: 15px;
         table-layout: fixed;
     }
 
-    &.mini {
+    &.compact {
         text-align: center;
     }
 
@@ -54,6 +54,7 @@ $cellSize: 15px;
         // IMPORTANT: use 1% to make every cell equal size when expanding to fill space,
         // and minimum width of their contents when collapsing
         width: 1%;
+        &.mini {line-height: 3px;}
     }
 
     .techniques:hover {
@@ -64,56 +65,59 @@ $cellSize: 15px;
         width: 100%;
         display: inline-block;
         padding: 2px;
+        margin-top: 3px;
 
         &:not(.itemcount) {
             border: 1px solid;
+            &.mini {
+                width: 2px;
+                height: 2px;
+                margin-right: 1px;
+            }
 
             .editing { border-color: black; }
             &:not(.editing) {
-                &:not(.mini) { border: none; padding: 3px; }
-                &.mini { border-color: $cell-border-color;}
+                &:not(.compact):not(.mini) { border: none; padding: 3px; }
+                &.compact,&.mini:not(.header) { border-color: $cell-border-color;}
             }
         }
 
         &.itemcount {
             border: 1px solid;
             border-color: white white black white;
-         }
-        margin-top: 3px;
+        }
+
+        &.editing {
+            border-color: black;
+        }
+
+        &.header {
+            font-weight: bold;
+            &:hover {color: $cell-highlight-color; }
+            &.mini {background-color: black; border-color: black; }
+        }
+
+        &.highlight {
+            background: $cell-highlight-color;
+            span { color: black; }
+        }
+
+        &.disabled:not(.highlight) {
+            span {color: $cell-border-color;} //span is required to make sure color doesn't affect border colors too
+            &.compact { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#cccccc' stroke-width='1' /></svg>"); }
+            &.mini { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#b8b8b8' stroke-width='1' /></svg>"); }
+        }
+        &.has-comment:not(.disabled) {
+            span {
+                border-bottom: 2px solid yellow;
+            }
+        }
     }
-
-    // conditional classes:
-
-    .editing {
-        border-color: black;
-    }
-
-    .header {
-        font-weight: bold;
-        &:hover {color: $cell-highlight-color; }
-    }
-
-    .highlight {
-        background: $cell-highlight-color;
-        span { color: black; }
-    }
-
-    .disabled:not(.highlight) {
-        span {color: $cell-border-color;} //span is required to make sure color doesn't affect border colors too
-        &.mini { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#cccccc' stroke-width='1' /></svg>"); }
-    }
-
     .anti-highlight:not(.highlight) {
         div:not(.editing) {
             &:not(.has-score-background) {
                 &:not(:hover) { color: $cell-border-color; }
             }
-        }
-    }
-
-    .has-comment:not(.disabled) {
-        span {
-            border-bottom: 2px solid yellow;
         }
     }
 }
@@ -127,14 +131,6 @@ $cellSize: 15px;
     // width: 100%;
     border: 1px solid $panel-dark;
     padding: 10px;
-    .full {
-        overflow-x: scroll;
-        overflow-y: hidden;
-    }
-    .mini {
-        // overflow-x: hidden;
-    }
-
 }
 
 
