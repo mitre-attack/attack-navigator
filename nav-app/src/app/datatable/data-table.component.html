@@ -475,6 +475,11 @@
             view technique
         </div>
     </div>
+    <div *ngIf="customContextMenuItems.length > 0" class="contextMenu-section">
+        <div *ngFor="let option of customContextMenuItems" class="contextMenu-button" (click)="openCustomURL($event, contextMenuSelectedTechnique, option.url); contextMenuVisible = false; ">
+            {{option.label}}
+        </div>
+    </div>
 </div>
 
 <!-- Tooltip -->

@@ -53,6 +53,8 @@ export class DataTableComponent implements AfterViewInit {
     searchingID = true;
     searchingDescription = true;
 
+    customContextMenuItems = [];
+
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
 
@@ -288,6 +290,7 @@ export class DataTableComponent implements AfterViewInit {
                                 config["mobile_data_url"],
                                 config["tactics_url"]);
             var domain = config["domain"];
+            this.customContextMenuItems = config["custom_context_menu_items"]
             dataService.getTactics().subscribe((tactics: Object[]) => {
                 this.constructTacticList(tactics, domain);
                 if(domain === "mitre-enterprise"){
@@ -563,6 +566,17 @@ export class DataTableComponent implements AfterViewInit {
     // open a url in a new tab
     openURL(event, technique){
         var win = window.open(technique.external_references_url);
+        if (win) {
+            win.focus();
+        } else {
+            alert('Please allow popups for this website');
+        }
+    }
+
+    // open custom url in a new tab
+    openCustomURL(event, technique, url){
+        var formattedURL = url.replace("+$+", technique.technique_id);
+        var win = window.open(formattedURL);
         if (win) {
             win.focus();
         } else {
