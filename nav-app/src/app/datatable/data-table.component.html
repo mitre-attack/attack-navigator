@@ -97,7 +97,7 @@
                      (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
                      matTooltipPosition="below"
                      matTooltip="deselect {{this.viewModel.selectedTechniques.length}} techniques">
-                    <img src="assets/ic_clear_black_24px.svg" alt="deselect all"/>
+                    <img src="assets/ic_remove_circle_black_24px.svg" alt="deselect all"/>
                     <span class="deselectNumber">{{this.viewModel.selectedTechniques.length}}</span>
                 </div>
             </div>
@@ -372,6 +372,16 @@
                     </mat-form-field>
                  </div>
              </div>
+             <!-- remove all annotations -->
+             <div class="control-row-item">
+                 <div class="control-row-button noselect"
+                      (click)="viewModel.resetSelectedTechniques(); populateEditFields()"
+                      matTooltipPosition="below"
+                      matTooltip="clear annotations on selected"
+                      [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_clear_black_24px.svg' : 'assets/ic_clear_gray_24px.svg'" alt="remove all annotations"/>
+                  </div>
+              </div>
         </li>
     </ul>
 </div>
