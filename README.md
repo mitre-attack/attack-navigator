@@ -49,6 +49,9 @@ To instead generate a matrix view of the [Mobile ATT&CK](https://attack.mitre.or
 
 [PRE-ATT&CK](https://attack.mitre.org/pre-attack) is included in the matrix view for either domain if the *prepare* stage is manually selected within the layer control filters.
 
+#### Tactics
+The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/src/assets/tacticsData.json` where they are organized by domain. We will keep this file up to date as tactics are added and edited in new releases of [ATT&CK](https://attack.mitre.org).
+
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
