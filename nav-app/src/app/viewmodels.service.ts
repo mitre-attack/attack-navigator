@@ -579,6 +579,18 @@ export class ViewModel {
     }
 
     /**
+     * Reset the selected techniques' annotations to their default values
+     */
+    resetSelectedTechniques(): void {
+        for (let i = 0; i < this.selectedTechniques.length; i++) {
+            this.getTechniqueVM(this.selectedTechniques[i]).score = "";
+            this.getTechniqueVM(this.selectedTechniques[i]).comment = "";
+            this.getTechniqueVM(this.selectedTechniques[i]).color = "";
+            this.getTechniqueVM(this.selectedTechniques[i]).enabled = true;
+        }
+    }
+
+    /**
      * Get get a common value from the selected techniques
      * @param  field the field to get the common value from
      * @return       the value of the field if all selected techniques have the same value, otherwise ""
