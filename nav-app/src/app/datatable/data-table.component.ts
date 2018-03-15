@@ -575,7 +575,12 @@ export class DataTableComponent implements AfterViewInit {
 
     // open custom url in a new tab
     openCustomURL(event, technique, url){
-        var formattedURL = url.replace("+$+", technique.technique_id);
+        var formattedTechniqueName = this.contextMenuSelectedTechnique.name.replace(/ /g, "_");
+
+        var formattedURL = url.replace(/~Technique_ID~/g, this.contextMenuSelectedTechnique.technique_id);
+        formattedURL = formattedURL.replace(/~Technique_Name~/g, formattedTechniqueName);
+        formattedURL = formattedURL.replace(/~Tactic_Name~/g, this.contextMenuSelectedTactic);
+        
         var win = window.open(formattedURL);
         if (win) {
             win.focus();
@@ -629,15 +634,17 @@ export class DataTableComponent implements AfterViewInit {
 
     contextMenuVisible = false;
     contextMenuSelectedTechnique: Technique = null;
+    contextMenuSelectedTactic = null;
     /**
      * called on right clicking a technique in the view, handles context menu stuff
      * @param  technique technique that was clicked
      * @param  event     click event
      * @return           false to suppress normal context menu
      */
-    rightClickTechnique(technique, event) {
+    rightClickTechnique(technique, tactic, event) {
         this.contextMenuVisible = true;
         this.contextMenuSelectedTechnique = technique;
+        this.contextMenuSelectedTactic = this.tacticDisplayNames[tactic].replace(" ", "_");
         // console.log(event, technique)
         let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModelsService.getViewModelUID(this.viewModel));
         element.style.left = event.pageX + "px";

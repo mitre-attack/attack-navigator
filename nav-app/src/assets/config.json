@@ -8,9 +8,12 @@
 
     "custom_context_menu_items": [
         {
-            "label": "test",
-            "url": "https://attack.mitre.org/wiki/Technique/+$+"
-            
+            "label": "custom technique url",
+            "url": "https://attack.mitre.org/wiki/Technique/~Technique_ID~"
+        },
+        {
+            "label": "custom tactic url",
+            "url": "https://attack.mitre.org/wiki/~Tactic_Name~"
         }
     ]
 }    
