@@ -97,7 +97,7 @@
                      (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
                      matTooltipPosition="below"
                      matTooltip="deselect {{this.viewModel.selectedTechniques.length}} techniques">
-                    <img src="assets/ic_remove_circle_black_24px.svg" alt="deselect all"/>
+                    <img src="assets/ic_clear_black_24px.svg" alt="deselect all"/>
                     <span class="deselectNumber">{{this.viewModel.selectedTechniques.length}}</span>
                 </div>
             </div>
@@ -379,7 +379,7 @@
                       matTooltipPosition="below"
                       matTooltip="clear annotations on selected"
                       [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_clear_black_24px.svg' : 'assets/ic_clear_gray_24px.svg'" alt="remove all annotations"/>
+                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_layers_clear_black_24px.svg' : 'assets/ic_layers_clear_gray_24px.svg'" alt="remove all annotations"/>
                   </div>
               </div>
         </li>
@@ -423,7 +423,7 @@
                     <div *ngFor="let technique of tactics[tactic]"
 
                         (click)="techniqueSelectEvent(technique, $event.shiftKey || $event.ctrlKey || $event.metaKey)"
-                         (contextmenu)="rightClickTechnique(technique, $event)"
+                         (contextmenu)="rightClickTechnique(technique, tactic, $event)"
 
                          (mouseenter)="viewModel.highlightedTechnique = technique;"
                          (mouseleave)="viewModel.highlightedTechnique = null"
