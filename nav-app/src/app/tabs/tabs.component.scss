@@ -225,13 +225,26 @@ input[type=file]{
     }
 }
 
-.uploadLayerTable {
+.inputTable {
     width: 100%;
     tr {
-        width: 109%;
+        width: 100%;
         td {
             text-align: center;
             width: 1%;
         }
+    }
+}
+
+#layerlinkfield {
+    color: rgba(0,0,0,.42);
+    /deep/.mat-input-underline {
+        background: none;
+        background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
+        background-size: 4px 1px;
+        background-repeat: repeat-x;
+    }
+    #layerLink {
+        cursor: pointer;
     }
 }
