@@ -56,6 +56,22 @@ The **layers** folder's **README** contains more detailed information about how 
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 
+## Adding Custom Context Menu Options
+To create custom options to the **ATT&CK<sup>™</sup> Navigator** context menu using data in the Navigator, objects must be added to the array labeled `custom_context_menu_options` in `nav-app/src/assets/config.json`. Each object must have a property **label**, which is the text displayed in the context menu, and a property **url**, which is where the user is navigated.
+
+To utilize data on right-clicked technique in the url, parameters surrounded by tildes can be added to the string. For example: using `http://www.someurl.com/~Technique_ID~` as the url in the custom option would lead to `http://www.someurl.com/T1098`, if the right-clicked technique's ID was T1098.
+
+Available technique data able to be added to the url:
+* **Technique_ID** returns the Technique ID
+* **Technique_Name** returns the Technique Name with the first letter of each word capitalized and using underscores between words
+* **Tactic_Name** returns the Tactic Name with the first letter of each word capitalized and using underscores between words
+
+Example custom context menu object:<br />
+  {<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;"`label`": &nbsp;"custom technique url",<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;"`url`": &nbsp;"https://attack.mitre.org/wiki/Technique/~Technique_Name~"<br />
+  }
+
 ## Related MITRE Work
 #### CTI
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
