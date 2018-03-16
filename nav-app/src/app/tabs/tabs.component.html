@@ -74,7 +74,7 @@
                         Load a layer from your computer or a URL
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table class="uploadLayerTable">
+                <table class="inputTable">
                     <tr>
                         <td><button mat-button (click)="openUploadPrompt()">Upload from local</button>
                         <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/></td>
@@ -177,6 +177,39 @@
                 </table>
 
                 <button mat-button [disabled]="getScoreExpressionError()" (click)="layerByOperation(); showScoreVariables = false">Create</button>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Create Layer Link
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Create a hyperlink to a layer on the web
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>Enter the URL of a layer hosted on the web. Navigating to the resulting link will create a navigator instance with the given layer already open.</p>
+
+                <table class="inputTable">
+                    <tr>
+                        <td><mat-form-field>
+                            <input type="text"
+                            matInput
+                            placeholder="layer URL"
+                            [(ngModel)]="layerLinkURL"/>
+                        </mat-form-field></td>
+                        <td><mat-form-field id="layerlinkfield">
+                            <input id="layerLink" type="text"
+                            matInput
+                            readonly="readonly"
+                            (click)="selectLayerLink()"
+                            [value]="getLayerLink()"/>
+                            <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy"><img src="assets/ic_content_copy_black_24px.svg" width="14px" alt="copy" matTooltip="copy" matTooltipPosition="right"></button>
+                            <mat-hint *ngIf="copiedRecently">copied</mat-hint>
+                        </mat-form-field></td>
+                    </tr>
+                </table>
 
             </mat-expansion-panel>
         </mat-accordion>

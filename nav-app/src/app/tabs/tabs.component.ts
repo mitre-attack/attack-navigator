@@ -55,7 +55,14 @@ export class TabsComponent implements AfterContentInit {
         this.ds.retreiveConfig().subscribe((config: Object) => {
             this.viewModelsService.domain = config["domain"];
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
-            this.newLayer();
+            if (this.getNamedFragmentValue("layerURL")) {
+                this.loadURL = this.getNamedFragmentValue("layerURL");
+                console.log(this.loadURL)
+                this.loadLayerFromURL();
+                if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
+            } else {
+                this.newLayer();
+            }
             let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
 
             // if there is no active tab set, activate the first
@@ -455,7 +462,38 @@ export class TabsComponent implements AfterContentInit {
 
     }
 
+    layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
+    /**
+     * Convert layerLinkURL to a query string value for layerURL query string
+     * @return URL such that when opened will create navigator instance with a query String
+     *         specifying layerLinkURL as the URL to fetch the default layer from
+     */
+    getLayerLink(): string {
+        if (!this.layerLinkURL) return "";
+        else return window.location.href.split("#")[0] + "#layerURL=" + encodeURIComponent(this.layerLinkURL)
+    }
+    /**
+     * Select the layer link field text
+     */
+    selectLayerLink(): void {
+        let copyText = <HTMLInputElement>document.getElementById("layerLink");
+        console.log(copyText)
+        console.log(copyText.value)
+        copyText.select();
+    }
 
+    copiedRecently = false; // true if copyLayerLink has been called recently -- reverts to false after 2 seconds
+    /**
+     * copy the created layer link to the user's clipboard
+     */
+    copyLayerLink(): void {
+        console.log("attempting copy")
+        this.selectLayerLink();
+        document.execCommand("Copy");
+        this.copiedRecently = true;
+        let self = this;
+        window.setTimeout(function() {self.copiedRecently = false}, 2000);
+    }
 
     /**
      * Return true if the text is only letters a-z, false otherwise
@@ -464,6 +502,22 @@ export class TabsComponent implements AfterContentInit {
      */
     alphabetical(text: string): boolean {
         return /^[a-z]+$/.test(text);
+    }
+
+    /**
+     * get a key=value fragment value by key
+     * @param  {string} name name of param to get the value of
+     * @param  {string} url  optional, if unspecified searches in current window location. Otherwise searches this string
+     * @return {string}      fragment param value
+     */
+    getNamedFragmentValue(name: string, url?: string): string {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[#&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
 }
