@@ -404,7 +404,7 @@ export class TabsComponent implements AfterContentInit {
     /**
      * Loads an existing layer into a tab
      */
-    loadFromFileLayer(): void {
+    loadLayerFromFile(): void {
         var input = (<HTMLInputElement>document.getElementById("uploader"));
         if(input.files.length < 1){
             alert("You must select a file to upload!")
