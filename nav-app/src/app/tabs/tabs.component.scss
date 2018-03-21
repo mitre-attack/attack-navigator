@@ -189,14 +189,13 @@ input[type=file]{
 }
 
 .header {
+    text-align: right; 
 
-
-    div {display: inline-block; cursor: pointer;
-    }
+    div { display: inline-block; cursor: pointer; }
     .logo {
-        position: absolute;
-        top: 0;
-        right: 0;
+        // position: absolute;
+        // top: 0;
+        text-align: right;
         a {
             text-decoration: none;
             color: rgb(176, 26, 26);

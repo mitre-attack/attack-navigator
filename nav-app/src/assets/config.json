@@ -7,6 +7,26 @@
     "domain": "mitre-enterprise",
 
     "custom_context_menu_items": [
-        
-    ]
-}    
+
+    ],
+
+    "features": {
+        "tabs": false,
+        "search": false,
+        "multiselect": false,
+        "deselect_all": false,
+        "layer_info": false,
+        "download_layer": false,
+        "filters": false,
+        "sorting": false,
+        "scoring_gradients": false,
+        "hide_disabled_toggle": false,
+        "toggle_view_mode": false,
+
+        "disable_techniques": false,
+        "manual_color": false,
+        "scoring": false,
+        "comments": false,
+        "clear_annotations": false
+    }
+}

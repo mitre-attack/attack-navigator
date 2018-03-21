@@ -5,6 +5,7 @@ import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, Com
 import { DynamicTabsDirective } from './dynamic-tabs.directive';
 import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
+import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
@@ -19,7 +20,7 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService]
+    providers: [ViewModelsService, ConfigService]
 
 })
 export class TabsComponent implements AfterContentInit {
@@ -41,7 +42,7 @@ export class TabsComponent implements AfterContentInit {
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http) {
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http, private configService: ConfigService) {
         let self = this;
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
