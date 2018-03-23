@@ -510,10 +510,12 @@
         <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
             <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score}}
         </div>
-        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
+        <div class="comment" [id]="'comment'+viewModelsService.getViewModelUID(viewModel)" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
             <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}
         </div>
-
+        <div class="comment-overflow-note" *ngIf="toolTipOverflows">
+            ...
+        </div>
 
     </div>
 

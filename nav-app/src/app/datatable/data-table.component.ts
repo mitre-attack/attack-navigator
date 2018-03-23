@@ -580,7 +580,7 @@ export class DataTableComponent implements AfterViewInit {
         var formattedURL = url.replace(/~Technique_ID~/g, this.contextMenuSelectedTechnique.technique_id);
         formattedURL = formattedURL.replace(/~Technique_Name~/g, formattedTechniqueName);
         formattedURL = formattedURL.replace(/~Tactic_Name~/g, this.contextMenuSelectedTactic);
-        
+
         var win = window.open(formattedURL);
         if (win) {
             win.focus();
@@ -653,7 +653,9 @@ export class DataTableComponent implements AfterViewInit {
     }
 
     //tooltip facing, true for right align, false for left align
-    tooltipDirection: boolean = false;
+    // tooltipDirectionHorizontal: boolean = false;
+    // tooltipDirectionVertical: boolean = false;
+    toolTipOverflows = false;
     /**
      * On mouse move, move the tooltip to the mouse location
      * @param event teh mouse move event
@@ -662,14 +664,16 @@ export class DataTableComponent implements AfterViewInit {
     @HostListener('mouseout', ['$event'])
     onMouseMove(event:MouseEvent): void {
         let element = <HTMLElement>document.getElementById("tooltip" + this.viewModelsService.getViewModelUID(this.viewModel));
-        this.tooltipDirection = document.body.clientWidth - event.pageX < 150; //determine facing of tooltip
+        let tooltipDirectionHorizontal = document.body.clientWidth - event.pageX < 150; //determine facing of tooltip
+        let tooltipDirectionVertical = document.body.clientHeight - event.pageY < 350; //determine facing of tooltip
         if(this.viewModel.highlightedTechnique !== null && event.type == "mousemove"){
-            element.style.left = this.tooltipDirection ? (event.pageX - 20 - element.clientWidth) + "px" : (event.pageX + 20) + "px";
-            element.style.top = event.pageY + "px";
+            element.style.left = tooltipDirectionHorizontal ? (event.pageX - 20 - element.clientWidth) + "px" : (event.pageX + 20) + "px";
+            element.style.top = tooltipDirectionVertical ? (event.pageY - element.clientHeight) + "px" : event.pageY + "px";
         } else {
             element.style.left = -10000 + "px";
         }
-
+        let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModelsService.getViewModelUID(this.viewModel));
+        this.toolTipOverflows = commentdiv.clientHeight >= 300;
     }
 
     /**

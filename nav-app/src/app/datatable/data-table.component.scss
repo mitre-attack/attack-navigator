@@ -373,17 +373,19 @@ $panel-light: lighten($panel-dark, 8%);
 
     font-size: 8pt;
     color: white;
+
     max-width: 150px;
     overflow-x: hidden;
-    // table {
-    //     border-collapse: collapse;
-    //     background: none;
-    //     // width: 100px;
-    //     td:first-child {
-    //         text-align: right;
-    //         width: 9ex;
-    //     }
-    // }
+
+    .comment {
+        max-height: 300px;
+        overflow-y: hidden;
+    }
+
+    .comment-overflow-note {
+        // color: rgb(255, 199, 190);
+    }
+
 }
 
 .mat-select{:focus {
