@@ -11,22 +11,33 @@
     ],
 
     "features": {
-        "tabs": false,
-        "search": false,
-        "multiselect": false,
-        "deselect_all": false,
-        "layer_info": false,
-        "download_layer": false,
-        "filters": false,
-        "sorting": false,
-        "scoring_gradients": false,
-        "hide_disabled_toggle": false,
-        "toggle_view_mode": false,
-
-        "disable_techniques": false,
-        "manual_color": false,
-        "scoring": false,
-        "comments": false,
-        "clear_annotations": false
+        "tabs": true,
+        "selecting_techniques": true,
+        "selection_controls": {
+            "search": true,
+            "multiselect": true,
+            "deselect_all": true
+        },
+        "layer_controls": {
+            "layer_info": true,
+            "download_layer": true,
+            "filters": true,
+            "sorting": true,
+            "scoring_gradients": true,
+            "hide_disabled_toggle": true,
+            "toggle_view_mode": true
+        },
+        "technique_controls": {
+            "disable_techniques": true,
+            "manual_color": true,
+            "scoring": true,
+            "comments": true,
+            "clear_annotations": true
+        },
+        "groups": {
+            "selection_controls": false,
+            "layer_controls": false,
+            "technique_controls": false
+        }
     }
 }
