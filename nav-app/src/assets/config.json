@@ -11,33 +11,30 @@
     ],
 
     "features": {
-        "tabs": true,
-        "selecting_techniques": true,
+        "tabs": false,
+        "selecting_techniques": false,
         "selection_controls": {
-            "search": true,
-            "multiselect": true,
-            "deselect_all": true
+            "search": false,
+            "multiselect": false,
+            "deselect_all": false
         },
         "layer_controls": {
-            "layer_info": true,
-            "download_layer": true,
-            "filters": true,
-            "sorting": true,
-            "scoring_gradients": true,
-            "hide_disabled_toggle": true,
-            "toggle_view_mode": true
+            "layer_info": false,
+            "download_layer": false,
+            "filters": false,
+            "sorting": false,
+            "scoring_gradients": false,
+            "toggle_hide_disabled": false,
+            "toggle_view_mode": false
         },
         "technique_controls": {
-            "disable_techniques": true,
-            "manual_color": true,
-            "scoring": true,
-            "comments": true,
-            "clear_annotations": true
+            "disable_techniques": false,
+            "manual_color": false,
+            "scoring": false,
+            "comments": false,
+            "clear_annotations": false
         },
         "groups": {
-            "selection_controls": false,
-            "layer_controls": false,
-            "technique_controls": false
         }
     }
 }

@@ -21,16 +21,35 @@ export class ConfigService {
     public getFeature(featureName: string): boolean {
         return this.features.get(featureName);
     }
+
     /**
-     * the logical AND of getFeature
-     * @param  featureNames string[] of features to check enabledness of
-     * @return              true if all enabled, false otherwise
+     * Return true if any/all features in the group are enabled
+     * @param  featureGroup feature group name
+     * @param  type         'any' or 'all' for logical or/and
+     * @return              true iffany/all are enabled, false otherwise
      */
-    public getFeatures(featureNames: string[]): boolean {
-        for (let i = 0; i < featureNames.length; i++) {
-            if (!this.getFeature(featureNames[i])) return false;
+    public getFeatureGroup(featureGroup: string, type?: string): boolean {
+        if (!this.featureGroups.has(featureGroup)) return true;
+
+        let subFeatures = this.featureGroups.get(featureGroup)
+        let count = this.getFeatureGroupCount(featureGroup);
+        return type == "any" ? count > 0 : count === subFeatures.length;
+    }
+
+    /**
+     * Return the number of enabled features in the group
+     * @param  featureGroup feature group name
+     * @return              the number of enabled features in the group, or -1 if
+     *                      the group does not exist
+     */
+    public getFeatureGroupCount(featureGroup: string): number {
+        if (!this.featureGroups.has(featureGroup)) return -1;
+        let count = 0
+        let subFeatures = this.featureGroups.get(featureGroup)
+        for (let i = 0; i < subFeatures.length; i++) {
+            if (this.getFeature(subFeatures[i])) count += 1
         }
-        return true;
+        return count;
     }
 
     /**

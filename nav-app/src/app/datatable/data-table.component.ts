@@ -1,5 +1,7 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit } from '@angular/core';
 import {DataService, Technique} from '../data.service';
+import {ConfigService} from '../config.service';
+
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
@@ -18,7 +20,7 @@ import * as FileSaver from 'file-saver';
     selector: 'DataTable',
     templateUrl: './data-table.component.html',
     styleUrls: ['./data-table.component.scss'],
-    providers: [DataService]
+    providers: [DataService, ConfigService]
 })
 export class DataTableComponent implements AfterViewInit {
 
@@ -282,7 +284,7 @@ export class DataTableComponent implements AfterViewInit {
     //     Calls functions to format the data                               //
     //////////////////////////////////////////////////////////////////////////
 
-    constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService) {
+    constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService, private configService: ConfigService) {
         this.ds = dataService;
         this.ds.retreiveConfig().subscribe((config: Object) => {
             this.ds.setUpURLs(config["enterprise_attack_url"],
@@ -580,7 +582,7 @@ export class DataTableComponent implements AfterViewInit {
         var formattedURL = url.replace(/~Technique_ID~/g, this.contextMenuSelectedTechnique.technique_id);
         formattedURL = formattedURL.replace(/~Technique_Name~/g, formattedTechniqueName);
         formattedURL = formattedURL.replace(/~Tactic_Name~/g, this.contextMenuSelectedTactic);
-        
+
         var win = window.open(formattedURL);
         if (win) {
             win.focus();
@@ -604,7 +606,11 @@ export class DataTableComponent implements AfterViewInit {
      * @param  technique      technique which was left clicked
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
-    techniqueSelectEvent(technique, addToSelection): void {
+    techniqueSelectEvent(technique, addToSelection, tactic, event): void {
+        if (!this.configService.getFeature('selecting_techniques')) {
+            this.rightClickTechnique(technique, tactic, event);
+            return;
+        }
         if (addToSelection) {
             // TODO add/remove from selection
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);

@@ -1,12 +1,12 @@
 <div class="controlsContainer">
     <ul class="control-sections">
-        <li >
-            <div class="section-label">
+        <li *ngIf="configService.getFeatureGroup('selection_controls', 'any')">
+            <div *ngIf="configService.getFeatureGroupCount('selection_controls').length >= 3" class="section-label">
                 selection controls
             </div>
 
             <!-- Search -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                     (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
@@ -62,7 +62,7 @@
 
 
             <!-- Multi-select -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('multiselect')" class="control-row-item">
                 <div class="control-row-button dropdown noselect"
                     (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
                     matTooltipPosition="below"
@@ -91,8 +91,8 @@
             </div>
 
 
-            <!-- stop editing -->
-            <div class="control-row-item">
+            <!-- deselect all -->
+            <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
                 <div class="control-row-button noselect"
                      (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
                      matTooltipPosition="below"
@@ -104,13 +104,13 @@
 
 
         </li>
-        <li>
-            <div class="section-label">
+        <li *ngIf="configService.getFeatureGroup('layer_controls', 'any')">
+            <div *ngIf="configService.getFeatureGroupCount('layer_controls') >= 2" class="section-label">
                 layer controls
             </div>
 
             <!-- layer description -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                      (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
@@ -145,7 +145,7 @@
 
 
             <!-- save locally -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
                 <div class="control-row-button noselect"
                     (click)="saveLayerLocally()"
                     matTooltipPosition="below"
@@ -155,7 +155,7 @@
             </div>
 
             <!-- Filters -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('filters')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                     (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null;"
@@ -184,7 +184,7 @@
             </div>
 
             <!-- sorting -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('sorting')" class="control-row-item">
                 <div class="control-row-button noselect"
                     (click)="viewModel.sorting = (viewModel.sorting + 1) % 4; filterTechniques()"
                     matTooltipPosition="below"
@@ -194,7 +194,7 @@
             </div>
 
             <!-- set up gradients -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('scoring_gradients')" class="control-row-item">
                 <div class="control-row-button dropdown noselect"
                     (click)="currentDropdown = currentDropdown !== 'gradients' ? 'gradients' : null; viewModel.updateGradient()"
                     matTooltipPosition="below"
@@ -251,7 +251,7 @@
             </div>
 
             <!-- show or hide disabled techniques -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('toggle_hide_disabled')" class="control-row-item">
                 <div class="control-row-button noselect"
                      (click)="viewModel.hideDisabled = !viewModel.hideDisabled; filterTechniques()"
                      matTooltipPosition="below"
@@ -261,7 +261,7 @@
              </div>
 
              <!-- view mode -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('toggle_view_mode')" class="control-row-item">
                 <div class="control-row-button noselect"
                      (click)="viewModel.viewMode = (viewModel.viewMode + 1) % 3"
                      matTooltipPosition="below"
@@ -271,13 +271,13 @@
              </div>
 
         </li>
-        <li>
-            <div class="section-label">
+        <li *ngIf="configService.getFeatureGroup('technique_controls', 'any')">
+            <div *ngIf="configService.getFeatureGroupCount('technique_controls') >= 3" class="section-label">
                 technique controls
             </div>
             <!-- TECHNIQUE CONTROLS -->
             <!-- enable/disable technique -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('disable_techniques')" class="control-row-item">
 
                 <div class="control-row-button noselect"
                      (click)="setSelectedState()"
@@ -289,7 +289,7 @@
              </div>
 
             <!-- background color -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('manual_color')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                      (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null : continue"
@@ -321,7 +321,7 @@
 
 
             <!-- score -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('scoring')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                      (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
@@ -348,7 +348,7 @@
 
 
             <!-- comment -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('comments')"  class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
                      (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'comment' ? 'comment' : null : continue"
@@ -373,7 +373,7 @@
                  </div>
              </div>
              <!-- remove all annotations -->
-             <div class="control-row-item">
+             <div *ngIf="configService.getFeature('clear_annotations')" class="control-row-item">
                  <div class="control-row-button noselect"
                       (click)="viewModel.resetSelectedTechniques(); populateEditFields()"
                       matTooltipPosition="below"
@@ -422,7 +422,7 @@
 
                     <div *ngFor="let technique of tactics[tactic]"
 
-                        (click)="techniqueSelectEvent(technique, $event.shiftKey || $event.ctrlKey || $event.metaKey)"
+                        (click)="techniqueSelectEvent(technique, $event.shiftKey || $event.ctrlKey || $event.metaKey, tactic, $event)"
                          (contextmenu)="rightClickTechnique(technique, tactic, $event)"
 
                          (mouseenter)="viewModel.highlightedTechnique = technique;"
@@ -457,7 +457,7 @@
 <div [hidden]="!contextMenuVisible"
      class="contextMenu-box dropdown-container noselect"
      [id]="'contextMenu'+viewModelsService.getViewModelUID(viewModel)">
-    <div class="contextMenu-section">
+    <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
         <div class="contextMenu-button" (click)="viewModel.replaceTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
             select
         </div>
@@ -468,7 +468,7 @@
             remove from selection
         </div>
     </div>
-    <div class="contextMenu-section">
+    <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
         <div class="contextMenu-button" (click)="viewModel.selectAllTechniques(); contextMenuVisible = false; populateEditFields();">
             select all
         </div>
