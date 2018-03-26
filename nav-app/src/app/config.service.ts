@@ -10,11 +10,23 @@ export class ConfigService {
     constructor(private dataService: DataService) {
         let self = this;
         dataService.retreiveConfig().subscribe(function(config: any) {
+            //parse feature preferences from config json
             Object.keys(config["features"]).forEach(function(featureName: string) {
                 self.setFeature(featureName, config["features"][featureName]);
             })
-            console.log(self.features)
-            console.log(self.featureGroups)
+            //override json preferences with preferences from URL fragment
+            self.getAllFragments().forEach(function(value: string, key: string) {
+                let valueBool = (value == 'true');
+                if (self.isFeature(key) || self.isFeatureGroup(key)) {
+                    // console.log("setting feature", key, valueBool)
+                    self.setFeature(key, valueBool);
+                }
+                // else {
+                //     console.log(key, "is not a feature")
+                // }
+            })
+            // console.log(self.features)
+            // console.log(self.featureGroups)
         })
     }
 
@@ -68,7 +80,7 @@ export class ConfigService {
      */
     public setFeature(featureName: string, value: any): string[] {
         let self = this
-        console.log(featureName, value);
+        // console.log(featureName, value);
 
         if (typeof(value) == "boolean") { //base case
             if (this.featureGroups.has(featureName)) { //feature group, assign to all subfeatures
@@ -89,6 +101,54 @@ export class ConfigService {
             this.featureGroups.set(featureName, subfeatures);
             return subfeatures;
         }
+    }
+
+    /**
+     * Return if the given string corresponds to a defined feature
+     * @param  featureName the name of the feature
+     * @return             true if the feature exists, false otherwise
+     */
+    public isFeature(featureName: string): boolean {
+        return this.features.has(featureName)
+    }
+    /**
+     * return if the given string corresponds to a defined feature group
+     * @param  featureGroupName the name of the feature group
+     * @return                  true if it is a feature group, false otherwise
+     */
+    public isFeatureGroup(featureGroupName: string): boolean {
+        return this.featureGroups.has(featureGroupName);
+    }
+
+    public getFeatureGroups(): string[] {
+        let keys = [];
+        this.featureGroups.forEach(function(value, key) { keys.push(key) })
+        return keys;
+    }
+
+    public getFeatures(): string[] {
+        let keys = [];
+        this.features.forEach(function(value, key) { keys.push(key) })
+        return keys;
+    }
+
+    /**
+     * Get all url fragments
+     * @param  url optional, url to parse instead of window location href
+     * @return     all fragments as key-value pairs
+     */
+    getAllFragments(url?: string): Map<string, string> {
+        if (!url) url = window.location.href;
+        let fragments = new Map<string, string>();
+        let regex = /[#&](\w+)=(\w+)/g
+
+        // let results = url.match(regex)
+        var match;
+        while (match = regex.exec(url)) {
+            fragments.set(match[1], match[2])
+        }
+
+        return fragments;
     }
 
 }
