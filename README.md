@@ -72,6 +72,12 @@ Example custom context menu object:<br />
     &nbsp;&nbsp;&nbsp;&nbsp;"`url`": &nbsp;"https://attack.mitre.org/wiki/Technique/~Technique_Name~"<br />
   }
 
+## Running the Docker File
+1. Navigate to the **nav-app** directory
+2. Run `docker build -t yourcustomname .`
+3. Run `docker run -p 4200:4200 yourcustomname`
+4. Navigate to `localhost:4200` in browser
+
 ## Related MITRE Work
 #### CTI
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
