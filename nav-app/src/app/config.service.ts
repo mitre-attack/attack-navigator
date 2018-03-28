@@ -6,13 +6,13 @@ export class ConfigService {
 
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-
+    private featureStructure: object;
     constructor(private dataService: DataService) {
         let self = this;
         dataService.retreiveConfig().subscribe(function(config: any) {
             //parse feature preferences from config json
-            Object.keys(config["features"]).forEach(function(featureName: string) {
-                self.setFeature(featureName, config["features"][featureName]);
+            config["features"].forEach(function(featureObject: any) {
+                self.setFeature_object(featureObject);
             })
             //override json preferences with preferences from URL fragment
             self.getAllFragments().forEach(function(value: string, key: string) {
@@ -25,9 +25,14 @@ export class ConfigService {
                 //     console.log(key, "is not a feature")
                 // }
             })
-            // console.log(self.features)
-            // console.log(self.featureGroups)
+            self.featureStructure = config["features"]
+            console.log(self.features)
+            console.log(self.featureGroups)
         })
+    }
+
+    public getFeatureStructure(): object {
+        return JSON.parse(JSON.stringify(this.featureStructure));
     }
 
     public getFeature(featureName: string): boolean {
@@ -101,6 +106,38 @@ export class ConfigService {
             this.featureGroups.set(featureName, subfeatures);
             return subfeatures;
         }
+    }
+
+    /**
+     * given a set of feature objects, set the enabledness of that object and all subobjects
+     *
+     * @param  featureObject {name: string, enabled: boolean, subfeatures?: featureObject[] }
+     *                       Of enabled is false and it has subfeatures, they will all be forced to be false too
+     * @param  override      Set all subfeatures, and their subfeatures, values to
+     *                       this value
+     */
+    public setFeature_object(featureObject: any, override=null):string[] {
+        let self = this
+
+        // base case
+        if (!featureObject.hasOwnProperty("subfeatures")) {
+            console.log("override", override)
+
+            let enabled = override !== null? override : featureObject.enabled
+            console.log(enabled)
+            this.features.set(featureObject.name, enabled)
+            return [featureObject.name]
+        } else { //has subfeatures
+            override = override ? override : !featureObject.enabled ? false : null;
+            let subfeatures = [];
+            featureObject.subfeatures.forEach(function(subfeature) {
+                subfeatures = Array.prototype.concat(subfeatures, self.setFeature_object(subfeature, override))
+            })
+            this.featureGroups.set(featureObject.name, subfeatures)
+            return subfeatures;
+        }
+
+
     }
 
     /**

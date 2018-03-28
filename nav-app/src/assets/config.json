@@ -10,29 +10,29 @@
 
     ],
 
-    "features": {
-        "tabs": true,
-        "selecting_techniques": true,
-        "selection_controls": {
-            "search": true,
-            "multiselect": true,
-            "deselect_all": true
-        },
-        "layer_controls": {
-            "layer_info": true,
-            "download_layer": true,
-            "filters": true,
-            "sorting": true,
-            "scoring_gradients": true,
-            "toggle_hide_disabled": true,
-            "toggle_view_mode": true
-        },
-        "technique_controls": {
-            "disable_techniques": true,
-            "manual_color": true,
-            "scoring": true,
-            "comments": true,
-            "clear_annotations": true
-        }
-    }
+    "features": [
+        {"name": "tabs", "enabled": true},
+        {"name": "selecting_techniques", "enabled": true},
+        {"name": "selection_controls", "enabled": false, "subfeatures": [
+            {"name": "search", "enabled": true},
+            {"name": "multiselect", "enabled": true},
+            {"name": "deselect_all", "enabled": true}
+        ]},
+        {"name": "layer_controls", "enabled": true, "subfeatures": [
+            {"name": "layer_info", "enabled": true},
+            {"name": "download_layer", "enabled": true},
+            {"name": "filters", "enabled": true},
+            {"name": "sorting", "enabled": true},
+            {"name": "scoring_gradients", "enabled": true},
+            {"name": "toggle_hide_disabled", "enabled": true},
+            {"name": "toggle_view_mode", "enabled": true}
+        ]},
+        {"name": "technique_controls", "enabled": true, "subfeatures": [
+            {"name": "disable_techniques", "enabled": true},
+            {"name": "manual_color", "enabled": true},
+            {"name": "scoring", "enabled": true},
+            {"name": "comments", "enabled": true},
+            {"name": "clear_annotations", "enabled": true}
+        ]}
+    ]
 }

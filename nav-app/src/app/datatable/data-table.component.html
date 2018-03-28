@@ -1,7 +1,7 @@
 <div class="controlsContainer">
     <ul class="control-sections">
         <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && configService.getFeature('selecting_techniques')">
-            <div *ngIf="configService.getFeatureGroupCount('selection_controls').length >= 3" class="section-label">
+            <div *ngIf="configService.getFeatureGroupCount('selection_controls') >= 3" class="section-label">
                 selection controls
             </div>
 
