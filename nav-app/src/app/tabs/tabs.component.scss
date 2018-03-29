@@ -189,7 +189,7 @@ input[type=file]{
 }
 
 .header {
-    text-align: right; 
+    text-align: right;
 
     div { display: inline-block; cursor: pointer; }
     .logo {
@@ -226,11 +226,33 @@ input[type=file]{
 
 .inputTable {
     width: 100%;
+    border-collapse: collapse;
     tr {
+        &.featureRow:hover {
+            background: darken(white, 5%)
+        }
+        transition: ease 0.2s;
+
         width: 100%;
+        // background: darken(white, 5%);
+        margin-top: 5px;
+        border-radius: 5px;
+        
         td {
-            text-align: center;
+            text-align: left;
             width: 1%;
+            padding: 5px;
+            &.featureRow-button {
+                img {vertical-align: middle; margin-bottom: 2px;}
+            }
+            &.subfeature {
+                &:first-child {
+                    border-left: 1px solid $panel-dark;
+                }
+                &.last {
+                    border-bottom: 1px solid $panel-dark;
+                }
+            }
         }
     }
 }

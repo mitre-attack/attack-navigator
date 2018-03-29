@@ -190,33 +190,70 @@
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Create Layer Link
+                        Create Customized Navigator
                     </mat-panel-title>
                     <mat-panel-description>
-                        Create a hyperlink to a layer on the web
+                        Create a hyperlink to a customized ATT&CK Navigator
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <p>Enter the URL of a layer hosted on the web. Navigating to the resulting link will create a navigator instance with the given layer already open.</p>
+
 
                 <table class="inputTable">
                     <tr>
+                        <td><h1>Default Layer</h1></td>
+                        <td></td>
+                    </tr>
+                    <tr class="custom_nav_inputsection">
                         <td><mat-form-field>
                             <input type="text"
                             matInput
-                            placeholder="layer URL"
+                            placeholder="default layer URL"
                             [(ngModel)]="layerLinkURL"/>
                         </mat-form-field></td>
-                        <td><mat-form-field id="layerlinkfield">
-                            <input id="layerLink" type="text"
-                            matInput
-                            readonly="readonly"
-                            (click)="selectLayerLink()"
-                            [value]="getLayerLink()"/>
-                            <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy"><img src="assets/ic_content_copy_black_24px.svg" width="14px" alt="copy" matTooltip="copy" matTooltipPosition="right"></button>
-                            <mat-hint *ngIf="copiedRecently">copied</mat-hint>
-                        </mat-form-field></td>
+                        <td>Enter the URL of a layer hosted on the web. The custom navigator will open this layer by default.</td>
                     </tr>
+                    <tr>
+                        <td><h1>Navigator Features</h1></td>
+                        <td></td>
+                    </tr>
+                    <template ngFor let-featureItem [ngForOf]="customizedConfig" let-featureItemIndex="index">
+                        <tr class="featureRow noselect" *ngIf="!featureItem.subfeatures"  (click)="featureItem.enabled = !featureItem.enabled">
+                            <td class="featureRow-button">
+                                <img height="16px" [src]="featureItem.enabled ? 'assets/ic_check_box_black_24px.svg' : 'assets/ic_check_box_outline_blank_black_24px.svg'"/> {{featureItem.name.split("_").join(" ")}}
+                            </td>
+                            <td>{{featureItem.description}}</td>
+
+                        </tr>
+                        <tr *ngIf="featureItem.subfeatures">
+                            <td>
+                                <h2>{{featureItem.name.split("_").join(" ")}}</h2>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <template ngFor let-subfeature [ngForOf]="featureItem.subfeatures" let-subfeatureIndex="index" let-last="last">
+                            <tr class="featureRow noselect" (click)="subfeature.enabled = !subfeature.enabled">
+                                <td class="featureRow-button subfeature" [class.last]="last" style="padding-left: 20px" >
+                                    <img height="16px" [src]="subfeature.enabled ? 'assets/ic_check_box_black_24px.svg' : 'assets/ic_check_box_outline_blank_black_24px.svg'"/> {{subfeature.name.split("_").join(" ")}}
+                                </td>
+                                <td class="subfeature" [class.last]="last">{{subfeature.description}}</td>
+                            </tr>
+                        </template>
+                    </template>
                 </table>
+                <div style="text-align: center; margin-top: 20px">
+                    <mat-form-field id="layerlinkfield">
+                        <input id="layerLink" type="text"
+                        matInput
+                        readonly="readonly"
+                        (click)="selectLayerLink()"
+                        [value]="getLayerLink()"
+                        placeholder="custom navigator URL"/>
+                        <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy"><img src="assets/ic_content_copy_black_24px.svg" width="14px" alt="copy" matTooltip="copy" matTooltipPosition="right"></button>
+                        <mat-hint *ngIf="copiedRecently">copied</mat-hint>
+                    </mat-form-field>
+                </div>
+
+
 
             </mat-expansion-panel>
         </mat-accordion>

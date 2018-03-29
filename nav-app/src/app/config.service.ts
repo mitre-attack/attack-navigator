@@ -31,7 +31,8 @@ export class ConfigService {
         })
     }
 
-    public getFeatureStructure(): object {
+    public getFeatureList(): object[] {
+        if (!this.featureStructure) return [{}]
         return JSON.parse(JSON.stringify(this.featureStructure));
     }
 
@@ -121,10 +122,8 @@ export class ConfigService {
 
         // base case
         if (!featureObject.hasOwnProperty("subfeatures")) {
-            console.log("override", override)
 
             let enabled = override !== null? override : featureObject.enabled
-            console.log(enabled)
             this.features.set(featureObject.name, enabled)
             return [featureObject.name]
         } else { //has subfeatures
