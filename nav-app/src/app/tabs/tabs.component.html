@@ -216,7 +216,7 @@
                         <td><h1>Navigator Features</h1></td>
                         <td></td>
                     </tr>
-                    <template ngFor let-featureItem [ngForOf]="customizedConfig" let-featureItemIndex="index">
+                    <ng-template ngFor let-featureItem [ngForOf]="customizedConfig" let-featureItemIndex="index">
                         <tr class="featureRow noselect" *ngIf="!featureItem.subfeatures"  (click)="featureItem.enabled = !featureItem.enabled">
                             <td class="featureRow-button">
                                 <img height="16px" [src]="featureItem.enabled ? 'assets/ic_check_box_black_24px.svg' : 'assets/ic_check_box_outline_blank_black_24px.svg'"/> {{featureItem.name.split("_").join(" ")}}
@@ -230,15 +230,15 @@
                             </td>
                             <td></td>
                         </tr>
-                        <template ngFor let-subfeature [ngForOf]="featureItem.subfeatures" let-subfeatureIndex="index" let-last="last">
+                        <ng-template ngFor let-subfeature [ngForOf]="featureItem.subfeatures" let-subfeatureIndex="index" let-last="last">
                             <tr class="featureRow noselect" (click)="subfeature.enabled = !subfeature.enabled">
                                 <td class="featureRow-button subfeature" [class.last]="last" style="padding-left: 20px" >
                                     <img height="16px" [src]="subfeature.enabled ? 'assets/ic_check_box_black_24px.svg' : 'assets/ic_check_box_outline_blank_black_24px.svg'"/> {{subfeature.name.split("_").join(" ")}}
                                 </td>
                                 <td class="subfeature" [class.last]="last">{{subfeature.description}}</td>
                             </tr>
-                        </template>
-                    </template>
+                        </ng-template>
+                    </ng-template>
                 </table>
                 <div style="text-align: center; margin-top: 20px">
                     <mat-form-field id="layerlinkfield">

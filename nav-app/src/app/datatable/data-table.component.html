@@ -15,7 +15,7 @@
                     <img src="assets/ic_search_black_24px.svg"/>
                 </div>
 
-                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'">
+                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
 
                     <mat-form-field style="width:100%; margin-top:5px; padding: 10px; padding-bottom:0px;">
                         <input matInput
@@ -69,7 +69,7 @@
                     [matTooltip]="'multi-select'">
                     <img src="assets/ic_playlist_add_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'">
+                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="multiselect-grouping" *ngFor="let multiSelectGroup of [{data: threatGroupList, label: 'Threat Groups'}, {data: softwareGroupList, label: 'Software'}]">
                         <div class="multiselect-grouping-label">{{multiSelectGroup.label}}</div>
                         <div class="multiselect-list">
@@ -120,7 +120,7 @@
                  </div>
 
                  <!-- description input (invisible, absolute) -->
-                 <div class="dropdown-container inputfield"
+                 <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
                       *ngIf="currentDropdown === 'description'">
 
                     <!-- layer name field -->
@@ -163,7 +163,7 @@
                     matTooltip="filters">
                     <img src="assets/ic_filter_list_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'">
+                <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="filter" *ngFor="let filter of ['platforms', 'stages']">
                         <b class="filter-label">{{filter}}</b>
                         <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
@@ -201,7 +201,7 @@
                     matTooltip="scoring gradient setup">
                     <img src="assets/ic_palette_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container gradients" *ngIf="currentDropdown === 'gradients'">
+                <div class="dropdown-container gradients" *ngIf="currentDropdown === 'gradients'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="gradient-controls">
                         <table>
                             <tr class="minmax top">
@@ -278,7 +278,6 @@
             <!-- TECHNIQUE CONTROLS -->
             <!-- enable/disable technique -->
             <div *ngIf="configService.getFeature('disable_techniques')" class="control-row-item">
-
                 <div class="control-row-button noselect"
                      (click)="setSelectedState()"
                      matTooltipPosition="below"
@@ -305,7 +304,7 @@
                     </svg>
                 </div>
                 <!-- color picker (invisible, absolute)-->
-                <div class="colorpicker dropdown-container"
+                <div class="colorpicker dropdown-container" #dropdown [class.left]="checkalign(dropdown)"
                      *ngIf="currentDropdown === 'colorpicker'">
 
                     <div class="color-block wide noselect dropdown"
@@ -321,8 +320,7 @@
 
 
             <!-- score -->
-            <div *ngIf="configService.getFeature('scoring')" class="control-row-item">
-
+            <div *ngIf="configService.getFeature('scoring')" class="control-row-item" >
                 <div class="control-row-button dropdown noselect"
                      (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
                      matTooltipPosition="below"
@@ -331,7 +329,7 @@
                      [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_chart_black_24px.svg' : 'assets/ic_insert_chart_gray_24px.svg'" alt="score"/>
                 </div>
-                <div class="dropdown-container inputfield left"
+                <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
                      *ngIf="currentDropdown === 'score'">
                      <mat-form-field>
                          <!-- update data whenever it is typed in -->
@@ -359,7 +357,7 @@
                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_comment_black_24px.svg' : 'assets/ic_insert_comment_gray_24px.svg'" alt="comment" />
                  </div>
                  <!-- comment input (invisible, absolute) -->
-                 <div class="dropdown-container inputfield left"
+                 <div class="dropdown-container inputfield left" #dropdown [class.left]="checkalign(dropdown)"
                       *ngIf="currentDropdown === 'comment'">
 
                     <mat-form-field>

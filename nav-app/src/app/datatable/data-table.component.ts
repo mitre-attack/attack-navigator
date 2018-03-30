@@ -814,7 +814,16 @@ export class DataTableComponent implements AfterViewInit {
         return true;
     }
 
-
+    /**
+     * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
+     * @param  dropdown the DOM node of the panel
+     * @return          true if it would overflow
+     */
+    checkalign(dropdown) {
+        // console.log(anchor)
+        let anchor = dropdown.parentNode;
+        return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
+    }
 }
 
 class SecurityInstance{

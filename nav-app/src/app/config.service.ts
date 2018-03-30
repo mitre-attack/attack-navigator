@@ -26,8 +26,6 @@ export class ConfigService {
                 // }
             })
             self.featureStructure = config["features"]
-            console.log(self.features)
-            console.log(self.featureGroups)
         })
     }
 
