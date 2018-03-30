@@ -805,11 +805,9 @@ export class DataTableComponent implements AfterViewInit {
      * @return    true if all techniques of the instance are selected, false otherwise
      */
     isSecurityInstanceSelected(si: SecurityInstance): boolean {
-        let self = this;
-        let selected = true
         for (let i = 0; i < si.techniques.length; i++) {
             let techniqueID = si.techniques[i];
-            if (!self.viewModel.isTechniqueSelected_id(techniqueID)) return false
+            if (!this.viewModel.isTechniqueSelected_id(techniqueID)) return false
         }
         return true;
     }
@@ -819,7 +817,7 @@ export class DataTableComponent implements AfterViewInit {
      * @param  dropdown the DOM node of the panel
      * @return          true if it would overflow
      */
-    checkalign(dropdown) {
+    checkalign(dropdown): boolean {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
