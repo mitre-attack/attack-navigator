@@ -11,7 +11,6 @@
             <ul>
                 <li><a href="#help_Creating_New_Layers">Creating New Layers</a></li>
                 <li><a href="#help_Saving_and_Loading_Layers">Saving and Loading Layers</a></li>
-                <li><a href="#help_Layer_Links">Layer Links</a></li>
                 <li><a href="#help_Creating_Layers_from_Other_Layers">Creating Layers from Other Layers</a></li>
             </ul>
         </li>
@@ -51,6 +50,13 @@
                 <li><a href="#help_Selecting_with_the_Mouse">Selecting with the Mouse</a></li>
                 <li><a href="#help_Search_Interface">Search Interface</a></li>
                 <li><a href="#help_Multiselct_Interface">Multiselect Interface</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#help_Customizing_The_Navigator">Customizing The Navigator</a>
+            <ul>
+                <li><a href="#help_Default_Layer">Default Layer</a></li>
+                <li><a href="#help_Disable_Features">Disabling Features</a></li>
             </ul>
         </li>
         <li><a href="#notice">Notice</a></li>
@@ -144,13 +150,6 @@
         local", and select your saved configuration file. Doing so will restore
         your saved layer to the ATT&CK navigator. This interface also has a "load from URL"
         input allowing you to open a layer json from a remote source.
-    </p>
-    <h2 id="help_Layer_Links">Layer Links</h2>
-    <p>
-        The "create layer link" panel on the new tab menu allows the user to create an ATT&CK Navigator URL
-        which, when opened, will automatically retrieve and display a chosen layer from the web. The purpose
-        of this feature is to make it easier to share a layer. Simply input the layer URL into the labelled field
-        and copy the resulting navigator URL.
     </p>
     <h2 id="help_Creating_Layers_from_Other_Layers">Creating Layers from Other Layers</h2>
     <p>
@@ -553,6 +552,41 @@
             the multiselect interface.
         </p>
 
+        <h1 id="help_Customizing_The_Navigator">Customizing The Navigator</h1>
+        <p>
+            The ATT&CK Navigator can be customized by modifying the fragment (e.g <code>example.com<b>#fragment</b></code>) of the URL.
+            A panel on the new tab page exists to build a properly formatted ATT&CK Navigator URL
+            such that, when opened, it will create an ATT&CK Navigator instance with the desired
+            customizations. This feature may be useful for sharing or embedding the ATT&CK Navigator.
+        </p>
+
+
+        <h2 id="help_Default_Layer">Default Layer</h2>
+        <p>
+            Enter the URL of a layer hosted on the web into the "default layer URL" field
+            will cause the customized ATT&CK Navigator to initialize with this layer open by default.
+            This is especially useful for embedding or sharing specific layers.
+        </p>
+        <p>
+            The following is an example ATT&CK Navigator URL with the default layer specified to be the *Bear APTs layer from <a href="https://github.com/mitre/attack-navigator">our github repo</a>: <br /><code>https://mitre.github.io/attack-navigator/enterprise/<b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
+        </p>
+
+
+        <h2 id="help_Disable_Features">Disabling Features</h2>
+        <p>
+            Individual ATT&CK Navigator features can be disabled with the checkboxes. Removing
+            a feature only removes the interface elements of the feature -- opened
+            layers utilizing those features will still have them present. For example,
+            even if comments are disabled layers with comments present will still display
+            them visually and in tooltips.
+        </p>
+        <p>
+            If you are hosting your own navigator instance, you can also disable
+            features by editing the configuration file <code>assets/config.json</code>.
+        </p>
+        <p>
+            The following is an example ATT&CK Navigator URL with the ability to download the layer and add comments disabled: <br /><code>https://mitre.github.io/attack-navigator/enterprise/<b>#download_layer=false&comments=false</b></code>
+        </p>
 
         <h1 id="notice">Notice</h1>
         <p>Copyright 2018 The MITRE Corporation</p>

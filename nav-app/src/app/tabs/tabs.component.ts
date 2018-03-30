@@ -5,6 +5,7 @@ import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, Com
 import { DynamicTabsDirective } from './dynamic-tabs.directive';
 import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
+import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
@@ -19,7 +20,7 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService]
+    providers: [ViewModelsService, ConfigService]
 
 })
 export class TabsComponent implements AfterContentInit {
@@ -36,12 +37,10 @@ export class TabsComponent implements AfterContentInit {
     @ViewChild('layerTab') layerTab;
     @ViewChild('helpTab') helpTab;
 
-    configData: object = {};
-
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http) {
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http, private configService: ConfigService) {
         let self = this;
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
@@ -69,6 +68,8 @@ export class TabsComponent implements AfterContentInit {
             if(activeTabs.length === 0) {
                 this.selectTab(this.dynamicTabs[0]);
             }
+
+            this.customizedConfig = this.configService.getFeatureList()
         });
 
     }
@@ -462,15 +463,46 @@ export class TabsComponent implements AfterContentInit {
 
     }
 
+
+    //   ___ _   _ ___ _____ ___  __  __ ___ _______ ___    _  _   ___   _____ ___   _ _____ ___  ___   ___ _____ _   _ ___ ___
+    //  / __| | | / __|_   _/ _ \|  \/  |_ _|_  / __|   \  | \| | /_\ \ / /_ _/ __| /_\_   _/ _ \| _ \ / __|_   _| | | | __| __|
+    // | (__| |_| \__ \ | || (_) | |\/| || | / /| _|| |) | | .` |/ _ \ V / | | (_ |/ _ \| || (_) |   / \__ \ | | | |_| | _|| _|
+    //  \___|\___/|___/ |_| \___/|_|  |_|___/___|___|___/  |_|\_/_/ \_\_/ |___\___/_/ \_\_| \___/|_|_\ |___/ |_|  \___/|_| |_|
     layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
+    customizedConfig = [];
+    setFeature(featureName, event) {
+        console.log(featureName, event)
+    }
     /**
      * Convert layerLinkURL to a query string value for layerURL query string
      * @return URL such that when opened will create navigator instance with a query String
      *         specifying layerLinkURL as the URL to fetch the default layer from
      */
     getLayerLink(): string {
-        if (!this.layerLinkURL) return "";
-        else return window.location.href.split("#")[0] + "#layerURL=" + encodeURIComponent(this.layerLinkURL)
+        // if (!this.layerLinkURL) return "";
+        let str = window.location.href.split("#")[0];
+        let join = "#" //hash first, then ampersand
+        if (this.layerLinkURL) {
+            str += join + "layerURL=" + encodeURIComponent(this.layerLinkURL)
+            join = "&";
+        }
+        for (let i = 0; i < this.customizedConfig.length; i++) {
+            if (this.customizedConfig[i].subfeatures) {
+                for (let j = 0; j < this.customizedConfig[i].subfeatures.length; j++) {
+                    if (!this.customizedConfig[i].subfeatures[j].enabled) {
+                        str += join + this.customizedConfig[i].subfeatures[j].name + "=false"
+                        join = "&";
+                    }
+                }
+            } else {
+                if (!this.customizedConfig[i].enabled) {
+                    str += join + this.customizedConfig[i].name + "=false"
+                    join = "&";
+                }
+            }
+        }
+
+        return str
     }
     /**
      * Select the layer link field text

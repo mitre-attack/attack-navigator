@@ -1,5 +1,7 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit } from '@angular/core';
 import {DataService, Technique} from '../data.service';
+import {ConfigService} from '../config.service';
+
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
@@ -18,7 +20,7 @@ import * as FileSaver from 'file-saver';
     selector: 'DataTable',
     templateUrl: './data-table.component.html',
     styleUrls: ['./data-table.component.scss'],
-    providers: [DataService]
+    providers: [DataService, ConfigService]
 })
 export class DataTableComponent implements AfterViewInit {
 
@@ -282,7 +284,7 @@ export class DataTableComponent implements AfterViewInit {
     //     Calls functions to format the data                               //
     //////////////////////////////////////////////////////////////////////////
 
-    constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService) {
+    constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService, private configService: ConfigService) {
         this.ds = dataService;
         this.ds.retreiveConfig().subscribe((config: Object) => {
             this.ds.setUpURLs(config["enterprise_attack_url"],
@@ -604,7 +606,11 @@ export class DataTableComponent implements AfterViewInit {
      * @param  technique      technique which was left clicked
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
-    techniqueSelectEvent(technique, addToSelection): void {
+    techniqueSelectEvent(technique, addToSelection, tactic, event): void {
+        if (!this.configService.getFeature('selecting_techniques')) {
+            this.rightClickTechnique(technique, tactic, event);
+            return;
+        }
         if (addToSelection) {
             // TODO add/remove from selection
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
@@ -803,16 +809,23 @@ export class DataTableComponent implements AfterViewInit {
      * @return    true if all techniques of the instance are selected, false otherwise
      */
     isSecurityInstanceSelected(si: SecurityInstance): boolean {
-        let self = this;
-        let selected = true
         for (let i = 0; i < si.techniques.length; i++) {
             let techniqueID = si.techniques[i];
-            if (!self.viewModel.isTechniqueSelected_id(techniqueID)) return false
+            if (!this.viewModel.isTechniqueSelected_id(techniqueID)) return false
         }
         return true;
     }
 
-
+    /**
+     * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
+     * @param  dropdown the DOM node of the panel
+     * @return          true if it would overflow
+     */
+    checkalign(dropdown): boolean {
+        // console.log(anchor)
+        let anchor = dropdown.parentNode;
+        return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
+    }
 }
 
 class SecurityInstance{

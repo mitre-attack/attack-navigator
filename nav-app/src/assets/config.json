@@ -7,6 +7,32 @@
     "domain": "mitre-enterprise",
 
     "custom_context_menu_items": [
-        
+
+    ],
+
+    "features": [
+        {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
+        {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
+        {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+            {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},
+            {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
+            {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
+        ]},
+        {"name": "layer_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name & description) panel from the interface. Note that the layer can still be renamed in the tab."},
+            {"name": "download_layer", "enabled": true, "description": "Disable to the button to download the layer."},
+            {"name": "filters", "enabled": true, "description": "Disable to the remove the filters panel from interface."},
+            {"name": "sorting", "enabled": true, "description": "Disable to the remove the sorting button from the interface."},
+            {"name": "scoring_gradients", "enabled": true, "description": "Disable to the remove the scoring gradient setup panel from interface."},
+            {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to the remove the hide disabled techniques button from the interface."},
+            {"name": "toggle_view_mode", "enabled": true, "description": "Disable to the remove the toggle view mode button from interface."}
+        ]},
+        {"name": "technique_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+            {"name": "disable_techniques", "enabled": true, "description": "Disable to the remove the ability to disable techniques."},
+            {"name": "manual_color", "enabled": true, "description": "Disable to the remove the ability to assign manual colors to techniques."},
+            {"name": "scoring", "enabled": true, "description": "Disable to the remove the ability to score techniques."},
+            {"name": "comments", "enabled": true, "description": "Disable to the remove the ability to add comments to techniques."},
+            {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
+        ]}
     ]
-}    
+}
