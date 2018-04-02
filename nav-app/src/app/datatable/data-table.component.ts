@@ -678,8 +678,10 @@ export class DataTableComponent implements AfterViewInit {
         } else {
             element.style.left = -10000 + "px";
         }
-        let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModelsService.getViewModelUID(this.viewModel));
-        this.toolTipOverflows = commentdiv.clientHeight >= 300;
+        if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_id).comment) {
+            let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModelsService.getViewModelUID(this.viewModel));
+            this.toolTipOverflows = commentdiv.clientHeight >= 300;
+        }
     }
 
     /**
