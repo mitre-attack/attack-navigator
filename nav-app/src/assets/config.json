@@ -10,6 +10,11 @@
 
     ],
 
+    "default_layer": {
+        "enabled": false,
+        "location": "assets/defaultLayerTest.json"
+    },
+
     "features": [
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},

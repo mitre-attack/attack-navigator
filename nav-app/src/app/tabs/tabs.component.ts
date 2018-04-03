@@ -59,6 +59,11 @@ export class TabsComponent implements AfterContentInit {
                 console.log(this.loadURL)
                 this.loadLayerFromURL();
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
+            } else if (config["default_layer"]["enabled"]){
+                this.loadURL = config["default_layer"]["location"]
+                console.log(this.loadURL)
+                this.loadLayerFromLocalFile();
+                if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
             } else {
                 this.newLayer();
             }
@@ -461,6 +466,24 @@ export class TabsComponent implements AfterContentInit {
             alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
         })
 
+    }
+
+    loadLayerFromLocalFile(): void {
+        this.http.get(this.loadURL).subscribe((res) => {
+            let viewModel = this.viewModelsService.newViewModel("loading layer...");
+            let content = res.text();
+            try {
+                viewModel.deSerialize(content)
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true)
+            } catch(err) {
+                console.log(err)
+                alert("ERROR: Failed to load layer file from local path")
+                this.viewModelsService.destroyViewModel(viewModel)
+            }
+        }, (err) => {
+            console.error(err)
+            alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for path " + err.url)
+        })
     }
 
 
