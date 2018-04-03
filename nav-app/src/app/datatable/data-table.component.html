@@ -154,6 +154,16 @@
                 </div>
             </div>
 
+            <!-- export render -->
+            <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
+                <div class="control-row-button noselect"
+                    (click)="exportRender()"
+                    matTooltipPosition="below"
+                    matTooltip="export render">
+                    <img src="assets/ic_camera_alt_black_24px.svg" alt="export render"/>
+                </div>
+            </div>
+
             <!-- Filters -->
             <div *ngIf="configService.getFeature('filters')" class="control-row-item">
 

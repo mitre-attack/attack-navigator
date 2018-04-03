@@ -1,0 +1,64 @@
+<div class="controlsContainer">
+    <ul class="control-sections">
+        <li>width</li>
+        <li>height</li>
+        <li>width</li>
+        <li>
+
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                [id]="'download-button' + uid"
+                    (click)="downloadSVG()"
+                    matTooltipPosition="below"
+                    matTooltip="download render">
+                    <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
+                </div>
+            </div>
+
+
+            <div *ngIf="configService.getFeature('toggle_view_mode')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     matTooltipPosition="below"
+                     matTooltip="toggle view mode">
+                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][viewModel.viewMode]"/>
+                 </div>
+             </div>
+
+
+
+        </li>
+    </ul>
+</div>
+<div class="export-container">
+
+</div>
+<table>
+    <tr>
+        <td><input type="number" step="50" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
+        <td>Width</td>
+    </tr>
+    <tr>
+        <td><input type="number" step="50" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
+        <td>Height</td>
+    </tr>
+    <tr>
+        <td><select [(ngModel)]="whUnits">
+            <option value="px">px</option>
+            <option value="in">in</option>
+            <option value="cm">cm</option>
+        </select></td>
+        <td>Units</td>
+    </tr>
+    <tr>
+        <td><input type="number" [(ngModel)]="fontSize" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
+        <td>Font-size (pt)</td>
+    </tr>
+</table>
+
+<button (click)="buildSVG(width, height, whUnits, fontSize, 'pt')">build</button>
+<!-- invisible download link -->
+<a [id]="'download' + uid">a</a>
+
+<div [id]="'svgInsert' + uid">
+    graphic goes here
+</div>

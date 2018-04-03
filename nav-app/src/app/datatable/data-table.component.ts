@@ -828,6 +828,15 @@ export class DataTableComponent implements AfterViewInit {
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
     }
+
+    /**
+     * open an export layer render tab for the current layer
+     */
+    exportRender(): void {
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain);
+        viewModelCopy.deSerialize(this.viewModel.serialize());
+        this.tabs.newExporterTab(viewModelCopy);
+    }
 }
 
 class SecurityInstance{

@@ -17,11 +17,11 @@
             <!-- <input [disabled]="!tab.active || !tab.dataContext" (click)="!tab.active || !tab.dataContext ? selectTab(tab) : selectTab(tab)" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
             <!-- <input [id]="'tabtitleinput' + $i" (click)="!tab.active || !tab.dataContext ? selectTab(tab, 'tabtitleinput' + $i) : continue" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
 
-            <a *ngIf="!tab.active || !tab.dataContext" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.dataContext ? tab.dataContext.name : tab.title}}</a>
-            <input *ngIf="!(!tab.active || !tab.dataContext)" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
+            <a *ngIf="!tab.active || !tab.isDataTable" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</a>
+            <input *ngIf="!(!tab.active || !tab.isDataTable)" [style.cursor]="tab.active ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
 
-            <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.dataContext && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+            <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
         </li>
         <!-- open new tab button -->
         <!-- <li (click)="openTab('new tab', blankTab, null, true, false, true)"> -->
@@ -258,10 +258,6 @@
             </mat-expansion-panel>
         </mat-accordion>
 
-        <!-- <button (click)="showLayerOperations = !showLayerOperations">Create Layer from other layers</button> <br />
-        <div *ngIf="showLayerOperations" class="layerOperationsPanel">
-
-        </div> -->
         <div class="helpButtonContainer">
             <button mat-button (click)="newHelpTab(replace=false, forceNew=false)">help</button>
         </div>
@@ -279,4 +275,10 @@
         <help></help>
     </div>
 
+</ng-template>
+
+<ng-template #exporterTab let-data="data">
+    <div class="border">
+        <exporter [viewModel]=data></exporter>
+    </div>
 </ng-template>

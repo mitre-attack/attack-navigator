@@ -20,7 +20,8 @@
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name & description) panel from the interface. Note that the layer can still be renamed in the tab."},
-            {"name": "download_layer", "enabled": true, "description": "Disable to the button to download the layer."},
+            {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
+            {"name": "export_render", "enabled": true, "description": "Disable to the remove the button to render the current layer."},
             {"name": "filters", "enabled": true, "description": "Disable to the remove the filters panel from interface."},
             {"name": "sorting", "enabled": true, "description": "Disable to the remove the sorting button from the interface."},
             {"name": "scoring_gradients", "enabled": true, "description": "Disable to the remove the scoring gradient setup panel from interface."},
