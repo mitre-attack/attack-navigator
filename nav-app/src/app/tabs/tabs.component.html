@@ -270,8 +270,8 @@
 
 </ng-template>
 
-<ng-template #layerTab let-data="data">
-    <DataTable [viewModel]=data></DataTable>
+<ng-template #layerTab let-data="data" let-active="active">
+    <DataTable *ngIf="active" [viewModel]=data></DataTable>
 </ng-template>
 
 <ng-template #helpTab>
