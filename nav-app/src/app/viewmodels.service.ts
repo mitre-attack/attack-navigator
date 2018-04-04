@@ -710,30 +710,7 @@ export class ViewModel {
     }
     
     legendItems = [
-        {
-            label: "FIRST",
-            color: "#ff0000"
-        },
-        {
-            label: "SaFE",
-            color: "#00ff00"
-        },
-        {
-            label: "danger",
-            color: "#ff0000"
-        },
-        {
-            label: "SaFE",
-            color: "#00ff00"
-        },
-        {
-            label: "danger",
-            color: "#ff0000"
-        },
-        {
-            label: "SaFE",
-            color: "#00ff00"
-        }
+
     ];
     
     addLegendItem(): void {
