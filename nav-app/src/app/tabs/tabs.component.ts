@@ -12,7 +12,10 @@ import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../
 
 import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
-import { Http } from '@angular/http'
+import { Http } from '@angular/http';
+
+
+import { ColorPickerModule } from 'ngx-color-picker';
 
 declare var math: any; //use mathjs
 
@@ -76,7 +79,6 @@ export class TabsComponent implements AfterContentInit {
 
             this.customizedConfig = this.configService.getFeatureList()
         });
-
     }
 
     /**

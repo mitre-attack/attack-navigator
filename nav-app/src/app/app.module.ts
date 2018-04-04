@@ -12,6 +12,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {AngularMultiSelectModule} from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
@@ -41,7 +42,8 @@ import { HelpComponent } from './help/help.component';
     MatTooltipModule,
     MatMenuModule,
     MatExpansionModule,
-    AngularMultiSelectModule
+    AngularMultiSelectModule,
+    ColorPickerModule
   ],
   exports: [
       MatSelectModule,
