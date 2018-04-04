@@ -43,6 +43,7 @@ body {
         border-left: 1px solid darken($panel-dark, 8%);
         padding: 0 5px 0 5px;
         position: relative;
+
         // text-align: center;
         // label for a section of controls, e.g layer controls or technique controls
         .section-label {
@@ -68,9 +69,10 @@ body {
         }
 
         .control-row-item {
-            vertical-align: middle;
+
             display: inline-block;
             position: relative;
+            height: 34px;
 
             .control-row-button {
                 border-radius: 3px;

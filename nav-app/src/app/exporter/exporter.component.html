@@ -1,10 +1,33 @@
 <div class="controlsContainer">
     <ul class="control-sections">
-        <li>width</li>
-        <li>height</li>
-        <li>width</li>
         <li>
+            <div class="section-label">
+                image size
+            </div>
 
+            <div class="control-row-item" >
+                <input type="number" step="50" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+
+                x
+                <input type="number" step="50" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+                <select [(ngModel)]="whUnits">
+                    <option value="px">px</option>
+                    <option value="in">in</option>
+                    <option value="cm">cm</option>
+                </select>
+
+            </div>
+        </li>
+        <li>
+            <div class="section-label">
+                font size
+            </div>
+            <div class="control-row-item has-input">
+                <input type="number" [(ngModel)]="fontSize" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">pt
+            </div>
+        </li>
+
+        <li>
             <div class="control-row-item">
                 <div class="control-row-button noselect"
                 [id]="'download-button' + uid"
@@ -24,8 +47,6 @@
                  </div>
              </div>
 
-
-
         </li>
     </ul>
 </div>
@@ -34,19 +55,15 @@
 </div>
 <table>
     <tr>
-        <td><input type="number" step="50" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
+        <td></td>
         <td>Width</td>
     </tr>
     <tr>
-        <td><input type="number" step="50" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
+        <td></td>
         <td>Height</td>
     </tr>
     <tr>
-        <td><select [(ngModel)]="whUnits">
-            <option value="px">px</option>
-            <option value="in">in</option>
-            <option value="cm">cm</option>
-        </select></td>
+        <td></td>
         <td>Units</td>
     </tr>
     <tr>

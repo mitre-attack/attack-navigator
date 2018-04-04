@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, Input } from '@angular/core';
 import { ViewModel } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
+import * as is from 'is_js';
 declare var d3: any; //d3js
 
 @Component({
@@ -63,23 +64,27 @@ export class ExporterComponent implements AfterViewInit {
 
     }
     downloadSVG() {
-        console.log("downloading SVG")
-        let self = this;
-        this.saveSvg(document.getElementById("svg" + this.uid), "download.svg")
-    }
-
-    saveSvg(svgEl, name) {
-        svgEl = document.getElementById("svg" + this.uid);
+        let svgEl = document.getElementById("svg" + this.uid);
         svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        var svgData = svgEl.outerHTML;
+        let svgData = new XMLSerializer().serializeToString(svgEl);
+        // // var svgData = svgEl.outerHTML;
+        // console.log(svgData)
+        // let svgData2 = new XMLSerializer().serializeToString(svgEl);
+        // console.log(svgData2)
+        let filename = this.viewModel.name.split(' ').join('_') + ".svg"
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
-        var svgUrl = URL.createObjectURL(svgBlob);
-        var downloadLink = document.createElement("a");
-        downloadLink.href = svgUrl;
-        downloadLink.download = this.viewModel.name.split(' ').join('_') + ".svg"
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        if (is.ie()) { //internet explorer
+            window.navigator.msSaveBlob(svgBlob, filename)
+        } else {
+            var svgUrl = URL.createObjectURL(svgBlob);
+            var downloadLink = document.createElement("a");
+            downloadLink.href = svgUrl;
+            downloadLink.download = filename
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+
     }
 }
