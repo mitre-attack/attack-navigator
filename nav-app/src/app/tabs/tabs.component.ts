@@ -14,9 +14,6 @@ import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
 import { Http } from '@angular/http';
 
-
-import { ColorPickerModule } from 'ngx-color-picker';
-
 declare var math: any; //use mathjs
 
 @Component({

@@ -15,6 +15,7 @@ declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
 
 import * as FileSaver from 'file-saver';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
     selector: 'DataTable',
@@ -57,6 +58,9 @@ export class DataTableComponent implements AfterViewInit {
 
     customContextMenuItems = [];
 
+    showingLegend = false;
+    
+
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
 
@@ -77,6 +81,10 @@ export class DataTableComponent implements AfterViewInit {
             if (this.techniques[i].technique_id === this.viewModel.highlightedTechnique.technique_id)
                 return this.techniques[i].tactics.includes(tacticName)
         }
+    }
+
+    toggleLegend(){
+        this.showingLegend = !this.showingLegend;
     }
 
     ////////////////////////////////////////////////////////////////////

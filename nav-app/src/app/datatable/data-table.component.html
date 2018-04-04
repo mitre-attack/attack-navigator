@@ -518,3 +518,34 @@
     </div>
 
 </div>
+
+<div class="legendBar" (click)="toggleLegend()" *ngIf="!showingLegend">
+    <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
+    <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+        legend
+    </div>
+</div>
+
+<div class="legend" *ngIf="showingLegend">
+    <div class="legendBar" (click)="toggleLegend()" style="position: absolute; top:0px; left:0px;">
+        <img src="assets/icons/ic_keyboard_arrow_down_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
+        <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+            legend
+        </div>
+    </div>
+    <div class="itemArea">
+        <div class="item" *ngFor="let item of viewModel.legendItems; let Even=even; let i=index" [class.even]="!Even">
+            <input [(colorPicker)]="item.color" [(ngModel)]="item.color" [style.background]="item.color" [cpPosition]="'top'" style="width:75px;"/>
+            <!-- <input class="label" [(ngModel)]="item.label"> -->
+            <mat-form-field class="label">
+                    <input matInput
+                    
+                    [(ngModel)]="item.label">
+
+            </mat-form-field>
+            <img src="assets/icons/ic_clear_gray_24px.svg" style="position: relative; top:5px; right:0px;" (click)="viewModel.deleteLegendItem(i);">
+        </div>
+        <button style="margin-left:75px; margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.addLegendItem();">Add Item</button>
+        <button style="margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.clearLegend();">Clear</button>
+    </div>
+</div>

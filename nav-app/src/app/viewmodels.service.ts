@@ -708,7 +708,49 @@ export class ViewModel {
             tvm.scoreColor = self.gradient.getColor(tvm.score);
         });
     }
+    
+    legendItems = [
+        {
+            label: "FIRST",
+            color: "#ff0000"
+        },
+        {
+            label: "SaFE",
+            color: "#00ff00"
+        },
+        {
+            label: "danger",
+            color: "#ff0000"
+        },
+        {
+            label: "SaFE",
+            color: "#00ff00"
+        },
+        {
+            label: "danger",
+            color: "#ff0000"
+        },
+        {
+            label: "SaFE",
+            color: "#00ff00"
+        }
+    ];
+    
+    addLegendItem(): void {
+        var newObj = {
+            label: "NewItem",
+            color: '#00ffff'
+        }
+        this.legendItems.push(newObj);
+    }
 
+    deleteLegendItem(index: number): void {
+        this.legendItems.splice(index,1);
+    }
+
+    clearLegend(): void {
+        this.legendItems = [];
+    }
 
 }
 
