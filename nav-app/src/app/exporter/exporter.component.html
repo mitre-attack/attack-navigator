@@ -6,10 +6,10 @@
             </div>
 
             <div class="control-row-item" >
-                <input type="number" step="50" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+                <input type="number" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
 
                 x
-                <input type="number" step="50" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+                <input type="number" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
                 <select [(ngModel)]="whUnits">
                     <option value="px">px</option>
                     <option value="in">in</option>
@@ -43,39 +43,14 @@
                 <div class="control-row-button noselect"
                      matTooltipPosition="below"
                      matTooltip="toggle view mode">
-                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][viewModel.viewMode]"/>
+                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][exportData.viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][exportData.viewModel.viewMode]"/>
                  </div>
              </div>
 
         </li>
     </ul>
 </div>
-<div class="export-container">
 
-</div>
-<table>
-    <tr>
-        <td></td>
-        <td>Width</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>Height</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>Units</td>
-    </tr>
-    <tr>
-        <td><input type="number" [(ngModel)]="fontSize" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')"></td>
-        <td>Font-size (pt)</td>
-    </tr>
-</table>
-
-<button (click)="buildSVG(width, height, whUnits, fontSize, 'pt')">build</button>
-<!-- invisible download link -->
-<a [id]="'download' + uid">a</a>
-
-<div [id]="'svgInsert' + uid">
+<div class="svgcontainer" [id]="'svgInsert' + uid">
     graphic goes here
 </div>

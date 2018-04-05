@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit } from '@angular/core';
 import {DataService, Technique} from '../data.service';
 import {ConfigService} from '../config.service';
-
+import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
@@ -835,7 +835,8 @@ export class DataTableComponent implements AfterViewInit {
     exportRender(): void {
         let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain);
         viewModelCopy.deSerialize(this.viewModel.serialize());
-        this.tabs.newExporterTab(viewModelCopy);
+        let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), JSON.parse(JSON.stringify(this.filteredTechniques)));
+        this.tabs.newExporterTab(exportData);
     }
 }
 
