@@ -634,6 +634,7 @@ export class ViewModel {
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
+        rep.legendItems = JSON.stringify(this.legendItems);
         return JSON.stringify(rep, null, "\t");
     }
 
@@ -666,6 +667,10 @@ export class ViewModel {
         if ("gradient" in obj) {
             this.gradient = new Gradient();
             this.gradient.deSerialize(JSON.stringify(obj.gradient))
+        }
+
+        if ("legendItems" in obj) {
+            this.legendItems = JSON.parse(obj.legendItems);
         }
 
         if ("techniques" in obj) {
