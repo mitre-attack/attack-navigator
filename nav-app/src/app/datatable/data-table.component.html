@@ -464,7 +464,7 @@
 <!-- Context Menu: Menu -->
 <div [hidden]="!contextMenuVisible"
      class="contextMenu-box dropdown-container noselect"
-     [id]="'contextMenu'+viewModelsService.getViewModelUID(viewModel)">
+     [id]="'contextMenu'+viewModel.uid">
     <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
         <div class="contextMenu-button" (click)="viewModel.replaceTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
             select
@@ -500,7 +500,7 @@
 </div>
 
 <!-- Tooltip -->
-<div class="tooltip noselect" [id]="'tooltip'+viewModelsService.getViewModelUID(viewModel)">
+<div class="tooltip noselect" [id]="'tooltip'+viewModel.uid">
     <div *ngIf="viewModel.highlightedTechnique">
         <div>
             <span *ngIf="viewModel.viewMode != 0">{{viewModel.highlightedTechnique.name}} (</span>{{viewModel.highlightedTechnique.technique_id}}<span *ngIf="viewModel.viewMode != 0">)</span>
@@ -518,7 +518,7 @@
         <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
             <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score}}
         </div>
-        <div class="comment" [id]="'comment'+viewModelsService.getViewModelUID(viewModel)" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
+        <div class="comment" [id]="'comment'+viewModel.uid" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
             <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}
         </div>
         <div class="comment-overflow-note" *ngIf="toolTipOverflows">

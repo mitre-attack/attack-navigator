@@ -104,15 +104,11 @@ export class ExporterComponent implements AfterViewInit {
             .attr("height", 2 * cellHeight)
             .style("stroke", "black")
             .style("fill", "none")
-        let columnBodies = columns.append("g")
-            .attr("transform", "translate(0,"+colHeaderHeight+")");
-
         //split headers into name and count cells
         let headerTacticNames = columnHeaders.append("g")
         .attr("transform", "translate(0,0)")
         let headerTechniqueCounts = columnHeaders.append("g")
             .attr("transform", "translate(0,"+cellHeight+")")
-
         headerTacticNames.append("text")
             .text(function(d) {return self.toCamelCase(d.replace(/-/g," "))})
             .attr("font-size", fontSize + fontUnits)
@@ -121,7 +117,6 @@ export class ExporterComponent implements AfterViewInit {
             .attr("dy", 0)
             .style("font-weight", "bold")
             .call(this.wrap, columnWidth - 2, cellHeight - 2, self)
-
         headerTechniqueCounts.append("text")
             .text(function(d) {
                 return self.exportData.tactics[d].length + " items"
@@ -131,6 +126,9 @@ export class ExporterComponent implements AfterViewInit {
             .attr("dx", 0)
             .attr("dy", 0)
             .call(this.wrap, columnWidth, cellHeight, self)
+
+        let columnBodies = columns.append("g")
+            .attr("transform", "translate(0,"+colHeaderHeight+")");
 
         let techniques = columnBodies.selectAll("g")
             .data(function(d) {

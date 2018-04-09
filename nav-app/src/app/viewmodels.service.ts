@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Technique } from "./data.service";
-
+import { DataService, Technique } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -14,7 +13,7 @@ export class ViewModelsService {
 
     domain = "mitre-mobile";
 
-    constructor() {
+    constructor(private dataService: DataService) {
 
         // attempt to restore viewmodels
         // console.log(this.getCookie("viewModels"))
@@ -22,14 +21,13 @@ export class ViewModelsService {
     }
 
     viewModels: ViewModel[] = [];
-
     /**
      * Create and return a new viewModel
      * @param {string} name the viewmodel name
      * @return {ViewModel} the created ViewModel
      */
     newViewModel(name: string) {
-        let vm = new ViewModel(name, this.domain);
+        let vm = new ViewModel(name, this.domain, "vm"+ this.dataService.getNonce());
         this.viewModels.push(vm);
         // console.log("created new viewModel", this.viewModels)
 
@@ -52,20 +50,6 @@ export class ViewModelsService {
     }
 
     /**
-     * Get a UID for a viewmodel at the current moment. UID can change as viewmodels are closed.
-     * @param  vm viewmodel to get UID for
-     * @return    uid integer
-     */
-    getViewModelUID(vm: ViewModel): number {
-        for (let i = 0; i < this.viewModels.length; i++) {
-            if (this.viewModels[i] == vm) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    /**
      * layer combination operation
      * @param  scoreExpression math expression of score expression
      * @param  scoreVariables  variables in math expression, mapping to viewmodel they correspond to
@@ -77,7 +61,7 @@ export class ViewModelsService {
      * @return                    new viewmodel inheriting above properties
      */
     layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", this.domain);
+        let result = new ViewModel("layer by operation", this.domain, "vm" + this.dataService.getNonce());
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -381,18 +365,19 @@ export class Gcolor {color: string; constructor(color: string) {this.color = col
 
 //semi-synonymous with "layer"
 export class ViewModel {
-    constructor(name: string, domain: string) {
+    constructor(name: string, domain: string, uid: string) {
         this.domain = domain;
         // console.log("INITIALIZING VIEW MODEL FOR DOMAIN: " + this.domain);
         this.filters = new Filter(this.domain);
         this.name = name;
+        this.uid = uid;
     }
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
     domain: string; //layer domain, TODO
     description: string = ""; //layer description
-
+    uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
     filters: Filter;
 
     /*

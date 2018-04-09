@@ -314,7 +314,7 @@ export class DataTableComponent implements AfterViewInit {
      * Angular lifecycle hook
      */
     ngAfterViewInit(): void {
-        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModel.uid);
         element.style.left = -10000 + "px";
     }
 
@@ -652,7 +652,7 @@ export class DataTableComponent implements AfterViewInit {
         this.contextMenuSelectedTechnique = technique;
         this.contextMenuSelectedTactic = this.tacticDisplayNames[tactic].replace(" ", "_");
         // console.log(event, technique)
-        let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModel.uid);
         element.style.left = event.pageX + "px";
         element.style.top = event.pageY + "px";
         return false;
@@ -669,7 +669,7 @@ export class DataTableComponent implements AfterViewInit {
     @HostListener('mousemove', ['$event'])
     @HostListener('mouseout', ['$event'])
     onMouseMove(event:MouseEvent): void {
-        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModel.uid);
         let tooltipDirectionHorizontal = document.body.clientWidth - event.pageX < 150; //determine facing of tooltip
         let tooltipDirectionVertical = document.body.clientHeight - event.pageY < 350; //determine facing of tooltip
         if(this.viewModel.highlightedTechnique !== null && event.type == "mousemove"){
@@ -679,7 +679,7 @@ export class DataTableComponent implements AfterViewInit {
             element.style.left = -10000 + "px";
         }
         if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_id).comment) {
-            let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModelsService.getViewModelUID(this.viewModel));
+            let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModel.uid);
             this.toolTipOverflows = commentdiv.clientHeight >= 300;
         }
     }
@@ -833,7 +833,7 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain);
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.dataService.getNonce());
         viewModelCopy.deSerialize(this.viewModel.serialize());
         let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(exportData);
