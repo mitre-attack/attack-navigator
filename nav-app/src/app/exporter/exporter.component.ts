@@ -20,6 +20,7 @@ export class ExporterComponent implements AfterViewInit {
     height: number = 8.5;
     fontSize: number = 12;
     whUnits: string = 'in'; //can also be 'cm', 'in'
+    cellTextMode: string = "name"; //can also be "id", "none"
     constructor(private configService: ConfigService) { }
 
     ngAfterViewInit() {
@@ -29,9 +30,10 @@ export class ExporterComponent implements AfterViewInit {
     buildSVG(): void {
         console.log("building SVG");
 
-        let width = this.convertToPx(this.width, this.whUnits)
-        let height = this.convertToPx(this.height, this.whUnits)
-        let fontSize = this.fontSize; let fontUnits = 'pt'
+        let width = Math.max(this.convertToPx(this.width, this.whUnits), 10)
+        let height = Math.max(this.convertToPx(this.height, this.whUnits), 10)
+        let fontSize = Math.max(this.fontSize, 1);
+        let fontUnits = 'px'
 
         let self = this;
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
@@ -73,6 +75,16 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0," + headerHeight + ")")
 
 
+        //calculate cell height: the longest column decides the cell height
+        let cellHeight = Number.MAX_VALUE;//Number.MAX_VALUE; //(height - margin.bottom - headerHeight)
+
+        Object.keys(self.exportData.tactics).forEach(function(key: string) {
+            let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
+            let thisCellHeight = (height - margin.bottom - headerHeight)/numVCells
+            cellHeight = Math.min(cellHeight, thisCellHeight)
+        });
+        cellHeight = Math.max(cellHeight, 1) //must be positive number
+
         // columns
         let columnWidth = (width - margin.right)/(Object.keys(self.exportData.tactics).length)
         let columns = tablebody.selectAll("g")
@@ -83,14 +95,44 @@ export class ExporterComponent implements AfterViewInit {
                 return "translate(" + columnWidth * i + ", 0)"
             });
 
-        //calculate cell height: the longest column decides the cell height
-        let cellHeight = Number.MAX_VALUE;//Number.MAX_VALUE; //(height - margin.bottom - headerHeight)
-        Object.keys(self.exportData.tactics).forEach(function(key: string) {
-            let thisCellHeight = (height - margin.bottom - headerHeight)/(self.exportData.tactics[key].length)
-            cellHeight = Math.min(cellHeight, thisCellHeight)
-        });
+        // split columns into headers and bodies
+        let colHeaderHeight = 2 * cellHeight;
+        let columnHeaders = columns.append("g")
+            .attr("transform", "translate(0,0)");
+        columnHeaders.append("rect")
+            .attr("width", columnWidth)
+            .attr("height", 2 * cellHeight)
+            .style("stroke", "black")
+            .style("fill", "none")
+        let columnBodies = columns.append("g")
+            .attr("transform", "translate(0,"+colHeaderHeight+")");
 
-        let techniques = columns.selectAll("g")
+        //split headers into name and count cells
+        let headerTacticNames = columnHeaders.append("g")
+        .attr("transform", "translate(0,0)")
+        let headerTechniqueCounts = columnHeaders.append("g")
+            .attr("transform", "translate(0,"+cellHeight+")")
+
+        headerTacticNames.append("text")
+            .text(function(d) {return self.toCamelCase(d.replace(/-/g," "))})
+            .attr("font-size", fontSize + fontUnits)
+            .attr("transform", "translate(2, " + (fontSize + 1) +")")
+            .attr("dx", 0)
+            .attr("dy", 0)
+            .style("font-weight", "bold")
+            .call(this.wrap, columnWidth - 2, cellHeight - 2, self)
+
+        headerTechniqueCounts.append("text")
+            .text(function(d) {
+                return self.exportData.tactics[d].length + " items"
+            })
+            .attr("font-size", fontSize + fontUnits)
+            .attr("transform", "translate(1, " + (fontSize + 1) +")")
+            .attr("dx", 0)
+            .attr("dy", 0)
+            .call(this.wrap, columnWidth, cellHeight, self)
+
+        let techniques = columnBodies.selectAll("g")
             .data(function(d) {
                 // console.log(d)
                 return self.exportData.tactics[d]
@@ -111,8 +153,8 @@ export class ExporterComponent implements AfterViewInit {
                 if (tvm.score) return tvm.scoreColor
                 return "none"
             });
-        techniques.append("text")
-            .text(function(d) {return [d.name, 'acr', ''][self.exportData.viewModel.viewMode]})
+        if (this.cellTextMode != "none") techniques.append("text")
+            .text(function(d) {return self.cellTextMode == "name" ? d.name : d.technique_id})
             .attr("font-size", fontSize + fontUnits)
             .attr("transform", "translate(1, " + (fontSize + 1) +")")
             .attr("dx", 0)
@@ -182,6 +224,17 @@ export class ExporterComponent implements AfterViewInit {
         return quantity * factor;
     }
 
+    // wrap(text, width, padding) {
+    //     var self = d3.select(this),
+    //     textLength = self.node().getComputedTextLength(),
+    //     text = self.text();
+    //     while (textLength > (width - 2 * padding) && text.length > 0) {
+    //         text = text.slice(0, -1);
+    //         self.text(text + '...');
+    //         textLength = self.node().getComputedTextLength();
+    //     }
+    // }
+
     /**
      * wrap the given text svg element
      * @param  text       element to wrap
@@ -208,11 +261,16 @@ export class ExporterComponent implements AfterViewInit {
                     tspan.text(line.join(" "));
                     line = [word];
                     let thisdy = ++lineNumber * lineHeight + dy
-                    if (self.convertToPx(thisdy, "em") > cellheight) return;
+                    // if (self.convertToPx(thisdy, "em") > cellheight) return;
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
             }
         });
+    }
+
+    // Capitalizes the first letter of each word in a string
+    toCamelCase(str){
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 }
 
@@ -222,6 +280,5 @@ export class ExportData {
     filteredTechniques: Technique[];
     constructor(viewModel, tactics, filteredTechniques: Technique[]) {
         this.viewModel = viewModel; this.tactics = tactics; this.filteredTechniques = filteredTechniques;
-        console.log(viewModel, tactics, filteredTechniques)
     }
 }

@@ -6,10 +6,10 @@
             </div>
 
             <div class="control-row-item" >
-                <input type="number" [(ngModel)]="width" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+                <input type="number" [(ngModel)]="width" (input)="buildSVG()">
 
                 x
-                <input type="number" [(ngModel)]="height" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">
+                <input type="number" [(ngModel)]="height" (input)="buildSVG()">
                 <select [(ngModel)]="whUnits">
                     <option value="px">px</option>
                     <option value="in">in</option>
@@ -23,8 +23,13 @@
                 font size
             </div>
             <div class="control-row-item has-input">
-                <input type="number" [(ngModel)]="fontSize" (input)="buildSVG(width, height, whUnits, fontSize, 'pt')">pt
+                <input type="number" [(ngModel)]="fontSize" (input)="buildSVG()">pt
             </div>
+            <select [(ngModel)]="cellTextMode" (change)="buildSVG()">
+                <option value="none">No Text</option>
+                <option value="name">Technique Name</option>
+                <option value="id">Technique ID</option>
+            </select>
         </li>
 
         <li>
@@ -37,16 +42,6 @@
                     <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
                 </div>
             </div>
-
-
-            <div *ngIf="configService.getFeature('toggle_view_mode')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     matTooltipPosition="below"
-                     matTooltip="toggle view mode">
-                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][exportData.viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][exportData.viewModel.viewMode]"/>
-                 </div>
-             </div>
-
         </li>
     </ul>
 </div>
