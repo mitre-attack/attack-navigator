@@ -27,16 +27,18 @@ export class ExporterComponent implements AfterViewInit {
 
     buildSVG(self?): void {
         console.log("building SVG");
-        if (!self) self = this;
-        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10)
-        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10)
-        let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1);
-        let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1);
+        if (!self) self = this; //in case we were called from somewhere other than ngViewInit
+
+        //check preconditions, make sure they're in the right range
+        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10); console.log("width", width);
+        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10); console.log("height", height)
+        let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
+        let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
         let fontUnits = 'px'
 
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
-
+        //remove previous graphic
         let element = <HTMLElement>document.getElementById(self.svgDivName);
         element.innerHTML = "";
 
@@ -64,17 +66,95 @@ export class ExporterComponent implements AfterViewInit {
         let headerHeight = 133;
         if (self.exportData.tableConfig.showHeader) {
             let header = svg.append("g");
-            header.append("rect")
-                .attr("width", width)
-                .attr("height", headerHeight)
-                .style("fill", "rgba(99, 143, 98, 0.5)");
-            // header text
-            header.append("text")
-                .text("header")
-                .attr("x", "50%")
-                .attr("y", headerHeight/2)
+            // header.append("rect")
+            //     .attr("width", width)
+            //     .attr("height", headerHeight)
+            //     .style("fill", "rgba(99, 143, 98, 0.5)");
+
+            // title
+            let titleGroup = header.append("g")
+                .attr("transform", "translate(0,0)");
+            titleGroup.append("text")
+                .text(self.exportData.viewModel.name)
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
                 .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black");
+                .attr("fill", "black")
+                .style("font-weight", "bold")
+                .call(self.wrap, (width/3) - 4, headerHeight/2, self);
+            titleGroup.append("rect")
+                .attr("width", width/3)
+                .attr("height", headerHeight/2)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            //description
+            let descriptionGroup = header.append("g")
+                .attr("transform", "translate(0," + headerHeight/2 + ")");
+            descriptionGroup.append("text")
+                .text(self.exportData.viewModel.description)
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+                .style("font-weight", "bold")
+                .call(self.wrap, (width/3) - 4, headerHeight/2, self);
+            descriptionGroup.append("rect")
+                .attr("width", width/3)
+                .attr("height", headerHeight/2)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            //filters
+            let filtersGroup = header.append("g")
+                .attr("transform", "translate(" + width/3 + ", 0)");
+            filtersGroup.append("rect")
+                .attr("width", width/6)
+                .attr("height", headerHeight)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            filtersGroup.append("text")
+                .text("filters")
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+            //gradient
+            let gradientGroup = header.append("g")
+                .attr("transform", "translate(" + (width/3 + width/6) + ",0)");
+            gradientGroup.append("rect")
+                .attr("width", width/6)
+                .attr("height", headerHeight)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            gradientGroup.append("text")
+                .text("gradient")
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+            //legend
+            let legendGroup = header.append("g")
+                .attr("transform", "translate(" + (width/3 + (2 * width/6)) + ",0)");
+            legendGroup.append("rect")
+                .attr("width", width/3)
+                .attr("height", headerHeight)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            legendGroup.append("text")
+                .text("legend")
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
         } else { //no header
             headerHeight = 0
         }
@@ -260,7 +340,6 @@ export class ExporterComponent implements AfterViewInit {
             words = text.text().split(/\s+/).reverse(),
             word,
             line = [],
-            lineNumber = 0,
             lineHeight = 1.1, // ems
             y = text.attr("y"),
             dy = parseFloat(text.attr("dy")),
@@ -272,7 +351,7 @@ export class ExporterComponent implements AfterViewInit {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    let thisdy = ++lineNumber * lineHeight + dy
+                    let thisdy = lineHeight + dy
                     // if (self.convertToPx(thisdy, "em") > cellheight) return;
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
@@ -321,7 +400,7 @@ export class ExportData {
             "tableFontSize": 10,
             "tableTextDisplay": "name",
             "showHeader": true,
-            "headerFontSize": 12,
+            "headerFontSize": 15,
             "showLegend": true,
             "legendDocked": true,
             "legendX": 0,

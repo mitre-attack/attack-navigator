@@ -63,9 +63,16 @@
 
     </li>
 </ul>
+<div class="control-row-button noselect"
+[id]="'download-button' + exportData.viewModel.uid"
+    (click)="downloadSVG()"
+    matTooltipPosition="below"
+    matTooltip="download render">
+    <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
+</div>
 
 </div>
 
 <div class="svgcontainer" [id]="'svgInsert' + exportData.viewModel.uid">
-    graphic goes here
+    loading...
 </div>
