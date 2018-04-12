@@ -19,14 +19,15 @@ export class ExporterComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
-        let self = this
+        let self = this;
+        console.log(self)
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)
     }
 
-    buildSVG(self): void {
+    buildSVG(self?): void {
         console.log("building SVG");
-
+        if (!self) self = this;
         let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10)
         let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10)
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1);
@@ -36,14 +37,14 @@ export class ExporterComponent implements AfterViewInit {
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
 
-        let element = <HTMLElement>document.getElementById(this.svgDivName);
+        let element = <HTMLElement>document.getElementById(self.svgDivName);
         element.innerHTML = "";
 
-        let svg = d3.select("#" + this.svgDivName).append("svg")
+        let svg = d3.select("#" + self.svgDivName).append("svg")
             .attr("width", width)
             .attr("height", height)
             .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("id", "svg" + this.exportData.viewModel.uid) //Tag for downloadSVG
+            .attr("id", "svg" + self.exportData.viewModel.uid) //Tag for downloadSVG
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         let stroke_width = 1;
@@ -61,7 +62,7 @@ export class ExporterComponent implements AfterViewInit {
         // |_||_|___/_/ \_\___/|___|_|_\
 
         let headerHeight = 133;
-        if (this.exportData.tableConfig.showHeader) {
+        if (self.exportData.tableConfig.showHeader) {
             let header = svg.append("g");
             header.append("rect")
                 .attr("width", width)
@@ -93,15 +94,15 @@ export class ExporterComponent implements AfterViewInit {
 
         Object.keys(self.exportData.tactics).forEach(function(key: string) {
             let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
-            let thisCellHeight = (height - margin.bottom - headerHeight)/numVCells
-            cellHeight = Math.min(cellHeight, thisCellHeight)
+            let selfCellHeight = (height - margin.bottom - headerHeight)/numVCells
+            cellHeight = Math.min(cellHeight, selfCellHeight)
         });
         cellHeight = Math.max(cellHeight, 1) //must be positive number
 
         // columns
         let columnWidth = (width - margin.right)/(Object.keys(self.exportData.tactics).length)
         let columns = tablebody.selectAll("g")
-            .data(Object.keys(this.exportData.tactics)).enter()
+            .data(Object.keys(self.exportData.tactics)).enter()
             .append("g")
             .attr("transform", function(d,i) {
                 // console.log(d,i)
@@ -129,7 +130,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
-            .call(this.wrap, columnWidth - 2, cellHeight - 2, self)
+            .call(self.wrap, columnWidth - 2, cellHeight - 2, self)
         headerTechniqueCounts.append("text")
             .text(function(d) {
                 return self.exportData.tactics[d].length + " items"
@@ -138,7 +139,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(this.wrap, columnWidth, cellHeight, self)
+            .call(self.wrap, columnWidth, cellHeight, self)
 
         let columnBodies = columns.append("g")
             .attr("transform", "translate(0,"+colHeaderHeight+")");
@@ -164,13 +165,13 @@ export class ExporterComponent implements AfterViewInit {
                 if (tvm.score) return tvm.scoreColor
                 return "none"
             });
-        if (this.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
+        if (self.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay == "name" ? d.name : d.technique_id})
             .attr("font-size", tableFontSize + fontUnits)
             .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(this.wrap, columnWidth, cellHeight, self)
+            .call(self.wrap, columnWidth, cellHeight, self)
 
     }
 

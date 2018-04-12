@@ -12,7 +12,7 @@
                     (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
                     matTooltipPosition="below"
                     [matTooltip]="'search'">
-                    <img src="assets/ic_search_black_24px.svg"/>
+                    <img src="assets/icons/ic_search_black_24px.svg"/>
                 </div>
 
                 <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
@@ -67,7 +67,7 @@
                     (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
                     matTooltipPosition="below"
                     [matTooltip]="'multi-select'">
-                    <img src="assets/ic_playlist_add_black_24px.svg"/>
+                    <img src="assets/icons/ic_playlist_add_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="multiselect-grouping" *ngFor="let multiSelectGroup of [{data: threatGroupList, label: 'Threat Groups'}, {data: softwareGroupList, label: 'Software'}]">
@@ -97,7 +97,7 @@
                      (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
                      matTooltipPosition="below"
                      matTooltip="deselect {{this.viewModel.selectedTechniques.length}} techniques">
-                    <img src="assets/ic_clear_black_24px.svg" alt="deselect all"/>
+                    <img src="assets/icons/ic_clear_black_24px.svg" alt="deselect all"/>
                     <span class="deselectNumber">{{this.viewModel.selectedTechniques.length}}</span>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                      (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
                      matTooltipPosition="below"
                      matTooltip="layer information">
-                     <img src="assets/ic_description_black_24px.svg" alt="layer information" />
+                     <img src="assets/icons/ic_description_black_24px.svg" alt="layer information" />
                  </div>
 
                  <!-- description input (invisible, absolute) -->
@@ -150,7 +150,7 @@
                     (click)="saveLayerLocally()"
                     matTooltipPosition="below"
                     matTooltip="download layer">
-                    <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
+                    <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
                 </div>
             </div>
 
@@ -171,7 +171,7 @@
                     (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null;"
                     matTooltipPosition="below"
                     matTooltip="filters">
-                    <img src="assets/ic_filter_list_black_24px.svg"/>
+                    <img src="assets/icons/ic_filter_list_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="filter" *ngFor="let filter of ['platforms', 'stages']">
@@ -199,7 +199,7 @@
                     (click)="viewModel.sorting = (viewModel.sorting + 1) % 4; filterTechniques()"
                     matTooltipPosition="below"
                     [matTooltip]="['sorting alphabetically ascending', 'sorting alphabetically descending', 'sorting by score ascending', 'sorting by score descending'][viewModel.sorting]">
-                    <img [src]="['assets/ic_sort_alphabetically_ascending_black_24px.svg', 'assets/ic_sort_alphabetically_descending_black_24px.svg', 'assets/ic_sort_numerically_ascending_black_24px.svg', 'assets/ic_sort_numerically_descending_black_24px.svg'][viewModel.sorting]" alt="sorting"/>
+                    <img [src]="['assets/icons/ic_sort_alphabetically_ascending_black_24px.svg', 'assets/icons/ic_sort_alphabetically_descending_black_24px.svg', 'assets/icons/ic_sort_numerically_ascending_black_24px.svg', 'assets/icons/ic_sort_numerically_descending_black_24px.svg'][viewModel.sorting]" alt="sorting"/>
                 </div>
             </div>
 
@@ -209,7 +209,7 @@
                     (click)="currentDropdown = currentDropdown !== 'gradients' ? 'gradients' : null; viewModel.updateGradient()"
                     matTooltipPosition="below"
                     matTooltip="scoring gradient setup">
-                    <img src="assets/ic_palette_black_24px.svg"/>
+                    <img src="assets/icons/ic_palette_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container gradients" *ngIf="currentDropdown === 'gradients'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="gradient-controls">
@@ -266,7 +266,7 @@
                      (click)="viewModel.hideDisabled = !viewModel.hideDisabled; filterTechniques()"
                      matTooltipPosition="below"
                      matTooltip="show/hide disabled">
-                     <img [src]="viewModel.hideDisabled ? 'assets/ic_visibility_off_black_24px.svg' : 'assets/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
+                     <img [src]="viewModel.hideDisabled ? 'assets/icons/ic_visibility_off_black_24px.svg' : 'assets/icons/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
                  </div>
              </div>
 
@@ -276,7 +276,7 @@
                      (click)="viewModel.viewMode = (viewModel.viewMode + 1) % 3"
                      matTooltipPosition="below"
                      matTooltip="toggle view mode">
-                      <img [src]="['assets/ic_view_large_black_24px.svg', 'assets/ic_view_medium_black_24px.svg', 'assets/ic_view_small_black_24px.svg'][viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][viewModel.viewMode]"/>
+                      <img [src]="['assets/icons/ic_view_large_black_24px.svg', 'assets/icons/ic_view_medium_black_24px.svg', 'assets/icons/ic_view_small_black_24px.svg'][viewModel.viewMode]" [alt]="['full view', 'compact view', 'mini view'][viewModel.viewMode]"/>
                  </div>
              </div>
 
@@ -293,7 +293,7 @@
                      matTooltipPosition="below"
                      matTooltip="toggle state"
                      [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_texture_black_24px.svg' : 'assets/ic_texture_gray_24px.svg'" alt="toggle state"/>
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_texture_black_24px.svg' : 'assets/icons/ic_texture_gray_24px.svg'" alt="toggle state"/>
                  </div>
              </div>
 
@@ -337,7 +337,7 @@
                      matTooltip="scoring"
                      [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
                      [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
-                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_chart_black_24px.svg' : 'assets/ic_insert_chart_gray_24px.svg'" alt="score"/>
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_insert_chart_black_24px.svg' : 'assets/icons/ic_insert_chart_gray_24px.svg'" alt="score"/>
                 </div>
                 <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
                      *ngIf="currentDropdown === 'score'">
@@ -364,7 +364,7 @@
                      matTooltip="comment"
                      [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
                      [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
-                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_insert_comment_black_24px.svg' : 'assets/ic_insert_comment_gray_24px.svg'" alt="comment" />
+                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_insert_comment_black_24px.svg' : 'assets/icons/ic_insert_comment_gray_24px.svg'" alt="comment" />
                  </div>
                  <!-- comment input (invisible, absolute) -->
                  <div class="dropdown-container inputfield left" #dropdown [class.left]="checkalign(dropdown)"
@@ -387,7 +387,7 @@
                       matTooltipPosition="below"
                       matTooltip="clear annotations on selected"
                       [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/ic_layers_clear_black_24px.svg' : 'assets/ic_layers_clear_gray_24px.svg'" alt="remove all annotations"/>
+                      <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_layers_clear_black_24px.svg' : 'assets/icons/ic_layers_clear_gray_24px.svg'" alt="remove all annotations"/>
                   </div>
               </div>
         </li>
@@ -527,4 +527,35 @@
 
     </div>
 
+</div>
+
+<div class="legendBar" (click)="toggleLegend()" *ngIf="!showingLegend">
+    <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
+    <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+        legend
+    </div>
+</div>
+
+<div class="legend" *ngIf="showingLegend">
+    <div class="legendBar" (click)="toggleLegend()" style="position: absolute; top:0px; left:0px;">
+        <img src="assets/icons/ic_keyboard_arrow_down_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
+        <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+            legend
+        </div>
+    </div>
+    <div class="itemArea">
+        <div class="item" *ngFor="let item of viewModel.legendItems; let Even=even; let i=index" [class.even]="!Even">
+            <input [(colorPicker)]="item.color" [(ngModel)]="item.color" [style.background]="item.color" [cpPosition]="'top'" style="width:75px;"/>
+            <!-- <input class="label" [(ngModel)]="item.label"> -->
+            <mat-form-field class="label">
+                    <input matInput
+                    
+                    [(ngModel)]="item.label">
+
+            </mat-form-field>
+            <img src="assets/icons/ic_clear_gray_24px.svg" style="position: relative; top:5px; right:0px;" (click)="viewModel.deleteLegendItem(i);">
+        </div>
+        <button style="margin-left:75px; margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.addLegendItem();">Add Item</button>
+        <button style="margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.clearLegend();">Clear</button>
+    </div>
 </div>

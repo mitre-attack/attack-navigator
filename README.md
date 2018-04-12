@@ -78,6 +78,12 @@ Example custom context menu object:<br />
 3. Run `docker run -p 4200:4200 yourcustomname`
 4. Navigate to `localhost:4200` in browser
 
+## Loading a Default Layer Upon Initialization
+1. Save a layer JSON file to the `nav-app/src/assets/` directory
+2. Set the `location` property in `default_layer` in **config.json** to `assets/YOUR_LAYER_HERE.json`
+3. Set the `enabled` property in `default_layer` to **true**
+4. Load/reload the Navigator
+
 ## Related MITRE Work
 #### CTI
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
