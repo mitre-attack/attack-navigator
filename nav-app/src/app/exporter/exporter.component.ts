@@ -19,22 +19,21 @@ export class ExporterComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
-        this.buildSVG()
+        let self = this
+        //put at the end of the function queue so that the page can render before building the svg
+        window.setTimeout(function() {self.buildSVG(self)}, 0)
     }
 
-    buildSVG(): void {
-        console.log("building SVG", this.svgDivName);
-        console.log(this.exportData.viewModel.uid)
+    buildSVG(self): void {
+        console.log("building SVG");
 
-        let width = Math.max(this.convertToPx(this.exportData.tableConfig.width, this.exportData.tableConfig.unit), 10)
-        let height = Math.max(this.convertToPx(this.exportData.tableConfig.height, this.exportData.tableConfig.unit), 10)
-        let tableFontSize = Math.max(this.exportData.tableConfig.tableFontSize, 1);
-        let headerFontSize = Math.max(this.exportData.tableConfig.headerFontSize, 1);
+        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10)
+        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10)
+        let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1);
+        let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1);
         let fontUnits = 'px'
 
-        let self = this;
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
-        let headerHeight = 133
 
 
         let element = <HTMLElement>document.getElementById(this.svgDivName);
@@ -54,20 +53,37 @@ export class ExporterComponent implements AfterViewInit {
             .style("stroke", "black")
             .style("stroke-width", stroke_width)
             .style("fill", "none")
-        //header
-        let header = svg.append("g");
-        header.append("rect")
-            .attr("width", width)
-            .attr("height", headerHeight)
-            .style("fill", "rgba(99, 143, 98, 0.5)");
-        // header text
-        header.append("text")
-            .text("header")
-            .attr("x", "50%")
-            .attr("y", headerHeight/2)
-            .attr("font-size", headerFontSize + fontUnits)
-            .attr("fill", "black");
-        // general table body
+
+
+        //  _  _ ___   _   ___  ___ ___
+        // | || | __| /_\ |   \| __| _ \
+        // | __ | _| / _ \| |) | _||   /
+        // |_||_|___/_/ \_\___/|___|_|_\
+
+        let headerHeight = 133;
+        if (this.exportData.tableConfig.showHeader) {
+            let header = svg.append("g");
+            header.append("rect")
+                .attr("width", width)
+                .attr("height", headerHeight)
+                .style("fill", "rgba(99, 143, 98, 0.5)");
+            // header text
+            header.append("text")
+                .text("header")
+                .attr("x", "50%")
+                .attr("y", headerHeight/2)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black");
+        } else { //no header
+            headerHeight = 0
+        }
+
+
+        //  _____ _   ___ _    ___   ___  ___  _____   __
+        // |_   _/_\ | _ ) |  | __| | _ )/ _ \|   \ \ / /
+        //   | |/ _ \| _ \ |__| _|  | _ \ (_) | |) \ V /
+        //   |_/_/ \_\___/____|___| |___/\___/|___/ |_|
+
         let tablebody = svg.append("g")
             .attr("transform", "translate(0," + headerHeight + ")")
 
@@ -268,16 +284,11 @@ export class ExporterComponent implements AfterViewInit {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
-    getKeys(obj) {
-        console.log(this.exportData)
-        let keys = Object.keys(obj)
-        console.log("test",keys)
-        return keys
-    }
+    //following two functions are only used for iterating over tableconfig options: remove when tableconfig options are hardcoded in html
+    getKeys(obj) { return Object.keys(obj) }
+    type(obj) { return typeof(obj) }
 
-    type(obj) {
-        return typeof(obj)
-    }
+
 }
 
 export class ExportData {
