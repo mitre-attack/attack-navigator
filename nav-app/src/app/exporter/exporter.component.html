@@ -1,3 +1,4 @@
+{{exportData.viewModel.uid}}
 <div class="controlsContainer">
     <ul class="control-sections">
         <li>
@@ -35,7 +36,7 @@
         <li>
             <div class="control-row-item">
                 <div class="control-row-button noselect"
-                [id]="'download-button' + uid"
+                [id]="'download-button' + exportData.viewModel.uid"
                     (click)="downloadSVG()"
                     matTooltipPosition="below"
                     matTooltip="download render">
@@ -46,6 +47,6 @@
     </ul>
 </div>
 
-<div class="svgcontainer" [id]="'svgInsert' + uid">
+<div class="svgcontainer" [id]="'svgInsert' + exportData.viewModel.uid">
     graphic goes here
 </div>

@@ -833,10 +833,16 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.dataService.getNonce());
+        this.viewModelsService.getNonce()
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce());
         viewModelCopy.deSerialize(this.viewModel.serialize());
+        console.log(viewModelCopy.uid, viewModelCopy)
         let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(exportData);
+    }
+
+    noncetest() {
+        console.log(this.viewModelsService.getNonce())
     }
 }
 

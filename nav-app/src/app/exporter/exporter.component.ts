@@ -14,8 +14,7 @@ export class ExporterComponent implements AfterViewInit {
 
     @Input() exportData: ExportData;
 
-    uid = "fo"
-    svgDivName = "svgInsert" + this.uid;
+    svgDivName = "svgInsert_tmp"
     width: number = 11;
     height: number = 8.5;
     fontSize: number = 12;
@@ -24,11 +23,13 @@ export class ExporterComponent implements AfterViewInit {
     constructor(private configService: ConfigService) { }
 
     ngAfterViewInit() {
+        this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
         this.buildSVG()
     }
 
     buildSVG(): void {
-        console.log("building SVG");
+        console.log("building SVG", this.svgDivName);
+        console.log(this.exportData.viewModel.uid)
 
         let width = Math.max(this.convertToPx(this.width, this.whUnits), 10)
         let height = Math.max(this.convertToPx(this.height, this.whUnits), 10)
@@ -47,7 +48,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("width", width)
             .attr("height", height)
             .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("id", "svg" + this.uid) //Tag for downloadSVG
+            .attr("id", "svg" + this.exportData.viewModel.uid) //Tag for downloadSVG
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         let stroke_width = 1;
@@ -162,7 +163,7 @@ export class ExporterComponent implements AfterViewInit {
     }
 
     downloadSVG() {
-        let svgEl = document.getElementById("svg" + this.uid);
+        let svgEl = document.getElementById("svg" + this.exportData.viewModel.uid);
         svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         let svgData = new XMLSerializer().serializeToString(svgEl);
         // // var svgData = svgEl.outerHTML;
