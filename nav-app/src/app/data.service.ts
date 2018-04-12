@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx"
 @Injectable()
 export class DataService {
 
-    constructor(private http: Http) { console.log("constructing")}
+    constructor(private http: Http) {}
 
     // Observable for data in config.json
     private configData$: Observable<Object>;

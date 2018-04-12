@@ -43,7 +43,6 @@ export class ViewModelsService {
      *         unique between app instances.
      */
     getNonce(): number {
-        console.log("nonce gen", this.nonce)
         return this.nonce++;
     }
 
