@@ -1,6 +1,5 @@
-{{exportData.viewModel.uid}}
 <div class="controlsContainer">
-    <ul class="control-sections">
+    <!-- <ul class="control-sections">
         <li>
             <div class="section-label">
                 image size
@@ -44,7 +43,27 @@
                 </div>
             </div>
         </li>
-    </ul>
+    </ul> -->
+<ul>
+    <li *ngFor="let configItem of getKeys(exportData.tableConfig)">
+        {{configItem}}:
+        <select *ngIf="configItem === 'unit'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="px">px</option>
+            <option value="in">in</option>
+            <option value="cm">cm</option>
+        </select>
+        <select *ngIf="configItem === 'tableTextDisplay'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="none">No Text</option>
+            <option value="name">Technique Name</option>
+            <option value="id">Technique ID</option>
+        </select>
+
+        <input *ngIf="type(exportData.tableConfig[configItem]) == 'number'" type="number" [(ngModel)]=exportData.tableConfig[configItem] (input)="buildSVG()">
+        <input *ngIf="type(exportData.tableConfig[configItem]) == 'boolean'" type="checkbox" [(ngModel)]=exportData.tableConfig[configItem] (change)="buildSVG()">
+
+    </li>
+</ul>
+
 </div>
 
 <div class="svgcontainer" [id]="'svgInsert' + exportData.viewModel.uid">

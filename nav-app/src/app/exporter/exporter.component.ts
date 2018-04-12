@@ -15,11 +15,6 @@ export class ExporterComponent implements AfterViewInit {
     @Input() exportData: ExportData;
 
     svgDivName = "svgInsert_tmp"
-    width: number = 11;
-    height: number = 8.5;
-    fontSize: number = 12;
-    whUnits: string = 'in'; //can also be 'cm', 'in'
-    cellTextMode: string = "name"; //can also be "id", "none"
     constructor(private configService: ConfigService) { }
 
     ngAfterViewInit() {
@@ -31,9 +26,10 @@ export class ExporterComponent implements AfterViewInit {
         console.log("building SVG", this.svgDivName);
         console.log(this.exportData.viewModel.uid)
 
-        let width = Math.max(this.convertToPx(this.width, this.whUnits), 10)
-        let height = Math.max(this.convertToPx(this.height, this.whUnits), 10)
-        let fontSize = Math.max(this.fontSize, 1);
+        let width = Math.max(this.convertToPx(this.exportData.tableConfig.width, this.exportData.tableConfig.unit), 10)
+        let height = Math.max(this.convertToPx(this.exportData.tableConfig.height, this.exportData.tableConfig.unit), 10)
+        let tableFontSize = Math.max(this.exportData.tableConfig.tableFontSize, 1);
+        let headerFontSize = Math.max(this.exportData.tableConfig.headerFontSize, 1);
         let fontUnits = 'px'
 
         let self = this;
@@ -69,7 +65,7 @@ export class ExporterComponent implements AfterViewInit {
             .text("header")
             .attr("x", "50%")
             .attr("y", headerHeight/2)
-            .attr("font-size", fontSize + fontUnits)
+            .attr("font-size", headerFontSize + fontUnits)
             .attr("fill", "black");
         // general table body
         let tablebody = svg.append("g")
@@ -112,8 +108,8 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0,"+cellHeight+")")
         headerTacticNames.append("text")
             .text(function(d) {return self.toCamelCase(d.replace(/-/g," "))})
-            .attr("font-size", fontSize + fontUnits)
-            .attr("transform", "translate(2, " + (fontSize + 1) +")")
+            .attr("font-size", tableFontSize + fontUnits)
+            .attr("transform", "translate(2, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
@@ -122,8 +118,8 @@ export class ExporterComponent implements AfterViewInit {
             .text(function(d) {
                 return self.exportData.tactics[d].length + " items"
             })
-            .attr("font-size", fontSize + fontUnits)
-            .attr("transform", "translate(1, " + (fontSize + 1) +")")
+            .attr("font-size", tableFontSize + fontUnits)
+            .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .call(this.wrap, columnWidth, cellHeight, self)
@@ -152,10 +148,10 @@ export class ExporterComponent implements AfterViewInit {
                 if (tvm.score) return tvm.scoreColor
                 return "none"
             });
-        if (this.cellTextMode != "none") techniques.append("text")
-            .text(function(d) {return self.cellTextMode == "name" ? d.name : d.technique_id})
-            .attr("font-size", fontSize + fontUnits)
-            .attr("transform", "translate(1, " + (fontSize + 1) +")")
+        if (this.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
+            .text(function(d) {return self.exportData.tableConfig.tableTextDisplay == "name" ? d.name : d.technique_id})
+            .attr("font-size", tableFontSize + fontUnits)
+            .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .call(this.wrap, columnWidth, cellHeight, self)
@@ -271,13 +267,54 @@ export class ExporterComponent implements AfterViewInit {
     toCamelCase(str){
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
+
+    getKeys(obj) {
+        console.log(this.exportData)
+        let keys = Object.keys(obj)
+        console.log("test",keys)
+        return keys
+    }
+
+    type(obj) {
+        return typeof(obj)
+    }
 }
 
 export class ExportData {
+    tableConfig: {
+        width: number; //graphic width
+        height: number; //graphic height
+        unit: string; //units of width/height: px, cm, or in
+        tableFontSize: number; //size of font in table, in pt
+        tableTextDisplay: string; //"name", "id" or "none"
+        showHeader: boolean; //show or hide the header
+        headerFontSize: number; //size of font in header, in pt?
+
+        showLegend: boolean; //show or hide the legend
+        legendDocked: boolean; //dock the legend to the header
+        legendX: number; //if undocked, where to place X
+        legendY: number; //if undocked, where to place Y
+    }
+
+
     viewModel: ViewModel;
     tactics: object;
     filteredTechniques: Technique[];
     constructor(viewModel, tactics, filteredTechniques: Technique[]) {
         this.viewModel = viewModel; this.tactics = tactics; this.filteredTechniques = filteredTechniques;
+        this.tableConfig = {
+            "width": 11,
+            "height": 8.5,
+            "unit": "in",
+            "tableFontSize": 10,
+            "tableTextDisplay": "name",
+            "showHeader": true,
+            "headerFontSize": 12,
+            "showLegend": true,
+            "legendDocked": true,
+            "legendX": 0,
+            "legendY": 0,
+        }
+
     }
 }
