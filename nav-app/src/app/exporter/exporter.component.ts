@@ -33,7 +33,9 @@ export class ExporterComponent implements AfterViewInit {
         let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10); console.log("width", width);
         let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10); console.log("height", height)
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
+        let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
         let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
+        let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
         let fontUnits = 'px'
 
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
@@ -63,98 +65,167 @@ export class ExporterComponent implements AfterViewInit {
         // | __ | _| / _ \| |) | _||   /
         // |_||_|___/_/ \_\___/|___|_|_\
 
-        let headerHeight = 133;
+        let headerHeight = Math.max(self.exportData.tableConfig.headerHeight, 1); console.log("headerHeight", headerHeight)
         if (self.exportData.tableConfig.showHeader) {
             let header = svg.append("g");
-            // header.append("rect")
-            //     .attr("width", width)
-            //     .attr("height", headerHeight)
-            //     .style("fill", "rgba(99, 143, 98, 0.5)");
 
-            // title
-            let titleGroup = header.append("g")
-                .attr("transform", "translate(0,0)");
-            titleGroup.append("text")
-                .text(self.exportData.viewModel.name)
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .style("font-weight", "bold")
-                .call(self.wrap, (width/3) - 4, headerHeight/2, self);
-            titleGroup.append("rect")
-                .attr("width", width/3)
-                .attr("height", headerHeight/2)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            //description
-            let descriptionGroup = header.append("g")
-                .attr("transform", "translate(0," + headerHeight/2 + ")");
-            descriptionGroup.append("text")
-                .text(self.exportData.viewModel.description)
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .style("font-weight", "bold")
-                .call(self.wrap, (width/3) - 4, headerHeight/2, self);
-            descriptionGroup.append("rect")
-                .attr("width", width/3)
-                .attr("height", headerHeight/2)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            //filters
-            let filtersGroup = header.append("g")
-                .attr("transform", "translate(" + width/3 + ", 0)");
-            filtersGroup.append("rect")
-                .attr("width", width/6)
-                .attr("height", headerHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            filtersGroup.append("text")
-                .text("filters")
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-            //gradient
-            let gradientGroup = header.append("g")
-                .attr("transform", "translate(" + (width/3 + width/6) + ",0)");
-            gradientGroup.append("rect")
-                .attr("width", width/6)
-                .attr("height", headerHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            gradientGroup.append("text")
-                .text("gradient")
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-            //legend
-            let legendGroup = header.append("g")
-                .attr("transform", "translate(" + (width/3 + (2 * width/6)) + ",0)");
-            legendGroup.append("rect")
-                .attr("width", width/3)
-                .attr("height", headerHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            legendGroup.append("text")
-                .text("legend")
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
+            // determine header divisions
+            let showName = self.exportData.tableConfig.showName && self.exportData.viewModel.name.length > 0;
+            let showDescription = self.exportData.tableConfig.showDescription && self.exportData.viewModel.description.length > 0;
+            let showLayerInfo = (showName || showDescription)
+            let showFilters = this.exportData.tableConfig.showFilters
+
+            let hasScores = false;
+            self.exportData.filteredTechniques.forEach(function(technique: Technique) {
+                if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
+                    if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") hasScores = true;
+                }
+
+            })
+            let showGradient = this.exportData.tableConfig.showGradient && hasScores;
+            let showLegend = this.exportData.tableConfig.showLegend && this.exportData.tableConfig.legendDocked && this.exportData.viewModel.legendItems.length > 0;
+
+            //count columns
+            let numSections = 0;
+            for (let i = 0; i < 4; i++) {
+                let option = [showLayerInfo, showFilters, showGradient, showLegend][i];
+                console.log(option)
+                if (option) numSections++;
+            }
+            let headerSectionWidth = width/numSections;
+            console.log(numSections, headerSectionWidth)
+
+            let posX = 0; //row in the header
+            // layer name
+            if (showLayerInfo) {
+                let layerAndDescPresent = (showName && showDescription)
+                let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
+                let descY = layerAndDescPresent ? headerHeight/2 : 0
+
+                if (showName) { //layer name
+                    let titleGroup = header.append("g")
+                        .attr("transform", "translate(0,0)");
+                    titleGroup.append("text")
+                        .text(self.exportData.viewModel.name)
+                        .attr("transform", "translate(2, " + (headerLayerNameFontSize + 1) +")")
+                        .attr("dx", 0)
+                        .attr("dy", 0)
+                        .attr("font-size", headerLayerNameFontSize + fontUnits)
+                        .attr("fill", "black")
+                        .style("font-weight", "bold")
+                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
+                        titleGroup.append("rect")
+                            .attr("width", headerSectionWidth)
+                            .attr("height", nameDescHeight)
+                            .style("stroke-width", 1)
+                            .style("stroke", "black")
+                            .style("fill", "none");
+                }
+
+                if (showDescription) {//description
+                    let descriptionGroup = header.append("g")
+                        .attr("transform", "translate(0," + descY + ")");
+                    descriptionGroup.append("text")
+                        .text(self.exportData.viewModel.description)
+                        .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                        .attr("dx", 0)
+                        .attr("dy", 0)
+                        .attr("font-size", headerFontSize + fontUnits)
+                        .attr("fill", "black")
+                        .style("font-weight", "bold")
+                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
+                    descriptionGroup.append("rect")
+                        .attr("width", headerSectionWidth)
+                        .attr("height", nameDescHeight)
+                        .style("stroke-width", 1)
+                        .style("stroke", "black")
+                        .style("fill", "none");
+                }
+                posX++;
+            }
+
+            if (showFilters) {
+                //filters
+                let filtersGroup = header.append("g")
+                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
+                filtersGroup.append("rect")
+                    .attr("width", headerSectionWidth)
+                    .attr("height", headerHeight)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black")
+                    .style("fill", "none");
+                filtersGroup.append("text")
+                    .text("filters")
+                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                    .attr("dx", 0)
+                    .attr("dy", 0)
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("fill", "black")
+                posX++
+            }
+
+            if (showGradient) {
+                //gradient
+                let gradientGroup = header.append("g")
+                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
+                gradientGroup.append("rect")
+                    .attr("width", headerSectionWidth)
+                    .attr("height", headerHeight)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black")
+                    .style("fill", "none");
+                gradientGroup.append("text")
+                    .text("score gradient")
+                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                    .attr("dx", 0)
+                    .attr("dy", 0)
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("fill", "black")
+                posX++;
+            }
+
+            if (showLegend) {
+                //legend
+                let legendGroup = header.append("g")
+                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
+                legendGroup.append("rect")
+                    .attr("width", headerSectionWidth)
+                    .attr("height", headerHeight)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black")
+                    .style("fill", "none");
+                legendGroup.append("text")
+                    .text("legend")
+                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                    .attr("dx", 0)
+                    .attr("dy", 0)
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("fill", "black");
+                let legendItemHeight = (headerHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length;
+                let legendItemsGroup = legendGroup.selectAll("g")
+                    .data(self.exportData.viewModel.legendItems)
+                    .enter().append("g")
+                    .attr("transform", function(d,i) {
+                        return "translate(2," + ((2 * (headerFontSize + 1)) + (legendItemHeight * i)) +")"
+                    });
+                legendItemsGroup.append("text")
+                    .text(function(d) {return d.label})
+                    .attr("transform", "translate(12, "+ headerFontSize/2 +")")
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("fill", "black")
+                    .attr("dx", 0)
+                    .attr("dy", 0)
+                    .call(self.wrap, (headerSectionWidth - 14), 0, self);
+                legendItemsGroup.append("rect")
+                    .attr("width", 10)
+                    .attr("height", 10)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black")
+                    .style("fill", function(d) { return d.color });
+                posX++
+            }
+
+
         } else { //no header
             headerHeight = 0
         }
@@ -205,8 +276,8 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0,"+cellHeight+")")
         headerTacticNames.append("text")
             .text(function(d) {return self.toCamelCase(d.replace(/-/g," "))})
-            .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate(2, " + (tableFontSize + 1) +")")
+            .attr("font-size", tableTacticFontSize + fontUnits)
+            .attr("transform", "translate(2, " + (tableTacticFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
@@ -215,8 +286,8 @@ export class ExporterComponent implements AfterViewInit {
             .text(function(d) {
                 return self.exportData.tactics[d].length + " items"
             })
-            .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
+            .attr("font-size", tableTacticFontSize + fontUnits)
+            .attr("transform", "translate(1, " + (tableTacticFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .call(self.wrap, columnWidth, cellHeight, self)
@@ -376,15 +447,25 @@ export class ExportData {
         width: number; //graphic width
         height: number; //graphic height
         unit: string; //units of width/height: px, cm, or in
-        tableFontSize: number; //size of font in table, in pt
-        tableTextDisplay: string; //"name", "id" or "none"
-        showHeader: boolean; //show or hide the header
-        headerFontSize: number; //size of font in header, in pt?
 
-        showLegend: boolean; //show or hide the legend
+        tableFontSize: number; //size of font in table, in px
+        tableTacticFontSize: number; // size of tactic names font, in px
+        tableTextDisplay: string; //"name", "id" or "none"
+
+        showHeader: boolean; //show or hide the header
+        headerHeight: number; //height of header in px
+        headerFontSize: number; //size of font in header, in px
+        headerLayerNameFontSize: number //size of layer name in header in px
+
         legendDocked: boolean; //dock the legend to the header
         legendX: number; //if undocked, where to place X
         legendY: number; //if undocked, where to place Y
+
+        showLegend: boolean; //show or hide the legend
+        showGradient: boolean; //show/hide the gradient in the header
+        showFilters: true, //show/hide the filters in the header
+        showDescription: true, //show/hide the description in the header
+        showName: true //show/hide the layer name in the header
     }
 
 
@@ -397,14 +478,25 @@ export class ExportData {
             "width": 11,
             "height": 8.5,
             "unit": "in",
+
             "tableFontSize": 10,
+            "tableTacticFontSize": 12,
             "tableTextDisplay": "name",
+
             "showHeader": true,
+            "headerHeight": 133,
+            "headerLayerNameFontSize": 24,
             "headerFontSize": 15,
-            "showLegend": true,
+
             "legendDocked": true,
             "legendX": 0,
             "legendY": 0,
+
+            "showLegend": true,
+            "showGradient": true,
+            "showFilters": true,
+            "showDescription": true,
+            "showName": true
         }
 
     }
