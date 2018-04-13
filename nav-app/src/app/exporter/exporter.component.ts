@@ -132,7 +132,6 @@ export class ExporterComponent implements AfterViewInit {
                         .attr("dy", 0)
                         .attr("font-size", headerFontSize + fontUnits)
                         .attr("fill", "black")
-                        .style("font-weight", "bold")
                         .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
                     descriptionGroup.append("rect")
                         .attr("width", headerSectionWidth)
@@ -161,6 +160,31 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
                     .attr("fill", "black")
+                    .style("font-weight", "bold");
+
+                let filterTextGroup = filtersGroup.append("g")
+                    .attr("transform", "translate(2," + (2 * (headerFontSize + 1)) + ")");
+                filterTextGroup.append("text")
+                    .text(function() {
+                        let t = "stages: "
+                        let selection = self.exportData.viewModel.filters.stages.selection;
+                        for (let i = 0; i < selection.length; i++) {
+                            if (i != 0) t += ", ";
+                            t += selection[i]
+                        }
+                        return t;
+                    })
+                filterTextGroup.append("text")
+                    .text(function() {
+                        let t = "platforms: "
+                        let selection = self.exportData.viewModel.filters.platforms.selection;
+                        for (let i = 0; i < selection.length; i++) {
+                            if (i != 0) t += ", "
+                            t += selection[i]
+                        }
+                        return t;
+                    })
+                    .attr("transform", "translate(0, " +(headerFontSize + 1) + ")")
                 posX++
             }
 
@@ -181,7 +205,44 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
                     .attr("fill", "black")
+                    .style("font-weight", "bold");
                 posX++;
+
+                let gradientContentGroup = gradientGroup.append("g")
+                    .attr("transform", "translate(2," + ((headerFontSize + 1)) + ")");
+
+                let leftText = gradientContentGroup.append("text")
+                    .text(self.exportData.viewModel.gradient.minValue)
+                    .attr("transform", "translate(0," +(headerFontSize + 2) + ")")
+                    .attr("font-size", headerFontSize + fontUnits)
+
+
+                //set up gradient to bind
+                let svgDefs = svg.append('defs');
+                let gradientElement = svgDefs.append("linearGradient")
+                    .attr("id", "gradientElement");
+                for (let i = 0; i < self.exportData.viewModel.gradient.gradientRGB.length; i++) {
+                    let color = self.exportData.viewModel.gradient.gradientRGB[i];
+                    gradientElement.append('stop')
+                        .attr('offset', i/100)
+                        .attr("stop-color", color.toHexString())
+                    // console.log(color)
+                }
+                // console.log(gradientElement);
+                let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
+                let gradientDisplay = gradientContentGroup.append("rect")
+                    .attr("transform", "translate(" + gradientDisplayLeft + "," + headerFontSize/2 + ")")
+                    .attr("width", 50)
+                    .attr("height", 10)
+                    .style("stroke-width", 1)
+                    .style("stroke", "black")
+                    .attr("fill", "url(#gradientElement)" ); //bind gradient
+
+                gradientContentGroup.append("text")
+                    .text(self.exportData.viewModel.gradient.maxValue)
+                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + "," +(headerFontSize + 2) + ")")
+                    .attr("font-size", headerFontSize + fontUnits)
+
             }
 
             if (showLegend) {
@@ -200,7 +261,8 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("dx", 0)
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black");
+                    .attr("fill", "black")
+                    .style("font-weight", "bold");;
                 let legendItemHeight = (headerHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length;
                 let legendItemsGroup = legendGroup.selectAll("g")
                     .data(self.exportData.viewModel.legendItems)
