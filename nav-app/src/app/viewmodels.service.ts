@@ -6,7 +6,7 @@ declare var tinycolor: any; //use tinycolor2
 // import * as tinycolor from 'tinycolor2';
 import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
-import * as globals from 'app/globals'; //global variables
+import * as globals from './globals'; //global variables
 
 @Injectable()
 export class ViewModelsService {

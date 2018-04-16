@@ -250,8 +250,8 @@ export class ExporterComponent implements AfterViewInit {
         } else { //no header
             headerHeight = 0
         }
-
-        if (showLegend && !(legendInHeader && self.exportData.tableConfig.legendDocked)) {
+        // console.log(showLegend, legendInHeader && self.exportData.tableConfig.legendDocked)
+        if (showLegend && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
             console.log("building legend")
             //legend
             let legendGroup = legendInHeader ? header.append("g")
