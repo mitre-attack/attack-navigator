@@ -157,7 +157,7 @@
             <!-- export render -->
             <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                 <div class="control-row-button noselect"
-                    (click)="exportRender()"
+                    (click)="filteredTechniques.length > 0 ? exportRender() : pass"
                     matTooltipPosition="below"
                     matTooltip="export render">
                     <img src="assets/ic_camera_alt_black_24px.svg" alt="export render"/>
@@ -549,7 +549,7 @@
             <!-- <input class="label" [(ngModel)]="item.label"> -->
             <mat-form-field class="label">
                     <input matInput
-                    
+
                     [(ngModel)]="item.label">
 
             </mat-form-field>
