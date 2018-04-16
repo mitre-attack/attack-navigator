@@ -59,7 +59,7 @@ export class DataTableComponent implements AfterViewInit {
     customContextMenuItems = [];
 
     showingLegend = false;
-    
+
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
@@ -434,6 +434,7 @@ export class DataTableComponent implements AfterViewInit {
                 // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
+            this.populateEditFields();
         } else {
             console.error("no viewmodel to initialize data for!")
         }
