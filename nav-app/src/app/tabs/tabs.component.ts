@@ -13,6 +13,7 @@ import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../
 import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
 import { Http } from '@angular/http';
+import * as globals from './../globals';
 
 declare var math: any; //use mathjs
 
@@ -454,7 +455,8 @@ export class TabsComponent implements AfterContentInit {
             let content = res.text();
             try {
                 viewModel.deSerialize(content)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true)
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true);
+                
             } catch(err) {
                 console.log(err)
                 alert("ERROR: Failed to load layer file from URL")
@@ -473,7 +475,7 @@ export class TabsComponent implements AfterContentInit {
             let content = res.text();
             try {
                 viewModel.deSerialize(content)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true)
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true);
             } catch(err) {
                 console.log(err)
                 alert("ERROR: Failed to load layer file from local path")

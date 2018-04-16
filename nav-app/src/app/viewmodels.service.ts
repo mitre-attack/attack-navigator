@@ -7,7 +7,7 @@ declare var tinycolor: any; //use tinycolor2
 // import * as tinycolor from 'tinycolor2';
 import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
-import * as globals from './globals'; //global variables
+import * as globals from 'app/globals'; //global variables
 
 @Injectable()
 export class ViewModelsService {
@@ -386,12 +386,14 @@ export class ViewModel {
         // console.log("INITIALIZING VIEW MODEL FOR DOMAIN: " + this.domain);
         this.filters = new Filter(this.domain);
         this.name = name;
+        this.version = globals.layer_version;
     }
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
     domain: string; //layer domain, TODO
     description: string = ""; //layer description
+    version: string = "";
 
     filters: Filter;
 
@@ -624,7 +626,7 @@ export class ViewModel {
         })
         let rep: {[k: string]: any } = {};
         rep.name = this.name;
-        rep.version = String(globals.layer_version);
+        rep.version = String(this.version);
         rep.domain = this.domain
 
         rep.description = this.description;
@@ -646,6 +648,13 @@ export class ViewModel {
         let obj = JSON.parse(rep)
         this.name = obj.name
         this.domain = obj.domain;
+
+        this.version = obj.version;
+        if(this.version !== globals.layer_version){
+            alert("NOTICE: Uploaded layer version (" + String(this.version) + ") does not match Navigator's layer version ("
+            + String(globals.layer_version) + ")");
+        }
+
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
