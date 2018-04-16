@@ -844,7 +844,7 @@ export class DataTableComponent implements AfterViewInit {
     exportRender(): void {
         let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce());
         viewModelCopy.deSerialize(this.viewModel.serialize());
-        let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), JSON.parse(JSON.stringify(this.filteredTechniques)));
+        let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(exportData);
     }
 

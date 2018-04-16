@@ -317,9 +317,9 @@ export class ExporterComponent implements AfterViewInit {
         cellHeight = Math.max(cellHeight, 1) //must be positive number
 
         // columns
-        let columnWidth = (width - margin.right)/(Object.keys(self.exportData.tactics).length)
+        let columnWidth = (width - margin.right)/(self.exportData.orderedTactics.length)
         let columns = tablebody.selectAll("g")
-            .data(Object.keys(self.exportData.tactics)).enter()
+            .data(self.exportData.orderedTactics).enter()
             .append("g")
             .attr("transform", function(d,i) {
                 // console.log(d,i)
@@ -539,9 +539,11 @@ export class ExportData {
 
     viewModel: ViewModel;
     tactics: object;
+    orderedTactics: string[];
     filteredTechniques: Technique[];
-    constructor(viewModel, tactics, filteredTechniques: Technique[]) {
+    constructor(viewModel, tactics, orderedTactics, filteredTechniques: Technique[]) {
         this.viewModel = viewModel; this.tactics = tactics; this.filteredTechniques = filteredTechniques;
+        this.orderedTactics = orderedTactics;
         this.tableConfig = {
             "width": 11,
             "height": 8.5,
