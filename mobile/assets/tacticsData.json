@@ -90,25 +90,24 @@
                 "description": "Staging capabilities consists of preparing operational environment required to conduct the operation. This includes activities such as deploying software, uploading data, enabling command and control infrastructure.",
                 "phase": "prepare",
                 "url": "https://attack.mitre.org/pre-attack/index.php/Stage_Capabilities"
-            },
-            {
-                "tactic": "launch",
-                "description": "Launch takes place when the adversary attempts to penetrate a target or intermediate target. Potential vectors of activity leading to compromise include remote software exploitation leading to code execution, gathering legitimate credentials prior to initial access of network, social engineering to execute exploit-less software, interdicting software or hardware supply chain, removable devices/media, sending a spearphish email, etc.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Launch"
-            },
-            {
-                "tactic": "compromise",
-                "description": "Compromise occurs when the adversary receives confirmation that the penetration was successful and the adversary has access to or control over one or more assets in the target environment. The combination of exploit, downloader, and RAT equals a successful compromise.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Compromise"
             }
         ],
         "domains": ["mitre-mobile","mitre-enterprise"]
     },
     "enterprise_tactics": {
         "tactics": [
-            
+            {
+                "tactic": "initial-access",
+                "description": "The initial access tactic represents the vectors adversaries use to gain an initial foothold within a network.",
+                "phase": "act",
+                "url": "https://attack.mitre.org/wiki/Initial_Access"
+            },
+            {
+                "tactic": "execution",
+                "description": "The execution tactic represents techniques that result in execution of adversary-controlled code on a local or remote system. This tactic is often used in conjunction with lateral movement to expand access to remote systems on a network.",
+                "phase": "act",
+                "url": "https://attack.mitre.org/wiki/Execution"
+            },
             {
                 "tactic": "persistence",
                 "description": "Persistence is any access, action, or configuration change to a system that gives an adversary a persistent presence on that system. Adversaries will often need to maintain access to systems through interruptions such as system restarts, loss of credentials, or other failures that would require a remote access tool to restart or alternate backdoor for them to regain access.",
@@ -144,12 +143,6 @@
                 "description": "Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool.\n\nAn adversary can use lateral movement for many purposes, including remote Execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect. The ability to remotely execute scripts or code can be a feature of adversary remote access tools, but adversaries may also reduce their tool footprint on the network by using legitimate credentials alongside inherent network and operating system functionality to remotely connect to systems.\n\nMovement across a network from one system to another may be necessary to achieve an adversary’s goals. Thus lateral movement, and the techniques that lateral movement relies on, are often very important to an adversary's set of capabilities and part of a broader set of information and access dependencies that the adversary takes advantage of within a network. To understand intrinsic security dependencies, it is important to know the relationships between accounts and access privileges across all systems on a network. Lateral movement may not always be a requirement for an adversary. If an adversary can reach the goal with access to the initial system, then additional movement throughout a network may be unnecessary.",
                 "phase": "act",
                 "url": "https://attack.mitre.org/wiki/Lateral_Movement"
-            },
-            {
-                "tactic": "execution",
-                "description": "The execution tactic represents techniques that result in execution of adversary-controlled code on a local or remote system. This tactic is often used in conjunction with lateral movement to expand access to remote systems on a network.",
-                "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Execution"
             },
             {
                 "tactic": "collection",
