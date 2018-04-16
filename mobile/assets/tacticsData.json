@@ -62,7 +62,7 @@
                 "url": "https://attack.mitre.org/pre-attack/index.php/Adversary_OPSEC"
             },
             {
-                "tactic": "establish-and-maintain-infrastructure",
+                "tactic": "establish-&-maintain-infrastructure",
                 "description": "Establishing and maintaining infrastructure consists of building, purchasing, co-opting, and maintaining systems and services used to conduct cyber operations. An adversary will need to establish infrastructure used to communicate with and control assets used throughout the course of their operations.",
                 "phase": "prepare",
                 "url": "https://attack.mitre.org/pre-attack/index.php/Establish_%26_Maintain_Infrastructure"
