@@ -649,12 +649,10 @@ export class ViewModel {
         this.name = obj.name
         this.domain = obj.domain;
 
-        this.version = obj.version;
-        if(this.version !== globals.layer_version){
+        if(obj.version !== globals.layer_version){
             alert("NOTICE: Uploaded layer version (" + String(this.version) + ") does not match Navigator's layer version ("
             + String(globals.layer_version) + ")");
         }
-
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
