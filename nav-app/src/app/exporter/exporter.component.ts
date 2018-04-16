@@ -64,38 +64,37 @@ export class ExporterComponent implements AfterViewInit {
         // | || | __| /_\ |   \| __| _ \
         // | __ | _| / _ \| |) | _||   /
         // |_||_|___/_/ \_\___/|___|_|_\
+        let showName = self.exportData.tableConfig.showName && self.exportData.viewModel.name.length > 0;
+        let showDescription = self.exportData.tableConfig.showDescription && self.exportData.viewModel.description.length > 0;
+        let showLayerInfo = (showName || showDescription)
+        let showFilters = this.exportData.tableConfig.showFilters
 
-        let headerHeight = Math.max(self.exportData.tableConfig.headerHeight, 1); console.log("headerHeight", headerHeight)
-        if (self.exportData.tableConfig.showHeader) {
-            let header = svg.append("g");
-
-            // determine header divisions
-            let showName = self.exportData.tableConfig.showName && self.exportData.viewModel.name.length > 0;
-            let showDescription = self.exportData.tableConfig.showDescription && self.exportData.viewModel.description.length > 0;
-            let showLayerInfo = (showName || showDescription)
-            let showFilters = this.exportData.tableConfig.showFilters
-
-            let hasScores = false;
-            self.exportData.filteredTechniques.forEach(function(technique: Technique) {
-                if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
-                    if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") hasScores = true;
-                }
-
-            })
-            let showGradient = this.exportData.tableConfig.showGradient && hasScores;
-            let showLegend = this.exportData.tableConfig.showLegend && this.exportData.tableConfig.legendDocked && this.exportData.viewModel.legendItems.length > 0;
-
-            //count columns
-            let numSections = 0;
-            for (let i = 0; i < 4; i++) {
-                let option = [showLayerInfo, showFilters, showGradient, showLegend][i];
-                console.log(option)
-                if (option) numSections++;
+        let hasScores = false;
+        self.exportData.filteredTechniques.forEach(function(technique: Technique) {
+            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
+                if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") hasScores = true;
             }
-            let headerSectionWidth = width/numSections;
-            console.log(numSections, headerSectionWidth)
 
-            let posX = 0; //row in the header
+        })
+        let showGradient = this.exportData.tableConfig.showGradient && hasScores;
+        let showLegend = this.exportData.tableConfig.showLegend && this.exportData.viewModel.legendItems.length > 0;
+        let legendInHeader = this.exportData.tableConfig.legendDocked && showLegend;
+
+        //count columns
+        let numSections = 0;
+        for (let i = 0; i < 4; i++) {
+            let option = [showLayerInfo, showFilters, showGradient, legendInHeader][i];
+            if (option) numSections++;
+        }
+        let headerSectionWidth = width/numSections;
+        // console.log(numSections, headerSectionWidth)
+        let header = null;
+        let headerHeight = Math.max(self.exportData.tableConfig.headerHeight, 1); console.log("headerHeight", headerHeight)
+        let posX = 0; //row in the header
+
+        if (self.exportData.tableConfig.showHeader) {
+            header = svg.append("g");
+
             // layer name
             if (showLayerInfo) {
                 let layerAndDescPresent = (showName && showDescription)
@@ -245,51 +244,56 @@ export class ExporterComponent implements AfterViewInit {
 
             }
 
-            if (showLegend) {
-                //legend
-                let legendGroup = header.append("g")
-                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
-                legendGroup.append("rect")
-                    .attr("width", headerSectionWidth)
-                    .attr("height", headerHeight)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", "none");
-                legendGroup.append("text")
-                    .text("legend")
-                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .style("font-weight", "bold");;
-                let legendItemHeight = (headerHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length;
-                let legendItemsGroup = legendGroup.selectAll("g")
-                    .data(self.exportData.viewModel.legendItems)
-                    .enter().append("g")
-                    .attr("transform", function(d,i) {
-                        return "translate(2," + ((2 * (headerFontSize + 1)) + (legendItemHeight * i)) +")"
-                    });
-                legendItemsGroup.append("text")
-                    .text(function(d) {return d.label})
-                    .attr("transform", "translate(12, "+ headerFontSize/2 +")")
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .call(self.wrap, (headerSectionWidth - 14), 0, self);
-                legendItemsGroup.append("rect")
-                    .attr("width", 10)
-                    .attr("height", 10)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", function(d) { return d.color });
-                posX++
-            }
+
 
 
         } else { //no header
             headerHeight = 0
+        }
+
+        if (showLegend && !(legendInHeader && self.exportData.tableConfig.legendDocked)) {
+            console.log("building legend")
+            //legend
+            let legendGroup = legendInHeader ? header.append("g")
+                .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
+                                             : svg.append("g")
+                .attr("transform", "translate("+self.exportData.tableConfig.legendX+","+self.exportData.tableConfig.legendY+")");
+            legendGroup.append("rect")
+                .attr("width", legendInHeader ? headerSectionWidth : self.exportData.tableConfig.legendWidth)
+                .attr("height",  legendInHeader ? headerHeight : self.exportData.tableConfig.legendHeight)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "none");
+            legendGroup.append("text")
+                .text("legend")
+                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+                .style("font-weight", "bold");;
+            let legendItemHeight = legendInHeader ? ((headerHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length);
+            let legendItemsGroup = legendGroup.selectAll("g")
+                .data(self.exportData.viewModel.legendItems)
+                .enter().append("g")
+                .attr("transform", function(d,i) {
+                    return "translate(2," + ((2 * (headerFontSize + 1)) + (legendItemHeight * i)) +")"
+                });
+            legendItemsGroup.append("text")
+                .text(function(d) {return d.label})
+                .attr("transform", "translate(12, "+ headerFontSize/2 +")")
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .call(self.wrap, (legendInHeader ? headerSectionWidth : self.exportData.tableConfig.legendWidth - 14), 0, self);
+            legendItemsGroup.append("rect")
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", function(d) { return d.color });
+            // posX++
         }
 
 
@@ -522,6 +526,8 @@ export class ExportData {
         legendDocked: boolean; //dock the legend to the header
         legendX: number; //if undocked, where to place X
         legendY: number; //if undocked, where to place Y
+        legendWidth: number; //if undocked, width of legend
+        legendHeight: number; //if undocked, height of legend
 
         showLegend: boolean; //show or hide the legend
         showGradient: boolean; //show/hide the gradient in the header
@@ -553,6 +559,8 @@ export class ExportData {
             "legendDocked": true,
             "legendX": 0,
             "legendY": 0,
+            "legendWidth": 100,
+            "legendHeight": 100,
 
             "showLegend": true,
             "showGradient": true,
