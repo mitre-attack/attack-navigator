@@ -649,8 +649,8 @@ export class ViewModel {
         this.domain = obj.domain;
 
         if(obj.version !== globals.layer_version){
-            alert("NOTICE: Uploaded layer version (" + String(this.version) + ") does not match Navigator's layer version ("
-            + String(globals.layer_version) + ")");
+            alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
+            + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
         }
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
