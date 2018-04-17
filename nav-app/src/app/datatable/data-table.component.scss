@@ -127,28 +127,6 @@ $cellSize: 15px;
 
 
 
-// dropdown controls container
-.dropdown-container {
-    &.left { right: 0 }
-    border: 1px solid black;
-    background-color: white;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-    position: absolute;
-    z-index: 100; //draw on top of other controls
-    width: max-content;
-
-    &.inputfield {
-        width:  150px;
-        padding: 0px 10px;
-        mat-form-field {
-            width: 100%;
-            &:first-child {
-                padding-top:5px;
-            }
-        }
-    }
-}
-
 .multiselect-dropdown{
     display: inline-block;
 }
@@ -488,7 +466,7 @@ $panel-light: lighten($panel-dark, 8%);
                 margin-left:10px;
                 width:150px;
             }
-            
+
         }
         .even {
             background-color: $panel-light;

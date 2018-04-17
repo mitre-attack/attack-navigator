@@ -34,6 +34,8 @@ export class ExporterComponent implements AfterViewInit {
 
         let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit)  - (margin.right + margin.left), 10); console.log("width", width);
         let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
+        let headerHeight = Math.max(self.convertToPx(self.exportData.tableConfig.headerHeight, self.exportData.tableConfig.unit), 1); console.log("headerHeight", headerHeight)
+
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
         let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
         let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
@@ -91,7 +93,6 @@ export class ExporterComponent implements AfterViewInit {
         let headerSectionWidth = width/numSections;
         // console.log(numSections, headerSectionWidth)
         let header = null;
-        let headerHeight = Math.max(self.exportData.tableConfig.headerHeight, 1); console.log("headerHeight", headerHeight)
         let posX = 0; //row in the header
         let headerSectionTitleSep = (2 * (headerFontSize + 1))
 
@@ -528,6 +529,16 @@ export class ExporterComponent implements AfterViewInit {
     getKeys(obj) { return Object.keys(obj) }
     type(obj) { return typeof(obj) }
 
+    /**
+     * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
+     * @param  dropdown the DOM node of the panel
+     * @return          true if it would overflow
+     */
+    checkalign(dropdown): boolean {
+        // console.log(anchor)
+        let anchor = dropdown.parentNode;
+        return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
+    }
 
 }
 
@@ -543,7 +554,7 @@ export class ExportData {
         tableTextDisplay: string; //"name", "id" or "none"
 
         showHeader: boolean; //show or hide the header
-        headerHeight: number; //height of header in px
+        headerHeight: number; //height of header in unit
         headerFontSize: number; //size of font in header, in px
         headerLayerNameFontSize: number //size of layer name in header in px
 
@@ -571,6 +582,8 @@ export class ExportData {
         this.tableConfig = {
             "width": 11,
             "height": 8.5,
+            "headerHeight": 1,
+
             "unit": "in",
 
             "font": 'sans-serif',
@@ -579,7 +592,6 @@ export class ExportData {
             "tableTextDisplay": "name",
 
             "showHeader": true,
-            "headerHeight": 125,
             "headerLayerNameFontSize": 24,
             "headerFontSize": 15,
 

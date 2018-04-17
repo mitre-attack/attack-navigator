@@ -1,50 +1,121 @@
 <div class="controlsContainer">
-    <!-- <ul class="control-sections">
+    <ul class="control-sections">
         <li>
-            <div class="section-label">
-                image size
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'imgsize' ? 'imgsize' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="image size">
+                    <img src="assets/icons/ic_photo_size_select_large_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container size" *ngIf="currentDropdown === 'imgsize'" #dropdown [class.left]="checkalign(dropdown)">
+                    <table>
+                        <tr>
+                            <td>width: <input type="number" [(ngModel)]="exportData.tableConfig.width" (input)="buildSVG()"></td>
+                            <td colspan="3">
+                                <select [(ngModel)]="exportData.tableConfig.unit" (change)="buildSVG()">
+                                    <option value="px">px</option>
+                                    <option value="in">in</option>
+                                    <option value="cm">cm</option>
+                                </select>
+                                </td>
+                        </tr>
+                        <tr>
+                            <td>height: <input type="number" [(ngModel)]="exportData.tableConfig.height" (input)="buildSVG()"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Header Height (does not contribute to total height): <input type="number" [(ngModel)]="exportData.tableConfig.headerHeight" (input)="buildSVG()">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
-            <div class="control-row-item" >
-                <input type="number" [(ngModel)]="width" (input)="buildSVG()">
-
-                x
-                <input type="number" [(ngModel)]="height" (input)="buildSVG()">
-                <select [(ngModel)]="whUnits">
-                    <option value="px">px</option>
-                    <option value="in">in</option>
-                    <option value="cm">cm</option>
-                </select>
-
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'font' ? 'font' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="font">
+                    <img src="assets/icons/ic_format_size_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container font" *ngIf="currentDropdown === 'font'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            Title Font Size: <input type="number" [(ngModel)]="exportData.tableConfig.headerLayerNameFontSize" (input)="buildSVG()">
+                        </li>
+                        <li>
+                            Header Font Size: <input type="number" [(ngModel)]="exportData.tableConfig.headerFontSize" (input)="buildSVG()">
+                        </li>
+                        <li>
+                            Technique Font Size: <input type="number" [(ngModel)]="exportData.tableConfig.tableFontSize" (input)="buildSVG()">
+                        </li>
+                        <li>
+                            Tactic font size: <input type="number" [(ngModel)]="exportData.tableConfig.tableTacticFontSize" (input)="buildSVG()">
+                        </li>
+                        <li>
+                            Font: <select [(ngModel)]="exportData.tableConfig.font" (change)="buildSVG()">
+                                <option value="serif">serif</option>
+                                <option value="sans-serif">sans-serif</option>
+                                <option value="monospace">monospace</option>
+                            </select>
+                        </li>
+                        <li>
+                            Technique Text: <select [(ngModel)]="exportData.tableConfig.tableTextDisplay" (change)="buildSVG()">
+                                <option value="none">No Text</option>
+                                <option value="name">Technique Name</option>
+                                <option value="id">Technique ID</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </li>
-        <li>
-            <div class="section-label">
-                font size
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'legend' ? 'legend' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="legend">
+                    <img src="assets/icons/ic_view_list_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container legend" *ngIf="currentDropdown === 'legend'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            Legend Docked: <input type="checkbox" [(ngModel)]="exportData.tableConfig.legendDocked" (change)="buildSVG()">
+                        </li>
+                        <li *ngFor="let configItem of ['legendX', 'legendY', 'legendWidth', 'legendHeight']">
+                            {{configItem}}: <input type="number" [(ngModel)]="exportData.tableConfig[configItem]" (input)="buildSVG()">
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="control-row-item has-input">
-                <input type="number" [(ngModel)]="fontSize" (input)="buildSVG()">pt
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'visibility' ? 'visibility' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="visibility settings">
+                    <img src="assets/icons/ic_visibility_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container visibility" *ngIf="currentDropdown === 'visibility'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li *ngFor="let configItem of ['showLegend', 'showGradient', 'showFilters', 'showDescription', 'showName', 'showHeader']">
+                            {{configItem}}: <input type="checkbox" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <select [(ngModel)]="cellTextMode" (change)="buildSVG()">
-                <option value="none">No Text</option>
-                <option value="name">Technique Name</option>
-                <option value="id">Technique ID</option>
-            </select>
-        </li>
-
-        <li>
             <div class="control-row-item">
                 <div class="control-row-button noselect"
                 [id]="'download-button' + exportData.viewModel.uid"
                     (click)="downloadSVG()"
                     matTooltipPosition="below"
-                    matTooltip="download render">
-                    <img src="assets/ic_file_download_black_24px.svg" alt="save layer"/>
+                    matTooltip="download SVG">
+                    <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
                 </div>
             </div>
+
         </li>
-    </ul> -->
-<ul>
+    </ul>
+<!-- <ul>
     <li *ngFor="let configItem of getKeys(exportData.tableConfig)">
         {{configItem}}:
         <select *ngIf="configItem === 'unit'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
@@ -67,14 +138,8 @@
         <input *ngIf="type(exportData.tableConfig[configItem]) == 'boolean'" type="checkbox" [(ngModel)]=exportData.tableConfig[configItem] (change)="buildSVG()">
 
     </li>
-</ul>
-<div class="control-row-button noselect"
-[id]="'download-button' + exportData.viewModel.uid"
-    (click)="downloadSVG()"
-    matTooltipPosition="below"
-    matTooltip="download render">
-    <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
-</div>
+</ul> -->
+
 
 </div>
 
