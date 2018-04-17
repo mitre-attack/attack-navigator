@@ -51,7 +51,8 @@ export class ExporterComponent implements AfterViewInit {
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .attr("id", "svg" + self.exportData.viewModel.uid) //Tag for downloadSVG
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .style("font-family", self.exportData.tableConfig.font);
         let stroke_width = 1;
         // svg.append("rect")
         //     .attr("width", width - margin.right - stroke_width/2)
@@ -536,6 +537,7 @@ export class ExportData {
         height: number; //graphic height
         unit: string; //units of width/height: px, cm, or in
 
+        font: string; //font to use in the table
         tableFontSize: number; //size of font in table, in px
         tableTacticFontSize: number; // size of tactic names font, in px
         tableTextDisplay: string; //"name", "id" or "none"
@@ -571,6 +573,7 @@ export class ExportData {
             "height": 8.5,
             "unit": "in",
 
+            "font": 'sans-serif',
             "tableFontSize": 10,
             "tableTacticFontSize": 12,
             "tableTextDisplay": "name",

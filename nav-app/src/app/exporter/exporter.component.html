@@ -57,6 +57,11 @@
             <option value="name">Technique Name</option>
             <option value="id">Technique ID</option>
         </select>
+        <select *ngIf="configItem === 'font'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="serif">serif</option>
+            <option value="sans-serif">sans-serif</option>
+            <option value="monospace">monospace</option>
+        </select>
 
         <input *ngIf="type(exportData.tableConfig[configItem]) == 'number'" type="number" [(ngModel)]=exportData.tableConfig[configItem] (input)="buildSVG()">
         <input *ngIf="type(exportData.tableConfig[configItem]) == 'boolean'" type="checkbox" [(ngModel)]=exportData.tableConfig[configItem] (change)="buildSVG()">
