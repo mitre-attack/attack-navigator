@@ -30,34 +30,35 @@ export class ExporterComponent implements AfterViewInit {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
         //check preconditions, make sure they're in the right range
-        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit), 10); console.log("width", width);
-        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit), 10); console.log("height", height)
+        let margin = {top: 5, right: 5, bottom: 5, left: 5};
+
+        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit)  - (margin.right + margin.left), 10); console.log("width", width);
+        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
         let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
         let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
         let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
         let fontUnits = 'px'
 
-        let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
         //remove previous graphic
         let element = <HTMLElement>document.getElementById(self.svgDivName);
         element.innerHTML = "";
 
         let svg = d3.select("#" + self.svgDivName).append("svg")
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .attr("id", "svg" + self.exportData.viewModel.uid) //Tag for downloadSVG
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         let stroke_width = 1;
-        svg.append("rect")
-            .attr("width", width - margin.right - stroke_width/2)
-            .attr("height", height - margin.bottom - stroke_width/2)
-            .style("stroke", "black")
-            .style("stroke-width", stroke_width)
-            .style("fill", "none")
+        // svg.append("rect")
+        //     .attr("width", width - margin.right - stroke_width/2)
+        //     .attr("height", height - margin.bottom - stroke_width/2)
+        //     .style("stroke", "black")
+        //     .style("stroke-width", stroke_width)
+        //     .style("fill", "none")
 
 
         //  _  _ ___   _   ___  ___ ___
@@ -91,9 +92,16 @@ export class ExporterComponent implements AfterViewInit {
         let header = null;
         let headerHeight = Math.max(self.exportData.tableConfig.headerHeight, 1); console.log("headerHeight", headerHeight)
         let posX = 0; //row in the header
+        let headerSectionTitleSep = (2 * (headerFontSize + 1))
 
         if (self.exportData.tableConfig.showHeader) {
             header = svg.append("g");
+            header.append("rect")
+                .attr("width", width)
+                .attr("height", headerHeight)
+                .style("stroke", "black")
+                .style("stroke-width", stroke_width)
+                .style("fill", "none")
 
             // layer name
             if (showLayerInfo) {
@@ -162,7 +170,7 @@ export class ExporterComponent implements AfterViewInit {
                     .style("font-weight", "bold");
 
                 let filterTextGroup = filtersGroup.append("g")
-                    .attr("transform", "translate(2," + (2 * (headerFontSize + 1)) + ")");
+                    .attr("transform", "translate(2," + (headerSectionTitleSep + 6) + ")");
                 filterTextGroup.append("text")
                     .text(function() {
                         let t = "stages: "
@@ -173,6 +181,8 @@ export class ExporterComponent implements AfterViewInit {
                         }
                         return t;
                     })
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("dominant-baseline", "middle");
                 filterTextGroup.append("text")
                     .text(function() {
                         let t = "platforms: "
@@ -183,7 +193,9 @@ export class ExporterComponent implements AfterViewInit {
                         }
                         return t;
                     })
-                    .attr("transform", "translate(0, " +(headerFontSize + 1) + ")")
+                    .attr("font-size", headerFontSize + fontUnits)
+                    .attr("dominant-baseline", "middle")
+                    .attr("transform", "translate(0, " +(headerFontSize + 1) + ")");
                 posX++
             }
 
@@ -208,12 +220,14 @@ export class ExporterComponent implements AfterViewInit {
                 posX++;
 
                 let gradientContentGroup = gradientGroup.append("g")
-                    .attr("transform", "translate(2," + ((headerFontSize + 1)) + ")");
+                    .attr("transform", "translate(2," + headerSectionTitleSep + ")");
 
                 let leftText = gradientContentGroup.append("text")
                     .text(self.exportData.viewModel.gradient.minValue)
-                    .attr("transform", "translate(0," +(headerFontSize + 2) + ")")
+                    .attr("transform", "translate(0, 6)")
                     .attr("font-size", headerFontSize + fontUnits)
+                    .attr("dominant-baseline", "middle")
+
 
 
                 //set up gradient to bind
@@ -230,7 +244,7 @@ export class ExporterComponent implements AfterViewInit {
                 // console.log(gradientElement);
                 let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
                 let gradientDisplay = gradientContentGroup.append("rect")
-                    .attr("transform", "translate(" + gradientDisplayLeft + "," + headerFontSize/2 + ")")
+                    .attr("transform", "translate(" + gradientDisplayLeft + ", 0)")
                     .attr("width", 50)
                     .attr("height", 10)
                     .style("stroke-width", 1)
@@ -239,11 +253,18 @@ export class ExporterComponent implements AfterViewInit {
 
                 gradientContentGroup.append("text")
                     .text(self.exportData.viewModel.gradient.maxValue)
-                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + "," +(headerFontSize + 2) + ")")
+                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", 6)")
                     .attr("font-size", headerFontSize + fontUnits)
+                    .attr("dominant-baseline", "middle")
 
             }
-
+            header.append("line")
+                .attr("x1", 0)
+                .attr("x2", width)
+                .attr("y1", headerHeight)
+                .attr("y2", headerHeight)
+                .style("stroke", "black")
+                .style("stroke-width", 3);
 
 
 
@@ -272,16 +293,17 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("font-size", headerFontSize + fontUnits)
                 .attr("fill", "black")
                 .style("font-weight", "bold");;
-            let legendItemHeight = legendInHeader ? ((headerHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - (2 * (headerFontSize + 1)))/self.exportData.viewModel.legendItems.length);
+            let legendItemHeight = legendInHeader ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
             let legendItemsGroup = legendGroup.selectAll("g")
                 .data(self.exportData.viewModel.legendItems)
                 .enter().append("g")
                 .attr("transform", function(d,i) {
-                    return "translate(2," + ((2 * (headerFontSize + 1)) + (legendItemHeight * i)) +")"
+                    return "translate(2," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
                 });
             legendItemsGroup.append("text")
                 .text(function(d) {return d.label})
-                .attr("transform", "translate(12, "+ headerFontSize/2 +")")
+                .attr("transform", "translate(12, 6)")
+                .attr("dominant-baseline", "middle")
                 .attr("font-size", headerFontSize + fontUnits)
                 .attr("fill", "black")
                 .attr("dx", 0)
@@ -311,13 +333,13 @@ export class ExporterComponent implements AfterViewInit {
 
         Object.keys(self.exportData.tactics).forEach(function(key: string) {
             let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
-            let selfCellHeight = (height - margin.bottom - headerHeight)/numVCells
+            let selfCellHeight = (height - headerHeight)/numVCells
             cellHeight = Math.min(cellHeight, selfCellHeight)
         });
         cellHeight = Math.max(cellHeight, 1) //must be positive number
 
         // columns
-        let columnWidth = (width - margin.right)/(self.exportData.orderedTactics.length)
+        let columnWidth = (width)/(self.exportData.orderedTactics.length)
         let columns = tablebody.selectAll("g")
             .data(self.exportData.orderedTactics).enter()
             .append("g")
@@ -554,7 +576,7 @@ export class ExportData {
             "tableTextDisplay": "name",
 
             "showHeader": true,
-            "headerHeight": 133,
+            "headerHeight": 125,
             "headerLayerNameFontSize": 24,
             "headerFontSize": 15,
 
