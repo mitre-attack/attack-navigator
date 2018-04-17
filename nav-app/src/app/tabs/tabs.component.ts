@@ -333,6 +333,7 @@ export class TabsComponent implements AfterContentInit {
     enabledness: ViewModel = null;
     filters: ViewModel = null;
     scoreExpression: string = "";
+    legendItems: ViewModel = null;
     /**
      * layer layer operation
      */
@@ -355,7 +356,7 @@ export class TabsComponent implements AfterContentInit {
 
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
-            let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters)
+            let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true)
         } catch (err) {
             alert("Math error" + err.message)
