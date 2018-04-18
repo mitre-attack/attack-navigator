@@ -132,7 +132,7 @@ $cellSize: 15px;
 }
 
 .colorpicker {
-    width: ($cellSize + 5 + 2) * 4;
+    width: ($cellSize + 5 + 2) * 4 !important; //override preset width
     align-items: center;
     text-align: center;
     .color-block {

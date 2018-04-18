@@ -15,6 +15,7 @@ export class ExporterComponent implements AfterViewInit {
     @Input() exportData: ExportData;
 
     svgDivName = "svgInsert_tmp"
+    unitEnum = 0; //counter for unit change ui element
     constructor(private configService: ConfigService) { }
 
     ngAfterViewInit() {
@@ -54,13 +55,18 @@ export class ExporterComponent implements AfterViewInit {
 
         let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit)  - (margin.right + margin.left), 10); console.log("width", width);
         let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
-        let headerHeight = Math.max(self.convertToPx(self.exportData.tableConfig.headerHeight, self.exportData.tableConfig.unit), 1); console.log("headerHeight", headerHeight)
+        let headerHeight = Math.max(self.convertToPx(self.exportData.tableConfig.headerHeight, self.exportData.tableConfig.unit), 1); console.log("headerHeight", headerHeight);
+
+        let legendX = Math.max(self.convertToPx(self.exportData.tableConfig.legendX, self.exportData.tableConfig.unit), 0);
+        let legendY = Math.max(self.convertToPx(self.exportData.tableConfig.legendY, self.exportData.tableConfig.unit), 0);
+        let legendWidth = Math.max(self.convertToPx(self.exportData.tableConfig.legendWidth, self.exportData.tableConfig.unit), 10);
+        let legendHeight = Math.max(self.convertToPx(self.exportData.tableConfig.legendHeight, self.exportData.tableConfig.unit), 10);
 
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
         let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
         let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
         let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
-        let fontUnits = 'px'
+        let fontUnits = self.exportData.tableConfig.fontUnit;
 
 
         //remove previous graphic
@@ -285,10 +291,10 @@ export class ExporterComponent implements AfterViewInit {
             let legendGroup = self.showLegendInHeader() ? header.append("g")
                 .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
                                              : svg.append("g")
-                .attr("transform", "translate("+self.exportData.tableConfig.legendX+","+self.exportData.tableConfig.legendY+")");
+                .attr("transform", "translate("+legendX+","+legendY+")");
             legendGroup.append("rect")
-                .attr("width", self.showLegendInHeader() ? headerSectionWidth : self.exportData.tableConfig.legendWidth)
-                .attr("height",  self.showLegendInHeader() ? headerHeight : self.exportData.tableConfig.legendHeight)
+                .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
+                .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
                 .style("stroke-width", 1)
                 .style("stroke", "black")
                 .style("fill", "none");
@@ -300,7 +306,7 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("font-size", headerFontSize + fontUnits)
                 .attr("fill", "black")
                 .style("font-weight", "bold");;
-            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
+            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
             let legendItemsGroup = legendGroup.selectAll("g")
                 .data(self.exportData.viewModel.legendItems)
                 .enter().append("g")
@@ -315,7 +321,7 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("fill", "black")
                 .attr("dx", 0)
                 .attr("dy", 0)
-                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : self.exportData.tableConfig.legendWidth - 14), 0, self);
+                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
             legendItemsGroup.append("rect")
                 .attr("width", 10)
                 .attr("height", 10)
@@ -473,6 +479,9 @@ export class ExporterComponent implements AfterViewInit {
                 factor = 16;
                 break;
             }
+            case "pt": {
+                factor = 1.33;
+            }
             default: {
                 console.error("unknown unit", unit)
                 factor = 0;
@@ -552,6 +561,7 @@ export class ExportData {
         width: number; //graphic width
         height: number; //graphic height
         unit: string; //units of width/height: px, cm, or in
+        fontUnit: string; //units for font size: px or pt
 
         font: string; //font to use in the table
         tableFontSize: number; //size of font in table, in px
@@ -590,21 +600,22 @@ export class ExportData {
             "headerHeight": 1,
 
             "unit": "in",
+            "fontUnit": "pt",
 
             "font": 'sans-serif',
-            "tableFontSize": 10,
-            "tableTacticFontSize": 12,
+            "tableFontSize": 5,
+            "tableTacticFontSize": 6,
             "tableTextDisplay": "name",
 
             "showHeader": true,
-            "headerLayerNameFontSize": 24,
-            "headerFontSize": 15,
+            "headerLayerNameFontSize": 18,
+            "headerFontSize": 12,
 
             "legendDocked": true,
             "legendX": 0,
             "legendY": 0,
-            "legendWidth": 100,
-            "legendHeight": 100,
+            "legendWidth": 2,
+            "legendHeight": 2,
 
             "showLegend": true,
             "showGradient": true,
