@@ -1,3 +1,18 @@
 .svgcontainer {
     overflow-x: auto
 }
+
+.dropdown-container {
+    ul {
+        li {
+            input.has-suffix {
+                text-align: right;
+                &::-webkit-inner-spin-button,
+                &::-webkit-outer-spin-button {
+                    display: none
+                }
+                -moz-appearance: textfield;
+            }
+        }
+    }
+}

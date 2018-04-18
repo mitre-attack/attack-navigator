@@ -112,3 +112,49 @@ body {
         }
     }
 }
+
+//////////////////////
+// Checkbox Styling //
+//////////////////////
+
+.checkbox-custom {
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-custom, .checkbox-custom-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.checkbox-custom-label {
+    position: relative;
+    &.disabled {
+        color: rgba(0,0,0,0.46);
+    }
+}
+
+.checkbox-custom + .checkbox-custom-label:before {
+    content: '';
+    background: #fff;
+    border: 3px solid $panel-dark;
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    padding: 2px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.checkbox-custom:checked + .checkbox-custom-label:before {
+    background: $cell-highlight-color;
+    box-shadow: inset 0px 0px 0px 1px $cell-highlight-color;
+}
+.checkbox-custom:checked:disabled + .checkbox-custom-label:before {
+    background: desaturate($cell-highlight-color, 100%);
+    box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
+
+}

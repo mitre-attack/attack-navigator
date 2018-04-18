@@ -20,10 +20,30 @@ export class ExporterComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
         let self = this;
-        console.log(self)
+        this.exportData.filteredTechniques.forEach(function(technique: Technique) {
+            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
+                if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") self.hasScores = true;
+            }
+        })
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)
     }
+
+    //visibility of SVG parts
+    //assess data in viewModel
+    hasName(): boolean {return this.exportData.viewModel.name.length > 0}
+    hasDescription(): boolean {return this.exportData.viewModel.description.length > 0}
+    hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
+    hasLegendItems(): boolean {return this.exportData.viewModel.legendItems.length > 0;}
+
+    //above && user preferences
+    showName(): boolean {return this.exportData.tableConfig.showName && this.hasName()}
+    showDescription(): boolean {return this.exportData.tableConfig.showDescription && this.hasDescription()}
+    showLayerInfo(): boolean {return this.showName() || this.showDescription()}
+    showFilters(): boolean {return this.exportData.tableConfig.showFilters};
+    showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores;}
+    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
+    showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
 
     buildSVG(self?): void {
         console.log("building SVG");
@@ -68,26 +88,11 @@ export class ExporterComponent implements AfterViewInit {
         // | || | __| /_\ |   \| __| _ \
         // | __ | _| / _ \| |) | _||   /
         // |_||_|___/_/ \_\___/|___|_|_\
-        let showName = self.exportData.tableConfig.showName && self.exportData.viewModel.name.length > 0;
-        let showDescription = self.exportData.tableConfig.showDescription && self.exportData.viewModel.description.length > 0;
-        let showLayerInfo = (showName || showDescription)
-        let showFilters = this.exportData.tableConfig.showFilters
-
-        let hasScores = false;
-        self.exportData.filteredTechniques.forEach(function(technique: Technique) {
-            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
-                if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") hasScores = true;
-            }
-
-        })
-        let showGradient = this.exportData.tableConfig.showGradient && hasScores;
-        let showLegend = this.exportData.tableConfig.showLegend && this.exportData.viewModel.legendItems.length > 0;
-        let legendInHeader = this.exportData.tableConfig.legendDocked && showLegend;
 
         //count columns
         let numSections = 0;
         for (let i = 0; i < 4; i++) {
-            let option = [showLayerInfo, showFilters, showGradient, legendInHeader][i];
+            let option = [self.showLayerInfo(), self.showFilters(), self.showGradient(), self.showLegendInHeader()][i];
             if (option) numSections++;
         }
         let headerSectionWidth = width/numSections;
@@ -106,12 +111,12 @@ export class ExporterComponent implements AfterViewInit {
                 .style("fill", "none")
 
             // layer name
-            if (showLayerInfo) {
-                let layerAndDescPresent = (showName && showDescription)
+            if (self.showLayerInfo()) {
+                let layerAndDescPresent = (self.showName() && self.showDescription())
                 let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
                 let descY = layerAndDescPresent ? headerHeight/2 : 0
 
-                if (showName) { //layer name
+                if (self.showName()) { //layer name
                     let titleGroup = header.append("g")
                         .attr("transform", "translate(0,0)");
                     titleGroup.append("text")
@@ -131,7 +136,7 @@ export class ExporterComponent implements AfterViewInit {
                             .style("fill", "none");
                 }
 
-                if (showDescription) {//description
+                if (self.showDescription()) {//description
                     let descriptionGroup = header.append("g")
                         .attr("transform", "translate(0," + descY + ")");
                     descriptionGroup.append("text")
@@ -152,7 +157,7 @@ export class ExporterComponent implements AfterViewInit {
                 posX++;
             }
 
-            if (showFilters) {
+            if (self.showFilters()) {
                 //filters
                 let filtersGroup = header.append("g")
                     .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
@@ -201,7 +206,7 @@ export class ExporterComponent implements AfterViewInit {
                 posX++
             }
 
-            if (showGradient) {
+            if (self.showGradient()) {
                 //gradient
                 let gradientGroup = header.append("g")
                     .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
@@ -273,17 +278,17 @@ export class ExporterComponent implements AfterViewInit {
         } else { //no header
             headerHeight = 0
         }
-        // console.log(showLegend, legendInHeader && self.exportData.tableConfig.legendDocked)
-        if (showLegend && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
+        // console.log(showLegend, showLegendInHeader && self.exportData.tableConfig.legendDocked)
+        if (self.showLegend() && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
             console.log("building legend")
             //legend
-            let legendGroup = legendInHeader ? header.append("g")
+            let legendGroup = self.showLegendInHeader() ? header.append("g")
                 .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
                                              : svg.append("g")
                 .attr("transform", "translate("+self.exportData.tableConfig.legendX+","+self.exportData.tableConfig.legendY+")");
             legendGroup.append("rect")
-                .attr("width", legendInHeader ? headerSectionWidth : self.exportData.tableConfig.legendWidth)
-                .attr("height",  legendInHeader ? headerHeight : self.exportData.tableConfig.legendHeight)
+                .attr("width", self.showLegendInHeader() ? headerSectionWidth : self.exportData.tableConfig.legendWidth)
+                .attr("height",  self.showLegendInHeader() ? headerHeight : self.exportData.tableConfig.legendHeight)
                 .style("stroke-width", 1)
                 .style("stroke", "black")
                 .style("fill", "none");
@@ -295,7 +300,7 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("font-size", headerFontSize + fontUnits)
                 .attr("fill", "black")
                 .style("font-weight", "bold");;
-            let legendItemHeight = legendInHeader ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
+            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((self.exportData.tableConfig.legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
             let legendItemsGroup = legendGroup.selectAll("g")
                 .data(self.exportData.viewModel.legendItems)
                 .enter().append("g")
@@ -310,7 +315,7 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("fill", "black")
                 .attr("dx", 0)
                 .attr("dy", 0)
-                .call(self.wrap, (legendInHeader ? headerSectionWidth : self.exportData.tableConfig.legendWidth - 14), 0, self);
+                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : self.exportData.tableConfig.legendWidth - 14), 0, self);
             legendItemsGroup.append("rect")
                 .attr("width", 10)
                 .attr("height", 10)
