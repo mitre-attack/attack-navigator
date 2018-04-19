@@ -1,0 +1,314 @@
+<div class="controlsContainer">
+    <ul class="control-sections">
+        <li>
+            <div class="control-row-item noselect">
+                <!-- {{exportData.tableConfig.unit}} -->
+                <div class="control-row-button"
+                     (click)="unitEnum = (unitEnum + 1) % 3; exportData.tableConfig.unit = ['in', 'cm', 'px'][unitEnum]; buildSVG()"
+                     matTooltipPosition="below"
+                     matTooltip="toggle measurement unit">
+                    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <text x="4px" y="50%" dominant-baseline="middle" style="font-size: 14px; font-weight: bold; font-family:monospace">{{exportData.tableConfig.unit}}</text>
+                    </svg>
+                </div>
+            </div>
+
+        </li>
+        <li>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'imgsize' ? 'imgsize' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="image size">
+                    <img src="assets/icons/ic_photo_size_select_large_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container size" *ngIf="currentDropdown === 'imgsize'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="width"
+                                       step="0.01"
+                                       [(ngModel)]="exportData.tableConfig.width"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="height"
+                                       step="0.01"
+                                       [(ngModel)]="exportData.tableConfig.height"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="header height"
+                                       step="0.01"
+                                       [disabled]="!exportData.tableConfig.showHeader"
+                                       [(ngModel)]="exportData.tableConfig.headerHeight"
+                                       (input)="buildSVG()" />
+                                <span matSuffix  [style.color]="!exportData.tableConfig.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <!-- <li>
+                            <mat-form-field>
+                                <mat-select placeholder="measurement unit" [(ngModel)]="exportData.tableConfig.unit" (change)="buildSVG()">
+                                    <mat-option value="px">pixels</mat-option>
+                                    <mat-option value="in">inches</mat-option>
+                                    <mat-option value="cm">centimeters</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'font' ? 'font' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="font">
+                    <img src="assets/icons/ic_format_size_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container font" *ngIf="currentDropdown === 'font'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="title font size"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.headerLayerNameFontSize"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="font size in header"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.headerFontSize"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="tactic header font size"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.tableTacticFontSize"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="technique font size"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.tableFontSize"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <mat-select placeholder="font size unit" [(ngModel)]="exportData.tableConfig.fontUnit" (change)="buildSVG()">
+                                    <mat-option value="pt">points</mat-option>
+                                    <mat-option value="px">pixels</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <mat-select placeholder="font" [(ngModel)]="exportData.tableConfig.font" (change)="buildSVG()">
+                                    <mat-option value="serif">serif</mat-option>
+                                    <mat-option value="sans-serif">sans-serif</mat-option>
+                                    <mat-option value="monospace">monospace</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <mat-select placeholder="technique text" [(ngModel)]="exportData.tableConfig.tableTextDisplay" (change)="buildSVG()">
+                                    <mat-option value="none">No Text</mat-option>
+                                    <mat-option value="name">Technique Name</mat-option>
+                                    <mat-option value="id">Technique ID</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="showLegend()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : continue;"
+                     matTooltipPosition="below"
+                     matTooltip="legend"
+                     [style.color]="showLegend() ? '#000000' : '#aaaaaa'">
+                    <img [src]="showLegend()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
+                </div>
+                <div class="dropdown-container legend" *ngIf="currentDropdown === 'legend'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            <input [id]="uid + 'legendDockedCheckbox'"type="checkbox" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.legendDocked" (change)="buildSVG()">
+                            <label [for]="uid + 'legendDockedCheckbox'" class="checkbox-custom-label noselect">
+                                dock legend in header
+                            </label>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend X position"
+                                       [disabled]="exportData.tableConfig.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.legendX"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="exportData.tableConfig.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend Y position"
+                                       [disabled]="exportData.tableConfig.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.legendY"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="exportData.tableConfig.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend width"
+                                       [disabled]="exportData.tableConfig.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.legendWidth"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="exportData.tableConfig.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend height"
+                                       [disabled]="exportData.tableConfig.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="exportData.tableConfig.legendHeight"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="exportData.tableConfig.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{exportData.tableConfig.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'visibility' ? 'visibility' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="visibility settings">
+                    <img src="assets/icons/ic_visibility_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container visibility" *ngIf="currentDropdown === 'visibility'" #dropdown [class.left]="checkalign(dropdown)">
+                    <ul>
+                        <li>
+                            <input [id]="uid+'checkboxheader'" type="checkbox" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showHeader" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxheader'" class="checkbox-custom-label noselect">show header</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxname'" type="checkbox" [disabled]="!hasName() || !exportData.tableConfig.showHeader" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showName" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxname'" class="checkbox-custom-label noselect" [class.disabled]="!hasName() || !exportData.tableConfig.showHeader">show title</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxdescription'" type="checkbox" [disabled]="!hasDescription() || !exportData.tableConfig.showHeader" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showDescription" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxdescription'" class="checkbox-custom-label noselect" [class.disabled]="!hasDescription() || !exportData.tableConfig.showHeader">show description</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxfilters'" type="checkbox" class="checkbox-custom" [disabled]="!exportData.tableConfig.showHeader"[(ngModel)]="exportData.tableConfig.showFilters" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxfilters'" class="checkbox-custom-label noselect" [class.disabled]="!exportData.tableConfig.showHeader">show filters</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxgradient'" type="checkbox" [disabled]="!hasScores || !exportData.tableConfig.showHeader" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showGradient" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxgradient'" class="checkbox-custom-label noselect" [class.disabled]="!hasScores || !exportData.tableConfig.showHeader">show score gradient</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems()" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showLegend" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()" >show legend</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                [id]="'download-button' + exportData.viewModel.uid"
+                    (click)="downloadSVG()"
+                    matTooltipPosition="below"
+                    matTooltip="download SVG">
+                    <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+<!-- <ul>
+    <li *ngFor="let configItem of getKeys(exportData.tableConfig)">
+        {{configItem}}:
+        <select *ngIf="configItem === 'unit'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="px">px</option>
+            <option value="in">in</option>
+            <option value="cm">cm</option>
+        </select>
+        <select *ngIf="configItem === 'tableTextDisplay'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="none">No Text</option>
+            <option value="name">Technique Name</option>
+            <option value="id">Technique ID</option>
+        </select>
+        <select *ngIf="configItem === 'font'" [(ngModel)]="exportData.tableConfig[configItem]" (change)="buildSVG()">
+            <option value="serif">serif</option>
+            <option value="sans-serif">sans-serif</option>
+            <option value="monospace">monospace</option>
+        </select>
+
+        <input *ngIf="type(exportData.tableConfig[configItem]) == 'number'" type="number" [(ngModel)]=exportData.tableConfig[configItem] (input)="buildSVG()">
+        <input *ngIf="type(exportData.tableConfig[configItem]) == 'boolean'" type="checkbox" [(ngModel)]=exportData.tableConfig[configItem] (change)="buildSVG()">
+
+    </li>
+</ul> -->
+
+
+</div>
+
+<div class="svgcontainer" [id]="'svgInsert' + exportData.viewModel.uid">
+    loading...
+</div>

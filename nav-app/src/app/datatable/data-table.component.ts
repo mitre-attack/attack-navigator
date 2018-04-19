@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit } from '@angular/core';
 import {DataService, Technique} from '../data.service';
 import {ConfigService} from '../config.service';
-
+import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
@@ -59,7 +59,7 @@ export class DataTableComponent implements AfterViewInit {
     customContextMenuItems = [];
 
     showingLegend = false;
-    
+
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
@@ -322,7 +322,7 @@ export class DataTableComponent implements AfterViewInit {
      * Angular lifecycle hook
      */
     ngAfterViewInit(): void {
-        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModel.uid);
         element.style.left = -10000 + "px";
     }
 
@@ -437,6 +437,7 @@ export class DataTableComponent implements AfterViewInit {
                 // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
+            this.populateEditFields();
         } else {
             console.error("no viewmodel to initialize data for!")
         }
@@ -663,7 +664,7 @@ export class DataTableComponent implements AfterViewInit {
         this.contextMenuSelectedTechnique = technique;
         this.contextMenuSelectedTactic = this.tacticDisplayNames[tactic].replace(" ", "_");
         // console.log(event, technique)
-        let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModel.uid);
         element.style.left = event.pageX + "px";
         element.style.top = event.pageY + "px";
         return false;
@@ -680,7 +681,7 @@ export class DataTableComponent implements AfterViewInit {
     @HostListener('mousemove', ['$event'])
     @HostListener('mouseout', ['$event'])
     onMouseMove(event:MouseEvent): void {
-        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModelsService.getViewModelUID(this.viewModel));
+        let element = <HTMLElement>document.getElementById("tooltip" + this.viewModel.uid);
         let tooltipDirectionHorizontal = document.body.clientWidth - event.pageX < 150; //determine facing of tooltip
         let tooltipDirectionVertical = document.body.clientHeight - event.pageY < 350; //determine facing of tooltip
         if(this.viewModel.highlightedTechnique !== null && event.type == "mousemove"){
@@ -690,7 +691,7 @@ export class DataTableComponent implements AfterViewInit {
             element.style.left = -10000 + "px";
         }
         if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_id).comment) {
-            let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModelsService.getViewModelUID(this.viewModel));
+            let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModel.uid);
             this.toolTipOverflows = commentdiv.clientHeight >= 300;
         }
     }
@@ -838,6 +839,20 @@ export class DataTableComponent implements AfterViewInit {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
+    }
+
+    /**
+     * open an export layer render tab for the current layer
+     */
+    exportRender(): void {
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce());
+        viewModelCopy.deSerialize(this.viewModel.serialize());
+        let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
+        this.tabs.newExporterTab(exportData);
+    }
+
+    noncetest() {
+        console.log(this.viewModelsService.getNonce())
     }
 }
 

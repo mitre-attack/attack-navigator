@@ -13,5 +13,6 @@ export class TabComponent {
     @Input() template;
     @Input() dataContext;
     @Input() showScoreVariables = false;
+    @Input() isDataTable: boolean;
 
 }

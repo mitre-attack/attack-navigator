@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-
+@import "colors.scss";
 body {
   padding: 0 15px 15px 15px;
   margin-top: 0;
@@ -15,4 +15,146 @@ body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+
+//   ___ ___  _  _ _____ ___  ___  _    ___
+//  / __/ _ \| \| |_   _| _ \/ _ \| |  / __|
+// | (_| (_) | .` | | | |   / (_) | |__\__ \
+//  \___\___/|_|\_| |_| |_|_\\___/|____|___/
+
+// $inputFontSize: 10pt;
+// panel with controls
+.controlsContainer {
+    background-color: $panel-dark;
+    // width: 100%;
+    text-align: right;
+    // padding: 0 3px;
+    // display: flex;
+    display: block;
+    ul { margin: 0; }
+    // justify-content: space-between;
+    // font: 400 12px system-ui;
+
+    .control-sections>li {
+        list-style: none;
+        display: inline-block;
+        // &:not(:last-child){
+        border-left: 1px solid darken($panel-dark, 8%);
+        padding: 0 5px 0 5px;
+        position: relative;
+
+        // text-align: center;
+        // label for a section of controls, e.g layer controls or technique controls
+        .section-label {
+            font-size: 8pt;
+            // height: 8px;
+            top: -13px;
+            position: absolute;
+            // border: 1px 1px 0 1px solid black;
+            border-color: white;
+            border-style: solid;
+            border-width: 1px 1px 0 1px;
+            // width:50%;
+            // left: 25%;
+            padding: 0 5px;
+            background-color: $panel-dark;
+            border-radius: 2px 2px 0 0;
+            text-align: center;
+            color: $tab-text-color;
+            cursor: default;
+            user-select: none;
+            white-space: nowrap;
+            // bottom: 10px;
+        }
+
+        .control-row-item {
+
+            display: inline-block;
+            position: relative;
+            height: 34px;
+
+            .control-row-button {
+                border-radius: 3px;
+                padding: 5px;
+                height: 24px;
+                cursor: pointer;
+                &:hover { background-color: darken($panel-dark, 5%); }
+                &.dropdown::after {
+                    font-size: 5pt;
+                    content: "▼";
+                }
+            }
+
+
+            // dropdown controls container
+            .dropdown-container {
+                &.left { right: 0 }
+                border: 1px solid black;
+                background-color: white;
+                box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+                position: absolute;
+                z-index: 100; //draw on top of other controls
+                width: max-content;
+
+                &.inputfield {
+                    width:  150px;
+                    padding: 0px 10px;
+                    mat-form-field {
+                        width: 100%;
+                        &:first-child {
+                            padding-top:5px;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+//////////////////////
+// Checkbox Styling //
+//////////////////////
+
+.checkbox-custom {
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-custom, .checkbox-custom-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.checkbox-custom-label {
+    position: relative;
+    &.disabled {
+        color: rgba(0,0,0,0.46);
+    }
+}
+
+.checkbox-custom + .checkbox-custom-label:before {
+    content: '';
+    background: #fff;
+    border: 3px solid $panel-dark;
+    display: inline-block;
+    vertical-align: middle;
+    width: 10px;
+    height: 10px;
+    padding: 2px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+.checkbox-custom:checked + .checkbox-custom-label:before {
+    background: $cell-highlight-color;
+    box-shadow: inset 0px 0px 0px 1px $cell-highlight-color;
+}
+.checkbox-custom:checked:disabled + .checkbox-custom-label:before {
+    background: desaturate($cell-highlight-color, 100%);
+    box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
+
 }

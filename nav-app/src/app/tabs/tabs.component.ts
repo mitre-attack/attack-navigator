@@ -7,6 +7,7 @@ import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
+import { ExportData } from "../exporter/exporter.component";
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
@@ -37,6 +38,7 @@ export class TabsComponent implements AfterContentInit {
     @ViewChild('blankTab') blankTab;
     @ViewChild('layerTab') layerTab;
     @ViewChild('helpTab') helpTab;
+    @ViewChild('exporterTab') exporterTab;
 
     ds: DataService = null;
     vms: ViewModelsService = null;
@@ -87,8 +89,10 @@ export class TabsComponent implements AfterContentInit {
      * @param  {Boolean} [isCloseable=false] can this tab be closed?
      * @param  {Boolean} [replace=false]     replace the current tab with the new tab, TODO
      * @param  {Boolean} [forceNew=false]    force open a new tab even if a tab of that name already exists
+     * @param  {Boolean} [dataTable=false]   is this a data-table tab? if so tab text should be editable
+
      */
-    openTab(title: string, template, data, isCloseable = false, replace = true, forceNew = false) {
+    openTab(title: string, template, data, isCloseable = false, replace = true, forceNew = false, dataTable = false) {
 
         if (!template) {
             console.error("ERROR: no template defined for tab titled ''", title, "''");
@@ -123,6 +127,7 @@ export class TabsComponent implements AfterContentInit {
         instance.dataContext = data;
         instance.isCloseable = isCloseable;
         instance.showScoreVariables = false;
+        instance.isDataTable = dataTable
 
         // remember the dynamic component for rendering the
         // tab navigation headers
@@ -239,7 +244,7 @@ export class TabsComponent implements AfterContentInit {
      * @param  {[type]} replace=false replace the current tab with this blank tab?
      */
     newBlankTab(replace=false) {
-        this.openTab('new tab', this.blankTab, null, true, replace, true)
+        this.openTab('new tab', this.blankTab, null, true, replace, true, false)
     }
 
     /**
@@ -250,6 +255,10 @@ export class TabsComponent implements AfterContentInit {
     newHelpTab(replace=false, forceNew=false): void {
         if (replace) this.closeActiveTab()
         this.openTab('help', this.helpTab, null, true, replace, false)
+    }
+
+    newExporterTab(exportData: ExportData) {
+        this.openTab('export: ' + exportData.viewModel.name, this.exporterTab, exportData, true, false, true)
     }
 
     /**
@@ -294,7 +303,7 @@ export class TabsComponent implements AfterContentInit {
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name);
-        this.openTab(name, this.layerTab, vm, true, true, true)
+        this.openTab(name, this.layerTab, vm, true, true, true, true)
     }
 
     /**
@@ -357,7 +366,7 @@ export class TabsComponent implements AfterContentInit {
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
             let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
-            this.openTab(layerName, this.layerTab, vm, true, true, true)
+            this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
             alert("Math error" + err.message)
         }
@@ -434,7 +443,7 @@ export class TabsComponent implements AfterContentInit {
             var string = reader.result;
             try{
                 viewModel.deSerialize(string)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true)
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
             }
             catch(err){
                 alert("ERROR: Either the file is not JSON formatted, or the file structure is invalid.");
@@ -456,8 +465,7 @@ export class TabsComponent implements AfterContentInit {
             let content = res.text();
             try {
                 viewModel.deSerialize(content)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true);
-                
+                this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
             } catch(err) {
                 console.log(err)
                 alert("ERROR: Failed to load layer file from URL")

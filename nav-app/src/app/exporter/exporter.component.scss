@@ -1,0 +1,22 @@
+.svgcontainer {
+    overflow-x: auto
+}
+
+.dropdown-container {
+    padding: 10px;
+    ul {
+        padding-left: 0;
+        li {
+            list-style: none;
+            text-align: left;
+            input.has-suffix {
+                text-align: right;
+                &::-webkit-inner-spin-button,
+                &::-webkit-outer-spin-button {
+                    display: none
+                }
+                -moz-appearance: textfield;
+            }
+        }
+    }
+}
