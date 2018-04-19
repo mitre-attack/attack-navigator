@@ -59,7 +59,6 @@
                                        [(ngModel)]="exportData.tableConfig.headerHeight"
                                        (input)="buildSVG()" />
                                 <span matSuffix  [style.color]="!exportData.tableConfig.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{exportData.tableConfig.unit}}</span>
-                                <mat-hint>header height does not count towards total</mat-hint>
                             </mat-form-field>
                         </li>
                         <!-- <li>
