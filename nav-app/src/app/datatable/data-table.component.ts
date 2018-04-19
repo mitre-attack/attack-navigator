@@ -365,17 +365,20 @@ export class DataTableComponent implements AfterViewInit {
     //////////////////////////////////////////////////////////////////////
 
     establishData(objects){
+        console.log(objects)
         var techniques = {}, threatGroups = {}, software = {}, relationships = {};
         for(var i = 0; i < objects.length; i++){
             var object = objects[i];
-            if(object.type === "attack-pattern"){
-                techniques[object.id] = object;
-            } else if(object.type === "intrusion-set"){
-                threatGroups[object.id] = object;
-            } else if(object.type === "malware" || object.type === "tool"){
-                software[object.id] = object;
-            } else if(object.type === "relationship"){
-                relationships[object.id] = object;
+            if(object.x_mitre_deprecated !== true && object.revoked !== true){
+                if(object.type === "attack-pattern"){
+                    techniques[object.id] = object;
+                } else if(object.type === "intrusion-set"){
+                    threatGroups[object.id] = object;
+                } else if(object.type === "malware" || object.type === "tool"){
+                    software[object.id] = object;
+                } else if(object.type === "relationship"){
+                    relationships[object.id] = object;
+                }
             }
         }
 
