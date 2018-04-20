@@ -31,7 +31,8 @@
             {"name": "sorting", "enabled": true, "description": "Disable to the remove the sorting button from the interface."},
             {"name": "scoring_gradients", "enabled": true, "description": "Disable to the remove the scoring gradient setup panel from interface."},
             {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to the remove the hide disabled techniques button from the interface."},
-            {"name": "toggle_view_mode", "enabled": true, "description": "Disable to the remove the toggle view mode button from interface."}
+            {"name": "toggle_view_mode", "enabled": true, "description": "Disable to the remove the toggle view mode button from interface."},
+            {"name": "legend", "enabled": true, "description": "Disable to the remove the legend panel from the interface."}
         ]},
         {"name": "technique_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "disable_techniques", "enabled": true, "description": "Disable to the remove the ability to disable techniques."},

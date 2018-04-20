@@ -529,14 +529,14 @@
 
 </div>
 
-<div class="legendBar" (click)="toggleLegend()" *ngIf="!showingLegend">
+<div class="legendBar" (click)="toggleLegend()" *ngIf="!showingLegend && configService.getFeature('legend')">
     <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
     <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
         legend
     </div>
 </div>
 
-<div class="legend" *ngIf="showingLegend">
+<div class="legend" *ngIf="showingLegend && configService.getFeature('legend')">
     <div class="legendBar" (click)="toggleLegend()" style="position: absolute; top:0px; left:0px;">
         <img src="assets/icons/ic_keyboard_arrow_down_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
         <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
