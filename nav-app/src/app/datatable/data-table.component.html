@@ -154,12 +154,12 @@
                 </div>
             </div>
 
-            <!-- export render -->
+            <!-- render layer to SVG -->
             <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                 <div class="control-row-button noselect"
                     (click)="filteredTechniques.length > 0 ? exportRender() : pass"
                     matTooltipPosition="below"
-                    matTooltip="export render">
+                    matTooltip="render layer to SVG">
                     <img src="assets/icons/ic_camera_alt_black_24px.svg" alt="export render"/>
                 </div>
             </div>
