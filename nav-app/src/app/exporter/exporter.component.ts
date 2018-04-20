@@ -38,12 +38,12 @@ export class ExporterComponent implements AfterViewInit {
     hasLegendItems(): boolean {return this.exportData.viewModel.legendItems.length > 0;}
 
     //above && user preferences
-    showName(): boolean {return this.exportData.tableConfig.showName && this.hasName()}
-    showDescription(): boolean {return this.exportData.tableConfig.showDescription && this.hasDescription()}
-    showLayerInfo(): boolean {return this.showName() || this.showDescription()}
-    showFilters(): boolean {return this.exportData.tableConfig.showFilters};
-    showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores;}
-    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
+    showName(): boolean {return this.exportData.tableConfig.showName && this.hasName() && this.exportData.tableConfig.showHeader}
+    showDescription(): boolean {return this.exportData.tableConfig.showDescription && this.hasDescription() && this.exportData.tableConfig.showHeader}
+    showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.exportData.tableConfig.showHeader}
+    showFilters(): boolean {return this.exportData.tableConfig.showFilters && this.exportData.tableConfig.showHeader};
+    showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores  && this.exportData.tableConfig.showHeader}
+    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems() && this.exportData.tableConfig.showHeader}
     showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
 
     buildSVG(self?): void {

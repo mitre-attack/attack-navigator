@@ -78,7 +78,7 @@
                 <div class="control-row-button dropdown noselect"
                      (click)="currentDropdown = currentDropdown !== 'font' ? 'font' : null;"
                      matTooltipPosition="below"
-                     matTooltip="font">
+                     matTooltip="text">
                     <img src="assets/icons/ic_format_size_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container font" *ngIf="currentDropdown === 'font'" #dropdown [class.left]="checkalign(dropdown)">
@@ -90,9 +90,10 @@
                                        type="number"
                                        placeholder="title font size"
                                        step="1"
+                                       [disabled]="!showName()"
                                        [(ngModel)]="exportData.tableConfig.headerLayerNameFontSize"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                                <span matSuffix [style.color]="!showName() ? 'rgba(0,0,0,0.42)' : 'black'">{{exportData.tableConfig.fontUnit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -102,9 +103,10 @@
                                        type="number"
                                        placeholder="font size in header"
                                        step="1"
+                                       [disabled]="!exportData.tableConfig.showHeader"
                                        [(ngModel)]="exportData.tableConfig.headerFontSize"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                                <span matSuffix [style.color]="!exportData.tableConfig.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{exportData.tableConfig.fontUnit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -126,9 +128,10 @@
                                        type="number"
                                        placeholder="technique font size"
                                        step="1"
+                                       [disabled]="exportData.tableConfig.tableTextDisplay === 'none'"
                                        [(ngModel)]="exportData.tableConfig.tableFontSize"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{exportData.tableConfig.fontUnit}}</span>
+                                       <span matSuffix [style.color]="exportData.tableConfig.tableTextDisplay === 'none' ? 'rgba(0,0,0,0.42)' : 'black'">{{exportData.tableConfig.fontUnit}}</span>
                             </mat-form-field>
                         </li>
                         <li>

@@ -258,7 +258,7 @@ export class TabsComponent implements AfterContentInit {
     }
 
     newExporterTab(exportData: ExportData) {
-        this.openTab('export: ' + exportData.viewModel.name, this.exporterTab, exportData, true, false, true)
+        this.openTab('render: ' + exportData.viewModel.name, this.exporterTab, exportData, true, false, true)
     }
 
     /**

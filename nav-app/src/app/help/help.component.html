@@ -60,6 +60,16 @@
                 <li><a href="#help_Disable_Features">Disabling Features</a></li>
             </ul>
         </li>
+        <li>
+            <a href="#help_Rendering_Layers_As_SVG">Exporting Layers as SVG</a>
+            <ul>
+                <li><a href="#help_exporting_units">Measurement Units</a></li>
+                <li><a href="#help_exporting_image_size">Configuring Image Size</a></li>
+                <li><a href="#help_exporting_text">Configuring Text</a></li>
+                <li><a href="#help_exporting_legend_config">Customizing the Legend</a></li>
+                <li><a href="#help_exporting_disabling_header_sections">Disabling Header Sections</a></li>
+            </ul>
+        </li>
         <li><a href="#notice">Notice</a></li>
 
     </ul>
@@ -393,11 +403,11 @@
             Legend
         </h2>
         <p>
-            The legend helps associate meanings with colors displayed by customized techniques in the ATT&CK Navigator. 
-            To open the legend, click on the bar labled "legend" in the bottom-right corner of the screen. Click on the same bar to close the legend. To add an item to the legend, click the "Add Item" 
+            The legend helps associate meanings with colors displayed by customized techniques in the ATT&CK Navigator.
+            To open the legend, click on the bar labled "legend" in the bottom-right corner of the screen. Click on the same bar to close the legend. To add an item to the legend, click the "Add Item"
             button. To clear all items in the legend, click "Clear".
             <br/><br/>
-            An item's color can be changed by either clicking in the color field and typing a hex color value, or by clicking in the field and choosing a color from the color picker. Click and type in the 
+            An item's color can be changed by either clicking in the color field and typing a hex color value, or by clicking in the field and choosing a color from the color picker. Click and type in the
             text field to change the item's label. To remove an item, click on the (<img src="assets/icons/ic_clear_gray_24px.svg"/>) button on the right side. Legend items are saved to the layer file and will be
             loaded when a layer with saved legend items is loaded.
         </p>
@@ -600,6 +610,136 @@
         <p>
             The following is an example ATT&CK Navigator URL with the ability to download the layer and add comments disabled: <br /><code>https://mitre.github.io/attack-navigator/enterprise/<b>#download_layer=false&comments=false</b></code>
         </p>
+
+        <h1 id="help_Rendering_Layers_As_SVG">
+            <img src="assets/icons/ic_camera_alt_black_24px.svg">
+            Rendering Layers as SVG
+        </h1>
+        <p>
+            Clicking the "render layer to SVG" button will open a new tab allowing the current layer
+            to be rendered to an SVG image. Changes to the layer after opening the render tab
+            will not be reflected in the render layer.
+        </p>
+        <p>
+            Clicking the <i>download svg</i> button (<img src="assets/icons/ic_file_download_black_24px.svg">) will download
+            the image, as displayed, in SVG format.
+        </p>
+        <p>
+            The Microsoft Edge browser has a bug where the downloaded SVG
+            will have the <code>.txt</code> extension. Renaming the extension to <code>.svg</code> will
+            restore it as a valid svg file.
+        </p>
+
+        <h2 id="help_exporting_units">Measurement Units</h2>
+        <p>
+            Clicking the "toggle measurement unit" button will toggle between
+            measuring in inches (in), centimeters (cm), and pixels (px). This unit
+            applies to controls for image size and legend position.
+        </p>
+
+        <h2 id="help_exporting_image_size">
+            <img src="assets/icons/ic_photo_size_select_large_black_24px.svg">
+            Configuring Image Size
+        </h2>
+        <p>
+            The image size controls allow you to specify the width and height of
+            the image, as well as the height of the header if one is present.
+            The measurements are in units specified by the <a href="#help_exporting_units">measurement units</a> control.
+        </p>
+        <p>
+            The header height contributes to the total image height: if you have specified
+            the image height to be 8.5 inches and the header height to be 1 inch,
+            the technique table will be 7.5 inches and the header 1 inch for a total height of 8.5 inches.
+            If the header is disabled this control will not be editable.
+        </p>
+        <h2 id="help_exporting_text">
+            <img src="assets/icons/ic_format_size_black_24px.svg">
+            Configuring Text
+        </h2>
+        <p>
+            The text configuration dropdown allows for the configuration of various
+            aspects of the text in the rendered layer.
+        </p>
+        <ul>
+            <li>
+                <b>Title font size</b> controls the font size of rendered layer title,
+                which is the same as the layer name. If the title or header are disabled this control
+                will not be editable.
+            </li>
+            <li>
+                <b>Font size in header</b> controls the size of the font size in
+                the table header: description, filters, score gradient, and legend.
+                If the header is disabled this control will not be editable.
+            </li>
+            <li>
+                <b>Tactic header font size</b> controls the font size of the tactic names
+                and technique count in the header of each tactic column.
+            </li>
+            <li>
+                <b>Technique font size</b> controls the size of the text in the technique
+                cells. If no text is displayed in the technique cells this control
+                will not be editable.
+            </li>
+            <li>
+                <b>Font size unit</b> controls whether the font-size controls are
+                measured in points (pt) or pixels (px).
+            </li>
+            <li>
+                <b>Font</b> controls the font used in the entire table. Options are given
+                for serif, sans-serif and monospace.
+            </li>
+            <li>
+                <b>Technique text</b> controls which text is shown in the technique
+                cells. Technique name or ID can be shown, or all text can be removed.
+            </li>
+        </ul>
+
+        <h2 id="help_exporting_legend_config">
+            <img src="assets/icons/ic_view_list_black_24px.svg">
+            Customizing the Legend
+        </h2>
+        <p>
+            This menu can only be opened if a <a href="#help_Legend">legend</a> is present on the layer.
+            The checkbox allows you to undock the legend from the SVG header.
+            Once undocked, the X and Y position controls can be used to position
+            the legend in the image. The width and height inputs control
+            the size of the legend when it is undocked. The measurements are in units specified by the <a href="#help_exporting_units">measurement units</a> control.
+        </p>
+
+        <h2 id="help_exporting_disabling_header_sections">
+            <img src="assets/icons/ic_visibility_black_24px.svg">
+            Disabling Header Sections
+        </h2>
+        <p>
+            The header itself, or specific parts of the header, can be hidden
+            using the controls in this dropdown.
+        </p>
+        <ul>
+            <li>
+                <b>Show header</b> controls whether the header is shown at all. If
+                the legend is undocked from the header it will still be shown.
+            </li>
+            <li>
+                <b>Show title</b> controls whether the layer name is visible in
+                the header. If the layer has no title, the control will be disabled and the description section automatically hidden.
+            </li>
+            <li>
+                <b>Show description</b> controls whether the layer description is visible in
+                the header. If the layer has no description, the control will be disabled and the description section automatically hidden.
+            </li>
+            <li>
+                <b>Show filters</b> controls whether the current filters (selected stages and platforms) are visible in
+                the header. This control will be disabled if the header is hidden in entirety.
+            </li>
+            <li>
+                <b>Show score gradient</b> controls whether the score gradient is visible in the header.
+                If none of the techniques in the layer have a score, the control will be disabled and the score gradient section automatically hidden.
+            </li>
+            <li>
+                <b>Show Legend</b> controls whether the layer legend is visible.
+                If the layer has no defined legend items, the control will be disabled and the legend will be automatically hidden.
+            </li>
+        </ul>
 
         <h1 id="notice">Notice</h1>
         <p>Copyright 2018 The MITRE Corporation</p>
