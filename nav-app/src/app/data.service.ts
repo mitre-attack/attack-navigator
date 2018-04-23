@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 // import { HttpClient } from '@angular/common/http'
 import { Http } from '@angular/http'
 import { Observable } from "rxjs/Rx"
+import { fromPromise } from 'rxjs/observable/fromPromise';
+import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
 
 @Injectable()
 export class DataService {
@@ -27,11 +29,18 @@ export class DataService {
     private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private tacticsURL: string = "assets/tacticsData.json";
 
-    setUpURLs(eAttackURL, preAttackURL, mURL, tURL){
+    private useTAXIIServer: boolean = false;
+    private taxiiURL: string = '';
+    private taxiiCollections: String[] = [];
+
+    setUpURLs(eAttackURL, preAttackURL, mURL, tURL, useTAXIIServer, taxiiURL, taxiiCollections){
         this.enterpriseAttackURL = eAttackURL;
         this.pre_attack_URL = preAttackURL;
         this.mobileDataURL = mURL;
         this.tacticsURL = tURL;
+        this.useTAXIIServer = useTAXIIServer;
+        this.taxiiURL = taxiiURL;
+        this.taxiiCollections = taxiiCollections;
     }
 
     retreiveConfig(refresh:boolean = false){
@@ -41,9 +50,36 @@ export class DataService {
         return this.configData$;
     }
 
-    getEnterpriseData(refresh: boolean = false){
-        //load from remote if not yet loaded or refresh=true
-        if (refresh || !this.enterpriseData$){
+    getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false){
+        if (useTAXIIServer) {
+            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
+            let enterpriseCollectionInfo: any = {
+                'id': this.taxiiCollections['enterprise_attack'],
+                'title': 'Enterprise ATT&CK',
+                'description': '',
+                'can_read': true,
+                'can_write': false,
+                'media_types': ['application/vnd.oasis.stix+json']
+            }
+            const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
+
+            let preattackCollectionInfo: any = {
+                'id': this.taxiiCollections['pre_attack'],
+                'title': 'Pre-ATT&CK',
+                'description': '',
+                'can_read': true,
+                'can_write': false,
+                'media_types': ['application/vnd.oasis.stix+json']
+            }
+
+            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
+
+            this.enterpriseData$ = Observable.forkJoin(
+                fromPromise(enterpriseCollection.getObjects('', undefined)),
+                fromPromise(preattackCollection.getObjects('', undefined))
+            )
+        }
+        else if (refresh || !this.enterpriseData$){
             this.enterpriseData$ = Observable.forkJoin(
                 this.http.get(this.enterpriseAttackURL).map(res => res.json()),
                 this.http.get(this.pre_attack_URL).map(res => res.json())
