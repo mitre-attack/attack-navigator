@@ -749,10 +749,15 @@ export class ViewModel {
     }
 
     updateLegendColorPresets(): void {
-        this.legendColorPresets = this.backgroundPresets;
+        this.legendColorPresets = [];
+        for(var i = 0; i < this.backgroundPresets.length; i++){
+            this.legendColorPresets.push(this.backgroundPresets[i]);
+        }
         for(var i = 0; i < this.gradient.colors.length; i++){
             this.legendColorPresets.push(this.gradient.labelToColor[this.gradient.colors[i].color]);
         }
+        console.log(this.legendColorPresets);
+        console.log("=============================")
     }
 
     /**
