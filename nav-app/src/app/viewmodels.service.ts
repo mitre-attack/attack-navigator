@@ -755,6 +755,44 @@ export class ViewModel {
         }
     }
 
+    /**
+     * return an acronym version of the given string
+     * @param  words the string of words to get the acrnoym of
+     * @return       the acronym string
+     */
+    acronym(words: string): string {
+        let skipWords = ["on","and", "the", "with", "a", "an", "of", "in", "for", "from"]
+
+        let result = "";
+        let wordSplit = words.split(" ");
+        if (wordSplit.length > 1) {
+            let wordIndex = 0;
+            // console.log(wordSplit);
+            while (result.length < 4 && wordIndex < wordSplit.length) {
+                if (skipWords.includes(wordSplit[wordIndex].toLowerCase())) {
+                    wordIndex++;
+                    continue;
+                }
+
+                //find first legal char of word
+                for (let charIndex = 0; charIndex < wordSplit[wordIndex].length; charIndex++) {
+                    let code = wordSplit[wordIndex].charCodeAt(charIndex);
+                    if (code < 48 || (code > 57 && code < 65) || (code > 90 && code < 97) || code > 122) { //illegal character
+                        continue;
+                    } else {
+                        result += wordSplit[wordIndex].charAt(charIndex).toUpperCase()
+                        break;
+                    }
+                }
+
+                wordIndex++;
+            }
+
+            return result;
+        } else {
+            return wordSplit[0].charAt(0).toUpperCase();
+        }
+    }
 }
 
 // the viewmodel for a specific technique

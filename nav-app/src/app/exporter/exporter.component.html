@@ -154,9 +154,10 @@
                         <li>
                             <mat-form-field>
                                 <mat-select placeholder="technique text" [(ngModel)]="exportData.tableConfig.tableTextDisplay" (change)="buildSVG()">
-                                    <mat-option value="none">No Text</mat-option>
-                                    <mat-option value="name">Technique Name</mat-option>
-                                    <mat-option value="id">Technique ID</mat-option>
+                                    <mat-option value="0">no text</mat-option>
+                                    <mat-option value="1">technique name</mat-option>
+                                    <mat-option value="2">technique name (acronym)</mat-option>
+                                    <mat-option value="3">technique ID</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </li>
