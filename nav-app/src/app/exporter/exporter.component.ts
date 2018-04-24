@@ -362,7 +362,7 @@ export class ExporterComponent implements AfterViewInit {
             });
 
         // split columns into headers and bodies
-        let colHeaderHeight = 2 * cellHeight;
+        let colHeaderHeight = self.exportData.tableConfig.tableTextDisplay != 0 ? 2 * cellHeight : cellHeight;
         let columnHeaders = columns.append("g")
             .attr("transform", "translate(0,0)");
         columnHeaders.append("rect")
@@ -376,16 +376,16 @@ export class ExporterComponent implements AfterViewInit {
         let headerTechniqueCounts = columnHeaders.append("g")
             .attr("transform", "translate(0,"+cellHeight+")")
         headerTacticNames.append("text")
-            .text(function(d) {return self.toCamelCase(d.replace(/-/g," "))})
+            .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
             .attr("font-size", tableTacticFontSize + fontUnits)
             .attr("transform", "translate(2, " + (tableTacticFontSize + 1) +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
             .call(self.wrap, columnWidth - 2, cellHeight - 2, self)
-        headerTechniqueCounts.append("text")
+        if (self.exportData.tableConfig.tableTextDisplay != 0) headerTechniqueCounts.append("text")
             .text(function(d) {
-                return self.exportData.tactics[d].length + " items"
+                return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
             })
             .attr("font-size", tableTacticFontSize + fontUnits)
             .attr("transform", "translate(1, " + (tableTacticFontSize + 1) +")")
@@ -418,7 +418,9 @@ export class ExporterComponent implements AfterViewInit {
                 return "none"
             });
         if (self.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
-            .text(function(d) {return self.exportData.tableConfig.tableTextDisplay == "name" ? d.name : d.technique_id})
+            .text(function(d) {
+                return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
+            })
             .attr("font-size", tableFontSize + fontUnits)
             .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
             .attr("dx", 0)
@@ -566,7 +568,7 @@ export class ExportData {
         font: string; //font to use in the table
         tableFontSize: number; //size of font in table, in px
         tableTacticFontSize: number; // size of tactic names font, in px
-        tableTextDisplay: string; //"name", "id" or "none"
+        tableTextDisplay: string; //0: no text, 1: technique name, 2: acronym of name, 3: technique ID
 
         showHeader: boolean; //show or hide the header
         headerHeight: number; //height of header in unit
@@ -594,6 +596,27 @@ export class ExportData {
     constructor(viewModel, tactics, orderedTactics, filteredTechniques: Technique[]) {
         this.viewModel = viewModel; this.tactics = tactics; this.filteredTechniques = filteredTechniques;
         this.orderedTactics = orderedTactics;
+
+        let tableTextDisplay = "0";
+        switch (this.viewModel.viewMode) {
+            case 0: {
+                tableTextDisplay = "1"
+                break;
+            }
+            case 1: {
+                tableTextDisplay = "2"
+                break;
+            }
+            case 2: {
+                tableTextDisplay = "0"
+                break;
+            }
+            default: {
+                tableTextDisplay = "1"
+            }
+        }
+        console.log(tableTextDisplay)
+
         this.tableConfig = {
             "width": 11,
             "height": 8.5,
@@ -605,7 +628,7 @@ export class ExportData {
             "font": 'sans-serif',
             "tableFontSize": 5,
             "tableTacticFontSize": 6,
-            "tableTextDisplay": "name",
+            "tableTextDisplay": tableTextDisplay,
 
             "showHeader": true,
             "headerLayerNameFontSize": 18,
