@@ -322,7 +322,7 @@
                         no color
                     </div>
                     <div class="color-block square"
-                         *ngFor="let color of ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9']"
+                         *ngFor="let color of viewModel.backgroundPresets"
                          [style.background]="color"
                          (click)="viewModel.editSelectedTechniques('color', color)"></div>
                 </div>
@@ -545,7 +545,7 @@
     </div>
     <div class="itemArea">
         <div class="item" *ngFor="let item of viewModel.legendItems; let Even=even; let i=index" [class.even]="!Even">
-            <input [(colorPicker)]="item.color" [(ngModel)]="item.color" [style.background]="item.color" [cpPosition]="'top'" style="width:75px;"/>
+            <input [(colorPicker)]="item.color" [(ngModel)]="item.color" [style.background]="item.color" [cpPosition]="'top'" [cpPresetColors]="viewModel.legendColorPresets" [cpAddColorButton]="true" style="width:75px;"/>
             <!-- <input class="label" [(ngModel)]="item.label"> -->
             <mat-form-field class="label">
                     <input matInput

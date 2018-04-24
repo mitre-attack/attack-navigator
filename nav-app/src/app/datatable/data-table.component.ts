@@ -365,7 +365,7 @@ export class DataTableComponent implements AfterViewInit {
     //////////////////////////////////////////////////////////////////////
 
     establishData(objects){
-        console.log(objects)
+        //console.log(objects)
         var techniques = {}, threatGroups = {}, software = {}, relationships = {};
         for(var i = 0; i < objects.length; i++){
             var object = objects[i];
