@@ -409,7 +409,7 @@
                          matTooltipPosition="right"
                          (click)="clickTactic(tactic)"
                          [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
-                         {{[tacticDisplayNames[tactic], acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
+                         {{[tacticDisplayNames[tactic], viewModel.acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
                     </div>
                 </td>
             </tr>
@@ -438,7 +438,7 @@
 
                          [class]="getClass(technique)"
                          [ngStyle]="getTechniqueBackground(technique)">
-                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, acronym(technique.name), ''][viewModel.viewMode] }}</span>
+                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}</span>
                     </div>
                 </td>
             </tr>
