@@ -756,8 +756,6 @@ export class ViewModel {
         for(var i = 0; i < this.gradient.colors.length; i++){
             this.legendColorPresets.push(this.gradient.labelToColor[this.gradient.colors[i].color]);
         }
-        console.log(this.legendColorPresets);
-        console.log("=============================")
     }
 
     /**
