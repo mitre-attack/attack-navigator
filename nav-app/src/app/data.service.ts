@@ -88,9 +88,37 @@ export class DataService {
         return this.enterpriseData$ //observable
     }
 
-    getMobileData(refresh: boolean = false){
+    getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false){
         //load from remote if not yet loaded or refresh=true
-        if (refresh || !this.mobileData$){
+        if (useTAXIIServer) {
+            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
+            let mobileCollectionInfo: any = {
+                'id': this.taxiiCollections['mobile_attack'],
+                'title': 'Mobile ATT&CK',
+                'description': '',
+                'can_read': true,
+                'can_write': false,
+                'media_types': ['application/vnd.oasis.stix+json']
+            }
+            const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
+
+            let preattackCollectionInfo: any = {
+                'id': this.taxiiCollections['pre_attack'],
+                'title': 'Pre-ATT&CK',
+                'description': '',
+                'can_read': true,
+                'can_write': false,
+                'media_types': ['application/vnd.oasis.stix+json']
+            }
+
+            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
+
+            this.mobileData$ = Observable.forkJoin(
+                fromPromise(mobileCollection.getObjects('', undefined)),
+                fromPromise(preattackCollection.getObjects('', undefined))
+            )
+        }
+        else if (refresh || !this.mobileData$){
             this.mobileData$ = Observable.forkJoin(
                 this.http.get(this.mobileDataURL).map(res => res.json()),
                 this.http.get(this.pre_attack_URL).map(res => res.json())
