@@ -68,6 +68,8 @@ export class ExporterComponent implements AfterViewInit {
         let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
         let fontUnits = self.exportData.tableConfig.fontUnit;
 
+        let textPad = 3;
+
 
         //remove previous graphic
         let element = <HTMLElement>document.getElementById(self.svgDivName);
@@ -105,7 +107,7 @@ export class ExporterComponent implements AfterViewInit {
         // console.log(numSections, headerSectionWidth)
         let header = null;
         let posX = 0; //row in the header
-        let headerSectionTitleSep = (2 * (headerFontSize + 1))
+        let headerSectionTitleSep = (2 * (headerFontSize + textPad))
 
         if (self.exportData.tableConfig.showHeader) {
             header = svg.append("g");
@@ -127,7 +129,7 @@ export class ExporterComponent implements AfterViewInit {
                         .attr("transform", "translate(0,0)");
                     titleGroup.append("text")
                         .text(self.exportData.viewModel.name)
-                        .attr("transform", "translate(2, " + (headerLayerNameFontSize + 1) +")")
+                        .attr("transform", "translate("+ textPad + ", " + (headerLayerNameFontSize + textPad) +")")
                         .attr("dx", 0)
                         .attr("dy", 0)
                         .attr("font-size", headerLayerNameFontSize + fontUnits)
@@ -147,7 +149,7 @@ export class ExporterComponent implements AfterViewInit {
                         .attr("transform", "translate(0," + descY + ")");
                     descriptionGroup.append("text")
                         .text(self.exportData.viewModel.description)
-                        .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                        .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
                         .attr("dx", 0)
                         .attr("dy", 0)
                         .attr("font-size", headerFontSize + fontUnits)
@@ -175,7 +177,7 @@ export class ExporterComponent implements AfterViewInit {
                     .style("fill", "none");
                 filtersGroup.append("text")
                     .text("filters")
-                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                    .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
                     .attr("dx", 0)
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
@@ -208,7 +210,8 @@ export class ExporterComponent implements AfterViewInit {
                     })
                     .attr("font-size", headerFontSize + fontUnits)
                     .attr("dominant-baseline", "middle")
-                    .attr("transform", "translate(0, " +(headerFontSize + 1) + ")");
+                    .attr("dy", "1.1em")
+                    // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
                 posX++
             }
 
@@ -224,7 +227,7 @@ export class ExporterComponent implements AfterViewInit {
                     .style("fill", "none");
                 gradientGroup.append("text")
                     .text("score gradient")
-                    .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                    .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
                     .attr("dx", 0)
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
@@ -300,7 +303,7 @@ export class ExporterComponent implements AfterViewInit {
                 .style("fill", "none");
             legendGroup.append("text")
                 .text("legend")
-                .attr("transform", "translate(2, " + (headerFontSize + 1) +")")
+                .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
                 .attr("dx", 0)
                 .attr("dy", 0)
                 .attr("font-size", headerFontSize + fontUnits)
@@ -338,15 +341,14 @@ export class ExporterComponent implements AfterViewInit {
         //   |_/_/ \_\___/____|___| |___/\___/|___/ |_|
 
         let tablebody = svg.append("g")
-            .attr("transform", "translate(0," + headerHeight + ")")
-
+            .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         //calculate cell height: the longest column decides the cell height
         let cellHeight = Number.MAX_VALUE;//Number.MAX_VALUE; //(height - margin.bottom - headerHeight)
 
         Object.keys(self.exportData.tactics).forEach(function(key: string) {
             let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
-            let selfCellHeight = (height - headerHeight)/numVCells
+            let selfCellHeight = (height - (headerHeight + 1))/numVCells
             cellHeight = Math.min(cellHeight, selfCellHeight)
         });
         cellHeight = Math.max(cellHeight, 1) //must be positive number
@@ -362,36 +364,41 @@ export class ExporterComponent implements AfterViewInit {
             });
 
         // split columns into headers and bodies
-        let colHeaderHeight = self.exportData.tableConfig.tableTextDisplay != 0 ? 2 * cellHeight : cellHeight;
+        let showItemCount = self.exportData.tableConfig.tableTextDisplay != 0
+        let colHeaderHeight = showItemCount ? 2 * cellHeight : cellHeight;
         let columnHeaders = columns.append("g")
             .attr("transform", "translate(0,0)");
         columnHeaders.append("rect")
             .attr("width", columnWidth)
-            .attr("height", 2 * cellHeight)
+            .attr("height", colHeaderHeight)
             .style("stroke", "black")
             .style("fill", "none")
         //split headers into name and count cells
-        let headerTacticNames = columnHeaders.append("g")
-        .attr("transform", "translate(0,0)")
-        let headerTechniqueCounts = columnHeaders.append("g")
-            .attr("transform", "translate(0,"+cellHeight+")")
-        headerTacticNames.append("text")
+        // let headerTacticNames = columnHeaders.append("g")
+        // .attr("transform", "translate(0,0)")
+        // let headerTechniqueCounts = columnHeaders.append("g")
+        //     .attr("transform", "translate(0,"+cellHeight+")")
+        columnHeaders.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate(2, " + (tableTacticFontSize + 1) +")")
+            .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) +")")
+            .attr("dominant-baseline", "middle")
+
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
-            .call(self.wrap, columnWidth - 2, cellHeight - 2, self)
-        if (self.exportData.tableConfig.tableTextDisplay != 0) headerTechniqueCounts.append("text")
+            .call(self.wrap, columnWidth - 2 - textPad, cellHeight - 2, self)
+        if (showItemCount) columnHeaders.append("text")
             .text(function(d) {
                 return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
             })
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate(1, " + (tableTacticFontSize + 1) +")")
+            .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, 2)[1]) +")")
+            .attr("dominant-baseline", "middle")
+
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(self.wrap, columnWidth, cellHeight, self)
+            .call(self.wrap, columnWidth - textPad, cellHeight, self)
 
         let columnBodies = columns.append("g")
             .attr("transform", "translate(0,"+colHeaderHeight+")");
@@ -422,10 +429,10 @@ export class ExporterComponent implements AfterViewInit {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
             .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate(1, " + (tableFontSize + 1) +")")
+            .attr("transform", "translate("+textPad+", " + (tableFontSize + textPad) +")")
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(self.wrap, columnWidth, cellHeight, self)
+            .call(self.wrap, columnWidth - textPad, cellHeight, self)
 
     }
 
@@ -533,6 +540,15 @@ export class ExporterComponent implements AfterViewInit {
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
             }
+            // console.log(text)
+            // text.selectAll("tspan").each(function(d, i, j) {
+            //     // console.log(this, i, j.length)
+            //     console.log(self.getSpacing(cellheight, j.length)[i])
+            //     d3.select(this)
+            //         .attr("dy", self.getSpacing(cellheight, j.length)[i])
+            //         .attr("dominant-baseline", "middle")
+            //
+            // })
         });
     }
 
@@ -554,6 +570,23 @@ export class ExporterComponent implements AfterViewInit {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
+    }
+
+    /**
+     * Divide distance into divisions equidestant anchor points S.T they all have equal
+     * padding from each other and the beginning and end of the distance
+     * @param  distance  distance to divide
+     * @param  divisions number of divisions
+     * @return           number[] where each number corresponds to a division-center offset
+     */
+    getSpacing(distance: number, divisions: number): number[] {
+        distance = distance - 1; //1px padding for border
+        let spacing = distance/(divisions*2);
+        let res = []
+        for (let i = 1; i <= divisions*2; i+=2) {
+            res.push(1 + (spacing * i))
+        }
+        return res
     }
 
 }
