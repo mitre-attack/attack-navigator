@@ -429,10 +429,12 @@ export class ExporterComponent implements AfterViewInit {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
             .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate("+textPad+", " + (tableFontSize + textPad) +")")
+            .attr("transform", "translate("+textPad+", " + (self.getSpacing(cellHeight, 1)) +")")
+            .attr("dominant-baseline", "middle")
             .attr("dx", 0)
             .attr("dy", 0)
             .call(self.wrap, columnWidth - textPad, cellHeight, self)
+            .call(self.recenter, cellHeight, self)
 
     }
 
@@ -550,6 +552,36 @@ export class ExporterComponent implements AfterViewInit {
             //
             // })
         });
+    }
+
+    /**
+     * Recenter the selected element's tspan elements
+     * @param  height [description]
+     * @param  self   [description]
+     */
+    recenter(text, height, self): void {
+        text.each(function() {
+            text.selectAll('tspan').each(function(d, i, els) {
+                let numTSpan = els.length;
+                if (numTSpan < 2) {
+                    return;
+                }
+                let midIndex = Math.floor(numTSpan/2) //middle of range
+                // calculate dy offset
+                let dyOffset = 0;
+                if (numTSpan % 2 == 0) { //even number of children
+                    if (i < numTSpan/2) dyOffset = (-1.1 * (midIndex - i)) - (1.1/2);
+                    else if (i > numTSpan/2) dyOffset = (1.1 * (i - midIndex)) + (1.1/2);
+                    //i will never equal numTSpan/2 since there is an odd number of children
+                } else { //odd number of children
+                    if (i < midIndex) dyOffset = -1.1 * (midIndex - i);
+                    else if (i > midIndex) dyOffset = 1.1 * (i - midIndex);
+                    // else dyOffset = 0
+                }
+                let tspan = d3.select(this)
+                    .attr("dy", (1.1 + dyOffset) + "em")
+            })
+        })
     }
 
     // Capitalizes the first letter of each word in a string
