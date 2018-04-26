@@ -429,12 +429,12 @@ export class ExporterComponent implements AfterViewInit {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
             .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate("+textPad+", " + (self.getSpacing(cellHeight, 1)) +")")
+            .attr("transform", "translate("+textPad+", 0)")
             .attr("dominant-baseline", "middle")
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(self.wrap, columnWidth - textPad, cellHeight, self)
-            .call(self.recenter, cellHeight, self)
+            .call(self.wrap, columnWidth - textPad, cellHeight, self) //do this before recenter
+            .call(self.recenter, cellHeight, self) //fix the tspan children's y locations. MUST CALL AFTER WRAP
 
     }
 
@@ -563,23 +563,11 @@ export class ExporterComponent implements AfterViewInit {
         text.each(function() {
             text.selectAll('tspan').each(function(d, i, els) {
                 let numTSpan = els.length;
-                if (numTSpan < 2) {
-                    return;
-                }
-                let midIndex = Math.floor(numTSpan/2) //middle of range
-                // calculate dy offset
-                let dyOffset = 0;
-                if (numTSpan % 2 == 0) { //even number of children
-                    if (i < numTSpan/2) dyOffset = (-1.1 * (midIndex - i)) - (1.1/2);
-                    else if (i > numTSpan/2) dyOffset = (1.1 * (i - midIndex)) + (1.1/2);
-                    //i will never equal numTSpan/2 since there is an odd number of children
-                } else { //odd number of children
-                    if (i < midIndex) dyOffset = -1.1 * (midIndex - i);
-                    else if (i > midIndex) dyOffset = 1.1 * (i - midIndex);
-                    // else dyOffset = 0
-                }
+                let location = self.getSpacing(height, numTSpan)[i]
+
                 let tspan = d3.select(this)
-                    .attr("dy", (1.1 + dyOffset) + "em")
+                    .attr("y", ( location))
+                    .attr("dy", "0")
             })
         })
     }
