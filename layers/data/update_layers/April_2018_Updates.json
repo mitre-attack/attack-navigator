@@ -235,6 +235,12 @@
 			"enabled": true
 		},
 		{
+			"techniqueID": "T1080",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description, permissions required added, contributor added",
+			"enabled": true
+		},
+		{
 			"techniqueID": "T1102",
 			"color": "#fcf26b",
 			"comment": "Major content change from previous release - updated description, data source added, defense bypassed added, contributor added",
