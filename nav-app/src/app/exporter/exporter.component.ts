@@ -4,6 +4,7 @@ import { ConfigService } from "../config.service";
 import { Technique } from '../data.service';
 import * as is from 'is_js';
 declare var d3: any; //d3js
+declare var tinycolor: any; //use tinycolor2
 
 @Component({
     selector: 'exporter',
@@ -372,7 +373,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("width", columnWidth)
             .attr("height", colHeaderHeight)
             .style("stroke", "black")
-            .style("fill", "none")
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? self.exportData.viewModel.tacticRowBackground : 'none')
         //split headers into name and count cells
         // let headerTacticNames = columnHeaders.append("g")
         // .attr("transform", "translate(0,0)")
@@ -383,6 +384,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("font-size", tableTacticFontSize + fontUnits)
             .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) +")")
             .attr("dominant-baseline", "middle")
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
 
             .attr("dx", 0)
             .attr("dy", 0)
@@ -395,6 +397,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("font-size", tableTacticFontSize + fontUnits)
             .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, 2)[1]) +")")
             .attr("dominant-baseline", "middle")
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
 
             .attr("dx", 0)
             .attr("dy", 0)
@@ -428,6 +431,13 @@ export class ExporterComponent implements AfterViewInit {
             .text(function(d) {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
+            .style("fill", function(d) {
+                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "black";
+                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
+                if (tvm.color) return tinycolor.mostReadable(tvm.color, ['white', 'black'])
+                if (tvm.score) return tinycolor.mostReadable(tvm.scoreColor, ['white', 'black'])
+            })
+
             .attr("font-size", tableFontSize + fontUnits)
             .attr("transform", "translate("+textPad+", 0)")
             .attr("dominant-baseline", "middle")

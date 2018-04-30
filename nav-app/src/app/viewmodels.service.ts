@@ -645,6 +645,10 @@ export class ViewModel {
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.stringify(this.legendItems);
+
+        rep.showTacticRowBackground = this.showTacticRowBackground;
+        rep.tacticRowBackground = this.tacticRowBackground;
+
         return JSON.stringify(rep, null, "\t");
     }
 
@@ -686,6 +690,15 @@ export class ViewModel {
 
         if ("legendItems" in obj) {
             this.legendItems = JSON.parse(obj.legendItems);
+        }
+
+        if ("showTacticRowBackground" in obj) {
+            if (typeof(obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
+            else console.error("TypeError: showTacticRowBackground field is not a boolean")
+        }
+        if ("tacticRowBackground" in obj) {
+            if (typeof(obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
+            else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
         }
 
         if ("techniques" in obj) {
