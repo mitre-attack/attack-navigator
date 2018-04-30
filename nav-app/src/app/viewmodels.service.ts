@@ -421,11 +421,18 @@ export class ViewModel {
 
     highlightedTactic: string = "";
     highlightedTechnique: Technique = null;
+    hoverTactic: string = "";
 
     gradient: Gradient = new Gradient(); //gradient for scores
 
     backgroundPresets: string[] = ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
     legendColorPresets: string[] = [];
+
+    techniqueIDSelectionLock: boolean = true;
+
+    changeTechniqueIDSelectionLock(){
+        this.techniqueIDSelectionLock = !this.techniqueIDSelectionLock;
+    }
 
      //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
      // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
@@ -460,6 +467,7 @@ export class ViewModel {
      */
     addToTechniqueSelection(technique: Technique): void {
         if (!this.isTechniqueSelected(technique)) this.selectedTechniques.push(technique.technique_id)
+
     }
 
     /**

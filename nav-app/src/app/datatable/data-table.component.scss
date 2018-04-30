@@ -246,7 +246,8 @@ $panel-light: lighten($panel-dark, 8%);
 }
 .contextMenu-box {
     position: absolute;
-    // background: white;
+    background: white;
+    border: 1px black solid;
     .contextMenu-section {
         &:not(:first-child) {
             border-top: 1px solid $panel-dark;

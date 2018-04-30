@@ -5,6 +5,18 @@
                 selection controls
             </div>
 
+
+            <!-- lock selecting all with technique id -->
+            <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="viewModel.changeTechniqueIDSelectionLock(); currentDropdown = null;"
+                     matTooltipPosition="below"
+                     matTooltip="lock multi-technique hover">
+                     <img [src]="viewModel.techniqueIDSelectionLock ? 'assets/icons/ic_lock_black_24px.svg' : 'assets/icons/ic_lock_open_black_24px.svg'" alt="lock"/>
+                </div>
+            </div>
+
+
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
@@ -433,10 +445,10 @@
                         (click)="techniqueSelectEvent(technique, $event.shiftKey || $event.ctrlKey || $event.metaKey, tactic, $event)"
                          (contextmenu)="rightClickTechnique(technique, tactic, $event)"
 
-                         (mouseenter)="viewModel.highlightedTechnique = technique;"
-                         (mouseleave)="viewModel.highlightedTechnique = null"
+                         (mouseenter)="viewModel.highlightedTechnique = technique; this.viewModel.hoverTactic = tactic;"
+                         (mouseleave)="viewModel.highlightedTechnique = null; this.viewModel.hoverTactic = tactic;"
 
-                         [class]="getClass(technique)"
+                         [class]="getClass(technique, tactic)"
                          [ngStyle]="getTechniqueBackground(technique)">
                          <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}</span>
                     </div>

@@ -79,7 +79,7 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel.highlightedTechnique == null || this.viewModel.highlightedTactic == null) return false;
         for (let i = 0; i < this.techniques.length; i++) {
             if (this.techniques[i].technique_id === this.viewModel.highlightedTechnique.technique_id)
-                return this.techniques[i].tactics.includes(tacticName)
+                return this.techniques[i].tactic === tacticName;
         }
     }
 
@@ -409,16 +409,23 @@ export class DataTableComponent implements AfterViewInit {
                 url = t.external_references[0].url;
                 tid = t.external_references[0].external_id;
             }
-            var formattedTechnique = new Technique(
-                t.name,   t.description,   tacticFinal, url,
-                t.x_mitre_platforms,   t.id,   tid
-            );
+            
             var stageString = this.tacticStages[tacticObject[0]["phase_name"]];
-            if(stageString === "act"){
-                actTechniquesParsed.push(formattedTechnique);
-            } else {
-                prepareTechniquesParsed.push(formattedTechnique);
+            for(var i = 0; i < tacticFinal.length; i++){
+                var formattedTechnique = new Technique(
+                    t.name,   t.description,   tacticFinal[i], url,
+                    t.x_mitre_platforms,   t.id,   tid
+                );
+                if(stageString === "act"){
+                    actTechniquesParsed.push(formattedTechnique);
+                } else {
+                    prepareTechniquesParsed.push(formattedTechnique);
+                }
             }
+
+            
+            
+            
         };
         // Stores techniques in arrays according to phase
         prepareTechniquesParsed.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
@@ -623,8 +630,10 @@ export class DataTableComponent implements AfterViewInit {
             this.rightClickTechnique(technique, tactic, event);
             return;
         }
+        console.log(technique);
         if (addToSelection) {
             // TODO add/remove from selection
+            
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
             else this.viewModel.addToTechniqueSelection(technique)
         } else {
@@ -718,15 +727,22 @@ export class DataTableComponent implements AfterViewInit {
      * @param  {boolean}   mini is it the minitable?
      * @return {string}               the classes the technique should currently have
      */
-    getClass(technique) {
+    getClass(technique, tactic) {
         let theclass = 'link noselect cell'
         if (!this.viewModel.getTechniqueVM(technique.technique_id).enabled)
             theclass += " disabled"
         // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_id).color
         if (this.viewModel.isTechniqueSelected(technique))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
-            theclass += " highlight"
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
+            if(this.viewModel.techniqueIDSelectionLock){
+                theclass += " highlight"
+            } else if (this.viewModel.hoverTactic == tactic) {
+                theclass += " highlight"
+            }
+            //console.log(this.viewModel.hoverTactic);
+        }
+            
         theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
         if (this.viewModel.getTechniqueVM(technique.technique_id).comment.length > 0)
             theclass += " has-comment"
