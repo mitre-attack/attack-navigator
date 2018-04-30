@@ -77,7 +77,7 @@ $cellSize: 15px;
 
         &.itemcount {
             border: 1px solid;
-            border-color: white white black white;
+            border-color: rgba(255, 255, 255, 0) rgba(255, 255, 255, 0) black rgba(255, 255, 255, 0);
         }
 
         &.editing {

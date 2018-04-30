@@ -427,7 +427,7 @@ export class ViewModel {
     legendColorPresets: string[] = [];
 
     showTacticRowBackground: boolean = false;
-    tacticRowBackground: string = "#cd30bc";
+    tacticRowBackground: string = "#dddddd";
 
      //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
      // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|

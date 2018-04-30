@@ -415,8 +415,8 @@
 <div class="tableContainer" oncontextmenu="return false">
     <div [class]="'dataTable noselect ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
         <table>
-            <tr [style.background]="viewModel.showTacticRowBackground ? sanitize(viewModel.tacticRowBackground) : 'none'"
-                [style.border-color]="viewModel.showTacticRowBackground ? sanitize(viewModel.tacticRowBackground) : 'none'"
+            <tr [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
                 [style.color]="getTacticRowTextColor()">
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
                     [class]="'header column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
@@ -427,12 +427,16 @@
                          matTooltip="{{tacticDisplayNames[tactic]}}"
                          matTooltipPosition="right"
                          (click)="clickTactic(tactic)"
-                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
+                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
+                         [style.border-width]="viewModel.showTacticRowBackground || viewModel.viewMode == 0 ? '0px' : '1px'">
                          {{[tacticDisplayNames[tactic], viewModel.acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
                     </div>
                 </td>
             </tr>
-            <tr *ngIf="viewModel.viewMode != 2">
+            <tr *ngIf="viewModel.viewMode != 2"
+                [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.color]="getTacticRowTextColor()">
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
                     [class]="'column' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
