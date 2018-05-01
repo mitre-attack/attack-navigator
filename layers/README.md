@@ -1,6 +1,8 @@
 # ATT&CK Navigator Layers
 
-This folder contains a basic script that demonstrates how layer files can be generated for use in the ATT&CK Navigator. Sample layer files are also found in the **data/samples** sub-folder.
+This folder contains a basic script that demonstrates how layer files can be generated for use in the ATT&CK Navigator. Sample layer files are found in the **data/samples** sub-folder.
+
+The **data/update_layers** folder currently contains a layer file that is based on the April 2018 ATT&CK content update.
 
 If you want to learn more about the format of layer files, **LAYERFORMATv1_1.md** describes version 1.1 of the MITRE ATT&CK Navigator Layer file format.
 
