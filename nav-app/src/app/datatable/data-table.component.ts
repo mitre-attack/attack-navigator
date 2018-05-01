@@ -298,13 +298,16 @@ export class DataTableComponent implements AfterViewInit {
             this.ds.setUpURLs(config["enterprise_attack_url"],
                                 config["pre_attack_url"],
                                 config["mobile_data_url"],
-                                config["tactics_url"]);
+                                config["tactics_url"],
+                                config["taxii_server"]["enabled"],
+                                config["taxii_server"]["url"],
+                                config["taxii_server"]["collections"]);
             var domain = config["domain"];
             this.customContextMenuItems = config["custom_context_menu_items"]
             dataService.getTactics().subscribe((tactics: Object[]) => {
                 this.constructTacticList(tactics, domain);
                 if(domain === "mitre-enterprise"){
-                    dataService.getEnterpriseData().subscribe((enterpriseData: Object[]) => {
+                    dataService.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
                         var objects = enterpriseData[1]["objects"].concat(enterpriseData[0]["objects"]);
                         this.establishData(objects);
                     });

@@ -75,6 +75,14 @@ Example custom context menu object:<br />
     &nbsp;&nbsp;&nbsp;&nbsp;"`url`": &nbsp;"https://attack.mitre.org/wiki/Technique/~Technique_Name~"<br />
   }
 
+## Loading content from a TAXII server
+*By default, the Navigator loads content from the MITRE CTI TAXII server at https://cti-taxii.mitre.org.*
+1. Edit the `config.json` file in the **nav-app/src/assets** directory
+2. Set the `enabled` property in `taxii_server` to **true**
+3. Set the `url` property in `taxii_server` to your server's URL
+4. Set the values of the `collections` dictionary to the collection UUIDs your TAXII server has set
+
+
 ## Running the Docker File
 1. Navigate to the **nav-app** directory
 2. Run `docker build -t yourcustomname .`
