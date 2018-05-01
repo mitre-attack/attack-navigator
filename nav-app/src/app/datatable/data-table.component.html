@@ -204,7 +204,7 @@
             </div>
 
             <!-- color setup -->
-            <div *ngIf="configService.getFeature('scoring_gradients')" class="control-row-item">
+            <div *ngIf="configService.getFeature('color_setup')" class="control-row-item">
                 <div class="control-row-button dropdown noselect"
                     (click)="currentDropdown = currentDropdown !== 'colorSetup' ? 'colorSetup' : null; viewModel.updateGradient()"
                     matTooltipPosition="below"

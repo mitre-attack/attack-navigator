@@ -644,7 +644,7 @@ export class ViewModel {
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
-        rep.legendItems = JSON.stringify(this.legendItems);
+        rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
@@ -689,7 +689,35 @@ export class ViewModel {
         }
 
         if ("legendItems" in obj) {
-            this.legendItems = JSON.parse(obj.legendItems);
+            for (let i = 0; i < obj.legendItems.length; i++) {
+                let legendItem = {
+                    color: "#defa217",
+                    label: "default label"
+                };
+                if (!("label" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+                if (!("color" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+
+                if (typeof(obj.legendItems[i].label) === "string") {
+                    legendItem.label = obj.legendItems[i].label;
+                } else {
+                    console.error("TypeError: legendItem label field is not a string")
+                    continue
+                }
+
+                if (typeof(obj.legendItems[i].color) === "string" && tinycolor(obj.legendItems[i].color).isValid()) {
+                    legendItem.color = obj.legendItems[i].color;
+                } else {
+                    console.error("TypeError: legendItem color field is not a color-string:", obj.legendItems[i].color, "(", typeof(obj.legendItems[i].color),")")
+                    continue
+                }
+                this.legendItems.push(legendItem);
+            }
         }
 
         if ("showTacticRowBackground" in obj) {

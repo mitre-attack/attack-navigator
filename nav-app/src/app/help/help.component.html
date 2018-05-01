@@ -21,7 +21,13 @@
                 <li><a href="#help_Layer_Information">Layer Information</a></li>
                 <li><a href="#help_Sorting">Sorting</a></li>
                 <li><a href="#help_Filtering">Filtering</a></li>
-                <li><a href="#help_Scoring">Scoring Gradient Setup</a></li>
+                <li>
+                    <a href="#help_Color_Setup">Color Setup</a>
+                    <ul>
+                        <li><a href="#help_Tactic_Row_Background">Tactic Row Background</a></li>
+                        <li><a href="#help_Scoring_Gradient">Scoring Gradient</a></li>
+                    </ul>
+                </li>
                 <li><a href="#help_Hiding_Disabled_Techniques">Hiding Disabled Techniques</a></li>
                 <li>
                     <a href="#help_Changing_Views">Changing Views</a>
@@ -315,13 +321,23 @@
             to hide techniques which are contained in specific threat or software groupings.
         </p>
 
-        <h2 id="help_Scoring">
+        <h2 id="help_Color_Setup">
             <img src="assets/icons/ic_palette_black_24px.svg"/>
-            Scoring Gradient Setup
+            Color Setup
         </h2>
+        <h3 id="help_Tactic_Row_Background">
+            Tactic Row Background
+        </h3>
+        <p>
+            The background color of the tactic row can be set in the tactic row background section of the color setup menu. The color
+            will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the <a href="#help_Mini_View">mini view</a>.
+        </p>
+
+
+        <h3 id="help_Scoring_Gradient">Scoring Gradient</h3>
         <p>
             Techniques which are assigned a score will be colored according to a
-            gradient defined in the scoring gradient setup menu. Technique scores are
+            gradient defined in the scoring gradient section in the color setup menu. Technique scores are
             mapped to a color scaled linearly between the "low value" and "high value"
             inputs. For example, on a red-green scale, if "low value" were set to 0 and
             "high value" were set to 50, a score of 25 would fall on yellow -- exactly
@@ -330,7 +346,7 @@
             they have the high value.
         </p>
         <p>
-            Several preset gradients are present within the preset menu. If no preset
+            Several preset gradients are present within the preset dropdown. If no preset
             matches your desired gradient, you can create your own by adding and removing
             colors using the interface.
         </p>
