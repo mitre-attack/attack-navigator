@@ -1,11 +1,11 @@
 # ATT&CK<sup>TM</sup> Navigator Layer File Format Definition
-This document describes **Version 1.2** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
+This document describes **Version 1.3** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
 
 ## Property Table
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| version | String | Yes | n/a | Must be "1.1" |
+| version | String | Yes | n/a | Must be "1.3" |
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "mitre-enterprise" or "mitre-mobile" |
@@ -55,7 +55,7 @@ This document describes **Version 1.2** of the MITRE ATT&CK Navigator Layer file
 The following example illustrates the layer file format:
 ```json
 {
-    "version": "1.1",
+    "version": "1.3",
     "name": "example",
     "description": "hello, world",
     "domain": "mitre-enterprise",
@@ -78,6 +78,14 @@ The following example illustrates the layer file format:
             "color": "#FF00FF",
             "techniqueID": "T1015",
         },
-    ]
+    ],
+    "legendItems": [
+        {
+            "label": "Legend Item Label",
+            "color": "#FF00FF"
+        }
+    ],
+    "showTacticRowBackground": true,
+    "tacticRowBackground": "#205b8f"
 }
 ```
