@@ -236,10 +236,10 @@ export class ViewModelsService {
  */
 export class Gradient {
     //official colors used in gradients:
-    labelToColor: object = {white: "#ffffff", red: "#ff6666", orange: "#ffaf66", yellow: "#ffe766", green: "#8ec843", blue: "#66b1ff", purple: "#ff66f4"};
 
     colors: Gcolor[] = [new Gcolor("red"), new Gcolor("green")]; //current colors
-    options: string[] = ["white", "red", "orange", "yellow", "green", "blue", "purple"]; //possible colors
+    // options: string[] = ["white", "red", "orange", "yellow", "green", "blue", "purple"]; //possible colors
+    options: string[] = ["#ffffff", "#ff6666", "#ffaf66","#ffe766", "#8ec843", "#66b1ff", "#ff66f4"]; //possible colors
     minValue: number = 0;
     maxValue: number = 100;
     gradient: any;
@@ -253,7 +253,7 @@ export class Gradient {
         let colorList: string[] = [];
         let self = this;
         this.colors.forEach(function(gColor: Gcolor) {
-            let hexstring = (gColor.color in self.labelToColor) ? self.labelToColor[gColor.color] : tinycolor(gColor.color).toHexString()
+            let hexstring = (tinycolor(gColor.color).toHexString())
             colorList.push(hexstring)
         });
 
@@ -296,12 +296,12 @@ export class Gradient {
 
     //presets in dropdown menu
     presets = {
-        redgreen: [new Gcolor("red"), new Gcolor("yellow"), new Gcolor("green")],
-        greenred: [new Gcolor("green"), new Gcolor("yellow"), new Gcolor("red")],
-        bluered: [new Gcolor("blue"), new Gcolor("purple"), new Gcolor("red")],
-        redblue: [new Gcolor("red"), new Gcolor("purple"), new Gcolor("blue")],
-        whiteblue: [new Gcolor("white"), new Gcolor("blue")],
-        whitered: [new Gcolor("white"), new Gcolor("red")]
+        redgreen: [new Gcolor("#ff6666"), new Gcolor("#ffe766"), new Gcolor("#8ec843")],
+        greenred: [new Gcolor("#8ec843"), new Gcolor("#ffe766"), new Gcolor("#ff6666")],
+        bluered: [new Gcolor("#66b1ff"), new Gcolor("#ff66f4"), new Gcolor("#ff6666")],
+        redblue: [new Gcolor("#ff6666"), new Gcolor("#ff66f4"), new Gcolor("#66b1ff")],
+        whiteblue: [new Gcolor("#ffffff"), new Gcolor("#66b1ff")],
+        whitered: [new Gcolor("#ffffff"), new Gcolor("#ff6666")]
     }
 
     /**
@@ -313,7 +313,7 @@ export class Gradient {
         let colorarray = []
         let self = this;
         this.presets[preset].forEach(function(gcolor: Gcolor) {
-            colorarray.push(self.labelToColor[gcolor.color]);
+            colorarray.push(gcolor.color);
         });
         return tinygradient(colorarray).css('linear', 'to right');
     }
@@ -333,15 +333,14 @@ export class Gradient {
      * recompute gradient
      */
     updateGradient(): void {
-        // console.log("update gradient")
+        console.log("update gradient")
         let colorarray = [];
         let self = this;
         this.colors.forEach(function(colorobj) {
             // figure out what kind of color this is
             // let format = tinycolor(colorobj.color).getFormat();
             // if (format == "name" && colorobj.color in self.labelToColor)
-            if (colorobj.color in self.labelToColor) colorarray.push(self.labelToColor[colorobj.color])
-            else colorarray.push(colorobj.color)
+            colorarray.push(colorobj.color)
         });
         this.gradient = tinygradient(colorarray);
         this.gradientRGB = this.gradient.rgb(100);
@@ -426,6 +425,9 @@ export class ViewModel {
 
     backgroundPresets: string[] = ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
     legendColorPresets: string[] = [];
+
+    showTacticRowBackground: boolean = false;
+    tacticRowBackground: string = "#dddddd";
 
      //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
      // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
@@ -642,7 +644,11 @@ export class ViewModel {
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
-        rep.legendItems = JSON.stringify(this.legendItems);
+        rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
+
+        rep.showTacticRowBackground = this.showTacticRowBackground;
+        rep.tacticRowBackground = this.tacticRowBackground;
+
         return JSON.stringify(rep, null, "\t");
     }
 
@@ -683,7 +689,44 @@ export class ViewModel {
         }
 
         if ("legendItems" in obj) {
-            this.legendItems = JSON.parse(obj.legendItems);
+            for (let i = 0; i < obj.legendItems.length; i++) {
+                let legendItem = {
+                    color: "#defa217",
+                    label: "default label"
+                };
+                if (!("label" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+                if (!("color" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+
+                if (typeof(obj.legendItems[i].label) === "string") {
+                    legendItem.label = obj.legendItems[i].label;
+                } else {
+                    console.error("TypeError: legendItem label field is not a string")
+                    continue
+                }
+
+                if (typeof(obj.legendItems[i].color) === "string" && tinycolor(obj.legendItems[i].color).isValid()) {
+                    legendItem.color = obj.legendItems[i].color;
+                } else {
+                    console.error("TypeError: legendItem color field is not a color-string:", obj.legendItems[i].color, "(", typeof(obj.legendItems[i].color),")")
+                    continue
+                }
+                this.legendItems.push(legendItem);
+            }
+        }
+
+        if ("showTacticRowBackground" in obj) {
+            if (typeof(obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
+            else console.error("TypeError: showTacticRowBackground field is not a boolean")
+        }
+        if ("tacticRowBackground" in obj) {
+            if (typeof(obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
+            else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
         }
 
         if ("techniques" in obj) {
@@ -754,7 +797,7 @@ export class ViewModel {
             this.legendColorPresets.push(this.backgroundPresets[i]);
         }
         for(var i = 0; i < this.gradient.colors.length; i++){
-            this.legendColorPresets.push(this.gradient.labelToColor[this.gradient.colors[i].color]);
+            this.legendColorPresets.push(this.gradient.colors[i].color);
         }
     }
 

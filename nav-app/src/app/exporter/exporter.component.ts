@@ -4,6 +4,7 @@ import { ConfigService } from "../config.service";
 import { Technique } from '../data.service';
 import * as is from 'is_js';
 declare var d3: any; //d3js
+declare var tinycolor: any; //use tinycolor2
 
 @Component({
     selector: 'exporter',
@@ -68,7 +69,8 @@ export class ExporterComponent implements AfterViewInit {
         let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
         let fontUnits = self.exportData.tableConfig.fontUnit;
 
-        let textPad = 3;
+        let headerTextPad = 6;
+        let bodyTextPad = 3;
 
 
         //remove previous graphic
@@ -84,13 +86,6 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("font-family", self.exportData.tableConfig.font);
         let stroke_width = 1;
-        // svg.append("rect")
-        //     .attr("width", width - margin.right - stroke_width/2)
-        //     .attr("height", height - margin.bottom - stroke_width/2)
-        //     .style("stroke", "black")
-        //     .style("stroke-width", stroke_width)
-        //     .style("fill", "none")
-
 
         //  _  _ ___   _   ___  ___ ___
         // | || | __| /_\ |   \| __| _ \
@@ -107,7 +102,7 @@ export class ExporterComponent implements AfterViewInit {
         // console.log(numSections, headerSectionWidth)
         let header = null;
         let posX = 0; //row in the header
-        let headerSectionTitleSep = (2 * (headerFontSize + textPad))
+        let headerSectionTitleSep = (2 * (headerFontSize + headerTextPad))
 
         if (self.exportData.tableConfig.showHeader) {
             header = svg.append("g");
@@ -116,7 +111,7 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("height", headerHeight)
                 .style("stroke", "black")
                 .style("stroke-width", stroke_width)
-                .style("fill", "none")
+                .style("fill", "white")
 
             // layer name
             if (self.showLayerInfo()) {
@@ -127,40 +122,43 @@ export class ExporterComponent implements AfterViewInit {
                 if (self.showName()) { //layer name
                     let titleGroup = header.append("g")
                         .attr("transform", "translate(0,0)");
+                    titleGroup.append("rect")
+                        .attr("width", headerSectionWidth)
+                        .attr("height", nameDescHeight)
+                        .style("stroke-width", 1)
+                        .style("stroke", "black")
+                        .style("fill", "white");
                     titleGroup.append("text")
                         .text(self.exportData.viewModel.name)
-                        .attr("transform", "translate("+ textPad + ", " + (headerLayerNameFontSize + textPad) +")")
+                        .attr("transform", "translate("+ headerTextPad + ", " + (headerLayerNameFontSize + headerTextPad) +")")
                         .attr("dx", 0)
                         .attr("dy", 0)
                         .attr("font-size", headerLayerNameFontSize + fontUnits)
                         .attr("fill", "black")
                         .style("font-weight", "bold")
                         .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
-                        titleGroup.append("rect")
-                            .attr("width", headerSectionWidth)
-                            .attr("height", nameDescHeight)
-                            .style("stroke-width", 1)
-                            .style("stroke", "black")
-                            .style("fill", "none");
                 }
 
                 if (self.showDescription()) {//description
                     let descriptionGroup = header.append("g")
                         .attr("transform", "translate(0," + descY + ")");
-                    descriptionGroup.append("text")
-                        .text(self.exportData.viewModel.description)
-                        .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
-                        .attr("dx", 0)
-                        .attr("dy", 0)
-                        .attr("font-size", headerFontSize + fontUnits)
-                        .attr("fill", "black")
-                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
                     descriptionGroup.append("rect")
                         .attr("width", headerSectionWidth)
                         .attr("height", nameDescHeight)
                         .style("stroke-width", 1)
                         .style("stroke", "black")
-                        .style("fill", "none");
+                        .style("fill", "white");
+                    descriptionGroup.append("text")
+                        .text(self.exportData.viewModel.description)
+                        .attr("transform", "translate("+headerTextPad+", " + headerTextPad +")")
+                        .attr("dominant-baseline", "middle")
+                        .attr("dx", 0)
+                        .attr("dy", 0)
+                        .attr("font-size", headerFontSize + fontUnits)
+                        .attr("fill", "black")
+                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self)
+                        .call(self.recenter, nameDescHeight - (2*headerTextPad), self);
+
                 }
                 posX++;
             }
@@ -174,10 +172,10 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("height", headerHeight)
                     .style("stroke-width", 1)
                     .style("stroke", "black")
-                    .style("fill", "none");
+                    .style("fill", "white");
                 filtersGroup.append("text")
                     .text("filters")
-                    .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
+                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
                     .attr("dx", 0)
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
@@ -185,7 +183,7 @@ export class ExporterComponent implements AfterViewInit {
                     .style("font-weight", "bold");
 
                 let filterTextGroup = filtersGroup.append("g")
-                    .attr("transform", "translate(2," + (headerSectionTitleSep + 6) + ")");
+                    .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6) + ")");
                 filterTextGroup.append("text")
                     .text(function() {
                         let t = "stages: "
@@ -224,10 +222,10 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("height", headerHeight)
                     .style("stroke-width", 1)
                     .style("stroke", "black")
-                    .style("fill", "none");
+                    .style("fill", "white");
                 gradientGroup.append("text")
                     .text("score gradient")
-                    .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
+                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
                     .attr("dx", 0)
                     .attr("dy", 0)
                     .attr("font-size", headerFontSize + fontUnits)
@@ -236,7 +234,7 @@ export class ExporterComponent implements AfterViewInit {
                 posX++;
 
                 let gradientContentGroup = gradientGroup.append("g")
-                    .attr("transform", "translate(2," + headerSectionTitleSep + ")");
+                    .attr("transform", "translate("+headerTextPad+"," + headerSectionTitleSep + ")");
 
                 let leftText = gradientContentGroup.append("text")
                     .text(self.exportData.viewModel.gradient.minValue)
@@ -287,52 +285,7 @@ export class ExporterComponent implements AfterViewInit {
         } else { //no header
             headerHeight = 0
         }
-        // console.log(showLegend, showLegendInHeader && self.exportData.tableConfig.legendDocked)
-        if (self.showLegend() && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
-            console.log("building legend")
-            //legend
-            let legendGroup = self.showLegendInHeader() ? header.append("g")
-                .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
-                                             : svg.append("g")
-                .attr("transform", "translate("+legendX+","+legendY+")");
-            legendGroup.append("rect")
-                .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
-                .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "none");
-            legendGroup.append("text")
-                .text("legend")
-                .attr("transform", "translate("+textPad+", " + (headerFontSize + textPad) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .style("font-weight", "bold");;
-            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
-            let legendItemsGroup = legendGroup.selectAll("g")
-                .data(self.exportData.viewModel.legendItems)
-                .enter().append("g")
-                .attr("transform", function(d,i) {
-                    return "translate(2," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
-                });
-            legendItemsGroup.append("text")
-                .text(function(d) {return d.label})
-                .attr("transform", "translate(12, 6)")
-                .attr("dominant-baseline", "middle")
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
-            legendItemsGroup.append("rect")
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", function(d) { return d.color });
-            // posX++
-        }
+
 
 
         //  _____ _   ___ _    ___   ___  ___  _____   __
@@ -372,33 +325,33 @@ export class ExporterComponent implements AfterViewInit {
             .attr("width", columnWidth)
             .attr("height", colHeaderHeight)
             .style("stroke", "black")
-            .style("fill", "none")
-        //split headers into name and count cells
-        // let headerTacticNames = columnHeaders.append("g")
-        // .attr("transform", "translate(0,0)")
-        // let headerTechniqueCounts = columnHeaders.append("g")
-        //     .attr("transform", "translate(0,"+cellHeight+")")
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? self.exportData.viewModel.tacticRowBackground : 'white')
         columnHeaders.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) +")")
+            .attr("transform", "translate("+bodyTextPad+", " + (self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) +")")
             .attr("dominant-baseline", "middle")
-
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
-            .call(self.wrap, columnWidth - 2 - textPad, cellHeight - 2, self)
+            .call(self.wrap, columnWidth - 2 - bodyTextPad, cellHeight - 2, self)
+
         if (showItemCount) columnHeaders.append("text")
             .text(function(d) {
                 return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
             })
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+textPad+", " + (self.getSpacing(colHeaderHeight, 2)[1]) +")")
+            .attr("transform", "translate("+bodyTextPad+", " + (self.getSpacing(colHeaderHeight, 2)[1]) +")")
             .attr("dominant-baseline", "middle")
+            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
 
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(self.wrap, columnWidth - textPad, cellHeight, self)
+            .call(self.wrap, columnWidth - bodyTextPad, cellHeight, self)
+
+
+        //column body
 
         let columnBodies = columns.append("g")
             .attr("transform", "translate(0,"+colHeaderHeight+")");
@@ -421,21 +374,80 @@ export class ExporterComponent implements AfterViewInit {
                 if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "white";
                 let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
                 if (tvm.color) return tvm.color
-                if (tvm.score) return tvm.scoreColor
-                return "none"
+                else if (tvm.score) return tvm.scoreColor
+                else return "white"
             });
         if (self.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
             .text(function(d) {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
+            .style("fill", function(d) {
+                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "black";
+                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
+                if (tvm.color) return tinycolor.mostReadable(tvm.color, ['white', 'black'])
+                if (tvm.score) return tinycolor.mostReadable(tvm.scoreColor, ['white', 'black'])
+            })
+
             .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate("+textPad+", 0)")
+            .attr("transform", "translate("+bodyTextPad+", 0)")
             .attr("dominant-baseline", "middle")
             .attr("dx", 0)
             .attr("dy", 0)
-            .call(self.wrap, columnWidth - textPad, cellHeight, self) //do this before recenter
-            .call(self.recenter, cellHeight, self) //fix the tspan children's y locations. MUST CALL AFTER WRAP
+            .call(self.wrap, columnWidth - (2*bodyTextPad), cellHeight, self) //do this before recenter
+            .call(self.recenter, cellHeight, self); //fix the tspan children's y locations. MUST CALL AFTER WRAP
 
+
+        //  _    ___ ___ ___ _  _ ___
+        // | |  | __/ __| __| \| |   \
+        // | |__| _| (_ | _|| .` | |) |
+        // |____|___\___|___|_|\_|___/
+
+        // console.log(showLegend, showLegendInHeader && self.exportData.tableConfig.legendDocked)
+        if (self.showLegend() && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
+            console.log("building legend")
+            //legend
+            let legendGroup = self.showLegendInHeader() ? header.append("g")
+                .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
+                                             : svg.append("g")
+                .attr("transform", "translate("+legendX+","+legendY+")");
+            legendGroup.append("rect")
+                .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
+                .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", "white");
+            legendGroup.append("text")
+                .text("legend")
+                .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+                .style("font-weight", "bold");;
+            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
+            let legendItemsGroup = legendGroup.selectAll("g")
+                .data(self.exportData.viewModel.legendItems)
+                .enter().append("g")
+                .attr("transform", function(d,i) {
+                    return "translate("+headerTextPad+"," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
+                });
+            legendItemsGroup.append("text")
+                .text(function(d) {return d.label})
+                .attr("transform", "translate("+ (headerTextPad + 10) + ", 6)")
+                .attr("dominant-baseline", "middle")
+                .attr("font-size", headerFontSize + fontUnits)
+                .attr("fill", "black")
+                .attr("dx", 0)
+                .attr("dy", 0)
+                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
+            legendItemsGroup.append("rect")
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("stroke-width", 1)
+                .style("stroke", "black")
+                .style("fill", function(d) { return d.color });
+            // posX++
+        }
     }
 
     downloadSVG() {

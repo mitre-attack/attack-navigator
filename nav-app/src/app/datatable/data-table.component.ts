@@ -769,6 +769,11 @@ export class DataTableComponent implements AfterViewInit {
         else return "black"
     }
 
+    getTacticRowTextColor() {
+        if (!this.viewModel.showTacticRowBackground) return 'black'
+        else return tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
+    }
+
     /**
      * Is score input valid number
      * @param  event keypress event just in case we need it
@@ -781,7 +786,7 @@ export class DataTableComponent implements AfterViewInit {
         return result
     }
 
-    
+
 
     /**
      * Return whether all techniques in the security instance are currently selected

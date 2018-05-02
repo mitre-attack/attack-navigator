@@ -38,7 +38,7 @@
             {"name": "export_render", "enabled": true, "description": "Disable to the remove the button to render the current layer."},
             {"name": "filters", "enabled": true, "description": "Disable to the remove the filters panel from interface."},
             {"name": "sorting", "enabled": true, "description": "Disable to the remove the sorting button from the interface."},
-            {"name": "scoring_gradients", "enabled": true, "description": "Disable to the remove the scoring gradient setup panel from interface."},
+            {"name": "color_setup", "enabled": true, "description": "Disable to the remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
             {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to the remove the hide disabled techniques button from the interface."},
             {"name": "toggle_view_mode", "enabled": true, "description": "Disable to the remove the toggle view mode button from interface."},
             {"name": "legend", "enabled": true, "description": "Disable to the remove the legend panel from the interface."}
