@@ -17,14 +17,14 @@ This document describes **Version 1.3** of the MITRE ATT&CK Navigator Layer file
 | gradient | Gradient object | No | Red to Green, minValue=0, maxValue=100 | See definition of Gradient object below |
 | legendItems | Array of LegendItem objects | no | | See definition of LegendItem object below |
 | showTacticRowBackground | boolean | no | false | If true, the tactic row background color will be the value of the _tacticRowBackground_ field |
-| tacticRowBackground | string | no | "#dddddd" | The the tactic row background color.  |
+| tacticRowBackground | string | no | "#dddddd" | The tactic row background color |
 
 
 ## Filter Object Properties
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| stages | Array of String | No |  ["act"] | Specifies the logical stages of the attack lifecycle to display. Valid choices are: "prepare" and "act". Array must contain at least one of these values. |
+| stages | Array of String | No |  ["act"] | Specifies the logical stages of the attack lifecycle to display. Valid choices are: "prepare" and "act". Array must contain at least one of these values |
 | platforms | Array of String | No | All platforms defined within domain | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=mitre-enterprise**: "windows", "linux", "mac" <br>**domain=mitre-mobile**: "android", "ios" |
 
 ## Technique Object properties
@@ -34,13 +34,13 @@ This document describes **Version 1.3** of the MITRE ATT&CK Navigator Layer file
 | techniqueID | String | Yes | n/a | Unique identifier of the ATT&CK technique, e.g. "T####" |
 | comment | String | No | "" | Free-text field |
 | enabled | Boolean | No | true | Specifies if the technique is considered enabled or disabled in this layer |
-| score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator. |
-| color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color. |
+| score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator |
+| color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color |
 
 ## Gradient Object properties
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| colors | Array of String | Yes | n/a | Specifies the hexadecimal RGB color values that constitute the color spectrum in use. The array must contain at least two (2) values, corresponding to the minValue and maxValue scores. |
+| colors | Array of String | Yes | n/a | Specifies the hexadecimal RGB color values that constitute the color spectrum in use. The array must contain at least two (2) values, corresponding to the minValue and maxValue scores |
 | minValue | Number | Yes | n/a | Lower bound score of the gradient |
 | maxValue | Number | Yes | n/a | Upper bound score of the gradient. *Note: maxValue must be > minValue* |
 

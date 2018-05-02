@@ -21,7 +21,7 @@ This document describes **Version 1.2** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| stages | Array of String | No |  ["act"] | Specifies the logical stages of the attack lifecycle to display. Valid choices are: "prepare" and "act". Array must contain at least one of these values. |
+| stages | Array of String | No |  ["act"] | Specifies the logical stages of the attack lifecycle to display. Valid choices are: "prepare" and "act". Array must contain at least one of these values |
 | platforms | Array of String | No | All platforms defined within domain | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=mitre-enterprise**: "windows", "linux", "mac" <br>**domain=mitre-mobile**: "android", "ios" |
 
 ## Technique Object properties
@@ -31,8 +31,8 @@ This document describes **Version 1.2** of the MITRE ATT&CK Navigator Layer file
 | techniqueID | String | Yes | n/a | Unique identifier of the ATT&CK technique, e.g. "T####" |
 | comment | String | No | "" | Free-text field |
 | enabled | Boolean | No | true | Specifies if the technique is considered enabled or disabled in this layer |
-| score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator. |
-| color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color. |
+| score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator |
+| color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color |
 
 ## Gradient Object properties
 | Name     | Type     | Required? | Default Value (if not present) | Description |
