@@ -30,7 +30,7 @@ export class ConfigService {
     }
 
     public getFeatureList(): object[] {
-        if (!this.featureStructure) return [{}]
+        if (!this.featureStructure) return []
         return JSON.parse(JSON.stringify(this.featureStructure));
     }
 
