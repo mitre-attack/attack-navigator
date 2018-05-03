@@ -666,10 +666,20 @@ export class DataTableComponent implements AfterViewInit {
         this.contextMenuVisible = true;
         this.contextMenuSelectedTechnique = technique;
         this.contextMenuSelectedTactic = this.tacticDisplayNames[tactic].replace(" ", "_");
-        // console.log(event, technique)
-        let element = <HTMLElement>document.getElementById("contextMenu" + this.viewModel.uid);
-        element.style.left = event.pageX + "px";
-        element.style.top = event.pageY + "px";
+        let self = this;
+        window.setTimeout(function() { //run after it gets drawn
+            // console.log(event, technique)
+            let element = <HTMLElement>document.getElementById("contextMenu" + self.viewModel.uid);
+
+            console.log( document.body.clientWidth, event.pageX, element.clientWidth)
+
+            let directionHorizontal = document.body.clientWidth - event.pageX < element.clientWidth; //determine facing
+            let directionVertical = document.body.clientHeight - event.pageY < element.clientHeight; //determine facing
+
+            element.style.left = directionHorizontal ? (event.pageX - element.clientWidth) + "px" : (event.pageX) + "px";
+            element.style.top = directionVertical ? (event.pageY - element.clientHeight) + "px" : event.pageY + "px";
+        }, 0)
+
         return false;
     }
 
