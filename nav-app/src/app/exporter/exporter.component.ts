@@ -44,7 +44,7 @@ export class ExporterComponent implements AfterViewInit {
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.exportData.tableConfig.showHeader}
     showFilters(): boolean {return this.exportData.tableConfig.showFilters && this.exportData.tableConfig.showHeader};
     showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores  && this.exportData.tableConfig.showHeader}
-    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems() && this.exportData.tableConfig.showHeader}
+    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
     showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
 
     buildSVG(self?): void {
