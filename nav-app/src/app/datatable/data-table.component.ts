@@ -671,8 +671,6 @@ export class DataTableComponent implements AfterViewInit {
             // console.log(event, technique)
             let element = <HTMLElement>document.getElementById("contextMenu" + self.viewModel.uid);
 
-            console.log( document.body.clientWidth, event.pageX, element.clientWidth)
-
             let directionHorizontal = document.body.clientWidth - event.pageX < element.clientWidth; //determine facing
             let directionVertical = document.body.clientHeight - event.pageY < element.clientHeight; //determine facing
 
