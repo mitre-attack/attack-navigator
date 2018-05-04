@@ -160,8 +160,8 @@ export class DataTableComponent implements AfterViewInit {
         // sort
         let self = this;
         filteredTechniques.sort(function(t1:Technique, t2:Technique): number {
-            let t1vm = self.viewModel.getTechniqueVM(t1.technique_id)
-            let t2vm = self.viewModel.getTechniqueVM(t2.technique_id)
+            let t1vm = self.viewModel.getTechniqueVM(t1.technique_tactic_union_id)
+            let t2vm = self.viewModel.getTechniqueVM(t2.technique_tactic_union_id)
             let c1 = String(t1vm.score).length > 0 ? Number(t1vm.score) : 0;
             let c2 = String(t2vm.score).length > 0 ? Number(t2vm.score) : 0;
             switch(self.viewModel.sorting){
@@ -268,7 +268,7 @@ export class DataTableComponent implements AfterViewInit {
         let self = this;
         techniques.forEach(function(technique) {
             // TODO other filters
-            if (!(!self.viewModel.getTechniqueVM(technique.technique_id).enabled && self.viewModel.hideDisabled)) filtered.push(technique);
+            if (!(!self.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled && self.viewModel.hideDisabled)) filtered.push(technique);
         })
         return filtered;
     }
@@ -298,13 +298,16 @@ export class DataTableComponent implements AfterViewInit {
             this.ds.setUpURLs(config["enterprise_attack_url"],
                                 config["pre_attack_url"],
                                 config["mobile_data_url"],
-                                config["tactics_url"]);
+                                config["tactics_url"],
+                                config["taxii_server"]["enabled"],
+                                config["taxii_server"]["url"],
+                                config["taxii_server"]["collections"]);
             var domain = config["domain"];
             this.customContextMenuItems = config["custom_context_menu_items"]
             dataService.getTactics().subscribe((tactics: Object[]) => {
                 this.constructTacticList(tactics, domain);
                 if(domain === "mitre-enterprise"){
-                    dataService.getEnterpriseData().subscribe((enterpriseData: Object[]) => {
+                    dataService.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
                         var objects = enterpriseData[1]["objects"].concat(enterpriseData[0]["objects"]);
                         this.establishData(objects);
                     });
@@ -439,8 +442,8 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel) {
             for (let i = 0; i < this.techniques.length; i++) {
                 // console.log("initializing VM", this.techniques[i].name)
-                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_id))
-                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_id));
+                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id))
+                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_tactic_union_id));
                 // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
@@ -699,7 +702,7 @@ export class DataTableComponent implements AfterViewInit {
         } else {
             element.style.left = -10000 + "px";
         }
-        if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_id).comment) {
+        if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_tactic_union_id).comment) {
             let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModel.uid);
             this.toolTipOverflows = commentdiv.clientHeight >= 300;
         }
@@ -729,12 +732,12 @@ export class DataTableComponent implements AfterViewInit {
      */
     getClass(technique, tactic) {
         let theclass = 'link noselect cell'
-        if (!this.viewModel.getTechniqueVM(technique.technique_id).enabled)
+        if (!this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled)
             theclass += " disabled"
-        // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_id).color
+        // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).color
         if (this.viewModel.isTechniqueSelected(technique))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id){
             if(this.viewModel.techniqueIDSelectionLock){
                 theclass += " highlight"
             } else if (this.viewModel.hoverTactic == tactic) {
@@ -744,7 +747,7 @@ export class DataTableComponent implements AfterViewInit {
         }
             
         theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
-        if (this.viewModel.getTechniqueVM(technique.technique_id).comment.length > 0)
+        if (this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).comment.length > 0)
             theclass += " has-comment"
         if (this.getTechniqueBackground(technique))
             theclass += " has-score-background"
@@ -757,9 +760,9 @@ export class DataTableComponent implements AfterViewInit {
      * @return           background object
      */
     getTechniqueBackground(technique: Technique) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_id)
+        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)) return {}
+        if (!tvm.enabled || (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id)) return {}
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
@@ -772,14 +775,19 @@ export class DataTableComponent implements AfterViewInit {
      * @return               black, white, or gray, depending on technique and column state
      */
     getTechniqueTextColor(technique: Technique, antihighlight: boolean) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_id)
+        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
         if (!tvm.enabled) return "#aaaaaa";
         // don't display if disabled or highlighted
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id) return "black"
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
         if (antihighlight) return "#aaaaaa";
         else return "black"
+    }
+
+    getTacticRowTextColor() {
+        if (!this.viewModel.showTacticRowBackground) return 'black'
+        else return tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
     }
 
     /**
@@ -794,7 +802,7 @@ export class DataTableComponent implements AfterViewInit {
         return result
     }
 
-    
+
 
     /**
      * Return whether all techniques in the security instance are currently selected

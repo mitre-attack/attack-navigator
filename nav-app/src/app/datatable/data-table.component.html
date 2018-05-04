@@ -215,58 +215,75 @@
                 </div>
             </div>
 
-            <!-- set up gradients -->
-            <div *ngIf="configService.getFeature('scoring_gradients')" class="control-row-item">
+            <!-- color setup -->
+            <div *ngIf="configService.getFeature('color_setup')" class="control-row-item">
                 <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'gradients' ? 'gradients' : null; viewModel.updateGradient()"
+                    (click)="currentDropdown = currentDropdown !== 'colorSetup' ? 'colorSetup' : null; viewModel.updateGradient()"
                     matTooltipPosition="below"
-                    matTooltip="scoring gradient setup">
+                    matTooltip="color setup">
                     <img src="assets/icons/ic_palette_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container gradients" *ngIf="currentDropdown === 'gradients'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="gradient-controls">
-                        <table>
-                            <tr class="minmax top">
-                                <td>Low value:</td>
-                                <td class="col2"><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.minValue" [max]=viewModel.gradient.maxValue></td>
-                            </tr>
-                            <tr>
-                                <td class="buttons">
-                                    <div *ngFor="let gradientStep of viewModel.gradient.colors; let $i = index">
-                                        <div class="left">
-                                            <button (click)="viewModel.removeGradientColor($i)" [disabled]="viewModel.gradient.colors.length == 2">remove</button>
-                                        </div>
-                                        <div class="right">
-                                            <select [(ngModel)]="gradientStep.color" (ngModelChange)="viewModel.updateGradient()">
-                                                <option *ngFor="let color of viewModel.gradient.options" [ngValue]="color">{{color}}</option>
-                                                <!-- option shows up if a nonstandard option is selected, from uploading a custom layer -->
-                                                <option *ngIf="!(viewModel.gradient.labelToColor.hasOwnProperty(gradientStep.color))" [ngValue]=gradientStep.color>{{gradientStep.color}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="col2" [style.background-image]="sanitize(viewModel.gradient.gradient.css('linear', 'to bottom'))"> </td>
-                            </tr>
-                            <tr>
-                                <td><button class="addcolor" (click)="viewModel.addGradientColor();">add another color</button></td>
-                            </tr>
-                            <tr class="minmax bottom">
-                                <td>High value: </td>
-                                <td class="col2 "><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.maxValue" [min]=viewModel.gradient.minValue></td>
-                            </tr>
-                        </table>
+                <div class="dropdown-container colorSetup" *ngIf="currentDropdown === 'colorSetup'" #dropdown [class.left]="checkalign(dropdown)">
+
+                    <div class="tacticRowColor">
+                        <div class="gradient-section-label">
+                            Tactic Row Background
+                        </div>
+                        <div class="gradient-section-content">
+                            <input id="showTacticRowBackground" type="checkbox" class="checkbox-custom" [(ngModel)]=viewModel.showTacticRowBackground>
+                            <label for="showTacticRowBackground" class="checkbox-custom-label noselect">show</label>
+                            <input class="colorpicker" [(colorPicker)]="viewModel.tacticRowBackground" [(ngModel)]="viewModel.tacticRowBackground" [style.background]="viewModel.tacticRowBackground" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D']">
+                        </div>
                     </div>
-                    <div class="display-buttons">
-                        <div class="squarebutton dropdown noselect" (click)="presetsMenuVisible = !presetsMenuVisible">
-                            presets<span style="font-size:5pt">▼</span>
-                        </div >
-                        <div class="dropdown-container presetsmenu" *ngIf="presetsMenuVisible">
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redgreen'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redgreen'))">red to green</div>
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('greenred'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('greenred'))">green to red</div>
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('bluered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('bluered'))">blue to red</div>
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redblue'))">red to blue</div>
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whiteblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whiteblue'))">white to blue</div>
-                            <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whitered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whitered'))">white to red</div>
+                    <div class="gradient">
+                        <div class="gradient-section-label">
+                            Scoring Gradient
+                        </div>
+                        <div class="gradient-controls gradient-section-content">
+                            <table>
+                                <tr class="minmax top">
+                                    <td>Low value:</td>
+                                    <td class="col2"><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.minValue" [max]=viewModel.gradient.maxValue></td>
+                                </tr>
+                                <tr>
+                                    <td class="buttons">
+                                        <div *ngFor="let gradientStep of viewModel.gradient.colors; let $i = index">
+                                            <div class="left">
+                                                <button (click)="viewModel.removeGradientColor($i)" [disabled]="viewModel.gradient.colors.length == 2">remove</button>
+                                            </div>
+                                            <div class="right">
+                                                <input class="colorpicker" (colorPickerChange)="viewModel.updateGradient()" (cpPresetColorsChange)="viewModel.updateGradient()" (cpSliderChange)="viewModel.updateGradient()" (cpInputChange)="viewModel.updateGradient()" [(colorPicker)]="gradientStep.color" [(ngModel)]="gradientStep.color" [style.background]="gradientStep.color" cpPosition="bottom" [cpPresetColors]="viewModel.gradient.options">
+                                                <!-- <select [(ngModel)]="gradientStep.color" (ngModelChange)="viewModel.updateGradient()">
+                                                    <option *ngFor="let color of viewModel.gradient.options" [ngValue]="color">{{color}}</option>
+                                                    option shows up if a nonstandard option is selected, from uploading a custom layer
+                                                    <option *ngIf="!(viewModel.gradient.labelToColor.hasOwnProperty(gradientStep.color))" [ngValue]=gradientStep.color>{{gradientStep.color}}</option>
+                                                </select> -->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="col2" [style.background-image]="sanitize(viewModel.gradient.gradient.css('linear', 'to bottom'))"> </td>
+                                </tr>
+                                <tr>
+                                    <td><button class="addcolor" (click)="viewModel.addGradientColor();">add another color</button></td>
+                                </tr>
+                                <tr class="minmax bottom">
+                                    <td>High value: </td>
+                                    <td class="col2 "><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.maxValue" [min]=viewModel.gradient.minValue></td>
+                                </tr>
+                            </table>
+                            <div class="display-buttons">
+                                <div class="squarebutton dropdown noselect" (click)="presetsMenuVisible = !presetsMenuVisible">
+                                    presets<span style="font-size:5pt">▼</span>
+                                </div >
+                                <div class="dropdown-container presetsmenu" *ngIf="presetsMenuVisible">
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redgreen'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redgreen'))">red to green</div>
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('greenred'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('greenred'))">green to red</div>
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('bluered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('bluered'))">blue to red</div>
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redblue'))">red to blue</div>
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whiteblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whiteblue'))">white to blue</div>
+                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('whitered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('whitered'))">white to red</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -410,22 +427,28 @@
 <div class="tableContainer" oncontextmenu="return false">
     <div [class]="'dataTable noselect ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
         <table>
-            <tr>
+            <tr [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.color]="getTacticRowTextColor()">
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
                     [class]="'header column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
-                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
-
+                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic"
+>
                     <div
                         [matTooltipDisabled]="viewModel.viewMode == 0"
                          matTooltip="{{tacticDisplayNames[tactic]}}"
                          matTooltipPosition="right"
                          (click)="clickTactic(tactic)"
-                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
+                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
+                         [style.border-width]="viewModel.showTacticRowBackground || viewModel.viewMode == 0 ? '0px' : '1px'">
                          {{[tacticDisplayNames[tactic], viewModel.acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
                     </div>
                 </td>
             </tr>
-            <tr *ngIf="viewModel.viewMode != 2">
+            <tr *ngIf="viewModel.viewMode != 2"
+                [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
+                [style.color]="getTacticRowTextColor()">
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
                     [class]="'column' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
@@ -527,11 +550,11 @@
                 <td>{{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}</td>
             </tr>
         </table> -->
-        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
-            <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score}}
+        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).score">
+            <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).score}}
         </div>
-        <div class="comment" [id]="'comment'+viewModel.uid" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment">
-            <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}
+        <div class="comment" [id]="'comment'+viewModel.uid" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).comment">
+            <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).comment}}
         </div>
         <div class="comment-overflow-note" *ngIf="toolTipOverflows">
             ...

@@ -236,10 +236,10 @@ export class ViewModelsService {
  */
 export class Gradient {
     //official colors used in gradients:
-    labelToColor: object = {white: "#ffffff", red: "#ff6666", orange: "#ffaf66", yellow: "#ffe766", green: "#8ec843", blue: "#66b1ff", purple: "#ff66f4"};
 
     colors: Gcolor[] = [new Gcolor("red"), new Gcolor("green")]; //current colors
-    options: string[] = ["white", "red", "orange", "yellow", "green", "blue", "purple"]; //possible colors
+    // options: string[] = ["white", "red", "orange", "yellow", "green", "blue", "purple"]; //possible colors
+    options: string[] = ["#ffffff", "#ff6666", "#ffaf66","#ffe766", "#8ec843", "#66b1ff", "#ff66f4"]; //possible colors
     minValue: number = 0;
     maxValue: number = 100;
     gradient: any;
@@ -253,7 +253,7 @@ export class Gradient {
         let colorList: string[] = [];
         let self = this;
         this.colors.forEach(function(gColor: Gcolor) {
-            let hexstring = (gColor.color in self.labelToColor) ? self.labelToColor[gColor.color] : tinycolor(gColor.color).toHexString()
+            let hexstring = (tinycolor(gColor.color).toHexString())
             colorList.push(hexstring)
         });
 
@@ -296,12 +296,12 @@ export class Gradient {
 
     //presets in dropdown menu
     presets = {
-        redgreen: [new Gcolor("red"), new Gcolor("yellow"), new Gcolor("green")],
-        greenred: [new Gcolor("green"), new Gcolor("yellow"), new Gcolor("red")],
-        bluered: [new Gcolor("blue"), new Gcolor("purple"), new Gcolor("red")],
-        redblue: [new Gcolor("red"), new Gcolor("purple"), new Gcolor("blue")],
-        whiteblue: [new Gcolor("white"), new Gcolor("blue")],
-        whitered: [new Gcolor("white"), new Gcolor("red")]
+        redgreen: [new Gcolor("#ff6666"), new Gcolor("#ffe766"), new Gcolor("#8ec843")],
+        greenred: [new Gcolor("#8ec843"), new Gcolor("#ffe766"), new Gcolor("#ff6666")],
+        bluered: [new Gcolor("#66b1ff"), new Gcolor("#ff66f4"), new Gcolor("#ff6666")],
+        redblue: [new Gcolor("#ff6666"), new Gcolor("#ff66f4"), new Gcolor("#66b1ff")],
+        whiteblue: [new Gcolor("#ffffff"), new Gcolor("#66b1ff")],
+        whitered: [new Gcolor("#ffffff"), new Gcolor("#ff6666")]
     }
 
     /**
@@ -313,7 +313,7 @@ export class Gradient {
         let colorarray = []
         let self = this;
         this.presets[preset].forEach(function(gcolor: Gcolor) {
-            colorarray.push(self.labelToColor[gcolor.color]);
+            colorarray.push(gcolor.color);
         });
         return tinygradient(colorarray).css('linear', 'to right');
     }
@@ -333,15 +333,14 @@ export class Gradient {
      * recompute gradient
      */
     updateGradient(): void {
-        // console.log("update gradient")
+        console.log("update gradient")
         let colorarray = [];
         let self = this;
         this.colors.forEach(function(colorobj) {
             // figure out what kind of color this is
             // let format = tinycolor(colorobj.color).getFormat();
             // if (format == "name" && colorobj.color in self.labelToColor)
-            if (colorobj.color in self.labelToColor) colorarray.push(self.labelToColor[colorobj.color])
-            else colorarray.push(colorobj.color)
+            colorarray.push(colorobj.color)
         });
         this.gradient = tinygradient(colorarray);
         this.gradientRGB = this.gradient.rgb(100);
@@ -434,6 +433,9 @@ export class ViewModel {
         this.techniqueIDSelectionLock = !this.techniqueIDSelectionLock;
     }
 
+    showTacticRowBackground: boolean = false;
+    tacticRowBackground: string = "#dddddd";
+
      //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
      // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
      //   | | | _| (__| __ | .` || | (_) | |_| | _|   / _ \|  _/| |
@@ -441,17 +443,17 @@ export class ViewModel {
 
     techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); //configuration for each technique
     // Getter
-    getTechniqueVM(techniqueID: string): TechniqueVM {
-        return this.techniqueVMs.get(techniqueID)
+    getTechniqueVM(technique_tactic_union_id: string): TechniqueVM {
+        return this.techniqueVMs.get(technique_tactic_union_id)
     }
     // Setter
     setTechniqueVM(techniqueVM: TechniqueVM): void {
-        if (this.techniqueVMs.has(techniqueVM.techniqueID)) this.techniqueVMs.delete(techniqueVM.techniqueID)
-        this.techniqueVMs.set(techniqueVM.techniqueID, techniqueVM);
+        if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
+        this.techniqueVMs.set(techniqueVM.technique_tactic_union_id, techniqueVM);
     }
     //checker
-    hasTechniqueVM(techniqueID: string): boolean {
-        return this.techniqueVMs.has(techniqueID)
+    hasTechniqueVM(technique_tactic_union_id: string): boolean {
+        return this.techniqueVMs.has(technique_tactic_union_id)
     }
 
     //  ___ ___ ___ _____ ___ _  _  ___     _   ___ ___
@@ -466,16 +468,16 @@ export class ViewModel {
      * @param {Technique} technique technique to add
      */
     addToTechniqueSelection(technique: Technique): void {
-        if (!this.isTechniqueSelected(technique)) this.selectedTechniques.push(technique.technique_id)
+        if (!this.isTechniqueSelected(technique)) this.selectedTechniques.push(technique.technique_tactic_union_id)
 
     }
 
     /**
      * Add a technique to the current selection
-     * @param {string} techniqueID techniqueID of technique to add
+     * @param {string} technique_tactic_union_id techniqueID of technique to add
      */
-    addToTechniqueSelection_id(techniqueID: string): void {
-        if (!this.isTechniqueSelected_id(techniqueID)) this.selectedTechniques.push(techniqueID)
+    addToTechniqueSelection_id(technique_tactic_union_id: string): void {
+        if (!this.isTechniqueSelected_id(technique_tactic_union_id)) this.selectedTechniques.push(technique_tactic_union_id)
     }
 
     /**
@@ -484,7 +486,7 @@ export class ViewModel {
      */
     removeFromTechniqueSelection(technique: Technique): void {
         if (this.isTechniqueSelected(technique)) {
-            let index = this.selectedTechniques.indexOf(technique.technique_id)
+            let index = this.selectedTechniques.indexOf(technique.technique_tactic_union_id)
             this.selectedTechniques.splice(index, 1);
         }
     }
@@ -493,9 +495,9 @@ export class ViewModel {
      * Remove the technique from the current selection
      * @param {Technique} technique techniqueID of technique to remove
      */
-    removeFromTechniqueSelection_id(techniqueID: string): void {
-        if (this.isTechniqueSelected_id(techniqueID)) {
-            let index = this.selectedTechniques.indexOf(techniqueID)
+    removeFromTechniqueSelection_id(technique_tactic_union_id: string): void {
+        if (this.isTechniqueSelected_id(technique_tactic_union_id)) {
+            let index = this.selectedTechniques.indexOf(technique_tactic_union_id)
             this.selectedTechniques.splice(index, 1);
         }
     }
@@ -505,7 +507,7 @@ export class ViewModel {
      * @param {Technique} technique technique to replace selection with
      */
     replaceTechniqueSelection(technique: Technique): void {
-        this.selectedTechniques = [technique.technique_id]
+        this.selectedTechniques = [technique.technique_tactic_union_id]
     }
 
     /**
@@ -532,7 +534,7 @@ export class ViewModel {
         let self = this;
         this.clearTechniqueSelection()
         this.techniqueVMs.forEach(function(tvm, key) {
-            if (!backup_selected.includes(tvm.techniqueID)) self.selectedTechniques.push(tvm.techniqueID)
+            if (!backup_selected.includes(tvm.technique_tactic_union_id)) self.selectedTechniques.push(tvm.technique_tactic_union_id)
         });
     }
 
@@ -554,16 +556,16 @@ export class ViewModel {
      * @return {boolean}           true if selected, false otherwise
      */
     isTechniqueSelected(technique): boolean {
-        return this.selectedTechniques.includes(technique.technique_id)
+        return this.selectedTechniques.includes(technique.technique_tactic_union_id)
     }
 
     /**
      * Return true if the given technique is selected, false otherwise
-     * @param  {string}  techniqueID the techniqueID to check
+     * @param  {string}  technique_tactic_union_id the techniqueID to check
      * @return {boolean}           true if selected, false otherwise
      */
-    isTechniqueSelected_id(techniqueID: string): boolean {
-        return this.selectedTechniques.includes(techniqueID)
+    isTechniqueSelected_id(technique_tactic_union_id: string): boolean {
+        return this.selectedTechniques.includes(technique_tactic_union_id)
     }
 
     /**
@@ -650,7 +652,11 @@ export class ViewModel {
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
-        rep.legendItems = JSON.stringify(this.legendItems);
+        rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
+
+        rep.showTacticRowBackground = this.showTacticRowBackground;
+        rep.tacticRowBackground = this.tacticRowBackground;
+
         return JSON.stringify(rep, null, "\t");
     }
 
@@ -691,7 +697,44 @@ export class ViewModel {
         }
 
         if ("legendItems" in obj) {
-            this.legendItems = JSON.parse(obj.legendItems);
+            for (let i = 0; i < obj.legendItems.length; i++) {
+                let legendItem = {
+                    color: "#defa217",
+                    label: "default label"
+                };
+                if (!("label" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+                if (!("color" in obj.legendItems[i])) {
+                    console.error("Error: LegendItem required field 'label' not present")
+                    continue;
+                }
+
+                if (typeof(obj.legendItems[i].label) === "string") {
+                    legendItem.label = obj.legendItems[i].label;
+                } else {
+                    console.error("TypeError: legendItem label field is not a string")
+                    continue
+                }
+
+                if (typeof(obj.legendItems[i].color) === "string" && tinycolor(obj.legendItems[i].color).isValid()) {
+                    legendItem.color = obj.legendItems[i].color;
+                } else {
+                    console.error("TypeError: legendItem color field is not a color-string:", obj.legendItems[i].color, "(", typeof(obj.legendItems[i].color),")")
+                    continue
+                }
+                this.legendItems.push(legendItem);
+            }
+        }
+
+        if ("showTacticRowBackground" in obj) {
+            if (typeof(obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
+            else console.error("TypeError: showTacticRowBackground field is not a boolean")
+        }
+        if ("tacticRowBackground" in obj) {
+            if (typeof(obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
+            else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
         }
 
         if ("techniques" in obj) {
@@ -762,7 +805,7 @@ export class ViewModel {
             this.legendColorPresets.push(this.backgroundPresets[i]);
         }
         for(var i = 0; i < this.gradient.colors.length; i++){
-            this.legendColorPresets.push(this.gradient.labelToColor[this.gradient.colors[i].color]);
+            this.legendColorPresets.push(this.gradient.colors[i].color);
         }
     }
 
@@ -809,6 +852,7 @@ export class ViewModel {
 // the viewmodel for a specific technique
 export class TechniqueVM {
     techniqueID: string;
+    technique_tactic_union_id: string;
 
     score: string = "";
     scoreColor: any; //color for score gradient
@@ -842,6 +886,7 @@ export class TechniqueVM {
         rep.color = this.color;
         rep.comment = this.comment;
         rep.enabled = this.enabled;
+        rep.technique_tactic_union_id = this.technique_tactic_union_id;
 
         return JSON.stringify(rep, null, "\t")
     }
@@ -854,6 +899,8 @@ export class TechniqueVM {
         let obj = JSON.parse(rep);
         if ("techniqueID" in obj) this.techniqueID = obj.techniqueID;
         else console.error("ERROR: TechniqueID field not present in technique")
+        if ("technique_tactic_union_id" in obj) this.technique_tactic_union_id = obj.technique_tactic_union_id;
+        else console.error("ERROR: technique_tactic_union_id field not present in technique")
         if ("comment" in obj) {
             if (typeof(obj.comment) === "string") this.comment = obj.comment;
             else console.error("TypeError: technique comment field is not a number:", obj.comment, "(",typeof(obj.comment),")")
@@ -872,7 +919,10 @@ export class TechniqueVM {
         }
     }
 
-    constructor(techniqueID: string) {this.techniqueID = techniqueID}
+    constructor(technique_tactic_union_id: string) {
+        this.technique_tactic_union_id = technique_tactic_union_id;
+        this.techniqueID = technique_tactic_union_id.split("^")[0];
+    }
 }
 
 // the data for a specific filter
