@@ -65,9 +65,17 @@ export class ExporterComponent implements AfterViewInit {
         let legendHeight = Math.max(self.convertToPx(self.exportData.tableConfig.legendHeight, self.exportData.tableConfig.unit), 10);
 
         let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
+        let tableTextYOffset = ((tableFontSize/2) - (1/2));
+
         let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
+        let tableTacticTextYOffset = ((tableTacticFontSize/2) - (1/2));
+
         let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
+        let headerTextYOffset = ((headerFontSize/2) - (1/2))
+
         let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
+        let heafderLayerNameTextYOffset = ((headerLayerNameFontSize/2) - (1/2))
+
         let fontUnits = self.exportData.tableConfig.fontUnit;
 
         let headerTextPad = 6;
@@ -151,8 +159,8 @@ export class ExporterComponent implements AfterViewInit {
                         .style("fill", "white");
                     descriptionGroup.append("text")
                         .text(self.exportData.viewModel.description)
-                        .attr("transform", "translate("+headerTextPad+", " + headerTextPad +")")
-                        .attr("dominant-baseline", "middle")
+                        .attr("transform", "translate("+headerTextPad+", " + (headerTextPad + headerTextYOffset) +")")
+                        // .attr("dominant-baseline", "middle")
                         .attr("dx", 0)
                         .attr("dy", 0)
                         .attr("font-size", headerFontSize + fontUnits)
@@ -184,7 +192,7 @@ export class ExporterComponent implements AfterViewInit {
                     .style("font-weight", "bold");
 
                 let filterTextGroup = filtersGroup.append("g")
-                    .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6) + ")");
+                    .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6 + headerTextYOffset) + ")");
                 filterTextGroup.append("text")
                     .text(function() {
                         let t = "stages: "
@@ -196,7 +204,7 @@ export class ExporterComponent implements AfterViewInit {
                         return t;
                     })
                     .attr("font-size", headerFontSize + fontUnits)
-                    .attr("dominant-baseline", "middle");
+                    // .attr("dominant-baseline", "middle");
                 filterTextGroup.append("text")
                     .text(function() {
                         let t = "platforms: "
@@ -208,7 +216,7 @@ export class ExporterComponent implements AfterViewInit {
                         return t;
                     })
                     .attr("font-size", headerFontSize + fontUnits)
-                    .attr("dominant-baseline", "middle")
+                    // .attr("dominant-baseline", "middle")
                     .attr("dy", "1.1em")
                     // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
                 posX++
@@ -239,9 +247,9 @@ export class ExporterComponent implements AfterViewInit {
 
                 let leftText = gradientContentGroup.append("text")
                     .text(self.exportData.viewModel.gradient.minValue)
-                    .attr("transform", "translate(0, 6)")
+                    .attr("transform", "translate(0, " + (6 + headerTextYOffset) + ")")
                     .attr("font-size", headerFontSize + fontUnits)
-                    .attr("dominant-baseline", "middle")
+                    // .attr("dominant-baseline", "middle")
 
 
 
@@ -268,9 +276,9 @@ export class ExporterComponent implements AfterViewInit {
 
                 gradientContentGroup.append("text")
                     .text(self.exportData.viewModel.gradient.maxValue)
-                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", 6)")
+                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", " + (6 + headerTextYOffset) + ")")
                     .attr("font-size", headerFontSize + fontUnits)
-                    .attr("dominant-baseline", "middle")
+                    // .attr("dominant-baseline", "middle")
 
             }
             header.append("line")
@@ -299,7 +307,6 @@ export class ExporterComponent implements AfterViewInit {
 
         //calculate cell height: the longest column decides the cell height
         let cellHeight = Number.MAX_VALUE;//Number.MAX_VALUE; //(height - margin.bottom - headerHeight)
-
         Object.keys(self.exportData.tactics).forEach(function(key: string) {
             let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
             let selfCellHeight = (height - (headerHeight + 1))/numVCells
@@ -330,8 +337,7 @@ export class ExporterComponent implements AfterViewInit {
         columnHeaders.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", " + (self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) +")")
-            .attr("dominant-baseline", "middle")
+            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) + tableTacticTextYOffset) +")")
             .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
             .attr("dx", 0)
             .attr("dy", 0)
@@ -343,8 +349,7 @@ export class ExporterComponent implements AfterViewInit {
                 return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
             })
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", " + (self.getSpacing(colHeaderHeight, 2)[1]) +")")
-            .attr("dominant-baseline", "middle")
+            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, 2)[1]) + tableTacticTextYOffset) +")")
             .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
 
             .attr("dx", 0)
@@ -390,8 +395,7 @@ export class ExporterComponent implements AfterViewInit {
             })
 
             .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", 0)")
-            .attr("dominant-baseline", "middle")
+            .attr("transform", "translate("+bodyTextPad+", "+ tableTextYOffset +")")
             .attr("dx", 0)
             .attr("dy", 0)
             .call(self.wrap, columnWidth - (2*bodyTextPad), cellHeight, self) //do this before recenter
@@ -434,8 +438,8 @@ export class ExporterComponent implements AfterViewInit {
                 });
             legendItemsGroup.append("text")
                 .text(function(d) {return d.label})
-                .attr("transform", "translate("+ (headerTextPad + 10) + ", 6)")
-                .attr("dominant-baseline", "middle")
+                .attr("transform", "translate("+ (headerTextPad + 10) + "," + (6 + headerTextYOffset) + ")")
+                // .attr("dominant-baseline", "middle")
                 .attr("font-size", headerFontSize + fontUnits)
                 .attr("fill", "black")
                 .attr("dx", 0)
@@ -719,7 +723,6 @@ export class ExportData {
             "showName": true
         }
 
-        console.log(this.tableConfig, this.tableConfig.tableBorderColor);
 
     }
 }
