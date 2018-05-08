@@ -48,9 +48,24 @@ export class ExporterComponent implements AfterViewInit {
     showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
     showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
 
-    buildSVG(self?): void {
-        console.log("building SVG");
+    buildSVGDebounce = false;
+    buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
+
+        console.log("settings changed")
+        if (self.buildSVGDebounce && !bypassDebounce) {
+            // console.log("skipping debounce...")
+            return;
+        }
+        if (!bypassDebounce) {
+            // console.log("debouncing...");
+            self.buildSVGDebounce = true;
+            window.setTimeout(function() {self.buildSVG(self, true)}, 500)
+            return;
+        }
+        self.buildSVGDebounce = false;
+
+        console.log("building SVG");
 
         //check preconditions, make sure they're in the right range
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
@@ -626,11 +641,6 @@ export class ExporterComponent implements AfterViewInit {
         return res
     }
 
-    colorPickerToggle: boolean = false;
-    colorPickerToggleEvent() {
-        console.log("event")
-        if (this.colorPickerToggle) this.buildSVG(); //colorPickerToggle boolean changes state after the toggle event finishes
-    }
 }
 
 export class ExportData {
