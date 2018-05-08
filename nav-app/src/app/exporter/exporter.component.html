@@ -268,6 +268,12 @@
                             <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems()" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showLegend" (change)="buildSVG()">
                             <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()" >show legend</label>
                         </li>
+                        <li>
+                            <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="exportData.tableConfig.tableBorderColor" [style.background]="exportData.tableConfig.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
+                             (cpToggleChange)="colorPickerToggleEvent()" [(cpToggle)]="colorPickerToggle" [cpOKButton]="true" [cpOKButtonText]="'apply'" style="width: 14px; margin: 5px 0 0 5px;">
+                             <label [for]="uid+'tableBorderInput'">cell border</label>
+
+                        </li>
                     </ul>
                 </div>
             </div>

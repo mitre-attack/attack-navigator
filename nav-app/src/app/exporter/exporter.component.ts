@@ -5,6 +5,7 @@ import { Technique } from '../data.service';
 import * as is from 'is_js';
 declare var d3: any; //d3js
 declare var tinycolor: any; //use tinycolor2
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
     selector: 'exporter',
@@ -324,7 +325,7 @@ export class ExporterComponent implements AfterViewInit {
         columnHeaders.append("rect")
             .attr("width", columnWidth)
             .attr("height", colHeaderHeight)
-            .style("stroke", "black")
+            .style("stroke", self.exportData.tableConfig.tableBorderColor)
             .style("fill", self.exportData.viewModel.showTacticRowBackground ? self.exportData.viewModel.tacticRowBackground : 'white')
         columnHeaders.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
@@ -369,7 +370,7 @@ export class ExporterComponent implements AfterViewInit {
         techniques.append("rect")
             .attr("width", columnWidth)
             .attr("height", cellHeight)
-            .style("stroke", "black")
+            .style("stroke", self.exportData.tableConfig.tableBorderColor)
             .style("fill", function(d) {
                 if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "white";
                 let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
@@ -621,6 +622,11 @@ export class ExporterComponent implements AfterViewInit {
         return res
     }
 
+    colorPickerToggle: boolean = false;
+    colorPickerToggleEvent() {
+        console.log("event")
+        if (this.colorPickerToggle) this.buildSVG(); //colorPickerToggle boolean changes state after the toggle event finishes
+    }
 }
 
 export class ExportData {
@@ -634,6 +640,7 @@ export class ExportData {
         tableFontSize: number; //size of font in table, in px
         tableTacticFontSize: number; // size of tactic names font, in px
         tableTextDisplay: string; //0: no text, 1: technique name, 2: acronym of name, 3: technique ID
+        tableBorderColor: string; //hex color for the table body border
 
         showHeader: boolean; //show or hide the header
         headerHeight: number; //height of header in unit
@@ -680,7 +687,6 @@ export class ExportData {
                 tableTextDisplay = "1"
             }
         }
-        console.log(tableTextDisplay)
 
         this.tableConfig = {
             "width": 11,
@@ -694,6 +700,7 @@ export class ExportData {
             "tableFontSize": 5,
             "tableTacticFontSize": 6,
             "tableTextDisplay": tableTextDisplay,
+            "tableBorderColor": "#000000",
 
             "showHeader": true,
             "headerLayerNameFontSize": 18,
@@ -711,6 +718,8 @@ export class ExportData {
             "showDescription": true,
             "showName": true
         }
+
+        console.log(this.tableConfig, this.tableConfig.tableBorderColor);
 
     }
 }
