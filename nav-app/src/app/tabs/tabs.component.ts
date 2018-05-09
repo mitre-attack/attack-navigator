@@ -368,7 +368,8 @@ export class TabsComponent implements AfterContentInit {
             let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
-            alert("Math error" + err.message)
+            console.log(err)
+            alert("Layer Layer operation error: " + err.message)
         }
 
 
