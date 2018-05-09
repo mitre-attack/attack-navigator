@@ -401,6 +401,13 @@ export class DataTableComponent implements AfterViewInit {
 
     establishTechniques(techniques){
         var prepareTechniquesParsed: Technique[] = [], actTechniquesParsed: Technique[] = [];
+
+        var techniqueIDToUIDMap: Map<string, string[]> = new Map<string, string[]>();
+        var techniqueUIDToIDMap: Map<string, string> = new Map<string, string>();
+
+        var techIDtoUIDMap: Object = {};
+        var techUIDtoIDMap: Object = {};
+
         for(var techniqueID in techniques) {
             var t = techniques[techniqueID]
             // console.log(t)
@@ -419,17 +426,35 @@ export class DataTableComponent implements AfterViewInit {
                     t.name,   t.description,   tacticFinal[i], url,
                     t.x_mitre_platforms,   t.id,   tid
                 );
+                if(!techniqueIDToUIDMap.has(tid)){
+                    //techniqueIDToUIDMap[tid] = [formattedTechnique.technique_tactic_union_id];
+                    techniqueIDToUIDMap.set(tid, [formattedTechnique.technique_tactic_union_id]);
+                } else {
+                    var arr: string[] = techniqueIDToUIDMap.get(tid);
+                    arr.push(formattedTechnique.technique_tactic_union_id);
+                    techniqueIDToUIDMap.set(tid, arr);
+                }
+
+                if(techIDtoUIDMap[tid] === null || techIDtoUIDMap[tid] === undefined){
+                    techIDtoUIDMap[tid] = [formattedTechnique.technique_tactic_union_id];
+                } else {
+                    let arr: string[] = techIDtoUIDMap[tid];
+                    arr.push(formattedTechnique.technique_tactic_union_id);
+                    techIDtoUIDMap[tid] = arr;
+                }
+                techUIDtoIDMap[formattedTechnique.technique_tactic_union_id] = tid;
+                // techniqueUIDToIDMap[formattedTechnique.technique_tactic_union_id] = tid;
+                techniqueUIDToIDMap.set(formattedTechnique.technique_tactic_union_id, tid);
                 if(stageString === "act"){
                     actTechniquesParsed.push(formattedTechnique);
                 } else {
                     prepareTechniquesParsed.push(formattedTechnique);
                 }
             }
-
-            
-            
-            
         };
+
+        this.viewModel.setTechniqueMaps(techIDtoUIDMap, techUIDtoIDMap);
+
         // Stores techniques in arrays according to phase
         prepareTechniquesParsed.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
         actTechniquesParsed.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
@@ -633,7 +658,7 @@ export class DataTableComponent implements AfterViewInit {
             this.rightClickTechnique(technique, tactic, event);
             return;
         }
-        console.log(technique);
+        //console.log(technique);
         if (addToSelection) {
             // TODO add/remove from selection
             
@@ -737,7 +762,7 @@ export class DataTableComponent implements AfterViewInit {
         // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).color
         if (this.viewModel.isTechniqueSelected(technique))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id){
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
             if(this.viewModel.techniqueIDSelectionLock){
                 theclass += " highlight"
             } else if (this.viewModel.hoverTactic == tactic) {
