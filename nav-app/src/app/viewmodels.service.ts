@@ -508,7 +508,7 @@ export class ViewModel {
         } else {
             
             var map = Object.freeze(this.techIDtoUIDMap);
-            var map = Object.freeze(this.techUIDtoIDMap);
+            //var map = Object.freeze(this.techUIDtoIDMap);
             var technique_id = this.techUIDtoIDMap[technique_tactic_union_id];
             var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique_id]));
 
@@ -517,6 +517,28 @@ export class ViewModel {
                 if (!this.isTechniqueSelected_id(item)) this.selectedTechniques.push(item);
             }
         }
+    }
+
+    addToTechniqueSelection_technique_id(technique_id: string): void {
+  
+        var mapIDtoUID = Object.freeze(this.techIDtoUIDMap);
+        var allTechniquesWithID = JSON.parse(JSON.stringify(mapIDtoUID[technique_id]));
+
+        for(var i = 0; i < allTechniquesWithID.length; i++){
+            var item = JSON.parse(JSON.stringify(allTechniquesWithID[i]));
+            if (!this.isTechniqueSelected_id(item)) this.selectedTechniques.push(item);
+        }
+        
+    }
+
+    removeFromTechniqueSelection_technique_id(technique_id: string): void {
+        
+        var map = Object.freeze(this.techIDtoUIDMap);
+        var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique_id]));
+        for(var i = 0; i < allTechniquesWithID.length; i++){
+            this.removeFromTechniqueSelectionIndividual(allTechniquesWithID[i]);
+        }
+              
     }
 
     /**
@@ -543,7 +565,6 @@ export class ViewModel {
             if(this.selectedTechniques.length > 1){
                 let index = this.selectedTechniques.indexOf(technique_tactic_union_id)
                 this.selectedTechniques.splice(index, 1);
-                console.log(this.selectedTechniques);
             } else {
                 this.clearTechniqueSelection();
             }
@@ -996,6 +1017,9 @@ export class TechniqueVM {
             if (typeof(obj.enabled) === "boolean") this.enabled = obj.enabled;
             else console.error("TypeError: technique enabled field is not a boolean:", obj.enabled, "(", typeof(obj.enabled), ")");
         }
+        
+
+        
     }
 
     constructor(technique_tactic_union_id: string) {

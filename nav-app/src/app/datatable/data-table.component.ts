@@ -97,6 +97,8 @@ export class DataTableComponent implements AfterViewInit {
         this.searchResults = [];
         var nameResults = [], idResults = [], descriptionResults = [];
 
+        var techniqueResultIDs = [];
+
         if(this.searchString === null || this.searchString === ""){
             return;
         }
@@ -108,22 +110,25 @@ export class DataTableComponent implements AfterViewInit {
             if(this.searchingName){
                 var name = this.filteredTechniques[i].name.toLowerCase();
                 var nameResult = name.search(re);
-                if(nameResult !== -1){
+                if(nameResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     nameResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
             if(this.searchingID){
                 var id = this.filteredTechniques[i].technique_id.toLowerCase();
                 var idResult = id.search(re);
-                if(idResult !== -1){
+                if(idResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     idResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
             if(this.searchingDescription){
                 var description = this.filteredTechniques[i].description.toLowerCase();
                 var descriptionResult = description.search(re);
-                if(descriptionResult !== -1){
+                if(descriptionResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     descriptionResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
         }
@@ -537,7 +542,8 @@ export class DataTableComponent implements AfterViewInit {
     selectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            self.viewModel.addToTechniqueSelection_id(technique_id);
+            console.log(technique_id);
+            self.viewModel.addToTechniqueSelection_technique_id(technique_id);
         })
     }
 
@@ -548,7 +554,7 @@ export class DataTableComponent implements AfterViewInit {
     deselectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            self.viewModel.removeFromTechniqueSelection_id(technique_id);
+            self.viewModel.removeFromTechniqueSelection_technique_id(technique_id);
         })
     }
 

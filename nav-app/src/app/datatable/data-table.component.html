@@ -11,7 +11,7 @@
                 <div class="control-row-button noselect"
                      (click)="viewModel.changeTechniqueIDSelectionLock(); currentDropdown = null;"
                      matTooltipPosition="below"
-                     matTooltip="lock multi-technique hover">
+                     matTooltip="lock ID selection">
                      <img [src]="viewModel.techniqueIDSelectionLock ? 'assets/icons/ic_lock_black_24px.svg' : 'assets/icons/ic_lock_open_black_24px.svg'" alt="lock"/>
                 </div>
             </div>
@@ -64,8 +64,8 @@
                                     </div>
                                 </td>
                                 <td><a style="margin-right:2px" [href]="result.external_references_url" target="_blank">view</a></td>
-                                <td><button  (click)="viewModel.addToTechniqueSelection(result); populateEditFields();" class="button">select</button></td>
-                                <td><button (click)="viewModel.removeFromTechniqueSelection(result); populateEditFields();" class="button">deselect</button></td>
+                                <td><button  (click)="viewModel.addToTechniqueSelection_technique_id(result.technique_id); populateEditFields();" class="button">select</button></td>
+                                <td><button (click)="viewModel.removeFromTechniqueSelection_technique_id(result.technique_id); populateEditFields();" class="button">deselect</button></td>
                             </tr>
                         </table>
                     </div>
