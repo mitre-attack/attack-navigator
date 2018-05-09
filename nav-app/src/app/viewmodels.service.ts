@@ -669,19 +669,22 @@ export class ViewModel {
      * @return {number} the number of selected techniques
      */
     getSelectedTechniqueCount(): number {
-        return this.selectedTechniques.length;
+        var result = 0;
+        if(this.techniqueIDSelectionLock){
+            var techniqueIDs = [];
+            for(var i = 0; i < this.selectedTechniques.length; i++){
+                var techniqueID = this.techUIDtoIDMap[this.selectedTechniques[i]];
+                if(!techniqueIDs.includes(techniqueID)){
+                    techniqueIDs.push(techniqueID);
+                }
+            }
+            result = techniqueIDs.length;
+        } else {
+            return this.selectedTechniques.length;
+        }
+        return result
     }
 
-    getSelectedTechniqueCountByID(): number {
-        var techniqueIDs = [];
-        for(var i = 0; i < this.selectedTechniques.length; i++){
-            var techniqueID = this.techUIDtoIDMap[this.selectedTechniques[i]];
-            if(!techniqueIDs.includes(techniqueID)){
-                techniqueIDs.push(techniqueID);
-            }
-        }
-        return techniqueIDs.length;
-    }
 
     /**
      * Return true if currently editing any techniques, false otherwise
