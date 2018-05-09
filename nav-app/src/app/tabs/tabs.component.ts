@@ -473,7 +473,14 @@ export class TabsComponent implements AfterContentInit {
             }
         }, (err) => {
             console.error(err)
-            alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
+            if (err.status == 0) {
+                // no response
+                alert("ERROR: no HTTP response from " + this.loadURL)
+            } else {
+                // response, but not a good one
+                alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
+            }
+
         })
 
     }
