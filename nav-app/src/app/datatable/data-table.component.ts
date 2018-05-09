@@ -671,7 +671,7 @@ export class DataTableComponent implements AfterViewInit {
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
             else this.viewModel.addToTechniqueSelection(technique)
         } else {
-            if (this.viewModel.getSelectedTechniqueCount() > 1) this.viewModel.replaceTechniqueSelection(technique)
+            if (this.viewModel.getSelectedTechniqueCountByID() > 1) this.viewModel.replaceTechniqueSelection(technique)
             else if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.clearTechniqueSelection();
             else this.viewModel.replaceTechniqueSelection(technique);
         }

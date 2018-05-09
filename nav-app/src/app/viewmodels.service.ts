@@ -672,6 +672,17 @@ export class ViewModel {
         return this.selectedTechniques.length;
     }
 
+    getSelectedTechniqueCountByID(): number {
+        var techniqueIDs = [];
+        for(var i = 0; i < this.selectedTechniques.length; i++){
+            var techniqueID = this.techUIDtoIDMap[this.selectedTechniques[i]];
+            if(!techniqueIDs.includes(techniqueID)){
+                techniqueIDs.push(techniqueID);
+            }
+        }
+        return techniqueIDs.length;
+    }
+
     /**
      * Return true if currently editing any techniques, false otherwise
      * @return {boolean} true if currently editing any techniques, false otherwise
@@ -1019,7 +1030,7 @@ export class TechniqueVM {
         }
         
 
-        
+
     }
 
     constructor(technique_tactic_union_id: string) {
