@@ -261,8 +261,15 @@ $panel-light: lighten($panel-dark, 8%);
 }
 .contextMenu-box {
     position: absolute;
-    background: white;
-    border: 1px black solid;
+    // background: white;
+    &.left { right: 0 }
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    z-index: 100; //draw on top of other controls
+    width: max-content;
+
     .contextMenu-section {
         &:not(:first-child) {
             border-top: 1px solid $panel-dark;

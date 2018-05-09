@@ -499,6 +499,7 @@
 <!-- Context Menu: Menu -->
 <div [hidden]="!contextMenuVisible"
      class="contextMenu-box dropdown-container noselect"
+     (contextmenu)="contextMenuVisible = false;"
      [id]="'contextMenu'+viewModel.uid">
     <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
         <div class="contextMenu-button" (click)="viewModel.replaceTechniqueSelection(contextMenuSelectedTechnique); contextMenuVisible = false; populateEditFields();">
