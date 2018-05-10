@@ -510,9 +510,7 @@ export class TabsComponent implements AfterContentInit {
     //  \___|\___/|___/ |_| \___/|_|  |_|___/___|___|___/  |_|\_/_/ \_\_/ |___\___/_/ \_\_| \___/|_|_\ |___/ |_|  \___/|_| |_|
     layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     customizedConfig = [];
-    setFeature(featureName, event) {
-        console.log(featureName, event)
-    }
+
     /**
      * Convert layerLinkURL to a query string value for layerURL query string
      * @return URL such that when opened will create navigator instance with a query String
