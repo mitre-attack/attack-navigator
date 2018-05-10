@@ -55,7 +55,7 @@ The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/s
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv1_1.md** describes version 1.1 of the layer file format for the Navigator.
+The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2.md** describes version 2.0 of the layer file format for the Navigator.
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 
@@ -69,11 +69,13 @@ Available technique data able to be added to the url:
 * **Technique_Name** returns the Technique Name with the first letter of each word capitalized and using underscores between words
 * **Tactic_Name** returns the Tactic Name with the first letter of each word capitalized and using underscores between words
 
-Example custom context menu object:<br />
-  {<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;"`label`": &nbsp;"custom technique url",<br />
-    &nbsp;&nbsp;&nbsp;&nbsp;"`url`": &nbsp;"https://attack.mitre.org/wiki/Technique/~Technique_Name~"<br />
-  }
+Example custom context menu object:
+```json
+{
+    "label": "custom technique url",
+    "url": "https://attack.mitre.org/wiki/Technique/~Technique_Name~"
+}
+```
 
 ## Loading content from a TAXII server
 *By default, the Navigator loads content from the MITRE CTI TAXII server at https://cti-taxii.mitre.org.*
@@ -94,6 +96,32 @@ Example custom context menu object:<br />
 2. Set the `location` property in `default_layer` in **config.json** to `assets/YOUR_LAYER_HERE.json`
 3. Set the `enabled` property in `default_layer` to **true**
 4. Load/reload the Navigator
+
+A layer hosted on the web can be set as default using the _create customized Navigator_
+feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+
+## Disabling Navigator Features
+The `features` array in `nav-app/src/assets/config.json` lists Navigator features you may want to disable. Setting the `enabled` field on a feature in the configuration file will hide all control
+elements related to that feature.
+
+However, if a layer is uploaded with an annotation or configuration
+relating to that feature it will not be hidden. For example, if `comments` are disabled the
+ability to add a new comment annotation will be removed, however if a layer is uploaded with
+comments present they will still be displayed in tooltips and and marked with an underline.
+
+Features can also be disabled using the _create customized Navigator_ feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+
+## Embedding the Navigator in a Webpage
+If you want to embed the Navigator in a webpage, use an iframe:
+```HTML
+<iframe src="https://mitre.github.io/attack-navigator/enterprise/" width="1000" height="500"></iframe>
+```
+If you want to imbed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+
+The following is an example iframe which embeds our [*Bear APTs](layers/data/samples/Bear_APT.json) layer with tabs and the ability to add annotations removed:
+```HTML
+<iframe src="https://mitre.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
+```
 
 ## Related MITRE Work
 #### CTI
