@@ -9,7 +9,6 @@ export class ConfigService {
     private featureStructure: object[];
     constructor(private dataService: DataService) {
         let self = this;
-        console.log("getting config, features don't exist", this.featureStructure)
         dataService.retreiveConfig().subscribe(function(config: any) {
             //parse feature preferences from config json
             config["features"].forEach(function(featureObject: any) {
@@ -27,13 +26,11 @@ export class ConfigService {
                 // }
             })
             self.featureStructure = config["features"]
-            console.log("got features, features exist", self.featureStructure)
         })
     }
 
     public getFeatureList(): object[] {
         if (!this.featureStructure) return []
-        console.log("retrieving features, features exist", this.featureStructure)
         return this.featureStructure;
     }
 
