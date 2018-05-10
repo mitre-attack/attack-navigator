@@ -6,9 +6,10 @@ export class ConfigService {
 
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-    private featureStructure: object;
+    private featureStructure: object[];
     constructor(private dataService: DataService) {
         let self = this;
+        console.log("getting config, features don't exist", this.featureStructure)
         dataService.retreiveConfig().subscribe(function(config: any) {
             //parse feature preferences from config json
             config["features"].forEach(function(featureObject: any) {
@@ -26,12 +27,14 @@ export class ConfigService {
                 // }
             })
             self.featureStructure = config["features"]
+            console.log("got features, features exist", self.featureStructure)
         })
     }
 
     public getFeatureList(): object[] {
         if (!this.featureStructure) return []
-        return JSON.parse(JSON.stringify(this.featureStructure));
+        console.log("retrieving features, features exist", this.featureStructure)
+        return this.featureStructure;
     }
 
     public getFeature(featureName: string): boolean {
