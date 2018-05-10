@@ -4,7 +4,7 @@ This folder contains a basic script that demonstrates how layer files can be gen
 
 The **data/update_layers** folder currently contains a layer file that is based on the April 2018 ATT&CK content update.
 
-If you want to learn more about the format of layer files, **LAYERFORMATv1_1.md** describes version 1.1 of the MITRE ATT&CK Navigator Layer file format.
+If you want to learn more about the format of layer files, **LAYERFORMATv2.md** describes version 2.0 of the MITRE ATT&CK Navigator Layer file format.
 
 *Also, feel free to come up with your own ideas for layer file generation, and contribute them to the community by making a pull request to the ATT&CK Navigator!*
 
@@ -16,35 +16,35 @@ It's important to emphasize that the scores generated here are **arbitrary**! Th
 
 The code excerpt below shows how **attack_layers_simple.py** adds scores to techniques:
 
-```
+```python
 # parse csv file, calculating a score for each technique and adding that to the layer
-    with open(args.input_fn, "rb") as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=",")
-        for row in reader:
-            # score each technique based on a simple formula
-            technique = {
-                "techniqueID": row["TechID"],
-                "score": (int(row["Software"]) + int(row["Groups"]))*2 + int(row["References"])
-            }
+with open(args.input_fn, "rb") as csvfile:
+    reader = csv.DictReader(csvfile, delimiter=",")
+    for row in reader:
+        # score each technique based on a simple formula
+        technique = {
+            "techniqueID": row["TechID"],
+            "score": (int(row["Software"]) + int(row["Groups"]))*2 + int(row["References"])
+        }
 
-            layer_json["techniques"].append(technique)
-
-```
-
-**attack_layers_simple.py** adds all of the required layer fields as outlined in **LAYERFORMATv1_1.md**. Additionally, a *gradient* field is added that specifies a color range that will be applied to the techniques based on their scores. In **attack_layers_simple.py**, we specify min/max values that match the min/max of the set of technique scores that were calculated.
-
+        layer_json["techniques"].append(technique)
 
 ```
-# add a color gradient (white -> red) to layer
-    # ranging from zero (white) to the maximum score in the file (red)
-    layer_json["gradient"] = {
-        "colors": [
-            "#ffffff",   # White
-            "#ff6666"    # Red
-        ],
-        "minValue": 0,
-        "maxValue": max([technique["score"] for technique in layer_json["techniques"]])
-    }
+
+**attack_layers_simple.py** adds all of the required layer fields as outlined in **LAYERFORMATv2.md**. Additionally, a *gradient* field is added that specifies a color range that will be applied to the techniques based on their scores. In **attack_layers_simple.py**, we specify min/max values that match the min/max of the set of technique scores that were calculated.
+
+
+```python
+# add a color gradient (white -> red) to layer, ranging  
+# from zero (white) to the maximum score in the file (red)
+layer_json["gradient"] = {
+    "colors": [
+        "#ffffff",   # White
+        "#ff6666"    # Red
+    ],
+    "minValue": 0,
+    "maxValue": max([technique["score"] for technique in layer_json["techniques"]])
+}
 ```
 See **data/csv** for an example csv file that can be ingested by **attack_layers_simple.py** (simple_input.csv) and **data/samples** to view a layer file output by this code (heatmap_layer.json).
 
