@@ -11,7 +11,7 @@
 ### Minor
 - Added configurable background color to tactics row. See issue [#32](https://github.com/mitre/attack-navigator/issues/32).
 - Added customizable legend to describe the meanings of the colors of annotated techniques. See issues [#24](https://github.com/mitre/attack-navigator/issues/24), [#28](https://github.com/mitre/attack-navigator/issues/28), [#31](https://github.com/mitre/attack-navigator/issues/31), [#33](https://github.com/mitre/attack-navigator/issues/33).
-- Added the ability to disable navigator features, either by editing the `src/assets/config.json` or using the new _create customized Navigator_ interface. See issue [#21](https://github.com/mitre/attack-navigator/issues/21).
+- Added the ability to disable navigator features, either by editing the `src/assets/config.json` or using the new _create customized Navigator_ interface. See issues [#21](https://github.com/mitre/attack-navigator/issues/21), [#41](https://github.com/mitre/attack-navigator/issues/41).
 - Added the ability to specify new items in the technique context menu by editing `src/assets/config.json`. These new items can be used to hyperlink to a specified URL, with parameters for the technique ID or tactic. See issue [#9](https://github.com/mitre/attack-navigator/issues/9).
 - Added a button to remove all annotations on the currently selected techniques. See issue [#12](https://github.com/mitre/attack-navigator/issues/12).
 - Added a new "super compact" view option, which removes all technique text in order to fit as much content on the screen as possible. See issue [#11](https://github.com/mitre/attack-navigator/issues/11).
