@@ -9,14 +9,14 @@ import json
 import sys
 
 # Static ATT&CK Navigator layer JSON fields
-VERSION = "1.0"
+VERSION = "2.0"
 NAME = "example"
 DESCRIPTION = "hello, world"
 DOMAIN = "mitre-enterprise"
 
 # Main
 def main():
-  
+
     # handle arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", action="store", dest="input_fn", default="attack.csv",
@@ -50,7 +50,7 @@ def main():
     # ranging from zero (white) to the maximum score in the file (red)
     layer_json["gradient"] = {
         "colors": [
-            "#ffffff", 
+            "#ffffff",
             "#ff6666"
         ],
         "minValue": 0,

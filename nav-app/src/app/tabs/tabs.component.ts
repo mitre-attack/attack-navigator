@@ -447,8 +447,8 @@ export class TabsComponent implements AfterContentInit {
                 this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
             }
             catch(err){
+                console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
                 alert("ERROR: Either the file is not JSON formatted, or the file structure is invalid.");
-                // console.log("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
                 this.viewModelsService.destroyViewModel(viewModel)
             }
         }
