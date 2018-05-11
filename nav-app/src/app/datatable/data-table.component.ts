@@ -428,7 +428,7 @@ export class DataTableComponent implements AfterViewInit {
                 url = t.external_references[0].url;
                 tid = t.external_references[0].external_id;
             }
-            
+
             var stageString = this.tacticStages[tacticObject[0]["phase_name"]];
             for(var i = 0; i < tacticFinal.length; i++){
                 var formattedTechnique = new Technique(
@@ -671,7 +671,7 @@ export class DataTableComponent implements AfterViewInit {
         //console.log(technique);
         if (addToSelection) {
             // TODO add/remove from selection
-            
+
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
             else this.viewModel.addToTechniqueSelection(technique)
         } else {
@@ -788,7 +788,7 @@ export class DataTableComponent implements AfterViewInit {
             }
             //console.log(this.viewModel.hoverTactic);
         }
-            
+
         theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
         if (this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).comment.length > 0)
             theclass += " has-comment"

@@ -869,7 +869,7 @@ export class ViewModel {
             }
 
 
-            
+
         }
         this.updateGradient();
     }
@@ -889,6 +889,7 @@ export class ViewModel {
                 }
             }
         }
+        this.updateGradient();
     }
 
     /**
@@ -912,6 +913,7 @@ export class ViewModel {
      * Update this vm's gradient
      */
     updateGradient(): void {
+        console.log("updating gradient")
         this.gradient.updateGradient();
         let self = this;
         this.techniqueVMs.forEach(function(tvm, key) {
