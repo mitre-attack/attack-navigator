@@ -5,7 +5,7 @@ This document describes **Version 2.0** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| version | String | Yes | n/a | Must be "2.0" or "1.3" |
+| version | String | Yes | n/a | Must be "2.0" |
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "mitre-enterprise" or "mitre-mobile" |
