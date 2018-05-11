@@ -879,13 +879,15 @@ export class ViewModel {
             for (let i = 0; i < this.legacyTechniques.length; i++) {
                 var techniqueID = this.legacyTechniques[i].techniqueID;
                 var techniqueTactics = this.techIDtoUIDMap[techniqueID];
-                for(var t = 0; t < techniqueTactics.length; t++){
-                    var tactic: string = techniqueTactics[t].split("^")[1];
-                    let tvm = new TechniqueVM("");
-                    tvm.deSerialize(JSON.stringify(this.legacyTechniques[i]),
-                                            techniqueID,
-                                            tactic)
-                    this.setTechniqueVM(tvm)
+                if(techniqueTactics){
+                    for(var t = 0; t < techniqueTactics.length; t++){
+                        var tactic: string = techniqueTactics[t].split("^")[1];
+                        let tvm = new TechniqueVM("");
+                        tvm.deSerialize(JSON.stringify(this.legacyTechniques[i]),
+                                                techniqueID,
+                                                tactic)
+                        this.setTechniqueVM(tvm)
+                    }
                 }
             }
         }

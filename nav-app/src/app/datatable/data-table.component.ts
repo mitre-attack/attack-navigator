@@ -805,7 +805,15 @@ export class DataTableComponent implements AfterViewInit {
     getTechniqueBackground(technique: Technique) {
         let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id)) return {}
+        var highlight = false;
+        if(this.viewModel.highlightedTechnique){
+            if(this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.technique_id === technique.technique_id){
+                highlight = true;
+            } else if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.technique_tactic_union_id === technique.technique_tactic_union_id) {
+                highlight = true;
+            }
+        }
+        if (!tvm.enabled || highlight) return {}
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
