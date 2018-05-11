@@ -398,6 +398,10 @@ export class DataTableComponent implements AfterViewInit {
         this.establishThreatDataHolders(threatGroups, software);
         this.establishThreatData(techniques, relationships);
         this.searchResults = [];
+
+        if(this.viewModel.needsToConstructTechniqueVMs){
+            this.viewModel.constructLegacyVMs();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -777,7 +781,7 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel.isTechniqueSelected(technique))
             theclass += " editing"
         if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
-            if(this.viewModel.techniqueIDSelectionLock){
+            if(this.viewModel.selectTechniquesAcrossTactics){
                 theclass += " highlight"
             } else if (this.viewModel.hoverTactic == tactic) {
                 theclass += " highlight"
