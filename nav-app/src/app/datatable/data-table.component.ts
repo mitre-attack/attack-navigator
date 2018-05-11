@@ -79,7 +79,7 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel.highlightedTechnique == null || this.viewModel.highlightedTactic == null) return false;
         for (let i = 0; i < this.techniques.length; i++) {
             if (this.techniques[i].technique_id === this.viewModel.highlightedTechnique.technique_id)
-                return this.techniques[i].tactics.includes(tacticName)
+                return this.techniques[i].tactic === tacticName;
         }
     }
 
@@ -97,6 +97,8 @@ export class DataTableComponent implements AfterViewInit {
         this.searchResults = [];
         var nameResults = [], idResults = [], descriptionResults = [];
 
+        var techniqueResultIDs = [];
+
         if(this.searchString === null || this.searchString === ""){
             return;
         }
@@ -108,22 +110,25 @@ export class DataTableComponent implements AfterViewInit {
             if(this.searchingName){
                 var name = this.filteredTechniques[i].name.toLowerCase();
                 var nameResult = name.search(re);
-                if(nameResult !== -1){
+                if(nameResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     nameResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
             if(this.searchingID){
                 var id = this.filteredTechniques[i].technique_id.toLowerCase();
                 var idResult = id.search(re);
-                if(idResult !== -1){
+                if(idResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     idResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
             if(this.searchingDescription){
                 var description = this.filteredTechniques[i].description.toLowerCase();
                 var descriptionResult = description.search(re);
-                if(descriptionResult !== -1){
+                if(descriptionResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
                     descriptionResults.push(this.filteredTechniques[i]);
+                    techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
                 }
             }
         }
@@ -160,8 +165,8 @@ export class DataTableComponent implements AfterViewInit {
         // sort
         let self = this;
         filteredTechniques.sort(function(t1:Technique, t2:Technique): number {
-            let t1vm = self.viewModel.getTechniqueVM(t1.technique_id)
-            let t2vm = self.viewModel.getTechniqueVM(t2.technique_id)
+            let t1vm = self.viewModel.getTechniqueVM(t1.technique_tactic_union_id)
+            let t2vm = self.viewModel.getTechniqueVM(t2.technique_tactic_union_id)
             let c1 = String(t1vm.score).length > 0 ? Number(t1vm.score) : 0;
             let c2 = String(t2vm.score).length > 0 ? Number(t2vm.score) : 0;
             switch(self.viewModel.sorting){
@@ -268,7 +273,7 @@ export class DataTableComponent implements AfterViewInit {
         let self = this;
         techniques.forEach(function(technique) {
             // TODO other filters
-            if (!(!self.viewModel.getTechniqueVM(technique.technique_id).enabled && self.viewModel.hideDisabled)) filtered.push(technique);
+            if (!(!self.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled && self.viewModel.hideDisabled)) filtered.push(technique);
         })
         return filtered;
     }
@@ -393,6 +398,10 @@ export class DataTableComponent implements AfterViewInit {
         this.establishThreatDataHolders(threatGroups, software);
         this.establishThreatData(techniques, relationships);
         this.searchResults = [];
+
+        if(this.viewModel.needsToConstructTechniqueVMs){
+            this.viewModel.constructLegacyVMs();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -401,6 +410,13 @@ export class DataTableComponent implements AfterViewInit {
 
     establishTechniques(techniques){
         var prepareTechniquesParsed: Technique[] = [], actTechniquesParsed: Technique[] = [];
+
+        var techniqueIDToUIDMap: Map<string, string[]> = new Map<string, string[]>();
+        var techniqueUIDToIDMap: Map<string, string> = new Map<string, string>();
+
+        var techIDtoUIDMap: Object = {};
+        var techUIDtoIDMap: Object = {};
+
         for(var techniqueID in techniques) {
             var t = techniques[techniqueID]
             // console.log(t)
@@ -412,17 +428,42 @@ export class DataTableComponent implements AfterViewInit {
                 url = t.external_references[0].url;
                 tid = t.external_references[0].external_id;
             }
-            var formattedTechnique = new Technique(
-                t.name,   t.description,   tacticFinal, url,
-                t.x_mitre_platforms,   t.id,   tid
-            );
+            
             var stageString = this.tacticStages[tacticObject[0]["phase_name"]];
-            if(stageString === "act"){
-                actTechniquesParsed.push(formattedTechnique);
-            } else {
-                prepareTechniquesParsed.push(formattedTechnique);
+            for(var i = 0; i < tacticFinal.length; i++){
+                var formattedTechnique = new Technique(
+                    t.name,   t.description,   tacticFinal[i], url,
+                    t.x_mitre_platforms,   t.id,   tid
+                );
+                if(!techniqueIDToUIDMap.has(tid)){
+                    //techniqueIDToUIDMap[tid] = [formattedTechnique.technique_tactic_union_id];
+                    techniqueIDToUIDMap.set(tid, [formattedTechnique.technique_tactic_union_id]);
+                } else {
+                    var arr: string[] = techniqueIDToUIDMap.get(tid);
+                    arr.push(formattedTechnique.technique_tactic_union_id);
+                    techniqueIDToUIDMap.set(tid, arr);
+                }
+
+                if(techIDtoUIDMap[tid] === null || techIDtoUIDMap[tid] === undefined){
+                    techIDtoUIDMap[tid] = [formattedTechnique.technique_tactic_union_id];
+                } else {
+                    let arr: string[] = techIDtoUIDMap[tid];
+                    arr.push(formattedTechnique.technique_tactic_union_id);
+                    techIDtoUIDMap[tid] = arr;
+                }
+                techUIDtoIDMap[formattedTechnique.technique_tactic_union_id] = tid;
+                // techniqueUIDToIDMap[formattedTechnique.technique_tactic_union_id] = tid;
+                techniqueUIDToIDMap.set(formattedTechnique.technique_tactic_union_id, tid);
+                if(stageString === "act"){
+                    actTechniquesParsed.push(formattedTechnique);
+                } else {
+                    prepareTechniquesParsed.push(formattedTechnique);
+                }
             }
         };
+
+        this.viewModel.setTechniqueMaps(techIDtoUIDMap, techUIDtoIDMap);
+
         // Stores techniques in arrays according to phase
         prepareTechniquesParsed.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
         actTechniquesParsed.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
@@ -435,8 +476,8 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel) {
             for (let i = 0; i < this.techniques.length; i++) {
                 // console.log("initializing VM", this.techniques[i].name)
-                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_id))
-                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_id));
+                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id))
+                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_tactic_union_id));
                 // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
@@ -505,7 +546,8 @@ export class DataTableComponent implements AfterViewInit {
     selectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            self.viewModel.addToTechniqueSelection_id(technique_id);
+            console.log(technique_id);
+            self.viewModel.addToTechniqueSelection_technique_id(technique_id);
         })
     }
 
@@ -516,7 +558,7 @@ export class DataTableComponent implements AfterViewInit {
     deselectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            self.viewModel.removeFromTechniqueSelection_id(technique_id);
+            self.viewModel.removeFromTechniqueSelection_technique_id(technique_id);
         })
     }
 
@@ -626,8 +668,10 @@ export class DataTableComponent implements AfterViewInit {
             this.rightClickTechnique(technique, tactic, event);
             return;
         }
+        //console.log(technique);
         if (addToSelection) {
             // TODO add/remove from selection
+            
             if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
             else this.viewModel.addToTechniqueSelection(technique)
         } else {
@@ -701,7 +745,7 @@ export class DataTableComponent implements AfterViewInit {
         } else {
             element.style.left = -10000 + "px";
         }
-        if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_id).comment) {
+        if (this.viewModel.highlightedTechnique && this.viewModel.getTechniqueVM(this.viewModel.highlightedTechnique.technique_tactic_union_id).comment) {
             let commentdiv = <HTMLElement>document.getElementById("comment" + this.viewModel.uid);
             this.toolTipOverflows = commentdiv.clientHeight >= 300;
         }
@@ -729,17 +773,24 @@ export class DataTableComponent implements AfterViewInit {
      * @param  {boolean}   mini is it the minitable?
      * @return {string}               the classes the technique should currently have
      */
-    getClass(technique) {
+    getClass(technique, tactic) {
         let theclass = 'link noselect cell'
-        if (!this.viewModel.getTechniqueVM(technique.technique_id).enabled)
+        if (!this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled)
             theclass += " disabled"
-        // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_id).color
+        // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).color
         if (this.viewModel.isTechniqueSelected(technique))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
-            theclass += " highlight"
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
+            if(this.viewModel.selectTechniquesAcrossTactics){
+                theclass += " highlight"
+            } else if (this.viewModel.hoverTactic == tactic) {
+                theclass += " highlight"
+            }
+            //console.log(this.viewModel.hoverTactic);
+        }
+            
         theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
-        if (this.viewModel.getTechniqueVM(technique.technique_id).comment.length > 0)
+        if (this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).comment.length > 0)
             theclass += " has-comment"
         if (this.getTechniqueBackground(technique))
             theclass += " has-score-background"
@@ -752,9 +803,9 @@ export class DataTableComponent implements AfterViewInit {
      * @return           background object
      */
     getTechniqueBackground(technique: Technique) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_id)
+        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)) return {}
+        if (!tvm.enabled || (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id)) return {}
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
@@ -767,10 +818,10 @@ export class DataTableComponent implements AfterViewInit {
      * @return               black, white, or gray, depending on technique and column state
      */
     getTechniqueTextColor(technique: Technique, antihighlight: boolean) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_id)
+        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
         if (!tvm.enabled) return "#aaaaaa";
         // don't display if disabled or highlighted
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id) return "black"
+        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
         if (antihighlight) return "#aaaaaa";

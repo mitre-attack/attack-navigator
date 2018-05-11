@@ -85,9 +85,9 @@ export class ViewModelsService {
             // assign unique integer ID to each score varaible technique
             scoreVariables.forEach(function(vm, key) {
                 vm.techniqueVMs.forEach(function(tvm, key) {
-                    if (!techniqueIDToIndex.has(tvm.techniqueID)) {
+                    if (!techniqueIDToIndex.has(tvm.technique_tactic_union_id)) {
                         indexToTechniqueVM.set(index, tvm)
-                        techniqueIDToIndex.set(tvm.techniqueID, index);
+                        techniqueIDToIndex.set(tvm.technique_tactic_union_id, index);
                         index += 1;
                     }
                 })
@@ -108,13 +108,13 @@ export class ViewModelsService {
             // build scope for mathjs
 
             let missingTechniques = new Map<string, number>(); //count of how many viewModels are missing each technique
-            let countMissingTechnique = function(techniqueID) {
-                if (missingTechniques.has(techniqueID)) {
-                    let value = missingTechniques.get(techniqueID)
+            let countMissingTechnique = function(technique_tactic_union_id) {
+                if (missingTechniques.has(technique_tactic_union_id)) {
+                    let value = missingTechniques.get(technique_tactic_union_id)
                     value++;
-                    missingTechniques.set(techniqueID, value)
+                    missingTechniques.set(technique_tactic_union_id, value)
                 } else {
-                    missingTechniques.set(techniqueID, 1)
+                    missingTechniques.set(technique_tactic_union_id, 1)
                 }
             }
 
@@ -123,20 +123,20 @@ export class ViewModelsService {
                 for (let i = 0; i < index; i++) {
                     let scoreValue: number;
                     // parse weird possible values. All non-numbers become 0. Count empty scores so that if all vms have no score it can omit them
-                    if (!vm.hasTechniqueVM(indexToTechniqueVM.get(i).techniqueID)) {
+                    if (!vm.hasTechniqueVM(indexToTechniqueVM.get(i).technique_tactic_union_id)) {
                         scoreValue = 0;
                         // console.log(vm, "doesn't have TVM", indexToTechniqueVM.get(i));
-                        countMissingTechnique(indexToTechniqueVM.get(i).techniqueID);
+                        countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
                     } else {
-                        let storedValue = vm.getTechniqueVM(indexToTechniqueVM.get(i).techniqueID).score;
+                        let storedValue = vm.getTechniqueVM(indexToTechniqueVM.get(i).technique_tactic_union_id).score;
                         if (storedValue == "") {
                             // console.log("empty score",  indexToTechniqueVM.get(i))
                             scoreValue = 0;
-                            countMissingTechnique(indexToTechniqueVM.get(i).techniqueID);
+                            countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
                         } else if (isNaN(Number(storedValue))) {
                             // console.log("NaN score:", storedValue, indexToTechniqueVM.get(i))
                             scoreValue = 0;
-                            countMissingTechnique(indexToTechniqueVM.get(i).techniqueID);
+                            countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
                         } else {
                             scoreValue = Number(storedValue);
                         }
@@ -157,7 +157,7 @@ export class ViewModelsService {
                 // assign the reult to new viewmodel
                 for (let i = 0; i < mathResult.length; i++) {
                     let techniqueVM = indexToTechniqueVM.get(i);
-                    let vm = new TechniqueVM(techniqueVM.techniqueID);
+                    let vm = new TechniqueVM(techniqueVM.technique_tactic_union_id);
                     if (typeof(mathResult[i]) === "boolean") {
                         mathResult[i] = mathResult[i] ? "1" : "0"; //parse booleans to binary
                         result.gradient.maxValue = 1;
@@ -177,18 +177,18 @@ export class ViewModelsService {
                 }
                 // console.log("non-matrix result")
                 indexToTechniqueVM.forEach(function(tvm, index) {
-                    let new_tvm = new TechniqueVM(tvm.techniqueID);
+                    let new_tvm = new TechniqueVM(tvm.technique_tactic_union_id);
                     new_tvm.score = mathResult;
                     result.setTechniqueVM(new_tvm);
 
                 })
             }
 
-            missingTechniques.forEach(function(count, techniqueID) {
-                // console.log(result.getTechniqueVM(techniqueID).techniqueName, count)
+            missingTechniques.forEach(function(count, technique_tactic_union_id) {
+                // console.log(result.getTechniqueVM(technique_tactic_union_id).techniqueName, count)
                 if (count == scoreVariables.size) {
                     // enough misses that this technique had no score in any viewmodels
-                    result.getTechniqueVM(techniqueID).score = "";
+                    result.getTechniqueVM(technique_tactic_union_id).score = "";
                 }
             })
         }
@@ -202,10 +202,10 @@ export class ViewModelsService {
         function inherit(inherit_vm: ViewModel, fieldname: string) {
             // console.log("inherit", fieldname)
             inherit_vm.techniqueVMs.forEach(function(inherit_TVM) {
-                let tvm = result.hasTechniqueVM(inherit_TVM.techniqueID) ? result.getTechniqueVM(inherit_TVM.techniqueID) : new TechniqueVM(inherit_TVM.techniqueID)
+                let tvm = result.hasTechniqueVM(inherit_TVM.technique_tactic_union_id) ? result.getTechniqueVM(inherit_TVM.technique_tactic_union_id) : new TechniqueVM(inherit_TVM.technique_tactic_union_id)
                 tvm[fieldname] = inherit_TVM[fieldname];
                 // console.log(inherit_TVM.techniqueName, "->", tvm)
-                result.techniqueVMs.set(inherit_TVM.techniqueID, tvm);
+                result.techniqueVMs.set(inherit_TVM.technique_tactic_union_id, tvm);
             })
         }
 
@@ -333,7 +333,6 @@ export class Gradient {
      * recompute gradient
      */
     updateGradient(): void {
-        console.log("update gradient")
         let colorarray = [];
         let self = this;
         this.colors.forEach(function(colorobj) {
@@ -420,14 +419,39 @@ export class ViewModel {
 
     highlightedTactic: string = "";
     highlightedTechnique: Technique = null;
+    hoverTactic: string = "";
 
     gradient: Gradient = new Gradient(); //gradient for scores
 
     backgroundPresets: string[] = ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
     legendColorPresets: string[] = [];
 
+    selectTechniquesAcrossTactics: boolean = true;
+    needsToConstructTechniqueVMs = false;
+    legacyTechniques = [];
+
+    techIDtoUIDMap: Object = {};
+    techUIDtoIDMap: Object = {};
+
+    changeTechniqueIDSelectionLock(){
+        this.selectTechniquesAcrossTactics = !this.selectTechniquesAcrossTactics;
+    }
+
     showTacticRowBackground: boolean = false;
     tacticRowBackground: string = "#dddddd";
+
+    getTechniqueIDFromUID(technique_tactic_union_id: string){
+        return this.techIDtoUIDMap[technique_tactic_union_id];
+    }
+
+    getTechniquesUIDFromID(technique_id: string){
+        return this.techIDtoUIDMap[technique_id];
+    }
+
+    setTechniqueMaps(techIDtoUIDMapt, techUIDtoIDMapt){
+        this.techIDtoUIDMap = Object.freeze(techIDtoUIDMapt);
+        this.techUIDtoIDMap = Object.freeze(techUIDtoIDMapt);
+    }
 
      //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
      // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
@@ -436,17 +460,18 @@ export class ViewModel {
 
     techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); //configuration for each technique
     // Getter
-    getTechniqueVM(techniqueID: string): TechniqueVM {
-        return this.techniqueVMs.get(techniqueID)
+    getTechniqueVM(technique_tactic_union_id: string): TechniqueVM {
+        return this.techniqueVMs.get(technique_tactic_union_id)
     }
     // Setter
     setTechniqueVM(techniqueVM: TechniqueVM): void {
-        if (this.techniqueVMs.has(techniqueVM.techniqueID)) this.techniqueVMs.delete(techniqueVM.techniqueID)
-        this.techniqueVMs.set(techniqueVM.techniqueID, techniqueVM);
+        if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
+        this.techniqueVMs.set(techniqueVM.technique_tactic_union_id, techniqueVM);
+
     }
     //checker
-    hasTechniqueVM(techniqueID: string): boolean {
-        return this.techniqueVMs.has(techniqueID)
+    hasTechniqueVM(technique_tactic_union_id: string): boolean {
+        return this.techniqueVMs.has(technique_tactic_union_id)
     }
 
     //  ___ ___ ___ _____ ___ _  _  ___     _   ___ ___
@@ -461,15 +486,60 @@ export class ViewModel {
      * @param {Technique} technique technique to add
      */
     addToTechniqueSelection(technique: Technique): void {
-        if (!this.isTechniqueSelected(technique)) this.selectedTechniques.push(technique.technique_id)
+        if(!this.selectTechniquesAcrossTactics){
+            if (!this.isTechniqueSelected(technique)) this.selectedTechniques.push(technique.technique_tactic_union_id)
+        } else {
+            var map = Object.freeze(this.techIDtoUIDMap);
+            var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique.technique_id]));
+
+            for(var i = 0; i < allTechniquesWithID.length; i++){
+                var item = JSON.parse(JSON.stringify(allTechniquesWithID[i]));
+                if (!this.isTechniqueSelected_id(item)) this.selectedTechniques.push(item);
+            }
+        }
     }
 
     /**
      * Add a technique to the current selection
-     * @param {string} techniqueID techniqueID of technique to add
+     * @param {string} technique_tactic_union_id techniqueID of technique to add
      */
-    addToTechniqueSelection_id(techniqueID: string): void {
-        if (!this.isTechniqueSelected_id(techniqueID)) this.selectedTechniques.push(techniqueID)
+    addToTechniqueSelection_id(technique_tactic_union_id: string): void {
+        if(!this.selectTechniquesAcrossTactics){
+            if (!this.isTechniqueSelected_id(technique_tactic_union_id)) this.selectedTechniques.push(technique_tactic_union_id)
+        } else {
+
+            var map = Object.freeze(this.techIDtoUIDMap);
+            //var map = Object.freeze(this.techUIDtoIDMap);
+            var technique_id = this.techUIDtoIDMap[technique_tactic_union_id];
+            var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique_id]));
+
+            for(var i = 0; i < allTechniquesWithID.length; i++){
+                var item = JSON.parse(JSON.stringify(allTechniquesWithID[i]));
+                if (!this.isTechniqueSelected_id(item)) this.selectedTechniques.push(item);
+            }
+        }
+    }
+
+    addToTechniqueSelection_technique_id(technique_id: string): void {
+
+        var mapIDtoUID = Object.freeze(this.techIDtoUIDMap);
+        var allTechniquesWithID = JSON.parse(JSON.stringify(mapIDtoUID[technique_id]));
+
+        for(var i = 0; i < allTechniquesWithID.length; i++){
+            var item = JSON.parse(JSON.stringify(allTechniquesWithID[i]));
+            if (!this.isTechniqueSelected_id(item)) this.selectedTechniques.push(item);
+        }
+
+    }
+
+    removeFromTechniqueSelection_technique_id(technique_id: string): void {
+
+        var map = Object.freeze(this.techIDtoUIDMap);
+        var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique_id]));
+        for(var i = 0; i < allTechniquesWithID.length; i++){
+            this.removeFromTechniqueSelectionIndividual(allTechniquesWithID[i]);
+        }
+
     }
 
     /**
@@ -477,9 +547,29 @@ export class ViewModel {
      * @param {Technique} technique technique to remove
      */
     removeFromTechniqueSelection(technique: Technique): void {
-        if (this.isTechniqueSelected(technique)) {
-            let index = this.selectedTechniques.indexOf(technique.technique_id)
-            this.selectedTechniques.splice(index, 1);
+        if(!this.selectTechniquesAcrossTactics){
+            if (this.isTechniqueSelected(technique)) {
+                let index = this.selectedTechniques.indexOf(technique.technique_tactic_union_id)
+                this.selectedTechniques.splice(index, 1);
+            }
+        } else {
+            var map = Object.freeze(this.techIDtoUIDMap);
+            var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique.technique_id]));
+            for(var i = 0; i < allTechniquesWithID.length; i++){
+                this.removeFromTechniqueSelectionIndividual(allTechniquesWithID[i]);
+            }
+        }
+    }
+
+    removeFromTechniqueSelectionIndividual(technique_tactic_union_id: string): void {
+        if (this.isTechniqueSelected_id(technique_tactic_union_id)) {
+            if(this.selectedTechniques.length > 1){
+                let index = this.selectedTechniques.indexOf(technique_tactic_union_id)
+                this.selectedTechniques.splice(index, 1);
+            } else {
+                this.clearTechniqueSelection();
+            }
+
         }
     }
 
@@ -487,10 +577,20 @@ export class ViewModel {
      * Remove the technique from the current selection
      * @param {Technique} technique techniqueID of technique to remove
      */
-    removeFromTechniqueSelection_id(techniqueID: string): void {
-        if (this.isTechniqueSelected_id(techniqueID)) {
-            let index = this.selectedTechniques.indexOf(techniqueID)
-            this.selectedTechniques.splice(index, 1);
+    removeFromTechniqueSelection_id(technique_tactic_union_id: string): void {
+        if(!this.selectTechniquesAcrossTactics){
+            if (this.isTechniqueSelected_id(technique_tactic_union_id)) {
+                let index = this.selectedTechniques.indexOf(technique_tactic_union_id)
+                this.selectedTechniques.splice(index, 1);
+            }
+        } else {
+            var map1 = Object.freeze(this.techUIDtoIDMap);
+            var map = Object.freeze(this.techIDtoUIDMap);
+            var technique_id = map1[technique_tactic_union_id];
+            var allTechniquesWithID = JSON.parse(JSON.stringify(map[technique_id]));
+            for(var i = 0; i < allTechniquesWithID.length; i++){
+                this.removeFromTechniqueSelectionIndividual(allTechniquesWithID[i]);
+            }
         }
     }
 
@@ -499,7 +599,11 @@ export class ViewModel {
      * @param {Technique} technique technique to replace selection with
      */
     replaceTechniqueSelection(technique: Technique): void {
-        this.selectedTechniques = [technique.technique_id]
+        if(!this.selectTechniquesAcrossTactics){
+            this.selectedTechniques = [technique.technique_tactic_union_id]
+        } else {
+            this.selectedTechniques = JSON.parse(JSON.stringify(this.techIDtoUIDMap[technique.technique_id]));
+        }
     }
 
     /**
@@ -526,7 +630,7 @@ export class ViewModel {
         let self = this;
         this.clearTechniqueSelection()
         this.techniqueVMs.forEach(function(tvm, key) {
-            if (!backup_selected.includes(tvm.techniqueID)) self.selectedTechniques.push(tvm.techniqueID)
+            if (!backup_selected.includes(tvm.technique_tactic_union_id)) self.selectedTechniques.push(tvm.technique_tactic_union_id)
         });
     }
 
@@ -548,25 +652,40 @@ export class ViewModel {
      * @return {boolean}           true if selected, false otherwise
      */
     isTechniqueSelected(technique): boolean {
-        return this.selectedTechniques.includes(technique.technique_id)
+        return this.selectedTechniques.includes(technique.technique_tactic_union_id)
     }
 
     /**
      * Return true if the given technique is selected, false otherwise
-     * @param  {string}  techniqueID the techniqueID to check
+     * @param  {string}  technique_tactic_union_id the techniqueID to check
      * @return {boolean}           true if selected, false otherwise
      */
-    isTechniqueSelected_id(techniqueID: string): boolean {
-        return this.selectedTechniques.includes(techniqueID)
+    isTechniqueSelected_id(technique_tactic_union_id: string): boolean {
+        return this.selectedTechniques.includes(technique_tactic_union_id)
     }
+
 
     /**
      * return the number of selected techniques
      * @return {number} the number of selected techniques
      */
     getSelectedTechniqueCount(): number {
-        return this.selectedTechniques.length;
+        var result = 0;
+        if(this.selectTechniquesAcrossTactics){
+            var techniqueIDs = [];
+            for(var i = 0; i < this.selectedTechniques.length; i++){
+                var techniqueID = this.techUIDtoIDMap[this.selectedTechniques[i]];
+                if(!techniqueIDs.includes(techniqueID)){
+                    techniqueIDs.push(techniqueID);
+                }
+            }
+            result = techniqueIDs.length;
+        } else {
+            return this.selectedTechniques.length;
+        }
+        return result
     }
+
 
     /**
      * Return true if currently editing any techniques, false otherwise
@@ -636,7 +755,6 @@ export class ViewModel {
         rep.name = this.name;
         rep.version = String(this.version);
         rep.domain = this.domain
-
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -648,6 +766,7 @@ export class ViewModel {
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
+        rep.selectTechniquesAcrossTactics = this.selectTechniquesAcrossTactics;
 
         return JSON.stringify(rep, null, "\t");
     }
@@ -728,18 +847,48 @@ export class ViewModel {
             if (typeof(obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
             else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
         }
-
+        if ("selectTechniquesAcrossTactics" in obj) {
+            if (typeof(obj.selectTechniquesAcrossTactics) === "boolean") this.selectTechniquesAcrossTactics = obj.selectTechniquesAcrossTactics
+            else console.error("TypeError: selectTechniquesAcrossTactics field is not a boolean")
+        }
         if ("techniques" in obj) {
-            for (let i = 0; i < obj.techniques.length; i++) {
-                let tvm = new TechniqueVM("");
-                tvm.deSerialize(JSON.stringify(obj.techniques[i]))
-                // console.log("deserialized", tvm)
-                this.setTechniqueVM(tvm)
+            if(obj.techniques.length > 0){
+                if("tactic" in obj.techniques[0]){
+                    for (let i = 0; i < obj.techniques.length; i++) {
+                        var technique = obj.techniques[i];
+                        let tvm = new TechniqueVM("");
+                        tvm.deSerialize(JSON.stringify(technique),
+                                        technique.techniqueID,
+                                        technique.tactic);
+                        this.setTechniqueVM(tvm);
+                    }
+                } else {
+                    this.needsToConstructTechniqueVMs = true;
+                    this.legacyTechniques = obj.techniques;
+                }
+            }
+
+
+            
+        }
+        this.updateGradient();
+    }
+
+    constructLegacyVMs(){
+        if(this.needsToConstructTechniqueVMs){
+            for (let i = 0; i < this.legacyTechniques.length; i++) {
+                var techniqueID = this.legacyTechniques[i].techniqueID;
+                var techniqueTactics = this.techIDtoUIDMap[techniqueID];
+                for(var t = 0; t < techniqueTactics.length; t++){
+                    var tactic: string = techniqueTactics[t].split("^")[1];
+                    let tvm = new TechniqueVM("");
+                    tvm.deSerialize(JSON.stringify(this.legacyTechniques[i]),
+                                            techniqueID,
+                                            tactic)
+                    this.setTechniqueVM(tvm)
+                }
             }
         }
-
-        // console.log("finished deserializing", this)
-        this.updateGradient();
     }
 
     /**
@@ -844,6 +993,8 @@ export class ViewModel {
 // the viewmodel for a specific technique
 export class TechniqueVM {
     techniqueID: string;
+    technique_tactic_union_id: string;
+    tactic: string;
 
     score: string = "";
     scoreColor: any; //color for score gradient
@@ -873,11 +1024,13 @@ export class TechniqueVM {
     serialize(): string {
         let rep: {[k: string]: any } = {};
         rep.techniqueID = this.techniqueID;
+        rep.tactic = this.tactic;
         if (this.score !== "" && !(isNaN(Number(this.score)))) rep.score = Number(this.score);
         rep.color = this.color;
         rep.comment = this.comment;
         rep.enabled = this.enabled;
-
+        //rep.technique_tactic_union_id = this.technique_tactic_union_id;
+        //console.log(rep);
         return JSON.stringify(rep, null, "\t")
     }
 
@@ -885,10 +1038,14 @@ export class TechniqueVM {
      * Restore this technique from serialized technique
      * @param rep serialized technique string
      */
-    deSerialize(rep: string): void {
+    deSerialize(rep: string, techniqueID: string, tactic: string): void {
         let obj = JSON.parse(rep);
-        if ("techniqueID" in obj) this.techniqueID = obj.techniqueID;
+        if (techniqueID !== undefined) this.techniqueID = techniqueID;
         else console.error("ERROR: TechniqueID field not present in technique")
+        // if ("technique_tactic_union_id" in obj) this.technique_tactic_union_id = obj.technique_tactic_union_id;
+        // else console.error("ERROR: technique_tactic_union_id field not present in technique")
+        if ("tactic" !== undefined) this.tactic = tactic;
+        else console.error("ERROR: tactic field not present in technique")
         if ("comment" in obj) {
             if (typeof(obj.comment) === "string") this.comment = obj.comment;
             else console.error("TypeError: technique comment field is not a number:", obj.comment, "(",typeof(obj.comment),")")
@@ -905,9 +1062,20 @@ export class TechniqueVM {
             if (typeof(obj.enabled) === "boolean") this.enabled = obj.enabled;
             else console.error("TypeError: technique enabled field is not a boolean:", obj.enabled, "(", typeof(obj.enabled), ")");
         }
+        if(this.tactic !== undefined && this.techniqueID !== undefined){
+            this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;
+        } else {
+            console.log("ERROR: Tactic and TechniqueID field needed.")
+        }
+
     }
 
-    constructor(techniqueID: string) {this.techniqueID = techniqueID}
+    constructor(technique_tactic_union_id: string) {
+        this.technique_tactic_union_id = technique_tactic_union_id;
+        var idSplit = technique_tactic_union_id.split("^");
+        this.techniqueID = idSplit[0];
+        this.tactic = idSplit[1];
+    }
 }
 
 // the data for a specific filter

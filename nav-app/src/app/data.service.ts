@@ -156,10 +156,10 @@ export class DataService {
         if (techniques.length === 0) return []
         var tactics = {};
         techniques.forEach(function(technique) {
-            technique.tactics.forEach(function(tt) {
-                if (tactics[tt]) tactics[tt].push(technique)
-                else tactics[tt] = [technique];
-            });
+            var tt = technique.tactic;            
+            if (tactics[tt]) tactics[tt].push(technique)
+            else tactics[tt] = [technique];
+
         });
         return tactics;
     }
@@ -174,9 +174,8 @@ export class DataService {
         var techniquesFinal: String[] = [];
         var seen = new Set();
         techniques.forEach(function(technique) {
-            technique.tactics.forEach(function(tt) {
-                seen.add(tt);
-            });
+            var tt = technique.tactic;
+            seen.add(tt);
         });
         for(var i = 0; i < this.totalTacticsOrder.length; i++){
             var tactic = this.totalTacticsOrder[i];
@@ -192,13 +191,15 @@ export class Technique {
     description: string;
     external_references_url: string;
     id: string;
-    tactics: string[];
+    tactic: string;
     name: string;
     platforms: string[];
     technique_id: string;
-    constructor(name: string, description: string, tactics: string[], url: string, platforms: string[], id: string, tid: string) {
-        this.name = name; this.description = description, this.tactics = tactics;
+    technique_tactic_union_id: string;
+    constructor(name: string, description: string, tactic: string, url: string, platforms: string[], id: string, tid: string) {
+        this.name = name; this.description = description, this.tactic = tactic;
         this.id = id; this.platforms = platforms; this.external_references_url = url;
         this.technique_id = tid;
+        this.technique_tactic_union_id = this.technique_id + "^" + this.tactic;
     }
 }
