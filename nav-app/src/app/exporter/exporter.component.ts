@@ -24,8 +24,8 @@ export class ExporterComponent implements AfterViewInit {
         this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
         let self = this;
         this.exportData.filteredTechniques.forEach(function(technique: Technique) {
-            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_id)) {
-                if (self.exportData.viewModel.getTechniqueVM(technique.technique_id).score != "") self.hasScores = true;
+            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_tactic_union_id)) {
+                if (self.exportData.viewModel.getTechniqueVM(technique.technique_tactic_union_id).score != "") self.hasScores = true;
             }
         })
         //put at the end of the function queue so that the page can render before building the svg
@@ -392,8 +392,8 @@ export class ExporterComponent implements AfterViewInit {
             .attr("height", cellHeight)
             .style("stroke", self.exportData.tableConfig.tableBorderColor)
             .style("fill", function(d) {
-                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "white";
-                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
+                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_tactic_union_id)) return "white";
+                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_tactic_union_id);
                 if (tvm.color) return tvm.color
                 else if (tvm.score) return tvm.scoreColor
                 else return "white"
@@ -403,8 +403,8 @@ export class ExporterComponent implements AfterViewInit {
                 return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
             })
             .style("fill", function(d) {
-                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_id)) return "black";
-                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_id);
+                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_tactic_union_id)) return "black";
+                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_tactic_union_id);
                 if (tvm.color) return tinycolor.mostReadable(tvm.color, ['white', 'black'])
                 if (tvm.score) return tinycolor.mostReadable(tvm.scoreColor, ['white', 'black'])
             })
