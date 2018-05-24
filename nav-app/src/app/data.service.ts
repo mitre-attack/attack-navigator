@@ -156,7 +156,7 @@ export class DataService {
         if (techniques.length === 0) return []
         var tactics = {};
         techniques.forEach(function(technique) {
-            var tt = technique.tactic;            
+            var tt = technique.tactic;
             if (tactics[tt]) tactics[tt].push(technique)
             else tactics[tt] = [technique];
 

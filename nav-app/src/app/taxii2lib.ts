@@ -1,11 +1,11 @@
 /**
  * @file
- * A TAXII 2.0 Javascript client library.
+ * A TAXII 2.0 Javascript client library. Converted to Typescript by Josh Trahan 24 May 2018
  *
  * @see https://oasis-open.github.io/cti-documentation/
  *
- * @author R. Wathelet, September 2017.
- * @version 0.1
+ * @author R. Wathelet, September 2017, modified by J Trahan 24 May 2018
+ * @version 0.2
  */
 
 /**
@@ -13,6 +13,15 @@
  *
  */
 export class TaxiiConnect {
+    baseURL: string;
+    user: string;
+    password: string;
+    hash: string;
+    timeout: number;
+    version: string;
+    getConfig: any;
+    postConfig: any;
+    getStixConfig: any;
 
     /**
      * provide network communication to a Taxii 2.0 server.
@@ -84,11 +93,11 @@ export class TaxiiConnect {
      * @param {Object} filter - the filter object describing the filtering requested, this is added to the path as a query string
      * @returns {Promise} the server response in json.
      */
-    async asyncFetch(path, config, filter) {
+    async asyncFetch(path, config, filter?) { //CHANGED
         let fullPath = (filter === undefined) ? path : path + "?" + TaxiiConnect.asQueryString(filter);
         return await (await (
             this.fetchTimeout(fullPath, config, this.timeout, 'connection timeout')
-                .then(res => res.json())
+                .then((res: Response) => res.json())
                 .catch(err => { throw new Error("fetch error: " + err); } ) ));
     }
 
@@ -107,7 +116,7 @@ export class TaxiiConnect {
      * @param {Object} config - the request configuration
      * @returns {Promise} the server response object
      */
-    async fetchThis(path, options, filter, config) {
+    async fetchThis(path, options, filter?, config?) { //CHANGED
         let conf = config === undefined ? this.getConfig : config;
         if (!options.flag) {
             options.cache = await (this.asyncFetch(path, conf, filter));
@@ -151,6 +160,10 @@ export class TaxiiConnect {
  * Server encapsulates a discovery and api roots endpoints.
  */
 export class Server {
+    path: string;
+    conn: TaxiiConnect;
+    disOptions: any;
+    apiOptions: any;
 
     /**
      * A TAXII Server endpoint representation.
@@ -223,7 +236,7 @@ export class Server {
      * @param {Map} apiRootMap - a map of key=url, value=api root object
      * @returns {Promise} the Array of api roots information objects
      */
-    async _getApiRoots(discovery, apiRootMap) {
+    async _getApiRoots(discovery, apiRootMap?) { //CHANGED
         if (!this.apiOptions.flag) {
             // clear the cache
             this.apiOptions.cache = [];
@@ -255,6 +268,11 @@ export class Server {
  * are used to exchange information in a request–response manner.
  */
 export class Collections {
+    api_root_path: string;
+    conn: TaxiiConnect;
+    options: any;
+    collectionsFlag: boolean;
+    // hash: string;
 
     /**
      * A TAXII Collections for a specific api root path.
@@ -312,7 +330,7 @@ export class Collections {
      * @param {String} range - a pagination range string, for example "0-10"
      * @returns {Array} an array of collection objects
      */
-    async collections(range) {
+    async collections(range?) { //CHANGED
         var theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
@@ -320,7 +338,7 @@ export class Collections {
                 'headers': new Headers({
                     'Accept': 'application/vnd.oasis.taxii+json',
                     'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.hash,
+                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
                     'Range': 'items=' + range
                 })
             };
@@ -336,10 +354,18 @@ export class Collections {
  * A Collection resource endpoint.
  */
 export class Collection {
+    collectionInfo: any;
+    api_root_path: string;
+    conn: TaxiiConnect;
+    path: string;
+    colOptions: any;
+    objsOptions: any;
+    objOptions: any;
+    manOptions: any;
 
     /**
      * Collection resource endpoint.
-     * @param {Collection} collectionInfo - the collection object of this endpoint.
+     * @param {CollectionInfoObject} collectionInfo - the collection object of this endpoint.
      * @param {String} api_root_path - the full path to the desired api root endpoint.
      * @param {TaxiiConnection} conn - a TaxiiConnection class instance.
      */
@@ -419,7 +445,7 @@ export class Collection {
                 'headers': new Headers({
                     'Accept': 'application/vnd.oasis.stix+json',
                     'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.hash,
+                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
                     'Range': 'items=' + range
                 })
             };
@@ -456,7 +482,7 @@ export class Collection {
      * @param {String} range - a pagination range string, for example "0-10"
      * @return {Array} an array of manifest entries object
      */
-    async getManifests(filter, range) {
+    async getManifests(filter, range?) {
         var theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
@@ -464,7 +490,7 @@ export class Collection {
                 'headers': new Headers({
                     'Accept': 'application/vnd.oasis.taxii+json',
                     'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.hash,
+                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
                     'Range': 'items=' + range
                 })
             };
@@ -492,6 +518,10 @@ export class Collection {
  * In TAXII 2.0, the only request that can be monitored is one to add objects to a Collection.
  */
 export class Status {
+    api_root_path: string;
+    status_id: string;
+    conn: TaxiiConnect;
+    path: string;
 
     /**
      * provide information about the status of a previous request.
