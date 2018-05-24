@@ -52,6 +52,7 @@ export class DataService {
 
     getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false){
         if (useTAXIIServer) {
+            console.log("fetching data from TAXII server") 
             let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
             let enterpriseCollectionInfo: any = {
                 'id': this.taxiiCollections['enterprise_attack'],
@@ -91,6 +92,7 @@ export class DataService {
     getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false){
         //load from remote if not yet loaded or refresh=true
         if (useTAXIIServer) {
+            console.log("fetching data from TAXII server")
             let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
             let mobileCollectionInfo: any = {
                 'id': this.taxiiCollections['mobile_attack'],

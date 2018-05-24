@@ -317,7 +317,7 @@ export class DataTableComponent implements AfterViewInit {
                         this.establishData(objects);
                     });
                 } else if (domain === "mitre-mobile"){
-                    dataService.getMobileData().subscribe((mobileData: Object[]) => {
+                    dataService.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
                         var objects = mobileData[1]["objects"].concat(mobileData[0]["objects"]);
                         this.establishData(objects);
                     });
@@ -546,7 +546,7 @@ export class DataTableComponent implements AfterViewInit {
     selectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            console.log(technique_id);
+            // console.log(technique_id);
             self.viewModel.addToTechniqueSelection_technique_id(technique_id);
         })
     }
