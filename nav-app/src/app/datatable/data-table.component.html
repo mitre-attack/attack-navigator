@@ -156,16 +156,27 @@
 
 
 
-            <!-- save locally -->
+            <!-- save locally as JSON -->
             <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
                 <div class="control-row-button noselect"
                     (click)="saveLayerLocally()"
                     matTooltipPosition="below"
-                    matTooltip="download layer">
+                    matTooltip="download layer as json">
                     <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
                 </div>
             </div>
 
+            <!-- export to excel -->
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                    (click)="saveLayerLocallyExcel()"
+                    matTooltipPosition="below"
+                    matTooltip="export to excel">
+                    <img src="assets/icons/baseline-grid_on-24px" alt="save layer"/>
+                </div>
+            </div>
+
+         
             <!-- render layer to SVG -->
             <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                 <div class="control-row-button noselect"

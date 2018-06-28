@@ -8,7 +8,7 @@ import {FormControl} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
+import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import {MatMenuTrigger} from '@angular/material/menu';
 
 declare var tinygradient: any; //use tinygradient
@@ -279,7 +279,6 @@ export class DataTableComponent implements AfterViewInit {
     }
 
 
-
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -290,6 +289,187 @@ export class DataTableComponent implements AfterViewInit {
         var json = this.viewModel.serialize(); //JSON.stringify(this.viewModel.serialize(), null, "\t");
         var blob = new Blob([json], {type: "text/json"});
         FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
+    }
+
+
+    /////////////////////////////////////
+    //     MAGICAL EXPORT TO EXCEL     //
+    /////////////////////////////////////
+
+    saveLayerLocallyExcel(){
+
+        // Strip out all the displayed techniques
+        var new_dict = {};
+        for (var key1 in this.filteredTechniques) {
+           var tactics = this.filteredTechniques[key1]['tactic']
+           var name = this.filteredTechniques[key1]['name']
+           if (new_dict.hasOwnProperty(tactics)) {
+            new_dict[tactics].push(name);
+           } else { new_dict[tactics] = [name];}
+        }
+
+        // Capture the maximum number of objects to fill out rows
+        var max_len = 0
+        var out_table = []
+        var columns = []
+        for (var col in new_dict) { 
+            if (new_dict[col].length > max_len) {max_len = new_dict[col].length};
+            if (columns.hasOwnProperty(col)){
+            } else {columns.push(col)}
+            
+        }
+        for (var col in new_dict) {
+            for (var t = new_dict[col].length; t < max_len; t++) {new_dict[col].push('')};
+        }
+
+
+        // Store the order of displayed columns
+        var sorted_columns = [
+                    "Priority Definition Planning",
+                    "Priority Definition Direction",
+                    "Target Selection",
+                    "Technical Information gathering",
+                    "People Information Gathering",
+                    "Organizational Information Gathering",
+                    "Technical Weakness Identification",
+                    "People Weakness Identification",
+                    "Organizational Weakness Identification",
+                    "Adversary Opsec",
+                    "Establish & Maintain Infrastructure",
+                    "Persona Development",
+                    "Build Capabilities",
+                    "Test Capabilities",
+                    "Stage Capabilities",
+                    "Initial Access",
+                    "Execution",
+                    "Persistence",
+                    "Privilege Escalation",
+                    "Defense Evasion",
+                    "Credential Access",
+                    "Discovery",
+                    "Lateral Movement",
+                    "Collection",
+                    "Exfiltration",
+                    "Command And Control",
+                    ]
+        // Store the pretty format to display
+        var lookup_columns = {
+                    "priority-definition-planning": "Priority Definition Planning",
+                    "priority-definition-direction": "Priority Definition Direction",
+                    "target-selection": "Target Selection",
+                    "technical-information-gathering": "Technical Information gathering",
+                    "people-information-gathering": "People Information Gathering",
+                    "organizational-information-gathering": "Organizational Information Gathering",
+                    "technical-weakness-identification": "Technical Weakness Identification",
+                    "people-weakness-identification": "People Weakness Identification",
+                    "organizational-weakness-identification": "Organizational Weakness Identification",
+                    "adversary-opsec": "Adversary Opsec",
+                    "establish-&-maintain-infrastructure": "Establish & Maintain Infrastructure",
+                    "persona-development": "Persona Development",
+                    "build-capabilities": "Build Capabilities",
+                    "test-capabilities": "Test Capabilities",
+                    "stage-capabilities": "Stage Capabilities",
+                    "initial-access": "Initial Access",
+                    "execution": "Execution",
+                    "persistence": "Persistence",
+                    "privilege-escalation": "Privilege Escalation",
+                    "defense-evasion": "Defense Evasion",
+                    "credential-access": "Credential Access",
+                    "discovery": "Discovery",
+                    "lateral-movement": "Lateral Movement",
+                    "collection": "Collection",
+                    "exfiltration": "Exfiltration",
+                    "command-and-control": "Command And Control",
+                   }
+
+        // Assemble the captured data into a row format
+        for (var i = 0; i < max_len; i++) {
+            var temp_dict = {}
+            for (var col in new_dict) {
+                temp_dict[lookup_columns[col]] = new_dict[col][i];
+            } 
+            out_table.push(temp_dict)
+        }
+     
+        var col_order = []
+        var col_order2 = []
+        var num = 0
+        for (var scol in sorted_columns){
+            for (var col in new_dict) {
+                if (lookup_columns[col] == sorted_columns[scol]) {
+                    col_order.push(sorted_columns[scol])
+                    col_order2.push({'header': sorted_columns[scol],'key': sorted_columns[scol]})
+                } 
+            }
+        }
+
+        // Pull the selected columns out of the this.viewModel object
+        var selData = this.viewModel.serialize();
+        var arrselData = typeof selData  != 'object' ? JSON.parse(selData) : selData;
+        var coloredTactics = arrselData['techniques']
+
+        // Create excel workbook object
+        var workbook = new Excel.Workbook();
+        var ws = workbook.addWorksheet('layer');
+
+        // Create columns
+        ws.columns = col_order2;
+
+        // Add the rows to the worksheet
+        ws.addRows(out_table);
+
+        // bold header (aka row 1)
+        ws.getRow(1).font = {bold: true};
+
+        // Assign each cell to their techID so that they can be looked up later
+        var tech_id = {}
+        for (var key2 in this.filteredTechniques) {
+            var tactics = this.filteredTechniques[key2]['tactic']
+            var name = this.filteredTechniques[key2]['name']
+            var tachid = this.filteredTechniques[key2]['technique_id']
+            tech_id[tachid] = name
+        }
+
+        // Color has to go after add rows
+        var color = ""
+        for (var selected in coloredTactics){
+            ws.eachRow(function(row,rowNumber){
+                row.eachCell( function(cell, colNumber){
+                    if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
+                        // Convert the color object to the specified ARGB HEX format
+                        var outcolor = coloredTactics[selected]['color'].replace("#",'')
+                        outcolor = outcolor.toUpperCase()
+                        row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
+                    };
+                })
+            })
+        }
+
+        // Partially working method to dynamically size columns
+        var colDict = {};
+        ws.eachRow({includeEmpty: true}, function(row,rowNumber){
+            row.eachCell({includeEmpty: true},function(cell,colNumber){
+                if (colDict.hasOwnProperty(colNumber)){
+                    if (cell.value.length > colDict[colNumber])
+                        // console.log(colNumber)
+                        // console.log(cell.value.length)
+                        colDict[colNumber] = cell.value.length
+                } else {colDict[colNumber] = cell.value.length}
+            })
+        })
+        // console.log(JSON.stringify(colDict))
+        for (var cols in ws.columns){
+            // console.log(colDict[cols])
+            ws.columns[cols].width = colDict[cols]
+        }
+
+
+        // Save the workbook
+        workbook.xlsx.writeBuffer().then( data => {
+          const blob = new Blob( [data], {type: "application/octet-stream"} );
+          FileSaver.saveAs( blob, this.viewModel.name.replace(/ /g, "_") + ".xlsx");
+        });
+
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -317,7 +497,7 @@ export class DataTableComponent implements AfterViewInit {
                         this.establishData(objects);
                     });
                 } else if (domain === "mitre-mobile"){
-                    dataService.getMobileData().subscribe((mobileData: Object[]) => {
+                    dataService.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
                         var objects = mobileData[1]["objects"].concat(mobileData[0]["objects"]);
                         this.establishData(objects);
                     });
@@ -546,7 +726,7 @@ export class DataTableComponent implements AfterViewInit {
     selectSecurityInstance(si: SecurityInstance): void {
         let self = this;
         si.techniques.forEach(function(technique_id) {
-            console.log(technique_id);
+            // console.log(technique_id);
             self.viewModel.addToTechniqueSelection_technique_id(technique_id);
         })
     }
