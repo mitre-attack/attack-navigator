@@ -8,8 +8,8 @@ import {FormControl} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import {MatMenuTrigger} from '@angular/material/menu';
+import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 
 declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
@@ -279,6 +279,7 @@ export class DataTableComponent implements AfterViewInit {
     }
 
 
+
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -291,21 +292,24 @@ export class DataTableComponent implements AfterViewInit {
         FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
     }
 
-
     /////////////////////////////////////
     //     MAGICAL EXPORT TO EXCEL     //
     /////////////////////////////////////
 
     saveLayerLocallyExcel(){
 
+        function capitalizeFirstLetter(str) {
+            return str.replace(/-/g,' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        }
+
         // Strip out all the displayed techniques
         var new_dict = {};
         for (var key1 in this.filteredTechniques) {
            var tactics = this.filteredTechniques[key1]['tactic']
            var name = this.filteredTechniques[key1]['name']
-           if (new_dict.hasOwnProperty(tactics)) {
-            new_dict[tactics].push(name);
-           } else { new_dict[tactics] = [name];}
+           if (new_dict.hasOwnProperty(capitalizeFirstLetter(tactics))) {
+            new_dict[capitalizeFirstLetter(tactics)].push(name);
+           } else { new_dict[capitalizeFirstLetter(tactics)] = [name];}
         }
 
         // Capture the maximum number of objects to fill out rows
@@ -315,93 +319,25 @@ export class DataTableComponent implements AfterViewInit {
         for (var col in new_dict) { 
             if (new_dict[col].length > max_len) {max_len = new_dict[col].length};
             if (columns.hasOwnProperty(col)){
-            } else {columns.push(col)}
-            
+            } else {columns.push(col)}  
         }
         for (var col in new_dict) {
             for (var t = new_dict[col].length; t < max_len; t++) {new_dict[col].push('')};
         }
 
-
-        // Store the order of displayed columns
-        var sorted_columns = [
-                    "Priority Definition Planning",
-                    "Priority Definition Direction",
-                    "Target Selection",
-                    "Technical Information gathering",
-                    "People Information Gathering",
-                    "Organizational Information Gathering",
-                    "Technical Weakness Identification",
-                    "People Weakness Identification",
-                    "Organizational Weakness Identification",
-                    "Adversary Opsec",
-                    "Establish & Maintain Infrastructure",
-                    "Persona Development",
-                    "Build Capabilities",
-                    "Test Capabilities",
-                    "Stage Capabilities",
-                    "Initial Access",
-                    "Execution",
-                    "Persistence",
-                    "Privilege Escalation",
-                    "Defense Evasion",
-                    "Credential Access",
-                    "Discovery",
-                    "Lateral Movement",
-                    "Collection",
-                    "Exfiltration",
-                    "Command And Control",
-                    ]
-        // Store the pretty format to display
-        var lookup_columns = {
-                    "priority-definition-planning": "Priority Definition Planning",
-                    "priority-definition-direction": "Priority Definition Direction",
-                    "target-selection": "Target Selection",
-                    "technical-information-gathering": "Technical Information gathering",
-                    "people-information-gathering": "People Information Gathering",
-                    "organizational-information-gathering": "Organizational Information Gathering",
-                    "technical-weakness-identification": "Technical Weakness Identification",
-                    "people-weakness-identification": "People Weakness Identification",
-                    "organizational-weakness-identification": "Organizational Weakness Identification",
-                    "adversary-opsec": "Adversary Opsec",
-                    "establish-&-maintain-infrastructure": "Establish & Maintain Infrastructure",
-                    "persona-development": "Persona Development",
-                    "build-capabilities": "Build Capabilities",
-                    "test-capabilities": "Test Capabilities",
-                    "stage-capabilities": "Stage Capabilities",
-                    "initial-access": "Initial Access",
-                    "execution": "Execution",
-                    "persistence": "Persistence",
-                    "privilege-escalation": "Privilege Escalation",
-                    "defense-evasion": "Defense Evasion",
-                    "credential-access": "Credential Access",
-                    "discovery": "Discovery",
-                    "lateral-movement": "Lateral Movement",
-                    "collection": "Collection",
-                    "exfiltration": "Exfiltration",
-                    "command-and-control": "Command And Control",
-                   }
-
         // Assemble the captured data into a row format
         for (var i = 0; i < max_len; i++) {
             var temp_dict = {}
             for (var col in new_dict) {
-                temp_dict[lookup_columns[col]] = new_dict[col][i];
+                temp_dict[col] = new_dict[col][i]
             } 
             out_table.push(temp_dict)
         }
      
-        var col_order = []
+        // Order Based on defined column order
         var col_order2 = []
-        var num = 0
-        for (var scol in sorted_columns){
-            for (var col in new_dict) {
-                if (lookup_columns[col] == sorted_columns[scol]) {
-                    col_order.push(sorted_columns[scol])
-                    col_order2.push({'header': sorted_columns[scol],'key': sorted_columns[scol]})
-                } 
-            }
-        }
+        for (var scol in this.dataService.tacticNames(this.filteredTechniques))
+                    col_order2.push({'header': capitalizeFirstLetter(this.dataService.tacticNames(this.filteredTechniques)[scol]),'key': capitalizeFirstLetter(this.dataService.tacticNames(this.filteredTechniques)[scol])})
 
         // Pull the selected columns out of the this.viewModel object
         var selData = this.viewModel.serialize();
@@ -446,24 +382,28 @@ export class DataTableComponent implements AfterViewInit {
         }
 
         // Partially working method to dynamically size columns
-        var colDict = {};
-        ws.eachRow({includeEmpty: true}, function(row,rowNumber){
-            row.eachCell({includeEmpty: true},function(cell,colNumber){
-                if (colDict.hasOwnProperty(colNumber)){
-                    if (cell.value.length > colDict[colNumber])
-                        // console.log(colNumber)
-                        // console.log(cell.value.length)
-                        colDict[colNumber] = cell.value.length
-                } else {colDict[colNumber] = cell.value.length}
-            })
-        })
+            // var colDict = {};
+            // ws.eachRow({includeEmpty: true}, function(row,rowNumber){
+            //     row.eachCell({includeEmpty: true},function(cell,colNumber){
+            //         if (colDict.hasOwnProperty(colNumber)){
+            //             if (cell.value.length > colDict[colNumber])
+            //                 // console.log(colNumber)
+            //                 // console.log(cell.value.length)
+            //                 colDict[colNumber] = cell.value.length
+            //         } else {colDict[colNumber] = cell.value.length}
+            //     })
+            // })
+
         // console.log(JSON.stringify(colDict))
-        for (var cols in ws.columns){
-            // console.log(colDict[cols])
-            ws.columns[cols].width = colDict[cols]
-        }
+            // for (var cols in ws.columns){
+            //     // console.log(colDict[cols])
+            //     ws.columns[cols].width = colDict[cols]
+            // }
 
+         //make column the width of the header
+        ws.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
 
+        // console.log(this.dataService.tacticNames(this.filteredTechniques))
         // Save the workbook
         workbook.xlsx.writeBuffer().then( data => {
           const blob = new Blob( [data], {type: "application/octet-stream"} );
@@ -471,6 +411,7 @@ export class DataTableComponent implements AfterViewInit {
         });
 
     }
+
 
     //////////////////////////////////////////////////////////////////////////
     // RETRIEVES THE TECHNIQUES, TACTICS, AND THREAT DATA FROM DATA SERVICE //
@@ -535,7 +476,7 @@ export class DataTableComponent implements AfterViewInit {
         this.ds.setTacticOrder(tactics);
         this.setTacticPhases(tactics);
     }
-
+    
     ////////////////////////////////////////////////////
     // Creates a mapping of each tactic and its phase //
     ////////////////////////////////////////////////////
