@@ -401,6 +401,7 @@ export class DataTableComponent implements AfterViewInit {
 
         if(this.viewModel.needsToConstructTechniqueVMs){
             this.viewModel.constructLegacyVMs();
+            this.filterTechniques();
         }
     }
 
