@@ -15,8 +15,7 @@
 	],
 	"filters": {
 		"stages": [
-			"act",
-			"prepare"
+			"act"
 		],
 		"platforms": [
 			"windows",
