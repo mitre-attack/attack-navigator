@@ -477,9 +477,11 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel) {
             for (let i = 0; i < this.techniques.length; i++) {
                 // console.log("initializing VM", this.techniques[i].name)
-                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id))
-                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_tactic_union_id));
-                // don't initialize vms we already have -- from loading or whatever
+                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id)) {
+                    var tvm = new TechniqueVM(this.techniques[i].technique_tactic_union_id);
+                    tvm.score = this.viewModel.initializeScoresTo;
+                    this.viewModel.setTechniqueVM(tvm);
+                } // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
             this.populateEditFields();
