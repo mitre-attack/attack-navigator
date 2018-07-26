@@ -292,9 +292,9 @@ export class DataTableComponent implements AfterViewInit {
         FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
     }
 
-    /////////////////////////////////////
-    //     MAGICAL EXPORT TO EXCEL     //
-    /////////////////////////////////////
+    /////////////////////////////
+    //     EXPORT TO EXCEL     //
+    /////////////////////////////
 
     saveLayerLocallyExcel(){
 
@@ -366,44 +366,60 @@ export class DataTableComponent implements AfterViewInit {
             tech_id[tachid] = name
         }
 
-        // Color has to go after add rows
-        var color = ""
-        for (var selected in coloredTactics){
-            ws.eachRow(function(row,rowNumber){
-                row.eachCell( function(cell, colNumber){
-                    if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
-                        // Convert the color object to the specified ARGB HEX format
-                        var outcolor = coloredTactics[selected]['color'].replace("#",'')
-                        outcolor = outcolor.toUpperCase()
-                        row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
-                    };
-                })
-            })
+        function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        function rgbToHex(r, g, b) {
+            return componentToHex(r) + componentToHex(g) + componentToHex(b);
         }
 
-        // Partially working method to dynamically size columns
-            // var colDict = {};
-            // ws.eachRow({includeEmpty: true}, function(row,rowNumber){
-            //     row.eachCell({includeEmpty: true},function(cell,colNumber){
-            //         if (colDict.hasOwnProperty(colNumber)){
-            //             if (cell.value.length > colDict[colNumber])
-            //                 // console.log(colNumber)
-            //                 // console.log(cell.value.length)
-            //                 colDict[colNumber] = cell.value.length
-            //         } else {colDict[colNumber] = cell.value.length}
-            //     })
-            // })
+        // Color our now defined cells
+        var color = ""
+        for (var selected in coloredTactics){
+            if ('color' in coloredTactics[selected]){
+                ws.eachRow(function(row,rowNumber){
+                    row.eachCell( function(cell, colNumber){
+                        if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
+                            // Convert the color object to the specified ARGB HEX format
+                            if (coloredTactics[selected]['color']){
+                                var outcolor = coloredTactics[selected]['color'].replace("#",'')
+                                outcolor = outcolor.toUpperCase()
+                                row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
+                            }
+                        };
+                    });
+                })
+            }
+            // Handle scored techniqe color differently
+            if (coloredTactics[selected].hasOwnProperty('score')){
+                ws.eachRow(function(row,rowNumber){
+                    row.eachCell( function(cell, colNumber){
+                        if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
+                            var origValue = cell.value
+                            var percent = parseInt(coloredTactics[selected]['score']) / 100
+                            
+                            if (percent == 0){
+                                var rchannel = 255
+                            }else {var rchannel = Math.trunc(255 - (255 * percent))}
 
-        // console.log(JSON.stringify(colDict))
-            // for (var cols in ws.columns){
-            //     // console.log(colDict[cols])
-            //     ws.columns[cols].width = colDict[cols]
-            // }
+                            var gchannel = Math.trunc(percent * 255)
+
+                            console.log(rgbToHex(componentToHex(rchannel),componentToHex(gchannel),0))
+                            cell.value = origValue + ' (' + coloredTactics[selected]['score'] + ')'
+                            var outcolor = rgbToHex(componentToHex(rchannel),componentToHex(gchannel),0).toUpperCase()
+                            row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
+
+                        };
+                    });
+                });
+            }
+        }
 
          //make column the width of the header
         ws.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
 
-        // console.log(this.dataService.tacticNames(this.filteredTechniques))
+
         // Save the workbook
         workbook.xlsx.writeBuffer().then( data => {
           const blob = new Blob( [data], {type: "application/octet-stream"} );
