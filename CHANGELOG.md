@@ -4,6 +4,7 @@
 - Added export to MS Excel feature. [sarahyoder add your release notes here]. See issue [#52](https://github.com/mitre/attack-navigator/issues/52).
 ### Minor
 - In the export to SVG interface you can now hide the technique count in the tactic column headers. See issue [#47](https://github.com/mitre/attack-navigator/issues/52).
+- Updated the README to explain how to use local files to populate the Navigator. See issue [#51](https://github.com/mitre/attack-navigator/issues/51).
 
 ## Fixes
 - Fixed constant score expressions (e.g `10`, `5+5`) featuring no variables being ignored in the _create layers from other layers_ interface. Now if a constant score expression is present it assigns uniformly to all techniques. See issue [#49](https://github.com/mitre/attack-navigator/issues/49).
