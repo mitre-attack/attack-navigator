@@ -1,9 +1,9 @@
-# v2.1 - [insert date here]
+# v2.1 - 31 July 2018
 ## New Features
 ### Major
-- Added export to MS Excel feature. [sarahyoder add your release notes here]. See issue [#52](https://github.com/mitre/attack-navigator/issues/52).
+- Added export to MS Excel feature. Saves the current layer to MS excel (_xlsx_) format. See issue [#52](https://github.com/mitre/attack-navigator/issues/52).
 ### Minor
-- In the export to SVG interface you can now hide the technique count in the tactic column headers. See issue [#47](https://github.com/mitre/attack-navigator/issues/52).
+- In the export to SVG interface you can now hide the technique count in the tactic column headers. See issue [#47](https://github.com/mitre/attack-navigator/issues/47).
 - Updated the README to explain how to use local files to populate the Navigator. See issue [#51](https://github.com/mitre/attack-navigator/issues/51).
 
 ## Fixes

@@ -167,7 +167,7 @@
             </div>
 
             <!-- export to excel -->
-            <div class="control-row-item">
+            <div *ngIf="configService.getFeature('export_excel')" class="control-row-item">
                 <div class="control-row-button noselect"
                     (click)="saveLayerLocallyExcel()"
                     matTooltipPosition="below"
