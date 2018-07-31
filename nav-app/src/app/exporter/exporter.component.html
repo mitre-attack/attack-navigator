@@ -269,6 +269,10 @@
                             <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()" >show legend</label>
                         </li>
                         <li>
+                            <input [id]="uid+'checkboxtcount'" type="checkbox" class="checkbox-custom" [(ngModel)]="exportData.tableConfig.showTechniqueCount" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxtcount'" class="checkbox-custom-label noselect">show technique count</label>
+                        </li>
+                        <li>
                             <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="exportData.tableConfig.tableBorderColor" [style.background]="exportData.tableConfig.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
                              (colorPickerSelect)="buildSVG()" [cpOKButton]="true" [cpOKButtonText]="'apply'" [cpCancelButton]="true" style="width: 14px; margin: 5px 0 0 5px;">
                              <label [for]="uid+'tableBorderInput'" class="noselect">cell border</label>
