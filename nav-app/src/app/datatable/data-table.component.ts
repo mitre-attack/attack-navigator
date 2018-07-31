@@ -296,136 +296,69 @@ export class DataTableComponent implements AfterViewInit {
     //     EXPORT TO EXCEL     //
     /////////////////////////////
 
-    saveLayerLocallyExcel(){
 
-        function capitalizeFirstLetter(str) {
-            return str.replace(/-/g,' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        }
-
-        // Strip out all the displayed techniques
-        var new_dict = {};
-        for (var key1 in this.filteredTechniques) {
-           var tactics = this.filteredTechniques[key1]['tactic']
-           var name = this.filteredTechniques[key1]['name']
-           if (new_dict.hasOwnProperty(capitalizeFirstLetter(tactics))) {
-            new_dict[capitalizeFirstLetter(tactics)].push(name);
-           } else { new_dict[capitalizeFirstLetter(tactics)] = [name];}
-        }
-
-        // Capture the maximum number of objects to fill out rows
-        var max_len = 0
-        var out_table = []
-        var columns = []
-        for (var col in new_dict) { 
-            if (new_dict[col].length > max_len) {max_len = new_dict[col].length};
-            if (columns.hasOwnProperty(col)){
-            } else {columns.push(col)}  
-        }
-        for (var col in new_dict) {
-            for (var t = new_dict[col].length; t < max_len; t++) {new_dict[col].push('')};
-        }
-
-        // Assemble the captured data into a row format
-        for (var i = 0; i < max_len; i++) {
-            var temp_dict = {}
-            for (var col in new_dict) {
-                temp_dict[col] = new_dict[col][i]
-            } 
-            out_table.push(temp_dict)
-        }
-     
-        // Order Based on defined column order
-        var col_order2 = []
-        for (var scol in this.dataService.tacticNames(this.filteredTechniques))
-                    col_order2.push({'header': capitalizeFirstLetter(this.dataService.tacticNames(this.filteredTechniques)[scol]),'key': capitalizeFirstLetter(this.dataService.tacticNames(this.filteredTechniques)[scol])})
-
-        // Pull the selected columns out of the this.viewModel object
-        var selData = this.viewModel.serialize();
-        var arrselData = typeof selData  != 'object' ? JSON.parse(selData) : selData;
-        var coloredTactics = arrselData['techniques']
-
-        // Create excel workbook object
+    saveLayerLocallyExcel() {
+        let self = this;
         var workbook = new Excel.Workbook();
-        var ws = workbook.addWorksheet('layer');
+        var worksheet = workbook.addWorksheet('layer');
 
-        // Create columns
-        ws.columns = col_order2;
+        // CREATE COLS
+        worksheet.columns = this.dataService.tacticNames(this.filteredTechniques).map(tacticname => {
+            return {header: tacticname, key: tacticname}
+        })
+       
+        // CREATE CELLS
+        for (const tacticName of this.dataService.tacticNames(this.filteredTechniques)) {
+            let col = worksheet.getColumn(tacticName);
+            let techniques = this.tactics[tacticName.toString()]
+            let cells = techniques.map(technique => {
+                return technique.name;
+                // return this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).;
+            })
+            //toString because String != string
+            col.values = [this.tacticDisplayNames[tacticName.toString()]].concat(cells) //insert header cell at top of col
+            col.eachCell((cell, rowNumber) => {
+                if (rowNumber > 1) { //skip tactic header
 
-        // Add the rows to the worksheet
-        ws.addRows(out_table);
-
-        // bold header (aka row 1)
-        ws.getRow(1).font = {bold: true};
-
-        // Assign each cell to their techID so that they can be looked up later
-        var tech_id = {}
-        for (var key2 in this.filteredTechniques) {
-            var tactics = this.filteredTechniques[key2]['tactic']
-            var name = this.filteredTechniques[key2]['name']
-            var tachid = this.filteredTechniques[key2]['technique_id']
-            tech_id[tachid] = name
-        }
-
-        function componentToHex(c) {
-            var hex = c.toString(16);
-            return hex.length == 1 ? "0" + hex : hex;
-        }
-        function rgbToHex(r, g, b) {
-            return componentToHex(r) + componentToHex(g) + componentToHex(b);
-        }
-
-        // Color our now defined cells
-        var color = ""
-        for (var selected in coloredTactics){
-            if ('color' in coloredTactics[selected]){
-                ws.eachRow(function(row,rowNumber){
-                    row.eachCell( function(cell, colNumber){
-                        if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
-                            // Convert the color object to the specified ARGB HEX format
-                            if (coloredTactics[selected]['color']){
-                                var outcolor = coloredTactics[selected]['color'].replace("#",'')
-                                outcolor = outcolor.toUpperCase()
-                                row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
+                    let index = rowNumber - 2; //skip header, and exceljs indexes starting at 1 
+                    if (cell.value && cell.value != "") { // handle jagged cols
+                        console.log(cell.value);
+                        
+                        let tvm = this.viewModel.getTechniqueVM(techniques[index].technique_tactic_union_id);
+                        if (tvm.enabled) {
+                            if (tvm.color) { //manually assigned
+                                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
+                                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}}
+                                console.log(cell.font);
+                                
                             }
-                        };
-                    });
-                })
-            }
-            // Handle scored techniqe color differently
-            if (coloredTactics[selected].hasOwnProperty('score')){
-                ws.eachRow(function(row,rowNumber){
-                    row.eachCell( function(cell, colNumber){
-                        if (tech_id[coloredTactics[selected]['techniqueID']] === cell.value){
-                            var origValue = cell.value
-                            var percent = parseInt(coloredTactics[selected]['score']) / 100
-                            
-                            if (percent == 0){
-                                var rchannel = 255
-                            }else {var rchannel = Math.trunc(255 - (255 * percent))}
-
-                            var gchannel = Math.trunc(percent * 255)
-
-                            console.log(rgbToHex(componentToHex(rchannel),componentToHex(gchannel),0))
-                            cell.value = origValue + ' (' + coloredTactics[selected]['score'] + ')'
-                            var outcolor = rgbToHex(componentToHex(rchannel),componentToHex(gchannel),0).toUpperCase()
-                            row.getCell(colNumber).fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + outcolor}};
-
-                        };
-                    });
-                });
-            }
+                            else if (tvm.score) { //score assigned
+                                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
+                                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}}
+                            }
+                        } else { //disabled
+                            cell.font = {color: {'argb': 'FFBCBCBC'}}
+                        }
+                    }
+                }
+            })
         }
 
-         //make column the width of the header
-        ws.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
-
-
-        // Save the workbook
-        workbook.xlsx.writeBuffer().then( data => {
-          const blob = new Blob( [data], {type: "application/octet-stream"} );
-          FileSaver.saveAs( blob, this.viewModel.name.replace(/ /g, "_") + ".xlsx");
-        });
-
+        // STYLE      
+        // width of cols
+        worksheet.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
+        //tactic background
+        if (this.viewModel.showTacticRowBackground) {
+            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
+            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+        } else {
+            worksheet.getRow(1).font = {bold: true}; //bold header
+        }
+         // Save the workbook
+         workbook.xlsx.writeBuffer().then( data => {
+            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            FileSaver.saveAs( blob, this.viewModel.name.replace(/ /g, "_") + ".xlsx");
+          });
     }
 
 
