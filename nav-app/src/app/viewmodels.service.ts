@@ -180,10 +180,11 @@ export class ViewModelsService {
                     let new_tvm = new TechniqueVM(tvm.technique_tactic_union_id);
                     new_tvm.score = mathResult;
                     result.setTechniqueVM(new_tvm);
-
+                
                 })
+                result.initializeScoresTo = String(mathResult); //save so that when data is initialized in data-table it can initialize to this value
             }
-
+            
             missingTechniques.forEach(function(count, technique_tactic_union_id) {
                 // console.log(result.getTechniqueVM(technique_tactic_union_id).techniqueName, count)
                 if (count == scoreVariables.size) {
@@ -221,6 +222,8 @@ export class ViewModelsService {
             result.legendItems = JSON.parse(JSON.stringify(legendItems.legendItems));
         }
 
+        console.log(result);
+        
         result.name = layerName;
         // console.log(result)
         this.viewModels.push(result)
@@ -429,6 +432,8 @@ export class ViewModel {
     selectTechniquesAcrossTactics: boolean = true;
     needsToConstructTechniqueVMs = false;
     legacyTechniques = [];
+
+    initializeScoresTo = ""; //value to initialize scores to
 
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};

@@ -8,8 +8,8 @@ import {FormControl} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-
 import {MatMenuTrigger} from '@angular/material/menu';
+import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 
 declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
@@ -292,6 +292,76 @@ export class DataTableComponent implements AfterViewInit {
         FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
     }
 
+    /////////////////////////////
+    //     EXPORT TO EXCEL     //
+    /////////////////////////////
+
+
+    saveLayerLocallyExcel() {
+        let self = this;
+        var workbook = new Excel.Workbook();
+        var worksheet = workbook.addWorksheet('layer');
+
+        // CREATE COLS
+        worksheet.columns = this.dataService.tacticNames(this.filteredTechniques).map(tacticname => {
+            return {header: tacticname, key: tacticname}
+        })
+       
+        // CREATE CELLS
+        for (const tacticName of this.dataService.tacticNames(this.filteredTechniques)) {
+            let col = worksheet.getColumn(tacticName);
+            let techniques = this.tactics[tacticName.toString()]
+            let cells = techniques.map(technique => {
+                return technique.name;
+                // return this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).;
+            })
+            //toString because String != string
+            col.values = [this.tacticDisplayNames[tacticName.toString()]].concat(cells) //insert header cell at top of col
+            col.eachCell((cell, rowNumber) => {
+                if (rowNumber > 1) { //skip tactic header
+
+                    let index = rowNumber - 2; //skip header, and exceljs indexes starting at 1 
+                    if (cell.value && cell.value != "") { // handle jagged cols
+                        console.log(cell.value);
+                        
+                        let tvm = this.viewModel.getTechniqueVM(techniques[index].technique_tactic_union_id);
+                        if (tvm.enabled) {
+                            if (tvm.color) { //manually assigned
+                                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
+                                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}}
+                                console.log(cell.font);
+                                
+                            }
+                            else if (tvm.score) { //score assigned
+                                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
+                                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}}
+                            }
+                        } else { //disabled
+                            cell.font = {color: {'argb': 'FFBCBCBC'}}
+                        }
+                    }
+                }
+            })
+        }
+
+        // STYLE      
+        // width of cols
+        worksheet.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
+        //tactic background
+        if (this.viewModel.showTacticRowBackground) {
+            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
+            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+        } else {
+            worksheet.getRow(1).font = {bold: true}; //bold header
+        }
+         // Save the workbook
+         workbook.xlsx.writeBuffer().then( data => {
+            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            FileSaver.saveAs( blob, this.viewModel.name.replace(/ /g, "_") + ".xlsx");
+          });
+    }
+
+
     //////////////////////////////////////////////////////////////////////////
     // RETRIEVES THE TECHNIQUES, TACTICS, AND THREAT DATA FROM DATA SERVICE //
     //     Calls functions to format the data                               //
@@ -355,7 +425,7 @@ export class DataTableComponent implements AfterViewInit {
         this.ds.setTacticOrder(tactics);
         this.setTacticPhases(tactics);
     }
-
+    
     ////////////////////////////////////////////////////
     // Creates a mapping of each tactic and its phase //
     ////////////////////////////////////////////////////
@@ -401,6 +471,7 @@ export class DataTableComponent implements AfterViewInit {
 
         if(this.viewModel.needsToConstructTechniqueVMs){
             this.viewModel.constructLegacyVMs();
+            this.filterTechniques();
         }
     }
 
@@ -476,9 +547,11 @@ export class DataTableComponent implements AfterViewInit {
         if (this.viewModel) {
             for (let i = 0; i < this.techniques.length; i++) {
                 // console.log("initializing VM", this.techniques[i].name)
-                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id))
-                    this.viewModel.setTechniqueVM(new TechniqueVM(this.techniques[i].technique_tactic_union_id));
-                // don't initialize vms we already have -- from loading or whatever
+                if (!this.viewModel.hasTechniqueVM(this.techniques[i].technique_tactic_union_id)) {
+                    var tvm = new TechniqueVM(this.techniques[i].technique_tactic_union_id);
+                    tvm.score = this.viewModel.initializeScoresTo;
+                    this.viewModel.setTechniqueVM(tvm);
+                } // don't initialize vms we already have -- from loading or whatever
             }
             this.viewModel.updateGradient();
             this.populateEditFields();

@@ -47,7 +47,7 @@ export class ExporterComponent implements AfterViewInit {
     showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores  && this.exportData.tableConfig.showHeader}
     showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
     showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
-
+    showItemCount(): boolean {return this.exportData.tableConfig.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
@@ -340,8 +340,8 @@ export class ExporterComponent implements AfterViewInit {
             });
 
         // split columns into headers and bodies
-        let showItemCount = self.exportData.tableConfig.tableTextDisplay != 0
-        let colHeaderHeight = showItemCount ? 2 * cellHeight : cellHeight;
+        
+        let colHeaderHeight = this.showItemCount() ? 2 * cellHeight : cellHeight;
         let columnHeaders = columns.append("g")
             .attr("transform", "translate(0,0)");
         columnHeaders.append("rect")
@@ -352,14 +352,14 @@ export class ExporterComponent implements AfterViewInit {
         columnHeaders.append("text")
             .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
             .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, showItemCount ? 2 : 1)[0]) + tableTacticTextYOffset) +")")
+            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, this.showItemCount() ? 2 : 1)[0]) + tableTacticTextYOffset) +")")
             .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
             .attr("dx", 0)
             .attr("dy", 0)
             .style("font-weight", "bold")
             .call(self.wrap, columnWidth - 2 - bodyTextPad, cellHeight - 2, self)
 
-        if (showItemCount) columnHeaders.append("text")
+        if (this.showItemCount()) columnHeaders.append("text")
             .text(function(d) {
                 return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
             })
@@ -672,6 +672,7 @@ export class ExportData {
         showFilters: true, //show/hide the filters in the header
         showDescription: true, //show/hide the description in the header
         showName: true //show/hide the layer name in the header
+        showTechniqueCount: true //show/hide the technique count in tactic columns
     }
 
 
@@ -730,7 +731,8 @@ export class ExportData {
             "showGradient": true,
             "showFilters": true,
             "showDescription": true,
-            "showName": true
+            "showName": true,
+            "showTechniqueCount": true
         }
 
 
