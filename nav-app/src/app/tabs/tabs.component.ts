@@ -492,7 +492,7 @@ export class TabsComponent implements AfterContentInit {
             let content = res.text();
             try {
                 viewModel.deSerialize(content)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true);
+                this.openTab(viewModel.name, this.layerTab, viewModel, true, true, true);
             } catch(err) {
                 console.log(err)
                 alert("ERROR: Failed to load layer file from local path")
