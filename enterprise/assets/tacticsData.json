@@ -5,91 +5,91 @@
                 "tactic": "priority-definition-planning",
                 "description": "Priority definition planning consists of the process of determining the set of Key Intelligence Topics (KIT) or Key Intelligence Questions (KIQ) required for meeting key strategic, operational, or tactical goals. Leadership outlines the priority definition (may be considered a goal) around which the adversary designs target selection and a plan to achieve. An analyst may outline the priority definition when in the course of determining gaps in existing KITs or KIQs.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Priority_Definition_Planning"
+                "url": "https://attack.mitre.org/tactics/TA0012"
             },
             {
                 "tactic": "priority-definition-direction",
                 "description": "Priority definition direction consists of the process of collecting and assigning requirements for meeting Key Intelligence Topics (KIT) or Key Intelligence Questions (KIQ) as determined by leadership.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Priority_Definition_Direction"
+                "url": "https://attack.mitre.org/tactics/TA0013"
             },
             {
                 "tactic": "target-selection",
                 "description": "Target selection consists of an iterative process in which an adversary determines a target by first beginning at the strategic level and then narrowing down operationally and tactically until a specific target is chosen.  A target may be defined as an entity or object that performs a function considered for possible engagement or other action.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Target_Selection"
+                "url": "https://attack.mitre.org/tactics/TA0014"
             },
             {
                 "tactic": "technical-information-gathering",
                 "description": "Technical information gathering consists of the process of identifying critical technical elements of intelligence an adversary will need about a target in order to best attack.  Technical intelligence gathering includes, but is not limited to, understanding the target's network architecture, IP space, network services, email format, and security procedures.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Technical_Information_Gathering"
+                "url": "https://attack.mitre.org/tactics/TA0015"
             },
             {
                 "tactic": "people-information-gathering",
                 "description": "People Information Gathering consists of the process of identifying critical personnel elements of intelligence an adversary will need about a target in order to best attack.  People intelligence gathering focuses on identifying key personnel or individuals with critical accesses in order to best approach a target for attack.  It may involve aspects of social engineering, elicitation, mining social media sources, or be thought of as understanding the personnel element of competitive intelligence.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/People_Information_Gathering"
+                "url": "https://attack.mitre.org/tactics/TA0016"
             },
             {
                 "tactic": "organizational-information-gathering",
                 "description": "Organizational information gathering consists of the process of identifying critical organizational elements of intelligence an adversary will need about a target in order to best attack.  Similar to competitive intelligence, organizational intelligence gathering focuses on understanding the operational tempo of an organization and gathering a deep understanding of the organization and how it operates, in order to best develop a strategy to target it.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Organizational_Information_Gathering"
+                "url": "https://attack.mitre.org/tactics/TA0017"
             },
             {
                 "tactic": "technical-weakness-identification",
                 "description": "Technical weakness identification consists of identifying and analyzing weaknesses and vulnerabilities collected during the intelligence gathering phases to determine best approach based on technical complexity and adversary priorities (e.g., expediency, stealthiness).",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Organizational_Information_Gathering"
+                "url": "https://attack.mitre.org/tactics/TA0018"
             },
             {
                 "tactic": "people-weakness-identification",
                 "description": "People weakness identification consists of identifying and analyzing weaknesses and vulnerabilities from the intelligence gathering phases which can be leveraged to gain access to target or intermediate target persons of interest or social trust relationships.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/People_Weakness_Identification"
+                "url": "https://attack.mitre.org/tactics/TA0019"
             },
             {
                 "tactic": "organizational-weakness-identification",
                 "description": "Organizational weakness identification consists of identifying and analyzing weaknesses and vulnerabilities from the intelligence gathering phases which can be leveraged to gain access to target or intermediate target organizations of interest.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Organizational_Weakness_Identification"
+                "url": "https://attack.mitre.org/tactics/TA0020"
             },
             {
                 "tactic": "adversary-opsec",
                 "description": "Adversary OPSEC consists of the use of various technologies or 3rd party services to obfuscate, hide, or blend in with accepted network traffic or system behavior. The adversary may use these techniques to evade defenses, reduce attribution, minimize discovery, and/or increase the time and effort required to analyze.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Adversary_OPSEC"
+                "url": "https://attack.mitre.org/tactics/TA0021"
             },
             {
                 "tactic": "establish-&-maintain-infrastructure",
                 "description": "Establishing and maintaining infrastructure consists of building, purchasing, co-opting, and maintaining systems and services used to conduct cyber operations. An adversary will need to establish infrastructure used to communicate with and control assets used throughout the course of their operations.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Establish_%26_Maintain_Infrastructure"
+                "url": "https://attack.mitre.org/tactics/TA0022"
             },
             {
                 "tactic": "persona-development",
                 "description": "Persona development consists of the development of public information, presence, history and appropriate affiliations. This development could be applied to social media, website, or other publicly available information that could be referenced and scrutinized for legitimacy over the course of an operation using that persona or identity.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Persona_Development"
+                "url": "https://attack.mitre.org/tactics/TA0023"
             },
             {
                 "tactic": "build-capabilities",
                 "description": "Building capabilities consists of developing and/or acquiring the software, data and techniques used at different phases of an operation. This is the process of identifying development requirements and implementing solutions such as malware, delivery mechanisms, obfuscation/cryptographic protections, and call back and O&M functions.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Build_Capabilities"
+                "url": "https://attack.mitre.org/tactics/TA0024"
             },
             {
                 "tactic": "test-capabilities",
                 "description": "Testing capabilities takes place when adversaries may need to test capabilities externally to refine development goals and criteria and to ensure success during an operation. Certain testing may be done after a capability is staged.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Test_Capabilities"
+                "url": "https://attack.mitre.org/tactics/TA0025"
             },
             {
                 "tactic": "stage-capabilities",
                 "description": "Staging capabilities consists of preparing operational environment required to conduct the operation. This includes activities such as deploying software, uploading data, enabling command and control infrastructure.",
                 "phase": "prepare",
-                "url": "https://attack.mitre.org/pre-attack/index.php/Stage_Capabilities"
+                "url": "https://attack.mitre.org/tactics/TA0026"
             }
         ],
         "domains": ["mitre-mobile","mitre-enterprise"]
@@ -100,67 +100,67 @@
                 "tactic": "initial-access",
                 "description": "The initial access tactic represents the vectors adversaries use to gain an initial foothold within a network.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Initial_Access"
+                "url": "https://attack.mitre.org/tactics/TA0001"
             },
             {
                 "tactic": "execution",
                 "description": "The execution tactic represents techniques that result in execution of adversary-controlled code on a local or remote system. This tactic is often used in conjunction with lateral movement to expand access to remote systems on a network.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Execution"
+                "url": "https://attack.mitre.org/tactics/TA0002"
             },
             {
                 "tactic": "persistence",
                 "description": "Persistence is any access, action, or configuration change to a system that gives an adversary a persistent presence on that system. Adversaries will often need to maintain access to systems through interruptions such as system restarts, loss of credentials, or other failures that would require a remote access tool to restart or alternate backdoor for them to regain access.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Persistence"
+                "url": "https://attack.mitre.org/tactics/TA0003"
             },
             {
                 "tactic": "privilege-escalation",
                 "description": "Privilege escalation is the result of actions that allow an adversary to obtain a higher level of permissions on a system or network. Certain tools or actions require a higher level of privilege to work and are likely necessary at many points throughout an operation. Adversaries can enter a system with unprivileged access and must take advantage of a system weakness to obtain local administrator or SYSTEM privileges. A user account with administrator-like access can also be used. User accounts with permissions to access specific systems or perform specific functions necessary for adversaries to achieve their objective may also be considered an escalation of privilege.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Privilege_Escalation"
+                "url": "https://attack.mitre.org/tactics/TA0004"
             },
             {
                 "tactic": "defense-evasion",
                 "description": "Defense evasion consists of techniques an adversary may use to evade detection or avoid other defenses. Sometimes these actions are the same as or variations of techniques in other categories that have the added benefit of subverting a particular defense or mitigation. Defense evasion may be considered a set of attributes the adversary applies to all other phases of the operation.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Defense_Evasion"
+                "url": "https://attack.mitre.org/tactics/TA0005"
             },
             {
                 "tactic": "credential-access",
                 "description": "Credential access represents techniques resulting in access to or control over system, domain, or service credentials that are used within an enterprise environment. Adversaries will likely attempt to obtain legitimate credentials from users or administrator accounts (local system administrator or domain users with administrator access) to use within the network. This allows the adversary to assume the identity of the account, with all of that account's permissions on the system and network, and makes it harder for defenders to detect the adversary. With sufficient access within a network, an adversary can create accounts for later use within the environment.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Credential_Access"
+                "url": "https://attack.mitre.org/tactics/TA0006"
             },
             {
                 "tactic": "discovery",
                 "description": "Discovery consists of techniques that allow the adversary to gain knowledge about the system and internal network. When adversaries gain access to a new system, they must orient themselves to what they now have control of and what benefits operating from that system give to their current objective or overall goals during the intrusion. The operating system provides many native tools that aid in this post-compromise information-gathering phase.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Discovery"
+                "url": "https://attack.mitre.org/tactics/TA0007"
             },
             {
                 "tactic": "lateral-movement",
                 "description": "Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool.\n\nAn adversary can use lateral movement for many purposes, including remote Execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect. The ability to remotely execute scripts or code can be a feature of adversary remote access tools, but adversaries may also reduce their tool footprint on the network by using legitimate credentials alongside inherent network and operating system functionality to remotely connect to systems.\n\nMovement across a network from one system to another may be necessary to achieve an adversary’s goals. Thus lateral movement, and the techniques that lateral movement relies on, are often very important to an adversary's set of capabilities and part of a broader set of information and access dependencies that the adversary takes advantage of within a network. To understand intrinsic security dependencies, it is important to know the relationships between accounts and access privileges across all systems on a network. Lateral movement may not always be a requirement for an adversary. If an adversary can reach the goal with access to the initial system, then additional movement throughout a network may be unnecessary.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Lateral_Movement"
+                "url": "https://attack.mitre.org/tactics/TA0008"
             },
             {
                 "tactic": "collection",
                 "description": "Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Collection"
+                "url": "https://attack.mitre.org/tactics/TA0009"
             },
             {
                 "tactic": "exfiltration",
                 "description": "Exfiltration refers to techniques and attributes that result or aid in the adversary removing files and information from a target network. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Exfiltration"
+                "url": "https://attack.mitre.org/tactics/TA0010"
             },
             {
                 "tactic": "command-and-control",
                 "description": "The command and control tactic represents how adversaries communicate with systems under their control within a target network. There are many ways an adversary can establish command and control with various levels of covertness, depending on system configuration and network topology. Due to the wide degree of variation available to the adversary at the network level, only the most common factors were used to describe the differences in command and control. There are still a great many specific techniques within the documented methods, largely due to how easy it is to define new protocols and use existing, legitimate protocols and network services for communication.\n\nThe resulting breakdown should help convey the concept that detecting intrusion through command and control protocols without prior knowledge is a difficult proposition over the long term. Adversaries' main constraints in network-level defense avoidance are testing and deployment of tools to rapidly change their protocols, awareness of existing defensive technologies, and access to legitimate Web services that, when used appropriately, make their tools difficult to distinguish from benign traffic.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/wiki/Command_and_Control"
+                "url": "https://attack.mitre.org/tactics/TA0011"
             }
         ],
         "domains": ["mitre-enterprise"]
@@ -168,118 +168,82 @@
     "mobile_tactics": {
         "tactics": [
             {
-                "tactic": "app-delivery-via-authorized-app-store",
-                "description":"Malicious applications are a common attack vector used by adversaries to gain a presence on mobile devices. Mobile devices often are configured to allow application installation only from an authorized app store (e.g., Google Play Store or Apple App Store). This category refers to tactics and techniques that can be used to place a malicious application in an authorized app store hence enabling the application to be installed on targeted devices.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/App_Delivery_via_Authorized_App_Store"
-            },
-            {
-                "tactic": "app-delivery-via-other-means",
-                "description":"Malicious applications are a common attack vector used by adversaries to gain a presence on mobile devices. This category refers to tactics and techniques that can be used to install a malicious application on targeted mobile devices without involving an authorized app store (e.g., Google Play Store or Apple App Store). Adversaries may wish to avoid placing malicious applications in an authorized app store due to increased potential risk of detection or other reasons. However, mobile devices often are configured to allow application installation only from an authorized app store which would prevent these techniques from working.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/App_Delivery_via_Other_Means"
-            },
-            {
-                "tactic": "exploit-via-cellular-network",
-                "description":"This category refers to tactics and techniques executed via the cellular network to gain an adversarial presence on mobile devices.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/Exploit_via_Cellular_Network"
-            },
-            {
-                "tactic": "exploit-via-internet",
-                "description":"This category refers to tactics and techniques executed via a mobile device's Internet connectivity to gain an adversarial presence on the mobile device.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/Exploit_via_Internet"
-            },
-            {
-                "tactic": "exploit-via-physical-access",
-                "description":"This category refers to tactics and techniques involving physical access to the device that could be used to gain an adversarial presence on mobile devices.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/Exploit_via_Physical_Access"
-            },
-            {
-                "tactic": "supply-chain",
-                "description":"This category refers to tactics and techniques involving supply chain access that could be used to gain an adversarial presence on mobile devices.",
-                "phase": "prepare",
-                "url": "https://attack.mitre.org/mobile/index.php/Supply_Chain"
+                "tactic": "initial-access",
+                "description":"The initial access tactic represents the vectors adversaries use to gain an initial foothold onto a mobile device.",
+                "phase": "act",
+                "url": "https://attack.mitre.org/tactics/TA0027"
             },
             {
                 "tactic": "persistence",
                 "description":"Persistence is any access, action, or configuration change to a mobile device that gives an attacker a persistent presence on the device. Attackers often will need to maintain access to mobile devices through interruptions such as device reboots and potentially even factory data resets.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Persistence"
+                "url": "https://attack.mitre.org/tactics/TA0028"
             },
             {
                 "tactic": "privilege-escalation",
                 "description":"Privilege escalation includes techniques that allow an attacker to obtain a higher level of permissions on the mobile device. Attackers may enter the mobile device with very limited privileges and may be required to take advantage of a device weakness to obtain higher privileges necessary to successfully carry out their mission objectives.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Privilege_Escalation"
+                "url": "https://attack.mitre.org/tactics/TA0029"
             },
             {
                 "tactic": "defense-evasion",
                 "description":"Defense evasion consists of techniques an adversary may use to evade detection or avoid other defenses. Sometimes these actions are the same as or variations of techniques in other categories that have the added benefit of subverting a particular defense or mitigation. Defense evasion may be considered a set of attributes the adversary applies to all other phases of the operation.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Defense_Evasion"
+                "url": "https://attack.mitre.org/tactics/TA0030"
             },
             {
                 "tactic": "credential-access",
                 "description":"Credential access represents techniques that can be used by adversaries to obtain access to or control over passwords, tokens, cryptographic keys, or other values that could be used by an adversary to gain unauthorized access to resources. Credential access allows the adversary to assume the identity of an account, with all of that account's permissions on the system and network, and makes it harder for defenders to detect the adversary. With sufficient access within a network, an adversary can create accounts for later use within the environment.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Credential_Access"
+                "url": "https://attack.mitre.org/tactics/TA0031"
             },
             {
                 "tactic": "discovery",
                 "description":"Discovery consists of techniques that allow the adversary to gain knowledge about the characteristics of the mobile device and potentially other networked systems. When adversaries gain access to a new system, they must orient themselves to what they now have control of and what benefits operating from that system give to their current objective or overall goals during the intrusion. The operating system may provide capabilities that aid in this post-compromise information-gathering phase.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Discovery"
+                "url": "https://attack.mitre.org/tactics/TA0032"
             },
             {
                 "tactic": "lateral-movement",
-                "description":"Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool.\n\nAn adversary can use lateral movement for many purposes, including remote execution of tools, pivoting to additional systems, access to specific information or files, access to additional credentials, or to cause an effect. The ability to remotely execute scripts or code can be a feature of adversary remote access tools, but adversaries may also reduce their tool footprint on the network by using legitimate credentials alongside inherent network and operating system functionality to remotely connect to systems.\n\nMovement across a network from one system to another may be necessary to achieve an adversary’s goals. Thus lateral movement, and the techniques that lateral movement relies on, are often very important to an adversary's set of capabilities and part of a broader set of information and access dependencies that the adversary takes advantage of within a network. To understand intrinsic security dependencies, it is important to know the relationships between accounts and access privileges across all systems on a network. Lateral movement may not always be a requirement for an adversary. If an adversary can reach the goal with access to the initial system, then additional movement throughout a network may be unnecessary.",
+                "description":"Lateral movement consists of techniques that enable an adversary to access and control remote systems on a network and could, but does not necessarily, include execution of tools on remote systems. The lateral movement techniques could allow an adversary to gather information from a system without needing additional tools, such as a remote access tool.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Lateral_Movement"
+                "url": "https://attack.mitre.org/tactics/TA0033"
             },
             {
                 "tactic": "effects",
                 "description":"Effects consists of techniques used by the adversary to execute his or her mission objectives but that do not cleanly fit into another category such as Collection. Mission objectives vary based on each adversary's goals, but examples include toll fraud, destruction of device data, or locking the user out of his or her device until a ransom is paid.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Effects"
+                "url": "https://attack.mitre.org/tactics/TA0034"
             },
             {
                 "tactic": "collection",
-                "description":"Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.",
+                "description": "Collection consists of techniques used to identify and gather information, such as sensitive files, from a target network prior to exfiltration. This category also covers locations on a system or network where the adversary may look for information to exfiltrate.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Collection"
+                "url": "https://attack.mitre.org/tactics/TA0035"
             },
             {
                 "tactic": "exfiltration",
-                "description":"Exfiltration refers to techniques and attributes that result or aid in the adversary removing files and information from the targeted mobile device.\n\nIn the mobile environment, mobile devices are frequently connected to networks outside enterprise control such as cellular networks or public Wi-Fi networks. Adversaries could attempt to evade detection by communicating on these networks, and potentially even by using non-Internet Protocol mechanisms such as Short Message Service (SMS). However, cellular networks often have data caps and/or extra data charges that could increase the potential for adversarial communication to be detected.",
+                "description":"Exfiltration refers to techniques and attributes that result or aid in the adversary removing files and information from the targeted mobile device.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Exfiltration"
+                "url": "https://attack.mitre.org/tactics/TA0036"
             },
             {
                 "tactic": "command-and-control",
-                "description":"The command and control tactic represents how adversaries communicate with systems under their control within a target network. There are many ways an adversary can establish command and control with various levels of covertness, depending on system configuration and network topology. Due to the wide degree of variation available to the adversary at the network level, only the most common factors were used to describe the differences in command and control. There are still a great many specific techniques within the documented methods, largely due to how easy it is to define new protocols and use existing, legitimate protocols and network services for communication.\n\nThe resulting breakdown should help convey the concept that detecting intrusion through command and control protocols without prior knowledge is a difficult proposition over the long term. Adversaries' main constraints in network-level defense avoidance are testing and deployment of tools to rapidly change their protocols, awareness of existing defensive technologies, and access to legitimate Web services that, when used appropriately, make their tools difficult to distinguish from benign traffic.\n\nAdditionally, in the mobile environment, mobile devices are frequently connected to networks outside enterprise control such as cellular networks or public Wi-Fi networks. Adversaries could attempt to evade detection by communicating on these networks, and potentially even by using non-Internet Protocol mechanisms such as Short Message Service (SMS). However, cellular networks often have data caps and/or extra data charges that could increase the potential for adversarial communication to be detected.",
+                "description":"The command and control tactic represents how adversaries communicate with systems under their control within a target network. There are many ways an adversary can establish command and control with various levels of covertness, depending on system configuration and network topology. Due to the wide degree of variation available to the adversary at the network level, only the most common factors were used to describe the differences in command and control. There are still a great many specific techniques within the documented methods, largely due to how easy it is to define new protocols and use existing, legitimate protocols and network services for communication.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Command_and_Control"
+                "url": "https://attack.mitre.org/tactics/TA0037"
             },
             {
-                "tactic": "general-network-based",
-                "description": "This category refers to general network-based tactics and techniques that an adversary may be able to use to fulfill his or her objectives without access to the mobile device itself.",
+                "tactic": "network-effects",
+                "description": "This category refers to network-based techniques that an adversary may be able to use to fulfill his or her objectives without access to the mobile device itself. These include techniques to intercept or manipulate network traffic to and from the mobile device.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/General_Network-Based"
+                "url": "https://attack.mitre.org/tactics/TA0038"
             },
             {
-                "tactic": "cellular-network-based",
-                "description": "This category refers to cellular network-based tactics and techniques that an adversary may be able to use to fulfill his or her objectives without access to the mobile device itself.",
+                "tactic": "remote-service-effects",
+                "description": "This category refers to techniques involving remote services, such as vendor-provided cloud services (e.g. Google Drive, Google Find My Device, or Apple iCloud), or enterprise mobility management (EMM)/mobile device management (MDM) services that an adversary may be able to use to fulfill his or her objectives without access to the mobile device itself.",
                 "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Cellular_Network-Based"
-            },
-            {
-                "tactic": "cloud-based",
-                "description": "This category refers to cloud-based tactics and techniques that an adversary may be able to use to fulfill his or her objectives without access to the mobile device itself.",
-                "phase": "act",
-                "url": "https://attack.mitre.org/mobile/index.php/Cloud-Based"
+                "url": "https://attack.mitre.org/tactics/TA0039"
             }
         ],
         "domains": ["mitre-mobile"]
