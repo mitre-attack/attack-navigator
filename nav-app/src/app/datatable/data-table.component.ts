@@ -10,6 +10,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatMenuTrigger} from '@angular/material/menu';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
+import * as is from 'is_js';
 
 declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
@@ -289,7 +290,24 @@ export class DataTableComponent implements AfterViewInit {
     saveLayerLocally(){
         var json = this.viewModel.serialize(); //JSON.stringify(this.viewModel.serialize(), null, "\t");
         var blob = new Blob([json], {type: "text/json"});
-        FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
+        let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
+        // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
+        this.saveBlob(blob, filename);
+        
+    }
+
+    saveBlob(blob, filename){
+        if (is.ie()) { //internet explorer
+            window.navigator.msSaveBlob(blob, filename)
+        } else {
+            var svgUrl = URL.createObjectURL(blob);
+            var downloadLink = document.createElement("a");
+            downloadLink.href = svgUrl;
+            downloadLink.download = filename
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
     }
 
     /////////////////////////////
@@ -322,7 +340,7 @@ export class DataTableComponent implements AfterViewInit {
 
                     let index = rowNumber - 2; //skip header, and exceljs indexes starting at 1 
                     if (cell.value && cell.value != "") { // handle jagged cols
-                        console.log(cell.value);
+                        // console.log(cell.value);
                         
                         let tvm = this.viewModel.getTechniqueVM(techniques[index].technique_tactic_union_id);
                         if (tvm.enabled) {
@@ -357,7 +375,9 @@ export class DataTableComponent implements AfterViewInit {
          // Save the workbook
          workbook.xlsx.writeBuffer().then( data => {
             const blob = new Blob( [data], {type: "application/octet-stream"} );
-            FileSaver.saveAs( blob, this.viewModel.name.replace(/ /g, "_") + ".xlsx");
+            const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
+            this.saveBlob(blob, filename);
+
           });
     }
 

@@ -4,7 +4,7 @@ declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
 // import * as tinycolor from 'tinycolor2';
-import * as FileSaver from 'file-saver';
+// import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 

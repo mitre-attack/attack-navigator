@@ -136,7 +136,7 @@
                         </li>
                         <li>
                             <mat-form-field>
-                                <mat-select placeholder="font size unit" [(ngModel)]="exportData.tableConfig.fontUnit" (change)="buildSVG()">
+                                <mat-select placeholder="font size unit" [(ngModel)]="exportData.tableConfig.fontUnit" (selectionChange)="buildSVG()">
                                     <mat-option value="pt">points</mat-option>
                                     <mat-option value="px">pixels</mat-option>
                                 </mat-select>
@@ -144,7 +144,7 @@
                         </li>
                         <li>
                             <mat-form-field>
-                                <mat-select placeholder="font" [(ngModel)]="exportData.tableConfig.font" (change)="buildSVG()">
+                                <mat-select placeholder="font" [(ngModel)]="exportData.tableConfig.font" (selectionChange)="buildSVG()">
                                     <mat-option value="serif">serif</mat-option>
                                     <mat-option value="sans-serif">sans-serif</mat-option>
                                     <mat-option value="monospace">monospace</mat-option>
@@ -153,7 +153,7 @@
                         </li>
                         <li>
                             <mat-form-field>
-                                <mat-select placeholder="technique text" [(ngModel)]="exportData.tableConfig.tableTextDisplay" (change)="buildSVG()">
+                                <mat-select placeholder="technique text" [(ngModel)]="exportData.tableConfig.tableTextDisplay" (selectionChange)="buildSVG()">
                                     <mat-option value="0">no text</mat-option>
                                     <mat-option value="1">technique name</mat-option>
                                     <mat-option value="2">technique name (acronym)</mat-option>
