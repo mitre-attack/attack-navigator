@@ -4,7 +4,7 @@ The ATT&CK Navigator is designed to provide basic navigation and annotation of [
 The principal feature of the Navigator is the ability for users to define layers - custom views of the ATT&CK knowledge base - e.g. showing just those techniques for a particular platform or highlighting techniques a specific adversary has been known to use. Layers can be created interactively within the Navigator or generated programmatically and then visualized via the Navigator.
 
 ## Usage
-There is an **Install and Run** section below that explains how to get the ATT&CK Navigator up and running. You can also try the Navigator out by pointing your browser [here](https://mitre.github.io/attack-navigator). The default is the [Enterprise ATT&CK](https://attack.mitre.org) domain, but the [Mobile ATT&CK](https://attack.mitre.org/mobile) domain can be utilized [here](https://mitre.github.io/attack-navigator/mobile/). See **Enterprise and Mobile Domains** below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
+There is an **Install and Run** section below that explains how to get the ATT&CK Navigator up and running. You can also try the Navigator out by pointing your browser [here](https://mitre.github.io/attack-navigator). The default is the [Enterprise ATT&CK](https://attack.mitre.org/matrices/enterprise/) domain, but the [Mobile ATT&CK](https://attack.mitre.org/matrices/mobile) domain can be utilized [here](https://mitre.github.io/attack-navigator/mobile/). See **Enterprise and Mobile Domains** below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
 
 **Important Note:** Layer files uploaded when visiting our Navigator instance hosted on GitHub Pages are **NOT** being stored on the server side, as the Navigator is a client-side only application. However, we still recommend installing and running your own instance of the ATT&CK Navigator if your layer files contain any sensitive content.
 
@@ -45,9 +45,9 @@ When viewing the app in a browser, click on the **?** icon to the right of the *
 ## Enterprise and Mobile Domains
 By default, the ATT&CK Navigator will generate a matrix view of the tactics and techniques matrix for the [Enterprise ATT&CK](https://attack.mitre.org) technology domain knowledge base. All tactics and techniques in this domain are contained within the *act* stage, which is also pre-selected by default.
 
-To instead generate a matrix view of the [Mobile ATT&CK](https://attack.mitre.org/mobile) technology domain knowledge base, change the `domain` value in `nav-app/src/assets/config.json` to `mitre-mobile`. **Use Device Access** and **Network-Based Effects** tactics and techniques in this domain are contained within the *act* stage, which is pre-selected by default. **Obtain Device Access** tactics and techniques are contained within the *prepare* stage, which can be manually selected.
+To instead generate a matrix view of the [Mobile ATT&CK](https://attack.mitre.org/matrices/mobile/) technology domain knowledge base, change the `domain` value in `nav-app/src/assets/config.json` to `mitre-mobile`. **Use Device Access** and **Network-Based Effects** tactics and techniques in this domain are contained within the *act* stage, which is pre-selected by default. **Obtain Device Access** tactics and techniques are contained within the *prepare* stage, which can be manually selected.
 
-[PRE-ATT&CK](https://attack.mitre.org/pre-attack) is included in the matrix view for either domain if the *prepare* stage is manually selected within the layer control filters.
+[PRE-ATT&CK](https://attack.mitre.org/matrices/pre/) is included in the matrix view for either domain if the *prepare* stage is manually selected within the layer control filters.
 
 #### Tactics
 The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/src/assets/tacticsData.json` where they are organized by domain. We will keep this file up to date as tactics are added and edited in new releases of [ATT&CK](https://attack.mitre.org).
@@ -73,7 +73,7 @@ Example custom context menu object:
 ```json
 {
     "label": "custom technique url",
-    "url": "https://attack.mitre.org/wiki/Technique/~Technique_Name~"
+    "url": "https://attack.mitre.org/techniques/~Technique_ID~"
 }
 ```
 
@@ -165,4 +165,4 @@ limitations under the License.
 
 This project makes use of ATT&CK<sup>™</sup>
 
-[ATT&CK Terms of Use](https://attack.mitre.org/wiki/enterprise:Terms_of_Use)
+[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
