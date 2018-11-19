@@ -87,7 +87,7 @@ Example custom context menu object:
 ## Loading content from local files
 *It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
 1. Put the files in `src/assets` in the Navigator code. This will tell the server hosting the Navigator to host the data as well.
-2. Change `enterprise_attack_url` (and mobile and pre-attack depending on what you're trying to do) in `src/assets/config.json` to the path to the file (probably something like `src/assets/enterprise-attack.json`).
+2. Change `enterprise_attack_url` (and mobile and pre-attack depending on what you're trying to do) in `src/assets/config.json` to the path to the file (probably something like `assets/enterprise-attack.json`).
 3. Also in that file, change `taxii_server -> enabled` to false.
 
 ## Running the Docker File
