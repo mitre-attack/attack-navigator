@@ -441,7 +441,7 @@ export class TabsComponent implements AfterContentInit {
         let viewModel = this.viewModelsService.newViewModel("loading layer...");
 
         reader.onload = (e) =>{
-            var string = reader.result;
+            var string = String(reader.result);
             try{
                 viewModel.deSerialize(string)
                 this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
