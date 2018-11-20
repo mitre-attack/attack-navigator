@@ -449,7 +449,7 @@ export class DataTableComponent implements AfterViewInit {
         ]
         for (let phase of phases) {
             // tactic info for this phase
-            let tacOrder = []
+            let tacOrders = {}
             let tacticIDToDef = {}
             
             //for objects in this phase bundle
@@ -475,12 +475,24 @@ export class DataTableComponent implements AfterViewInit {
                         }
                     } else if (object.type === "x-mitre-matrix") {
                         //matrix defines the order of tactics in this phase
-                        tacOrder = object.tactic_refs;
+                        tacOrders[object.name] = object.tactic_refs;
                     }
                 }
             }
-            //append phase tactics to master tactics list
-            tactics = tactics.concat(tacOrder.map((tacID) => tacticIDToDef[tacID]))
+            if (Object.keys(tacOrders).length > 1) {
+                // multiple matrixes for this phase: mobile attack handling of multiple matrixes
+                // ! the order of this array determines the order of the matrixes
+                let orderedMatrixes = ["Device Access", "Network-Based Effects"].map((name) => tacOrders[name])
+                for (let tacOrder of orderedMatrixes) {
+                    tactics = tactics.concat(tacOrder.map((tacID) => tacticIDToDef[tacID]))
+                }
+            }
+            else {
+                //only one matrix object for this phase
+                let tacOrder = tacOrders[Object.keys(tacOrders)[0]]
+                tactics = tactics.concat(tacOrder.map((tacID) => tacticIDToDef[tacID]))
+            }
+            
         }
 
         this.ds.setTacticOrder(tactics);
