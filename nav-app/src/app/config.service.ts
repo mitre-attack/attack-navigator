@@ -9,7 +9,7 @@ export class ConfigService {
     private featureStructure: object[];
     constructor(private dataService: DataService) {
         let self = this;
-        dataService.retreiveConfig().subscribe(function(config: any) {
+        dataService.getConfig().subscribe(function(config: any) {
             //parse feature preferences from config json
             config["features"].forEach(function(featureObject: any) {
                 self.setFeature_object(featureObject);

@@ -16,7 +16,6 @@ export class DataService {
     // Observables for data
     private enterpriseData$: Observable<Object>;
     private mobileData$: Observable<Object>;
-    private tacticData$: Observable<Object>;
 
     // Order of tactics to be displayed in application
     private actTacticsOrder: String[] = [];
@@ -27,23 +26,21 @@ export class DataService {
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private pre_attack_URL: string = "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json";
     private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
-    private tacticsURL: string = "assets/tacticsData.json";
 
     private useTAXIIServer: boolean = false;
     private taxiiURL: string = '';
     private taxiiCollections: String[] = [];
 
-    setUpURLs(eAttackURL, preAttackURL, mURL, tURL, useTAXIIServer, taxiiURL, taxiiCollections){
+    setUpURLs(eAttackURL, preAttackURL, mURL, useTAXIIServer, taxiiURL, taxiiCollections){
         this.enterpriseAttackURL = eAttackURL;
         this.pre_attack_URL = preAttackURL;
         this.mobileDataURL = mURL;
-        this.tacticsURL = tURL;
         this.useTAXIIServer = useTAXIIServer;
         this.taxiiURL = taxiiURL;
         this.taxiiCollections = taxiiCollections;
     }
 
-    retreiveConfig(refresh:boolean = false){
+    getConfig(refresh:boolean = false){
         if (refresh || !this.configData$){
             this.configData$ = this.http.get("./assets/config.json").map(res => res.json())
         }
@@ -129,14 +126,8 @@ export class DataService {
         return this.mobileData$ //observable
     }
 
-    getTactics(refresh: boolean = false){
-        if (refresh || !this.tacticData$){
-            this.tacticData$ = this.http.get(this.tacticsURL).map(res => res.json())
-        }
-        return this.tacticData$ //observable
-    }
-
     setTacticOrder(retrievedTactics){
+        // this.totalTacticsOrder = retrievedTactics;
         for(var i = 0; i < retrievedTactics.length; i++){
             var phase = retrievedTactics[i].phase;
             var tactic = retrievedTactics[i].tactic;

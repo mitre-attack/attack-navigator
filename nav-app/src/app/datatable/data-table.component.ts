@@ -389,30 +389,28 @@ export class DataTableComponent implements AfterViewInit {
 
     constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService, private configService: ConfigService) {
         this.ds = dataService;
-        this.ds.retreiveConfig().subscribe((config: Object) => {
+        this.ds.getConfig().subscribe((config: Object) => {
             this.ds.setUpURLs(config["enterprise_attack_url"],
                                 config["pre_attack_url"],
                                 config["mobile_data_url"],
-                                config["tactics_url"],
                                 config["taxii_server"]["enabled"],
                                 config["taxii_server"]["url"],
                                 config["taxii_server"]["collections"]);
             var domain = config["domain"];
             this.customContextMenuItems = config["custom_context_menu_items"]
-            dataService.getTactics().subscribe((tactics: Object[]) => {
-                this.constructTacticList(tactics, domain);
-                if(domain === "mitre-enterprise"){
-                    dataService.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
-                        var objects = enterpriseData[1]["objects"].concat(enterpriseData[0]["objects"]);
-                        this.establishData(objects);
-                    });
-                } else if (domain === "mitre-mobile"){
-                    dataService.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
-                        var objects = mobileData[1]["objects"].concat(mobileData[0]["objects"]);
-                        this.establishData(objects);
-                    });
-                }
-            });
+
+            if(domain === "mitre-enterprise"){
+                dataService.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
+                    // let bundle = enterpriseData[1]["objects"].concat(enterpriseData[0]["objects"]);
+                    this.parseBundle(enterpriseData);
+
+                });
+            } else if (domain === "mitre-mobile"){
+                dataService.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
+                    // let bundle = mobileData[1]["objects"].concat(mobileData[0]["objects"]);
+                    this.parseBundle(mobileData);
+                });
+            }
         });
     }
 
@@ -424,27 +422,6 @@ export class DataTableComponent implements AfterViewInit {
         element.style.left = -10000 + "px";
     }
 
-    ////////////////////////////////////////////////////
-    // Handles the construction of tactic information //
-    ////////////////////////////////////////////////////
-
-    constructTacticList(totalTactics, domain){
-        var tactics = [];
-        var added = false;
-        for(var setKey in totalTactics){
-            var set = totalTactics[setKey];
-            var domains = set.domains;
-            added = false;
-            for(var i = 0; i < domains.length; i++){
-                if(domains[i] === domain && !added){
-                    added = true;
-                    tactics = tactics.concat(set.tactics);
-                }
-            }
-        }
-        this.ds.setTacticOrder(tactics);
-        this.setTacticPhases(tactics);
-    }
     
     ////////////////////////////////////////////////////
     // Creates a mapping of each tactic and its phase //
@@ -462,23 +439,52 @@ export class DataTableComponent implements AfterViewInit {
     // Does preliminary sorting before establishing the data structures //
     //////////////////////////////////////////////////////////////////////
 
-    establishData(objects){
-        //console.log(objects)
+    parseBundle(bundle){
         var techniques = {}, threatGroups = {}, software = {}, relationships = {};
-        for(var i = 0; i < objects.length; i++){
-            var object = objects[i];
-            if(object.x_mitre_deprecated !== true && object.revoked !== true){
-                if(object.type === "attack-pattern"){
-                    techniques[object.id] = object;
-                } else if(object.type === "intrusion-set"){
-                    threatGroups[object.id] = object;
-                } else if(object.type === "malware" || object.type === "tool"){
-                    software[object.id] = object;
-                } else if(object.type === "relationship"){
-                    relationships[object.id] = object;
+        let tactics = [] //list of ordered tactics
+        // ! the phases array defines the order of phases in the table; prepare comes before act
+        let phases = [
+            {name: "prepare", objects: bundle[1]["objects"]},
+            {name: "act",     objects: bundle[0]["objects"]}
+        ]
+        for (let phase of phases) {
+            // tactic info for this phase
+            let tacOrder = []
+            let tacticIDToDef = {}
+            
+            //for objects in this phase bundle
+            let objects = phase.objects;
+            for(var i = 0; i < objects.length; i++){
+                var object = objects[i];
+                if(object.x_mitre_deprecated !== true && object.revoked !== true){
+                    if(object.type === "attack-pattern"){
+                        techniques[object.id] = object;
+                    } else if(object.type === "intrusion-set"){
+                        threatGroups[object.id] = object;
+                    } else if(object.type === "malware" || object.type === "tool"){
+                        software[object.id] = object;
+                    } else if(object.type === "relationship"){
+                        relationships[object.id] = object;
+                    } else if(object.type === "x-mitre-tactic"){
+                        //store tactic info by their IDs, since we don't yet have order
+                        tacticIDToDef[object.id] ={
+                            "tactic": object.x_mitre_shortname,
+                            "description": object.description,
+                            "phase": phase.name,
+                            "url": object["external_references"][0]["url"]
+                        }
+                    } else if (object.type === "x-mitre-matrix") {
+                        //matrix defines the order of tactics in this phase
+                        tacOrder = object.tactic_refs;
+                    }
                 }
             }
+            //append phase tactics to master tactics list
+            tactics = tactics.concat(tacOrder.map((tacID) => tacticIDToDef[tacID]))
         }
+
+        this.ds.setTacticOrder(tactics);
+        this.setTacticPhases(tactics);
 
         this.establishTechniques(techniques);
         this.setTacticDisplayNames();
