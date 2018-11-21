@@ -96,14 +96,24 @@ Example custom context menu object:
 3. Run `docker run -p 4200:4200 yourcustomname`
 4. Navigate to `localhost:4200` in browser
 
-## Loading a Default Layer Upon Initialization
-1. Save a layer JSON file to the `nav-app/src/assets/` directory
-2. Set the `location` property in `default_layer` in **config.json** to `assets/YOUR_LAYER_HERE.json`
-3. Set the `enabled` property in `default_layer` to **true**
-4. Load/reload the Navigator
+## Loading Default Layers Upon Initialization
+The Navigator can be configured so as to load a set of layers upon initialization. These layers can be from the web and/or from local files. 
+Local files to load should be placed in the `nav-app/src/assets/` directory.
+1. Set the `enabled` property in `default_layers` in `src/assets/config.json` to `true`
+2. Add the paths to your desired default layers to the `urls` array in `default_layers`. For example,
+   ```JSON
+   "default_layers": {
+        "enabled": true,
+        "urls": [
+            "assets/example.json", 
+            "https://raw.githubusercontent.com/mitre/attack-navigator/master/layers/data/samples/Bear_APT.json"
+        ]
+    }
+   ```
+   would load `example.json` from the local assets directory, and `Bear_APT.json` from this repo's sample layer folder on Github.
+3. Load/reload the Navigator
 
-A layer hosted on the web can be set as default using the _create customized Navigator_
-feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+A single default layer from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 ## Disabling Navigator Features
 The `features` array in `nav-app/src/assets/config.json` lists Navigator features you may want to disable. Setting the `enabled` field on a feature in the configuration file will hide all control
