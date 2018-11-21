@@ -59,13 +59,19 @@ export class TabsComponent implements AfterContentInit {
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
             if (this.getNamedFragmentValue("layerURL")) {
                 this.loadURL = this.getNamedFragmentValue("layerURL");
-                console.log(this.loadURL)
-                this.loadLayerFromURL();
+                // console.log(this.loadURL)
+                this.loadLayerFromURL(this.loadURL, true);
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
-            } else if (config["default_layer"]["enabled"]){
-                this.loadURL = config["default_layer"]["location"]
-                console.log(this.loadURL)
-                this.loadLayerFromLocalFile();
+            } else if (config["default_layers"]["enabled"]){
+                let first = true;
+                for (let url of config["default_layers"]["urls"]) {
+                    console.log(url);
+                    this.loadLayerFromURL(url, first);
+                    first = false;
+                }
+                // this.loadURL = config["default_layer"]["location"]
+                // console.log(this.loadURL)
+                // this.loadLayerFromLocalFile();
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
             } else {
                 this.newLayer();
@@ -459,14 +465,16 @@ export class TabsComponent implements AfterContentInit {
     /**
      * attempt an HTTP GET to loadURL, and load the response (if it exists) as a layer.
      */
-    loadLayerFromURL(): void {
-        if (!this.loadURL.startsWith("http://") && !this.loadURL.startsWith("https://") && !this.loadURL.startsWith("FTP://")) this.loadURL = "https://" + this.loadURL;
-        this.http.get(this.loadURL).subscribe((res) => {
+    loadLayerFromURL(loadURL, replace): void {
+        // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
+        this.http.get(loadURL).subscribe((res) => {
+            
             let viewModel = this.viewModelsService.newViewModel("loading layer...");
             let content = res.text();
             try {
                 viewModel.deSerialize(content)
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
+                console.log(loadURL, viewModel);
+                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
             } catch(err) {
                 console.log(err)
                 alert("ERROR: Failed to load layer file from URL")
@@ -476,7 +484,7 @@ export class TabsComponent implements AfterContentInit {
             console.error(err)
             if (err.status == 0) {
                 // no response
-                alert("ERROR: no HTTP response from " + this.loadURL)
+                alert("ERROR: no HTTP response from " + loadURL)
             } else {
                 // response, but not a good one
                 alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
@@ -484,24 +492,6 @@ export class TabsComponent implements AfterContentInit {
 
         })
 
-    }
-
-    loadLayerFromLocalFile(): void {
-        this.http.get(this.loadURL).subscribe((res) => {
-            let viewModel = this.viewModelsService.newViewModel("loading layer...");
-            let content = res.text();
-            try {
-                viewModel.deSerialize(content)
-                this.openTab(viewModel.name, this.layerTab, viewModel, true, true, true);
-            } catch(err) {
-                console.log(err)
-                alert("ERROR: Failed to load layer file from local path")
-                this.viewModelsService.destroyViewModel(viewModel)
-            }
-        }, (err) => {
-            console.error(err)
-            alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for path " + err.url)
-        })
     }
 
 

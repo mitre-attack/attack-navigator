@@ -95,7 +95,7 @@
                                    matInput
                                    placeholder="Load from URL"
                                    [(ngModel)]="loadURL"/>
-                            <button mat-button matSuffix mat-icon-button aria-label="go" *ngIf="loadURL" (click)="loadLayerFromURL()">></button>
+                            <button mat-button matSuffix mat-icon-button aria-label="go" *ngIf="loadURL" (click)="loadLayerFromURL(loadURL, true)">></button>
                         </mat-form-field></td>
                     </tr>
                 </table>
