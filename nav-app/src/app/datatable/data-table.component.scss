@@ -485,3 +485,37 @@ $panel-light: lighten($panel-dark, 8%);
         cursor: pointer;
     }
 }
+
+.layer_info {
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    width: 250px !important;
+    .name_desc {
+        padding: 0 10px;
+    }
+    .metadata_input {
+        padding-left: 10px;
+        // padding-bottom: 5px; 
+        margin-bottom: 2px; //fix funky scroll overflow
+        max-height: 50vh;
+        overflow-y: auto;
+        text-align: left;
+        table {
+            border-spacing: 5px 15px;
+            // width: 500px;
+            // padding: 0;
+            // margin: 0;
+            // list-style: none;
+            .formfield-group {
+                // &:not(:first-child) { margin-bottom: 5px; }
+                td:first-child { border-width: 1px 0 1px 1px; border-color: black; border-style: solid; width: 5px}
+                // border-left: 1px solid black;
+                // padding-left: 5px;
+                // &:not(:first-child) { margin-top: 10px;}
+                button { margin-bottom: 4px; }
+            }
+        }
+    }
+}
+
+

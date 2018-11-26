@@ -741,6 +741,22 @@ export class ViewModel {
         return commonValue;
     }
 
+    /**
+     * add a new blank metadata to the metadata list, for editing in UI
+     */
+    addMetadata() {
+        let m = new Metadata()
+        this.metadata.push(m);
+    }
+
+    /**
+     * remove a metadata from the metadata list
+     * @param index the index to remove from the list
+     */
+    removeMetadata(index: number) {
+        this.metadata.splice(index, 1)
+    }
+
 
 
     //  ___ ___ ___ ___   _   _    ___ ____  _ _____ ___ ___  _  _
@@ -770,7 +786,7 @@ export class ViewModel {
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
-        rep.metadata = this.metadata.map((m) => m.serialize());
+        rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
@@ -880,7 +896,7 @@ export class ViewModel {
             for (let metadataObj of obj.metadata) {
                 let m = new Metadata();
                 m.deSerialize(metadataObj);
-                this.metadata.push(m)
+                if (m.valid()) this.metadata.push(m)
             }
         }
         
@@ -1048,7 +1064,7 @@ export class TechniqueVM {
         rep.comment = this.comment;
         rep.enabled = this.enabled;
         console.log(this.metadata)
-        rep.metadata = this.metadata.map((m) => m.serialize());
+        rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
         //rep.technique_tactic_union_id = this.technique_tactic_union_id;
         //console.log(rep);
         return JSON.stringify(rep, null, "\t")
@@ -1092,7 +1108,7 @@ export class TechniqueVM {
             for (let metadataObj of obj.metadata) {
                 let m = new Metadata();
                 m.deSerialize(metadataObj);
-                this.metadata.push(m)
+                if (m.valid()) this.metadata.push(m)
             }
         }
 
@@ -1184,7 +1200,7 @@ export class Metadata {
     public name: string;
     public value: string;
     constructor() {};
-    serialize() { return {name: this.name, value: this.value} }
+    serialize(): object { return {name: this.name, value: this.value} }
     deSerialize(rep: any) {
         if (rep.name) {
             if (typeof(rep.name) === "string") this.name = rep.name;
@@ -1195,5 +1211,6 @@ export class Metadata {
             else console.error("TypeError: Metadata field 'value' is not a string")
         } else console.error("Error: Metadata required field 'value' not present");
     }
+    valid(): boolean { return this.name.length > 0 && this.value.length > 0 }
 }
 

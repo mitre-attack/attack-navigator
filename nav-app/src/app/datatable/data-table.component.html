@@ -121,7 +121,7 @@
                 layer controls
             </div>
 
-            <!-- layer description -->
+            <!-- layer name, description and metadata -->
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
@@ -132,25 +132,56 @@
                  </div>
 
                  <!-- description input (invisible, absolute) -->
-                 <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
+                 <div class="dropdown-container inputfield layer_info"  #dropdown [class.left]="checkalign(dropdown)"
                       *ngIf="currentDropdown === 'description'">
 
                     <!-- layer name field -->
-                    <mat-form-field>
-                        <input matInput
-                               type="text"
-                               placeholder="name"
-                               [(ngModel)]="viewModel.name" />
-                    </mat-form-field>
+                    <div class="name_desc">
+                        <mat-form-field>
+                                <input matInput
+                                        type="text"
+                                        placeholder="name"
+                                        [(ngModel)]="viewModel.name" />
+                            </mat-form-field>
+        
+                            <!-- layer description field -->
+                            <mat-form-field>
+                                <textarea matInput
+                                            matTextareaAutosize
+                                            placeholder="description"
+                                            [(ngModel)]="viewModel.description">
+                                </textarea>
+                            </mat-form-field>
+                    </div>
+                    <div class="metadata_input">
+                        <b class="metadata-label">Metadata</b>
+                        <table>
+                            <tr class="formfield-group" *ngFor="let metadata of viewModel.metadata; let $i = index">
+                                <td></td>
+                                <td>
+                                    <mat-form-field>
+                                            <input matInput
+                                                    type="text"
+                                                    placeholder="name"
+                                                    [(ngModel)]="metadata.name" />
+                                        </mat-form-field>
+                                        <mat-form-field>
+                                            <input matInput
+                                                type="text"
+                                                placeholder="value"
+                                                [(ngModel)]="metadata.value" />
+                                        </mat-form-field>
+                                        <button class="button" (click)="viewModel.removeMetadata($i)">remove this metadata</button>
+                                </td>                                
+                            </tr>
+                            <tr>
+                                <td colspan=2 class="addmore">
+                                        <button class="button" (click)="viewModel.addMetadata()">add more metadata</button>
+                                </td>
+                            </tr>
+                        </table>
 
-                    <!-- layer description field -->
-                    <mat-form-field>
-                        <textarea matInput
-                                    matTextareaAutosize
-                                    placeholder="description"
-                                    [(ngModel)]="viewModel.description">
-                        </textarea>
-                    </mat-form-field>
+                    </div>
                  </div>
              </div>
 
