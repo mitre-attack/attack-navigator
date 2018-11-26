@@ -3,7 +3,7 @@ import { DataService, Technique } from './data.service'; //import the DataServic
 
 @Injectable()
 export class ConfigService {
-
+    public comment_color = "yellow";
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];
@@ -26,6 +26,7 @@ export class ConfigService {
                 // }
             })
             self.featureStructure = config["features"]
+            self.comment_color = config["comment_color"]
         })
     }
 

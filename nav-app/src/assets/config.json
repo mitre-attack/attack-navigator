@@ -19,9 +19,11 @@
     ],
 
     "default_layers": {
-        "enabled": false,
-        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        "enabled": true,
+        "urls": ["assets/metadataLayer.json"]
     },
+
+    "comment_color": "yellow",
 
     "features": [
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},

@@ -515,7 +515,7 @@
 
                          [class]="getClass(technique, tactic)"
                          [ngStyle]="getTechniqueBackground(technique)">
-                         <span [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}</span>
+                         <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}</span>
                     </div>
                 </td>
             </tr>

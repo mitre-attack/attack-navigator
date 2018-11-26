@@ -1063,7 +1063,6 @@ export class TechniqueVM {
         rep.color = this.color;
         rep.comment = this.comment;
         rep.enabled = this.enabled;
-        console.log(this.metadata)
         rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
         //rep.technique_tactic_union_id = this.technique_tactic_union_id;
         //console.log(rep);

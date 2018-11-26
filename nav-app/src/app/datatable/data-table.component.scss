@@ -102,7 +102,8 @@ $cellSize: 15px;
         }
         &.has-comment:not(.disabled) {
             span {
-                border-bottom: 2px solid yellow;
+                //color is assigned from config file
+                border-bottom: 2px solid transparent;
             }
         }
     }
