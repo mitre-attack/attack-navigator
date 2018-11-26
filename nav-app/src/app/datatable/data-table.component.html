@@ -571,6 +571,14 @@
         <div class="comment-overflow-note" *ngIf="toolTipOverflows">
             ...
         </div>
+        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).metadata.length > 0">
+            <b>Metadata:</b>
+            <ul class="metadatalist">
+                <li *ngFor="let metadata of viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).metadata">
+                    {{metadata.name}}: {{metadata.value}}
+                </li>
+            </ul>
+        </div>
 
     </div>
 

@@ -401,6 +401,8 @@ export class ViewModel {
 
     filters: Filter;
 
+    metadata: Metadata[] = [];
+
     /*
      * sorting int meanings (see data-table.filterTechniques()):
      * 0: ascending alphabetically
@@ -768,6 +770,7 @@ export class ViewModel {
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
+        rep.metadata = this.metadata.map((m) => m.serialize());
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
@@ -872,10 +875,15 @@ export class ViewModel {
                     this.legacyTechniques = obj.techniques;
                 }
             }
-
-
-
         }
+        if ("metadata" in obj) {
+            for (let metadataObj of obj.metadata) {
+                let m = new Metadata();
+                m.deSerialize(metadataObj);
+                this.metadata.push(m)
+            }
+        }
+        
         this.updateGradient();
     }
 
@@ -1011,6 +1019,7 @@ export class TechniqueVM {
     color: string = ""; //manually assigned color-class name
     enabled: boolean = true;
     comment: string = ""
+    metadata: Metadata[] = [];
 
     //print this object to the console
     print(): void {
@@ -1038,6 +1047,8 @@ export class TechniqueVM {
         rep.color = this.color;
         rep.comment = this.comment;
         rep.enabled = this.enabled;
+        console.log(this.metadata)
+        rep.metadata = this.metadata.map((m) => m.serialize());
         //rep.technique_tactic_union_id = this.technique_tactic_union_id;
         //console.log(rep);
         return JSON.stringify(rep, null, "\t")
@@ -1075,6 +1086,14 @@ export class TechniqueVM {
             this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;
         } else {
             console.log("ERROR: Tactic and TechniqueID field needed.")
+        }
+
+        if ("metadata" in obj) {
+            for (let metadataObj of obj.metadata) {
+                let m = new Metadata();
+                m.deSerialize(metadataObj);
+                this.metadata.push(m)
+            }
         }
 
     }
@@ -1159,3 +1178,22 @@ export class Filter {
         }
     }
 }
+
+// { name, value } with serialization
+export class Metadata {
+    public name: string;
+    public value: string;
+    constructor() {};
+    serialize() { return {name: this.name, value: this.value} }
+    deSerialize(rep: any) {
+        if (rep.name) {
+            if (typeof(rep.name) === "string") this.name = rep.name;
+            else console.error("TypeError: Metadata field 'name' is not a string")
+        } else console.error("Error: Metadata required field 'name' not present");
+        if (rep.value) {
+            if (typeof(rep.value) === "string") this.value = rep.value;
+            else console.error("TypeError: Metadata field 'value' is not a string")
+        } else console.error("Error: Metadata required field 'value' not present");
+    }
+}
+

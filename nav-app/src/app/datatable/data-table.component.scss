@@ -310,6 +310,13 @@ $panel-light: lighten($panel-dark, 8%);
     .comment-overflow-note {
         // color: rgb(255, 199, 190);
     }
+    .metadatalist {
+        margin: 0;
+        margin-top: 1px;
+        padding-left: 6px;
+        list-style: none;
+
+    }
 
 }
 
