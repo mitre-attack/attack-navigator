@@ -19,7 +19,7 @@ This document describes **Version 2.1** of the MITRE ATT&CK Navigator Layer file
 | showTacticRowBackground | boolean | no | false | If true, the tactic row background color will be the value of the _tacticRowBackground_ field |
 | tacticRowBackground | string | no | "#dddddd" | The tactic row background color |
 | selectTechniquesAcrossTactics | boolean | no | true | If true, selecting a technique also selects all instances with the same technique ID |
-| metadata | Array of Metadata objects | No | User defined metadata for this layer. See definition of Metadata object below |
+| metadata | Array of Metadata objects | No | | User defined metadata for this layer. See definition of Metadata object below |
 
 
 ## Filter Object Properties
@@ -39,7 +39,7 @@ This document describes **Version 2.1** of the MITRE ATT&CK Navigator Layer file
 | enabled | Boolean | No | true | Specifies if the technique is considered enabled or disabled in this layer |
 | score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator |
 | color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color |
-| metadata | Array of Metadata objects | No | User defined metadata for this technique. See definition of Metadata object below |
+| metadata | Array of Metadata objects | No | | User defined metadata for this technique. See definition of Metadata object below |
 
 ## Gradient Object properties
 | Name     | Type     | Required? | Default Value (if not present) | Description |
