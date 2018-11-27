@@ -416,7 +416,7 @@
                          <!-- update data whenever it is typed in -->
                          <input matInput
                                 type="text"
-                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 45"
                                 [(ngModel)]="scoreEditField"
                                 placeholder="score"
                                 (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value)); filterTechniques()">
