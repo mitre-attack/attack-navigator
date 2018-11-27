@@ -48,7 +48,7 @@ Also, please note that multiple matrixes are only supported for `mitre-mobile`, 
 
 
 ## Layer File Format Changes
-Layer file format updated to version 2.1. This update is fully backwards compatible with layer format v2.0 since all the added fields are optional. See `layers/LAYERFORMATv2_1.md` for the full v2.1 specification.
+Layer file format updated to version 2.1. This update is fully backwards compatible with layer format v2.0 since all the added fields are optional. See [layers/LAYERFORMATv2_1.md](layers/LAYERFORMATv2_1.md) for the full v2.1 specification.
 
 This update constitutes the addition of `metadata` fields to the layer and technique objects. Metadata can be used to support other applications using the layer format, or to add additional descriptive fields to layers or techniques. Metadata is formatted as an array, and each piece of metadata in the array must conform to the schema `{"name": string, "value": string}`.  
 
@@ -98,7 +98,7 @@ This update constitutes the addition of `metadata` fields to the layer and techn
 - Uploaded layer files now typecheck their fields to make sure everything is formatted properly. Fields which do not meet the layer format specification are set to their default value.
 
 ## Layer File Format Changes
-Layer file format updated to version 2.0. Older layer versions can still be loaded by the Navigator, however some fields may no longer be supported. See `layers/LAYERFORMATv2.md` for the full v2.0 specification.
+Layer file format updated to version 2.0. Older layer versions can still be loaded by the Navigator, however some fields may no longer be supported. See [layers/LAYERFORMATv2.md](layers/LAYERFORMATv2.md) for the full v2.0 specification.
 - Replaced the `viewFullTable` field (boolean) with the `viewMode` field (number) in order to support the "super compact" view option. See issue [#11](https://github.com/mitre/attack-navigator/issues/11).
    - If `viewFullTable` is present in a layer file uploaded to the v2.0 Navigator it will be ignored.
    - To upgrade a layer without losing the view mode, see the following mappings:
