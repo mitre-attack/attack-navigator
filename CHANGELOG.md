@@ -1,3 +1,57 @@
+# v2.2 - 27 November 2018
+## New Features
+### Major
+- Added the ability to associate user defined metadata to layers and techniques inside of a layer. Metadata can be useful for supporting other applications that use the layer format, or for attaching additional descriptive fields to the layer. The UI supports editing metadata on the layer itself, but not on techniques. Metadata on techniques is shown in tooltips. See *Layer File Format Changes*, below, for more detail on the metadata format. Also see issue [#52](https://github.com/mitre/attack-navigator/issues/22).
+- Removed `assets/tacticsData.json`. The Navigator now populates its tactics data from `x-mitre-matrix` and `x-mitre-tactic` objects in the bundled data. The field `tactics_url` was removed from `assets/config.json` -- see *Changes to config.json Format*, below. See issue [#63](https://github.com/mitre/attack-navigator/issues/63).
+### Minor
+- Multiple layers can now be loaded on initialization. A change to the `config.json` file format allows the user to specify a list of default layers. Default layers can be loaded from the assets directory or from the web. see *Changes to config.json Format*, below. Also see issue [#67](https://github.com/mitre/attack-navigator/issues/67). 
+- The color of the underline denoting comments can now be configured in the `config.json` file. Setting the color to `"transparent"` will remove comment underlines altogether. See *Changes to config.json Format`, below. Also see issue [#53](https://github.com/mitre/attack-navigator/issues/53).
+## Fixes
+- Updated links in the documentation to match the new ATT&CK website. See issue [#62](https://github.com/mitre/attack-navigator/issues/62).
+- Updated Angular to version 7.0.6. This fixes some installation issues with OSX. We also updated several other packages. Please note that our new version of Angular requires a newer nodejs version, so try updating your node installation if errors occur after updating the Navigator. See issues [#61](https://github.com/mitre/attack-navigator/issues/61), [#70](https://github.com/mitre/attack-navigator/issues/70).
+- Merged a [pull request](https://github.com/mitre/attack-navigator/pull/58) which fixed a bug where default layers would have placeholder layer titles. See [#54](https://github.com/mitre/attack-navigator/issues/64).
+
+## Changes to `config.json` Format
+### Default Layer
+`default_layer` has been renamed to `default_layers`. The string property `location` has been replaced with the string[] property `urls`. The strings in `urls` should be the paths to the default layers you wish to load -- now multiple default layers can be loaded. You can also now load default layers from the assets folder and from the web simultaneously, although the order of the tabs is not guaranteed (since layer loading over HTTP is asynchronous). 
+
+To update previous default layers configuration to the new format, see the following example:
+```json
+"default_layer": {
+    "enabled": true,
+    "location": "assets/example.json"
+}
+```
+Becomes:
+```json
+"default_layers": {
+    "enabled": true,
+    "urls": [
+        "assets/example.json"
+    ]
+}
+```
+### Comment Color
+The `comment_color` field has been added, which specifies the color for comment underlines. 
+### Removal of `assets/tacticsData.json` and `tactics_url`
+`assets/tacticsData.json` was removed, and the `config.json` field `tactics_url` along with it. `tacticsData.json` was previously used to specify the _pre-attack_, _mitre-enterprise_ and _mitre-mobile_ tactics.
+
+This is now done using the `x-mitre-matrix` and `x-mitre-tactic` objects in the bundled data retrieved from the taxii server or from our static cti github. `x-mitre-matrix` specifies the order of tactics and `x-mitre-tactic` specifies the actual tactic data. 
+
+If you are using your own dataset with the Navigator an update to your source data will be required. The ATT&CK Navigator uses bundled data, where objects with types `attack-pattern`, `intrusion-set`, `malware`, `tool`, `relationship`, `x-mitre-tactic`, and `x-mitre-matrix` are all stored in a single array. This array is now required to contain `x-mitre-tactic` and `x-mitre-matrix` objects, which were not previously used. 
+
+The data retrieved from `enterprise_attack_url`, `pre_attack_url`, and `mobile_data_url` follow the proper bundle format. Please use them as a guide for how to format your own datasets.
+
+Also, please note that multiple matrixes are only supported for `mitre-mobile`, which expects matrixes with the names `Device Access` and `Network-Based Effects` so that we can order the tactics in the UI properly.
+
+
+## Layer File Format Changes
+Layer file format updated to version 2.1. This update is fully backwards compatible with layer format v2.0 since all the added fields are optional. See `layers/LAYERFORMATv2_1.md` for the full v2.1 specification.
+
+This update constitutes the addition of `metadata` fields to the layer and technique objects. Metadata can be used to support other applications using the layer format, or to add additional descriptive fields to layers or techniques. Metadata is formatted as an array, and each piece of metadata in the array must conform to the schema `{"name": string, "value": string}`.  
+
+
+
 # v2.1 - 31 July 2018
 ## New Features
 ### Major
@@ -15,7 +69,7 @@
 ### Major
 - Added TAXII client to pull ATT&CK content from a TAXII server. By default, the Navigator now loads content from the MITRE CTI TAXII server hosted at [https://cti-taxii.mitre.org](https://cti-taxii.mitre.org). See issue [#4](https://github.com/mitre/attack-navigator/issues/4).
 - Added a new interface to render layers to a downloadable SVG image. See issue [#2](https://github.com/mitre/attack-navigator/issues/2).
-- Added the ability to load a default layer when the Navigator initializes. See issue [#14](https://github.com/mitre/attack-navigator/issues/14), [#26](https://github.com/mitre/attack-navigator/issues/26).
+- Added the ability to load a default layer when the Navigator initializes. See issues [#14](https://github.com/mitre/attack-navigator/issues/14), [#26](https://github.com/mitre/attack-navigator/issues/26).
    - A local default layer can be specified in `src/assets/config.json`.
    - The URL to a default layer hosted on the web can be specified in the new _create customized Navigator_ interface, and when the navigator loads it will fetch that layer. See issues [#7](https://github.com/mitre/attack-navigator/issues/7), [#20](https://github.com/mitre/attack-navigator/issues/20).
 
