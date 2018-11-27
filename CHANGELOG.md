@@ -10,6 +10,8 @@
 - Updated links in the documentation to match the new ATT&CK website. See issue [#62](https://github.com/mitre/attack-navigator/issues/62).
 - Updated Angular to version 7.0.6. This fixes some installation issues with OSX. We also updated several other packages. Please note that our new version of Angular requires a newer nodejs version, so try updating your node installation if errors occur after updating the Navigator. See issues [#61](https://github.com/mitre/attack-navigator/issues/61), [#70](https://github.com/mitre/attack-navigator/issues/70).
 - Merged a [pull request](https://github.com/mitre/attack-navigator/pull/58) which fixed a bug where default layers would have placeholder layer titles. See [#54](https://github.com/mitre/attack-navigator/issues/64).
+- Negative scores can now be entered in the UI. See [#72](https://github.com/mitre/attack-navigator/issues/72).
+
 
 ## Changes to `config.json` Format
 ### Default Layer
