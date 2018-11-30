@@ -13,7 +13,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre/attack-navigator/issues)
 *See [CONTRIBUTING.md](https://github.com/mitre/attack-navigator/blob/master/CONTRIBUTING.md) for more information on making contributions to the ATT&CK Navigator.*
 
 ## Requirements
-* [Node.js](https://nodejs.org)
+* [Node.js](https://nodejs.org) version 8 or greater
 * [AngularCLI](https://cli.angular.io)
 
 ## Supported Browsers

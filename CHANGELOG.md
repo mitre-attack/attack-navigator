@@ -44,7 +44,7 @@ If you are using your own dataset with the Navigator an update to your source da
 
 The data retrieved from `enterprise_attack_url`, `pre_attack_url`, and `mobile_data_url` follow the proper bundle format. Please use them as a guide for how to format your own datasets.
 
-Also, please note that multiple matrixes are only supported for `mitre-mobile`, which expects matrixes with the names `Device Access` and `Network-Based Effects` so that we can order the tactics in the UI properly.
+Also, please note that multiple matrices are only supported for `mitre-mobile`, which expects matrices with the names `Device Access` and `Network-Based Effects` so that we can order the tactics in the UI properly.
 
 
 ## Layer File Format Changes
