@@ -1,6 +1,6 @@
 {
 	"name": "Submitter Responses",
-	"version": "2.0",
+	"version": "2.1",
 	"domain": "mitre-enterprise",
 	"description": "Answers submitted to the ATT&CKcon CFP in response to \"What is your favorite technique?\"",
 	"filters": {

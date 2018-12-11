@@ -15,4 +15,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 This project makes use of ATT&CK™
-ATT&CK™ Terms of Use - https://attack.mitre.org/wiki/enterprise:Terms_of_Use
+ATT&CK™ Terms of Use - https://attack.mitre.org/resources/terms-of-use/

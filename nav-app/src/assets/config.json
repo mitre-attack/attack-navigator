@@ -2,9 +2,8 @@
     "enterprise_attack_url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
     "pre_attack_url": "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json",
     "mobile_data_url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
-    "tactics_url": "assets/tacticsData.json",
     "taxii_server": {
-        "enabled": true,
+        "enabled": false,
         "url": "https://cti-taxii.mitre.org/",
         "collections": {
             "enterprise_attack": "95ecc380-afe9-11e4-9b6c-751b66dd541e",
@@ -19,10 +18,12 @@
 
     ],
 
-    "default_layer": {
+    "default_layers": {
         "enabled": false,
-        "location": "assets/defaultLayerTest.json"
+        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre/attack-navigator/master/layers/data/samples/Bear_APT.json"]
     },
+
+    "comment_color": "yellow",
 
     "features": [
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
@@ -34,7 +35,7 @@
             {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
-            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name & description) panel from the interface. Note that the layer can still be renamed in the tab."},
+            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
             {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
             {"name": "export_render", "enabled": true, "description": "Disable to the remove the button to render the current layer."},
             {"name": "export_excel", "enabled": true, "description": "Disable to the remove the button to export the current layer to MS Excel (.xlsx) format."},

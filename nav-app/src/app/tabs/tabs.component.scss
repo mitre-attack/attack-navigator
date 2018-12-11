@@ -259,7 +259,7 @@ input[type=file]{
 
 #layerlinkfield {
     color: rgba(0,0,0,.42);
-    /deep/.mat-input-underline {
+    /deep/.mat-form-field-underline {
         background: none;
         background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
         background-size: 4px 1px;
