@@ -1,4 +1,4 @@
-# v2.2 - 27 November 2018
+# v2.2 - 11 December 2018
 ## New Features
 ### Major
 - Added the ability to associate user defined metadata to layers and techniques inside of a layer. Metadata can be useful for supporting other applications that use the layer format, or for attaching additional descriptive fields to the layer. The UI supports editing metadata on the layer itself, but not on techniques. Metadata on techniques is shown in tooltips. See *Layer File Format Changes*, below, for more detail on the metadata format. Also see issue [#52](https://github.com/mitre/attack-navigator/issues/22).
