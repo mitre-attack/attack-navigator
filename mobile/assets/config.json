@@ -20,7 +20,7 @@
 
     "default_layers": {
         "enabled": false,
-        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
     },
 
     "comment_color": "yellow",
