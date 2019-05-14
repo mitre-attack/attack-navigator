@@ -8,7 +8,7 @@ WORKDIR /nav-app/
 COPY . ./
 
 # install packages and build 
-RUN npm install --unsafe-perm && npm rebuild node-sass --force
+RUN npm install --unsafe-perm
 
 EXPOSE 4200
 
