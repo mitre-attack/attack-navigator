@@ -33,6 +33,7 @@
     "load-json-file": "^5.1.0",
     "mathjs": "^5.2.3",
     "ngx-color-picker": "^7.0.2",
+    "node-sass": "^4.12.0",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.0.0-rc.0",
     "tinygradient": "^0.4.2",
