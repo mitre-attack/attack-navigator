@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule }    from '@angular/http';
+import { HttpClientModule }    from '@angular/http';
 import 'rxjs/add/operator/map'
 
 // material
@@ -34,7 +34,7 @@ import { ExporterComponent } from './exporter/exporter.component';
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatSelectModule,
     FormsModule,
