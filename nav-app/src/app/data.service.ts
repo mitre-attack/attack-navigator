@@ -79,8 +79,8 @@ export class DataService {
         }
         else if (refresh || !this.enterpriseData$){
             this.enterpriseData$ = Observable.forkJoin(
-                this.http.get(this.enterpriseAttackURL).map(res => res.json()),
-                this.http.get(this.pre_attack_URL).map(res => res.json())
+                this.http.get(this.enterpriseAttackURL),
+                this.http.get(this.pre_attack_URL)
             );
         }
         return this.enterpriseData$ //observable
@@ -119,8 +119,8 @@ export class DataService {
         }
         else if (refresh || !this.mobileData$){
             this.mobileData$ = Observable.forkJoin(
-                this.http.get(this.mobileDataURL).map(res => res.json()),
-                this.http.get(this.pre_attack_URL).map(res => res.json())
+                this.http.get(this.mobileDataURL),
+                this.http.get(this.pre_attack_URL)
             );
         }
         return this.mobileData$ //observable

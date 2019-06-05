@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule }    from '@angular/http';
 import 'rxjs/add/operator/map'
 
 // material
@@ -20,6 +19,7 @@ import {DynamicTabsDirective} from './tabs/dynamic-tabs.directive';
 import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({

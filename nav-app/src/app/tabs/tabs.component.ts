@@ -13,7 +13,7 @@ import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../
 
 import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 
 declare var math: any; //use mathjs
@@ -35,22 +35,22 @@ export class TabsComponent implements AfterContentInit {
 
     // these variables refer to the templates of the same name defined in the HTML.
     // to open a tab use one of these variables as the template variable.
-    @ViewChild('blankTab') blankTab;
-    @ViewChild('layerTab') layerTab;
-    @ViewChild('helpTab') helpTab;
-    @ViewChild('exporterTab') exporterTab;
+    @ViewChild('blankTab', {static: false}) blankTab;
+    @ViewChild('layerTab', {static: false}) layerTab;
+    @ViewChild('helpTab', {static: true}) helpTab;
+    @ViewChild('exporterTab', {static: false}) exporterTab;
 
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: Http, private configService: ConfigService) {
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
         let self = this;
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
 
     dynamicTabs: TabComponent[] = [];
-    @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
+    @ViewChild(DynamicTabsDirective, {static: false}) dynamicTabPlaceholder: DynamicTabsDirective;
 
 
     ngAfterContentInit() {
