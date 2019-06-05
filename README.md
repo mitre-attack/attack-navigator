@@ -41,7 +41,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 
 #### Running the Navigator offline
 1. Install the Navigator as per instructions above.
-2. Follow instructions under [loading content from local files][#Loading-content-from-local-files] to configure the Navigator to populate the matrix without an internet connection.
+2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). For mobile-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json). For pre-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json).
 
 ## Documentation
 When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
@@ -90,9 +90,12 @@ Example custom context menu object:
 
 ## Loading content from local files
 *It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
-1. Put the files in `src/assets` in the Navigator code. This will tell the server hosting the Navigator to host the data as well.
-2. Change `enterprise_attack_url` (and mobile and pre-attack depending on what you're trying to do) in `src/assets/config.json` to the path to the file (probably something like `assets/enterprise-attack.json`).
-3. Also in that file, change `taxii_server -> enabled` to false.
+1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
+2. Configure the navigator to use these files. In `src/assets/config.json`:
+    1.  Change `enterprise_attack_url` to the path to the enterprise-attack bundle (e.g `assets/enterprise-attack.json`).
+    2. Change `mobile_attack_url` to the path to the mobile-attack bundle (e.g `assets/mobile-attack.json`).
+    3. Change `pre_attack_url` to the path to the pre-attack bundle (e.g `assets/pre-attack.json`).
+    4. Change `taxii_server.enabled` to false.
 
 ## Running the Docker File
 1. Navigate to the **nav-app** directory
