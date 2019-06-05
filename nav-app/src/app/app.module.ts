@@ -4,7 +4,8 @@ import 'rxjs/add/operator/map'
 
 // material
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatSelectModule, MatInputModule} from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTooltipModule} from '@angular/material/tooltip';

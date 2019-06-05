@@ -2,7 +2,7 @@
     "version": "2.1",
     "name": "April 2019 Mobile Updates",
     "description": "Mobile updates for the April 2019 release of ATT&CK",
-    "domain": "mobile-attack",
+    "domain": "mitre-mobile",
     "techniques": [
         {
             "techniqueID": "T1481",

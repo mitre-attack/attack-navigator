@@ -2,7 +2,7 @@
     "version": "2.1",
     "name": "April 2019 Enterprise Updates",
     "description": "Enterprise updates for the April 2019 release of ATT&CK",
-    "domain": "enterprise-attack",
+    "domain": "mitre-enterprise",
     "techniques": [
         {
             "techniqueID": "T1486",

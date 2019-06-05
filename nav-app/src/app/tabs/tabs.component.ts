@@ -470,9 +470,8 @@ export class TabsComponent implements AfterContentInit {
         this.http.get(loadURL).subscribe((res) => {
             
             let viewModel = this.viewModelsService.newViewModel("loading layer...");
-            let content = res.text();
             try {
-                viewModel.deSerialize(content)
+                viewModel.deSerialize(res)
                 console.log(loadURL, viewModel);
                 this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
             } catch(err) {
