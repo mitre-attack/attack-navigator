@@ -39,6 +39,10 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Run `ng build` within the **nav-app** directory
 2. Copy files from `nav-app/dist/` directory
 
+#### Running the Navigator offline
+1. Install the Navigator as per instructions above.
+2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). For mobile-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json). For pre-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json).
+
 ## Documentation
 When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
 
@@ -55,7 +59,7 @@ The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/s
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2.md** describes version 2.0 of the layer file format for the Navigator.
+The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_1.md** describes version 2.1 of the layer file format for the Navigator.
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 
@@ -86,9 +90,12 @@ Example custom context menu object:
 
 ## Loading content from local files
 *It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
-1. Put the files in `src/assets` in the Navigator code. This will tell the server hosting the Navigator to host the data as well.
-2. Change `enterprise_attack_url` (and mobile and pre-attack depending on what you're trying to do) in `src/assets/config.json` to the path to the file (probably something like `assets/enterprise-attack.json`).
-3. Also in that file, change `taxii_server -> enabled` to false.
+1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
+2. Configure the navigator to use these files. In `src/assets/config.json`:
+    1.  Change `enterprise_attack_url` to the path to the enterprise-attack bundle (e.g `assets/enterprise-attack.json`).
+    2. Change `mobile_attack_url` to the path to the mobile-attack bundle (e.g `assets/mobile-attack.json`).
+    3. Change `pre_attack_url` to the path to the pre-attack bundle (e.g `assets/pre-attack.json`).
+    4. Change `taxii_server.enabled` to false.
 
 ## Running the Docker File
 1. Navigate to the **nav-app** directory
@@ -143,7 +150,7 @@ The following is an example iframe which embeds our [*Bear APTs](layers/data/sam
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
 
 #### ATT&CK
-MITRE’s Adversarial Tactics, Techniques, and Common Knowledge (ATT&CK™) is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
+ATT&CK™ is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
 
 https://attack.mitre.org
 

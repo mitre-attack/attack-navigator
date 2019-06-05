@@ -799,8 +799,8 @@ export class ViewModel {
      * restore this vm from a string
      * @param  rep string to restore from
      */
-    deSerialize(rep: string): void {
-        let obj = JSON.parse(rep)
+    deSerialize(rep: any): void {
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
         this.domain = obj.domain;
 
@@ -1139,7 +1139,8 @@ export class Filter {
             this.platforms = {selection: ["windows", "linux", "mac"], options: ["windows", "linux", "mac"]}
         } else if (domain == "mitre-mobile") {
             this.platforms = {selection: ["android", "ios"], options: ["android", "ios"]}
-
+        } else {
+            console.error("unknown domain", domain);
         }
     }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http'
-import { Http } from '@angular/http'
+import { HttpClient } from '@angular/common/http'
+// import { Http } from '@angular/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
@@ -8,7 +8,7 @@ import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2l
 @Injectable()
 export class DataService {
 
-    constructor(private http: Http) {}
+    constructor(private http: HttpClient) {}
 
     // Observable for data in config.json
     private configData$: Observable<Object>;
@@ -42,7 +42,7 @@ export class DataService {
 
     getConfig(refresh:boolean = false){
         if (refresh || !this.configData$){
-            this.configData$ = this.http.get("./assets/config.json").map(res => res.json())
+            this.configData$ = this.http.get("./assets/config.json");
         }
         return this.configData$;
     }
@@ -79,8 +79,8 @@ export class DataService {
         }
         else if (refresh || !this.enterpriseData$){
             this.enterpriseData$ = Observable.forkJoin(
-                this.http.get(this.enterpriseAttackURL).map(res => res.json()),
-                this.http.get(this.pre_attack_URL).map(res => res.json())
+                this.http.get(this.enterpriseAttackURL),
+                this.http.get(this.pre_attack_URL)
             );
         }
         return this.enterpriseData$ //observable
@@ -119,8 +119,8 @@ export class DataService {
         }
         else if (refresh || !this.mobileData$){
             this.mobileData$ = Observable.forkJoin(
-                this.http.get(this.mobileDataURL).map(res => res.json()),
-                this.http.get(this.pre_attack_URL).map(res => res.json())
+                this.http.get(this.mobileDataURL),
+                this.http.get(this.pre_attack_URL)
             );
         }
         return this.mobileData$ //observable
