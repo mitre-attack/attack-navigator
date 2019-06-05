@@ -10,7 +10,7 @@ import * as globals from "./globals";
     providers: [DataService] //add this provider to make sure we know we need DataService for this component
 })
 export class AppComponent {
-    @ViewChild(TabsComponent) tabsComponent;
+    @ViewChild(TabsComponent, {static: false}) tabsComponent;
 
     nav_version: string = globals.nav_version;
 

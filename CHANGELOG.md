@@ -1,3 +1,11 @@
+# v2.2.1 - 5 June 2019
+## Fixes
+- Updated Angular from 7.0.4 to 8.0.0.
+- Updated other packages to fix vulnerabilities.
+- Removed node-sass rebuild in dockerfile.
+- Fixed improperly formatted domains in the April 2019 update layers which were causing issues when exporting those layers to excel.
+- Updated readme to better highlight documentation for using the Navigator offline. See issue [#82](https://github.com/mitre-attack/attack-navigator/issues/82).
+
 # v2.2 - 11 December 2018
 ## New Features
 ### Major
