@@ -39,6 +39,10 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Run `ng build` within the **nav-app** directory
 2. Copy files from `nav-app/dist/` directory
 
+#### Running the Navigator offline
+1. Install the Navigator as per instructions above.
+2. Follow instructions under [loading content from local files][#Loading-content-from-local-files] to configure the Navigator to populate the matrix without an internet connection.
+
 ## Documentation
 When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
 
@@ -55,7 +59,7 @@ The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/s
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2.md** describes version 2.0 of the layer file format for the Navigator.
+The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_1.md** describes version 2.1 of the layer file format for the Navigator.
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 

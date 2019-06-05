@@ -1,3 +1,11 @@
+# v2.2.1 - 5 June 2019
+## Fixes
+- Updated Angular from 7.0.4 to 8.0.0.
+- Updated other packages to fix vulnerabilities.
+- Removed node-sass rebuild in dockerfile.
+- Fixed improperly formatted domains in the April 2019 update layers which were causing issues when exporting those layers to excel.
+- Updated readme to better highlight documentation for using the Navigator offline. See issue [#82](https://github.com/mitre-attack/attack-navigator/issues/82).
+
 # v2.2 - 11 December 2018
 ## New Features
 ### Major
@@ -8,7 +16,7 @@
 - The color of the underline denoting comments can now be configured in the `config.json` file. Setting the color to `"transparent"` will remove comment underlines altogether. See *Changes to config.json Format`, below. Also see issue [#53](https://github.com/mitre-attack/attack-navigator/issues/53).
 ## Fixes
 - Updated links in the documentation to match the new ATT&CK website. See issue [#62](https://github.com/mitre-attack/attack-navigator/issues/62).
-- Updated Angular to version 7.0.6. This fixes some installation issues with OSX. We also updated several other packages. Please note that our new version of Angular requires a newer nodejs version, so try updating your node installation if errors occur after updating the Navigator. See issues [#61](https://github.com/mitre-attack/attack-navigator/issues/61), [#70](https://github.com/mitre-attack/attack-navigator/issues/70).
+- Updated Angular to version 7.0.6. This fixes somexinstallation issues with OSX. We also updated several other packages. Please note that our new version of Angular requires a newer nodejs version, so try updating your node installation if errors occur after updating the Navigator. See issues [#61](https://github.com/mitre-attack/attack-navigator/issues/61), [#70](https://github.com/mitre-attack/attack-navigator/issues/70).
 - Merged a [pull request](https://github.com/mitre-attack/attack-navigator/pull/58) which fixed a bug where default layers would have placeholder layer titles. See [#54](https://github.com/mitre-attack/attack-navigator/issues/64).
 - Negative scores can now be entered in the UI. See [#72](https://github.com/mitre-attack/attack-navigator/issues/72).
 
