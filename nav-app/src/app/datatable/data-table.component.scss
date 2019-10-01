@@ -1,10 +1,6 @@
-// $table-background-color: rgb(255, 255, 255);
-//
-// $column-hover-color: rgb(235, 235, 235);
-// $cell-highlight-color: rgb(96, 197, 255);
-// $hover-cell-font-color: rgb(0, 0, 0);
 @import "../../colors.scss";
 @import "../../styles.scss";
+@import "cell.scss";
 $cellSize: 15px;
 
 
@@ -42,7 +38,8 @@ $cellSize: 15px;
     }
 
     .column {
-        padding-right: 6px;
+        padding: 2px 1px 0 1px;
+        // padding-right: 6px;
         // border: 1px solid red;
         // IMPORTANT: use 1% to make every cell equal size when expanding to fill space,
         // and minimum width of their contents when collapsing
@@ -54,70 +51,12 @@ $cellSize: 15px;
         background: $column-hover-color;
     }
 
-    .cell {
-        width: 100%;
-        display: inline-block;
-        padding: 2px;
-        margin-top: 3px;
-
-        &:not(.itemcount) {
-            border: 1px solid;
-            &.mini {
-                width: 2px;
-                height: 2px;
-                margin-right: 1px;
-            }
-
-            .editing { border-color: black; }
-            &:not(.editing) {
-                &:not(.compact):not(.mini) { border: none; padding: 3px; }
-                &.compact,&.mini:not(.header) { border-color: $cell-border-color;}
-            }
-        }
-
-        &.itemcount {
-            border: 1px solid;
-            border-color: rgba(255, 255, 255, 0) rgba(255, 255, 255, 0) black rgba(255, 255, 255, 0);
-        }
-
-        &.editing {
-            border-color: black;
-        }
-
-        &.header {
-            font-weight: bold;
-            &:hover {color: $cell-highlight-color; }
-            &.mini {background-color: black; border-color: black; }
-        }
-
-        &.highlight {
-            background: $cell-highlight-color;
-            span { color: black; }
-        }
-
-        &.disabled:not(.highlight) {
-            span {color: $cell-border-color;} //span is required to make sure color doesn't affect border colors too
-            &.compact { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#cccccc' stroke-width='1' /></svg>"); }
-            &.mini { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#b8b8b8' stroke-width='1' /></svg>"); }
-        }
-        &.has-comment:not(.disabled) {
-            span {
-                //color is assigned from config file
-                border-bottom: 2px solid transparent;
-            }
+    //fix border overlap issue
+    technique-cell.editing+technique-cell {
+        >.cell.highlight {
+            border-top: 1px solid black;
         }
     }
-    .anti-highlight:not(.highlight) {
-        div:not(.editing) {
-            &:not(.has-score-background) {
-                &:not(:hover) { color: $cell-border-color; }
-            }
-        }
-    }
-}
-
-.link {
-    cursor: pointer;
 }
 
 // content of each tab

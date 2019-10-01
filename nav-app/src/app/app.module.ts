@@ -12,6 +12,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
@@ -20,7 +21,7 @@ import {DynamicTabsDirective} from './tabs/dynamic-tabs.directive';
 import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
-import { HttpClientModule } from '@angular/common/http';
+import { TechniqueCellComponent } from './datatable/technique-cell/technique-cell.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { HttpClientModule } from '@angular/common/http';
     DynamicTabsDirective,
     HelpComponent,
     ExporterComponent,
+    TechniqueCellComponent
   ],
   imports: [
     BrowserModule,
