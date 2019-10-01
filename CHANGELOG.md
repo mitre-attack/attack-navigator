@@ -1,3 +1,7 @@
+# v2.2.2 - 24 October 2019
+## Fixes
+- Updated packages to fix vulnerabilities.
+
 # v2.2.1 - 5 June 2019
 ## Fixes
 - Updated Angular from 7.0.4 to 8.0.0.
