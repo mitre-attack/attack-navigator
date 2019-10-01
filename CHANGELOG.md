@@ -2,6 +2,7 @@
 ## New Features
 ### Minor
 - Technique comments will now be included with excel exports as cell notes. Note: you may have to re-install your node modules for this functionality to be present. See issue [#55](https://github.com/mitre-attack/attack-navigator/issues/55).
+- Minor matrix layout improvements. See issue [#106](https://github.com/mitre-attack/attack-navigator/issues/106).
 
 ## Fixes
 - Multiselect interface should now correctly sort software and groups which start with lowercase letters. See issue [#99](https://github.com/mitre-attack/attack-navigator/issues/99).

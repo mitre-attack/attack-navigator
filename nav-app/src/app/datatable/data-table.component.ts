@@ -1,9 +1,10 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit } from '@angular/core';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import {DataService, Technique} from '../data.service';
 import {ConfigService} from '../config.service';
 import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
+import { TechniqueCellComponent } from "./technique-cell/technique-cell.component";
 import {FormControl} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {MatSelectModule} from '@angular/material/select';
@@ -22,7 +23,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
     selector: 'DataTable',
     templateUrl: './data-table.component.html',
     styleUrls: ['./data-table.component.scss'],
-    providers: [DataService, ConfigService]
+    providers: [DataService, ConfigService],
+    encapsulation: ViewEncapsulation.None,
 })
 export class DataTableComponent implements AfterViewInit {
 
@@ -775,9 +777,9 @@ export class DataTableComponent implements AfterViewInit {
      * @param  technique      technique which was left clicked
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
-    techniqueSelectEvent(technique, addToSelection, tactic, event): void {
+    onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
         if (!this.configService.getFeature('selecting_techniques')) {
-            this.rightClickTechnique(technique, tactic, event);
+            this.onTechniqueContextMenu(technique, eventX, eventY);
             return;
         }
         //console.log(technique);
@@ -818,20 +820,20 @@ export class DataTableComponent implements AfterViewInit {
      * @param  event     click event
      * @return           false to suppress normal context menu
      */
-    rightClickTechnique(technique, tactic, event) {
+    onTechniqueContextMenu(technique, eventX, eventY) {
         this.contextMenuVisible = true;
         this.contextMenuSelectedTechnique = technique;
-        this.contextMenuSelectedTactic = this.tacticDisplayNames[tactic].replace(" ", "_");
+        this.contextMenuSelectedTactic = this.tacticDisplayNames[technique.tactic].replace(" ", "_");
         let self = this;
         window.setTimeout(function() { //run after it gets drawn
             // console.log(event, technique)
             let element = <HTMLElement>document.getElementById("contextMenu" + self.viewModel.uid);
 
-            let directionHorizontal = document.body.clientWidth - event.pageX < element.clientWidth; //determine facing
-            let directionVertical = document.body.clientHeight - event.pageY < element.clientHeight; //determine facing
+            let directionHorizontal = document.body.clientWidth - eventX < element.clientWidth; //determine facing
+            let directionVertical = document.body.clientHeight - eventY < element.clientHeight; //determine facing
 
-            element.style.left = directionHorizontal ? (event.pageX - element.clientWidth) + "px" : (event.pageX) + "px";
-            element.style.top = directionVertical ? (event.pageY - element.clientHeight) + "px" : event.pageY + "px";
+            element.style.left = directionHorizontal ? (eventX - element.clientWidth) + "px" : eventX + "px";
+            element.style.top = directionVertical ? (eventY - element.clientHeight) + "px" : eventY + "px";
         }, 0)
 
         return false;
@@ -877,75 +879,6 @@ export class DataTableComponent implements AfterViewInit {
     //sanitize the given css so that it can be displayed without error
     sanitize(css) {
         return this.sanitizer.bypassSecurityTrustStyle(css);
-    }
-
-    /**
-     * Return css classes for a technique
-     * @param  {technique} technique the technique to get the class of
-     * @param  {boolean}   mini is it the minitable?
-     * @return {string}               the classes the technique should currently have
-     */
-    getClass(technique, tactic) {
-        let theclass = 'link noselect cell'
-        if (!this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled)
-            theclass += " disabled"
-        // else theclass += " " + this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).color
-        if (this.viewModel.isTechniqueSelected(technique))
-            theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id){
-            if(this.viewModel.selectTechniquesAcrossTactics){
-                theclass += " highlight"
-            } else if (this.viewModel.hoverTactic == tactic) {
-                theclass += " highlight"
-            }
-            //console.log(this.viewModel.hoverTactic);
-        }
-
-        theclass += [" full", " compact", " mini"][this.viewModel.viewMode]
-        if (this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).comment.length > 0)
-            theclass += " has-comment"
-        if (this.getTechniqueBackground(technique))
-            theclass += " has-score-background"
-        return theclass
-    }
-
-    /**
-     * get the technique background style for ngstyle
-     * @param  technique technique
-     * @return           background object
-     */
-    getTechniqueBackground(technique: Technique) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
-        // don't display if disabled or highlighted
-        var highlight = false;
-        if(this.viewModel.highlightedTechnique){
-            if(this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.technique_id === technique.technique_id){
-                highlight = true;
-            } else if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.technique_tactic_union_id === technique.technique_tactic_union_id) {
-                highlight = true;
-            }
-        }
-        if (!tvm.enabled || highlight) return {}
-        if (tvm.color) return {"background": tvm.color }
-        if (tvm.score) return {"background": tvm.scoreColor }
-        // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
-    }
-
-    /**
-     * Get most readable text color for the given technique
-     * @param  technique     the technique to get the text color for
-     * @param  antihighlight boolean, true if the column is not selected.
-     * @return               black, white, or gray, depending on technique and column state
-     */
-    getTechniqueTextColor(technique: Technique, antihighlight: boolean) {
-        let tvm = this.viewModel.getTechniqueVM(technique.technique_tactic_union_id)
-        if (!tvm.enabled) return "#aaaaaa";
-        // don't display if disabled or highlighted
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
-        if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
-        if (antihighlight) return "#aaaaaa";
-        else return "black"
     }
 
     getTacticRowTextColor() {
