@@ -347,12 +347,13 @@ export class DataTableComponent implements AfterViewInit {
                             if (tvm.color) { //manually assigned
                                 cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
                                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}}
-                                console.log(cell.font);
-                                
                             }
                             else if (tvm.score) { //score assigned
                                 cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
                                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}}
+                            }
+                            if (tvm.comment) { //comment present on technique
+                                cell.note = tvm.comment;
                             }
                         } else { //disabled
                             cell.font = {color: {'argb': 'FFBCBCBC'}}
