@@ -1,4 +1,8 @@
 # v2.2.2 - 24 October 2019
+## New Features
+### Minor
+- Technique comments will now be included with excel exports as cell notes. Note: you may have to re-install your node modules for this functionality to be present. See issue [#55](https://github.com/mitre-attack/attack-navigator/issues/55).
+
 ## Fixes
 - Updated packages to fix vulnerabilities.
 
