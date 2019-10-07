@@ -6,6 +6,7 @@
 
 ## Fixes
 - Multiselect interface should now correctly sort software and groups which start with lowercase letters. See issue [#99](https://github.com/mitre-attack/attack-navigator/issues/99).
+- Layer loading should now provide more accurate descriptions when errors are encountered. See issue [#103](https://github.com/mitre-attack/attack-navigator/issues/103).
 - Updated packages to fix vulnerabilities.
 
 # v2.2.1 - 5 June 2019

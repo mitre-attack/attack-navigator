@@ -43,6 +43,9 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Install the Navigator as per instructions above.
 2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). For mobile-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json). For pre-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json).
 
+#### Common issues
+1. If serving or compiling the application gives the warning `Module not found: can't resolve 'fs'`, run the command `npm run postinstall`. The postinstall step usually runs automatically after `npm install` to patch the `fs` issue, but in some environments it must be run manually.
+
 ## Documentation
 When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
 
