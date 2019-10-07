@@ -374,7 +374,7 @@ export class TabsComponent implements AfterContentInit {
             let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
-            console.log(err)
+            console.error(err)
             alert("Layer Layer operation error: " + err.message)
         }
 
@@ -472,21 +472,21 @@ export class TabsComponent implements AfterContentInit {
             let viewModel = this.viewModelsService.newViewModel("loading layer...");
             try {
                 viewModel.deSerialize(res)
-                console.log(loadURL, viewModel);
+                console.log("loaded layer from", loadURL);
                 this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
             } catch(err) {
-                console.log(err)
-                alert("ERROR: Failed to load layer file from URL")
+                console.error(err)
+                alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
                 this.viewModelsService.destroyViewModel(viewModel)
             }
         }, (err) => {
             console.error(err)
             if (err.status == 0) {
                 // no response
-                alert("ERROR: no HTTP response from " + loadURL)
+                alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
             } else {
                 // response, but not a good one
-                alert("ERROR: HTTP response " + err.status + " ("+err.statusText+") for URL " + err.url)
+                alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
             }
 
         })
