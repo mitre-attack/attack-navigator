@@ -239,6 +239,7 @@ export class DataTableComponent implements AfterViewInit {
         }else if(selectedPlatforms.length === this.viewModel.filters.platforms.options.length){
             return preFilteredTechniques;
         } else {
+            var currentPlatformsSet = new Set(selectedPlatforms.map(function(platform) { return platform.toLowerCase() } ));
             var filteredTechniques: Technique[] = [];
             // For each technique
             for(var i = 0; i < preFilteredTechniques.length; i++){
@@ -247,20 +248,10 @@ export class DataTableComponent implements AfterViewInit {
                 if(techniquePlatforms === null || techniquePlatforms === undefined){
                     filteredTechniques.push(technique);
                 } else {
-                    var matched = false;
-                    // For each platform
-                    for(var p = 0; p < techniquePlatforms.length; p++){
-                        // For each desiredPlatform
-                        var techPlat = techniquePlatforms[p].toLowerCase();
-                        for (var f = 0; f < selectedPlatforms.length; f++){
-                            var plat = selectedPlatforms[f].toLowerCase();
-                            if(techPlat.indexOf(plat) !== -1){
-                                matched = true;
-                                filteredTechniques.push(technique);
-                                break;
-                            }
-                        }
-                        if(matched){
+                    // check if the technique has a platform in the current set
+                    for(let platform of techniquePlatforms) {
+                        if (currentPlatformsSet.has(platform.toLowerCase())) {
+                            filteredTechniques.push(technique);
                             break;
                         }
                     }

@@ -1136,9 +1136,9 @@ export class Filter {
         // this.stages.selection = ["act"];
         // this.stages.options = ["prepare", "act"];
         if (domain == "mitre-enterprise") {
-            this.platforms = {selection: ["windows", "linux", "mac"], options: ["windows", "linux", "mac"]}
+            this.platforms = {selection: ["Windows", "Linux", "MacOS"], options: ["Windows", "Linux", "MacOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
         } else if (domain == "mitre-mobile") {
-            this.platforms = {selection: ["android", "ios"], options: ["android", "ios"]}
+            this.platforms = {selection: ["Android", "iOS"], options: ["Android", "iOS"]}
         } else {
             console.error("unknown domain", domain);
         }
@@ -1184,7 +1184,23 @@ export class Filter {
         }
         // let obj = JSON.parse(rep);
         if (rep.platforms) {
-            if (isStringArray(rep.platforms)) this.platforms.selection = rep.platforms
+            if (isStringArray(rep.platforms)) {
+                let backwards_compatibility_mappings = { //backwards compatibility with older layers
+                    "android": "Android",
+                    "iOS": "iOS",
+
+                    "windows": "Windows",
+                    "linux": "Linux",
+                    "mac": "MacOS"
+                }
+                this.platforms.selection = rep.platforms.map(function(platform) {
+                    if (platform in backwards_compatibility_mappings) {
+                        return backwards_compatibility_mappings[platform];
+                    } else {
+                        return platform;
+                    }
+                });
+            }
             else console.error("TypeError: filter platforms field is not a string[]");
         }
         if (rep.stages) {
