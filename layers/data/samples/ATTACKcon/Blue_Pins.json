@@ -1,6 +1,6 @@
 {
 	"name": "Blue Pins",
-	"version": "2.1",
+	"version": "2.2",
 	"domain": "mitre-enterprise",
 	"description": "\nATT&CKcon Matrix Question: With your ATT&CK-mapped detections, which ones generate the most false positives?",
 	"filters": {
@@ -8,9 +8,9 @@
 			"act"
 		],
 		"platforms": [
-			"windows",
-			"linux",
-			"mac"
+			"Windows",
+			"Linux",
+			"macOS"
 		]
 	},
 	"sorting": 0,

@@ -9,7 +9,7 @@ import json
 import sys
 
 # Static ATT&CK Navigator layer JSON fields
-VERSION = "2.1"
+VERSION = "2.2"
 NAME = "example"
 DESCRIPTION = "hello, world"
 DOMAIN = "mitre-enterprise"

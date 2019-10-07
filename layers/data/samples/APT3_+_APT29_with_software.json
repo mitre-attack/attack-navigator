@@ -1,6 +1,6 @@
 {
 	"name": "APT3 + APT29 with software",
-	"version": "2.1",
+	"version": "2.2",
 	"domain": "mitre-enterprise",
 	"description": "This layer shows techniques (including techniques from software used by the groups) used by APT3 only in blue, APT29 only in yellow, and both APT3 and APT29 in green. If these groups were high threats to an organization, the techniques in green may be the highest priority to determine how to detect and mitigate.",
 	"filters": {
@@ -8,9 +8,9 @@
 			"act"
 		],
 		"platforms": [
-			"windows",
-			"linux",
-			"mac"
+			"Windows",
+			"Linux",
+			"macOS"
 		]
 	},
 	"sorting": 0,

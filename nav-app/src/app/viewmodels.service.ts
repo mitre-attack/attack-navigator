@@ -1136,7 +1136,7 @@ export class Filter {
         // this.stages.selection = ["act"];
         // this.stages.options = ["prepare", "act"];
         if (domain == "mitre-enterprise") {
-            this.platforms = {selection: ["Windows", "Linux", "MacOS"], options: ["Windows", "Linux", "MacOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
+            this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
         } else if (domain == "mitre-mobile") {
             this.platforms = {selection: ["Android", "iOS"], options: ["Android", "iOS"]}
         } else {
@@ -1187,11 +1187,11 @@ export class Filter {
             if (isStringArray(rep.platforms)) {
                 let backwards_compatibility_mappings = { //backwards compatibility with older layers
                     "android": "Android",
-                    "iOS": "iOS",
+                    "ios": "iOS",
 
                     "windows": "Windows",
                     "linux": "Linux",
-                    "mac": "MacOS"
+                    "mac": "macOS"
                 }
                 this.platforms.selection = rep.platforms.map(function(platform) {
                     if (platform in backwards_compatibility_mappings) {
