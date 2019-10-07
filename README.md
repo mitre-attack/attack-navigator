@@ -62,7 +62,7 @@ The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/s
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_1.md** describes version 2.1 of the layer file format for the Navigator.
+The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_2.md** describes version 2.2 of the layer file format for the Navigator.
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 

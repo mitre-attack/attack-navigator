@@ -1,6 +1,6 @@
 {
 	"name": "October 2018 Updates Mobile",
-	"version": "2.1",
+	"version": "2.2",
 	"domain": "mitre-mobile",
 	"description": "",
 	"filters": {
@@ -8,8 +8,8 @@
 			"act"
 		],
 		"platforms": [
-			"android",
-			"ios"
+			"Android",
+			"iOS"
 		]
 	},
 	"sorting": 0,

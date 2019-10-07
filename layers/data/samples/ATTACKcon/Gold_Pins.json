@@ -1,6 +1,6 @@
 {
 	"name": "Gold Pins",
-	"version": "2.1",
+	"version": "2.2",
 	"domain": "mitre-enterprise",
 	"description": "ATT&CKcon Matrix Question: What techniques keep you up at night?",
 	"filters": {
@@ -8,9 +8,9 @@
 			"act"
 		],
 		"platforms": [
-			"windows",
-			"linux",
-			"mac"
+			"Windows",
+			"Linux",
+			"macOS"
 		]
 	},
 	"sorting": 0,
