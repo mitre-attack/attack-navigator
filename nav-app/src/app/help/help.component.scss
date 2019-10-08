@@ -2,14 +2,17 @@
 
 .help {
     font-size: 11pt;
+    padding: 25px 50px;
+    // margin: 0 10%;
+    h1 {
+        text-align: center;
+        border-bottom: 1px solid black;
+    }
+    
 }
-
-.content {
-    padding: 5px;
-}
-
 // table of contents
 .toc {
+    
     list-style: none;
     ul {
         list-style: none;
