@@ -7,6 +7,7 @@ declare var tinycolor: any; //use tinycolor2
 // import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
+import * as is from 'is_js';
 
 @Injectable()
 export class ViewModelsService {
@@ -88,45 +89,64 @@ export class ViewModelsService {
                     techniqueIDs.add(techniqueID);
                 })
             })
-            // compute the score of each techniqueID
-            techniqueIDs.forEach(function(technique_id) {
-                let new_tvm = new TechniqueVM(technique_id);
-                let scope = {};
-                let misses = 0; //number of times a VM is missing the value
-                scoreVariables.forEach(function(vm, key) {
-                    let scoreValue: number;
-                    if (!vm.hasTechniqueVM(technique_id)) { //missing technique
-                        scoreValue = 0;
-                        misses++;
-                    } else { //technique exists
-                        let score = vm.getTechniqueVM(technique_id).score;
-                        if (score == "") {
-                            scoreValue = 0;
-                            misses++;
-                        } else if (isNaN(Number(score))) {
-                            scoreValue = 0;
-                            misses++;
-                        } else {
-                            scoreValue = Number(score);
-                        }
-                    }
-                    scope[key] = scoreValue;
-                });
-                //don't record a result if none of VMs had a score for this technique
-                //did at least one technique have a score for this technique?
-                if (misses < scoreVariables.size) { 
-                    // console.log(scope);
-                    let mathResult = math.eval(scoreExpression, scope);
-                    if (typeof(mathResult) === "boolean") {
-                        mathResult = mathResult ? "1" : "0"; //boolean to binary
-                    }
-                    new_tvm.score = String(mathResult);
-                    result.techniqueVMs.set(technique_id, new_tvm);
-
-                    score_min = Math.min(score_min, mathResult);
-                    score_max = Math.max(score_max, mathResult);
+            //attempt to evaluate without a scope to catch the case of a static assignment
+            try {
+                // evaluate with an empty scope
+                let mathResult = math.eval(scoreExpression, {});
+                // if it didn't except after this, it evaluated to a single result.
+                console.log("score expression evaluated to single result to be applied to all techniques");
+                if (is.boolean(mathResult)) {
+                    mathResult = mathResult ? "1" : "0"; //boolean to binary
+                } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
+                    throw {message: "math result ( " + mathResult + " ) is not a number"};
                 }
-            })
+                // if it didn't error, and outputted a single value, apply this to all techniques.
+                result.initializeScoresTo = String(mathResult); //initialize scores to this value
+                score_min = mathResult;
+                score_max = mathResult;
+            } catch(err) { //couldn't evaluate with empty scope, build scope for each technique
+                // compute the score of each techniqueID
+                techniqueIDs.forEach(function(technique_id) {
+                    let new_tvm = new TechniqueVM(technique_id);
+                    let scope = {};
+                    let misses = 0; //number of times a VM is missing the value
+                    scoreVariables.forEach(function(vm, key) {
+                        let scoreValue: number;
+                        if (!vm.hasTechniqueVM(technique_id)) { //missing technique
+                            scoreValue = 0;
+                            misses++;
+                        } else { //technique exists
+                            let score = vm.getTechniqueVM(technique_id).score;
+                            if (score == "") {
+                                scoreValue = 0;
+                                misses++;
+                            } else if (isNaN(Number(score))) {
+                                scoreValue = 0;
+                                misses++;
+                            } else {
+                                scoreValue = Number(score);
+                            }
+                        }
+                        scope[key] = scoreValue;
+                    });
+                    //don't record a result if none of VMs had a score for this technique
+                    //did at least one technique have a score for this technique?
+                    if (misses < scoreVariables.size) { 
+                        // console.log(scope);
+                        let mathResult = math.eval(scoreExpression, scope);
+                        if (is.boolean(mathResult)) {
+                            mathResult = mathResult ? "1" : "0"; //boolean to binary
+                        } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
+                            throw {message: "math result ( " + mathResult + " ) is not a number"};
+                        }
+                        new_tvm.score = String(mathResult);
+                        result.techniqueVMs.set(technique_id, new_tvm);
+
+                        score_min = Math.min(score_min, mathResult);
+                        score_max = Math.max(score_max, mathResult);
+                    }
+                })
+            }
             //don't do gradient if there's no range of values
             if (score_min != score_max) {
                 // set up gradient according to result range
