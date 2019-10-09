@@ -197,7 +197,8 @@
                 will create a layer with a score of 1 whereever <code>a>b</code> and
                 0 whereever <code>a<=b</code>. Such boolean expressions can be
                 extended using <code>and</code>, <code>or</code>, <code>xor</code>
-                and <code>not</code>. See <a href="http://mathjs.org/docs/expressions/syntax.html#operators">
+                and <code>not</code>. You can also use ternary expressions such as <code>a > b ? 25 : 10</code>
+                See <a href="http://mathjs.org/docs/expressions/syntax.html#operators">
                     this page</a> for a  full list of operators.
                 </p>
                 Some example score expressions:
@@ -308,15 +309,14 @@
             applies to a particular technology platform.  Technology platforms
             are tied to the specific technology domain you are visualizing. For
             the Enterprise technology domain, the defined platforms are:
-            Windows, Linux and Mac.  For the Mobile technology domain, the
-            defined platforms are: Android and iOS.  By default, all platforms
-            for a given technology domain are selected in a newly-created layer.
+            Windows, Linux, macOS, AWS, GCP, Azure, Azure AD, Office 365, and SaaS.  For the Mobile technology domain, the
+            defined platforms are: Android and iOS. 
         </p>
         <p>
             Each technique in an ATT&CK matrix is tied to one or more platforms.
             In the Navigator, if you wanted to see only those techniques in
             Enterprise ATT&CK which applied to the Linux platform, you would
-            deselect "Windows" and "Mac" under the platform filter. If later you
+            deselect "Windows" and "macOS" under the platform filter. If later you
             decided to also include techniques known to apply to macOS
             platforms, you could select "macOS" as well and those techniques would
             be added to the visible layer.

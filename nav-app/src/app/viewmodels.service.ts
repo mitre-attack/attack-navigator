@@ -7,6 +7,7 @@ declare var tinycolor: any; //use tinycolor2
 // import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
+import * as is from 'is_js';
 
 @Injectable()
 export class ViewModelsService {
@@ -78,120 +79,82 @@ export class ViewModelsService {
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
-            //Build maps
-            let index = 0;
-            let indexToTechniqueVM = new Map<number, TechniqueVM>();
-            let techniqueIDToIndex = new Map<string, number>();
-            // assign unique integer ID to each score varaible technique
-            scoreVariables.forEach(function(vm, key) {
-                vm.techniqueVMs.forEach(function(tvm, key) {
-                    if (!techniqueIDToIndex.has(tvm.technique_tactic_union_id)) {
-                        indexToTechniqueVM.set(index, tvm)
-                        techniqueIDToIndex.set(tvm.technique_tactic_union_id, index);
-                        index += 1;
-                    }
-                })
-                // techniqueList.forEach(function(technique) {
-                //     console.log(technique)
-                //     if (!techniqueIDToIndex.has(technique.technique_id)) {
-                //         indexToTechnique.set(index, technique)
-                //         techniqueIDToIndex.set(technique.technique_id, index);
-                //         index += 1;
-                //     }
-                // });
-            });
-
-            // console.log(techniqueIDToIndex, indexToTechniqueVM)
-
-            let scope = {};
-            // build arrays where each index is mapped to a specific techniqueVM.
-            // build scope for mathjs
-
-            let missingTechniques = new Map<string, number>(); //count of how many viewModels are missing each technique
-            let countMissingTechnique = function(technique_tactic_union_id) {
-                if (missingTechniques.has(technique_tactic_union_id)) {
-                    let value = missingTechniques.get(technique_tactic_union_id)
-                    value++;
-                    missingTechniques.set(technique_tactic_union_id, value)
-                } else {
-                    missingTechniques.set(technique_tactic_union_id, 1)
-                }
-            }
-
-            scoreVariables.forEach(function(vm, key) {
-                let scoreArray = [];
-                for (let i = 0; i < index; i++) {
-                    let scoreValue: number;
-                    // parse weird possible values. All non-numbers become 0. Count empty scores so that if all vms have no score it can omit them
-                    if (!vm.hasTechniqueVM(indexToTechniqueVM.get(i).technique_tactic_union_id)) {
-                        scoreValue = 0;
-                        // console.log(vm, "doesn't have TVM", indexToTechniqueVM.get(i));
-                        countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
-                    } else {
-                        let storedValue = vm.getTechniqueVM(indexToTechniqueVM.get(i).technique_tactic_union_id).score;
-                        if (storedValue == "") {
-                            // console.log("empty score",  indexToTechniqueVM.get(i))
-                            scoreValue = 0;
-                            countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
-                        } else if (isNaN(Number(storedValue))) {
-                            // console.log("NaN score:", storedValue, indexToTechniqueVM.get(i))
-                            scoreValue = 0;
-                            countMissingTechnique(indexToTechniqueVM.get(i).technique_tactic_union_id);
-                        } else {
-                            scoreValue = Number(storedValue);
-                        }
-                    }
-                    scoreArray[i] = scoreValue;
-                }
-                scope[key] = scoreArray;
-            });
-
-            // console.log(scoreExpression, scope)
-
-            //evaluate math
-            let mathResult = math.eval(scoreExpression, scope);
-
-            // console.log(scoreExpression, "(",scoreVariables,")", "->", scope, "->", mathResult)
-            if (! (typeof(mathResult) === "number")) { //had defined variables, applies uniqely to tvms
-                // console.log("matrix result")
-                // assign the reult to new viewmodel
-                for (let i = 0; i < mathResult.length; i++) {
-                    let techniqueVM = indexToTechniqueVM.get(i);
-                    let vm = new TechniqueVM(techniqueVM.technique_tactic_union_id);
-                    if (typeof(mathResult[i]) === "boolean") {
-                        mathResult[i] = mathResult[i] ? "1" : "0"; //parse booleans to binary
-                        result.gradient.maxValue = 1;
-                        result.gradient.minValue = 0;
-                        result.gradient.setGradientPreset("whiteblue");
-                    }
-                    vm.score = String(mathResult[i])
-
-                    result.setTechniqueVM(vm)
-                }
-            } else { //evaulated to single number: apply number to all tvms
-                if (typeof(mathResult) === "boolean") {
-                    mathResult = mathResult ? "1" : "0";  //parse booleans to binary
-                    result.gradient.maxValue = 1;
-                    result.gradient.minValue = 0;
-                    result.gradient.setGradientPreset("whiteblue");
-                }
-                // console.log("non-matrix result")
-                indexToTechniqueVM.forEach(function(tvm, index) {
-                    let new_tvm = new TechniqueVM(tvm.technique_tactic_union_id);
-                    new_tvm.score = mathResult;
-                    result.setTechniqueVM(new_tvm);
-                
-                })
-                result.initializeScoresTo = String(mathResult); //save so that when data is initialized in data-table it can initialize to this value
-            }
+            let score_min = Infinity;
+            let score_max = -Infinity;
             
-            missingTechniques.forEach(function(count, technique_tactic_union_id) {
-                // console.log(result.getTechniqueVM(technique_tactic_union_id).techniqueName, count)
-                if (count == scoreVariables.size) {
-                    // enough misses that this technique had no score in any viewmodels
-                    result.getTechniqueVM(technique_tactic_union_id).score = "";
-                }
+            //get list of all technique IDs used in the VMs
+            let techniqueIDs = new Set<string>(); 
+            scoreVariables.forEach(function(vm, key) {
+                vm.techniqueVMs.forEach(function(techniqueVM, techniqueID) {
+                    techniqueIDs.add(techniqueID);
+                })
             })
+            //attempt to evaluate without a scope to catch the case of a static assignment
+            try {
+                // evaluate with an empty scope
+                let mathResult = math.eval(scoreExpression, {});
+                // if it didn't except after this, it evaluated to a single result.
+                console.log("score expression evaluated to single result to be applied to all techniques");
+                if (is.boolean(mathResult)) {
+                    mathResult = mathResult ? "1" : "0"; //boolean to binary
+                } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
+                    throw {message: "math result ( " + mathResult + " ) is not a number"};
+                }
+                // if it didn't error, and outputted a single value, apply this to all techniques.
+                result.initializeScoresTo = String(mathResult); //initialize scores to this value
+                score_min = mathResult;
+                score_max = mathResult;
+            } catch(err) { //couldn't evaluate with empty scope, build scope for each technique
+                // compute the score of each techniqueID
+                techniqueIDs.forEach(function(technique_id) {
+                    let new_tvm = new TechniqueVM(technique_id);
+                    let scope = {};
+                    let misses = 0; //number of times a VM is missing the value
+                    scoreVariables.forEach(function(vm, key) {
+                        let scoreValue: number;
+                        if (!vm.hasTechniqueVM(technique_id)) { //missing technique
+                            scoreValue = 0;
+                            misses++;
+                        } else { //technique exists
+                            let score = vm.getTechniqueVM(technique_id).score;
+                            if (score == "") {
+                                scoreValue = 0;
+                                misses++;
+                            } else if (isNaN(Number(score))) {
+                                scoreValue = 0;
+                                misses++;
+                            } else {
+                                scoreValue = Number(score);
+                            }
+                        }
+                        scope[key] = scoreValue;
+                    });
+                    //don't record a result if none of VMs had a score for this technique
+                    //did at least one technique have a score for this technique?
+                    if (misses < scoreVariables.size) { 
+                        // console.log(scope);
+                        let mathResult = math.eval(scoreExpression, scope);
+                        if (is.boolean(mathResult)) {
+                            mathResult = mathResult ? "1" : "0"; //boolean to binary
+                        } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
+                            throw {message: "math result ( " + mathResult + " ) is not a number"};
+                        }
+                        new_tvm.score = String(mathResult);
+                        result.techniqueVMs.set(technique_id, new_tvm);
+
+                        score_min = Math.min(score_min, mathResult);
+                        score_max = Math.max(score_max, mathResult);
+                    }
+                })
+            }
+            //don't do gradient if there's no range of values
+            if (score_min != score_max) {
+                // set up gradient according to result range
+                if (score_min != Infinity) result.gradient.minValue = score_min;
+                if (score_max != -Infinity) result.gradient.maxValue = score_max;
+                // if it's a binary range, set to whiteblue gradient
+                if (score_min == 0 && score_max == 1) result.gradient.setGradientPreset("whiteblue");
+            }
         }
 
 
@@ -221,8 +184,6 @@ export class ViewModelsService {
         if (legendItems) {
             result.legendItems = JSON.parse(JSON.stringify(legendItems.legendItems));
         }
-
-        console.log(result);
         
         result.name = layerName;
         // console.log(result)
