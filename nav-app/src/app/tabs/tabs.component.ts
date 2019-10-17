@@ -15,6 +15,7 @@ import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
+import { log } from 'util';
 
 declare var math: any; //use mathjs
 
@@ -58,9 +59,13 @@ export class TabsComponent implements AfterContentInit {
             this.viewModelsService.domain = config["domain"];
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
             if (this.getNamedFragmentValue("layerURL")) {
-                this.loadURL = this.getNamedFragmentValue("layerURL");
-                // console.log(this.loadURL)
-                this.loadLayerFromURL(this.loadURL, true);
+                let urls = this.getNamedFragmentValue("layerURL");
+                let replace = true;
+                for (let url of urls) {
+                    console.log("loading initial layer", url)
+                    this.loadLayerFromURL(url, replace);
+                    replace = false;
+                }
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
@@ -498,8 +503,28 @@ export class TabsComponent implements AfterContentInit {
     //  / __| | | / __|_   _/ _ \|  \/  |_ _|_  / __|   \  | \| | /_\ \ / /_ _/ __| /_\_   _/ _ \| _ \ / __|_   _| | | | __| __|
     // | (__| |_| \__ \ | || (_) | |\/| || | / /| _|| |) | | .` |/ _ \ V / | | (_ |/ _ \| || (_) |   / \__ \ | | | |_| | _|| _|
     //  \___|\___/|___/ |_| \___/|_|  |_|___/___|___|___/  |_|\_/_/ \_\_/ |___\___/_/ \_\_| \___/|_|_\ |___/ |_|  \___/|_| |_|
-    layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
+    // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
+    layerLinkURLs: string[] = [];
     customizedConfig = [];
+
+    /**
+     * Add a new empty layer link to the layerLinkURLs array
+     */
+    addLayerLink(): void {
+        this.layerLinkURLs.push("");
+    }
+
+    /**
+     * Remove the given layer link URL from layerLinkURLs
+     * @param {number} index the index to remove
+     */
+    removeLayerLink(index: number): void {
+        console.log("removing index", index)
+        console.log(this.layerLinkURLs);
+        if (this.layerLinkURLs.length == 1) this.layerLinkURLs = [];
+        else this.layerLinkURLs.splice(index, 1);
+        console.log(this.layerLinkURLs);
+    }
 
     /**
      * Convert layerLinkURL to a query string value for layerURL query string
@@ -510,8 +535,8 @@ export class TabsComponent implements AfterContentInit {
         // if (!this.layerLinkURL) return "";
         let str = window.location.href.split("#")[0];
         let join = "#" //hash first, then ampersand
-        if (this.layerLinkURL) {
-            str += join + "layerURL=" + encodeURIComponent(this.layerLinkURL)
+        for (let layerLinkURL of this.layerLinkURLs) {
+            str += join + "layerURL=" + encodeURIComponent(layerLinkURL)
             join = "&";
         }
         for (let i = 0; i < this.customizedConfig.length; i++) {
@@ -570,14 +595,19 @@ export class TabsComponent implements AfterContentInit {
      * @param  {string} url  optional, if unspecified searches in current window location. Otherwise searches this string
      * @return {string}      fragment param value
      */
-    getNamedFragmentValue(name: string, url?: string): string {
+    getNamedFragmentValue(name: string, url?: string): any {
+        
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[#&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
+        var regex = new RegExp("[#&]" + name + "(?:=([^&#]*)|&|#|$)", "g");
+        //match as many results as exist under the name
+        let results = [];
+        let match = regex.exec(url);
+        while (match != null) {
+            results.push(decodeURIComponent(match[1].replace(/\+/g, " ")));
+            match = regex.exec(url);
+        }
+        return results
     }
 
 }

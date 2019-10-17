@@ -123,7 +123,7 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
    would load `example.json` from the local assets directory, and `Bear_APT.json` from this repo's sample layer folder on Github.
 3. Load/reload the Navigator
 
-A single default layer from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
+Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 ## Disabling Navigator Features
 The `features` array in `nav-app/src/assets/config.json` lists Navigator features you may want to disable. Setting the `enabled` field on a feature in the configuration file will hide all control
