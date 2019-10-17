@@ -216,17 +216,31 @@
 
                 <table class="inputTable">
                     <tr>
-                        <td><h1>Default Layer</h1></td>
+                        <td><h1>Default Layers</h1></td>
                         <td></td>
                     </tr>
                     <tr class="custom_nav_inputsection">
-                        <td><mat-form-field>
-                            <input type="text"
-                            matInput
-                            placeholder="default layer URL"
-                            [(ngModel)]="layerLinkURL"/>
-                        </mat-form-field></td>
-                        <td>Enter the URL of a layer hosted on the web. The custom navigator will open this layer by default.</td>
+                        <td>
+                            <ul class="layerLinks">
+                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index">
+                                    <mat-form-field>
+                                        <input type="text"
+                                        matInput
+                                        [placeholder]="'default layer URL ' + (i + 1)"
+                                        [(ngModel)]="layerLinkURLs[i]"/>
+                                        <button mat-button matSuffix mat-icon-button aria-label="remove" (click)="removeLayerLink(i)">
+                                            x
+                                        </button>
+                                    </mat-form-field>
+                                </li>
+                                <li>
+                                    <button mat-button (click)="addLayerLink()">
+                                        add {{layerLinkURLs.length > 0? "another" : "a"}} layer link
+                                    </button>
+                                </li>
+                            </ul>
+                        </td>
+                        <td>Enter the URLs of layers hosted on the web. The custom navigator will open these layers by default.</td>
                     </tr>
                     <tr>
                         <td><h1>Navigator Features</h1></td>
