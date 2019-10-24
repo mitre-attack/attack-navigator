@@ -1,0 +1,66 @@
+@import "../../colors.scss";
+@import "../../styles.scss";
+$sizeunit: 13px;
+
+.cell {
+    width: 100%;
+    display: inline-block;
+    
+    // this makes sure that the borders don't count towards the cell height
+    // so everything lines up well
+    margin-top: -2px; 
+    
+    font-size: $sizeunit - 1px;
+    &:not(.mini) { 
+        padding: $sizeunit/2 2px;
+        line-height: $sizeunit;
+    }
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    &.mini {
+        width: 8px; 
+        height: 8px;
+        margin-right: 2px;
+        margin-top: 2px;
+        border-color: $disabled-color;
+    }
+    &.has-background:not(.highlight) {
+        border-color: white;
+    }
+
+    &.editing {
+        border-color: black;
+    }
+    &.header {
+        font-weight: bold;
+        &:hover {color: $cell-highlight-color; }
+        &.mini {background-color: black; border-color: black; }
+    }
+    &.highlight {
+        background: $cell-highlight-color;
+        span { color: black; }
+    }
+    &.itemcount {
+        border: 1px solid;
+        border-color: rgba(255, 255, 255, 0) rgba(255, 255, 255, 0) black rgba(255, 255, 255, 0);
+    }
+
+    &.disabled:not(.highlight) {
+        span {color: $disabled-color;} //span is required to make sure color doesn't affect border colors too
+        &.compact { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#cccccc' stroke-width='1' /></svg>"); }
+        &.mini { background: url("data:image/svg+xml;utf8, <svg xmlns='http://www.w3.org/2000/svg' version='1.1' preserveAspectRatio='none' viewBox='0 0 10 10'><path d='M 10 0 L 0 10' fill='none' stroke='#b8b8b8' stroke-width='1' /></svg>"); }
+    }
+    &.has-comment:not(.disabled) {
+        span {
+            //color is assigned from config file
+            border-bottom: 2px solid transparent;
+        }
+    }
+}
+
+.link {
+    cursor: pointer;
+}

@@ -1,6 +1,6 @@
 {
     "description": "all techniques that can be executed by software (in blue)",
-    "version": "2.1", 
+    "version": "2.2", 
     "name": "Software(tools) Execution",
     "domain": "mitre-enterprise",
     "techniques": [

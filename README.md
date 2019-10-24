@@ -43,6 +43,9 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Install the Navigator as per instructions above.
 2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). For mobile-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json). For pre-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json).
 
+#### Common issues
+1. If serving or compiling the application gives the warning `Module not found: can't resolve 'fs'`, run the command `npm run postinstall`. The postinstall step usually runs automatically after `npm install` to patch the `fs` issue, but in some environments it must be run manually.
+
 ## Documentation
 When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
 
@@ -59,7 +62,7 @@ The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/s
 ## Layers Folder
 The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_1.md** describes version 2.1 of the layer file format for the Navigator.
+The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_2.md** describes version 2.2 of the layer file format for the Navigator.
 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 
@@ -120,7 +123,7 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
    would load `example.json` from the local assets directory, and `Bear_APT.json` from this repo's sample layer folder on Github.
 3. Load/reload the Navigator
 
-A single default layer from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
+Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 ## Disabling Navigator Features
 The `features` array in `nav-app/src/assets/config.json` lists Navigator features you may want to disable. Setting the `enabled` field on a feature in the configuration file will hide all control

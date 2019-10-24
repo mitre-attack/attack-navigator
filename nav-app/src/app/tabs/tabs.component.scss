@@ -184,9 +184,6 @@ input[type=file]{
     text-align: center;
     margin-top: 20px;
 }
-.help {
-    padding: 10px;
-}
 
 .header {
     text-align: right;
@@ -268,4 +265,9 @@ input[type=file]{
     #layerLink {
         cursor: pointer;
     }
+}
+.layerLinks {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
 }

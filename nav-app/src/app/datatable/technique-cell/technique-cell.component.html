@@ -1,0 +1,12 @@
+<div class="cell" 
+     [ngStyle]="getTechniqueBackground()" 
+     [ngClass]="getClass()"
+     (click)="onLeftClick($event)"
+     (contextmenu)="onRightClick($event)"
+     (mouseenter)="onHighlight()"
+     (mouseleave)="onUnhighlight()">
+    <span [style.border-color]="configService.comment_color" 
+          [style.color]="getTechniqueTextColor()">
+        {{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}
+    </span>
+</div>

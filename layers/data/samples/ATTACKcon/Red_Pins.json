@@ -1,6 +1,6 @@
 {
 	"name": "Red Pins",
-	"version": "2.1",
+	"version": "2.2",
 	"domain": "mitre-enterprise",
 	"description": "ATT&CKcon Matrix Question: What’s the least likely\u000b ATT&CK technique to\u000b be seen in the wild?",
 	"filters": {
@@ -8,9 +8,9 @@
 			"act"
 		],
 		"platforms": [
-			"windows",
-			"linux",
-			"mac"
+			"Windows",
+			"Linux",
+			"macOS"
 		]
 	},
 	"sorting": 0,

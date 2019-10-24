@@ -1,3 +1,28 @@
+# v2.3 - 24 October 2019
+## New Features
+### Minor
+- Technique comments will now be included with excel exports as cell notes. Note: you may have to re-install your node modules for this functionality to be present. See issue [#55](https://github.com/mitre-attack/attack-navigator/issues/55).
+- Minor matrix layout improvements. See issue [#106](https://github.com/mitre-attack/attack-navigator/issues/106).
+- Added support for cloud platforms. See issue [#101](https://github.com/mitre-attack/attack-navigator/issues/101). Also see *Layer File Format Changes*, below.
+- In layer-layer operations, score expressions are now calculated on an element-by-element basis. This allows the use of normal math operators (e.g `a * b`) instead of the elementwise operators (e.g `a .* b`) as were previously required. It also enables the use of ternary operations such as `a > b ? a : 0`. See issue [#81](https://github.com/mitre-attack/attack-navigator/issues/81).
+- Added the ability to specify multiple default layers in the layerURL query param. See issue [#75](https://github.com/mitre-attack/attack-navigator/issues/75).
+
+## Fixes
+- Multiselect interface should now correctly sort software and groups which start with lowercase letters. See issue [#99](https://github.com/mitre-attack/attack-navigator/issues/99).
+- Layer loading should now provide more accurate descriptions when errors are encountered. See issue [#103](https://github.com/mitre-attack/attack-navigator/issues/103).
+- Updated packages to fix vulnerabilities.
+
+## Layer File Format Changes
+Layer file format updated to version 2.2. Older versions can still be loaded in the Navigator, and this update is fully backwards compatible with Version 2.1. See [layers/LAYERFORMATv2_2md](layers/LAYERFORMATv2_2.md) for the full v2.2 specification.
+- Added the following cloud platforms to the set of acceptable enterprise platforms: "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS".
+- Updated Enterprise and Mobile platforms to match their format as seen elsewhere in ATT&CK. This change is fully backwards compatible, and if the old format is detected it will automatically be updated to the new format.
+   - "android" becomes "Android"
+   - "ios" becomes "iOS"
+   - "windows" becomes "Windows"
+   - "linux" becomes "Linux"
+   - "mac" becomes "macOS"
+   
+
 # v2.2.1 - 5 June 2019
 ## Fixes
 - Updated Angular from 7.0.4 to 8.0.0.

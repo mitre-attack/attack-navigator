@@ -504,19 +504,14 @@
                 <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
                     [class]="'techniques column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
                     [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
-
-                    <div *ngFor="let technique of tactics[tactic]"
-
-                        (click)="techniqueSelectEvent(technique, $event.shiftKey || $event.ctrlKey || $event.metaKey, tactic, $event)"
-                         (contextmenu)="rightClickTechnique(technique, tactic, $event)"
-
-                         (mouseenter)="viewModel.highlightedTechnique = technique; this.viewModel.hoverTactic = tactic;"
-                         (mouseleave)="viewModel.highlightedTechnique = null; this.viewModel.hoverTactic = tactic;"
-
-                         [class]="getClass(technique, tactic)"
-                         [ngStyle]="getTechniqueBackground(technique)">
-                         <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor(technique, viewModel.highlightedTactic && tactic != viewModel.highlightedTactic)">{{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}</span>
-                    </div>
+                    <technique-cell *ngFor="let technique of tactics[tactic]" 
+                                    [class.editing]="viewModel.isTechniqueSelected(technique)"
+                                    [technique]="technique" 
+                                    [viewModel]="viewModel"
+                                    (leftclick)="onTechniqueSelect($event.technique, $event.shift || $event.ctrl || $event.meta, $event.x, $event.y)"
+                                    (rightclick)="onTechniqueContextMenu($event.technique, $event.x, $event.y)"
+                                    (highlight)="viewModel.highlightedTechnique=$event; this.viewModel.hoverTactic = tactic;">
+                    </technique-cell>
                 </td>
             </tr>
         </table>
