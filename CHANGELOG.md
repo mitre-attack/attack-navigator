@@ -1,3 +1,7 @@
+# v2.3.1 - 29 October 2019
+## Fixes
+- Fixes a bug where default_layers specified in `config.json` would not load. See pull request [#109](https://github.com/mitre-attack/attack-navigator/pull/109).
+
 # v2.3 - 24 October 2019
 ## New Features
 ### Minor

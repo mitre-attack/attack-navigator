@@ -58,10 +58,11 @@ export class TabsComponent implements AfterContentInit {
         this.ds.getConfig().subscribe((config: Object) => {
             this.viewModelsService.domain = config["domain"];
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
-            if (this.getNamedFragmentValue("layerURL")) {
-                let urls = this.getNamedFragmentValue("layerURL");
-                let replace = true;
-                for (let url of urls) {
+            let fragment_value = this.getNamedFragmentValue("layerURL");
+            if (fragment_value && fragment_value.length > 0) {
+                var replace = true;
+                for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
+                    var url = urls_1[_i];
                     console.log("loading initial layer", url)
                     this.loadLayerFromURL(url, replace);
                     replace = false;
@@ -473,7 +474,7 @@ export class TabsComponent implements AfterContentInit {
     loadLayerFromURL(loadURL, replace): void {
         // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
         this.http.get(loadURL).subscribe((res) => {
-            
+
             let viewModel = this.viewModelsService.newViewModel("loading layer...");
             try {
                 viewModel.deSerialize(res)
@@ -596,7 +597,7 @@ export class TabsComponent implements AfterContentInit {
      * @return {string}      fragment param value
      */
     getNamedFragmentValue(name: string, url?: string): any {
-        
+
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[#&]" + name + "(?:=([^&#]*)|&|#|$)", "g");
