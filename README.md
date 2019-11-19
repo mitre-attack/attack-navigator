@@ -60,11 +60,9 @@ To instead generate a matrix view of the [Mobile ATT&CK](https://attack.mitre.or
 The tactics displayed in the ATT&CK matrices are pulled from the file `nav-app/src/assets/tacticsData.json` where they are organized by domain. We will keep this file up to date as tactics are added and edited in new releases of [ATT&CK](https://attack.mitre.org).
 
 ## Layers Folder
-The **layers** folder currently contains a Python script that automatically generates layer files. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
+The **layers** folder contains specifications for the layer format as well as example layers and a script demonstrating programatic layer generation. We will continue to add content to this repository as new scripts are implemented. Also, feel free to create pull requests if you want to add new capabilities here!
 
-The **layers** folder's **README** contains more detailed information about how to utilize this set of scripts, and **LAYERFORMATv2_2.md** describes version 2.2 of the layer file format for the Navigator.
-
-More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
+More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser, and in the README in the **layers** folder.
 
 ## Adding Custom Context Menu Options
 To create custom options to the **ATT&CK<sup>™</sup> Navigator** context menu using data in the Navigator, objects must be added to the array labeled `custom_context_menu_options` in `nav-app/src/assets/config.json`. Each object must have a property **label**, which is the text displayed in the context menu, and a property **url**, which is where the user is navigated.
