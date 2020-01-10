@@ -1,7 +1,7 @@
 <table class="matrix side">
     <thead>
         <tr>
-            <td *ngFor="let tactic of matrix.tactics" class="tactic name"><a href="{{tactic.url}}">{{tactic.name}}</a></td>
+            <td *ngFor="let tactic of matrix.tactics" class="tactic name"><a (click)="onTacticClick(tactic)">{{tactic.name}}</a></td>
         </tr>
         <tr>
             <td *ngFor="let tactic of matrix.tactics" class="tactic count">

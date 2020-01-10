@@ -34,7 +34,6 @@ export abstract class MatrixCommon {
         } else {
             // replace selection
             if (this.viewModel.getSelectedTechniqueCount() > 1) {
-                console.log("replace")
                 if (this.viewModel.isTechniqueSelected)
                 this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(technique, tactic);
@@ -58,6 +57,11 @@ export abstract class MatrixCommon {
     }
     onTechniqueUnhighlight(event: any) {
         this.viewModel.clearHighlight();
+    }
+
+    onTacticClick(tactic: Tactic) {
+        if (this.viewModel.isTacticSelected(tactic)) this.viewModel.clearSelectedTactic();
+        else this.viewModel.selectTactic(tactic);
     }
 }
 
