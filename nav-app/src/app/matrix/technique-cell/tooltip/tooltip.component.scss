@@ -1,0 +1,59 @@
+.tooltip {
+    position: absolute;
+    padding: 6px;
+    &:not(.top) { top: 0; }
+    z-index: 100;
+    
+    border-radius: 3px;
+    background: rgba(80, 80, 80, 0.75);
+    font-size: 8pt;
+    color: white;
+    &.right {
+        transform: translateX(10px);
+        &:before { 
+            left: -9.5px;
+            transform: rotate(90deg);
+        }
+    }
+    &.left {
+        transform: translateX(-10px);
+        right: 100%;
+        &:before { 
+            right: -9px;
+            transform: rotate(-90deg);
+        }
+    }
+    &.top {
+        transform: translateY(-10px);
+        bottom: 100%;
+        left: 0;
+        &:before {
+            bottom: -9px;
+            // transform: rotate(180deg);
+        }
+    }
+    &.bottom {
+        transform: translateY(10px);
+        top: 100%;
+        left: 0;
+        &:before {
+            top: -10.5px;
+            transform: rotate(180deg);
+        }
+    }
+    &:before {
+        position: absolute;
+        font-size: 12px;
+        content: '\25BC';
+        color: rgba(80, 80, 80, 0.75);
+    }
+    table {
+        border-collapse: collapse;
+        td {
+            vertical-align: top;;
+        }
+        tr:nth-child(2) td {
+            border-top: 1px solid white;
+        }
+    }
+}

@@ -21,7 +21,12 @@ import {DynamicTabsDirective} from './tabs/dynamic-tabs.directive';
 import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
-import { TechniqueCellComponent } from './datatable/technique-cell/technique-cell.component';
+import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.component';
+import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component';
+import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
+import { MatrixMiniComponent } from './matrix//matrix-mini/matrix-mini.component';
+import { MatrixMicroComponent } from './matrix//matrix-micro/matrix-micro.component';
+import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
 
 
 @NgModule({
@@ -33,7 +38,12 @@ import { TechniqueCellComponent } from './datatable/technique-cell/technique-cel
     DynamicTabsDirective,
     HelpComponent,
     ExporterComponent,
-    TechniqueCellComponent
+    TechniqueCellComponent,
+    MatrixSideComponent,
+    MatrixFlatComponent,
+    MatrixMiniComponent,
+    MatrixMicroComponent,
+    TooltipComponent
   ],
   imports: [
     BrowserModule,

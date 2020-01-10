@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { DataService, Technique } from './data.service'; //import the DataService component so we can use it
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class ConfigService {
     public comment_color = "yellow";
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];
     constructor(private dataService: DataService) {
+        console.log("initializing config service");
         let self = this;
         dataService.getConfig().subscribe(function(config: any) {
             //parse feature preferences from config json

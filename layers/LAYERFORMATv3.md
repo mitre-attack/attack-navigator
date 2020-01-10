@@ -43,6 +43,7 @@ Technique objects are used to store both techniques and subtechniques. The only 
 | score | Number | No | (unscored) | Optional numeric score assigned to this technique in the layer. If omitted, the technique is considered to be "unscored" meaning that it will not be assigned a color from the gradient by the Navigator |
 | color | String | No | "" | Explicit color value assigned to the technique in this layer. Note that explicitly defined color overrides any color implied by the score – the Navigator will display the technique using the explicitly defined color |
 | metadata | Array of Metadata objects | No | | User defined metadata for this technique. See definition of Metadata object below |
+| showSubtechniques | boolean | false | false | if true, the subtechniques under this technique will be shown by default. This field is only valid under a technique with subtechniques. Note that subtechniques can still be shown/hidden using the UI controls — this field is simply the default state. |
 
 ## Gradient Object properties
 | Name     | Type     | Required? | Default Value (if not present) | Description |

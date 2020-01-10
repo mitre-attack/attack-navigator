@@ -1,0 +1,16 @@
+<div class="technique-cell" 
+     [ngStyle]="getTechniqueBackground()" 
+     [ngClass]="getClass()"
+     (click)="onLeftClick($event)"
+     (contextmenu)="onRightClick($event)"
+     (mouseenter)="onHighlight()"
+     (mouseleave)="onUnhighlight()">
+    <div>
+        <span [style.border-color]="configService.comment_color"
+              [style.color]="getTechniqueTextColor()">
+            {{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}
+            <!-- <sub>{{technique.subtechniques.length}}</sub> -->
+        </span>
+    </div>
+    <app-tooltip *ngIf="showTooltip" [placement]="'top'" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
+</div>

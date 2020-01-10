@@ -23,7 +23,7 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService, ConfigService]
+    providers: [ViewModelsService]
 
 })
 export class TabsComponent implements AfterContentInit {
@@ -45,7 +45,7 @@ export class TabsComponent implements AfterContentInit {
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
     constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
-        let self = this;
+        console.log("tabs component initializing");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }

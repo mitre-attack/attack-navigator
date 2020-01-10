@@ -1,0 +1,36 @@
+@import "../matrix-common.scss";
+
+.technique-cell {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    font-size: $sizeunit - 1px;
+    line-height: $sizeunit;
+
+    div { 
+        padding: $sizeunit /2 3px; 
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    &:not(.editing):not(.colored):not(.supertechniquecell) { outline-color: border-color(body); }
+
+    &.editing {
+        outline-color: black;
+    }
+
+    &.commented div span {
+        border-bottom: 2px solid transparent;
+    }
+
+    &.highlight {
+        background: $cell-highlight-color;
+    }
+}

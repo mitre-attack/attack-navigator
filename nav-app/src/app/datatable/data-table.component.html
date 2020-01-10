@@ -9,7 +9,7 @@
             <!-- lock selecting all with technique id -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="viewModel.changeTechniqueIDSelectionLock(); currentDropdown = null;"
+                     (click)="viewModel.selectTechniquesAcrossTactics = !viewModel.selectTechniquesAcrossTactics; currentDropdown = null;"
                      matTooltipPosition="below"
                      matTooltip="lock multi-tactic technique selection">
                      <img [src]="viewModel.selectTechniquesAcrossTactics ? 'assets/icons/ic_lock_black_24px.svg' : 'assets/icons/ic_lock_open_black_24px.svg'" alt="lock"/>
@@ -232,7 +232,7 @@
                         <b class="filter-label">{{filter}}</b>
                         <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
                             <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
-                            <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">
+                            <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption);" [checked]="viewModel.filters.inFilter(filter, filterOption)">
                             <label for="{{filterOption}}" class="checkbox-custom-label noselect">{{filterOption}}</label>
                         </div>
                         <!-- <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()">
@@ -250,7 +250,7 @@
             <!-- sorting -->
             <div *ngIf="configService.getFeature('sorting')" class="control-row-item">
                 <div class="control-row-button noselect"
-                    (click)="viewModel.sorting = (viewModel.sorting + 1) % 4; filterTechniques()"
+                    (click)="viewModel.sorting = (viewModel.sorting + 1) % 4;"
                     matTooltipPosition="below"
                     [matTooltip]="['sorting alphabetically ascending', 'sorting alphabetically descending', 'sorting by score ascending', 'sorting by score descending'][viewModel.sorting]">
                     <img [src]="['assets/icons/ic_sort_alphabetically_ascending_black_24px.svg', 'assets/icons/ic_sort_alphabetically_descending_black_24px.svg', 'assets/icons/ic_sort_numerically_ascending_black_24px.svg', 'assets/icons/ic_sort_numerically_descending_black_24px.svg'][viewModel.sorting]" alt="sorting"/>
@@ -334,7 +334,7 @@
             <!-- show or hide disabled techniques -->
             <div *ngIf="configService.getFeature('toggle_hide_disabled')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="viewModel.hideDisabled = !viewModel.hideDisabled; filterTechniques()"
+                     (click)="viewModel.hideDisabled = !viewModel.hideDisabled;"
                      matTooltipPosition="below"
                      matTooltip="show/hide disabled">
                      <img [src]="viewModel.hideDisabled ? 'assets/icons/ic_visibility_off_black_24px.svg' : 'assets/icons/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
@@ -419,7 +419,7 @@
                                 onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 45"
                                 [(ngModel)]="scoreEditField"
                                 placeholder="score"
-                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value)); filterTechniques()">
+                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value));">
                          <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
                      </mat-form-field>
                 </div>
@@ -466,56 +466,14 @@
 </div>
 
 
-<div class="tableContainer" oncontextmenu="return false">
-    <div [class]="'dataTable noselect ' + ['full', 'compact', 'mini'][viewModel.viewMode]">
-        <table>
-            <tr [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
-                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
-                [style.color]="getTacticRowTextColor()">
-                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    [class]="'header column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
-                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic"
->
-                    <div
-                        [matTooltipDisabled]="viewModel.viewMode == 0"
-                         matTooltip="{{tacticDisplayNames[tactic]}}"
-                         matTooltipPosition="right"
-                         (click)="clickTactic(tactic)"
-                         [class]="'cell link header ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
-                         [style.border-width]="viewModel.showTacticRowBackground || viewModel.viewMode == 0 ? '0px' : '1px'">
-                         {{[tacticDisplayNames[tactic], viewModel.acronym(tacticDisplayNames[tactic]), ''][viewModel.viewMode]}}
-                    </div>
-                </td>
-            </tr>
-            <tr *ngIf="viewModel.viewMode != 2"
-                [style.background]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
-                [style.border-color]="viewModel.showTacticRowBackground && viewModel.viewMode != 2  ? sanitize(viewModel.tacticRowBackground) : 'none'"
-                [style.color]="getTacticRowTextColor()">
-                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    [class]="'column' + ['full', 'compact', 'mini'][viewModel.viewMode]"
-                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
-
-                    <div class="cell itemcount">
-                        {{tactics[tactic].length}}<span *ngIf="viewModel.viewMode == 0"> items</span>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td *ngFor="let tactic of dataService.tacticNames(filteredTechniques)"
-                    [class]="'techniques column ' + ['full', 'compact', 'mini'][viewModel.viewMode]"
-                    [class.anti-highlight]="viewModel.highlightedTactic && tactic != viewModel.highlightedTactic">
-                    <technique-cell *ngFor="let technique of tactics[tactic]" 
-                                    [class.editing]="viewModel.isTechniqueSelected(technique)"
-                                    [technique]="technique" 
-                                    [viewModel]="viewModel"
-                                    (leftclick)="onTechniqueSelect($event.technique, $event.shift || $event.ctrl || $event.meta, $event.x, $event.y)"
-                                    (rightclick)="onTechniqueContextMenu($event.technique, $event.x, $event.y)"
-                                    (highlight)="viewModel.highlightedTechnique=$event; this.viewModel.hoverTactic = tactic;">
-                    </technique-cell>
-                </td>
-            </tr>
-        </table>
+<div class="matrices" oncontextmenu="return false">
+    <div class="matrices-columns">
+        <div class="matrix-column" *ngFor="let matrix of viewModel.filters.filterMatrices(dataService.matrices)">
+            <div *ngIf="viewModel.filters.filterMatrices(dataService.matrices).length > 1" class="matrix-name">{{matrix.name}}</div>
+            <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
+        </div>
     </div>
+    
 </div>
 
 
@@ -573,11 +531,11 @@
 </div>
 
 <!-- Tooltip -->
-<div class="tooltip noselect" [id]="'tooltip'+viewModel.uid">
-    <div *ngIf="viewModel.highlightedTechnique">
-        <div>
+<!-- <div class="tooltip noselect" [id]="'tooltip'+viewModel.uid">
+    <div *ngIf="viewModel.highlightedTechnique"> -->
+        <!-- <div>
             <span *ngIf="viewModel.viewMode != 0">{{viewModel.highlightedTechnique.name}} (</span>{{viewModel.highlightedTechnique.technique_id}}<span *ngIf="viewModel.viewMode != 0">)</span>
-        </div>
+        </div> -->
         <!-- <table>
             <tr *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).score">
                 <td>Score:</td>
@@ -588,27 +546,27 @@
                 <td>{{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_id).comment}}</td>
             </tr>
         </table> -->
-        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).score">
+        <!-- <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).score">
             <b>Score:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).score}}
         </div>
         <div class="comment" [id]="'comment'+viewModel.uid" *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).comment">
             <b>Comment:</b> {{viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).comment}}
-        </div>
-        <div class="comment-overflow-note" *ngIf="toolTipOverflows">
+        </div> -->
+        <!-- <div class="comment-overflow-note" *ngIf="toolTipOverflows">
             ...
-        </div>
-        <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).metadata.length > 0">
+        </div> -->
+        <!-- <div *ngIf="viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).metadata.length > 0">
             <b>Metadata:</b>
             <ul class="metadatalist">
                 <li *ngFor="let metadata of viewModel.getTechniqueVM(viewModel.highlightedTechnique.technique_tactic_union_id).metadata">
                     {{metadata.name}}: {{metadata.value}}
                 </li>
             </ul>
-        </div>
+        </div> -->
 
-    </div>
+    <!-- </div>
 
-</div>
+</div> -->
 
 <div class="legendBar" (click)="toggleLegend()" *ngIf="!showingLegend && configService.getFeature('legend')">
     <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">

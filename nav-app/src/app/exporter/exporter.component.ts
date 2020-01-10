@@ -24,9 +24,9 @@ export class ExporterComponent implements AfterViewInit {
         this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
         let self = this;
         this.exportData.filteredTechniques.forEach(function(technique: Technique) {
-            if (self.exportData.viewModel.hasTechniqueVM(technique.technique_tactic_union_id)) {
-                if (self.exportData.viewModel.getTechniqueVM(technique.technique_tactic_union_id).score != "") self.hasScores = true;
-            }
+            // if (self.exportData.viewModel.hasTechniqueVM(technique.technique_tactic_union_id)) {
+            //     if (self.exportData.viewModel.getTechniqueVM(technique.technique_tactic_union_id).score != "") self.hasScores = true;
+            // }
         })
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)

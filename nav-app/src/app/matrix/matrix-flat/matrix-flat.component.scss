@@ -1,0 +1,76 @@
+@import "../matrix-common.scss";
+.matrix.flat {
+    .tactic {
+        margin-right: 5px;
+        width: 1%;
+        vertical-align: top;
+
+        &.name, &.count {
+            text-align: center;
+            font-size: $sizeunit + 2px;
+        }
+        &.name {
+            font-weight: bold;
+        }
+        &.count { 
+            font-size: $sizeunit - 1px;
+            border-bottom: 1px solid black;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .subtechniques-row.hidden {
+            display: none;
+        }
+        .supertechnique {
+            border-collapse: collapse;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            td {
+                padding: 0;
+                vertical-align: top;
+                &.sidebar.technique {
+                    min-width: 8px;
+                    width: 12px;
+                    padding: 0;    
+                    background: on-color-deemphasis(body);
+                    cursor: pointer;
+                    vertical-align: middle;
+                    .handle {
+                        text-align: center;
+                        vertical-align: middle;
+                        transform: rotate(-90deg);
+                        color: color-alternate(body);
+                        
+                        width: 12px; height: 9px; 
+                        
+                        font-size: 16px;
+                        line-height: 12px;
+                    }
+                }
+                &.sidebar.subtechniques {
+                    svg { fill: on-color-deemphasis(body); }
+                }
+                &.sidebar {
+                    border-right: 2px solid on-color-deemphasis(body);
+                }
+                &.technique {
+                    outline: 1px solid on-color-deemphasis(body);
+                    outline-offset: -1px;
+                }
+            }
+        }
+
+        .more-icon {
+            transition: all ease 0.125s;
+            vertical-align: top;
+            // TODO icon
+            transform: scale(0.5) rotate(-90deg);
+            width: 12px; height: 12px;
+            &.expanded {
+                transform: scale(0.5);
+            }
+        }
+    }
+}
