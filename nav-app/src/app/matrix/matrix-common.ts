@@ -6,6 +6,7 @@ import { ConfigService } from '../config.service';
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
     @Input() viewModel: ViewModel;
+    @Output() selectionChanged = new EventEmitter<any>();
     private configService: ConfigService;
 
     // @Output() techniqueRightClicked = new EventEmitter<TechniqueEvent>();
@@ -44,6 +45,7 @@ export abstract class MatrixCommon {
                 this.viewModel.selectTechnique(technique, tactic);
             }
         }
+        this.selectionChanged.emit();
     }
 
     onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {

@@ -470,7 +470,7 @@
     <div class="matrices-columns">
         <div class="matrix-column" *ngFor="let matrix of viewModel.filters.filterMatrices(dataService.matrices)">
             <div *ngIf="viewModel.filters.filterMatrices(dataService.matrices).length > 1" class="matrix-name">{{matrix.name}}</div>
-            <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
+            <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
         </div>
     </div>
     

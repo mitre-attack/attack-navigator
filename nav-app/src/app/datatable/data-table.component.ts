@@ -594,28 +594,12 @@ export class DataTableComponent implements AfterViewInit {
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
     onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-        // if (!this.configService.getFeature('selecting_techniques')) {
-        //     this.onTechniqueContextMenu(technique, eventX, eventY);
-        //     return;
-        // }
-        // //console.log(technique);
-        // if (addToSelection) {
-        //     // TODO add/remove from selection
-
-        //     if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.removeFromTechniqueSelection(technique);
-        //     else this.viewModel.addToTechniqueSelection(technique)
-        // } else {
-        //     if (this.viewModel.getSelectedTechniqueCount() > 1) this.viewModel.replaceTechniqueSelection(technique)
-        //     else if (this.viewModel.isTechniqueSelected(technique)) this.viewModel.clearTechniqueSelection();
-        //     else this.viewModel.replaceTechniqueSelection(technique);
-        // }
-        // //don't do any control population if nothing is being edited
-        // if (!this.viewModel.isCurrentlyEditing()) {
-        //     if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
-        //     return;
-        // }
-        // //else populate editing controls
-
+        
+        if (!this.viewModel.isCurrentlyEditing()) {
+            if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            return;
+        }
+        //else populate editing controls
         this.populateEditFields();
     }
 
