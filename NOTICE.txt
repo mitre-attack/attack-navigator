@@ -1,4 +1,4 @@
-Copyright 2018 The MITRE Corporation
+Copyright 2020 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 
@@ -14,5 +14,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This project makes use of ATT&CK™
-ATT&CK™ Terms of Use - https://attack.mitre.org/resources/terms-of-use/
+This project makes use of ATT&CK®
+ATT&CK® Terms of Use - https://attack.mitre.org/resources/terms-of-use/

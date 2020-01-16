@@ -1,7 +1,7 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500" rel="stylesheet">
 <div *ngIf="configService.getFeature('header')" [style.margin-bottom]="configService.getFeature('tabs') ? '0px' : '15px'" class="header" >
     <div class="logo">
-        <a href="http://attack.mitre.org">MITRE ATT&CK<sup style="font-size: 6pt">TM</sup> Navigator</a>
+        <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
     </div>
     <div *ngIf="configService.getFeature('tabs')" class="helpButton" matTooltip="help" (click)="newHelpTab(forceNew=false)">
         ?
