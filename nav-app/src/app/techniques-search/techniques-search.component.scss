@@ -1,0 +1,51 @@
+@import "../../colors.scss";
+.techniques-search {
+    
+    .query {
+        padding: 0 10px;
+    }
+    .fields {
+        padding: 0 10px;
+        text-align: left;
+        .field {
+            display: inline-block;
+        }
+    }
+    h1 {
+        font-size: 14px;
+        background: $panel-light;
+        padding: 5px;
+        margin: 0;
+        text-align: center;
+    }
+    .allresults-buttons {
+        button {
+            width: 48.5%;
+        }
+    }
+    .results {
+        max-height: 150px;
+        overflow-y: auto;
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            tr + tr {
+                border-top: 1px solid $panel-light;
+            }
+            tr:hover {
+                background: $cell-highlight-color
+            }
+            td {
+                width: 100px;
+                text-align: left;
+                &+td {
+                    width: 1px;
+                }
+            }
+        }
+        .no-results {
+            padding: 5px;
+            text-align: center;
+        }
+    }
+}

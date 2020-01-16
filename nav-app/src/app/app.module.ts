@@ -27,6 +27,8 @@ import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component
 import { MatrixMiniComponent } from './matrix//matrix-mini/matrix-mini.component';
 import { MatrixMicroComponent } from './matrix//matrix-micro/matrix-micro.component';
 import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
+import { MultiselectComponent } from './multiselect/multiselect.component';
+import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
 
 
 @NgModule({
@@ -43,7 +45,9 @@ import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.compon
     MatrixFlatComponent,
     MatrixMiniComponent,
     MatrixMicroComponent,
-    TooltipComponent
+    TooltipComponent,
+    MultiselectComponent,
+    TechniquesSearchComponent
   ],
   imports: [
     BrowserModule,

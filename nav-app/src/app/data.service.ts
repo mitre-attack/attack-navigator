@@ -87,14 +87,14 @@ export class DataService {
                 // parse according to type
                 switch(sdo.type) {
                     case "intrusion-set":
-                        this.groups.push(new Group(sdo));
+                        this.groups.push(new Group(sdo, this));
                         break;
                     case "malware":
                     case "tool":
-                        this.software.push(new Software(sdo));
+                        this.software.push(new Software(sdo, this));
                         break;
                     case "course-of-action":
-                        this.mitigations.push(new Mitigation(sdo));
+                        this.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case "relationship":
                         if (sdo.relationship_type == "subtechnique-of") {
@@ -108,19 +108,19 @@ export class DataService {
                         } else if (sdo.relationship_type == "uses") {
                             if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
                                 // record group:technique relationship
-                                if (this.relationships["group_uses"].has(sdo.target_ref)) {
-                                    let ids = this.relationships["group_uses"].get(sdo.target_ref);
-                                    ids.push(sdo.source_ref);
+                                if (this.relationships["group_uses"].has(sdo.source_ref)) {
+                                    let ids = this.relationships["group_uses"].get(sdo.source_ref);
+                                    ids.push(sdo.target_ref);
                                 } else {
-                                    this.relationships["group_uses"].set(sdo.target_ref, [sdo.source_ref])
+                                    this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
                                 }
                             } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
                                 // record software:technique relationship
-                                if (this.relationships["software_uses"].has(sdo.target_ref)) {
-                                    let ids = this.relationships["software_uses"].get(sdo.target_ref);
-                                    ids.push(sdo.source_ref);
+                                if (this.relationships["software_uses"].has(sdo.source_ref)) {
+                                    let ids = this.relationships["software_uses"].get(sdo.source_ref);
+                                    ids.push(sdo.target_ref);
                                 } else {
-                                    this.relationships["software_uses"].set(sdo.target_ref, [sdo.source_ref])
+                                    this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                                 }
                             }
                         } else if (sdo.relationship_type == "mitigates") {
@@ -151,13 +151,13 @@ export class DataService {
         for (let techniqueSDO of techniqueSDOs) {
             let subtechniques: Technique[] = [];
             if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                subtechniques = this.relationships.subtechniques_of.get(techniqueSDO.id).map((sub_id) => new Technique(idToTechniqueSDO.get(sub_id), []));
+                subtechniques = this.relationships.subtechniques_of.get(techniqueSDO.id).map((sub_id) => new Technique(idToTechniqueSDO.get(sub_id), [], this));
             }
-            this.techniques.push(new Technique(techniqueSDO, subtechniques));
+            this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
         //create matrices, which also creates tactics and filters techniques
         for (let matrixSDO of matrixSDOs) {
-            this.matrices.push(new Matrix(matrixSDO, idToTacticSDO, this.techniques));
+            this.matrices.push(new Matrix(matrixSDO, idToTacticSDO, this.techniques, this));
         }
 
         console.log("data.service parsing complete")
@@ -347,13 +347,16 @@ export abstract class BaseStix {
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
-    protected dataService: DataService;
-    constructor(stixSDO: any) {
+    public readonly stage: string;       // prepare or act
+    protected readonly dataService: DataService;
+    constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
         this.attackID = stixSDO.external_references[0].external_id;
+        this.stage = stixSDO.external_references[0].source_name == "mitre-pre-attack" ? "prepare" : "act";
         this.url = stixSDO.external_references[0].url;
+        this.dataService = dataService;
     }
 }
 
@@ -368,9 +371,9 @@ export class Matrix extends BaseStix {
      * @param {Map<string, any>} idToTacticSDO map of tactic ID to tactic SDO
      * @param {Technique[]} techniques all techniques defined in the domain
      */
-    constructor(stixSDO: any, idToTacticSDO: Map<string, any>, techniques: Technique[]) {
-        super(stixSDO);
-        this.tactics = stixSDO.tactic_refs.map((tacticID) => new Tactic(idToTacticSDO.get(tacticID), techniques))
+    constructor(stixSDO: any, idToTacticSDO: Map<string, any>, techniques: Technique[], dataService: DataService) {
+        super(stixSDO, dataService);
+        this.tactics = stixSDO.tactic_refs.map((tacticID) => new Tactic(idToTacticSDO.get(tacticID), techniques, this.dataService))
     }
 }
 
@@ -385,8 +388,8 @@ export class Tactic extends BaseStix {
      * @param {*} stixSDO for the tactic
      * @param {Technique[]} techniques all techniques in the domain
      */
-    constructor(stixSDO: any, techniques: Technique[]) {
-        super(stixSDO);
+    constructor(stixSDO: any, techniques: Technique[], dataService: DataService) {
+        super(stixSDO, dataService);
         this.shortname = stixSDO.x_mitre_shortname;
         this.techniques = techniques.filter((technique: Technique) => technique.tactics.includes(this.shortname));
     }
@@ -403,8 +406,8 @@ export class Technique extends BaseStix {
      * @param {*} stixSDO for the technique
      * @param {Technique[]} subtechniques occuring under the technique
      */
-    constructor(stixSDO: any, subtechniques: Technique[]) {
-        super(stixSDO);
+    constructor(stixSDO: any, subtechniques: Technique[], dataService: DataService) {
+        super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms;
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         this.subtechniques = subtechniques;
@@ -443,6 +446,12 @@ export class Software extends BaseStix {
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
+    /**
+     * Return all related techniques
+     */
+    public relatedTechniques(): string[] {
+        return this.used();
+    }
 }
 /**
  * Object representing a Group (intrusion-set) in the ATT&CK catalogue
@@ -456,6 +465,12 @@ export class Group extends BaseStix {
         let rels = this.dataService.relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
+    }
+    /**
+     * Return all related techniques
+     */
+    public relatedTechniques(): string[] {
+        return this.used();
     }
 }
 
@@ -471,5 +486,11 @@ export class Mitigation extends BaseStix {
         let rels = this.dataService.relationships.mitigates;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
+    }
+    /**
+     * Return all related techniques
+     */
+    public relatedTechniques(): string[] {
+        return this.mitigated();
     }
 }

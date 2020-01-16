@@ -556,7 +556,6 @@ export class ViewModel {
      * @param {Technique} technique to unselect
      */
     public unselectTechniqueAcrossTactics(technique: Technique) {
-        console.log("unselect all", technique.attackID)
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.delete(id);
         }

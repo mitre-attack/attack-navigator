@@ -28,47 +28,7 @@
                 </div>
 
                 <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
-
-                    <mat-form-field style="width:100%; margin-top:5px; padding: 10px; padding-bottom:0px;">
-                        <input matInput
-
-                        [(ngModel)]="searchString"
-                        (input)="updateSearchDropdown()"
-                        placeholder="Search for techniques here...">
-
-                    </mat-form-field>
-                    <div><b>Properties searched:</b></div>
-
-                    <div>
-                        <div class="noselect">
-                            <input id="search-name-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingName" (change)="updateSearchDropdown()">
-                            <label for="search-name-checkbox" class="checkbox-custom-label">Name</label>
-                            <input id="search-id-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingID" (change)="updateSearchDropdown()">
-                            <label for="search-id-checkbox" class="checkbox-custom-label">ID</label>
-                            <input id="search-description-checkbox" class="checkbox-custom" type="checkbox" [(ngModel)]="searchingDescription" (change)="updateSearchDropdown()">
-                            <label for="search-description-checkbox" class="checkbox-custom-label">Description</label>
-                        </div>
-                    </div>
-
-                    <div>
-                        <button  (click)="selectAllInSearch(); populateEditFields();" style="width:48.5%" class="button">select all</button>
-                        <button (click)="deselectAllInSearch(); populateEditFields();" style="width:48.5%; margin-left:2px;" class="button">deselect all</button>
-                    </div>
-
-                    <div class="search-list">
-                        <table>
-                            <tr  *ngFor="let result of searchResults" class="search-list-item">
-                                <td>
-                                    <div class="search-list-item-label">
-                                        {{result.name}}
-                                    </div>
-                                </td>
-                                <td><a style="margin-right:2px" [href]="result.external_references_url" target="_blank">view</a></td>
-                                <td><button  (click)="viewModel.addToTechniqueSelection_technique_id(result.technique_id); populateEditFields();" class="button">select</button></td>
-                                <td><button (click)="viewModel.removeFromTechniqueSelection_technique_id(result.technique_id); populateEditFields();" class="button">deselect</button></td>
-                            </tr>
-                        </table>
-                    </div>
+                    <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
                 </div>
             </div>
 
@@ -82,23 +42,7 @@
                     <img src="assets/icons/ic_playlist_add_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="multiselect-grouping" *ngFor="let multiSelectGroup of [{data: threatGroupList, label: 'Threat Groups'}, {data: softwareGroupList, label: 'Software'}]">
-                        <div class="multiselect-grouping-label">{{multiSelectGroup.label}}</div>
-                        <div class="multiselect-list">
-                            <table>
-                                <tr  *ngFor="let securityInstance of multiSelectGroup.data" class="multiselect-list-item" [class.selected]="isSecurityInstanceSelected(securityInstance)">
-                                    <td>
-                                        <div class="multiselect-list-item-label">
-                                            {{securityInstance.name}}
-                                        </div>
-                                    </td>
-                                    <td><a *ngIf="securityInstance.url" style="margin-right:2px" [href]="securityInstance.url" target="_blank">view</a><span *ngIf="!securityInstance.url">----</span></td>
-                                    <td><button (click)="selectSecurityInstance(securityInstance); populateEditFields();" class="multiselect-list-item-button button">select</button></td>
-                                    <td><button (click)="deselectSecurityInstance(securityInstance); populateEditFields();" class="multiselect-list-item-button button">deselect</button></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                    <app-multiselect [viewModel]="viewModel"></app-multiselect>
                 </div>
             </div>
 
@@ -106,11 +50,11 @@
             <!-- deselect all -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="viewModel.clearTechniqueSelection(); currentDropdown = null;"
+                     (click)="viewModel.clearSelectedTechniques(); currentDropdown = null;"
                      matTooltipPosition="below"
-                     matTooltip="deselect {{this.viewModel.selectedTechniques.length}} techniques">
+                     matTooltip="deselect {{this.viewModel.getSelectedTechniqueCount()}} techniques">
                     <img src="assets/icons/ic_clear_black_24px.svg" alt="deselect all"/>
-                    <span class="deselectNumber">{{this.viewModel.selectedTechniques.length}}</span>
+                    <span class="deselectNumber">{{this.viewModel.getSelectedTechniqueCount()}}</span>
                 </div>
             </div>
 

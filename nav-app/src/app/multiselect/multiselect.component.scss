@@ -1,0 +1,32 @@
+@import "../../colors.scss";
+.multiselect {
+    .stixType {
+        h1 {
+            font-size: 14px;
+            background: $panel-light;
+            padding: 5px;
+            margin: 0;
+        }
+        .objects {
+            height: 150px;
+            overflow-y: scroll;
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                tr + tr {
+                    border-top: 1px solid $panel-light;
+                }
+                tr:hover {
+                    background: $cell-highlight-color
+                }
+                td {
+                    width: 100px;
+                    text-align: left;
+                    &+td {
+                        width: 1px;
+                    }
+                }
+            }
+        }
+    }
+}
