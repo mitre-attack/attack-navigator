@@ -1,4 +1,4 @@
-# ATT&CK<sup>™</sup> Navigator
+# ATT&CK® Navigator
 The ATT&CK Navigator is designed to provide basic navigation and annotation of [ATT&CK](https://attack.mitre.org) matrices, something that people are already doing today in tools like Excel.  We've designed it to be simple and generic - you can use the Navigator to visualize your defensive coverage, your red/blue team planning, the frequency of detected techniques or anything else you want to do.  The Navigator doesn't care - it just allows you to manipulate the cells in the matrix (color coding, adding a comment, assigning a numerical value, etc.).  We thought having a simple tool that everyone could use to visualize the matrix would help make it easy to use ATT&CK.
 
 The principal feature of the Navigator is the ability for users to define layers - custom views of the ATT&CK knowledge base - e.g. showing just those techniques for a particular platform or highlighting techniques a specific adversary has been known to use. Layers can be created interactively within the Navigator or generated programmatically and then visualized via the Navigator.
@@ -47,7 +47,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. If serving or compiling the application gives the warning `Module not found: can't resolve 'fs'`, run the command `npm run postinstall`. The postinstall step usually runs automatically after `npm install` to patch the `fs` issue, but in some environments it must be run manually.
 
 ## Documentation
-When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK<sup>™</sup> Navigator** title to view its documentation.
+When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK® Navigator** title to view its documentation.
 
 ## Enterprise and Mobile Domains
 By default, the ATT&CK Navigator will generate a matrix view of the tactics and techniques matrix for the [Enterprise ATT&CK](https://attack.mitre.org) technology domain knowledge base. All tactics and techniques in this domain are contained within the *act* stage, which is also pre-selected by default.
@@ -67,7 +67,7 @@ The **layers** folder's **README** contains more detailed information about how 
 More information on how layers are used and developed can be found in the ATT&CK Navigator documentation that can be viewed by clicking **?** when running the app in a browser.
 
 ## Adding Custom Context Menu Options
-To create custom options to the **ATT&CK<sup>™</sup> Navigator** context menu using data in the Navigator, objects must be added to the array labeled `custom_context_menu_options` in `nav-app/src/assets/config.json`. Each object must have a property **label**, which is the text displayed in the context menu, and a property **url**, which is where the user is navigated.
+To create custom options to the **ATT&CK® Navigator** context menu using data in the Navigator, objects must be added to the array labeled `custom_context_menu_options` in `nav-app/src/assets/config.json`. Each object must have a property **label**, which is the text displayed in the context menu, and a property **url**, which is where the user is navigated.
 
 To utilize data on right-clicked technique in the url, parameters surrounded by tildes can be added to the string. For example: using `http://www.someurl.com/~Technique_ID~` as the url in the custom option would lead to `http://www.someurl.com/T1098`, if the right-clicked technique's ID was T1098.
 
@@ -153,7 +153,7 @@ The following is an example iframe which embeds our [*Bear APTs](layers/data/sam
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
 
 #### ATT&CK
-ATT&CK™ is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
+ATT&CK® is a curated knowledge base and model for cyber adversary behavior, reflecting the various phases of an adversary’s lifecycle and the platforms they are known to target. ATT&CK is useful for understanding security risk against known adversary behavior, for planning security improvements, and verifying defenses work as expected.
 
 https://attack.mitre.org
 
@@ -167,7 +167,7 @@ STIX is designed to improve many different capabilities, such as collaborative t
 https://oasis-open.github.io/cti-documentation/
 
 ## Notice
-Copyright 2018 The MITRE Corporation
+Copyright 2020 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 
@@ -183,6 +183,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This project makes use of ATT&CK<sup>™</sup>
+This project makes use of ATT&CK®
 
-[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
+[ATT&CK® Terms of Use](https://attack.mitre.org/resources/terms-of-use/)

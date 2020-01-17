@@ -1,3 +1,8 @@
+# v2.3.2 - 17 January 2020
+## Improvements
+- Updated trademark to registered trademark and updated copyright date to 2020. See issue [#125](https://github.com/mitre-attack/attack-navigator/pull/125).
+- Updated help page to be more legible by increasing page margins.
+
 # v2.3.1 - 29 October 2019
 ## Fixes
 - Fixes a bug where default_layers specified in `config.json` would not load. See pull request [#109](https://github.com/mitre-attack/attack-navigator/pull/109).
