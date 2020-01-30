@@ -79,11 +79,27 @@ export class TechniqueCellComponent implements OnInit {
             theclass += " disabled"
         if (this.viewModel.isTechniqueSelected(this.technique, this.tactic))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.id == this.technique.id){
+        if (this.viewModel.highlightedTechnique){
             if (this.viewModel.selectTechniquesAcrossTactics) {
-                theclass += " highlight"
+                if (this.viewModel.selectSubtechniquesWithParent) {
+                    let compareTo = this.viewModel.highlightedTechnique;
+                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
+                    let compare = this.technique;
+                    if (compare.isSubtechnique) compare = compare.parent;
+                    if (compare.attackID == compareTo.attackID) theclass += " highlight"
+                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
+                    theclass += " highlight"
+                }
             } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
-                theclass += " highlight"
+                if (this.viewModel.selectSubtechniquesWithParent) {
+                    let compareTo = this.viewModel.highlightedTechnique;
+                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
+                    let compare = this.technique;
+                    if (compare.isSubtechnique) compare = compare.parent;
+                    if (compare.attackID == compareTo.attackID) theclass += " highlight"
+                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
+                    theclass += " highlight"
+                }
             }
         }
 
