@@ -34,6 +34,7 @@ export abstract class MatrixCommon {
             let techniqueVM = this.viewModel.getTechniqueVM(technique, tactic);
             // filter by enabled
             if (this.viewModel.hideDisabled && !techniqueVM.enabled) return false;
+            if (this.matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
             // filter by platform
             let platforms = new Set(technique.platforms)
             for (let platform of this.viewModel.filters.platforms.selection) {
