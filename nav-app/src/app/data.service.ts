@@ -401,6 +401,8 @@ export class Technique extends BaseStix {
     public readonly platforms: string[];        // platforms for this technique.
     public readonly tactics: string[];          // tactics this technique is found under in phase-name format
     public readonly subtechniques: Technique[]; // subtechniques under this technique
+    public parent: Technique = null;            // parent technique. Only present if it's a sub-technique
+    public get isSubtechnique() { return this.parent != null; }
     /**
      * Creates an instance of Technique.
      * @param {*} stixSDO for the technique
@@ -411,6 +413,9 @@ export class Technique extends BaseStix {
         this.platforms = stixSDO.x_mitre_platforms;
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         this.subtechniques = subtechniques;
+        for (let subtechnique of this.subtechniques) {
+            subtechnique.parent = this;
+        }
     }
 
     /**

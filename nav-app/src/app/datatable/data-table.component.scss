@@ -167,6 +167,11 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
+.select_behavior {
+    padding: 5px;
+    text-align: left;
+}
+
 .contextMenu-cover {
     // covers entire page
     position: fixed;

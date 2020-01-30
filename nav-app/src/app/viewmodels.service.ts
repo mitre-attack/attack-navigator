@@ -382,6 +382,8 @@ export class ViewModel {
     legendColorPresets: string[] = [];
 
     selectTechniquesAcrossTactics: boolean = true;
+    selectSubtechniquesWithParent: boolean = false;
+
     needsToConstructTechniqueVMs = false;
     legacyTechniques = [];
 
@@ -527,16 +529,38 @@ export class ViewModel {
      * select the given technique in the given tactic
      * @param {Technique} technique to select
      * @param {Tactic} tactic wherein the technique occurs
+     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public selectTechniqueInTactic(technique: Technique, tactic: Tactic): void {
+    public selectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren=true): void {
+        if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
+            if (technique.isSubtechnique) { //select from parent
+                this.selectTechniqueInTactic(technique.parent, tactic, true);
+                return;
+            } else { //select subtechniques
+                for (let subtechnique of technique.subtechniques) {
+                    this.selectTechniqueInTactic(subtechnique, tactic, false);
+                }
+            }
+        }
         this.selectedTechniques.add(technique.get_technique_tactic_id(tactic));
     }
 
     /**
      * select the given technque across all tactics in which it occurs
      * @param {Technique} technique to select
+     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public selectTechniqueAcrossTactics(technique: Technique): void {
+    public selectTechniqueAcrossTactics(technique: Technique, walkChildren=true): void {
+        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
+            if (technique.isSubtechnique) { //select from parent
+                this.selectTechniqueAcrossTactics(technique.parent, true);
+                return;
+            } else { //select subtechniques
+                for (let subtechnique of technique.subtechniques) {
+                    this.selectTechniqueAcrossTactics(subtechnique, false);
+                }
+            }
+        }
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.add(id);
         }
@@ -546,16 +570,38 @@ export class ViewModel {
      * unselect the given technique in the given tactic
      * @param {Technique} technique to unselect
      * @param {Tactic} tactic wherein the technique occurs
+     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public unselectTechniqueInTactic(technique: Technique, tactic: Tactic): void {
+    public unselectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren=true): void {
+        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
+            if (technique.isSubtechnique) { //select from parent
+                this.unselectTechniqueInTactic(technique.parent, tactic, true);
+                return;
+            } else { //select subtechniques
+                for (let subtechnique of technique.subtechniques) {
+                    this.unselectTechniqueInTactic(subtechnique, tactic, false);
+                }
+            }
+        }
         this.selectedTechniques.delete(technique.get_technique_tactic_id(tactic));
     }
     
     /**
      * unselect the given technque across all tactics in which it occurs
      * @param {Technique} technique to unselect
+     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public unselectTechniqueAcrossTactics(technique: Technique) {
+    public unselectTechniqueAcrossTactics(technique: Technique, walkChildren=true) {
+        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
+            if (technique.isSubtechnique) { //select from parent
+                this.unselectTechniqueAcrossTactics(technique.parent, true);
+                return;
+            } else { //select subtechniques
+                for (let subtechnique of technique.subtechniques) {
+                    this.unselectTechniqueAcrossTactics(subtechnique, false);
+                }
+            }
+        }
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.delete(id);
         }
@@ -594,13 +640,32 @@ export class ViewModel {
     * * @param  {Tactic}  tactic wherein the technique occurs
      * @return {boolean}           true if selected, false otherwise
      */
-    isTechniqueSelected(technique: Technique, tactic: Tactic): boolean {
+    public isTechniqueSelected(technique: Technique, tactic: Tactic, walkChildren=true): boolean {
         if (this.selectTechniquesAcrossTactics) {
+            if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
+                if (technique.isSubtechnique) { //select from parent
+                    return this.isTechniqueSelected(technique.parent, tactic, true);
+                } else {
+                    for (let subtechnique of technique.subtechniques) {
+                        if (this.isTechniqueSelected(subtechnique, tactic, false)) return true;
+                    }
+                }
+            }
+
             for (let id of technique.get_all_technique_tactic_ids()) {
                 if (this.selectedTechniques.has(id)) return true;
             }
             return false;
         } else {
+            if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
+                if (technique.isSubtechnique) { //select from parent
+                    return this.isTechniqueSelected(technique.parent, tactic, true);
+                } else {
+                    for (let subtechnique of technique.subtechniques) {
+                        if (this.isTechniqueSelected(subtechnique, tactic, false)) return true;
+                    }
+                }
+            }
             return this.selectedTechniques.has(technique.get_technique_tactic_id(tactic));
         }
     }
@@ -609,13 +674,54 @@ export class ViewModel {
      * return the number of selected techniques
      * @return {number} the number of selected techniques
      */
-    getSelectedTechniqueCount(): number {
+    public getSelectedTechniqueCount(): number {
         if (this.selectTechniquesAcrossTactics) {
-            let ids = new Set();
-            this.selectedTechniques.forEach((unionID) => ids.add(unionID.split("^")[0]))
-            return ids.size;
+            if (this.selectSubtechniquesWithParent) {
+                // match across tactics
+                // match subtechniques and parents
+                
+                // matches this part
+                // vvvvv     
+                // T1001.001^TA1000
+                let ids = new Set();
+                this.selectedTechniques.forEach((unionID) => ids.add(unionID.split("^")[0].split(".")[0]));
+                return ids.size;
+            } else {
+                // match across tactics
+                // differentiate subtechniques and parents
+
+                // matches this part
+                // vvvvv vvv
+                // T1001.001^TA1000
+                let ids = new Set();
+                this.selectedTechniques.forEach((unionID) => ids.add(unionID.split("^")[0]));
+                return ids.size;
+            }
         } else {
-            return this.selectedTechniques.size;
+            if (this.selectSubtechniquesWithParent) {
+                // differentiate tactics
+                // match subtechniques and parents
+
+                // matches this part
+                // vvvvv     vvvvvv
+                // T1001.001^TA1000
+                let ids = new Set();
+                this.selectedTechniques.forEach((unionID) => {
+                    let split = unionID.split("^");
+                    let tacticID = split[1];
+                    let techniqueID = split[0].split(".")[0];
+                    ids.add(techniqueID + "^" + tacticID);
+                })
+                return ids.size;
+            } else {
+                // differentiate tactics
+                // differentiate subtechniques and parents
+
+                // matches this part
+                // vvvvv vvv vvvvvv
+                // T1001.001^TA1000
+                return this.selectedTechniques.size;
+            }
         }
     }
 
@@ -656,7 +762,7 @@ export class ViewModel {
      * Return true if currently editing any techniques, false otherwise
      * @return {boolean} true if currently editing any techniques, false otherwise
      */
-    isCurrentlyEditing(): boolean {
+    public isCurrentlyEditing(): boolean {
         return this.getSelectedTechniqueCount() > 0;
     }
 
@@ -665,7 +771,7 @@ export class ViewModel {
      * @param {string} field the field to edit
      * @param {any}    value the value to place in the field
      */
-    editSelectedTechniques(field: string, value: any): void {
+    public editSelectedTechniques(field: string, value: any): void {
         this.selectedTechniques.forEach((id) => {
             this.getTechniqueVM_id(id)[field] = value;
         })
@@ -674,7 +780,7 @@ export class ViewModel {
     /**
      * Reset the selected techniques' annotations to their default values
      */
-    resetSelectedTechniques(): void {
+    public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
             this.getTechniqueVM_id(id).score = "";
             this.getTechniqueVM_id(id).comment = "";
@@ -688,7 +794,7 @@ export class ViewModel {
      * @param  field the field to get the common value from
      * @return       the value of the field if all selected techniques have the same value, otherwise ""
      */
-    getEditingCommonValue(field: string): any {
+    public getEditingCommonValue(field: string): any {
         if (!this.isCurrentlyEditing()) return "";
         let ids = Array.from(this.selectedTechniques);
         let commonValue = this.getTechniqueVM_id(ids[0])[field];
@@ -702,7 +808,7 @@ export class ViewModel {
     /**
      * add a new blank metadata to the metadata list, for editing in UI
      */
-    addMetadata() {
+    public addMetadata() {
         let m = new Metadata()
         this.metadata.push(m);
     }
@@ -711,7 +817,7 @@ export class ViewModel {
      * remove a metadata from the metadata list
      * @param index the index to remove from the list
      */
-    removeMetadata(index: number) {
+    public removeMetadata(index: number) {
         this.metadata.splice(index, 1)
     }
 
@@ -751,6 +857,7 @@ export class ViewModel {
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
         rep.selectTechniquesAcrossTactics = this.selectTechniquesAcrossTactics;
+        rep.selectSubtechniquesWithParent = this.selectSubtechniquesWithParent;
 
         return JSON.stringify(rep, null, "\t");
     }
@@ -834,6 +941,10 @@ export class ViewModel {
         if ("selectTechniquesAcrossTactics" in obj) {
             if (typeof(obj.selectTechniquesAcrossTactics) === "boolean") this.selectTechniquesAcrossTactics = obj.selectTechniquesAcrossTactics
             else console.error("TypeError: selectTechniquesAcrossTactics field is not a boolean")
+        }
+        if ("selectSubtechniquesWithParent" in obj) {
+            if (typeof(obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
+            else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
         }
         if ("techniques" in obj) {
             if(obj.techniques.length > 0){

@@ -6,17 +6,29 @@
             </div>
 
 
-            <!-- lock selecting all with technique id -->
-            <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="viewModel.selectTechniquesAcrossTactics = !viewModel.selectTechniquesAcrossTactics; currentDropdown = null;"
-                     matTooltipPosition="below"
-                     matTooltip="lock multi-tactic technique selection">
-                     <img [src]="viewModel.selectTechniquesAcrossTactics ? 'assets/icons/ic_lock_black_24px.svg' : 'assets/icons/ic_lock_open_black_24px.svg'" alt="lock"/>
+            <!-- lock selection locks -->
+            <div *ngIf="configService.getFeature('selecting_techniques')" class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'selection_behavior' ? 'selection_behavior' : null;"
+                    matTooltipPosition="below"
+                    matTooltip="selection behavior">
+                    <img src="assets/icons/ic_lock_black_24px.svg"/>
+                </div>
+                <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_behavior'" #dropdown [class.left]="checkalign(dropdown)">
+                    <!-- selectTechniquesAcrossTactics -->
+                    <div>
+                        <input id="select_behavior_tactic" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.selectTechniquesAcrossTactics">
+                        <label for="select_behavior_tactic" class="checkbox-custom-label noselect">select techniques across tactics</label>
+                    </div>
+                    <!-- selectSubtechniquesWithParent -->
+                    <div>
+                        <input id="select_behavior_subtechnique" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.selectSubtechniquesWithParent">
+                        <label for="select_behavior_subtechnique" class="checkbox-custom-label noselect">select sub-techniques with parent</label>
+                    </div>
                 </div>
             </div>
 
-
+            
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
