@@ -276,6 +276,7 @@ export class DataService {
             )
         }
         else if (refresh || !this.mobileData$){
+            console.log("retrieving data", this.mobileDataURL),
             this.mobileData$ = Observable.forkJoin(
                 this.http.get(this.mobileDataURL),
                 this.http.get(this.pre_attack_URL)
