@@ -1,0 +1,35 @@
+@import "../cell-overlay.scss";
+@import "../../../../colors.scss";
+.contextmenu {
+    
+    .cover {
+        z-index: 100;
+        // background: red;
+        // opacity: 0.5;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+    .menu {
+        @include cell-overlay(0.85);
+        width: 150px;
+        .contextMenu-section {
+            &:not(:first-child) {
+                border-top: 1px solid white;
+                margin-top: 2px;
+                padding-top: 2px;
+            }
+            div {padding: 3px;}
+
+            .contextMenu-button {
+                
+                cursor: pointer;
+                &:hover {
+                    background: $cell-highlight-color;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,39 @@
+<div class="contextmenu">
+    <!-- covers entire screen -->
+    <div class="cover" (click)="closeContextmenu()" (contextmenu)="closeContextmenu()"></div>
+    <!-- the actual menu -->
+    <div class="menu right">
+        <div class="contextMenu-section">
+            <div>
+                <span *ngIf="viewModel.viewMode != 0">{{technique.name}} (</span>{{technique.attackID}}<span *ngIf="viewModel.viewMode != 0">)</span>
+            </div>
+        </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="select()">
+                select
+            </div>
+            <div class="contextMenu-button" (click)="addSelection()">
+                add to selection
+            </div>
+            <div class="contextMenu-button" (click)="removeSelection()">
+                remove from selection
+            </div>
+        </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="selectAll()">
+                select all
+            </div>
+            <div class="contextMenu-button" (click)="deselectAll()">
+                deselect all
+            </div>
+            <div class="contextMenu-button" (click)="invertSelection()">
+                invert selection
+            </div>
+        </div>
+        <div class="contextMenu-section">
+            <div class="contextMenu-button" (click)="viewTechnique()">
+                view technique
+            </div>
+        </div>
+    </div>
+</div>

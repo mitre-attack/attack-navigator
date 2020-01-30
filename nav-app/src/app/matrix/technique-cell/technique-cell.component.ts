@@ -17,16 +17,12 @@ export class TechniqueCellComponent implements OnInit {
     @Output() highlight = new EventEmitter<any>(); // emit with the highlighted technique, or null to unhighlight
     @Output() unhighlight = new EventEmitter<any>();
     @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
-    @Output() rightclick = new EventEmitter<any>(); //emit with the technique which was right-clicked
+    private showContextmenu: boolean = false;
 
     private get showTooltip() {
+        if (this.showContextmenu) return false;
         if (!this.viewModel.highlightedTechnique) return false;
         
-        if (!this.technique) console.log(this);
-        if (!this.tactic) console.log(this);
-        if (!this.viewModel.highlightedTactic) console.log('tac', this.technique.name);
-        if (!this.viewModel.highlightedTechnique) console.log('tec', this.technique.name);
-
         return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
@@ -55,16 +51,7 @@ export class TechniqueCellComponent implements OnInit {
         })
     }
     private onRightClick(event) {
-        this.rightclick.emit({
-            "technique": this.technique,
-            // modifier keys
-            "shift": event.shiftKey,
-            "ctrl": event.ctrlKey,
-            "meta": event.metaKey,
-            // position of event on page
-            "x": event.pageX,
-            "y": event.pageY
-        });
+       this.showContextmenu = true;
     }
 
     /**

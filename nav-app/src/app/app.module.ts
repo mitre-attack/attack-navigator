@@ -29,6 +29,7 @@ import { MatrixMicroComponent } from './matrix//matrix-micro/matrix-micro.compon
 import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
 import { MultiselectComponent } from './multiselect/multiselect.component';
 import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
+import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { TechniquesSearchComponent } from './techniques-search/techniques-search
     MatrixMicroComponent,
     TooltipComponent,
     MultiselectComponent,
-    TechniquesSearchComponent
+    TechniquesSearchComponent,
+    ContextmenuComponent
   ],
   imports: [
     BrowserModule,
