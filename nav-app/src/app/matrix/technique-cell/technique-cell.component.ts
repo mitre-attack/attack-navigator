@@ -86,9 +86,9 @@ export class TechniqueCellComponent implements OnInit {
                     if (compareTo.isSubtechnique) compareTo = compareTo.parent;
                     let compare = this.technique;
                     if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) theclass += " highlight"
+                    if (compare.attackID == compareTo.attackID) theclass += " highlight";
                 } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    theclass += " highlight"
+                    theclass += " highlight";
                 }
             } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
                 if (this.viewModel.selectSubtechniquesWithParent) {
@@ -96,9 +96,9 @@ export class TechniqueCellComponent implements OnInit {
                     if (compareTo.isSubtechnique) compareTo = compareTo.parent;
                     let compare = this.technique;
                     if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) theclass += " highlight"
+                    if (compare.attackID == compareTo.attackID) theclass += " highlight";
                 } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    theclass += " highlight"
+                    theclass += " highlight";
                 }
             }
         }

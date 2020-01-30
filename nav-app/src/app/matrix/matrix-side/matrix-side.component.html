@@ -1,19 +1,19 @@
 <table class="matrix side">
     <thead>
         <tr>
-            <td *ngFor="let tactic of matrix.tactics" class="tactic name"><a (click)="onTacticClick(tactic)">{{tactic.name}}</a></td>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name"><a (click)="onTacticClick(tactic)">{{tactic.name}}</a></td>
         </tr>
         <tr>
-            <td *ngFor="let tactic of matrix.tactics" class="tactic count">
-                {{tactic.techniques.length }}&nbsp;techniques
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic count">
+                {{filterTechniques(tactic.techniques, tactic).length }}&nbsp;techniques
             </td>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td *ngFor="let tactic of matrix.tactics" class="tactic">
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic">
                 <table class="techniques-table">
-                    <tr *ngFor="let technique of tactic.techniques" class="technique-row">
+                    <tr *ngFor="let technique of applyControls(tactic.techniques, tactic)" class="technique-row">
                         <td>
                             <ng-container *ngIf="technique.subtechniques.length == 0; else supertechnique">
                                 <technique-cell
@@ -61,7 +61,7 @@
                         <td class="subtechniques-td">
                             <div class="subtechniques"
                                     [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">
-                                <div *ngFor="let subtechnique of technique.subtechniques" class="subtechnique">
+                                <div *ngFor="let subtechnique of applyControls(technique.subtechniques, tactic)" class="subtechnique">
                                     <technique-cell
                                                     [tactic]="tactic"
                                                     [technique]="subtechnique" 
