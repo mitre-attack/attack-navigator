@@ -1,6 +1,6 @@
-<div class="contextmenu">
+<div class="contextmenu" (contextmenu)="closeContextmenu()">
     <!-- covers entire screen -->
-    <div class="cover" (click)="closeContextmenu()" (contextmenu)="closeContextmenu()"></div>
+    <div class="cover" (click)="closeContextmenu()"></div>
     <!-- the actual menu -->
     <div [ngClass]="'menu ' + placement">
         <div class="contextMenu-section">
