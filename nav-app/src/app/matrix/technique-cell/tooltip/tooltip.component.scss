@@ -1,8 +1,8 @@
-@import "../cell-overlay.scss";
+@import "../cell-popover.scss";
 
 
 .tooltip {
-    @include cell-overlay(0.75);
+    @include cell-popover(0.75);
     table {
         border-collapse: collapse;
         td {

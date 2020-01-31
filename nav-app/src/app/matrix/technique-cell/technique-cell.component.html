@@ -10,6 +10,6 @@
             <!-- <sub>{{technique.subtechniques.length}}</sub> -->
         </span>
     </div>
-    <app-tooltip *ngIf="showTooltip" [placement]="'right'" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
-    <app-contextmenu *ngIf="showContextmenu" [placement]="right" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false"></app-contextmenu>
+    <app-tooltip *ngIf="showTooltip"  [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
+    <app-contextmenu *ngIf="showContextmenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false"></app-contextmenu>
 </div>

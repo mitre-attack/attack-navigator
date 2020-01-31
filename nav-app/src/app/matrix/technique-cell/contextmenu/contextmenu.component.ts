@@ -1,27 +1,31 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Technique, Tactic } from '../../../data.service';
 import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
 import { ConfigService } from '../../../config.service';
+import { CellPopover } from '../cell-popover';
 
 @Component({
   selector: 'app-contextmenu',
   templateUrl: './contextmenu.component.html',
   styleUrls: ['./contextmenu.component.scss']
 })
-export class ContextmenuComponent implements OnInit {
+export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
     @Input() tactic: Tactic;
     @Input() viewModel: ViewModel;
-    @Input() placement: string;
+    private placement: string;
     @Output() close = new EventEmitter<any>();
 
     private get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 
-    constructor(private configService: ConfigService) { }
+    constructor(private element: ElementRef, private configService: ConfigService) {
+        super(element);
+    }
 
     ngOnInit() {
+        this.placement = this.getPosition();
     }
 
     private closeContextmenu() {

@@ -2,7 +2,8 @@
     <table>
         <tr>
             <td colspan=2 class="technique-name">
-                <span *ngIf="viewModel.viewMode != 0">{{technique.name}} (</span>{{technique.attackID}}<span *ngIf="viewModel.viewMode != 0">)</span>
+                {{placement}}
+                <!-- <span *ngIf="viewModel.viewMode != 0">{{technique.name}} (</span>{{technique.attackID}}<span *ngIf="viewModel.viewMode != 0">)</span> -->
             </td>
         </tr>
         <tr *ngIf="techniqueVM.score">

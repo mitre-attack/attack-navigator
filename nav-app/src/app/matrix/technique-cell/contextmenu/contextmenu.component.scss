@@ -1,4 +1,4 @@
-@import "../cell-overlay.scss";
+@import "../cell-popover.scss";
 @import "../../../../colors.scss";
 .contextmenu {
     
@@ -13,7 +13,7 @@
         height: 100vh;
     }
     .menu {
-        @include cell-overlay(0.85);
+        @include cell-popover(0.85);
         width: 150px;
         .contextMenu-section {
             &:not(:first-child) {
