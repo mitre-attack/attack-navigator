@@ -29,6 +29,8 @@
             width: 100%;
             tr, td {
                 padding: 0;
+            }
+            tr {
                 height: 1px;
             }
         }
@@ -44,8 +46,9 @@
                 vertical-align: top;
                 
                 &.technique {
-                    outline: 1px solid on-color-deemphasis(body);
-                    outline-offset: -1px;
+                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+                    // outline: 1px solid on-color-deemphasis(body);
+                    // outline-offset: -1px;
                 }
             }
         }
@@ -61,8 +64,8 @@
 
             margin-left: -1px;
             border-left: 2px solid on-color-deemphasis(body);
-            outline: 1px solid on-color-deemphasis(body);
-            outline-offset: -1px;
+            box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+
             white-space: nowrap;
             vertical-align: top;
             

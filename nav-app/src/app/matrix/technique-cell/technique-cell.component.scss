@@ -1,5 +1,6 @@
 @import "../matrix-common.scss";
 .technique-cell {
+    cursor: pointer;
     height: 100%;
     display: flex;
     align-items: center;
@@ -17,12 +18,12 @@
         height: 100%;
     }
     
-    outline: 1px solid transparent;
-    outline-offset: -1px;
-    &:not(.editing):not(.colored):not(.supertechniquecell) { outline-color: border-color(body); }
+    &:not(.editing):not(.colored):not(.supertechniquecell) { 
+        box-shadow: 0 0 0 1px border-color(body) inset;
+    }
 
     &.editing {
-        outline-color: black;
+        box-shadow: 0 0 0 1px black inset;
     }
 
     &.commented div span {
