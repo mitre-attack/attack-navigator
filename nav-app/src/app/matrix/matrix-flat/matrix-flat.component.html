@@ -1,3 +1,74 @@
-<p>
-  matrix-flat works!
-</p>
+<table class="matrix flat">
+    <thead>
+        <tr>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name">
+                <a (click)="onTacticClick(tactic)">{{tactic.name}}</a>
+            </td>
+        </tr>
+        <tr>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic count">
+                {{filterTechniques(tactic.techniques, tactic).length }}&nbsp;techniques
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic">
+                <ng-container *ngFor="let technique of applyControls(tactic.techniques, tactic)">
+                    <ng-container *ngIf="technique.subtechniques.length == 0; else supertechnique">
+                        <technique-cell
+                                        [tactic]="tactic"
+                                        [technique]="technique" 
+                                        [viewModel]="viewModel"
+                                        (leftclick)="onTechniqueLeftClick($event, technique, tactic)"
+                                        (rightclick)="onTechniqueRightClick($event, technique)"
+                                        (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                                        (unhighlight)="onTechniqueUnhighlight($event)">
+                        </technique-cell>
+                    </ng-container>
+                    <ng-template #supertechnique>
+                        <table class="supertechnique">
+                            <tr>
+                                <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)">
+                                    <div class="handle"> = </div>
+                                </td>
+                                <td class="technique">
+                                    <technique-cell
+                                                    [tactic]="tactic"
+                                                    [technique]="technique" 
+                                                    [viewModel]="viewModel"
+                                                    (leftclick)="onTechniqueLeftClick($event, technique, tactic)"
+                                                    (rightclick)="onTechniqueRightClick($event, technique)"
+                                                    (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                                                    (unhighlight)="onTechniqueUnhighlight($event)">
+                                    </technique-cell>
+                                </td>
+                            </tr>
+                            <tr class="subtechniques-row subtechniques-container" [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">
+                                <td class="sidebar subtechniques">
+                                    <svg width="12px" height="12px">
+                                        <path d="M0 0H12V12Z"/>
+                                    </svg>
+                                </td>
+                                <td class="subtechniques">
+                                    <div class="subtechniques">
+                                        <technique-cell 
+                                                *ngFor="let subtechnique of applyControls(technique.subtechniques, tactic)"
+                                                [tactic]="tactic"
+                                                [technique]="subtechnique" 
+                                                [viewModel]="viewModel"
+                                                (leftclick)="onTechniqueLeftClick($event, subtechnique, tactic)"
+                                                (rightclick)="onTechniqueRightClick($event, subtechnique)"
+                                                (highlight)="onTechniqueHighlight($event, subtechnique, tactic)"
+                                                (unhighlight)="onTechniqueUnhighlight($event)">
+                                        </technique-cell>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </ng-template>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

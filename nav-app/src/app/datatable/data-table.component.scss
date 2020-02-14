@@ -440,4 +440,16 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
+.layout {
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        li {
+            cursor: pointer;
+            padding: 5px;
+            &.active { background: $cell-highlight-color; }
+        }
+    }
+}
 

@@ -26,6 +26,10 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class DataTableComponent implements AfterViewInit {
 
+
+    private layoutOptions = ["side", "flat", "mini"];
+    private currentLayout = this.layoutOptions[0];
+
     ////////////////
     // DATA TABLE //
     // VARIABLES  //
