@@ -5,7 +5,7 @@
     <div [ngClass]="'menu ' + placement">
         <div class="contextMenu-section">
             <div>
-                <span *ngIf="viewModel.viewMode != 0">{{technique.name}} (</span>{{technique.attackID}}<span *ngIf="viewModel.viewMode != 0">)</span>
+                {{technique.name}} ({{technique.attackID}})
             </div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">

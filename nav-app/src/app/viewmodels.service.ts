@@ -364,13 +364,8 @@ export class ViewModel {
      * 3: descending numerically
      */
     sorting: number = 0;
-    /*
-     * viewMode int meanings
-     * 0: full table
-     * 1: compact table (previosly: minitable)
-     * 2: mini table
-     */
-    viewMode: number = 0;
+    
+    layout: LayoutOptions = new LayoutOptions();
 
 
     hideDisabled: boolean = false; //are disabled techniques hidden?
@@ -847,7 +842,7 @@ export class ViewModel {
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
-        rep.viewMode = this.viewMode;
+        rep.layout = this.layout.serialize();
         rep.hideDisabled = this.hideDisabled;
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
@@ -883,10 +878,6 @@ export class ViewModel {
         if ("sorting" in obj) {
             if (typeof(obj.sorting) === "number") this.sorting = obj.sorting;
             else console.error("TypeError: sorting field is not a number")
-        }
-        if ("viewMode" in obj) {
-            if (typeof(obj.viewMode) === "number") this.viewMode = obj.viewMode;
-            else console.error("TypeError: viewMode field is not a number")
         }
         if ("hideDisabled" in obj) {
             if (typeof(obj.hideDisabled) === "boolean") this.hideDisabled = obj.hideDisabled;
@@ -969,6 +960,34 @@ export class ViewModel {
                 m.deSerialize(metadataObj);
                 if (m.valid()) this.metadata.push(m)
             }
+        }
+        if ("layout" in obj) {
+            this.layout.deserialize(obj.layout);
+        }
+        else if ("viewMode" in obj) {
+            /*
+             * viewMode backwards compatibility:
+             * 0: full table (side layout, show name)
+             * 1: compact table (side layout, show ID)
+             * 2: mini table (mini layout, show neither name nor ID)
+             */
+            if (typeof(obj.viewMode) === "number") {
+                switch(obj.viewMode) {
+                    default:
+                    case 0:
+                        break; //default matrix layout already initialized
+                    case 1:
+                        this.layout.layout = "side";
+                        this.layout.showName = false;
+                        this.layout.showID = true;
+                        break;
+                    case 2:
+                        this.layout.layout = "mini";
+                        this.layout.showName = false;
+                        this.layout.showID = false;
+                }
+            }
+            else console.error("TypeError: viewMode field is not a number")
         }
         
         this.updateGradient();
@@ -1316,5 +1335,66 @@ export class Metadata {
         } else console.error("Error: Metadata required field 'value' not present");
     }
     valid(): boolean { return this.name.length > 0 && this.value.length > 0 }
+}
+
+export class LayoutOptions {
+    // current layout selection
+    public readonly layoutOptions: string[] = ["side", "flat", "mini"];
+    private _layout = this.layoutOptions[0]; //current selection
+    public set layout(newLayout) {
+        if (!this.layoutOptions.includes(newLayout)) {
+            console.warn("invalid matrix layout", newLayout);
+            return;
+        }
+        let oldLayout = this._layout;
+        this._layout = newLayout;
+        if (this._layout == "mini") { //mini-table cannot show ID or name
+            this.showID = false;
+            this.showName = false;
+        }
+        if (oldLayout == "mini" && newLayout != "mini") {
+            this.showName = true; //restore default show value for name
+        }
+    }
+    public get layout(): string { return this._layout; }
+    
+    //show technique/tactic IDs in the view?
+    public _showID: boolean = false; 
+    public set showID(newval: boolean) {
+        this._showID = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
+    }
+    public get showID(): boolean { return this._showID; }
+    
+    //show technique/tactic names in the view?
+    public _showName: boolean = true; 
+    public set showName(newval: boolean) {
+        this._showName = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
+    }
+    public get showName(): boolean { return this._showName; }
+
+    public serialize(): object {
+        return {
+            "layout": this.layout,
+            "showID": this.showID,
+            "showName": this.showName
+        }
+    }
+    public deserialize(rep: any) {
+        if (rep.showID) {
+            if (typeof(rep.showID) === "boolean") this.showID = rep.showID;
+            else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof(rep.showID), ")");
+        }
+        if (rep.showName) {
+            if (typeof(rep.showName) === "boolean") this.showName = rep.showName;
+            else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof(rep.showName), ")");
+        }
+        //make sure this one goes last so that it can override name and ID if layout == 'mini'
+        if (rep.layout) {
+            if (typeof(rep.layout) === "string") this.layout = rep.layout;
+            else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof(rep.layout), ")");
+        }
+    }
 }
 

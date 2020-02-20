@@ -14,7 +14,7 @@
     }
     .menu {
         @include cell-popover(0.85);
-        width: 150px;
+        min-width: 150px;
         .contextMenu-section {
             &:not(:first-child) {
                 border-top: 1px solid white;

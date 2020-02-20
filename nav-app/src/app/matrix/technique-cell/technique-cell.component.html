@@ -6,10 +6,9 @@
     <div (click)="onLeftClick($event)" (contextmenu)="onRightClick($event)">
         <span [style.border-color]="configService.comment_color"
               [style.color]="getTechniqueTextColor()">
-            {{ [technique.name, viewModel.acronym(technique.name), ''][viewModel.viewMode] }}
-            <!-- <sub>{{technique.subtechniques.length}}</sub> -->
+            <ng-container *ngIf="viewModel.layout.showID">{{technique.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{technique.name}}</ng-container>
         </span>
     </div>
     <app-tooltip *ngIf="showTooltip"  [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
-    <app-contextmenu *ngIf="showContextmenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false"></app-contextmenu>
+    <app-contextmenu *ngIf="showContextmenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false; onUnhighlight()"></app-contextmenu>
 </div>

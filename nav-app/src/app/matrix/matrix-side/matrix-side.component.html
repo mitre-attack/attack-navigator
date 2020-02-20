@@ -1,11 +1,13 @@
 <table class="matrix side">
     <thead>
-        <tr>
-            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name"><a (click)="onTacticClick(tactic)">{{tactic.name}}</a></td>
+        <tr class="tactic">
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name"><a (click)="onTacticClick(tactic)">
+                <ng-container *ngIf="viewModel.layout.showID">{{tactic.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{tactic.name}}</ng-container>
+            </a></td>
         </tr>
         <tr>
             <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic count">
-                {{filterTechniques(tactic.techniques, tactic).length }}&nbsp;techniques
+                {{filterTechniques(tactic.techniques, tactic).length }}<ng-container *ngIf="viewModel.layout.showName">&nbsp;techniques</ng-container>
             </td>
         </tr>
     </thead>

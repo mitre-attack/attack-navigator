@@ -26,10 +26,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class DataTableComponent implements AfterViewInit {
 
-
-    private layoutOptions = ["side", "flat", "mini"];
-    private currentLayout = this.layoutOptions[0];
-
     ////////////////
     // DATA TABLE //
     // VARIABLES  //
@@ -710,10 +706,6 @@ export class DataTableComponent implements AfterViewInit {
         viewModelCopy.deSerialize(this.viewModel.serialize());
         let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(exportData);
-    }
-
-    noncetest() {
-        console.log(this.viewModelsService.getNonce())
     }
 }
 

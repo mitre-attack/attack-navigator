@@ -3,6 +3,7 @@
 
 .tooltip {
     @include cell-popover(0.75);
+    width: 150px;
     table {
         border-collapse: collapse;
         td {

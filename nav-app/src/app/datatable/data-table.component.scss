@@ -441,14 +441,16 @@ $panel-light: lighten($panel-dark, 8%);
 }
 
 .layout {
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        li {
-            cursor: pointer;
-            padding: 5px;
-            &.active { background: $cell-highlight-color; }
+    width: 100px;
+    text-align: left;
+    select {
+        width: 100%;
+    }
+    
+    .section {
+        padding: 10px;
+        &+.section {
+            border-top: 1px solid $panel-light;
         }
     }
 }

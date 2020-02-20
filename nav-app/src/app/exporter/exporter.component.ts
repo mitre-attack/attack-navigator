@@ -685,23 +685,24 @@ export class ExportData {
         this.orderedTactics = orderedTactics;
 
         let tableTextDisplay = "0";
-        switch (this.viewModel.viewMode) {
-            case 0: {
-                tableTextDisplay = "1"
-                break;
-            }
-            case 1: {
-                tableTextDisplay = "2"
-                break;
-            }
-            case 2: {
-                tableTextDisplay = "0"
-                break;
-            }
-            default: {
-                tableTextDisplay = "1"
-            }
-        }
+        // switch (this.viewModel.viewMode) {
+        //     case 0: {
+        //         tableTextDisplay = "1"
+        //         break;
+        //     }
+        //     case 1: {
+        //         tableTextDisplay = "2"
+        //         break;
+        //     }
+        //     case 2: {
+        //         tableTextDisplay = "0"
+        //         break;
+        //     }
+        //     default: {
+        //         tableTextDisplay = "1"
+        //     }
+        // }
+        tableTextDisplay = "0";
 
         this.tableConfig = {
             "width": 11,
