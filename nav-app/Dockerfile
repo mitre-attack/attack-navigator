@@ -1,6 +1,6 @@
 # Build stage
 
-FROM node:latest 
+FROM docker.repo.schwarz/node:latest 
 
 WORKDIR /nav-app/
 
