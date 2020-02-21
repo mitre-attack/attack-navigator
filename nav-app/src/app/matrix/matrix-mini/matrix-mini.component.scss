@@ -1,0 +1,26 @@
+@import "../matrix-common.scss";
+.matrix.mini {
+    .tactic { padding: 0 5px; }
+    .tactic.body {
+        vertical-align: top;
+        // display: flex;
+        // flex-wrap: wrap;
+        // justify-content: space-between;
+        
+        .cell-container {
+            margin-right: 2px;
+            margin-bottom: 2px;
+            &:not(.supertechnique-group) { display: inline-block; }
+            // margin: 0 2px 0 2px;
+            &.supertechnique-group {
+                transform: translateX(-3px);
+                // background: $panel-light;
+                box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+                padding: 3px 0 0 3px;
+            }
+            &.supertechnique {
+                box-shadow: 0 0 0 1px on-color-deemphasis(body);
+            }
+        }
+    }
+}
