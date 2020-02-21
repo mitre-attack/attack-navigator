@@ -21,6 +21,10 @@
         height: 100%;
     }
 
+    &.showID:not(.showName) {
+        text-align: center;
+    }
+
 
     .id-name-break {
         outline-offset: -0.5px;

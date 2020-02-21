@@ -30,6 +30,7 @@ import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.compon
 import { MultiselectComponent } from './multiselect/multiselect.component';
 import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
+import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contex
     TooltipComponent,
     MultiselectComponent,
     TechniquesSearchComponent,
-    ContextmenuComponent
+    ContextmenuComponent,
+    TacticCellComponent
   ],
   imports: [
     BrowserModule,

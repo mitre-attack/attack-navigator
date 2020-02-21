@@ -89,7 +89,10 @@ export class TechniqueCellComponent implements OnInit {
                 }
             }
         }
-
+        if (this.viewModel.layout.showID) 
+            theclass += " showID"
+        if (this.viewModel.layout.showName) 
+            theclass += " showName"
         if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0)
             theclass += " commented"
         if (this.getTechniqueBackground())

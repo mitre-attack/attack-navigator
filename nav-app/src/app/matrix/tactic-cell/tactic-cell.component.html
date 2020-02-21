@@ -1,0 +1,3 @@
+<div class="tactic-cell" [class.bordered]="!(viewModel.layout.showID || viewModel.layout.showName)" [matTooltip]="tactic.attackID + ': ' + tactic.name" [matTooltipDisabled]="viewModel.layout.showID || viewModel.layout.showName" matTooltipPosition="above">
+    <ng-container *ngIf="viewModel.layout.showID">{{tactic.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{tactic.name}}</ng-container>
+</div>

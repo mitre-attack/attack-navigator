@@ -4,6 +4,8 @@
     &:not(.top) { top: 0; }
     z-index: 100;
     
+    text-align: left;
+    
     border-radius: 3px;
     background: rgba(80, 80, 80, $opacity);
     font-size: 8pt;

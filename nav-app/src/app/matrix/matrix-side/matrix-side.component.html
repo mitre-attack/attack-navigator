@@ -2,7 +2,7 @@
     <thead>
         <tr class="tactic">
             <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name"><a (click)="onTacticClick(tactic)">
-                <ng-container *ngIf="viewModel.layout.showID">{{tactic.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{tactic.name}}</ng-container>
+                <tactic-cell [viewModel]="viewModel" [tactic]="tactic"></tactic-cell>
             </a></td>
         </tr>
         <tr>
