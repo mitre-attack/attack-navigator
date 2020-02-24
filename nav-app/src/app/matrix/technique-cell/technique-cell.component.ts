@@ -122,7 +122,7 @@ export class TechniqueCellComponent implements OnInit {
     private getTechniqueBackground(): any {
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || this.isHighlighted) return {}
+        if (!tvm.enabled || this.isHighlighted) return null
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)

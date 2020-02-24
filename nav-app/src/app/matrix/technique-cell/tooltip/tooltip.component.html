@@ -5,6 +5,9 @@
                 {{technique.name}} ({{technique.attackID}})
             </td>
         </tr>
+        <tr *ngIf="!techniqueVM.enabled">
+            <td colspan=2>Disabled</td>
+        </tr>
         <tr *ngIf="techniqueVM.score">
             <td>Score:</td>
             <td>{{techniqueVM.score}}

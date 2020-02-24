@@ -462,7 +462,6 @@ export class ViewModel {
      * @param {boolean} overwrite (default true) if true, overwrite existing techniqueVMs under that ID.
      */
     public setTechniqueVM(techniqueVM: TechniqueVM, overwrite=true): void {
-        if (techniqueVM.modified()) console.log("set TVM", techniqueVM)
         if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) {
             if (overwrite) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
             else return;
