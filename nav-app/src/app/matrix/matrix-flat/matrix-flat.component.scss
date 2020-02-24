@@ -57,8 +57,7 @@
                     border-right: 2px solid on-color-deemphasis(body);
                 }
                 &.technique {
-                    outline: 1px solid on-color-deemphasis(body);
-                    outline-offset: -1px;
+                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
                 }
             }
         }
