@@ -408,14 +408,14 @@ export class ViewModel {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
-                this.setTechniqueVM(techniqueVM);
+                this.setTechniqueVM(techniqueVM, false);
             }
             //init subtechniques
             for (let subtechnique of technique.subtechniques) {
                 for (let id of subtechnique.get_all_technique_tactic_ids()) {
                     let techniqueVM = new TechniqueVM(id);
                     techniqueVM.score = this.initializeScoresTo;
-                    this.setTechniqueVM(techniqueVM);
+                    this.setTechniqueVM(techniqueVM, false);
                 }
             }
         }
@@ -456,9 +456,17 @@ export class ViewModel {
         if (!this.hasTechniqueVM_id(technique_tactic_id)) throw Error("technique VM not found: " + technique_tactic_id);
         return this.techniqueVMs.get(technique_tactic_id);
     }
-    // Setter
-    public setTechniqueVM(techniqueVM: TechniqueVM): void {
-        if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
+    /**
+     * setter
+     * @param {techniqueVM} techniqueVM: the techniqueVM to set
+     * @param {boolean} overwrite (default true) if true, overwrite existing techniqueVMs under that ID.
+     */
+    public setTechniqueVM(techniqueVM: TechniqueVM, overwrite=true): void {
+        if (techniqueVM.modified()) console.log("set TVM", techniqueVM)
+        if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) {
+            if (overwrite) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
+            else return;
+        }
         this.techniqueVMs.set(techniqueVM.technique_tactic_union_id, techniqueVM);
     }
     //checker
@@ -990,26 +998,6 @@ export class ViewModel {
             else console.error("TypeError: viewMode field is not a number")
         }
         
-        this.updateGradient();
-    }
-
-    constructLegacyVMs(){
-        if(this.needsToConstructTechniqueVMs){
-            for (let i = 0; i < this.legacyTechniques.length; i++) {
-                var techniqueID = this.legacyTechniques[i].techniqueID;
-                var techniqueTactics = this.techIDtoUIDMap[techniqueID];
-                if(techniqueTactics){
-                    for(var t = 0; t < techniqueTactics.length; t++){
-                        var tactic: string = techniqueTactics[t].split("^")[1];
-                        let tvm = new TechniqueVM("");
-                        tvm.deSerialize(JSON.stringify(this.legacyTechniques[i]),
-                                                techniqueID,
-                                                tactic)
-                        this.setTechniqueVM(tvm)
-                    }
-                }
-            }
-        }
         this.updateGradient();
     }
 
