@@ -19,11 +19,39 @@ export class TechniqueCellComponent implements OnInit {
     @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
     private showContextmenu: boolean = false;
 
-    private get showTooltip() {
+    private get showTooltip(): boolean {
         if (this.showContextmenu) return false;
         if (!this.viewModel.highlightedTechnique) return false;
         
         return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
+    }
+
+    private get isHighlighted(): boolean {
+        if (this.viewModel.highlightedTactic) {
+            if (this.viewModel.selectTechniquesAcrossTactics) {
+                if (this.viewModel.selectSubtechniquesWithParent) {
+                    let compareTo = this.viewModel.highlightedTechnique;
+                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
+                    let compare = this.technique;
+                    if (compare.isSubtechnique) compare = compare.parent;
+                    if (compare.attackID == compareTo.attackID) return true;
+                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
+                    return true;
+                }
+            } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
+                if (this.viewModel.selectSubtechniquesWithParent) {
+                    let compareTo = this.viewModel.highlightedTechnique;
+                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
+                    let compare = this.technique;
+                    if (compare.isSubtechnique) compare = compare.parent;
+                    if (compare.attackID == compareTo.attackID) return true;
+                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
+                    return true;
+                }
+            }
+        }
+
+        return this.showContextmenu;
     }
 
     constructor(private configService: ConfigService) { }
@@ -62,43 +90,27 @@ export class TechniqueCellComponent implements OnInit {
      */
     private getClass(): string {
         let theclass = 'link noselect cell'
-        if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
-            theclass += " disabled"
         if (this.viewModel.isTechniqueSelected(this.technique, this.tactic))
             theclass += " editing"
-        if (this.viewModel.highlightedTechnique){
-            if (this.viewModel.selectTechniquesAcrossTactics) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) theclass += " highlight";
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    theclass += " highlight";
-                }
-            } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) theclass += " highlight";
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    theclass += " highlight";
-                }
-            }
-        } else if (this.showContextmenu) { //open context menu always keeps highlight even if the mouse has moved elsewhere
+        if (this.isHighlighted) { //open context menu always keeps highlight even if the mouse has moved elsewhere
             theclass += " highlight";
         }
+
+        // classes added by layout config
         if (this.viewModel.layout.showID) 
             theclass += " showID"
         if (this.viewModel.layout.showName) 
             theclass += " showName"
+        theclass += " " + this.viewModel.layout.layout; 
+
+        // classes according to annotations
         if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0)
             theclass += " commented"
         if (this.getTechniqueBackground())
             theclass += " colored"
+        if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
+            theclass += " disabled"
+
         return theclass
     }
 
@@ -110,15 +122,7 @@ export class TechniqueCellComponent implements OnInit {
     private getTechniqueBackground(): any {
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
-        var highlight = false;
-        if(this.viewModel.highlightedTechnique){
-            if(this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.attackID === this.technique.attackID){
-                highlight = true;
-            } else if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.get_technique_tactic_id(this.viewModel.highlightedTactic) === this.technique.get_technique_tactic_id(this.tactic)) {
-                highlight = true;
-            }
-        } else if (this.showContextmenu) highlight = true;
-        if (!tvm.enabled || highlight) return {}
+        if (!tvm.enabled || this.isHighlighted) return {}
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
