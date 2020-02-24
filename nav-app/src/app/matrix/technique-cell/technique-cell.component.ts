@@ -32,10 +32,10 @@ export class TechniqueCellComponent implements OnInit {
     }
 
     // events to pass to parent component
-    private onHighlight() {
+    private onMouseEnter() {
         this.highlight.emit();
     }
-    private onUnhighlight() {
+    private onMouseLeave() {
         this.unhighlight.emit();
     }
     private onLeftClick(event) {
@@ -88,6 +88,8 @@ export class TechniqueCellComponent implements OnInit {
                     theclass += " highlight";
                 }
             }
+        } else if (this.showContextmenu) { //open context menu always keeps highlight even if the mouse has moved elsewhere
+            theclass += " highlight";
         }
         if (this.viewModel.layout.showID) 
             theclass += " showID"
@@ -115,7 +117,7 @@ export class TechniqueCellComponent implements OnInit {
             } else if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTechnique.get_technique_tactic_id(this.viewModel.highlightedTactic) === this.technique.get_technique_tactic_id(this.tactic)) {
                 highlight = true;
             }
-        }
+        } else if (this.showContextmenu) highlight = true;
         if (!tvm.enabled || highlight) return {}
         if (tvm.color) return {"background": tvm.color }
         if (tvm.score) return {"background": tvm.scoreColor }
