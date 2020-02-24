@@ -25,7 +25,6 @@ import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.c
 import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component';
 import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
 import { MatrixMiniComponent } from './matrix//matrix-mini/matrix-mini.component';
-import { MatrixMicroComponent } from './matrix//matrix-micro/matrix-micro.component';
 import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
 import { MultiselectComponent } from './multiselect/multiselect.component';
 import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
@@ -46,7 +45,6 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
     MatrixSideComponent,
     MatrixFlatComponent,
     MatrixMiniComponent,
-    MatrixMicroComponent,
     TooltipComponent,
     MultiselectComponent,
     TechniquesSearchComponent,
