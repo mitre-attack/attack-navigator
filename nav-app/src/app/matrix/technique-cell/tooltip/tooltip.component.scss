@@ -3,12 +3,12 @@
 
 .tooltip {
     @include cell-popover(0.75);
-    width: 150px;
     table {
+        width: 100%;
         border-collapse: collapse;
         td {
             padding: 3px;
-            vertical-align: top;;
+            vertical-align: top;
         }
         tr:nth-child(2) td {
             border-top: 1px solid white;

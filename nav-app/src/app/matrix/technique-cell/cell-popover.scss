@@ -3,8 +3,10 @@
     padding: 6px;
     &:not(.top) { top: 0; }
     z-index: 100;
-    
+    min-width: 150px;
+    max-width: 300px;
     text-align: left;
+    white-space: normal;
     
     border-radius: 3px;
     background: rgba(80, 80, 80, $opacity);
