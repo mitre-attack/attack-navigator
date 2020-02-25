@@ -14,6 +14,7 @@
             font-size: $sizeunit + 2px;
         }
         &.name {
+            cursor: pointer;
             font-weight: bold;
             // height: (($sizeunit + 2) * 3);
             vertical-align: bottom;

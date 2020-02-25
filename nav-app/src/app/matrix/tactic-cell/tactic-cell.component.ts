@@ -15,5 +15,4 @@ export class TacticCellComponent implements OnInit {
 
     ngOnInit() {
     }
-
 }

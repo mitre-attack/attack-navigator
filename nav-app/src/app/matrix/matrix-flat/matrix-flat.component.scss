@@ -10,6 +10,7 @@
             font-size: $sizeunit + 2px;
         }
         &.name {
+            cursor: pointer;
             vertical-align: bottom;
             font-weight: bold;
         }

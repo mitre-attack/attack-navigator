@@ -1,5 +1,5 @@
 <table class="matrix flat">
-    <thead>
+    <thead [ngStyle]="tacticRowStyle">
         <tr>
             <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic name">
                 <a (click)="onTacticClick(tactic)">

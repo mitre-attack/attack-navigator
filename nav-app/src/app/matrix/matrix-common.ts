@@ -2,6 +2,7 @@ import { Input, Output, EventEmitter } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../data.service';
 import { ViewModel } from '../viewmodels.service';
 import { ConfigService } from '../config.service';
+declare var tinycolor: any; //use tinycolor2
 
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
@@ -130,6 +131,13 @@ export abstract class MatrixCommon {
     private onTacticClick(tactic: Tactic) {
         if (this.viewModel.isTacticSelected(tactic)) this.viewModel.clearSelectedTactic();
         else this.viewModel.selectTactic(tactic);
+    }
+
+    private get tacticRowStyle(): any {
+        return this.viewModel.showTacticRowBackground ? { 
+            "background": this.viewModel.tacticRowBackground,
+            "color": tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
+         } : {}
     }
 }
 

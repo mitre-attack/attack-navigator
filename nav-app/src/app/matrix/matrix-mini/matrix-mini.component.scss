@@ -1,7 +1,11 @@
 @import "../matrix-common.scss";
 .matrix.mini {
     .tactic { padding: 0 5px; }
+    .tactic.header {
+        padding: 5px;
+    }
     .tactic.body {
+        padding-top: 5px;
         vertical-align: top;
         // display: flex;
         // flex-wrap: wrap;
