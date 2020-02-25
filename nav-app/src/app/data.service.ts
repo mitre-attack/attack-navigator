@@ -284,59 +284,6 @@ export class DataService {
         }
         return this.mobileData$ //observable
     }
-
-    setTacticOrder(retrievedTactics){
-        // this.totalTacticsOrder = retrievedTactics;
-        for(var i = 0; i < retrievedTactics.length; i++){
-            var phase = retrievedTactics[i].phase;
-            var tactic = retrievedTactics[i].tactic;
-            if(phase.localeCompare("prepare") === 0){
-                this.prepareTacticsOrder.push(tactic);
-            } else {
-                this.actTacticsOrder.push(tactic);
-            }
-            this.totalTacticsOrder.push(tactic);
-        }
-    }
-
-    /**
-     * Convert a list of techniques to a list of tactics, each one containing the techniques of the tactic
-     * @param  {[object]} techniques the techniques to convert
-     * @return {object}              object with keys of each tactic and values of the techniques of those tactics
-     */
-    techniquesToTactics(techniques: Technique[]) {
-        // if (techniques.length === 0) return []
-        // var tactics = {};
-        // techniques.forEach(function(technique) {
-        //     var tt = technique.tactic;
-        //     if (tactics[tt]) tactics[tt].push(technique)
-        //     else tactics[tt] = [technique];
-
-        // });
-        // return tactics;
-    }
-
-    /**
-     * Extract all tactic names from the list of techniques
-     * @param  {[object]} techniques the techniques to extract
-     * @return {[string]}            an array of all tactic names
-     */
-    tacticNames(techniques: Technique[]) {
-    //     if (techniques.length === 0) return []
-    //     var techniquesFinal: String[] = [];
-    //     var seen = new Set();
-    //     techniques.forEach(function(technique) {
-    //         var tt = technique.tactic;
-    //         seen.add(tt);
-    //     });
-    //     for(var i = 0; i < this.totalTacticsOrder.length; i++){
-    //         var tactic = this.totalTacticsOrder[i];
-    //         if(seen.has(tactic)){
-    //             techniquesFinal.push(tactic);
-    //         }
-    //     }
-    //     return techniquesFinal;
-    }
 }
 
 /** 

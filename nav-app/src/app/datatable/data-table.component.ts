@@ -26,253 +26,15 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class DataTableComponent implements AfterViewInit {
 
-    ////////////////
-    // DATA TABLE //
-    // VARIABLES  //
-    ////////////////
-
-    // Stores the techniques and tacticsdisplayed in the dataTable
-    actTechniques: Technique[] = [];
-    prepareTechniques: Technique[] = [];
-    techniques: Technique[] = [];
-    tactics = {};
-    tacticStages = {};
-
-    // The techniques and tactics being displayed after filters are applied
-    filteredTechniques: Technique[] = [];
-    filteredTactics = {};
-
-    // Stores properly formated tactic names to use in data-table headers
-    tacticDisplayNames = {};
-
-    // Stores properly formated names for the malware, tools, and threat groups
-    threatGroupList: SecurityInstance[] = [];
-    softwareGroupList: SecurityInstance[] = [];
-
-    selectedTechniques = new Set();
-
-    searchString = "";
-    searchResults = [];
-    searchingName = true;
-    searchingID = true;
-    searchingDescription = true;
-
+    //items for custom context menu
     customContextMenuItems = [];
-
+    //is the legend panel currently expanded
     showingLegend = false;
-
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
 
     currentDropdown: string = ""; //current dropdown menu
-
-    // The data service that delivers the technique/tactic data
-    ds: DataService = null;
-
-    clickTactic(tacticName) {
-        // console.log(tacticName, this.viewModel.highlightedTactic)
-        if (this.viewModel.highlightedTactic == tacticName) this.viewModel.highlightedTactic = null;
-        else this.viewModel.highlightedTactic = tacticName;
-    }
-
-    containsActiveTechnique(tacticName) {
-        // if (this.viewModel.highlightedTechnique == null || this.viewModel.highlightedTactic == null) return false;
-        // for (let i = 0; i < this.techniques.length; i++) {
-        //     if (this.techniques[i].technique_id === this.viewModel.highlightedTechnique.technique_id)
-        //         return this.techniques[i].tactic === tacticName;
-        // }
-    }
-
-    toggleLegend(){
-        this.showingLegend = !this.showingLegend;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    // Updates the search list interface based on the search string.  //
-    // Called whenever the input is updated.                          //
-    ////////////////////////////////////////////////////////////////////
-
-    updateSearchDropdown(){
-        // // Clear the previous results and initialize result holders
-        // this.searchResults = [];
-        // var nameResults = [], idResults = [], descriptionResults = [];
-
-        // var techniqueResultIDs = [];
-
-        // if(this.searchString === null || this.searchString === ""){
-        //     return;
-        // }
-        // // Create a regular expression to search for
-        // var formattedInput = this.searchString.toLowerCase();
-        // var re = new RegExp(formattedInput, "g");
-
-        // for(var i = 0; i < this.filteredTechniques.length; i++){
-        //     if(this.searchingName){
-        //         var name = this.filteredTechniques[i].name.toLowerCase();
-        //         var nameResult = name.search(re);
-        //         if(nameResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
-        //             nameResults.push(this.filteredTechniques[i]);
-        //             techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
-        //         }
-        //     }
-        //     if(this.searchingID){
-        //         var id = this.filteredTechniques[i].technique_id.toLowerCase();
-        //         var idResult = id.search(re);
-        //         if(idResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
-        //             idResults.push(this.filteredTechniques[i]);
-        //             techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
-        //         }
-        //     }
-        //     if(this.searchingDescription){
-        //         var description = this.filteredTechniques[i].description.toLowerCase();
-        //         var descriptionResult = description.search(re);
-        //         if(descriptionResult !== -1 && !techniqueResultIDs.includes(this.filteredTechniques[i].technique_id)){
-        //             descriptionResults.push(this.filteredTechniques[i]);
-        //             techniqueResultIDs.push(this.filteredTechniques[i].technique_id);
-        //         }
-        //     }
-        // }
-        // // Add the results in order of name, ID, and description
-        // var searchSet = new Set([...nameResults, ...idResults, ...descriptionResults]);
-        // this.searchResults = Array.from(searchSet);
-    }
-
-    selectAllInSearch(){
-        // for(var i = 0; i < this.searchResults.length; i++){
-        //     this.viewModel.addToTechniqueSelection(this.searchResults[i]);
-        // }
-    }
-
-    deselectAllInSearch(){
-        // for(var i = 0; i < this.searchResults.length; i++){
-        //     this.viewModel.removeFromTechniqueSelection(this.searchResults[i]);
-        // }
-    }
-
-    ///////////////////////////////////////////////////////////
-    // FILTERS THE TECHNIQUES TO SHOW WHAT THE USER REQUESTS //
-    //   Filters the stages, then platforms, and finally     //
-    //   sorts the techniques by name.                       //
-    ///////////////////////////////////////////////////////////
-    /**
-     * Given a technique array, return an array of techniques which is sorted
-     * and filtered according to the current view options
-     */
-    // sortFilterTechnqiues(techniques: Technique[], tactic_shortname: string, tactic: Tactic) {
-    //     let self = this;
-    //     // filter by platform
-    //     var selectedPlatforms: Set<string> = new Set(this.viewModel.filters.platforms.selection);
-    //     let filteredTechniques = techniques.filter(function(technique: Technique) {
-    //         for (let platform of technique.platforms) {
-    //             if (selectedPlatforms.has(platform)) return true;
-    //         }
-    //         return false;
-    //     });
-    //     // sort filtered techniques
-    //     return filteredTechniques.sort(function(t1: Technique, t2: Technique) {
-    //         let t1vm = self.viewModel.getTechniqueVM(t1.get_technique_tactic_id(tactic_shortname))
-    //         let t2vm = self.viewModel.getTechniqueVM(t2.get_technique_tactic_id(tactic_shortname))
-    //         let c1 = String(t1vm.score).length > 0 ? Number(t1vm.score) : 0;
-    //         let c2 = String(t2vm.score).length > 0 ? Number(t2vm.score) : 0;
-    //         switch(self.viewModel.sorting){
-    //             case 0:
-    //                 return t1.name.localeCompare(t2.name);
-    //             case 1:
-    //                 return t2.name.localeCompare(t1.name);
-    //             case 2:
-    //                 if (c1 === c2) return t1.name.localeCompare(t2.name);
-    //                 else return c1 - c2
-    //             case 3:
-    //                 if (c1 === c2) return t1.name.localeCompare(t2.name);
-    //                 else return c2 - c1
-    //             default:
-    //                 return t1.name.localeCompare(t2.name);
-    //         }
-    //     })
-    // }
-    
-
-
-    ///////////////////////////////////////////////////////////
-    // FILTERS THE TECHNIQUES USING THE VALUES SET BY THE    //
-    // STAGES FILTER DROPDOWN                                //
-    //     Returns an array of the newly filtered techniques //
-    ///////////////////////////////////////////////////////////
-
-    filterStages(preFilteredTechniques){
-        var filteredTechniques = [];
-
-        var stagesSelected: string[] = this.viewModel.filters.stages.selection;
-        var addPrepare = false;
-        var addAct = false;
-        if(stagesSelected.length === 1){
-            if(stagesSelected[0].localeCompare("act") === 0){
-                addAct = true;
-            } else {
-                addPrepare = true;
-            }
-        } else if(stagesSelected.length > 1){
-            addPrepare = true;
-            addAct = true;
-        }
-        // based on the platforms set, use the preset technique arrays to make a final
-        //    filtered array
-        if(addPrepare){
-            filteredTechniques = filteredTechniques.concat(this.prepareTechniques);
-        }
-        if(addAct){
-            filteredTechniques = filteredTechniques.concat(this.actTechniques);
-        }
-        return filteredTechniques;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////
-    // FILTERS THE TECHNIQUES USING THE VALUES SET BY THE PLATFORMS FILTER DROPDOWN //
-    //     Returns an array of the newly filtered techniques                        //
-    //////////////////////////////////////////////////////////////////////////////////
-
-    filterPlatforms(preFilteredTechniques){
-        var selectedPlatforms: string[] = this.viewModel.filters.platforms.selection;
-
-        if(selectedPlatforms.length === 0){
-            return [];
-        }else if(selectedPlatforms.length === this.viewModel.filters.platforms.options.length){
-            return preFilteredTechniques;
-        } else {
-            var currentPlatformsSet = new Set(selectedPlatforms.map(function(platform) { return platform.toLowerCase() } ));
-            var filteredTechniques: Technique[] = [];
-            // For each technique
-            for(var i = 0; i < preFilteredTechniques.length; i++){
-                var technique = preFilteredTechniques[i];
-                var techniquePlatforms = technique.platforms;
-                if(techniquePlatforms === null || techniquePlatforms === undefined){
-                    filteredTechniques.push(technique);
-                } else {
-                    // check if the technique has a platform in the current set
-                    for(let platform of techniquePlatforms) {
-                        if (currentPlatformsSet.has(platform.toLowerCase())) {
-                            filteredTechniques.push(technique);
-                            break;
-                        }
-                    }
-                }
-
-            }
-            return filteredTechniques;
-        }
-    }
-
-    removeDisabled(techniques: Technique[]) {
-        let filtered: Technique[] = [];
-        let self = this;
-        techniques.forEach(function(technique) {
-            // TODO other filters
-            // if (!(!self.viewModel.getTechniqueVM(technique.technique_tactic_union_id).enabled && self.viewModel.hideDisabled)) filtered.push(technique);
-        })
-        return filtered;
-    }
-
 
 
     //////////////////////////////////////////////////////////
@@ -376,191 +138,16 @@ export class DataTableComponent implements AfterViewInit {
         //   });
     }
 
-
-    //////////////////////////////////////////////////////////////////////////
-    // RETRIEVES THE TECHNIQUES, TACTICS, AND THREAT DATA FROM DATA SERVICE //
-    //     Calls functions to format the data                               //
-    //////////////////////////////////////////////////////////////////////////
-
-    constructor(private dataService: DataService, private tabs: TabsComponent, private sanitizer: DomSanitizer, private viewModelsService: ViewModelsService, private configService: ConfigService) {
-        console.log("data table initializing");
-        // this.ds = dataService;
-        // this.ds.getConfig().subscribe((config: Object) => {
-        //     this.ds.setUpURLs(config["enterprise_attack_url"],
-        //                         config["pre_attack_url"],
-        //                         config["mobile_data_url"],
-        //                         config["taxii_server"]["enabled"],
-        //                         config["taxii_server"]["url"],
-        //                         config["taxii_server"]["collections"]);
-        //     var domain = config["domain"];
-        //     this.customContextMenuItems = config["custom_context_menu_items"]
-
-        //     if(domain === "mitre-enterprise"){
-        //         dataService.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
-        //             // let bundle = enterpriseData[1]["objects"].concat(enterpriseData[0]["objects"]);
-        //             this.parseBundle(enterpriseData);
-
-        //         });
-        //     } else if (domain === "mitre-mobile"){
-        //         dataService.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
-        //             // let bundle = mobileData[1]["objects"].concat(mobileData[0]["objects"]);
-        //             this.parseBundle(mobileData);
-        //         });
-        //     }
-        // });
-    }
+    constructor(private dataService: DataService, 
+                private tabs: TabsComponent, 
+                private sanitizer: DomSanitizer, 
+                private viewModelsService: ViewModelsService, 
+                private configService: ConfigService) { }
 
     /**
      * Angular lifecycle hook
      */
-    ngAfterViewInit(): void {
-
-    }
-
-    // Sets a map of properly formated tactic names to display in the data table
-    setTacticDisplayNames(){
-        this.tacticDisplayNames = {};
-        for(const tactic in this.tactics){
-            var displayString = tactic.replace(new RegExp("-", 'g'), " ");
-            displayString = this.toUpperCase(displayString);
-            this.tacticDisplayNames[tactic] = displayString;
-        }
-    }
-
-    establishThreatDataHolders(threatGroups, software){
-        for(var threatGroupID in threatGroups){
-            var threatGroupRawData = threatGroups[threatGroupID];
-
-            // get url from mitre attack
-            let url = ""
-            for (let i = 0; i < threatGroupRawData.external_references.length; i++) {
-                if (threatGroupRawData.external_references[i].source_name === "mitre-attack")  {
-                    url = threatGroupRawData.external_references[i].url;
-                    break;
-                }
-            }
-
-            var threatGroup = new SecurityInstance(threatGroupRawData.name,
-                "threat-group",
-                threatGroupID, url);
-
-            this.threatGroupList.push(threatGroup);
-        }
-
-
-        for(var softwareID in software){
-            var softwareRawData = software[softwareID];
-            // get url from mitre attack
-            var url = ""
-            for (let i = 0; i < softwareRawData.external_references.length; i++) {
-                if (softwareRawData.external_references[i].source_name.startsWith("mitre-attack"))  {
-                    url = softwareRawData.external_references[i].url;
-                    break;
-                }
-            }
-
-            var soft = new SecurityInstance(softwareRawData.name,
-                "software",
-                softwareID, url);
-
-            this.softwareGroupList.push(soft);
-        }
-        this.threatGroupList.sort(function(a,b) {return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0);} );
-        this.softwareGroupList.sort(function(a,b) {return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : ((b.name.toLowerCase() > a.name.toLowerCase()) ? -1 : 0);} );
-    }
-
-    /**
-     * Add all techniques in the given security instance to the technique selection
-     * @param si SecurityInstance object
-     */
-    selectSecurityInstance(si: SecurityInstance): void {
-        // let self = this;
-        // si.techniques.forEach(function(technique_id) {
-        //     // console.log(technique_id);
-        //     self.viewModel.addToTechniqueSelection_technique_id(technique_id);
-        // })
-    }
-
-    /**
-     *  Remove all techniques in the given security instance from the technique selection
-     * @param si SecurityInstance object
-     */
-    deselectSecurityInstance(si: SecurityInstance): void {
-        // let self = this;
-        // si.techniques.forEach(function(technique_id) {
-        //     self.viewModel.removeFromTechniqueSelection_technique_id(technique_id);
-        // })
-    }
-
-    /**
-     * Populate SecurityInstance objects' techniques array with relevant techniques
-     * @param  techniques    technique list
-     * @param  relationships relationship list
-     */
-    establishThreatData(techniques, relationships){
-        // console.log(relationships)
-        for (let relationship_id in relationships) {
-            var relationship = relationships[relationship_id];
-            var targetRef = relationship.target_ref;
-            var sourceRef = relationship.source_ref;
-
-            // determine what softwares or threat groups this pertains to
-            let relevantSI: SecurityInstance = null;
-            let relevantTechnique: Technique = null;
-
-            // find relevant security instance
-            let groupList = [this.softwareGroupList, this.threatGroupList];
-            for (let i = 0; i < groupList.length && !relevantSI; i++) {
-                let groupSecurityInstances = groupList[i];
-                for (let j = 0; j < groupSecurityInstances.length && !relevantSI; j++) {
-                    let securityInstance = groupSecurityInstances[j];
-                    if (securityInstance.id === sourceRef) {
-                        relevantSI = securityInstance;
-                    }
-                }
-            }
-
-            // find relevant technique
-            for (let i = 0; i < this.techniques.length && !relevantTechnique; i++) {
-                if (this.techniques[i].id == targetRef) {
-                    relevantTechnique = this.techniques[i]
-                }
-            }
-
-            if (relevantSI && relevantTechnique) {
-                // console.log(relationship, relevantSI, relevantTechnique);
-                // relevantSI.techniques.push(relevantTechnique.technique_id);
-            }
-
-        }
-
-        // cull threat groups and software with no associated techniques
-        let culledSoftware = [];
-        let culledThreatGroups = [];
-        this.softwareGroupList.forEach(function(si: SecurityInstance) {
-            if (si.techniques.length > 0) culledSoftware.push(si)
-        });
-        this.threatGroupList.forEach(function(si: SecurityInstance) {
-            if (si.techniques.length > 0) culledThreatGroups.push(si)
-        });
-        this.softwareGroupList = culledSoftware;
-        this.threatGroupList = culledThreatGroups;
-
-        // console.log(this.softwareGroupList, this.threatGroupList);
-    }
-
-
-
-
-    // open a url in a new tab
-    openURL(event, technique){
-        var win = window.open(technique.external_references_url);
-        if (win) {
-            win.focus();
-        } else {
-            alert('Please allow popups for this website');
-        }
-    }
+    ngAfterViewInit(): void {}
 
     // open custom url in a new tab
     openCustomURL(event, technique, url){
@@ -576,12 +163,6 @@ export class DataTableComponent implements AfterViewInit {
         // } else {
         //     alert('Please allow popups for this website');
         // }
-    }
-
-
-    // Capitalizes the first letter of each word in a string
-    toUpperCase(str){
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
 
@@ -611,53 +192,18 @@ export class DataTableComponent implements AfterViewInit {
         this.scoreEditField = this.viewModel.getEditingCommonValue("score");
     }
 
-    contextMenuVisible = false;
-    contextMenuSelectedTechnique: Technique = null;
-    contextMenuSelectedTactic = null;
-    /**
-     * called on right clicking a technique in the view, handles context menu stuff
-     * @param  technique technique that was clicked
-     * @param  event     click event
-     * @return           false to suppress normal context menu
-     */
-    onTechniqueContextMenu(technique, eventX, eventY) {
-        this.contextMenuVisible = true;
-        this.contextMenuSelectedTechnique = technique;
-        this.contextMenuSelectedTactic = this.tacticDisplayNames[technique.tactic].replace(" ", "_");
-        let self = this;
-        window.setTimeout(function() { //run after it gets drawn
-            // console.log(event, technique)
-            let element = <HTMLElement>document.getElementById("contextMenu" + self.viewModel.uid);
-
-            let directionHorizontal = document.body.clientWidth - eventX < element.clientWidth; //determine facing
-            let directionVertical = document.body.clientHeight - eventY < element.clientHeight; //determine facing
-
-            element.style.left = directionHorizontal ? (eventX - element.clientWidth) + "px" : eventX + "px";
-            element.style.top = directionVertical ? (eventY - element.clientHeight) + "px" : eventY + "px";
-        }, 0)
-
-        return false;
-    }
-
     /**
      * Set the state (enabled/disabled) of the selected features
      */
     setSelectedState(): void {
         let currentState = this.viewModel.getEditingCommonValue('enabled')
-        // console.log(currentState)
-        if (currentState === '') this.viewModel.editSelectedTechniques('enabled',false)
-        else                   this.viewModel.editSelectedTechniques('enabled',!currentState)
-        // this.filterTechniques();
+        if (currentState === '') this.viewModel.editSelectedTechniques('enabled', false)
+        else                     this.viewModel.editSelectedTechniques('enabled', !currentState)
     }
 
     //sanitize the given css so that it can be displayed without error
     sanitize(css) {
         return this.sanitizer.bypassSecurityTrustStyle(css);
-    }
-
-    getTacticRowTextColor() {
-        if (!this.viewModel.showTacticRowBackground) return 'black'
-        else return tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
     }
 
     /**
@@ -666,25 +212,8 @@ export class DataTableComponent implements AfterViewInit {
      * @return       true if valid number
      */
     validateScoreInput(event) {
-        // console.log(event)
         let result: boolean = isNaN(Number(this.scoreEditField))
-        // console.log(result)
         return result
-    }
-
-
-
-    /**
-     * Return whether all techniques in the security instance are currently selected
-     * @param  si SecurityInstance object
-     * @return    true if all techniques of the instance are selected, false otherwise
-     */
-    isSecurityInstanceSelected(si: SecurityInstance): boolean {
-        // for (let i = 0; i < si.techniques.length; i++) {
-        //     let techniqueID = si.techniques[i];
-        //     if (!this.viewModel.isTechniqueSelected_id(techniqueID)) return false
-        // }
-        return true;
     }
 
     /**
@@ -702,26 +231,9 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
-        viewModelCopy.deSerialize(this.viewModel.serialize());
-        let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
-        this.tabs.newExporterTab(exportData);
-    }
-}
-
-class SecurityInstance{
-    name: string;
-    type: string;
-    id: string;
-    techniques: string[];
-    aliases: string[];
-    url: string;
-
-    constructor(name: string, type: string, id: string, url: string){
-        this.name = name;
-        this.type = type;
-        this.id = id;
-        this.techniques = [];
-        this.url = url;
+        // let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
+        // viewModelCopy.deSerialize(this.viewModel.serialize());
+        // let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
+        // this.tabs.newExporterTab(exportData);
     }
 }
