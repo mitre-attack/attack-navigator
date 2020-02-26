@@ -840,6 +840,7 @@ export class ViewModel {
     /**
      * filter tactics according to viewmodel state
      * @param {Tactic[]} tactics to filter
+     * @param {Matrix} matrix that the tactics fall under
      * @returns {Tactic[]} filtered tactics
      */
     public filterTactics(tactics: Tactic[], matrix: Matrix): Tactic[] {
@@ -850,6 +851,7 @@ export class ViewModel {
      * filter techniques according to viewModel state
      * @param {Technique[]} techniques list of techniques to filter
      * @param {Tactic} tactic tactic the techniques fall under
+     * @param {Matrix} matrix that the techniques fall under
      * @returns {Technique[]} filtered techniques
      */
     public filterTechniques(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
@@ -899,6 +901,7 @@ export class ViewModel {
      * apply sort and filter state to techniques
      * @param {Technique[]} techniques techniques to sort and filter
      * @param {Tactic} tactic that the techniques fall under
+     * @param {Matrix} matrix that the techniques fall under
      * @returns {Technique[]} sorted and filtered techniques
      */
     public applyControls(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
