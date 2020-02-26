@@ -67,16 +67,17 @@ export class TechniqueCellComponent implements OnInit {
         this.unhighlight.emit();
     }
     private onLeftClick(event) {
-        this.leftclick.emit({
-            "technique": this.technique,
-            // modifier keys
-            "shift": event.shiftKey,
-            "ctrl": event.ctrlKey,
-            "meta": event.metaKey,
-            // position of event on page
-            "x": event.pageX,
-            "y": event.pageY
-        })
+        if (this.configService.getFeature("selecting_techniques")) this.leftclick.emit({
+                "technique": this.technique,
+                // modifier keys
+                "shift": event.shiftKey,
+                "ctrl": event.ctrlKey,
+                "meta": event.metaKey,
+                // position of event on page
+                "x": event.pageX,
+                "y": event.pageY
+            });
+        else this.onRightClick(event);
     }
     private onRightClick(event) {
        this.showContextmenu = true;

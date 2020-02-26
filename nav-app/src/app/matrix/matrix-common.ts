@@ -54,15 +54,10 @@ export abstract class MatrixCommon {
         return this.viewModel.applyControls(techniques, tactic, this.matrix);
     }
 
-    private onTechniqueRightClick(event: any, technique: Technique) {
-        console.log("rc", technique, event);
-        // this.techniqueRightClicked.emit(new TechniqueEvent(event, technique));
-    }
 
     private onTechniqueLeftClick(event: any, technique: Technique, tactic: Tactic) {
         if (!this.configService.getFeature('selecting_techniques')) {
-            //if selecting is disabled, same behavior as right click
-            this.onTechniqueRightClick(event, technique);
+            //if selecting is disabled, same behavior as right click. Shouldn't ever get to this point because it should be handled in technique-cell
             return;
         }
         if (event.shift || event.ctrl || event.meta) {
