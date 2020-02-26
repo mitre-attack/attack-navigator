@@ -151,7 +151,6 @@ export class DataService {
         for (let techniqueSDO of techniqueSDOs) {
             let subtechniques: Technique[] = [];
             if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                let subtechniques = [];
                 this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
                     if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
                     // else the target was revoked or deprecated and we can skip honoring the relationship
