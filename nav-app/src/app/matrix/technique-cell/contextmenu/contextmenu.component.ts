@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Technique, Tactic } from '../../../data.service';
 import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
-import { ConfigService } from '../../../config.service';
+import { ConfigService, ContextMenuItem } from '../../../config.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
@@ -35,29 +35,46 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
     private select() {
         this.viewModel.clearSelectedTechniques();
         this.viewModel.selectTechnique(this.technique, this.tactic);
+        this.closeContextmenu();
     }
 
     private addSelection() {
         this.viewModel.selectTechnique(this.technique, this.tactic);
+        this.closeContextmenu();
     }
 
     private removeSelection() {
         this.viewModel.unselectTechnique(this.technique, this.tactic);
+        this.closeContextmenu();
     }
 
     private selectAll() {
         this.viewModel.selectAllTechniques();
+        this.closeContextmenu();
     }
 
     private deselectAll() {
-        this.viewModel.clearSelectedTechniques()
+        this.viewModel.clearSelectedTechniques();
+        this.closeContextmenu();
     }
 
     private invertSelection() {
         this.viewModel.invertSelection();
+        this.closeContextmenu();
     }
 
     private viewTechnique() {
         window.open(this.technique.url, "_blank");
+        this.closeContextmenu();
+    }
+
+    private viewTactic() {
+        window.open(this.tactic.url, "_blank");
+        this.closeContextmenu();
+    }
+
+    private openCustomContextMenuItem(customItem: ContextMenuItem) {
+        window.open(customItem.getReplacedURL(this.technique, this.tactic), "_blank");
+        this.closeContextmenu();
     }
 }

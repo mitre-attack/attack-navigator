@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, Technique } from './data.service'; //import the DataService component so we can use it
+import { DataService, Technique, Tactic } from './data.service'; //import the DataService component so we can use it
 
 @Injectable({
     providedIn: 'root',
@@ -9,6 +9,8 @@ export class ConfigService {
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];
+
+    private contextMenuItems: ContextMenuItem[] = [];
     constructor(private dataService: DataService) {
         console.log("initializing config service");
         let self = this;
@@ -29,7 +31,10 @@ export class ConfigService {
                 // }
             })
             self.featureStructure = config["features"]
-            self.comment_color = config["comment_color"]
+            self.comment_color = config["comment_color"];
+            for (let obj of config["custom_context_menu_items"]) {
+                self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
+            }
         })
     }
 
@@ -188,5 +193,41 @@ export class ConfigService {
 
         return fragments;
     }
+}
 
+export class ContextMenuItem {
+    public readonly label: string;
+    private readonly url: string;
+    private readonly subtechnique_url: string;
+
+    constructor(label, url, subtechnique_url=null) {
+        this.label = label;
+        this.url = url;
+        this.subtechnique_url = subtechnique_url;
+    }
+
+    public getReplacedURL(technique: Technique, tactic: Tactic): string {
+        if (this.subtechnique_url && technique.isSubtechnique) {
+            return this.subtechnique_url.replace("{{parent_technique_attackID}}", technique.parent.attackID)
+                                        .replace("{{parent_technique_stixID}}", technique.parent.id)
+                                        .replace("{{parent_technique_name}}", technique.parent.name.replace(/ /g, "-").toLowerCase())
+
+                                        .replace("{{subtechnique_attackID}}", technique.attackID)
+                                        .replace("{{subtechnique_attackID_suffix}}", technique.attackID.split(".")[1])
+                                        .replace("{{subtechnique_stixID}}", technique.id)
+                                        .replace("{{subtechnique_name}}", technique.name.replace(/ /g, "-").toLowerCase())
+
+                                        .replace("{{tactic_attackID}}", tactic.attackID)
+                                        .replace("{{tactic_stixID}}", tactic.id)
+                                        .replace("{{tactic_name}}", tactic.shortname);
+        } else {
+            return this.url.replace("{{technique_attackID}}", technique.attackID)
+                           .replace("{{technique_stixID}}", technique.id)
+                           .replace("{{technique_name}}", technique.name.replace(/ /g, "-").toLowerCase())
+
+                           .replace("{{tactic_attackID}}", tactic.attackID)
+                           .replace("{{tactic_stixID}}", tactic.id)
+                           .replace("{{tactic_name}}", tactic.shortname);
+        }
+    }
 }

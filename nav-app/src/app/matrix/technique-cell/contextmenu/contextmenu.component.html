@@ -34,6 +34,14 @@
             <div class="contextMenu-button" (click)="viewTechnique()">
                 view technique
             </div>
+            <div class="contextMenu-button" (click)="viewTactic()">
+                view tactic
+            </div>
+        </div>
+        <div class="contextMenu-section" *ngIf="configService.contextMenuItems.length > 0">
+            <div class="contextMenu-button" *ngFor="let contextMenuItem of configService.contextMenuItems" (click)="openCustomContextMenuItem(contextMenuItem)">
+                {{contextMenuItem.label}}
+            </div>
         </div>
     </div>
 </div>

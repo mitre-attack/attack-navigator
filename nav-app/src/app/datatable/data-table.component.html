@@ -1,3 +1,11 @@
+<!--
+  oooooooo8   ooooooo  oooo   oooo ooooooooooo oooooooooo    ooooooo  ooooo        oooooooo8  
+o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888        888         
+888         888     888 88 888o88      888      888oooo88  888     888 888         888oooooo  
+888o     oo 888o   o888 88   8888      888      888  88o   888o   o888 888      o         888 
+ 888oooo88    88ooo88  o88o    88     o888o    o888o  88o8   88ooo88  o888ooooo88 o88oooo888  
+                                                                                              -->
+
 <div class="controlsContainer">
     <ul class="control-sections">
         <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && configService.getFeature('selecting_techniques')">
@@ -441,6 +449,13 @@
     </ul>
 </div>
 
+<!--
+oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo 
+ 8888o   888      888  88  888  88  888    888  888    888  88   
+ 88 888o8 88     8  88     888      888oooo88   888      888     
+ 88  888  88    8oooo88    888      888  88o    888     88 888   
+o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o 
+                                                                 -->
 
 <div class="matrices" oncontextmenu="return false">
     <div class="matrices-columns">
@@ -461,12 +476,12 @@
 
 
 <!--
-   ___ ___  _  _ _____ _____  _______   __  __ ___ _  _ _   _ ___     _   _  _ ___    _____ ___   ___  _  _____ ___ ___  ___
-  / __/ _ \| \| |_   _| __\ \/ /_   _| |  \/  | __| \| | | | / __|   /_\ | \| |   \  |_   _/ _ \ / _ \| ||_   _|_ _| _ \/ __|
- | (_| (_) | .` | | | | _| >  <  | |   | |\/| | _|| .` | |_| \__ \  / _ \| .` | |) |   | || (_) | (_) | |__| |  | ||  _/\__ \
-  \___\___/|_|\_| |_| |___/_/\_\ |_|   |_|  |_|___|_|\_|\___/|___/ /_/ \_\_|\_|___/    |_| \___/ \___/|____|_| |___|_|  |___/
- -->
-
+ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo   
+ 888         888    88 o888    88  888    88   8888o  88   888    88o 
+ 888         888ooo8   888    oooo 888ooo8     88 888o88   888    888 
+ 888      o  888    oo 888o    88  888    oo   88   8888   888    888 
+o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88   
+                                                                      -->
 
 <div class="legendBar" (click)="showingLegend = !showingLegend" *ngIf="!showingLegend && configService.getFeature('legend')">
     <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
