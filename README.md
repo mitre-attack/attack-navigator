@@ -96,7 +96,7 @@ Example custom context menu objects:
 {
     "label": "view technique on ATT&CK website",
     "url": "https://attack.mitre.org/techniques/{{technique_attackID}}",
-    "subtechnique_url": "https://attack.mitre.org/techniques/{{parent_technique_attackID}}/{{subtechnique_attackID}}"
+    "subtechnique_url": "https://attack.mitre.org/techniques/{{parent_technique_attackID}}/{{subtechnique_attackID_suffix}}"
 }
 ```
 ```json
