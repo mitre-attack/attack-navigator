@@ -65,8 +65,11 @@ export class DataService {
         this.dataLoadedCallbacks.push(callback);
     }
 
-
-    parseBundle(stixBundle: any[]) {
+    /**
+     * Parse the given stix bundle into the relevant data holders (above)
+     * @param {any[]} stixBundle: the STIX bundle to parse
+     */
+    parseBundle(stixBundle: any[]): void {
 
         let techniqueSDOs = [];
         let idToTechniqueSDO = new Map<string, any>();
@@ -177,11 +180,6 @@ export class DataService {
     private enterpriseData$: Observable<Object>;
     private mobileData$: Observable<Object>;
 
-    // Order of tactics to be displayed in application
-    private actTacticsOrder: String[] = [];
-    private prepareTacticsOrder: String[] = [];
-    private totalTacticsOrder: String[] = [];
-
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private pre_attack_URL: string = "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json";
@@ -191,7 +189,17 @@ export class DataService {
     private taxiiURL: string = '';
     private taxiiCollections: String[] = [];
 
-    setUpURLs(eAttackURL, preAttackURL, mURL, useTAXIIServer, taxiiURL, taxiiCollections){
+    /**
+     * Set up the URLs for data
+     * @param {string} eAttackURL enterprise domain url
+     * @param {string} preAttackURL pre-attack domain url
+     * @param {string} mURL mobile-attack url
+     * @param {boolean} useTAXIIServer use taxii server?
+     * @param {string} taxiiURL the URL of the taxii server
+     * @param {string[]} taxiiCollections taxii collections to fetch from
+     * @memberof DataService
+     */
+    setUpURLs(eAttackURL: string, preAttackURL: string, mURL: string, useTAXIIServer: boolean, taxiiURL: string, taxiiCollections: string[]){
         this.enterpriseAttackURL = eAttackURL;
         this.pre_attack_URL = preAttackURL;
         this.mobileDataURL = mURL;
@@ -200,6 +208,10 @@ export class DataService {
         this.taxiiCollections = taxiiCollections;
     }
 
+    /**
+     * get the current config
+     * @param {boolean} refresh: if true fetches the config from file. Otherwise, only fetches if it's never been fetched before
+     */
     getConfig(refresh:boolean = false){
         if (refresh || !this.configData$) {
             this.configData$ = this.http.get("./assets/config.json");
@@ -207,7 +219,10 @@ export class DataService {
         return this.configData$;
     }
 
-    getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false){
+    /**
+     * fetch the enterprise data from the endpoint
+     */
+    getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
         if (useTAXIIServer) {
             console.log("fetching data from TAXII server") 
             let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
@@ -247,7 +262,10 @@ export class DataService {
         return this.enterpriseData$ //observable
     }
 
-    getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false){
+    /**
+     * fetch the mobile data from the endpoint
+     */
+    getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false): Observable<Object> {
         //load from remote if not yet loaded or refresh=true
         if (useTAXIIServer) {
             console.log("fetching data from TAXII server")
