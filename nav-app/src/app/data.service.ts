@@ -151,7 +151,11 @@ export class DataService {
         for (let techniqueSDO of techniqueSDOs) {
             let subtechniques: Technique[] = [];
             if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                subtechniques = this.relationships.subtechniques_of.get(techniqueSDO.id).map((sub_id) => new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                let subtechniques = [];
+                this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+                    if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                    // else the target was revoked or deprecated and we can skip honoring the relationship
+                })
             }
             this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
