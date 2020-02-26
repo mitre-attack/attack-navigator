@@ -21,7 +21,7 @@ export abstract class MatrixCommon {
      * @returns {Tactic[]} filtered tactics
      */
     private filterTactics(tactics: Tactic[]): Tactic[] {
-        return tactics.filter((tactic: Tactic) => this.filterTechniques(tactic.techniques, tactic).length > 0);
+        return this.viewModel.filterTactics(tactics, this.matrix);
     }
 
     /**
@@ -31,18 +31,7 @@ export abstract class MatrixCommon {
      * @returns {Technique[]} filtered techniques
      */
     private filterTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
-        return techniques.filter((technique: Technique) => {
-            let techniqueVM = this.viewModel.getTechniqueVM(technique, tactic);
-            // filter by enabled
-            if (this.viewModel.hideDisabled && !techniqueVM.enabled) return false;
-            if (this.matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
-            // filter by platform
-            let platforms = new Set(technique.platforms)
-            for (let platform of this.viewModel.filters.platforms.selection) {
-                if (platforms.has(platform)) return true; //platform match
-            }
-            return false; //no platform match
-        })
+        return this.viewModel.filterTechniques(techniques, tactic, this.matrix);
     }
 
     /**
@@ -52,25 +41,7 @@ export abstract class MatrixCommon {
      * @returns {Technique[]} sorted techniques
      */
     private sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
-        return techniques.sort((technique1: Technique, technique2: Technique) => {
-            let techniqueVM1 = this.viewModel.getTechniqueVM(technique1, tactic);
-            let techniqueVM2 = this.viewModel.getTechniqueVM(technique2, tactic);
-            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-            switch(this.viewModel.sorting) {
-                default:
-                case 0:
-                    return technique1.name.localeCompare(technique2.name);
-                case 1:
-                    return technique2.name.localeCompare(technique1.name);
-                case 2:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score1 - score2;
-                case 3:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score2 - score1;
-            }
-        })
+        return this.viewModel.sortTechniques(techniques, tactic);
     }
 
     /**
@@ -80,8 +51,7 @@ export abstract class MatrixCommon {
      * @returns {Technique[]} sorted and filtered techniques
      */
     private applyControls(techniques: Technique[], tactic: Tactic): Technique[] {
-        //apply sort and filter
-        return this.sortTechniques(this.filterTechniques(techniques, tactic), tactic);
+        return this.viewModel.applyControls(techniques, tactic, this.matrix);
     }
 
     private onTechniqueRightClick(event: any, technique: Technique) {

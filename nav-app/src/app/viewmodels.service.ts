@@ -357,7 +357,7 @@ export class ViewModel {
     metadata: Metadata[] = [];
 
     /*
-     * sorting int meanings (see data-table.filterTechniques()):
+     * sorting int meanings (see filterTechniques()):
      * 0: ascending alphabetically
      * 1: descending alphabetically
      * 2: ascending numerically
@@ -821,6 +821,89 @@ export class ViewModel {
      */
     public removeMetadata(index: number) {
         this.metadata.splice(index, 1)
+    }
+
+    
+    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8                           
+    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo    
+    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888  
+    //         888 888     888 888        888     o88       888         888   888  888  888          888         
+    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o        
+    //                                         o88                                                               
+    //     ooooo ooooo            o888                                                 
+    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
+    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
+    //     888   888 888          888  888    888 888          888                888 
+    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
+    //                                o888                                            
+
+    /**
+     * filter tactics according to viewmodel state
+     * @param {Tactic[]} tactics to filter
+     * @returns {Tactic[]} filtered tactics
+     */
+    public filterTactics(tactics: Tactic[], matrix: Matrix): Tactic[] {
+        return tactics.filter((tactic: Tactic) => this.filterTechniques(tactic.techniques, tactic, matrix).length > 0);
+    }
+
+    /**
+     * filter techniques according to viewModel state
+     * @param {Technique[]} techniques list of techniques to filter
+     * @param {Tactic} tactic tactic the techniques fall under
+     * @returns {Technique[]} filtered techniques
+     */
+    public filterTechniques(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
+        return techniques.filter((technique: Technique) => {
+            let techniqueVM = this.getTechniqueVM(technique, tactic);
+            // filter by enabled
+            if (this.hideDisabled && !techniqueVM.enabled) return false;
+            if (matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
+            // filter by platform
+            let platforms = new Set(technique.platforms)
+            for (let platform of this.filters.platforms.selection) {
+                if (platforms.has(platform)) return true; //platform match
+            }
+            return false; //no platform match
+        })
+    }
+
+    /**
+     * sort techniques accoding to viewModel state
+     * @param {Technique[]} techniques techniques to sort
+     * @param {Tactic} tactic tactic the techniques fall under
+     * @returns {Technique[]} sorted techniques
+     */
+    public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
+        return techniques.sort((technique1: Technique, technique2: Technique) => {
+            let techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            switch(this.sorting) {
+                default:
+                case 0:
+                    return technique1.name.localeCompare(technique2.name);
+                case 1:
+                    return technique2.name.localeCompare(technique1.name);
+                case 2:
+                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
+                    else return score1 - score2;
+                case 3:
+                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
+                    else return score2 - score1;
+            }
+        })
+    }
+
+    /**
+     * apply sort and filter state to techniques
+     * @param {Technique[]} techniques techniques to sort and filter
+     * @param {Tactic} tactic that the techniques fall under
+     * @returns {Technique[]} sorted and filtered techniques
+     */
+    public applyControls(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
+        //apply sort and filter
+        return this.sortTechniques(this.filterTechniques(techniques, tactic, matrix), tactic);
     }
 
     
