@@ -17,8 +17,8 @@ export class ExporterComponent implements AfterViewInit {
     @Input() viewModel: ViewModel;
 
     private config = {
-        "width": 17,
-        "height": 11,
+        "width": 40,
+        "height": 30,
         "headerHeight": 1,
 
         "unit": "in",
@@ -27,7 +27,6 @@ export class ExporterComponent implements AfterViewInit {
         "font": 'sans-serif',
         "tableFontSize": 5,
         "tableTacticFontSize": 6,
-        "tableTextDisplay": 1,
         "tableBorderColor": "#6B7279",
 
         "showHeader": true,
@@ -411,13 +410,13 @@ export class ExporterComponent implements AfterViewInit {
             .attr("class", "cell")
             .attr("height", y(1))
             .attr("width", x.bandwidth())
-            .attr("fill", "#84d1e0")
+            .attr("fill", function(technique: RenderableTechnique) { return technique.fill })
             .attr("stroke", self.config.tableBorderColor);
         let subtechniqueRects = subtechniqueGroups.append("rect")
             .attr("class", "cell")
             .attr("height", y(1))
             .attr("width", x.bandwidth() - subtechniqueIndent)
-            .attr("fill", "#e08484")
+            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill })
             .attr("stroke", self.config.tableBorderColor);
         // add sidebar
         // let sidebarWidth = y(1);
@@ -508,21 +507,21 @@ export class ExporterComponent implements AfterViewInit {
          * Given an array of words, find the optimal font size for the array of words to be
          * broken onto 1 line each.
          * @param  {string[]} words     to be broken onto each line
-         * @param  {string[]} technique the technique data for the cell
          * @param  {dom node} node      the dom node of the cell
          * @param  {cellWidth} number   the width of the cell
+         * @param  {cellHeight} number  the height of the cell
          * @return {number}             the largest possible font size
          *                              not larger than 12
          */
-        function findSpace(words: string[], technique: RenderableTechnique, node, cellWidth: number) {
+        function findSpace(words: string[], node, cellWidth: number, cellHeight: number) {
             let padding = 4; //the amount of padding on the left and right
             //break into multiple lines
-            let breakDistance = Math.min(y(1), 15 * words.length)
-            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, true, cellWidth)
+            let breakDistance = Math.min(cellHeight, 15 * words.length)
+            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, false, cellWidth)
 
             //find right size to fit the height of the cell
             let breakTextHeight = breakDistance / words.length
-            let fitTextHeight = Math.min(breakTextHeight, y(1)) * 0.8;
+            let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8;
 
             //find right size to fit the width of the cell
             // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
@@ -543,13 +542,14 @@ export class ExporterComponent implements AfterViewInit {
         /**
          * Given a technique and dom node, try all combinations of word breaks to maximize font size.
          * returns font size in pixels
-         * @param {RenderableTechnique} technique the technique data for the cell
+         * @param {string} text                   the text to render in the cell
          * @param {dom node} node                 the node for the cell
          * @param {number} cellWidth              width of the cell to get the font size for
+         * @param {number} cellHeight             height of the cell to get the font size for
          * @return {string}                       the size in pixels
          */
-        function optimalFontSize(technique: RenderableTechnique, node, cellWidth: number): string {
-            let words = technique.technique.name.split(" ");
+        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number): string {
+            let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
             let bestBinary = ""; //arrangement of line breaks, see below
@@ -568,7 +568,7 @@ export class ExporterComponent implements AfterViewInit {
                     }
                 }
 
-                let size = findSpace(wordSet, technique, node, cellWidth);
+                let size = findSpace(wordSet, node, cellWidth, cellHeight);
                 if (size >= bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
@@ -577,23 +577,30 @@ export class ExporterComponent implements AfterViewInit {
                 if (size == 12) break; //if largest text found, no need to search more
             }
 
-            findSpace(bestWordArrangement, technique, node, cellWidth);
+            findSpace(bestWordArrangement, node, cellWidth, cellHeight);
             return bestSize + "px";
         }
 
         techniqueGroups.append("text")
-            .text(function(technique: RenderableTechnique) { return technique.technique.name; })
+            .text(function(technique: RenderableTechnique) { 
+                return technique.text;
+            })
             .attr("font-size", function(technique: RenderableTechnique) {
-                return optimalFontSize(technique, this, x.bandwidth());
+                return optimalFontSize(technique.text, this, x.bandwidth(), y(1));
             })
             .attr("dominant-baseline", "middle")
+            .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
 
         subtechniqueGroups.append("text")
-            .text(function(subtechnique: RenderableTechnique) { return subtechnique.technique.name; })
+            .text(function(subtechnique: RenderableTechnique) { 
+                return subtechnique.text;
+            })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
-                return optimalFontSize(subtechnique, this, x.bandwidth() - subtechniqueIndent);
+                return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1));
             })
             .attr("dominant-baseline", "middle")
+            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
+    
         //  _    ___ ___ ___ _  _ ___
         // | |  | __/ __| __| \| |   \
         // | |__| _| (_ | _|| .` | |) |
@@ -863,12 +870,31 @@ class RenderableTechnique {
     public readonly yPosition: number;
     public readonly technique: Technique;
     public readonly tactic: Tactic;
-    public readonly matrix: Matrix
+    public readonly matrix: Matrix;
+    private readonly viewModel: ViewModel;
     constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
         this.yPosition = yPosition;
         this.technique = technique;
         this.tactic = tactic;
         this.matrix = matrix;
+        this.viewModel = viewModel;
+    }
+    public get fill() {
+        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
+            let techniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            if (techniqueVM.color) return techniqueVM.color;
+            if (techniqueVM.score) return techniqueVM.scoreColor;
+        } 
+        return "white"; //default
+    }
+    public get textColor() {
+        return tinycolor.mostReadable(this.fill, ["white", "black"]);
+    }
+    public get text() {
+        let text = [];
+        if (this.viewModel.layout.showID) text.push(this.technique.attackID);
+        if (this.viewModel.layout.showName) text.push(this.technique.name);
+        return text.join(": ")
     }
 }
 

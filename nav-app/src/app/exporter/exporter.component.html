@@ -85,79 +85,10 @@
                     <ul>
                         <li>
                             <mat-form-field>
-                                <input matInput
-                                       class="has-suffix"
-                                       type="number"
-                                       placeholder="title font size"
-                                       step="1"
-                                       [disabled]="!showName()"
-                                       [(ngModel)]="config.headerLayerNameFontSize"
-                                       (input)="buildSVG()" />
-                                <span matSuffix [style.color]="!showName() ? 'rgba(0,0,0,0.42)' : 'black'">{{config.fontUnit}}</span>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
-                                <input matInput
-                                       class="has-suffix"
-                                       type="number"
-                                       placeholder="font size in header"
-                                       step="1"
-                                       [disabled]="!config.showHeader"
-                                       [(ngModel)]="config.headerFontSize"
-                                       (input)="buildSVG()" />
-                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.fontUnit}}</span>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
-                                <input matInput
-                                       class="has-suffix"
-                                       type="number"
-                                       placeholder="tactic header font size"
-                                       step="1"
-                                       [(ngModel)]="config.tableTacticFontSize"
-                                       (input)="buildSVG()" />
-                                <span matSuffix>{{config.fontUnit}}</span>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
-                                <input matInput
-                                       class="has-suffix"
-                                       type="number"
-                                       placeholder="technique font size"
-                                       step="1"
-                                       [disabled]="config.tableTextDisplay === 'none'"
-                                       [(ngModel)]="config.tableFontSize"
-                                       (input)="buildSVG()" />
-                                       <span matSuffix [style.color]="config.tableTextDisplay === 'none' ? 'rgba(0,0,0,0.42)' : 'black'">{{config.fontUnit}}</span>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
-                                <mat-select placeholder="font size unit" [(ngModel)]="config.fontUnit" (selectionChange)="buildSVG()">
-                                    <mat-option value="pt">points</mat-option>
-                                    <mat-option value="px">pixels</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
                                 <mat-select placeholder="font" [(ngModel)]="config.font" (selectionChange)="buildSVG()">
                                     <mat-option value="serif">serif</mat-option>
                                     <mat-option value="sans-serif">sans-serif</mat-option>
                                     <mat-option value="monospace">monospace</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </li>
-                        <li>
-                            <mat-form-field>
-                                <mat-select placeholder="technique text" [(ngModel)]="config.tableTextDisplay" (selectionChange)="buildSVG()">
-                                    <mat-option value="0">no text</mat-option>
-                                    <mat-option value="1">technique name</mat-option>
-                                    <mat-option value="2">technique name (acronym)</mat-option>
-                                    <mat-option value="3">technique ID</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </li>
