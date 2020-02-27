@@ -482,8 +482,9 @@ export class ExporterComponent implements AfterViewInit {
         * @param  {number} spacingDistance total distance to space text inside,
         *                                  should be < totalDistance
         * @param {boolean} center          if true, center the text in the node, else left-align
+        * @param {number} cellWidth        total width of the cell to put the text in
         */
-        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center) {
+        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
             let el = d3.select(node)
             // el.attr("y", y + (totalDistance - spacingDistance) / 2);
 
@@ -498,7 +499,7 @@ export class ExporterComponent implements AfterViewInit {
                 // if (i > 0)
                 let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
                 tspan
-                    .attr('x', center? xpos + (x.bandwidth()/2) : xpos + padding)
+                    .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
                     .attr('y', offsetY + 'px');
             }
         };
@@ -509,14 +510,15 @@ export class ExporterComponent implements AfterViewInit {
          * @param  {string[]} words     to be broken onto each line
          * @param  {string[]} technique the technique data for the cell
          * @param  {dom node} node      the dom node of the cell
+         * @param  {cellWidth} number   the width of the cell
          * @return {number}             the largest possible font size
          *                              not larger than 12
          */
-        function findSpace(words: string[], technique: RenderableTechnique, node) {
+        function findSpace(words: string[], technique: RenderableTechnique, node, cellWidth: number) {
             let padding = 4; //the amount of padding on the left and right
             //break into multiple lines
             let breakDistance = Math.min(y(1), 15 * words.length)
-            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, true)
+            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, true, cellWidth)
 
             //find right size to fit the height of the cell
             let breakTextHeight = breakDistance / words.length
@@ -529,7 +531,7 @@ export class ExporterComponent implements AfterViewInit {
                 let word = words[w];
                 longestWordLength = Math.max(longestWordLength, word.length)
             }
-            let fitTextWidth = ((x.bandwidth() - (2 * padding)) / longestWordLength) * 1.45;
+            let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
 
             //the min fitting text size not larger than 12
             let size = Math.min(12, fitTextHeight, fitTextWidth);
@@ -543,9 +545,10 @@ export class ExporterComponent implements AfterViewInit {
          * returns font size in pixels
          * @param {RenderableTechnique} technique the technique data for the cell
          * @param {dom node} node                 the node for the cell
+         * @param {number} cellWidth              width of the cell to get the font size for
          * @return {string}                       the size in pixels
          */
-        function optimalFontSize(technique: RenderableTechnique, node): string {
+        function optimalFontSize(technique: RenderableTechnique, node, cellWidth: number): string {
             let words = technique.technique.name.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
@@ -565,7 +568,7 @@ export class ExporterComponent implements AfterViewInit {
                     }
                 }
 
-                let size = findSpace(wordSet, technique, node);
+                let size = findSpace(wordSet, technique, node, cellWidth);
                 if (size >= bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
@@ -574,17 +577,23 @@ export class ExporterComponent implements AfterViewInit {
                 if (size == 12) break; //if largest text found, no need to search more
             }
 
-            findSpace(bestWordArrangement, technique, node);
+            findSpace(bestWordArrangement, technique, node, cellWidth);
             return bestSize + "px";
         }
 
         techniqueGroups.append("text")
             .text(function(technique: RenderableTechnique) { return technique.technique.name; })
             .attr("font-size", function(technique: RenderableTechnique) {
-                return optimalFontSize(technique, this);
+                return optimalFontSize(technique, this, x.bandwidth());
             })
             .attr("dominant-baseline", "middle")
 
+        subtechniqueGroups.append("text")
+            .text(function(subtechnique: RenderableTechnique) { return subtechnique.technique.name; })
+            .attr("font-size", function(subtechnique: RenderableTechnique) {
+                return optimalFontSize(subtechnique, this, x.bandwidth() - subtechniqueIndent);
+            })
+            .attr("dominant-baseline", "middle")
         //  _    ___ ___ ___ _  _ ___
         // | |  | __/ __| __| \| |   \
         // | |__| _| (_ | _|| .` | |) |
