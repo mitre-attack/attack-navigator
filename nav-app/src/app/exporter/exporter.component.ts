@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Input } from '@angular/core';
-import { ViewModel } from "../viewmodels.service";
+import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
@@ -881,15 +881,22 @@ class RenderableTechnique {
     }
     public get fill() {
         if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
-            let techniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            if (!techniqueVM.enabled) return "white";
             if (techniqueVM.color) return techniqueVM.color;
             if (techniqueVM.score) return techniqueVM.scoreColor;
         } 
         return "white"; //default
     }
+
     public get textColor() {
-        return tinycolor.mostReadable(this.fill, ["white", "black"]);
+        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
+            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            if (!techniqueVM.enabled) return "#aaaaaa";
+        }
+        return tinycolor.mostReadable(this.fill, ["white", "black"]); //default;
     }
+
     public get text() {
         let text = [];
         if (this.viewModel.layout.showID) text.push(this.technique.attackID);
