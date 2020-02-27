@@ -17,8 +17,8 @@ export class ExporterComponent implements AfterViewInit {
     @Input() viewModel: ViewModel;
 
     private config = {
-        "width": 11,
-        "height": 8.5,
+        "width": 17,
+        "height": 11,
         "headerHeight": 1,
 
         "unit": "in",
@@ -443,98 +443,147 @@ export class ExporterComponent implements AfterViewInit {
             .attr("fill", self.config.tableBorderColor)
             .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 ? "visible" : "hidden"});
 
-        // let sidebar = tacticGroups.append("g")
-            // .attr("class", "sidebars").selectAll("polygon")
-            // .data(function(tactic: RenderableTactic) { return tactic.techniques})
-            // .enter().append("polygon")
-            // .attr("class", "sidebar")
-            // .attr("transform", function(technique: RenderableTechnique) {
-            //     return `translate(0, ${y(technique.yPosition) + y(1)})`
-            // })
-            // .attr("points", function(technique: RenderableTechnique) {
-            //     let points = [];
-            //     points.push("0,0")
-            //     points.push(`${subtechniqueIndent}, 0`)
-            //     points.push(`${subtechniqueIndent}, ${y(technique.technique.subtechniques.length)}`)
-            //     points.push(`${subtechniqueIndent - 3}, ${y(technique.technique.subtechniques.length)}`)
-            //     points.push(`${subtechniqueIndent - 3}, ${3}`)
-            //     return points.join(" ");
-            // })
-            // .attr("stroke", "red")
-            // .attr("fill", "red")
-            // .attr("opacity", "0.5");
-        
-        // let techniqueGroups = tacticGroups.selectAll("g")
-        //     .data(function(tactic) { return tactic.techniques })
-        //     .enter().append("g")
-        //     .attr("class", "technique")
-        //     .attr("transform", function(technique: RenderableTechnique) {
-        //         let tactic: Tactic = d3.select(this.parentNode).data()[0];
-        //         let translate = `translate(${x(tactic.id)}, ${y(technique.yPosition)})`
-        //         // console.log(translate);
-        //         return translate;
-        //     });
-        
-        
+        //   oooooooo8             o888  o888       ooooooooooo                          o8   
+        // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo 
+        // 888         888oooooo8   888   888           888    888oooooo8    888o888    888   
+        // 888o     oo 888          888   888           888    888           o88 88o    888   
+        //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
+                                                                                           
+        // Essentially, the following functions brute force the optimal text arrangement for each cell 
+        // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
+        // in the cell text.
 
+        /**
+         * Divide distance into divisions equidistant anchor points S.T they all have equal
+         * padding from each other and the beginning and end of the distance
+         * @param  distance  distance to divide
+         * @param  divisions number of divisions
+         * @return           number[] where each number corresponds to a division-center offset
+         */
+        function getSpacing(distance, divisions) {
+            distance = distance - 1; //1px padding for border
+            let spacing = distance/(divisions*2);
+            let res = []
+            for (let i = 1; i <= divisions*2; i+=2) {
+                res.push(1 + (spacing * i))
+            }
+            return res
+        };
 
-        // // techniqueGroups.append("g")
-        // //     .attr("class", "technique")
-            
-        // // add technique to techniqueGroups
-        // techniqueGroups.append("rect")
-        //     .attr("class", "supertechnique")
-        //     .attr("height", y(1))
-        //     .attr("width", x.bandwidth()/2)
-        //     .attr("fill", "#84d1e0")
-        //     .attr("stroke", "black");
-        // // add subtechniques to techniqueGroups
+        /**
+         * Magic function to insert line breaks. 
+        * @param  {string[]} words         array of words to space
+        * @param  {dom node} self          the dom element with the text
+        * @param  {number} xpos            x pos to place multiline text at
+        * @param  {number} ypos            same but with y
+        * @param  {number} totalDistance   total distance to contain broken text.
+        *                                  amt in excess of spacingDistance
+        *                                  becomes v padding.
+        * @param  {number} spacingDistance total distance to space text inside,
+        *                                  should be < totalDistance
+        * @param {boolean} center          if true, center the text in the node, else left-align
+        */
+        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center) {
+            let el = d3.select(node)
+            // el.attr("y", y + (totalDistance - spacingDistance) / 2);
 
-        // techniqueGroups.selectAll("rect")
-        //     .data(function(technique: RenderableTechnique) { return technique.subtechniques })
-        //     .enter().append("rect")
-        //     .attr("class", "subtechnique")
-        //     .attr("x", x.bandwidth()/2)
-        //     .attr("width",x.bandwidth()/2)
-        //     .attr("height", y(1))
-        //     .attr("y", function(subtechnique: RenderableTechnique, index) {
-        //         return y(index)
-        //     })
-        //     .attr("fill", "#e08484")
-        //     .attr("stroke", "black");
-            // .attr("x", function(technique: Technique) { 
-            //     return 
-            // })
-            // .attr("y", function(technique: RenderableTechnique, index) {
-            //     console.log(technique);
-            //     let result = y(technique.yPosition);
-            //     console.log(result);
-            //     return result;
-            // })
-            // .attr("height", function(technique: Technique) {
-            //     return y(1);
-            // })
-            // .attr("width", x.bandwidth())
-            // .attr("fill", "none")
+            //clear previous content
+            el.text('');
+            while(node.firstChild) node.removeChild(node.firstChild);
 
-        // techniqueGroups.append("group")
-        //     .attr("class", "technique-cell")
-        //     .attr("x", function(technique: Technique) { 
-        //         let tactic: Tactic = getTactic(this);
-        //         return x(tactic.id);
-        //     })
-        //     .attr("y", function(technique: RenderableTechnique, index) {
-        //         console.log(technique);
-        //         let result = y(technique.yPosition);
-        //         console.log(result);
-        //         return result;
-        //     })
-        //     .attr("height", function(technique: Technique) {
-        //         return y(1);
-        //     })
-        //     .attr("width", x.bandwidth())
-        //     .attr("fill", "none")
-        //     .attr("stroke", "black")
+            let spacing = getSpacing(spacingDistance, words.length)
+            for (var i = 0; i < words.length; i++) {
+                var tspan = el.append('tspan').text(words[i]);
+                if (center) tspan.attr("text-anchor","middle");
+                // if (i > 0)
+                let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
+                tspan
+                    .attr('x', center? xpos + (x.bandwidth()/2) : xpos + padding)
+                    .attr('y', offsetY + 'px');
+            }
+        };
+
+        /**
+         * Given an array of words, find the optimal font size for the array of words to be
+         * broken onto 1 line each.
+         * @param  {string[]} words     to be broken onto each line
+         * @param  {string[]} technique the technique data for the cell
+         * @param  {dom node} node      the dom node of the cell
+         * @return {number}             the largest possible font size
+         *                              not larger than 12
+         */
+        function findSpace(words: string[], technique: RenderableTechnique, node) {
+            let padding = 4; //the amount of padding on the left and right
+            //break into multiple lines
+            let breakDistance = Math.min(y(1), 15 * words.length)
+            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, true)
+
+            //find right size to fit the height of the cell
+            let breakTextHeight = breakDistance / words.length
+            let fitTextHeight = Math.min(breakTextHeight, y(1)) * 0.8;
+
+            //find right size to fit the width of the cell
+            // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
+            let longestWordLength = -Infinity;
+            for (let w = 0; w < words.length; w++) {
+                let word = words[w];
+                longestWordLength = Math.max(longestWordLength, word.length)
+            }
+            let fitTextWidth = ((x.bandwidth() - (2 * padding)) / longestWordLength) * 1.45;
+
+            //the min fitting text size not larger than 12
+            let size = Math.min(12, fitTextHeight, fitTextWidth);
+
+            // if (size < 5) return "0px"; //enable for min text size
+            return size;
+        }
+
+        /**
+         * Given a technique and dom node, try all combinations of word breaks to maximize font size.
+         * returns font size in pixels
+         * @param {RenderableTechnique} technique the technique data for the cell
+         * @param {dom node} node                 the node for the cell
+         * @return {string}                       the size in pixels
+         */
+        function optimalFontSize(technique: RenderableTechnique, node): string {
+            let words = technique.technique.name.split(" ");
+            let bestSize = -Infinity; //beat this size
+            let bestWordArrangement = [];
+            let bestBinary = ""; //arrangement of line breaks, see below
+            for (let j = 2**(words.length - 1) - 1; j >= 0; j--) { //try no breaks first
+                let wordSet = []; //build this array
+
+                //binary representation of newline locations, e.g 001011
+                //where 1 is newline and 0 is no newline
+                let binaryString = j.toString(2).padStart(words.length, "0");
+
+                for (let k = 0; k < binaryString.length; k++) {
+                    if (binaryString[k] === "1") {//join with space
+                        wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
+                    } else { //linebreak
+                        wordSet.push(words[k]) //new word in array
+                    }
+                }
+
+                let size = findSpace(wordSet, technique, node);
+                if (size >= bestSize) { //found new optimum
+                    bestSize = size;
+                    bestWordArrangement = wordSet;
+                    bestBinary = binaryString;
+                }
+                if (size == 12) break; //if largest text found, no need to search more
+            }
+
+            findSpace(bestWordArrangement, technique, node);
+            return bestSize + "px";
+        }
+
+        techniqueGroups.append("text")
+            .text(function(technique: RenderableTechnique) { return technique.technique.name; })
+            .attr("font-size", function(technique: RenderableTechnique) {
+                return optimalFontSize(technique, this);
+            })
+            .attr("dominant-baseline", "middle")
 
         //  _    ___ ___ ___ _  _ ___
         // | |  | __/ __| __| \| |   \
