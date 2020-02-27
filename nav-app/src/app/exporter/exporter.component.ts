@@ -367,19 +367,23 @@ export class ExporterComponent implements AfterViewInit {
             .domain(tactics.map(function(tactic: RenderableTactic) { return tactic.tactic.id; }))
             .range([0, width])
 
-            
         let y = d3.scaleLinear()
             .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height}), 0])
             .range([height - (headerHeight), 0])
             
         // let subtechniqueIndent = (1/3) * x.bandwidth(); //2/3 of full techinque width
         // let subtechniqueIndent = 2 * y(1); //2*the height of a cell, to make room for y(1) width sidebar
-        let subtechniqueIndent = Math.min(2 * y(1), 15);
-
-        let yAxis = d3.axisLeft(y);
-        let xAxis = d3.axisTop(x)
-            .tickFormat(function(tactic: RenderableTactic) { return tactic.tactic.name; })
+        let subtechniqueIndent = Math.min(2 * y(1), 15);     
         
+        //add tactic row backgroun
+        if (self.viewModel.showTacticRowBackground) {
+            tablebody.append("rect")
+                .attr("class", "tactic-header-background")
+                .attr("width", width)
+                .attr("height", y(1))
+                .attr("fill", self.viewModel.tacticRowBackground)
+                .attr("stroke", self.config.tableBorderColor)
+        }
 
         let tacticGroups = tablebody.append("g").selectAll("g")
             .data(tactics)
@@ -510,14 +514,15 @@ export class ExporterComponent implements AfterViewInit {
          * @param  {dom node} node      the dom node of the cell
          * @param  {cellWidth} number   the width of the cell
          * @param  {cellHeight} number  the height of the cell
+         * @param {boolean} center      center the text?
          * @return {number}             the largest possible font size
          *                              not larger than 12
          */
-        function findSpace(words: string[], node, cellWidth: number, cellHeight: number) {
+        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean) {
             let padding = 4; //the amount of padding on the left and right
             //break into multiple lines
             let breakDistance = Math.min(cellHeight, 15 * words.length)
-            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, false, cellWidth)
+            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, center, cellWidth)
 
             //find right size to fit the height of the cell
             let breakTextHeight = breakDistance / words.length
@@ -540,15 +545,17 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         /**
-         * Given a technique and dom node, try all combinations of word breaks to maximize font size.
+         * Given text, a dom node, and sizing parameters, 
+         * try all combinations of word breaks to maximize font size inside of the given space
          * returns font size in pixels
          * @param {string} text                   the text to render in the cell
          * @param {dom node} node                 the node for the cell
          * @param {number} cellWidth              width of the cell to get the font size for
          * @param {number} cellHeight             height of the cell to get the font size for
+         * @param {boolean} center                center the text?
          * @return {string}                       the size in pixels
          */
-        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number): string {
+        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean): string {
             let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
@@ -568,7 +575,7 @@ export class ExporterComponent implements AfterViewInit {
                     }
                 }
 
-                let size = findSpace(wordSet, node, cellWidth, cellHeight);
+                let size = findSpace(wordSet, node, cellWidth, cellHeight, center);
                 if (size >= bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
@@ -577,7 +584,7 @@ export class ExporterComponent implements AfterViewInit {
                 if (size == 12) break; //if largest text found, no need to search more
             }
 
-            findSpace(bestWordArrangement, node, cellWidth, cellHeight);
+            findSpace(bestWordArrangement, node, cellWidth, cellHeight, center);
             return bestSize + "px";
         }
 
@@ -586,7 +593,7 @@ export class ExporterComponent implements AfterViewInit {
                 return technique.text;
             })
             .attr("font-size", function(technique: RenderableTechnique) {
-                return optimalFontSize(technique.text, this, x.bandwidth(), y(1));
+                return optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
             })
             .attr("dominant-baseline", "middle")
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
@@ -596,11 +603,36 @@ export class ExporterComponent implements AfterViewInit {
                 return subtechnique.text;
             })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
-                return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1));
+                return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
             })
             .attr("dominant-baseline", "middle")
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
     
+        let tacticLabels = tacticGroups.append("g")
+            .attr("class", "tactic-label");
+        tacticLabels.append("text")
+            .text(function(tactic: RenderableTactic) {
+                return tactic.tactic.name;
+            })
+            .attr("font-size", function(tactic: RenderableTactic) {
+                return optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
+            })
+            .attr("dominant-baseline", "middle")
+            .attr("fill", function(tactic: RenderableTactic) {
+                if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
+                else return "black";
+            })
+            .attr("font-weight", "bold")
+        
+        
+        // tacticLabels.append("rect")
+        //     .attr("height", y(1))
+        //     .attr("width", x.bandwidth())
+            // .attr("fill", "white")
+            // .attr("stroke", "black")
+
+
+
         //  _    ___ ___ ___ _  _ ___
         // | |  | __/ __| __| \| |   \
         // | |__| _| (_ | _|| .` | |) |
@@ -852,7 +884,7 @@ class RenderableTactic {
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
         this.tactic = tactic;
         let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
-        let yPosition = 0;
+        let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix)
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel));
