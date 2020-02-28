@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import {DataService, Technique} from '../data.service';
 import {ConfigService} from '../config.service';
-import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
