@@ -286,9 +286,15 @@ export class ExporterComponent implements AfterViewInit {
             return bestSize + "px";
         }
 
+        class HeaderSectionContent {
+            label: string;
+            // either string to display in box, or a callback to create complex content in the box
+            // callback function option takes params node, width, height, and appends data to node
+            data: string | Function;
+        }
         class HeaderSection {
             title: string;
-            contents: string[];
+            contents: HeaderSectionContent[];
         }
 
         function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
@@ -334,20 +340,24 @@ export class ExporterComponent implements AfterViewInit {
             let boxGroupY = d3.scaleBand()
                 .padding(0.05)
                 .align(0.5)
-                .domain(sectionData.contents)
+                .domain(sectionData.contents.map(function(content) { return content.label }))
                 .range([0, boxContentHeight]);
             for (let i = 0; i < sectionData.contents.length; i++) {
                 let subsectionContent = sectionData.contents[i];
-                console.log(subsectionContent);
                 let contentGroup = boxContentGroup.append("g")
-                    .attr("transform", `translate(0, ${boxGroupY(subsectionContent)})`);
-                
-                contentGroup.append("text")
-                    .text(subsectionContent)
-                    .attr("font-size", function() {
-                        return optimalFontSize(subsectionContent, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
-                    })
-                    .attr("dominant-baseline", "middle")
+                    .attr("transform", `translate(0, ${boxGroupY( subsectionContent.label )})`);
+                if (typeof(subsectionContent.data) == "string") {
+                    // add text to contentGroup
+                    contentGroup.append("text")
+                        .text(subsectionContent)
+                        .attr("font-size", function() {
+                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
+                        })
+                        .attr("dominant-baseline", "middle")
+                } else {
+                    //call callback to add complex data to contentGroup
+                    (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
+                }
                 if (i != sectionData.contents.length - 1) contentGroup.append("line") //dividing line
                     .attr("x1", 0)
                     .attr("x2", boxContentWidth)
@@ -369,15 +379,70 @@ export class ExporterComponent implements AfterViewInit {
             let headerSections: HeaderSection[] = [
                 {
                     "title": "about",
-                    "contents": [this.viewModel.name, this.viewModel.description]
+                    "contents": [{
+                        "label": "name", "data": this.viewModel.name, 
+                    }, { 
+                        "label": "description", "data": this.viewModel.description
+                    }]
                 },
                 {
                     "title": "filters",
-                    "contents": [this.viewModel.filters.platforms.selection.join(", "), this.viewModel.filters.stages.selection.join(", ")]
+                    "contents": [{
+                        "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
+                    }, {
+                        "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
+                    }]
                 },
                 {
                     "title": "legend",
-                    "contents": []
+                    "contents": [{
+                        "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
+                            // let labels = self.viewModel.legendItems.map(function(item) { return item.label }).join(", ");
+                            // let legendText = group.append("text")
+                            //     .text(labels)
+                            //     .attr("font-size", function() {
+                            //         return optimalFontSize(labels, this, sectionWidth, sectionHeight, false, 12)
+                            //     })
+                            //     .attr("dominant-baseline", "middle")
+
+                            let colorScale = d3.scaleOrdinal()
+                                .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
+                                .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+                            group.call(d3.legendColor()
+                                .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
+                                .shapePadding(0)
+                                .shape("rect")
+                                .orient("horizontal")
+                                .scale(colorScale)
+                                .labelOffset(2)
+                            )
+                        }
+                    }, {
+                        "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
+                            let domain = [];
+                            for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
+                                let percent = i / (self.viewModel.gradient.colors.length - 1);
+                                domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
+                            }
+                            let colorScale = d3.scaleLinear()
+                                .domain(domain)
+                                .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
+                            let nCells = domain.length * 2;
+                            let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
+                            group.call(d3.legendColor()
+                                .shapeWidth((sectionWidth / nCells))
+                                .shapePadding(0)
+                                .cells(nCells)
+                                .shape("rect")
+                                .orient("horizontal")
+                                .scale(colorScale)
+                                .labelOffset(2)
+                                .labelFormat(d3.format("0.02r"))
+                                
+                                // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
+                            )
+                        }
+                    }]
                 }
             ]
 
