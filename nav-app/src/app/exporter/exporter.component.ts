@@ -257,7 +257,7 @@ export class ExporterComponent implements AfterViewInit {
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
             let bestBinary = ""; //arrangement of line breaks, see below
-            for (let j = 2**(words.length - 1) - 1; j >= 0; j--) { //try no breaks first
+            for (let j = 0; j < 2**(words.length - 1); j++) { //try no breaks first
                 let wordSet = []; //build this array
 
                 //binary representation of newline locations, e.g 001011
@@ -265,15 +265,16 @@ export class ExporterComponent implements AfterViewInit {
                 let binaryString = j.toString(2).padStart(words.length, "0");
 
                 for (let k = 0; k < binaryString.length; k++) {
-                    if (binaryString[k] === "1") {//join with space
-                        wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
+                    if (binaryString[k] === "0") {//join with space
+                        if (wordSet.length == 0) wordSet.push(words[k]);
+                        else wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
                     } else { //linebreak
                         wordSet.push(words[k]) //new word in array
                     }
                 }
 
                 let size = findSpace(wordSet, node, cellWidth, cellHeight, center, maxFontSize);
-                if (size >= bestSize) { //found new optimum
+                if (size > bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
                     bestBinary = binaryString;
