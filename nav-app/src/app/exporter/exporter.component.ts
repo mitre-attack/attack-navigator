@@ -17,8 +17,8 @@ export class ExporterComponent implements AfterViewInit {
     @Input() viewModel: ViewModel;
 
     private config = {
-        "width": 40,
-        "height": 30,
+        "width": 11,
+        "height": 8.5,
         "headerHeight": 1,
 
         "unit": "in",
@@ -147,193 +147,415 @@ export class ExporterComponent implements AfterViewInit {
         // | __ | _| / _ \| |) | _||   /
         // |_||_|___/_/ \_\___/|___|_|_\
 
-        //count columns
-        let numSections = 0;
-        for (let i = 0; i < 4; i++) {
-            let option = [self.showLayerInfo(), self.showFilters(), self.showGradient(), self.showLegendInHeader()][i];
-            if (option) numSections++;
+        // Essentially, the following functions brute force the optimal text arrangement for each cell 
+        // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
+        // in the cell text.
+
+        /**
+         * Divide distance into divisions equidistant anchor points S.T they all have equal
+         * padding from each other and the beginning and end of the distance
+         * @param  distance  distance to divide
+         * @param  divisions number of divisions
+         * @return           number[] where each number corresponds to a division-center offset
+         */
+        function getSpacing(distance, divisions) {
+            distance = distance - 1; //1px padding for border
+            let spacing = distance/(divisions*2);
+            let res = []
+            for (let i = 1; i <= divisions*2; i+=2) {
+                res.push(1 + (spacing * i))
+            }
+            return res
+        };
+
+        /**
+         * Magic function to insert line breaks. 
+        * @param  {string[]} words         array of words to space
+        * @param  {dom node} self          the dom element with the text
+        * @param  {number} xpos            x pos to place multiline text at
+        * @param  {number} ypos            same but with y
+        * @param  {number} totalDistance   total distance to contain broken text.
+        *                                  amt in excess of spacingDistance
+        *                                  becomes v padding.
+        * @param  {number} spacingDistance total distance to space text inside,
+        *                                  should be < totalDistance
+        * @param {boolean} center          if true, center the text in the node, else left-align
+        * @param {number} cellWidth        total width of the cell to put the text in
+        */
+        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
+            let el = d3.select(node)
+            // el.attr("y", y + (totalDistance - spacingDistance) / 2);
+
+            //clear previous content
+            el.text('');
+            while(node.firstChild) node.removeChild(node.firstChild);
+
+            let spacing = getSpacing(spacingDistance, words.length)
+            for (var i = 0; i < words.length; i++) {
+                var tspan = el.append('tspan').text(words[i]);
+                if (center) tspan.attr("text-anchor","middle");
+                // if (i > 0)
+                let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
+                tspan
+                    .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
+                    .attr('y', offsetY + 'px');
+            }
+        };
+
+        /**
+         * Given an array of words, find the optimal font size for the array of words to be
+         * broken onto 1 line each.
+         * @param  {string[]} words     to be broken onto each line
+         * @param  {dom node} node      the dom node of the cell
+         * @param  {cellWidth} number   the width of the cell
+         * @param  {cellHeight} number  the height of the cell
+         * @param {boolean} center      center the text?
+         * @param {number} maxFontSize  max font size, default is 12
+         * @return {number}             the largest possible font size
+         *                              not larger than 12
+         */
+        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
+            let padding = 4; //the amount of padding on the left and right
+            //break into multiple lines
+            let breakDistance = Math.min(cellHeight, (maxFontSize + 3) * words.length)
+            insertLineBreaks(words, node, padding, 0, 0, cellHeight, breakDistance, center, cellWidth)
+
+            //find right size to fit the height of the cell
+            let breakTextHeight = breakDistance / words.length;
+            let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8; //0.8
+
+            //find right size to fit the width of the cell
+            // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
+            let longestWordLength = -Infinity;
+            for (let w = 0; w < words.length; w++) {
+                let word = words[w];
+                longestWordLength = Math.max(longestWordLength, word.length)
+            }
+            let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
+
+            //the min fitting text size not larger than MaxFontSize
+            let size = Math.min(maxFontSize, fitTextHeight, fitTextWidth);
+
+            // if (size < 5) return "0px"; //enable for min text size
+            return size;
         }
-        let headerSectionWidth = width/numSections;
-        // console.log(numSections, headerSectionWidth)
-        let header = null;
-        let posX = 0; //row in the header
-        let headerSectionTitleSep = (2 * (headerFontSize + headerTextPad))
+
+        /**
+         * Given text, a dom node, and sizing parameters, 
+         * try all combinations of word breaks to maximize font size inside of the given space
+         * returns font size in pixels
+         * @param {string} text                   the text to render in the cell
+         * @param {dom node} node                 the node for the cell
+         * @param {number} cellWidth              width of the cell to get the font size for
+         * @param {number} cellHeight             height of the cell to get the font size for
+         * @param {boolean} center                center the text?
+         * @param {number} maxFontSize            max font size, default is 12
+         * @return {string}                       the size in pixels
+         */
+        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): string {
+            let words = text.split(" ");
+            let bestSize = -Infinity; //beat this size
+            let bestWordArrangement = [];
+            let bestBinary = ""; //arrangement of line breaks, see below
+            for (let j = 2**(words.length - 1) - 1; j >= 0; j--) { //try no breaks first
+                let wordSet = []; //build this array
+
+                //binary representation of newline locations, e.g 001011
+                //where 1 is newline and 0 is no newline
+                let binaryString = j.toString(2).padStart(words.length, "0");
+
+                for (let k = 0; k < binaryString.length; k++) {
+                    if (binaryString[k] === "1") {//join with space
+                        wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
+                    } else { //linebreak
+                        wordSet.push(words[k]) //new word in array
+                    }
+                }
+
+                let size = findSpace(wordSet, node, cellWidth, cellHeight, center, maxFontSize);
+                if (size >= bestSize) { //found new optimum
+                    bestSize = size;
+                    bestWordArrangement = wordSet;
+                    bestBinary = binaryString;
+                }
+                if (size == maxFontSize) break; //if largest text found, no need to search more
+            }
+
+            findSpace(bestWordArrangement, node, cellWidth, cellHeight, center, maxFontSize);
+            return bestSize + "px";
+        }
+
+        class HeaderSection {
+            title: string;
+            contents: string[];
+        }
+
+        function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
+            let boxGroup = group.append("g")
+                .attr("transform", "translate(0,4)");
+            // adjust height for padding
+            boxHeight -= 8;
+            let outerbox = boxGroup.append("rect")
+                .attr("class", "header-box")
+                .attr("width", boxWidth)
+                .attr("height", boxHeight)
+                .attr("stroke", "black")
+                .attr("fill", "white")
+                .attr("rx", 5); //rounded corner
+            let titleEl = boxGroup.append("text")
+                .attr("class", "header-box-label")
+                .text(sectionData.title)
+                .attr("x", 10)
+                .attr("font-size", 12)
+                .attr("font-family", "sans-serif")
+                .attr("dominant-baseline", "middle")
+            // add cover mask so that the box lines crop around the text
+            let bbox = titleEl.node().getBBox();
+            let coverPadding = 2;
+            let cover = boxGroup.append("rect")
+                .attr("class", "label-cover")
+                .attr("x", bbox.x - coverPadding)
+                .attr("y", bbox.y - coverPadding)
+                .attr("width", bbox.width + 2*coverPadding)
+                .attr("height", bbox.height + 2*coverPadding)
+                .attr("fill", "white")
+                .attr("rx", 5); //rounded corner just in case it's being shown on a transparent background
+            titleEl.raise(); //push title to front;
+
+            // add content to box
+            let boxContentGroup = boxGroup.append("g")
+                .attr("class", "header-box-content")
+
+            let boxGroupY = d3.scaleBand()
+                .paddingInner(0.1)
+                .align(0.01)
+                .domain(sectionData.contents)
+                .range([0, boxHeight]);
+            for (let i = 0; i < sectionData.contents.length; i++) {
+                let subsectionContent = sectionData.contents[i];
+                console.log(subsectionContent);
+                let contentTextGroup = boxContentGroup.append("g")
+                    .attr("transform", `translate(0, ${boxGroupY(subsectionContent)})`);
+                
+                contentTextGroup.append("text")
+                    .text(subsectionContent)
+                    .attr("font-size", function() {
+                        return optimalFontSize(subsectionContent, this, boxWidth, boxGroupY.bandwidth(), false, 32)
+                    })
+                    .attr("dominant-baseline", "middle")
+            }
+        }
 
         if (self.config.showHeader) {
-            header = svg.append("g");
-            header.append("rect")
-                .attr("width", width)
-                .attr("height", headerHeight)
-                .style("stroke", "black")
-                .style("stroke-width", stroke_width)
-                .style("fill", "white")
 
-            // layer name
-            if (self.showLayerInfo()) {
-                let layerAndDescPresent = (self.showName() && self.showDescription())
-                let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
-                let descY = layerAndDescPresent ? headerHeight/2 : 0
+            
 
-                if (self.showName()) { //layer name
-                    let titleGroup = header.append("g")
-                        .attr("transform", "translate(0,0)");
-                    titleGroup.append("rect")
-                        .attr("width", headerSectionWidth)
-                        .attr("height", nameDescHeight)
-                        .style("stroke-width", 1)
-                        .style("stroke", "black")
-                        .style("fill", "white");
-                    titleGroup.append("text")
-                        .text(self.viewModel.name)
-                        .attr("transform", "translate("+ headerTextPad + ", " + (headerLayerNameFontSize + headerTextPad) +")")
-                        .attr("dx", 0)
-                        .attr("dy", 0)
-                        .attr("font-size", headerLayerNameFontSize + fontUnits)
-                        .attr("fill", "black")
-                        .style("font-weight", "bold")
-                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
+             /**
+             * Helper function for creating header sections
+             */
+            
+
+            let headerSections: HeaderSection[] = [
+                {
+                    "title": "about",
+                    "contents": [this.viewModel.name, this.viewModel.description]
+                },
+                {
+                    "title": "filters",
+                    "contents": [this.viewModel.filters.platforms.selection.join(", "), this.viewModel.filters.stages.selection.join(", ")]
+                },
+                {
+                    "title": "legend",
+                    "contents": []
                 }
+            ]
 
-                if (self.showDescription()) {//description
-                    let descriptionGroup = header.append("g")
-                        .attr("transform", "translate(0," + descY + ")");
-                    descriptionGroup.append("rect")
-                        .attr("width", headerSectionWidth)
-                        .attr("height", nameDescHeight)
-                        .style("stroke-width", 1)
-                        .style("stroke", "black")
-                        .style("fill", "white");
-                    descriptionGroup.append("text")
-                        .text(self.viewModel.description)
-                        .attr("transform", "translate("+headerTextPad+", " + (headerTextPad + headerTextYOffset) +")")
-                        // .attr("dominant-baseline", "middle")
-                        .attr("dx", 0)
-                        .attr("dy", 0)
-                        .attr("font-size", headerFontSize + fontUnits)
-                        .attr("fill", "black")
-                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self)
-                        .call(self.recenter, nameDescHeight - (2*headerTextPad), self);
+            let headerGroup = svg.append("g");
 
-                }
-                posX++;
+            let headerX = d3.scaleBand()
+                .paddingInner(0.1)
+                .align(0.01)
+                .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
+                .range([0, width]);
+            
+            for (let section of headerSections) {
+                let sectionGroup = headerGroup.append("g")
+                    .attr("transform", `translate(${headerX(section.title)}, 0)`);
+                descriptiveBox(sectionGroup, section, headerX.bandwidth(), headerHeight);
             }
+            // header.append("rect")
+            //     .attr("width", width)
+            //     .attr("height", headerHeight)
+            //     // .style("stroke", "black")
+            //     .style("stroke-width", stroke_width)
+            //     .style("fill", "white")
 
-            if (self.showFilters()) {
-                //filters
-                let filtersGroup = header.append("g")
-                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
-                filtersGroup.append("rect")
-                    .attr("width", headerSectionWidth)
-                    .attr("height", headerHeight)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", "white");
-                filtersGroup.append("text")
-                    .text("filters")
-                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .style("font-weight", "bold");
+            // // layer name
+            // if (self.showLayerInfo()) {
+            //     let layerAndDescPresent = (self.showName() && self.showDescription())
+            //     let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
+            //     let descY = layerAndDescPresent ? headerHeight/2 : 0
 
-                let filterTextGroup = filtersGroup.append("g")
-                    .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6 + headerTextYOffset) + ")");
-                filterTextGroup.append("text")
-                    .text(function() {
-                        let t = "stages: "
-                        let selection = self.viewModel.filters.stages.selection;
-                        for (let i = 0; i < selection.length; i++) {
-                            if (i != 0) t += ", ";
-                            t += selection[i]
-                        }
-                        return t;
-                    })
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle");
-                filterTextGroup.append("text")
-                    .text(function() {
-                        let t = "platforms: "
-                        let selection = self.viewModel.filters.platforms.selection;
-                        for (let i = 0; i < selection.length; i++) {
-                            if (i != 0) t += ", "
-                            t += selection[i]
-                        }
-                        return t;
-                    })
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
-                    .attr("dy", "1.1em")
-                    // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
-                posX++
-            }
+            //     if (self.showName()) { //layer name
+            //         let titleGroup = header.append("g")
+            //             .attr("transform", "translate(0,0)");
+            //         titleGroup.append("rect")
+            //             .attr("width", headerSectionWidth)
+            //             .attr("height", nameDescHeight)
+            //             .style("stroke-width", 1)
+            //             // .style("stroke", "black")
+            //             .style("fill", "white");
+            //         titleGroup.append("text")
+            //             .text(self.viewModel.name)
+            //             .attr("transform", "translate("+ headerTextPad + ", " + (headerLayerNameFontSize + headerTextPad) +")")
+            //             .attr("dx", 0)
+            //             .attr("dy", 0)
+            //             .attr("font-size", headerLayerNameFontSize + fontUnits)
+            //             .attr("fill", "black")
+            //             .style("font-weight", "bold")
+            //             .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
+            //     }
 
-            if (self.showGradient()) {
-                //gradient
-                let gradientGroup = header.append("g")
-                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
-                gradientGroup.append("rect")
-                    .attr("width", headerSectionWidth)
-                    .attr("height", headerHeight)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", "white");
-                gradientGroup.append("text")
-                    .text("score gradient")
-                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .style("font-weight", "bold");
-                posX++;
+            //     if (self.showDescription()) {//description
+            //         let descriptionGroup = header.append("g")
+            //             .attr("transform", "translate(0," + descY + ")");
+            //         descriptionGroup.append("rect")
+            //             .attr("width", headerSectionWidth)
+            //             .attr("height", nameDescHeight)
+            //             .style("stroke-width", 1)
+            //             // .style("stroke", "black")
+            //             .style("fill", "white");
+            //         descriptionGroup.append("text")
+            //             .text(self.viewModel.description)
+            //             .attr("transform", "translate("+headerTextPad+", " + (headerTextPad + headerTextYOffset) +")")
+            //             // .attr("dominant-baseline", "middle")
+            //             .attr("dx", 0)
+            //             .attr("dy", 0)
+            //             .attr("font-size", headerFontSize + fontUnits)
+            //             .attr("fill", "black")
+            //             .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self)
+            //             .call(self.recenter, nameDescHeight - (2*headerTextPad), self);
 
-                let gradientContentGroup = gradientGroup.append("g")
-                    .attr("transform", "translate("+headerTextPad+"," + headerSectionTitleSep + ")");
+            //     }
+            //     posX++;
+            // }
 
-                let leftText = gradientContentGroup.append("text")
-                    .text(self.viewModel.gradient.minValue)
-                    .attr("transform", "translate(0, " + (6 + headerTextYOffset) + ")")
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
+            // if (self.showFilters()) {
+            //     //filters
+            //     let filtersGroup = header.append("g")
+            //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
+            //     filtersGroup.append("rect")
+            //         .attr("width", headerSectionWidth)
+            //         .attr("height", headerHeight)
+            //         .style("stroke-width", 1)
+            //         // .style("stroke", "black")
+            //         .style("fill", "white");
+            //     filtersGroup.append("text")
+            //         .text("filters")
+            //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
+            //         .attr("dx", 0)
+            //         .attr("dy", 0)
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         .attr("fill", "black")
+            //         .style("font-weight", "bold");
+
+            //     let filterTextGroup = filtersGroup.append("g")
+            //         .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6 + headerTextYOffset) + ")");
+            //     filterTextGroup.append("text")
+            //         .text(function() {
+            //             let t = "stages: "
+            //             let selection = self.viewModel.filters.stages.selection;
+            //             for (let i = 0; i < selection.length; i++) {
+            //                 if (i != 0) t += ", ";
+            //                 t += selection[i]
+            //             }
+            //             return t;
+            //         })
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         // .attr("dominant-baseline", "middle");
+            //     filterTextGroup.append("text")
+            //         .text(function() {
+            //             let t = "platforms: "
+            //             let selection = self.viewModel.filters.platforms.selection;
+            //             for (let i = 0; i < selection.length; i++) {
+            //                 if (i != 0) t += ", "
+            //                 t += selection[i]
+            //             }
+            //             return t;
+            //         })
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         // .attr("dominant-baseline", "middle")
+            //         .attr("dy", "1.1em")
+            //         // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
+            //     posX++
+            // }
+
+            // if (self.showGradient()) {
+            //     //gradient
+            //     let gradientGroup = header.append("g")
+            //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
+            //     gradientGroup.append("rect")
+            //         .attr("width", headerSectionWidth)
+            //         .attr("height", headerHeight)
+            //         .style("stroke-width", 1)
+            //         // .style("stroke", "black")
+            //         .style("fill", "white");
+            //     gradientGroup.append("text")
+            //         .text("score gradient")
+            //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
+            //         .attr("dx", 0)
+            //         .attr("dy", 0)
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         .attr("fill", "black")
+            //         .style("font-weight", "bold");
+            //     posX++;
+
+            //     let gradientContentGroup = gradientGroup.append("g")
+            //         .attr("transform", "translate("+headerTextPad+"," + headerSectionTitleSep + ")");
+
+            //     let leftText = gradientContentGroup.append("text")
+            //         .text(self.viewModel.gradient.minValue)
+            //         .attr("transform", "translate(0, " + (6 + headerTextYOffset) + ")")
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         // .attr("dominant-baseline", "middle")
 
 
 
-                //set up gradient to bind
-                let svgDefs = svg.append('defs');
-                let gradientElement = svgDefs.append("linearGradient")
-                    .attr("id", self.viewModel.uid + "gradientElement");
-                for (let i = 0; i < self.viewModel.gradient.gradientRGB.length; i++) {
-                    let color = self.viewModel.gradient.gradientRGB[i];
-                    gradientElement.append('stop')
-                        .attr('offset', i/100)
-                        .attr("stop-color", color.toHexString())
-                    // console.log(color)
-                }
-                // console.log(gradientElement);
-                let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
-                let gradientDisplay = gradientContentGroup.append("rect")
-                    .attr("transform", "translate(" + gradientDisplayLeft + ", 0)")
-                    .attr("width", 50)
-                    .attr("height", 10)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .attr("fill", "url(#" + self.viewModel.uid + "gradientElement)"); //bind gradient
+            //     //set up gradient to bind
+            //     let svgDefs = svg.append('defs');
+            //     let gradientElement = svgDefs.append("linearGradient")
+            //         .attr("id", self.viewModel.uid + "gradientElement");
+            //     for (let i = 0; i < self.viewModel.gradient.gradientRGB.length; i++) {
+            //         let color = self.viewModel.gradient.gradientRGB[i];
+            //         gradientElement.append('stop')
+            //             .attr('offset', i/100)
+            //             .attr("stop-color", color.toHexString())
+            //         // console.log(color)
+            //     }
+            //     // console.log(gradientElement);
+            //     let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
+            //     let gradientDisplay = gradientContentGroup.append("rect")
+            //         .attr("transform", "translate(" + gradientDisplayLeft + ", 0)")
+            //         .attr("width", 50)
+            //         .attr("height", 10)
+            //         .style("stroke-width", 1)
+            //         .style("stroke", "black")
+            //         .attr("fill", "url(#" + self.viewModel.uid + "gradientElement)"); //bind gradient
 
-                gradientContentGroup.append("text")
-                    .text(self.viewModel.gradient.maxValue)
-                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", " + (6 + headerTextYOffset) + ")")
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
+            //     gradientContentGroup.append("text")
+            //         .text(self.viewModel.gradient.maxValue)
+            //         .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", " + (6 + headerTextYOffset) + ")")
+            //         .attr("font-size", headerFontSize + fontUnits)
+            //         // .attr("dominant-baseline", "middle")
 
-            }
-            header.append("line")
-                .attr("x1", 0)
-                .attr("x2", width)
-                .attr("y1", headerHeight)
-                .attr("y2", headerHeight)
-                .style("stroke", "black")
-                .style("stroke-width", 3);
+            // }
+            // header.append("line")
+            //     .attr("x1", 0)
+            //     .attr("x2", width)
+            //     .attr("y1", headerHeight)
+            //     .attr("y2", headerHeight)
+            //     .style("stroke", "black")
+            //     .style("stroke-width", 3);
 
 
 
@@ -452,141 +674,7 @@ export class ExporterComponent implements AfterViewInit {
         // 888o     oo 888          888   888           888    888           o88 88o    888   
         //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
                                                                                            
-        // Essentially, the following functions brute force the optimal text arrangement for each cell 
-        // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
-        // in the cell text.
-
-        /**
-         * Divide distance into divisions equidistant anchor points S.T they all have equal
-         * padding from each other and the beginning and end of the distance
-         * @param  distance  distance to divide
-         * @param  divisions number of divisions
-         * @return           number[] where each number corresponds to a division-center offset
-         */
-        function getSpacing(distance, divisions) {
-            distance = distance - 1; //1px padding for border
-            let spacing = distance/(divisions*2);
-            let res = []
-            for (let i = 1; i <= divisions*2; i+=2) {
-                res.push(1 + (spacing * i))
-            }
-            return res
-        };
-
-        /**
-         * Magic function to insert line breaks. 
-        * @param  {string[]} words         array of words to space
-        * @param  {dom node} self          the dom element with the text
-        * @param  {number} xpos            x pos to place multiline text at
-        * @param  {number} ypos            same but with y
-        * @param  {number} totalDistance   total distance to contain broken text.
-        *                                  amt in excess of spacingDistance
-        *                                  becomes v padding.
-        * @param  {number} spacingDistance total distance to space text inside,
-        *                                  should be < totalDistance
-        * @param {boolean} center          if true, center the text in the node, else left-align
-        * @param {number} cellWidth        total width of the cell to put the text in
-        */
-        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
-            let el = d3.select(node)
-            // el.attr("y", y + (totalDistance - spacingDistance) / 2);
-
-            //clear previous content
-            el.text('');
-            while(node.firstChild) node.removeChild(node.firstChild);
-
-            let spacing = getSpacing(spacingDistance, words.length)
-            for (var i = 0; i < words.length; i++) {
-                var tspan = el.append('tspan').text(words[i]);
-                if (center) tspan.attr("text-anchor","middle");
-                // if (i > 0)
-                let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
-                tspan
-                    .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
-                    .attr('y', offsetY + 'px');
-            }
-        };
-
-        /**
-         * Given an array of words, find the optimal font size for the array of words to be
-         * broken onto 1 line each.
-         * @param  {string[]} words     to be broken onto each line
-         * @param  {dom node} node      the dom node of the cell
-         * @param  {cellWidth} number   the width of the cell
-         * @param  {cellHeight} number  the height of the cell
-         * @param {boolean} center      center the text?
-         * @return {number}             the largest possible font size
-         *                              not larger than 12
-         */
-        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean) {
-            let padding = 4; //the amount of padding on the left and right
-            //break into multiple lines
-            let breakDistance = Math.min(cellHeight, 15 * words.length)
-            insertLineBreaks(words, node, padding, 0, 0, y(1), breakDistance, center, cellWidth)
-
-            //find right size to fit the height of the cell
-            let breakTextHeight = breakDistance / words.length
-            let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8;
-
-            //find right size to fit the width of the cell
-            // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
-            let longestWordLength = -Infinity;
-            for (let w = 0; w < words.length; w++) {
-                let word = words[w];
-                longestWordLength = Math.max(longestWordLength, word.length)
-            }
-            let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
-
-            //the min fitting text size not larger than 12
-            let size = Math.min(12, fitTextHeight, fitTextWidth);
-
-            // if (size < 5) return "0px"; //enable for min text size
-            return size;
-        }
-
-        /**
-         * Given text, a dom node, and sizing parameters, 
-         * try all combinations of word breaks to maximize font size inside of the given space
-         * returns font size in pixels
-         * @param {string} text                   the text to render in the cell
-         * @param {dom node} node                 the node for the cell
-         * @param {number} cellWidth              width of the cell to get the font size for
-         * @param {number} cellHeight             height of the cell to get the font size for
-         * @param {boolean} center                center the text?
-         * @return {string}                       the size in pixels
-         */
-        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean): string {
-            let words = text.split(" ");
-            let bestSize = -Infinity; //beat this size
-            let bestWordArrangement = [];
-            let bestBinary = ""; //arrangement of line breaks, see below
-            for (let j = 2**(words.length - 1) - 1; j >= 0; j--) { //try no breaks first
-                let wordSet = []; //build this array
-
-                //binary representation of newline locations, e.g 001011
-                //where 1 is newline and 0 is no newline
-                let binaryString = j.toString(2).padStart(words.length, "0");
-
-                for (let k = 0; k < binaryString.length; k++) {
-                    if (binaryString[k] === "1") {//join with space
-                        wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
-                    } else { //linebreak
-                        wordSet.push(words[k]) //new word in array
-                    }
-                }
-
-                let size = findSpace(wordSet, node, cellWidth, cellHeight, center);
-                if (size >= bestSize) { //found new optimum
-                    bestSize = size;
-                    bestWordArrangement = wordSet;
-                    bestBinary = binaryString;
-                }
-                if (size == 12) break; //if largest text found, no need to search more
-            }
-
-            findSpace(bestWordArrangement, node, cellWidth, cellHeight, center);
-            return bestSize + "px";
-        }
+        
 
         techniqueGroups.append("text")
             .text(function(technique: RenderableTechnique) { 
@@ -639,51 +727,51 @@ export class ExporterComponent implements AfterViewInit {
         // |____|___\___|___|_|\_|___/
 
         // console.log(showLegend, showLegendInHeader && self.config.legendDocked)
-        if (self.showLegend() && !(!self.config.showHeader && self.config.legendDocked)) {
-            console.log("building legend")
-            //legend
-            let legendGroup = self.showLegendInHeader() ? header.append("g")
-                .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
-                                             : svg.append("g")
-                .attr("transform", "translate("+legendX+","+legendY+")");
-            legendGroup.append("rect")
-                .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
-                .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "white");
-            legendGroup.append("text")
-                .text("legend")
-                .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .style("font-weight", "bold");;
-            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.viewModel.legendItems.length);
-            let legendItemsGroup = legendGroup.selectAll("g")
-                .data(self.viewModel.legendItems)
-                .enter().append("g")
-                .attr("transform", function(d,i) {
-                    return "translate("+headerTextPad+"," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
-                });
-            legendItemsGroup.append("text")
-                .text(function(d) {return d.label})
-                .attr("transform", "translate("+ (headerTextPad + 10) + "," + (6 + headerTextYOffset) + ")")
-                // .attr("dominant-baseline", "middle")
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
-            legendItemsGroup.append("rect")
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", function(d) { return d.color });
-            // posX++
-        }
+        // if (self.showLegend() && !(!self.config.showHeader && self.config.legendDocked)) {
+        //     console.log("building legend")
+        //     //legend
+        //     let legendGroup = self.showLegendInHeader() ? header.append("g")
+        //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
+        //                                      : svg.append("g")
+        //         .attr("transform", "translate("+legendX+","+legendY+")");
+        //     legendGroup.append("rect")
+        //         .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
+        //         .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
+        //         .style("stroke-width", 1)
+        //         .style("stroke", "black")
+        //         .style("fill", "white");
+        //     legendGroup.append("text")
+        //         .text("legend")
+        //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
+        //         .attr("dx", 0)
+        //         .attr("dy", 0)
+        //         .attr("font-size", headerFontSize + fontUnits)
+        //         .attr("fill", "black")
+        //         .style("font-weight", "bold");;
+        //     let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.viewModel.legendItems.length);
+        //     let legendItemsGroup = legendGroup.selectAll("g")
+        //         .data(self.viewModel.legendItems)
+        //         .enter().append("g")
+        //         .attr("transform", function(d,i) {
+        //             return "translate("+headerTextPad+"," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
+        //         });
+        //     legendItemsGroup.append("text")
+        //         .text(function(d) {return d.label})
+        //         .attr("transform", "translate("+ (headerTextPad + 10) + "," + (6 + headerTextYOffset) + ")")
+        //         // .attr("dominant-baseline", "middle")
+        //         .attr("font-size", headerFontSize + fontUnits)
+        //         .attr("fill", "black")
+        //         .attr("dx", 0)
+        //         .attr("dy", 0)
+        //         .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
+        //     legendItemsGroup.append("rect")
+        //         .attr("width", 10)
+        //         .attr("height", 10)
+        //         .style("stroke-width", 1)
+        //         .style("stroke", "black")
+        //         .style("fill", function(d) { return d.color });
+        //     // posX++
+        // }
     }
 
     downloadSVG() {
