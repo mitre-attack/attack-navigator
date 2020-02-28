@@ -292,21 +292,22 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
+            let boxPadding = 5;
             let boxGroup = group.append("g")
-                .attr("transform", "translate(0,4)");
+                .attr("transform", `translate(0,${boxPadding})`);
             // adjust height for padding
-            boxHeight -= 8;
+            boxHeight -= 2 * boxPadding;
             let outerbox = boxGroup.append("rect")
                 .attr("class", "header-box")
                 .attr("width", boxWidth)
                 .attr("height", boxHeight)
                 .attr("stroke", "black")
                 .attr("fill", "white")
-                .attr("rx", 5); //rounded corner
+                .attr("rx", boxPadding); //rounded corner
             let titleEl = boxGroup.append("text")
                 .attr("class", "header-box-label")
                 .text(sectionData.title)
-                .attr("x", 10)
+                .attr("x", 2 * boxPadding)
                 .attr("font-size", 12)
                 .attr("font-family", "sans-serif")
                 .attr("dominant-baseline", "middle")
@@ -320,30 +321,39 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("width", bbox.width + 2*coverPadding)
                 .attr("height", bbox.height + 2*coverPadding)
                 .attr("fill", "white")
-                .attr("rx", 5); //rounded corner just in case it's being shown on a transparent background
+                .attr("rx", boxPadding); //rounded corner just in case it's being shown on a transparent background
             titleEl.raise(); //push title to front;
 
             // add content to box
             let boxContentGroup = boxGroup.append("g")
                 .attr("class", "header-box-content")
+                .attr("transform", `translate(${boxPadding}, 0)`)
+            let boxContentHeight = boxHeight;// - 2*boxPadding;
+            let boxContentWidth = boxWidth - 2*boxPadding;
 
             let boxGroupY = d3.scaleBand()
-                .paddingInner(0.1)
-                .align(0.01)
+                .padding(0.05)
+                .align(0.5)
                 .domain(sectionData.contents)
-                .range([0, boxHeight]);
+                .range([0, boxContentHeight]);
             for (let i = 0; i < sectionData.contents.length; i++) {
                 let subsectionContent = sectionData.contents[i];
                 console.log(subsectionContent);
-                let contentTextGroup = boxContentGroup.append("g")
+                let contentGroup = boxContentGroup.append("g")
                     .attr("transform", `translate(0, ${boxGroupY(subsectionContent)})`);
                 
-                contentTextGroup.append("text")
+                contentGroup.append("text")
                     .text(subsectionContent)
                     .attr("font-size", function() {
-                        return optimalFontSize(subsectionContent, this, boxWidth, boxGroupY.bandwidth(), false, 32)
+                        return optimalFontSize(subsectionContent, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
                     })
                     .attr("dominant-baseline", "middle")
+                if (i != sectionData.contents.length - 1) contentGroup.append("line") //dividing line
+                    .attr("x1", 0)
+                    .attr("x2", boxContentWidth)
+                    .attr("y1", boxGroupY.bandwidth())
+                    .attr("y2", boxGroupY.bandwidth())
+                    .attr("stroke", "#dddddd");
             }
         }
 
@@ -374,8 +384,8 @@ export class ExporterComponent implements AfterViewInit {
             let headerGroup = svg.append("g");
 
             let headerX = d3.scaleBand()
-                .paddingInner(0.1)
-                .align(0.01)
+                .paddingInner(0.05)
+                .align(0.5)
                 .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
                 .range([0, width]);
             
