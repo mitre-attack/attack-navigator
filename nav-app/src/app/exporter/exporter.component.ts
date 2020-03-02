@@ -408,7 +408,9 @@ export class ExporterComponent implements AfterViewInit {
                             let colorScale = d3.scaleOrdinal()
                                 .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
                                 .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
-                            group.call(d3.legendColor()
+                            group.append("g")
+                                .attr("transform", "translate(0, 5)")
+                                .call(d3.legendColor()
                                 .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
                                 .shapePadding(0)
                                 .shape("rect")
@@ -429,7 +431,9 @@ export class ExporterComponent implements AfterViewInit {
                                 .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
                             let nCells = domain.length * 2;
                             let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
-                            group.call(d3.legendColor()
+                            group.append("g")
+                                .attr("transform", "translate(0, 5)")
+                                .call(d3.legendColor()
                                 .shapeWidth((sectionWidth / nCells))
                                 .shapePadding(0)
                                 .cells(nCells)
