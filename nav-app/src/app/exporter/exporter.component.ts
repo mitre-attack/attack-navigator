@@ -198,7 +198,7 @@ export class ExporterComponent implements AfterViewInit {
                 let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
                 tspan
                     .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
-                    .attr('y', offsetY + 'px');
+                    .attr('y', offsetY);
             }
         };
 
@@ -252,7 +252,7 @@ export class ExporterComponent implements AfterViewInit {
          * @param {number} maxFontSize            max font size, default is 12
          * @return {string}                       the size in pixels
          */
-        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): string {
+        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
             let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
@@ -283,7 +283,21 @@ export class ExporterComponent implements AfterViewInit {
             }
 
             findSpace(bestWordArrangement, node, cellWidth, cellHeight, center, maxFontSize);
-            return bestSize + "px";
+            return bestSize;
+        }
+
+        // add properties to the node to set the vertical alignment to center without using
+        // dominant-baseline, which isn't widely supported
+        function centerValign(node, fontSize=null) {
+            if (node.children.length > 0) {
+                for (let child of node.children) centerValign(child, node.getAttribute("font-size"));
+            } else {
+                // base case
+                // transform by half the font size - 1/2px for proper centering
+                fontSize = fontSize ? fontSize : node.getAttribute("font-size");
+                let currY = node.hasAttribute("y") ? Number(node.getAttribute("y")) : 0;
+                d3.select(node).attr("y", currY + Math.floor((fontSize * 0.3)));
+            }
         }
 
         class HeaderSectionContent {
@@ -316,7 +330,8 @@ export class ExporterComponent implements AfterViewInit {
                 .attr("x", 2 * boxPadding)
                 .attr("font-size", 12)
                 .attr("font-family", "sans-serif")
-                .attr("dominant-baseline", "middle")
+                .each(function() { centerValign(this); })
+                // .attr("dominant-baseline", "middle")
             // add cover mask so that the box lines crop around the text
             let bbox = titleEl.node().getBBox();
             let coverPadding = 2;
@@ -353,7 +368,8 @@ export class ExporterComponent implements AfterViewInit {
                         .attr("font-size", function() {
                             return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
                         })
-                        .attr("dominant-baseline", "middle")
+                        .each(function() { centerValign(this); })
+                        // .attr("dominant-baseline", "middle")
                 } else {
                     //call callback to add complex data to contentGroup
                     (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
@@ -397,14 +413,6 @@ export class ExporterComponent implements AfterViewInit {
                     "title": "legend",
                     "contents": [{
                         "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
-                            // let labels = self.viewModel.legendItems.map(function(item) { return item.label }).join(", ");
-                            // let legendText = group.append("text")
-                            //     .text(labels)
-                            //     .attr("font-size", function() {
-                            //         return optimalFontSize(labels, this, sectionWidth, sectionHeight, false, 12)
-                            //     })
-                            //     .attr("dominant-baseline", "middle")
-
                             let colorScale = d3.scaleOrdinal()
                                 .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
                                 .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
@@ -463,182 +471,6 @@ export class ExporterComponent implements AfterViewInit {
                     .attr("transform", `translate(${headerX(section.title)}, 0)`);
                 descriptiveBox(sectionGroup, section, headerX.bandwidth(), headerHeight);
             }
-            // header.append("rect")
-            //     .attr("width", width)
-            //     .attr("height", headerHeight)
-            //     // .style("stroke", "black")
-            //     .style("stroke-width", stroke_width)
-            //     .style("fill", "white")
-
-            // // layer name
-            // if (self.showLayerInfo()) {
-            //     let layerAndDescPresent = (self.showName() && self.showDescription())
-            //     let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
-            //     let descY = layerAndDescPresent ? headerHeight/2 : 0
-
-            //     if (self.showName()) { //layer name
-            //         let titleGroup = header.append("g")
-            //             .attr("transform", "translate(0,0)");
-            //         titleGroup.append("rect")
-            //             .attr("width", headerSectionWidth)
-            //             .attr("height", nameDescHeight)
-            //             .style("stroke-width", 1)
-            //             // .style("stroke", "black")
-            //             .style("fill", "white");
-            //         titleGroup.append("text")
-            //             .text(self.viewModel.name)
-            //             .attr("transform", "translate("+ headerTextPad + ", " + (headerLayerNameFontSize + headerTextPad) +")")
-            //             .attr("dx", 0)
-            //             .attr("dy", 0)
-            //             .attr("font-size", headerLayerNameFontSize + fontUnits)
-            //             .attr("fill", "black")
-            //             .style("font-weight", "bold")
-            //             .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
-            //     }
-
-            //     if (self.showDescription()) {//description
-            //         let descriptionGroup = header.append("g")
-            //             .attr("transform", "translate(0," + descY + ")");
-            //         descriptionGroup.append("rect")
-            //             .attr("width", headerSectionWidth)
-            //             .attr("height", nameDescHeight)
-            //             .style("stroke-width", 1)
-            //             // .style("stroke", "black")
-            //             .style("fill", "white");
-            //         descriptionGroup.append("text")
-            //             .text(self.viewModel.description)
-            //             .attr("transform", "translate("+headerTextPad+", " + (headerTextPad + headerTextYOffset) +")")
-            //             // .attr("dominant-baseline", "middle")
-            //             .attr("dx", 0)
-            //             .attr("dy", 0)
-            //             .attr("font-size", headerFontSize + fontUnits)
-            //             .attr("fill", "black")
-            //             .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self)
-            //             .call(self.recenter, nameDescHeight - (2*headerTextPad), self);
-
-            //     }
-            //     posX++;
-            // }
-
-            // if (self.showFilters()) {
-            //     //filters
-            //     let filtersGroup = header.append("g")
-            //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
-            //     filtersGroup.append("rect")
-            //         .attr("width", headerSectionWidth)
-            //         .attr("height", headerHeight)
-            //         .style("stroke-width", 1)
-            //         // .style("stroke", "black")
-            //         .style("fill", "white");
-            //     filtersGroup.append("text")
-            //         .text("filters")
-            //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-            //         .attr("dx", 0)
-            //         .attr("dy", 0)
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         .attr("fill", "black")
-            //         .style("font-weight", "bold");
-
-            //     let filterTextGroup = filtersGroup.append("g")
-            //         .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6 + headerTextYOffset) + ")");
-            //     filterTextGroup.append("text")
-            //         .text(function() {
-            //             let t = "stages: "
-            //             let selection = self.viewModel.filters.stages.selection;
-            //             for (let i = 0; i < selection.length; i++) {
-            //                 if (i != 0) t += ", ";
-            //                 t += selection[i]
-            //             }
-            //             return t;
-            //         })
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         // .attr("dominant-baseline", "middle");
-            //     filterTextGroup.append("text")
-            //         .text(function() {
-            //             let t = "platforms: "
-            //             let selection = self.viewModel.filters.platforms.selection;
-            //             for (let i = 0; i < selection.length; i++) {
-            //                 if (i != 0) t += ", "
-            //                 t += selection[i]
-            //             }
-            //             return t;
-            //         })
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         // .attr("dominant-baseline", "middle")
-            //         .attr("dy", "1.1em")
-            //         // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
-            //     posX++
-            // }
-
-            // if (self.showGradient()) {
-            //     //gradient
-            //     let gradientGroup = header.append("g")
-            //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
-            //     gradientGroup.append("rect")
-            //         .attr("width", headerSectionWidth)
-            //         .attr("height", headerHeight)
-            //         .style("stroke-width", 1)
-            //         // .style("stroke", "black")
-            //         .style("fill", "white");
-            //     gradientGroup.append("text")
-            //         .text("score gradient")
-            //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-            //         .attr("dx", 0)
-            //         .attr("dy", 0)
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         .attr("fill", "black")
-            //         .style("font-weight", "bold");
-            //     posX++;
-
-            //     let gradientContentGroup = gradientGroup.append("g")
-            //         .attr("transform", "translate("+headerTextPad+"," + headerSectionTitleSep + ")");
-
-            //     let leftText = gradientContentGroup.append("text")
-            //         .text(self.viewModel.gradient.minValue)
-            //         .attr("transform", "translate(0, " + (6 + headerTextYOffset) + ")")
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         // .attr("dominant-baseline", "middle")
-
-
-
-            //     //set up gradient to bind
-            //     let svgDefs = svg.append('defs');
-            //     let gradientElement = svgDefs.append("linearGradient")
-            //         .attr("id", self.viewModel.uid + "gradientElement");
-            //     for (let i = 0; i < self.viewModel.gradient.gradientRGB.length; i++) {
-            //         let color = self.viewModel.gradient.gradientRGB[i];
-            //         gradientElement.append('stop')
-            //             .attr('offset', i/100)
-            //             .attr("stop-color", color.toHexString())
-            //         // console.log(color)
-            //     }
-            //     // console.log(gradientElement);
-            //     let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
-            //     let gradientDisplay = gradientContentGroup.append("rect")
-            //         .attr("transform", "translate(" + gradientDisplayLeft + ", 0)")
-            //         .attr("width", 50)
-            //         .attr("height", 10)
-            //         .style("stroke-width", 1)
-            //         .style("stroke", "black")
-            //         .attr("fill", "url(#" + self.viewModel.uid + "gradientElement)"); //bind gradient
-
-            //     gradientContentGroup.append("text")
-            //         .text(self.viewModel.gradient.maxValue)
-            //         .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", " + (6 + headerTextYOffset) + ")")
-            //         .attr("font-size", headerFontSize + fontUnits)
-            //         // .attr("dominant-baseline", "middle")
-
-            // }
-            // header.append("line")
-            //     .attr("x1", 0)
-            //     .attr("x2", width)
-            //     .attr("y1", headerHeight)
-            //     .attr("y2", headerHeight)
-            //     .style("stroke", "black")
-            //     .style("stroke-width", 3);
-
-
-
         } else { //no header
             headerHeight = 0
         }
@@ -763,7 +595,8 @@ export class ExporterComponent implements AfterViewInit {
             .attr("font-size", function(technique: RenderableTechnique) {
                 return optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
             })
-            .attr("dominant-baseline", "middle")
+            // .attr("dominant-baseline", "middle")
+            .each(function() { centerValign(this); })
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
 
         subtechniqueGroups.append("text")
@@ -773,8 +606,9 @@ export class ExporterComponent implements AfterViewInit {
             .attr("font-size", function(subtechnique: RenderableTechnique) {
                 return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
             })
-            .attr("dominant-baseline", "middle")
+            // .attr("dominant-baseline", "middle")
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
+            .each(function() { centerValign(this); })
     
         let tacticLabels = tacticGroups.append("g")
             .attr("class", "tactic-label");
@@ -785,73 +619,13 @@ export class ExporterComponent implements AfterViewInit {
             .attr("font-size", function(tactic: RenderableTactic) {
                 return optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
             })
-            .attr("dominant-baseline", "middle")
+            // .attr("dominant-baseline", "middle")
             .attr("fill", function(tactic: RenderableTactic) {
                 if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
                 else return "black";
             })
             .attr("font-weight", "bold")
-        
-        
-        // tacticLabels.append("rect")
-        //     .attr("height", y(1))
-        //     .attr("width", x.bandwidth())
-            // .attr("fill", "white")
-            // .attr("stroke", "black")
-
-
-
-        //  _    ___ ___ ___ _  _ ___
-        // | |  | __/ __| __| \| |   \
-        // | |__| _| (_ | _|| .` | |) |
-        // |____|___\___|___|_|\_|___/
-
-        // console.log(showLegend, showLegendInHeader && self.config.legendDocked)
-        // if (self.showLegend() && !(!self.config.showHeader && self.config.legendDocked)) {
-        //     console.log("building legend")
-        //     //legend
-        //     let legendGroup = self.showLegendInHeader() ? header.append("g")
-        //         .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
-        //                                      : svg.append("g")
-        //         .attr("transform", "translate("+legendX+","+legendY+")");
-        //     legendGroup.append("rect")
-        //         .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
-        //         .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
-        //         .style("stroke-width", 1)
-        //         .style("stroke", "black")
-        //         .style("fill", "white");
-        //     legendGroup.append("text")
-        //         .text("legend")
-        //         .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-        //         .attr("dx", 0)
-        //         .attr("dy", 0)
-        //         .attr("font-size", headerFontSize + fontUnits)
-        //         .attr("fill", "black")
-        //         .style("font-weight", "bold");;
-        //     let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.viewModel.legendItems.length);
-        //     let legendItemsGroup = legendGroup.selectAll("g")
-        //         .data(self.viewModel.legendItems)
-        //         .enter().append("g")
-        //         .attr("transform", function(d,i) {
-        //             return "translate("+headerTextPad+"," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
-        //         });
-        //     legendItemsGroup.append("text")
-        //         .text(function(d) {return d.label})
-        //         .attr("transform", "translate("+ (headerTextPad + 10) + "," + (6 + headerTextYOffset) + ")")
-        //         // .attr("dominant-baseline", "middle")
-        //         .attr("font-size", headerFontSize + fontUnits)
-        //         .attr("fill", "black")
-        //         .attr("dx", 0)
-        //         .attr("dy", 0)
-        //         .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
-        //     legendItemsGroup.append("rect")
-        //         .attr("width", 10)
-        //         .attr("height", 10)
-        //         .style("stroke-width", 1)
-        //         .style("stroke", "black")
-        //         .style("fill", function(d) { return d.color });
-        //     // posX++
-        // }
+            .each(function() { centerValign(this); })
     }
 
     downloadSVG() {
@@ -877,7 +651,6 @@ export class ExporterComponent implements AfterViewInit {
             downloadLink.click();
             document.body.removeChild(downloadLink);
         }
-
     }
 
     /**
@@ -958,15 +731,6 @@ export class ExporterComponent implements AfterViewInit {
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
             }
-            // console.log(text)
-            // text.selectAll("tspan").each(function(d, i, j) {
-            //     // console.log(this, i, j.length)
-            //     console.log(self.getSpacing(cellheight, j.length)[i])
-            //     d3.select(this)
-            //         .attr("dy", self.getSpacing(cellheight, j.length)[i])
-            //         .attr("dominant-baseline", "middle")
-            //
-            // })
         });
     }
 
