@@ -16,49 +16,70 @@ export class ExporterComponent implements AfterViewInit {
 
     @Input() viewModel: ViewModel;
 
-    private config = {
-        "width": 11,
-        "height": 8.5,
-        "headerHeight": 1,
-
-        "unit": "in",
-        "fontUnit": "pt",
-
-        "font": 'sans-serif',
-        "tableFontSize": 5,
-        "tableTacticFontSize": 6,
-        "tableBorderColor": "#6B7279",
-
-        "showHeader": true,
-        "headerLayerNameFontSize": 18,
-        "headerFontSize": 12,
-
-        "legendDocked": true,
-        "legendX": 0,
-        "legendY": 0,
-        "legendWidth": 2,
-        "legendHeight": 2,
-
-        "showLegend": true,
-        "showGradient": true,
-        "showFilters": true,
-        "showDescription": true,
-        "showName": true,
-        "showTechniqueCount": true
-    }
+    private config: any = {}
+        
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
-    constructor(private configService: ConfigService, private dataService: DataService) { }
+    constructor(private configService: ConfigService, private dataService: DataService) {
+        this.config = { 
+            "width": 11,
+            "height": 8.5,
+            "headerHeight": 1,
+
+            "unit": "in",
+            "fontUnit": "pt",
+
+            "font": 'sans-serif',
+            "tableFontSize": 5,
+            "tableTacticFontSize": 6,
+            "tableBorderColor": "#6B7279",
+
+            "showHeader": true,
+            "headerLayerNameFontSize": 18,
+            "headerFontSize": 12,
+
+            "legendDocked": true,
+            "legendX": 0,
+            "legendY": 0,
+            "legendWidth": 2,
+            "legendHeight": 1,
+
+            "showLegend": true,
+            "showFilters": true,
+            "showAbout": true,
+        }
+     }
 
     ngAfterViewInit() {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
-        // this.exportData.filteredTechniques.forEach(function(technique: Technique) {
-        //     // if (self.viewModel.hasTechniqueVM(technique.technique_tactic_union_id)) {
-        //     //     if (self.viewModel.getTechniqueVM(technique.technique_tactic_union_id).score != "") self.hasScores = true;
-        //     // }
-        // })
+        for (let matrix of this.dataService.matrices) {
+            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
+                for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
+                    if (technique.subtechniques.length > 0) {
+                        for (let subtechnique of this.viewModel.filterTechniques(technique.subtechniques, tactic, matrix)) {
+                            if (self.viewModel.hasTechniqueVM(subtechnique, tactic)) {
+                                if (self.viewModel.getTechniqueVM(subtechnique, tactic).score != "") self.hasScores = true;
+                            }
+                        }
+                    }
+                    if (self.viewModel.hasTechniqueVM(technique, tactic)) {
+                        if (self.viewModel.getTechniqueVM(technique, tactic).score != "") self.hasScores = true;
+                    }
+                }
+            }
+        }
+        // dynamic legend height according to content;
+        let legendSectionCount = 0;
+        if (self.hasScores) legendSectionCount++;
+        if (self.hasLegendItems()) legendSectionCount++;
+        self.config.legendHeight = 0.5 * legendSectionCount; 
+        //initial legend position for undocked legend
+        this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
+        this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
+        if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
+
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)
     }
@@ -71,14 +92,14 @@ export class ExporterComponent implements AfterViewInit {
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
     //above && user preferences
-    showName(): boolean {return this.config.showName && this.hasName() && this.config.showHeader}
-    showDescription(): boolean {return this.config.showDescription && this.hasDescription() && this.config.showHeader}
+    showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
+    showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showGradient && this.hasScores  && this.config.showHeader}
-    showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
+    showGradient(): boolean {return this.config.showLegend && this.hasScores  && this.config.showHeader}
+    showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
     showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
-    showItemCount(): boolean {return this.config.showTechniqueCount}
+    // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
@@ -142,10 +163,12 @@ export class ExporterComponent implements AfterViewInit {
             .style("font-family", self.config.font);
         let stroke_width = 1;
 
-        //  _  _ ___   _   ___  ___ ___
-        // | || | __| /_\ |   \| __| _ \
-        // | __ | _| / _ \| |) | _||   /
-        // |_||_|___/_/ \_\___/|___|_|_\
+        // ooooo ooooo            o888                                                 
+        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
+        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
+        //  888   888 888          888  888    888 888          888                888 
+        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
+        //                             o888                                            
 
         // Essentially, the following functions brute force the optimal text arrangement for each cell 
         // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
@@ -311,6 +334,53 @@ export class ExporterComponent implements AfterViewInit {
             contents: HeaderSectionContent[];
         }
 
+        let legend = {"title": "legend", "contents": []};
+        if (self.hasScores) legend.contents.push({
+            "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
+                let domain = [];
+                for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
+                    let percent = i / (self.viewModel.gradient.colors.length - 1);
+                    domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
+                }
+                let colorScale = d3.scaleLinear()
+                    .domain(domain)
+                    .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
+                let nCells = domain.length * 2;
+                let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
+                group.append("g")
+                    .attr("transform", "translate(0, 5)")
+                    .call(d3.legendColor()
+                    .shapeWidth((sectionWidth / nCells))
+                    .shapePadding(0)
+                    .cells(nCells)
+                    .shape("rect")
+                    .orient("horizontal")
+                    .scale(colorScale)
+                    .labelOffset(2)
+                    .labelFormat(d3.format("0.02r"))
+                    
+                    // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
+                )
+            }
+        });
+        if (self.hasLegendItems()) legend.contents.push({
+            "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
+                let colorScale = d3.scaleOrdinal()
+                    .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
+                    .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+                group.append("g")
+                    .attr("transform", "translate(0, 5)")
+                    .call(d3.legendColor()
+                    .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
+                    .shapePadding(0)
+                    .shape("rect")
+                    .orient("horizontal")
+                    .scale(colorScale)
+                    .labelOffset(2)
+                )
+            }
+        })
+
         function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
             let boxPadding = 5;
             let boxGroup = group.append("g")
@@ -329,7 +399,6 @@ export class ExporterComponent implements AfterViewInit {
                 .text(sectionData.title)
                 .attr("x", 2 * boxPadding)
                 .attr("font-size", 12)
-                .attr("font-family", "sans-serif")
                 .each(function() { centerValign(this); })
                 // .attr("dominant-baseline", "middle")
             // add cover mask so that the box lines crop around the text
@@ -383,104 +452,61 @@ export class ExporterComponent implements AfterViewInit {
             }
         }
 
+        // ooooo ooooo                             oooo                        
+        //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo   
+        //  888ooo888 888oooooo8   ooooo888 888    888 888oooooo8   888    888 
+        //  888   888 888        888    888 888    888 888          888        
+        // o888o o888o  88oooo888 88ooo88 8o  88ooo888o  88oooo888 o888o       
+                                                                            
+
         if (self.config.showHeader) {
+            let headerSections: HeaderSection[] = []
 
-            
+            if (self.showName() || self.showDescription()) {
+                let about = {"title": "about", "contents": []};
+                if (self.showName()) about.contents.push({"label": "name", "data": this.viewModel.name});
+                if (self.showDescription()) about.contents.push({"label": "description", "data": this.viewModel.description});
+                headerSections.push(about)
+            }
 
-             /**
-             * Helper function for creating header sections
-             */
-            
+            if (self.showFilters()) headerSections.push({
+                "title": "filters",
+                "contents": [{
+                    "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
+                }, {
+                    "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
+                }]
+            });
 
-            let headerSections: HeaderSection[] = [
-                {
-                    "title": "about",
-                    "contents": [{
-                        "label": "name", "data": this.viewModel.name, 
-                    }, { 
-                        "label": "description", "data": this.viewModel.description
-                    }]
-                },
-                {
-                    "title": "filters",
-                    "contents": [{
-                        "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
-                    }, {
-                        "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
-                    }]
-                },
-                {
-                    "title": "legend",
-                    "contents": [{
-                        "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
-                            let colorScale = d3.scaleOrdinal()
-                                .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
-                                .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
-                            group.append("g")
-                                .attr("transform", "translate(0, 5)")
-                                .call(d3.legendColor()
-                                .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
-                                .shapePadding(0)
-                                .shape("rect")
-                                .orient("horizontal")
-                                .scale(colorScale)
-                                .labelOffset(2)
-                            )
-                        }
-                    }, {
-                        "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
-                            let domain = [];
-                            for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
-                                let percent = i / (self.viewModel.gradient.colors.length - 1);
-                                domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
-                            }
-                            let colorScale = d3.scaleLinear()
-                                .domain(domain)
-                                .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
-                            let nCells = domain.length * 2;
-                            let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
-                            group.append("g")
-                                .attr("transform", "translate(0, 5)")
-                                .call(d3.legendColor()
-                                .shapeWidth((sectionWidth / nCells))
-                                .shapePadding(0)
-                                .cells(nCells)
-                                .shape("rect")
-                                .orient("horizontal")
-                                .scale(colorScale)
-                                .labelOffset(2)
-                                .labelFormat(d3.format("0.02r"))
-                                
-                                // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
-                            )
-                        }
-                    }]
-                }
-            ]
+            if (self.showLegend() && self.showLegendInHeader()) headerSections.push(legend);
 
             let headerGroup = svg.append("g");
 
             let headerX = d3.scaleBand()
                 .paddingInner(0.05)
-                .align(0.5)
+                // .align(0.5)
                 .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
                 .range([0, width]);
             
             for (let section of headerSections) {
-                let sectionGroup = headerGroup.append("g")
-                    .attr("transform", `translate(${headerX(section.title)}, 0)`);
-                descriptiveBox(sectionGroup, section, headerX.bandwidth(), headerHeight);
+                let sectionGroup = headerGroup.append("g");
+                if (headerSections.length > 1) sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
+                descriptiveBox(sectionGroup, section, headerSections.length == 1? width : headerX.bandwidth(), headerHeight);
             }
+
+            if (headerSections.length == 0) headerHeight = 0; //no header sections to show
         } else { //no header
             headerHeight = 0
         }
 
 
 
-        //  _____ _   ___ _    ___   ___  ___  _____   __
-        // |_   _/_\ | _ ) |  | __| | _ )/ _ \|   \ \ / /
-        //   | |/ _ \| _ \ |__| _|  | _ \ (_) | |) \ V /
-        //   |_/_/ \_\___/____|___| |___/\___/|___/ |_|
+        // oooo     oooo            o8              o88               
+        //  8888o   888   ooooooo o888oo oo oooooo  oooo  oooo   oooo 
+        //  88 888o8 88   ooooo888 888    888    888 888    888o888   
+        //  88  888  88 888    888 888    888        888    o88 88o   
+        // o88o  8  o88o 88ooo88 8o 888o o888o      o888o o88o   o88o 
+                                                                   
 
         let tablebody = svg.append("g")
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
@@ -626,6 +652,20 @@ export class ExporterComponent implements AfterViewInit {
             })
             .attr("font-weight", "bold")
             .each(function() { centerValign(this); })
+
+        //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
+        // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
+        // 888    88  888   888 888    888 888     888 888     888 888o888   888oooooo8 888    888        888        888oooooo8  888    88o 888oooooo8   888   888 888    888  
+        // 888    88  888   888 888    888 888     888 888         8888 88o  888        888    888        888      o 888          888oo888o 888          888   888 888    888  
+        // 888oo88  o888o o888o  88ooo888o  88ooo88     88ooo888 o888o o888o  88oooo888  88ooo888o      o888ooooo88   88oooo888 888     888  88oooo888 o888o o888o  88ooo888o 
+        //                                                                                                                         888ooo888                                    
+
+
+        if (self.showLegend() && !self.showLegendInHeader()) {
+            let legendGroup = tablebody.append("g")
+                .attr("transform", `translate(${legendX}, ${legendY})`)
+            descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
+        }
     }
 
     downloadSVG() {

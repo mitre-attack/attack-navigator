@@ -61,15 +61,6 @@
                                 <span matSuffix  [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
-                        <!-- <li>
-                            <mat-form-field>
-                                <mat-select placeholder="measurement unit" [(ngModel)]="config.unit" (change)="buildSVG()">
-                                    <mat-option value="px">pixels</mat-option>
-                                    <mat-option value="in">inches</mat-option>
-                                    <mat-option value="cm">centimeters</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </li> -->
                     </ul>
                 </div>
             </div>
@@ -180,29 +171,21 @@
                             <label [for]="uid+'checkboxheader'" class="checkbox-custom-label noselect">show header</label>
                         </li>
                         <li>
-                            <input [id]="uid+'checkboxname'" type="checkbox" [disabled]="!hasName() || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showName" (change)="buildSVG()">
-                            <label [for]="uid+'checkboxname'" class="checkbox-custom-label noselect" [class.disabled]="!hasName() || !config.showHeader">show title</label>
-                        </li>
-                        <li>
-                            <input [id]="uid+'checkboxdescription'" type="checkbox" [disabled]="!hasDescription() || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showDescription" (change)="buildSVG()">
-                            <label [for]="uid+'checkboxdescription'" class="checkbox-custom-label noselect" [class.disabled]="!hasDescription() || !config.showHeader">show description</label>
+                            <input [id]="uid+'checkboxAbout'" type="checkbox" [disabled]="(!hasName() && !hasDescription()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showAbout" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxAbout'" class="checkbox-custom-label noselect" [class.disabled]="(!hasName() && !hasDescription()) || !config.showHeader">show about</label>
                         </li>
                         <li>
                             <input [id]="uid+'checkboxfilters'" type="checkbox" class="checkbox-custom" [disabled]="!config.showHeader"[(ngModel)]="config.showFilters" (change)="buildSVG()">
                             <label [for]="uid+'checkboxfilters'" class="checkbox-custom-label noselect" [class.disabled]="!config.showHeader">show filters</label>
                         </li>
                         <li>
-                            <input [id]="uid+'checkboxgradient'" type="checkbox" [disabled]="!hasScores || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showGradient" (change)="buildSVG()">
-                            <label [for]="uid+'checkboxgradient'" class="checkbox-custom-label noselect" [class.disabled]="!hasScores || !config.showHeader">show score gradient</label>
+                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems() && !hasScores" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems() && !hasScores" >show legend</label>
                         </li>
-                        <li>
-                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems()" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
-                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()" >show legend</label>
-                        </li>
-                        <li>
+                        <!-- <li>
                             <input [id]="uid+'checkboxtcount'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.showTechniqueCount" (change)="buildSVG()">
                             <label [for]="uid+'checkboxtcount'" class="checkbox-custom-label noselect">show technique count</label>
-                        </li>
+                        </li> -->
                         <li>
                             <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="config.tableBorderColor" [style.background]="config.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
                              (colorPickerSelect)="buildSVG()" [cpOKButton]="true" [cpOKButtonText]="'apply'" [cpCancelButton]="true" style="width: 14px; margin: 5px 0 0 5px;">
