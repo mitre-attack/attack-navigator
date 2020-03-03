@@ -22,7 +22,7 @@
                      matTooltip="image size">
                     <img src="assets/icons/ic_photo_size_select_large_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container size" *ngIf="currentDropdown === 'imgsize'" #dropdown [class.left]="checkalign(dropdown)">
+                <div class="dropdown-container size left" *ngIf="currentDropdown === 'imgsize'">
                     <ul>
                         <li>
                             <mat-form-field>
@@ -72,7 +72,7 @@
                      matTooltip="text">
                     <img src="assets/icons/ic_format_size_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container font" *ngIf="currentDropdown === 'font'" #dropdown [class.left]="checkalign(dropdown)">
+                <div class="dropdown-container font left" *ngIf="currentDropdown === 'font'">
                     <ul>
                         <li>
                             <mat-form-field>
@@ -94,7 +94,7 @@
                      [style.color]="showLegend() ? '#000000' : '#aaaaaa'">
                     <img [src]="showLegend()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
                 </div>
-                <div class="dropdown-container legend" *ngIf="currentDropdown === 'legend'" #dropdown [class.left]="checkalign(dropdown)">
+                <div class="dropdown-container legend left" *ngIf="currentDropdown === 'legend'">
                     <ul>
                         <li>
                             <input [id]="uid + 'legendDockedCheckbox'"type="checkbox" class="checkbox-custom" [(ngModel)]="config.legendDocked" (change)="buildSVG()">
@@ -164,7 +164,7 @@
                      matTooltip="display settings">
                     <img src="assets/icons/ic_visibility_black_24px.svg"/>
                 </div>
-                <div class="dropdown-container visibility" *ngIf="currentDropdown === 'visibility'" #dropdown [class.left]="checkalign(dropdown)">
+                <div class="dropdown-container visibility left" *ngIf="currentDropdown === 'visibility'">
                     <ul>
                         <li>
                             <input [id]="uid+'checkboxheader'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.showHeader" (change)="buildSVG()">
@@ -187,7 +187,7 @@
                             <label [for]="uid+'checkboxtcount'" class="checkbox-custom-label noselect">show technique count</label>
                         </li> -->
                         <li>
-                            <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="config.tableBorderColor" [style.background]="config.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
+                            <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="config.tableBorderColor" [style.background]="config.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#6B7279', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
                              (colorPickerSelect)="buildSVG()" [cpOKButton]="true" [cpOKButtonText]="'apply'" [cpCancelButton]="true" style="width: 14px; margin: 5px 0 0 5px;">
                              <label [for]="uid+'tableBorderInput'" class="noselect">cell border</label>
 
