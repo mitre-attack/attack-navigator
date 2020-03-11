@@ -11,7 +11,7 @@ This document describes **Version 3.0** of the MITRE ATT&CK Navigator Layer file
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "mitre-enterprise" or "mitre-mobile" |
 | filters |Filter object | No | | See Filter object definition below
 | sorting | Number | No | 0 | Specifies the ordering of the techniques within each tactic category as follows: <br>**0**: sort ascending alphabetically by technique name <br>**1**: sort descending alphabetically by technique name <br>**2**: sort ascending by technique score <br>**3**: sort descending by technique score |
-| viewMode | Number | No | 0 | Specifies the view mode for the layer as follows: <br>**0**: display the full table with tactic and technique names <br>**1**: display compact table with abbreviated tactic and technique names <br>**2**: display mini table with no text with the exception of tooltips |
+| layout | Layout object | No | | See definition of Layout object below |
 | hideDisabled | Boolean | No | false | Specifies whether techniques that have been disabled are still displayed (greyed-out) or omitted from the view as follows: <br>**true**: omit techniques marked as disabled from the view <br>**false**: include disabled techniques in the view but display as greyed-out |
 | techniques | Array of Technique objects | No | | See definition of Technique object below |
 | gradient | Gradient object | No | Red to Green, minValue=0, maxValue=100 | See definition of Gradient object below |
@@ -64,6 +64,12 @@ Technique objects are used to store both techniques and subtechniques. The only 
 | name | String | Yes | n/a | the name of the metadata |
 | value | String | Yes | n/a | The value of the metadata |
 
+## Layout Object properties
+| Name     | Type     | Required? | Default Value (if not present) | Description |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| layout | String | No | "side' | The layout of the matrix. Either "side", "flat" or "mini" |
+| showID | Boolean | No | false | if true, show the ATT&CK ID of techniques and tactics in the matrix |
+| showName | Boolean | No | true | if true, show the name of techniques and tactics in the matrix |
 
 ## Example
 The following example illustrates the layer file format:
@@ -83,13 +89,18 @@ The following example illustrates the layer file format:
         ]
     },
     "sorting": 2,
-    "viewMode": 0,
+    "layout": {
+        "layout": "side",
+        "showName": true,
+        "showID": false
+    },
     "hideDisabled": false,
     "techniques": [
         {
             "techniqueID": "T1110",
             "color": "#fd8d3c",
-            "comment": "This is a comment for technique T1110"
+            "comment": "This is a comment for technique T1110",
+            "showSubtechniques": true
         },
         {
             "techniqueID": "T1110.001",
@@ -139,6 +150,7 @@ The following example illustrates the layer file format:
     "showTacticRowBackground": true,
     "tacticRowBackground": "#dddddd",
     "selectTechniquesAcrossTactics": false,
+    "selectSubtechniquesWithParent": false,
     "metadata": [
         { 
             "name": "layer metadata 1", 

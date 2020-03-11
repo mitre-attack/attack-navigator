@@ -1,3 +1,56 @@
+# v3.0 - unreleased
+The ATT&CK Navigator v3.0 release includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
+## New Features
+### Major
+- Added support for sub-techniques. Techniques with sub-techniques will be denoted by a sidebar which can be clicked to show and hide the sub-techniques. Techniques without sub-techniques will not have a sidebar.
+- Added "select techniques with subtechniques" control under "selection controls" dropdown, augmenting the existing "select techniques across tactics" control. By default sub-techniques will be selected along with their parents.
+- Added "matrix layout" controls (replacing "view mode") . 
+    - Supports multiple layouts, and the codebase is designed to allow the addition of new layouts easily. Added the following layouts:
+        - the "side" layout (default), where sub-techniques appear in an adjacent sub-column of the tactic.
+        - the "flat" layout, where sub-techniques appear nested beneath their parent similar to an indented list.
+        - the "mini" layout, where sub-techniques are grouped into boxes with their parent. The "mini" layout is designed to give an overview of the layer without the comparatively complex structure of the "flat" or "side" views.
+    - Added the ability to show technique ATT&CK IDs and names simultaneously, individually or not at all. The "mini" layout overrides this selection.
+
+### Minor
+- Added mitigations to multi-select interface. Improved the extensibility of the multi-select interface to make future additions easier.
+
+## Improvements
+### Major
+- Major redesign of the "render layer to SVG" feature.
+    - Added support for sub-techniques.
+    - Users will no longer need to specify text size manually. Algorithms have been implemented to automatically maximize text size without overflowing the text container. The overall layer rendering process will take slightly longer than previously due to these computations.
+    - Header and legend (docked and undocked) should be much more aesthetic.
+    - Score gradient legend should now show which scores map to which colors more clearly.
+- Context menu and tooltip improvements:
+    - Visual style has been improved for both context menu and tooltip. 
+    - Tooltip is now statically placed instead of following the cursor, which increases the performance of the UI.
+    - Context menu should now orient itself better to avoid falling off the edge of the screen.
+    - Added "view tactic" button to context menu.
+    - Major improvements to the flexibility of the custom context menu items feature. See _Config File Format Changes_ below for more details.
+- Major refactor to many components should reduce lag and improve extensibility and maintainability of the application. 
+
+### Minor
+- Export to excel: added sub-techniques support.
+- Minor UI improvements to the search feature. Disabled regex in search because it was very buggy.
+
+## Layer File Format Changes
+Layer file format updated to version 3.0. Older versions can still be loaded in the Navigator, but may have degraded functionality.
+- Removed "viewMode" enumeration in favor of "layout" object. viewMode will get parsed into a layout configuration automatically, but the conversion is not perfect since the layouts have changed.
+- Added "showSubtechniques" field to technique objects. 
+- Added "selectSubtechniquesWithParent" field setting the default value of the "select techniques with subtechniques" control.
+
+## Config File Format Changes
+### Changes to `custom_context_menu_items`
+Custom context menu feature has been significantly improved for flexibility. See _Adding Custom Context Menu Options_ in [the readme](README.md) for more details on the format.
+- Updated substitution string to use double curly braces (e.g `{{technique_name}}`) instead of tildes.
+- Added ability to specify STIX IDs in addition to ATT&CK IDs.
+- Added the option to add a sub-technique specific URL (`subtechnique_url`) which will apply only to sub-techniques. When using the sub-technique URL, extra sub-technique related substitutions are available.
+
+### Changes to `features`
+The "features" structure is used to enable/disable specific Navigator features. It also propagates to the "create customized Navigator" interface.
+- "toggle_view_mode" has been renamed to "layout_controls" and the description updated accordingly. 
+
+
 # v2.3.1 - 29 October 2019
 ## Fixes
 - Fixes a bug where default_layers specified in `config.json` would not load. See pull request [#109](https://github.com/mitre-attack/attack-navigator/pull/109).
