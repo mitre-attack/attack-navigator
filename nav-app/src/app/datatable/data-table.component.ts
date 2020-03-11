@@ -1,5 +1,5 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import {DataService, Technique} from '../data.service';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, ɵregisterNgModuleType } from '@angular/core';
+import {DataService, Technique, Matrix} from '../data.service';
 import {ConfigService} from '../config.service';
 import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
@@ -17,6 +17,7 @@ declare var tinycolor: any; //use tinycolor2
 
 import * as FileSaver from 'file-saver';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { TechniquesSearchComponent } from '../techniques-search/techniques-search.component';
 
 @Component({
     selector: 'DataTable',
@@ -72,70 +73,125 @@ export class DataTableComponent implements AfterViewInit {
 
 
     saveLayerLocallyExcel() {
-        // let self = this;
-        // var workbook = new Excel.Workbook();
-        // var worksheet = workbook.addWorksheet('layer');
+        var workbook = new Excel.Workbook();
+        var worksheet = workbook.addWorksheet(this.viewModel.name);
+        let matrices = this.viewModel.filters.filterMatrices(this.dataService.matrices);
+        for (let matrix of matrices) {
+            //TODO: check for multiple matrices
+            
+            // CREATE TACTIC COLUMNS
+            let columns = matrix.tactics.map(tactic => {
+                return {header: tactic.name, key: tactic.name};
+            })
+            worksheet.columns = columns;
 
-        // // CREATE COLS
-        // worksheet.columns = this.dataService.tacticNames(this.filteredTechniques).map(tacticname => {
-        //     return {header: tacticname, key: tacticname}
-        // })
-       
-        // // CREATE CELLS
-        // for (const tacticName of this.dataService.tacticNames(this.filteredTechniques)) {
-        //     let col = worksheet.getColumn(tacticName);
-        //     let techniques = this.tactics[tacticName.toString()]
-        //     let cells = techniques.map(technique => {
-        //         return technique.name;
-        //         // return this.viewModel.getTechniqueVM(technique.technique_tactic_union_id).;
-        //     })
-        //     //toString because String != string
-        //     col.values = [this.tacticDisplayNames[tacticName.toString()]].concat(cells) //insert header cell at top of col
-        //     col.eachCell((cell, rowNumber) => {
-        //         if (rowNumber > 1) { //skip tactic header
+            // CREATE CELLS
+            for (let tactic of matrix.tactics) {
+                let tacticCol = worksheet.getColumn(tactic.name);
+                let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
+                let techniqueCells = techniques.map(technique => { return technique.name });
+                let subtechniqueList = [];
 
-        //             let index = rowNumber - 2; //skip header, and exceljs indexes starting at 1 
-        //             if (cell.value && cell.value != "") { // handle jagged cols
-        //                 // console.log(cell.value);
-                        
-        //                 let tvm = this.viewModel.getTechniqueVM(techniques[index].technique_tactic_union_id);
-        //                 if (tvm.enabled) {
-        //                     if (tvm.color) { //manually assigned
-        //                         cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
-        //                         cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}}
-        //                     }
-        //                     else if (tvm.score) { //score assigned
-        //                         cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
-        //                         cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}}
-        //                     }
-        //                     if (tvm.comment) { //comment present on technique
-        //                         cell.note = tvm.comment;
-        //                     }
-        //                 } else { //disabled
-        //                     cell.font = {color: {'argb': 'FFBCBCBC'}}
-        //                 }
-        //             }
-        //         }
-        //     })
-        // }
+                // SUBTECHNIQUES
+                let subtechniqueCells = [];
+                for (let technique of techniques) {
+                    let techniqueRow = techniqueCells.indexOf(technique.name);
+                    let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                    if(tvm.showSubtechniques) {
+                        // retrieve subtechniques
+                        let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
+                            .map( sub => { return sub.name });
+                        technique.subtechniques.forEach(sub => subtechniqueList.push(sub));
 
-        // // STYLE      
-        // // width of cols
-        // worksheet.columns.forEach(column => {column.width = column.header.length < 20 ? 20 : column.header.length});
-        // //tactic background
-        // if (this.viewModel.showTacticRowBackground) {
-        //     worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
-        //     worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
-        // } else {
-        //     worksheet.getRow(1).font = {bold: true}; //bold header
-        // }
-        //  // Save the workbook
-        //  workbook.xlsx.writeBuffer().then( data => {
-        //     const blob = new Blob( [data], {type: "application/octet-stream"} );
-        //     const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
-        //     this.saveBlob(blob, filename);
+                        // format technique cells for subtechniques
+                        let excelIndex = 0;
+                        for (let subtechnique of subtechniques) {
+                            if(excelIndex !== 0) {
+                                techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
+                            }
+                            subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
+                        }
 
-        //   });
+                        // merge technique cells
+                        worksheet.mergeCells(techniqueRow + 2, tacticCol.number,
+                                             techniqueRow + excelIndex + 1, tacticCol.number);
+                    }
+                }
+
+                if(subtechniqueCells.length > 0) {
+                    // add subtechniques column
+                    let id = columns.findIndex(col => col.key == tactic.name);
+                    columns.splice(id + 1, 0, {header: tactic.name, key: tactic.name + " Subtechniques"});
+                    worksheet.columns = columns;
+
+                    // merge subtechniques header
+                    let subtechniqueCol = worksheet.getColumn(tactic.name + " Subtechniques");
+                    worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
+                    subtechniqueCol.values = [tactic.name.toString() + ' Subtechniques'].concat(subtechniqueCells);
+
+                    // STYLE SUBTECHNIQUE CELLS
+                    subtechniqueCol.eachCell(cell => {
+                        if(cell.row > 1) {
+                            if(cell.value && cell.value !== undefined) {
+                                let subtechnique = subtechniqueList.find(s => { return s.name == cell.value });
+                                let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
+                                this.styleCells(cell, svm);
+                            }
+                        }
+                    });
+                }
+
+                tacticCol.values = [tactic.name.toString()].concat(techniqueCells);
+                
+                // STYLE TECHNIQUE CELLS
+                tacticCol.eachCell(cell => {
+                    if (cell.row > 1) {
+                        if(cell.value && cell.value !== undefined) {
+                            let technique = techniques.find( t => { return t.name === cell.value });
+                            let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                            this.styleCells(cell, tvm);
+                        }
+                    }
+                });
+            }
+        }
+
+        // STYLE HEADERS
+        worksheet.columns.forEach(column => {column.width = column.header.length < 30 ? 30 : column.header.length});
+        if (this.viewModel.showTacticRowBackground) {
+            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
+            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+            worksheet.getRow(1).alignment = {horizontal: 'center'};
+        } else {
+            worksheet.getRow(1).font = {bold: true};
+            worksheet.getRow(1).alignment = {horizontal: 'center'};
+        }
+
+        // SAVE
+        workbook.xlsx.writeBuffer().then(data => {
+            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
+            this.saveBlob(blob, filename);
+        });
+    }
+
+    styleCells(cell, tvm) {
+        cell.alignment = {vertical: 'top', horizontal: 'left'};
+        if(tvm.enabled) {
+            if (tvm.color) { //manually assigned
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
+                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}};
+            }
+            else if (tvm.score) { //score assigned
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
+                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}};
+            }
+            if (tvm.comment) { //comment present on technique
+                cell.note = tvm.comment;
+            }
+        } else { //disabled
+            cell.font = {color: {'argb': 'FFBCBCBC'}}
+        }
     }
 
     constructor(private dataService: DataService, 
