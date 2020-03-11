@@ -76,13 +76,9 @@ export class DataTableComponent implements AfterViewInit {
         var workbook = new Excel.Workbook();
         var worksheet = workbook.addWorksheet(this.viewModel.name);
         let matrices = this.viewModel.filters.filterMatrices(this.dataService.matrices);
-        for (let matrix of matrices) {
-            //TODO: check for multiple matrices
-            
+        for (let matrix of matrices) {            
             // CREATE TACTIC COLUMNS
-            let columns = matrix.tactics.map(tactic => {
-                return {header: tactic.name, key: tactic.name};
-            })
+            let columns = matrix.tactics.map(tactic => { return {header: tactic.name, key: tactic.name} });
             worksheet.columns = columns;
 
             // CREATE CELLS
@@ -121,35 +117,36 @@ export class DataTableComponent implements AfterViewInit {
                 if(subtechniqueCells.length > 0) {
                     // add subtechniques column
                     let id = columns.findIndex(col => col.key == tactic.name);
-                    columns.splice(id + 1, 0, {header: tactic.name, key: tactic.name + " Subtechniques"});
+                    columns.splice(id + 1, 0, {header: tactic.name, key: tactic.name + "Subtechniques"});
                     worksheet.columns = columns;
 
                     // merge subtechniques header
-                    let subtechniqueCol = worksheet.getColumn(tactic.name + " Subtechniques");
+                    let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
                     worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
-                    subtechniqueCol.values = [tactic.name.toString() + ' Subtechniques'].concat(subtechniqueCells);
+                    subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
                     // STYLE SUBTECHNIQUE CELLS
                     subtechniqueCol.eachCell(cell => {
                         if(cell.row > 1) {
                             if(cell.value && cell.value !== undefined) {
-                                let subtechnique = subtechniqueList.find(s => { return s.name == cell.value });
+                                let subtechnique = subtechniqueList.find(s => { 
+                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1) || s.attackID === cell.value });
                                 let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
-                                this.styleCells(cell, svm);
+                                this.styleCells(cell, subtechnique, svm);
                             }
                         }
                     });
                 }
-
                 tacticCol.values = [tactic.name.toString()].concat(techniqueCells);
                 
                 // STYLE TECHNIQUE CELLS
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
                         if(cell.value && cell.value !== undefined) {
-                            let technique = techniques.find( t => { return t.name === cell.value });
+                            let technique = techniques.find( t => { 
+                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1) || t.attackID === cell.value });
                             let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-                            this.styleCells(cell, tvm);
+                            this.styleCells(cell, technique, tvm);
                         }
                     }
                 });
@@ -175,7 +172,15 @@ export class DataTableComponent implements AfterViewInit {
         });
     }
 
-    styleCells(cell, tvm) {
+    styleCells(cell, technique, tvm) {
+        // cell value
+        if(this.viewModel.layout.showID && this.viewModel.layout.showName) {
+            cell.value = technique.attackID + ':' + technique.name;
+        } else if(this.viewModel.layout.showID) {
+            cell.value = technique.attackID;
+        }
+
+        // cell format
         cell.alignment = {vertical: 'top', horizontal: 'left'};
         if(tvm.enabled) {
             if (tvm.color) { //manually assigned
