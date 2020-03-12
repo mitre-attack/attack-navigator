@@ -21,7 +21,7 @@
             <table class="results" *ngIf="results.length > 0">
                 <tr *ngFor="let result of results">
                     <td>
-                        {{result.name}}
+                        <span *ngIf="result.isSubtechnique">{{result.parent.name}}: </span>{{result.name}}
                     </td>
                     <td><a href="{{result.url}}" target="_blank">view</a></td>
                     <td><button class="button" (click)="select(result)">select</button></td>

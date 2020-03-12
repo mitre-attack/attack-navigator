@@ -3,21 +3,21 @@ The ATT&CK Navigator v3.0 release includes support for sub-techniques as well as
 ## New Features
 ### Major
 - Added support for sub-techniques. Techniques with sub-techniques will be denoted by a sidebar which can be clicked to show and hide the sub-techniques. Techniques without sub-techniques will not have a sidebar.
-- Added "select techniques with subtechniques" control under "selection controls" dropdown, augmenting the existing "select techniques across tactics" control. By default sub-techniques will be selected along with their parents.
-- Added "matrix layout" controls (replacing "view mode") . 
+- Added "select techniques with subtechniques" control under "selection controls" dropdown, augmenting the existing "select techniques across tactics" control. By default sub-techniques will be selected along with their parents. See issue [#114](https://github.com/mitre-attack/attack-navigator/issues/114).
+- Added "matrix layout" controls (replacing "view mode"). See issues [#117](https://github.com/mitre-attack/attack-navigator/issues/117) and [#110](https://github.com/mitre-attack/attack-navigator/issues/110).
     - Supports multiple layouts, and the codebase is designed to allow the addition of new layouts easily. Added the following layouts:
         - the "side" layout (default), where sub-techniques appear in an adjacent sub-column of the tactic.
         - the "flat" layout, where sub-techniques appear nested beneath their parent similar to an indented list.
         - the "mini" layout, where sub-techniques are grouped into boxes with their parent. The "mini" layout is designed to give an overview of the layer without the comparatively complex structure of the "flat" or "side" views.
-    - Added the ability to show technique ATT&CK IDs and names simultaneously, individually or not at all. The "mini" layout overrides this selection.
+    - Added the ability to show technique ATT&CK IDs and names simultaneously, individually or not at all. The "mini" layout overrides this selection. See issue [#124](https://github.com/mitre-attack/attack-navigator/issues/124).
 
 ### Minor
-- Added mitigations to multi-select interface. Improved the extensibility of the multi-select interface to make future additions easier.
+- Added mitigations to multi-select interface. Improved the extensibility of the multi-select interface to make future additions easier. See issue [#119](https://github.com/mitre-attack/attack-navigator/issues/119).
 
 ## Improvements
 ### Major
-- Major redesign of the "render layer to SVG" feature.
-    - Added support for sub-techniques.
+- Major redesign of the "render layer to SVG" feature. 
+    - Added support for sub-techniques. See issue [#116](https://github.com/mitre-attack/attack-navigator/issues/116).
     - Users will no longer need to specify text size manually. Algorithms have been implemented to automatically maximize text size without overflowing the text container. The overall layer rendering process will take slightly longer than previously due to these computations.
     - Header and legend (docked and undocked) should be much more aesthetic.
     - Score gradient legend should now show which scores map to which colors more clearly.
@@ -30,8 +30,8 @@ The ATT&CK Navigator v3.0 release includes support for sub-techniques as well as
 - Major refactor to many components should reduce lag and improve extensibility and maintainability of the application. 
 
 ### Minor
-- Export to excel: added sub-techniques support.
-- Minor UI improvements to the search feature. Disabled regex in search because it was very buggy.
+- Export to excel: added sub-techniques support. See issue [#115](https://github.com/mitre-attack/attack-navigator/issues/115).
+- Minor UI improvements to the search feature. Disabled regex in search because it was very buggy. See issue [#113](https://github.com/mitre-attack/attack-navigator/issues/113).
 
 ## Layer File Format Changes
 Layer file format updated to version 3.0. Older versions can still be loaded in the Navigator, but may have degraded functionality.

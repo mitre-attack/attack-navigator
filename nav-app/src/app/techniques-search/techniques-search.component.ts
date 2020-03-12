@@ -38,8 +38,15 @@ export class TechniquesSearchComponent implements OnInit {
         this._query = newQuery;
         if (this._query.trim() != "") {
             // search
+
+            //get master list of techniques and sub-techniques
+            let allTechniques = this.dataService.techniques;
+            for (let technique of allTechniques) {
+                allTechniques = allTechniques.concat(technique.subtechniques);
+            }
+
             let re = new RegExp(this._query.trim(), "gi");
-            let results = this.dataService.techniques.filter(function(technique: Technique) {
+            let results = allTechniques.filter(function(technique: Technique) {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
@@ -61,6 +68,11 @@ export class TechniquesSearchComponent implements OnInit {
             })
             //remove out of stage results
             results = results.filter((technique: Technique) => this.viewModel.filters.stages.selection.includes(technique.stage));
+            results = results.sort((tA: Technique, tB: Technique) => {
+                let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
+                let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;
+                return c1.localeCompare(c2)
+            });
             // console.log(seenIDs, results)
             this.results = results;
         } else {
