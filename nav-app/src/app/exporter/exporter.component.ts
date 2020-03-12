@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, Input } from '@angular/core';
-import { ViewModel } from "../viewmodels.service";
+import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
-import { Technique } from '../data.service';
+import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
 declare var d3: any; //d3js
 declare var tinycolor: any; //use tinycolor2
@@ -14,40 +14,92 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class ExporterComponent implements AfterViewInit {
 
-    @Input() exportData: ExportData;
+    @Input() viewModel: ViewModel;
 
-    svgDivName = "svgInsert_tmp"
+    private config: any = {}
+        
+
+    private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
-    constructor(private configService: ConfigService) { }
+    constructor(private configService: ConfigService, private dataService: DataService) {
+        this.config = { 
+            "width": 11,
+            "height": 8.5,
+            "headerHeight": 1,
+
+            "unit": "in",
+            "fontUnit": "pt",
+
+            "font": 'sans-serif',
+            "tableFontSize": 5,
+            "tableTacticFontSize": 6,
+            "tableBorderColor": "#6B7279",
+
+            "showHeader": true,
+            "headerLayerNameFontSize": 18,
+            "headerFontSize": 12,
+
+            "legendDocked": true,
+            "legendX": 0,
+            "legendY": 0,
+            "legendWidth": 2,
+            "legendHeight": 1,
+
+            "showLegend": true,
+            "showFilters": true,
+            "showAbout": true,
+        }
+     }
 
     ngAfterViewInit() {
-        this.svgDivName = "svgInsert" + this.exportData.viewModel.uid;
+        this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
-        this.exportData.filteredTechniques.forEach(function(technique: Technique) {
-            // if (self.exportData.viewModel.hasTechniqueVM(technique.technique_tactic_union_id)) {
-            //     if (self.exportData.viewModel.getTechniqueVM(technique.technique_tactic_union_id).score != "") self.hasScores = true;
-            // }
-        })
+        for (let matrix of this.dataService.matrices) {
+            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
+                for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
+                    if (technique.subtechniques.length > 0) {
+                        for (let subtechnique of this.viewModel.filterTechniques(technique.subtechniques, tactic, matrix)) {
+                            if (self.viewModel.hasTechniqueVM(subtechnique, tactic)) {
+                                if (self.viewModel.getTechniqueVM(subtechnique, tactic).score != "") self.hasScores = true;
+                            }
+                        }
+                    }
+                    if (self.viewModel.hasTechniqueVM(technique, tactic)) {
+                        if (self.viewModel.getTechniqueVM(technique, tactic).score != "") self.hasScores = true;
+                    }
+                }
+            }
+        }
+        // dynamic legend height according to content;
+        let legendSectionCount = 0;
+        if (self.hasScores) legendSectionCount++;
+        if (self.hasLegendItems()) legendSectionCount++;
+        self.config.legendHeight = 0.5 * legendSectionCount; 
+        //initial legend position for undocked legend
+        this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
+        this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
+        if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
+
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)
     }
 
     //visibility of SVG parts
     //assess data in viewModel
-    hasName(): boolean {return this.exportData.viewModel.name.length > 0}
-    hasDescription(): boolean {return this.exportData.viewModel.description.length > 0}
+    hasName(): boolean {return this.viewModel.name.length > 0}
+    hasDescription(): boolean {return this.viewModel.description.length > 0}
     hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
-    hasLegendItems(): boolean {return this.exportData.viewModel.legendItems.length > 0;}
+    hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
     //above && user preferences
-    showName(): boolean {return this.exportData.tableConfig.showName && this.hasName() && this.exportData.tableConfig.showHeader}
-    showDescription(): boolean {return this.exportData.tableConfig.showDescription && this.hasDescription() && this.exportData.tableConfig.showHeader}
-    showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.exportData.tableConfig.showHeader}
-    showFilters(): boolean {return this.exportData.tableConfig.showFilters && this.exportData.tableConfig.showHeader};
-    showGradient(): boolean {return this.exportData.tableConfig.showGradient && this.hasScores  && this.exportData.tableConfig.showHeader}
-    showLegend(): boolean {return this.exportData.tableConfig.showLegend && this.hasLegendItems()}
-    showLegendInHeader(): boolean {return this.exportData.tableConfig.legendDocked && this.showLegend();}
-    showItemCount(): boolean {return this.exportData.tableConfig.showTechniqueCount}
+    showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
+    showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
+    showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
+    showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
+    showGradient(): boolean {return this.config.showLegend && this.hasScores  && this.config.showHeader}
+    showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
+    showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
+    // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
@@ -70,28 +122,28 @@ export class ExporterComponent implements AfterViewInit {
         //check preconditions, make sure they're in the right range
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
-        let width = Math.max(self.convertToPx(self.exportData.tableConfig.width, self.exportData.tableConfig.unit)  - (margin.right + margin.left), 10); console.log("width", width);
-        let height = Math.max(self.convertToPx(self.exportData.tableConfig.height, self.exportData.tableConfig.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
-        let headerHeight = Math.max(self.convertToPx(self.exportData.tableConfig.headerHeight, self.exportData.tableConfig.unit), 1); console.log("headerHeight", headerHeight);
+        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); console.log("width", width);
+        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
+        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); console.log("headerHeight", headerHeight);
 
-        let legendX = Math.max(self.convertToPx(self.exportData.tableConfig.legendX, self.exportData.tableConfig.unit), 0);
-        let legendY = Math.max(self.convertToPx(self.exportData.tableConfig.legendY, self.exportData.tableConfig.unit), 0);
-        let legendWidth = Math.max(self.convertToPx(self.exportData.tableConfig.legendWidth, self.exportData.tableConfig.unit), 10);
-        let legendHeight = Math.max(self.convertToPx(self.exportData.tableConfig.legendHeight, self.exportData.tableConfig.unit), 10);
+        let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
+        let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
+        let legendWidth = Math.max(self.convertToPx(self.config.legendWidth, self.config.unit), 10);
+        let legendHeight = Math.max(self.convertToPx(self.config.legendHeight, self.config.unit), 10);
 
-        let tableFontSize = Math.max(self.exportData.tableConfig.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
+        let tableFontSize = Math.max(self.config.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
         let tableTextYOffset = ((tableFontSize/2) - (1/2));
 
-        let tableTacticFontSize = Math.max(self.exportData.tableConfig.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
+        let tableTacticFontSize = Math.max(self.config.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
         let tableTacticTextYOffset = ((tableTacticFontSize/2) - (1/2));
 
-        let headerFontSize = Math.max(self.exportData.tableConfig.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
+        let headerFontSize = Math.max(self.config.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
         let headerTextYOffset = ((headerFontSize/2) - (1/2))
 
-        let headerLayerNameFontSize = Math.max(self.exportData.tableConfig.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
+        let headerLayerNameFontSize = Math.max(self.config.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
         let heafderLayerNameTextYOffset = ((headerLayerNameFontSize/2) - (1/2))
 
-        let fontUnits = self.exportData.tableConfig.fontUnit;
+        let fontUnits = self.config.fontUnit;
 
         let headerTextPad = 6;
         let bodyTextPad = 3;
@@ -105,380 +157,526 @@ export class ExporterComponent implements AfterViewInit {
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("id", "svg" + self.exportData.viewModel.uid) //Tag for downloadSVG
+            .attr("id", "svg" + self.viewModel.uid) //Tag for downloadSVG
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .style("font-family", self.exportData.tableConfig.font);
+            .style("font-family", self.config.font);
         let stroke_width = 1;
 
-        //  _  _ ___   _   ___  ___ ___
-        // | || | __| /_\ |   \| __| _ \
-        // | __ | _| / _ \| |) | _||   /
-        // |_||_|___/_/ \_\___/|___|_|_\
+        // ooooo ooooo            o888                                                 
+        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
+        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
+        //  888   888 888          888  888    888 888          888                888 
+        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
+        //                             o888                                            
 
-        //count columns
-        let numSections = 0;
-        for (let i = 0; i < 4; i++) {
-            let option = [self.showLayerInfo(), self.showFilters(), self.showGradient(), self.showLegendInHeader()][i];
-            if (option) numSections++;
+        // Essentially, the following functions brute force the optimal text arrangement for each cell 
+        // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
+        // in the cell text.
+
+        /**
+         * Divide distance into divisions equidistant anchor points S.T they all have equal
+         * padding from each other and the beginning and end of the distance
+         * @param  distance  distance to divide
+         * @param  divisions number of divisions
+         * @return           number[] where each number corresponds to a division-center offset
+         */
+        function getSpacing(distance, divisions) {
+            distance = distance - 1; //1px padding for border
+            let spacing = distance/(divisions*2);
+            let res = []
+            for (let i = 1; i <= divisions*2; i+=2) {
+                res.push(1 + (spacing * i))
+            }
+            return res
+        };
+
+        /**
+         * Magic function to insert line breaks. 
+        * @param  {string[]} words         array of words to space
+        * @param  {dom node} self          the dom element with the text
+        * @param  {number} xpos            x pos to place multiline text at
+        * @param  {number} ypos            same but with y
+        * @param  {number} totalDistance   total distance to contain broken text.
+        *                                  amt in excess of spacingDistance
+        *                                  becomes v padding.
+        * @param  {number} spacingDistance total distance to space text inside,
+        *                                  should be < totalDistance
+        * @param {boolean} center          if true, center the text in the node, else left-align
+        * @param {number} cellWidth        total width of the cell to put the text in
+        */
+        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
+            let el = d3.select(node)
+            // el.attr("y", y + (totalDistance - spacingDistance) / 2);
+
+            //clear previous content
+            el.text('');
+            while(node.firstChild) node.removeChild(node.firstChild);
+
+            let spacing = getSpacing(spacingDistance, words.length)
+            for (var i = 0; i < words.length; i++) {
+                var tspan = el.append('tspan').text(words[i]);
+                if (center) tspan.attr("text-anchor","middle");
+                // if (i > 0)
+                let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
+                tspan
+                    .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
+                    .attr('y', offsetY);
+            }
+        };
+
+        /**
+         * Given an array of words, find the optimal font size for the array of words to be
+         * broken onto 1 line each.
+         * @param  {string[]} words     to be broken onto each line
+         * @param  {dom node} node      the dom node of the cell
+         * @param  {cellWidth} number   the width of the cell
+         * @param  {cellHeight} number  the height of the cell
+         * @param {boolean} center      center the text?
+         * @param {number} maxFontSize  max font size, default is 12
+         * @return {number}             the largest possible font size
+         *                              not larger than 12
+         */
+        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
+            let padding = 4; //the amount of padding on the left and right
+            //break into multiple lines
+            let breakDistance = Math.min(cellHeight, (maxFontSize + 3) * words.length)
+            insertLineBreaks(words, node, padding, 0, 0, cellHeight, breakDistance, center, cellWidth)
+
+            //find right size to fit the height of the cell
+            let breakTextHeight = breakDistance / words.length;
+            let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8; //0.8
+
+            //find right size to fit the width of the cell
+            // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
+            let longestWordLength = -Infinity;
+            for (let w = 0; w < words.length; w++) {
+                let word = words[w];
+                longestWordLength = Math.max(longestWordLength, word.length)
+            }
+            let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
+
+            //the min fitting text size not larger than MaxFontSize
+            let size = Math.min(maxFontSize, fitTextHeight, fitTextWidth);
+
+            // if (size < 5) return "0px"; //enable for min text size
+            return size;
         }
-        let headerSectionWidth = width/numSections;
-        // console.log(numSections, headerSectionWidth)
-        let header = null;
-        let posX = 0; //row in the header
-        let headerSectionTitleSep = (2 * (headerFontSize + headerTextPad))
 
-        if (self.exportData.tableConfig.showHeader) {
-            header = svg.append("g");
-            header.append("rect")
-                .attr("width", width)
-                .attr("height", headerHeight)
-                .style("stroke", "black")
-                .style("stroke-width", stroke_width)
-                .style("fill", "white")
+        /**
+         * Given text, a dom node, and sizing parameters, 
+         * try all combinations of word breaks to maximize font size inside of the given space
+         * returns font size in pixels
+         * @param {string} text                   the text to render in the cell
+         * @param {dom node} node                 the node for the cell
+         * @param {number} cellWidth              width of the cell to get the font size for
+         * @param {number} cellHeight             height of the cell to get the font size for
+         * @param {boolean} center                center the text?
+         * @param {number} maxFontSize            max font size, default is 12
+         * @return {string}                       the size in pixels
+         */
+        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
+            let words = text.split(" ");
+            let bestSize = -Infinity; //beat this size
+            let bestWordArrangement = [];
+            let bestBinary = ""; //arrangement of line breaks, see below
+            for (let j = 0; j < 2**(words.length - 1); j++) { //try no breaks first
+                let wordSet = []; //build this array
 
-            // layer name
-            if (self.showLayerInfo()) {
-                let layerAndDescPresent = (self.showName() && self.showDescription())
-                let nameDescHeight = layerAndDescPresent ? headerHeight/2 : headerHeight
-                let descY = layerAndDescPresent ? headerHeight/2 : 0
+                //binary representation of newline locations, e.g 001011
+                //where 1 is newline and 0 is no newline
+                let binaryString = j.toString(2).padStart(words.length, "0");
 
-                if (self.showName()) { //layer name
-                    let titleGroup = header.append("g")
-                        .attr("transform", "translate(0,0)");
-                    titleGroup.append("rect")
-                        .attr("width", headerSectionWidth)
-                        .attr("height", nameDescHeight)
-                        .style("stroke-width", 1)
-                        .style("stroke", "black")
-                        .style("fill", "white");
-                    titleGroup.append("text")
-                        .text(self.exportData.viewModel.name)
-                        .attr("transform", "translate("+ headerTextPad + ", " + (headerLayerNameFontSize + headerTextPad) +")")
-                        .attr("dx", 0)
-                        .attr("dy", 0)
-                        .attr("font-size", headerLayerNameFontSize + fontUnits)
-                        .attr("fill", "black")
-                        .style("font-weight", "bold")
-                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self);
+                for (let k = 0; k < binaryString.length; k++) {
+                    if (binaryString[k] === "0") {//join with space
+                        if (wordSet.length == 0) wordSet.push(words[k]);
+                        else wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
+                    } else { //linebreak
+                        wordSet.push(words[k]) //new word in array
+                    }
                 }
 
-                if (self.showDescription()) {//description
-                    let descriptionGroup = header.append("g")
-                        .attr("transform", "translate(0," + descY + ")");
-                    descriptionGroup.append("rect")
-                        .attr("width", headerSectionWidth)
-                        .attr("height", nameDescHeight)
-                        .style("stroke-width", 1)
-                        .style("stroke", "black")
-                        .style("fill", "white");
-                    descriptionGroup.append("text")
-                        .text(self.exportData.viewModel.description)
-                        .attr("transform", "translate("+headerTextPad+", " + (headerTextPad + headerTextYOffset) +")")
+                let size = findSpace(wordSet, node, cellWidth, cellHeight, center, maxFontSize);
+                if (size > bestSize) { //found new optimum
+                    bestSize = size;
+                    bestWordArrangement = wordSet;
+                    bestBinary = binaryString;
+                }
+                if (size == maxFontSize) break; //if largest text found, no need to search more
+            }
+
+            findSpace(bestWordArrangement, node, cellWidth, cellHeight, center, maxFontSize);
+            return bestSize;
+        }
+
+        // add properties to the node to set the vertical alignment to center without using
+        // dominant-baseline, which isn't widely supported
+        function centerValign(node, fontSize=null) {
+            if (node.children.length > 0) {
+                for (let child of node.children) centerValign(child, node.getAttribute("font-size"));
+            } else {
+                // base case
+                // transform by half the font size - 1/2px for proper centering
+                fontSize = fontSize ? fontSize : node.getAttribute("font-size");
+                let currY = node.hasAttribute("y") ? Number(node.getAttribute("y")) : 0;
+                d3.select(node).attr("y", currY + Math.floor((fontSize * 0.3)));
+            }
+        }
+
+        class HeaderSectionContent {
+            label: string;
+            // either string to display in box, or a callback to create complex content in the box
+            // callback function option takes params node, width, height, and appends data to node
+            data: string | Function;
+        }
+        class HeaderSection {
+            title: string;
+            contents: HeaderSectionContent[];
+        }
+
+        let legend = {"title": "legend", "contents": []};
+        if (self.hasScores) legend.contents.push({
+            "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
+                let domain = [];
+                for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
+                    let percent = i / (self.viewModel.gradient.colors.length - 1);
+                    domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
+                }
+                let colorScale = d3.scaleLinear()
+                    .domain(domain)
+                    .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
+                let nCells = domain.length * 2;
+                let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
+                group.append("g")
+                    .attr("transform", "translate(0, 5)")
+                    .call(d3.legendColor()
+                    .shapeWidth((sectionWidth / nCells))
+                    .shapePadding(0)
+                    .cells(nCells)
+                    .shape("rect")
+                    .orient("horizontal")
+                    .scale(colorScale)
+                    .labelOffset(2)
+                    .labelFormat(d3.format("0.02r"))
+                    
+                    // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
+                )
+            }
+        });
+        if (self.hasLegendItems()) legend.contents.push({
+            "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
+                let colorScale = d3.scaleOrdinal()
+                    .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
+                    .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+                group.append("g")
+                    .attr("transform", "translate(0, 5)")
+                    .call(d3.legendColor()
+                    .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
+                    .shapePadding(0)
+                    .shape("rect")
+                    .orient("horizontal")
+                    .scale(colorScale)
+                    .labelOffset(2)
+                )
+            }
+        })
+
+        function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
+            let boxPadding = 5;
+            let boxGroup = group.append("g")
+                .attr("transform", `translate(0,${boxPadding})`);
+            // adjust height for padding
+            boxHeight -= 2 * boxPadding;
+            let outerbox = boxGroup.append("rect")
+                .attr("class", "header-box")
+                .attr("width", boxWidth)
+                .attr("height", boxHeight)
+                .attr("stroke", "black")
+                .attr("fill", "white")
+                .attr("rx", boxPadding); //rounded corner
+            let titleEl = boxGroup.append("text")
+                .attr("class", "header-box-label")
+                .text(sectionData.title)
+                .attr("x", 2 * boxPadding)
+                .attr("font-size", 12)
+                .each(function() { centerValign(this); })
+                // .attr("dominant-baseline", "middle")
+            // add cover mask so that the box lines crop around the text
+            let bbox = titleEl.node().getBBox();
+            let coverPadding = 2;
+            let cover = boxGroup.append("rect")
+                .attr("class", "label-cover")
+                .attr("x", bbox.x - coverPadding)
+                .attr("y", bbox.y - coverPadding)
+                .attr("width", bbox.width + 2*coverPadding)
+                .attr("height", bbox.height + 2*coverPadding)
+                .attr("fill", "white")
+                .attr("rx", boxPadding); //rounded corner just in case it's being shown on a transparent background
+            titleEl.raise(); //push title to front;
+
+            // add content to box
+            let boxContentGroup = boxGroup.append("g")
+                .attr("class", "header-box-content")
+                .attr("transform", `translate(${boxPadding}, 0)`)
+            let boxContentHeight = boxHeight;// - 2*boxPadding;
+            let boxContentWidth = boxWidth - 2*boxPadding;
+
+            let boxGroupY = d3.scaleBand()
+                .padding(0.05)
+                .align(0.5)
+                .domain(sectionData.contents.map(function(content) { return content.label }))
+                .range([0, boxContentHeight]);
+            for (let i = 0; i < sectionData.contents.length; i++) {
+                let subsectionContent = sectionData.contents[i];
+                let contentGroup = boxContentGroup.append("g")
+                    .attr("transform", `translate(0, ${boxGroupY( subsectionContent.label )})`);
+                if (typeof(subsectionContent.data) == "string") {
+                    // add text to contentGroup
+                    contentGroup.append("text")
+                        .text(subsectionContent)
+                        .attr("font-size", function() {
+                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
+                        })
+                        .each(function() { centerValign(this); })
                         // .attr("dominant-baseline", "middle")
-                        .attr("dx", 0)
-                        .attr("dy", 0)
-                        .attr("font-size", headerFontSize + fontUnits)
-                        .attr("fill", "black")
-                        .call(self.wrap, (headerSectionWidth) - 4, nameDescHeight, self)
-                        .call(self.recenter, nameDescHeight - (2*headerTextPad), self);
-
+                } else {
+                    //call callback to add complex data to contentGroup
+                    (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
                 }
-                posX++;
+                if (i != sectionData.contents.length - 1) contentGroup.append("line") //dividing line
+                    .attr("x1", 0)
+                    .attr("x2", boxContentWidth)
+                    .attr("y1", boxGroupY.bandwidth())
+                    .attr("y2", boxGroupY.bandwidth())
+                    .attr("stroke", "#dddddd");
+            }
+        }
+
+        // ooooo ooooo                             oooo                        
+        //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo   
+        //  888ooo888 888oooooo8   ooooo888 888    888 888oooooo8   888    888 
+        //  888   888 888        888    888 888    888 888          888        
+        // o888o o888o  88oooo888 88ooo88 8o  88ooo888o  88oooo888 o888o       
+                                                                            
+
+        if (self.config.showHeader) {
+            let headerSections: HeaderSection[] = []
+
+            if (self.showName() || self.showDescription()) {
+                let about = {"title": "about", "contents": []};
+                if (self.showName()) about.contents.push({"label": "name", "data": this.viewModel.name});
+                if (self.showDescription()) about.contents.push({"label": "description", "data": this.viewModel.description});
+                headerSections.push(about)
             }
 
-            if (self.showFilters()) {
-                //filters
-                let filtersGroup = header.append("g")
-                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ", 0)");
-                filtersGroup.append("rect")
-                    .attr("width", headerSectionWidth)
-                    .attr("height", headerHeight)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", "white");
-                filtersGroup.append("text")
-                    .text("filters")
-                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .style("font-weight", "bold");
+            if (self.showFilters()) headerSections.push({
+                "title": "filters",
+                "contents": [{
+                    "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
+                }, {
+                    "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
+                }]
+            });
 
-                let filterTextGroup = filtersGroup.append("g")
-                    .attr("transform", "translate("+headerTextPad+"," + (headerSectionTitleSep + 6 + headerTextYOffset) + ")");
-                filterTextGroup.append("text")
-                    .text(function() {
-                        let t = "stages: "
-                        let selection = self.exportData.viewModel.filters.stages.selection;
-                        for (let i = 0; i < selection.length; i++) {
-                            if (i != 0) t += ", ";
-                            t += selection[i]
-                        }
-                        return t;
-                    })
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle");
-                filterTextGroup.append("text")
-                    .text(function() {
-                        let t = "platforms: "
-                        let selection = self.exportData.viewModel.filters.platforms.selection;
-                        for (let i = 0; i < selection.length; i++) {
-                            if (i != 0) t += ", "
-                            t += selection[i]
-                        }
-                        return t;
-                    })
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
-                    .attr("dy", "1.1em")
-                    // .attr("transform", "translate(0, " +(headerFontSize + textPad) + ")");
-                posX++
+            if (self.showLegend() && self.showLegendInHeader()) headerSections.push(legend);
+
+            let headerGroup = svg.append("g");
+
+            let headerX = d3.scaleBand()
+                .paddingInner(0.05)
+                // .align(0.5)
+                .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
+                .range([0, width]);
+            
+            for (let section of headerSections) {
+                let sectionGroup = headerGroup.append("g");
+                if (headerSections.length > 1) sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
+                descriptiveBox(sectionGroup, section, headerSections.length == 1? width : headerX.bandwidth(), headerHeight);
             }
 
-            if (self.showGradient()) {
-                //gradient
-                let gradientGroup = header.append("g")
-                    .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)");
-                gradientGroup.append("rect")
-                    .attr("width", headerSectionWidth)
-                    .attr("height", headerHeight)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .style("fill", "white");
-                gradientGroup.append("text")
-                    .text("score gradient")
-                    .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                    .attr("dx", 0)
-                    .attr("dy", 0)
-                    .attr("font-size", headerFontSize + fontUnits)
-                    .attr("fill", "black")
-                    .style("font-weight", "bold");
-                posX++;
-
-                let gradientContentGroup = gradientGroup.append("g")
-                    .attr("transform", "translate("+headerTextPad+"," + headerSectionTitleSep + ")");
-
-                let leftText = gradientContentGroup.append("text")
-                    .text(self.exportData.viewModel.gradient.minValue)
-                    .attr("transform", "translate(0, " + (6 + headerTextYOffset) + ")")
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
-
-
-
-                //set up gradient to bind
-                let svgDefs = svg.append('defs');
-                let gradientElement = svgDefs.append("linearGradient")
-                    .attr("id", self.exportData.viewModel.uid + "gradientElement");
-                for (let i = 0; i < self.exportData.viewModel.gradient.gradientRGB.length; i++) {
-                    let color = self.exportData.viewModel.gradient.gradientRGB[i];
-                    gradientElement.append('stop')
-                        .attr('offset', i/100)
-                        .attr("stop-color", color.toHexString())
-                    // console.log(color)
-                }
-                // console.log(gradientElement);
-                let gradientDisplayLeft = (leftText.node().getComputedTextLength()) + 2;
-                let gradientDisplay = gradientContentGroup.append("rect")
-                    .attr("transform", "translate(" + gradientDisplayLeft + ", 0)")
-                    .attr("width", 50)
-                    .attr("height", 10)
-                    .style("stroke-width", 1)
-                    .style("stroke", "black")
-                    .attr("fill", "url(#" + self.exportData.viewModel.uid + "gradientElement)"); //bind gradient
-
-                gradientContentGroup.append("text")
-                    .text(self.exportData.viewModel.gradient.maxValue)
-                    .attr("transform", "translate(" + (gradientDisplayLeft + 50 + 2 ) + ", " + (6 + headerTextYOffset) + ")")
-                    .attr("font-size", headerFontSize + fontUnits)
-                    // .attr("dominant-baseline", "middle")
-
-            }
-            header.append("line")
-                .attr("x1", 0)
-                .attr("x2", width)
-                .attr("y1", headerHeight)
-                .attr("y2", headerHeight)
-                .style("stroke", "black")
-                .style("stroke-width", 3);
-
-
-
+            if (headerSections.length == 0) headerHeight = 0; //no header sections to show
         } else { //no header
             headerHeight = 0
         }
 
 
 
-        //  _____ _   ___ _    ___   ___  ___  _____   __
-        // |_   _/_\ | _ ) |  | __| | _ )/ _ \|   \ \ / /
-        //   | |/ _ \| _ \ |__| _|  | _ \ (_) | |) \ V /
-        //   |_/_/ \_\___/____|___| |___/\___/|___/ |_|
+        // oooo     oooo            o8              o88               
+        //  8888o   888   ooooooo o888oo oo oooooo  oooo  oooo   oooo 
+        //  88 888o8 88   ooooo888 888    888    888 888    888o888   
+        //  88  888  88 888    888 888    888        888    o88 88o   
+        // o88o  8  o88o 88ooo88 8o 888o o888o      o888o o88o   o88o 
+                                                                   
 
         let tablebody = svg.append("g")
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
-        //calculate cell height: the longest column decides the cell height
-        let cellHeight = Number.MAX_VALUE;//Number.MAX_VALUE; //(height - margin.bottom - headerHeight)
-        Object.keys(self.exportData.tactics).forEach(function(key: string) {
-            let numVCells = (self.exportData.tactics[key].length) + 2 //extra two cells for the header
-            let selfCellHeight = (height - (headerHeight + 1))/numVCells
-            cellHeight = Math.min(cellHeight, selfCellHeight)
+        // build data model
+        let matrices: RenderableMatrix[] = this.viewModel.filters.filterMatrices(this.dataService.matrices).map(function(matrix: Matrix) {
+            return new RenderableMatrix(matrix, self.viewModel);
         });
-        cellHeight = Math.max(cellHeight, 1) //must be positive number
 
-        // columns
-        let columnWidth = (width)/(self.exportData.orderedTactics.length)
-        let columns = tablebody.selectAll("g")
-            .data(self.exportData.orderedTactics).enter()
-            .append("g")
-            .attr("transform", function(d,i) {
-                // console.log(d,i)
-                return "translate(" + columnWidth * i + ", 0)"
-            });
-
-        // split columns into headers and bodies
+        let tactics: RenderableTactic[] = [];
+        //flattened list of tactics
+        for (let matrix of matrices) { tactics = tactics.concat(matrix.tactics); }
         
-        let colHeaderHeight = this.showItemCount() ? 2 * cellHeight : cellHeight;
-        let columnHeaders = columns.append("g")
-            .attr("transform", "translate(0,0)");
-        columnHeaders.append("rect")
-            .attr("width", columnWidth)
-            .attr("height", colHeaderHeight)
-            .style("stroke", self.exportData.tableConfig.tableBorderColor)
-            .style("fill", self.exportData.viewModel.showTacticRowBackground ? self.exportData.viewModel.tacticRowBackground : 'white')
-        columnHeaders.append("text")
-            .text(function(d) {return self.exportData.tableConfig.tableTextDisplay != 2 ? self.toCamelCase(d.replace(/-/g," ")) : self.exportData.viewModel.acronym(d.replace(/-/g," "))})
-            .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, this.showItemCount() ? 2 : 1)[0]) + tableTacticTextYOffset) +")")
-            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
-            .attr("dx", 0)
-            .attr("dy", 0)
-            .style("font-weight", "bold")
-            .call(self.wrap, columnWidth - 2 - bodyTextPad, cellHeight - 2, self)
 
-        if (this.showItemCount()) columnHeaders.append("text")
-            .text(function(d) {
-                return self.exportData.tableConfig.tableTextDisplay != 2 ? self.exportData.tactics[d].length + " items" : self.exportData.tactics[d].length
+        let x = d3.scaleBand()
+            .paddingInner(0.1)
+            .align(0.01)
+            .domain(tactics.map(function(tactic: RenderableTactic) { return tactic.tactic.id; }))
+            .range([0, width])
+
+        let y = d3.scaleLinear()
+            .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height}), 0])
+            .range([height - (headerHeight), 0])
+            
+        // let subtechniqueIndent = (1/3) * x.bandwidth(); //2/3 of full techinque width
+        // let subtechniqueIndent = 2 * y(1); //2*the height of a cell, to make room for y(1) width sidebar
+        let subtechniqueIndent = Math.min(2 * y(1), 15);     
+        
+        //add tactic row backgroun
+        if (self.viewModel.showTacticRowBackground) {
+            tablebody.append("rect")
+                .attr("class", "tactic-header-background")
+                .attr("width", width)
+                .attr("height", y(1))
+                .attr("fill", self.viewModel.tacticRowBackground)
+                .attr("stroke", self.config.tableBorderColor)
+        }
+
+        let tacticGroups = tablebody.append("g").selectAll("g")
+            .data(tactics)
+            .enter().append("g")
+            .attr("class", function(tactic: RenderableTactic) { return "tactic " + tactic.tactic.shortname; })
+            .attr("transform", function(tactic: RenderableTactic) {
+                return `translate(${x(tactic.tactic.id)}, 0)`;
             })
-            .attr("font-size", tableTacticFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", " + ((self.getSpacing(colHeaderHeight, 2)[1]) + tableTacticTextYOffset) +")")
-            .style("fill", self.exportData.viewModel.showTacticRowBackground ? tinycolor.mostReadable(self.exportData.viewModel.tacticRowBackground, ['white', 'black']): 'black')
-
-            .attr("dx", 0)
-            .attr("dy", 0)
-            .call(self.wrap, columnWidth - bodyTextPad, cellHeight, self)
-
-
-        //column body
-
-        let columnBodies = columns.append("g")
-            .attr("transform", "translate(0,"+colHeaderHeight+")");
-
-        let techniques = columnBodies.selectAll("g")
-            .data(function(d) {
-                // console.log(d)
-                return self.exportData.tactics[d]
-            }).enter().append("g")
-                .attr("transform", function(d, i) {
-                    return "translate(0," + i * cellHeight + ")"
-                });
-
-
-        techniques.append("rect")
-            .attr("width", columnWidth)
-            .attr("height", cellHeight)
-            .style("stroke", self.exportData.tableConfig.tableBorderColor)
-            .style("fill", function(d) {
-                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_tactic_union_id)) return "white";
-                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_tactic_union_id);
-                if (tvm.color) return tvm.color
-                else if (tvm.score) return tvm.scoreColor
-                else return "white"
+        // add technique and subtechnique groups
+        let techniqueGroups = tacticGroups.append("g")
+            .attr("class", "techniques").selectAll("g")
+            .data(function(tactic: RenderableTactic) { return tactic.techniques})
+            .enter().append("g")
+            .attr("class", function(technique: RenderableTechnique) { return "technique " + technique.technique.attackID; })
+            .attr("transform", function(technique: RenderableTechnique) {
+                return `translate(0, ${y(technique.yPosition)})`
             });
-        if (self.exportData.tableConfig.tableTextDisplay != "none") techniques.append("text")
-            .text(function(d) {
-                return ['', d.name, self.exportData.viewModel.acronym(d.name), d.technique_id][self.exportData.tableConfig.tableTextDisplay];
+        let subtechniqueGroups = tacticGroups.append("g")
+            .attr("class", "subtechniques").selectAll("g")
+            .data(function(tactic: RenderableTactic) { return tactic.subtechniques})
+            .enter().append("g")
+            .attr("class", function(subtechnique: RenderableTechnique) { return "subtechnique " + subtechnique.technique.attackID; })
+            .attr("transform", function(subtechnique: RenderableTechnique) {
+                return `translate(${subtechniqueIndent}, ${y(subtechnique.yPosition)})`
+            });
+        // add cells to techniques and subtechniques
+        let techniqueRects = techniqueGroups.append("rect")
+            .attr("class", "cell")
+            .attr("height", y(1))
+            .attr("width", x.bandwidth())
+            .attr("fill", function(technique: RenderableTechnique) { return technique.fill })
+            .attr("stroke", self.config.tableBorderColor);
+        let subtechniqueRects = subtechniqueGroups.append("rect")
+            .attr("class", "cell")
+            .attr("height", y(1))
+            .attr("width", x.bandwidth() - subtechniqueIndent)
+            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill })
+            .attr("stroke", self.config.tableBorderColor);
+        // add sidebar
+        // let sidebarWidth = y(1);
+        let sidebarWidth = 3;
+
+        let sidebar = subtechniqueGroups.append("rect")
+            .attr("class", "cell")
+            .attr("height", y(1))
+            .attr("width", sidebarWidth)
+            .attr("transform",  `translate(${-sidebarWidth}, 0)`)
+            .attr("fill", self.config.tableBorderColor)
+            .attr("stroke", self.config.tableBorderColor);
+        let sidebarAngle = techniqueGroups.append("polygon")
+            .attr("class", "sidebar")
+            .attr("transform", `translate(0, ${y(1)})`)
+            .attr("points", function(technique: RenderableTechnique) {
+                return [
+                    "0,0",
+                    `${subtechniqueIndent - sidebarWidth},0`,
+                    `${subtechniqueIndent - sidebarWidth},${Math.min(subtechniqueIndent - sidebarWidth, y(self.viewModel.filterTechniques(technique.technique.subtechniques, technique.tactic, technique.matrix).length))}`
+                ].join(" ");
             })
-            .style("fill", function(d) {
-                if (!self.exportData.viewModel.hasTechniqueVM(d.technique_tactic_union_id)) return "black";
-                let tvm = self.exportData.viewModel.getTechniqueVM(d.technique_tactic_union_id);
-                if (tvm.color) return tinycolor.mostReadable(tvm.color, ['white', 'black'])
-                if (tvm.score) return tinycolor.mostReadable(tvm.scoreColor, ['white', 'black'])
+            .attr("fill", self.config.tableBorderColor)
+            .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 ? "visible" : "hidden"});
+
+        //   oooooooo8             o888  o888       ooooooooooo                          o8   
+        // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo 
+        // 888         888oooooo8   888   888           888    888oooooo8    888o888    888   
+        // 888o     oo 888          888   888           888    888           o88 88o    888   
+        //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
+                                                                                           
+        
+
+        techniqueGroups.append("text")
+            .text(function(technique: RenderableTechnique) { 
+                return technique.text;
             })
+            .attr("font-size", function(technique: RenderableTechnique) {
+                return optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
+            })
+            // .attr("dominant-baseline", "middle")
+            .each(function() { centerValign(this); })
+            .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
 
-            .attr("font-size", tableFontSize + fontUnits)
-            .attr("transform", "translate("+bodyTextPad+", "+ tableTextYOffset +")")
-            .attr("dx", 0)
-            .attr("dy", 0)
-            .call(self.wrap, columnWidth - (2*bodyTextPad), cellHeight, self) //do this before recenter
-            .call(self.recenter, cellHeight, self); //fix the tspan children's y locations. MUST CALL AFTER WRAP
+        subtechniqueGroups.append("text")
+            .text(function(subtechnique: RenderableTechnique) { 
+                return subtechnique.text;
+            })
+            .attr("font-size", function(subtechnique: RenderableTechnique) {
+                return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
+            })
+            // .attr("dominant-baseline", "middle")
+            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
+            .each(function() { centerValign(this); })
+    
+        let tacticLabels = tacticGroups.append("g")
+            .attr("class", "tactic-label");
+        tacticLabels.append("text")
+            .text(function(tactic: RenderableTactic) {
+                return tactic.tactic.name;
+            })
+            .attr("font-size", function(tactic: RenderableTactic) {
+                return optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
+            })
+            // .attr("dominant-baseline", "middle")
+            .attr("fill", function(tactic: RenderableTactic) {
+                if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
+                else return "black";
+            })
+            .attr("font-weight", "bold")
+            .each(function() { centerValign(this); })
+
+        //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
+        // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
+        // 888    88  888   888 888    888 888     888 888     888 888o888   888oooooo8 888    888        888        888oooooo8  888    88o 888oooooo8   888   888 888    888  
+        // 888    88  888   888 888    888 888     888 888         8888 88o  888        888    888        888      o 888          888oo888o 888          888   888 888    888  
+        // 888oo88  o888o o888o  88ooo888o  88ooo88     88ooo888 o888o o888o  88oooo888  88ooo888o      o888ooooo88   88oooo888 888     888  88oooo888 o888o o888o  88ooo888o 
+        //                                                                                                                         888ooo888                                    
 
 
-        //  _    ___ ___ ___ _  _ ___
-        // | |  | __/ __| __| \| |   \
-        // | |__| _| (_ | _|| .` | |) |
-        // |____|___\___|___|_|\_|___/
-
-        // console.log(showLegend, showLegendInHeader && self.exportData.tableConfig.legendDocked)
-        if (self.showLegend() && !(!self.exportData.tableConfig.showHeader && self.exportData.tableConfig.legendDocked)) {
-            console.log("building legend")
-            //legend
-            let legendGroup = self.showLegendInHeader() ? header.append("g")
-                .attr("transform", "translate(" + (headerSectionWidth * posX) + ",0)")
-                                             : svg.append("g")
-                .attr("transform", "translate("+legendX+","+legendY+")");
-            legendGroup.append("rect")
-                .attr("width", self.showLegendInHeader() ? headerSectionWidth : legendWidth)
-                .attr("height", self.showLegendInHeader() ? headerHeight : legendHeight)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", "white");
-            legendGroup.append("text")
-                .text("legend")
-                .attr("transform", "translate("+headerTextPad+", " + (headerFontSize + headerTextPad) +")")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .style("font-weight", "bold");;
-            let legendItemHeight = self.showLegendInHeader() ? ((headerHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length) : ((legendHeight - headerSectionTitleSep)/self.exportData.viewModel.legendItems.length);
-            let legendItemsGroup = legendGroup.selectAll("g")
-                .data(self.exportData.viewModel.legendItems)
-                .enter().append("g")
-                .attr("transform", function(d,i) {
-                    return "translate("+headerTextPad+"," + (headerSectionTitleSep + (legendItemHeight * i)) +")"
-                });
-            legendItemsGroup.append("text")
-                .text(function(d) {return d.label})
-                .attr("transform", "translate("+ (headerTextPad + 10) + "," + (6 + headerTextYOffset) + ")")
-                // .attr("dominant-baseline", "middle")
-                .attr("font-size", headerFontSize + fontUnits)
-                .attr("fill", "black")
-                .attr("dx", 0)
-                .attr("dy", 0)
-                .call(self.wrap, (self.showLegendInHeader() ? headerSectionWidth : legendWidth - 14), 0, self);
-            legendItemsGroup.append("rect")
-                .attr("width", 10)
-                .attr("height", 10)
-                .style("stroke-width", 1)
-                .style("stroke", "black")
-                .style("fill", function(d) { return d.color });
-            // posX++
+        if (self.showLegend() && !self.showLegendInHeader()) {
+            let legendGroup = tablebody.append("g")
+                .attr("transform", `translate(${legendX}, ${legendY})`)
+            descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
         }
     }
 
     downloadSVG() {
-        let svgEl = document.getElementById("svg" + this.exportData.viewModel.uid);
+        let svgEl = document.getElementById("svg" + this.viewModel.uid);
         svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         let svgData = new XMLSerializer().serializeToString(svgEl);
         // // var svgData = svgEl.outerHTML;
         // console.log(svgData)
         // let svgData2 = new XMLSerializer().serializeToString(svgEl);
         // console.log(svgData2)
-        let filename = this.exportData.viewModel.name.split(' ').join('_');
+        let filename = this.viewModel.name.split(' ').join('_');
         filename = filename.replace(/\W/g, "")  + ".svg"; // remove all non alphanumeric characters
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
@@ -493,7 +691,6 @@ export class ExporterComponent implements AfterViewInit {
             downloadLink.click();
             document.body.removeChild(downloadLink);
         }
-
     }
 
     /**
@@ -574,15 +771,6 @@ export class ExporterComponent implements AfterViewInit {
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
             }
-            // console.log(text)
-            // text.selectAll("tspan").each(function(d, i, j) {
-            //     // console.log(this, i, j.length)
-            //     console.log(self.getSpacing(cellheight, j.length)[i])
-            //     d3.select(this)
-            //         .attr("dy", self.getSpacing(cellheight, j.length)[i])
-            //         .attr("dominant-baseline", "middle")
-            //
-            // })
         });
     }
 
@@ -640,102 +828,84 @@ export class ExporterComponent implements AfterViewInit {
         }
         return res
     }
-
 }
 
-export class ExportData {
-    tableConfig: {
-        width: number; //graphic width
-        height: number; //graphic height
-        unit: string; //units of width/height: px, cm, or in
-        fontUnit: string; //units for font size: px or pt
 
-        font: string; //font to use in the table
-        tableFontSize: number; //size of font in table, in px
-        tableTacticFontSize: number; // size of tactic names font, in px
-        tableTextDisplay: string; //0: no text, 1: technique name, 2: acronym of name, 3: technique ID
-        tableBorderColor: string; //hex color for the table body border
 
-        showHeader: boolean; //show or hide the header
-        headerHeight: number; //height of header in unit
-        headerFontSize: number; //size of font in header, in px
-        headerLayerNameFontSize: number //size of layer name in header in px
-
-        legendDocked: boolean; //dock the legend to the header
-        legendX: number; //if undocked, where to place X
-        legendY: number; //if undocked, where to place Y
-        legendWidth: number; //if undocked, width of legend
-        legendHeight: number; //if undocked, height of legend
-
-        showLegend: boolean; //show or hide the legend
-        showGradient: boolean; //show/hide the gradient in the header
-        showFilters: true, //show/hide the filters in the header
-        showDescription: true, //show/hide the description in the header
-        showName: true //show/hide the layer name in the header
-        showTechniqueCount: true //show/hide the technique count in tactic columns
+class RenderableMatrix {
+    public readonly matrix: Matrix;
+    public readonly tactics: RenderableTactic[] = [];
+    public get height() {
+        let heights = this.tactics.map(function(tactic: RenderableTactic) { return tactic.height; })
+        return Math.max(...heights);
     }
-
-
-    viewModel: ViewModel;
-    tactics: object;
-    orderedTactics: string[];
-    filteredTechniques: Technique[];
-    constructor(viewModel, tactics, orderedTactics, filteredTechniques: Technique[]) {
-        this.viewModel = viewModel; this.tactics = tactics; this.filteredTechniques = filteredTechniques;
-        this.orderedTactics = orderedTactics;
-
-        let tableTextDisplay = "0";
-        // switch (this.viewModel.viewMode) {
-        //     case 0: {
-        //         tableTextDisplay = "1"
-        //         break;
-        //     }
-        //     case 1: {
-        //         tableTextDisplay = "2"
-        //         break;
-        //     }
-        //     case 2: {
-        //         tableTextDisplay = "0"
-        //         break;
-        //     }
-        //     default: {
-        //         tableTextDisplay = "1"
-        //     }
-        // }
-        tableTextDisplay = "0";
-
-        this.tableConfig = {
-            "width": 11,
-            "height": 8.5,
-            "headerHeight": 1,
-
-            "unit": "in",
-            "fontUnit": "pt",
-
-            "font": 'sans-serif',
-            "tableFontSize": 5,
-            "tableTacticFontSize": 6,
-            "tableTextDisplay": tableTextDisplay,
-            "tableBorderColor": "#000000",
-
-            "showHeader": true,
-            "headerLayerNameFontSize": 18,
-            "headerFontSize": 12,
-
-            "legendDocked": true,
-            "legendX": 0,
-            "legendY": 0,
-            "legendWidth": 2,
-            "legendHeight": 2,
-
-            "showLegend": true,
-            "showGradient": true,
-            "showFilters": true,
-            "showDescription": true,
-            "showName": true,
-            "showTechniqueCount": true
+    constructor(matrix: Matrix, viewModel: ViewModel) {
+        this.matrix = matrix;
+        let filteredTactics = viewModel.filterTactics(matrix.tactics, matrix);
+        for (let tactic of filteredTactics) {
+            this.tactics.push(new RenderableTactic(tactic, matrix, viewModel));
         }
-
-
     }
 }
+
+class RenderableTactic {
+    public readonly tactic: Tactic;
+    public readonly techniques: RenderableTechnique[] = [];
+    public readonly subtechniques: RenderableTechnique[] = [];
+    public readonly height: number;
+    constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
+        this.tactic = tactic;
+        let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
+        let yPosition = 1; //start at 1 to make space for tactic label
+        for (let technique of filteredTechniques) {
+            let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix)
+            this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel));
+            if (filteredSubtechniques.length > 0) {
+                for (let subtechnique of filteredSubtechniques) {
+                    this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel));
+                }
+            }
+        }
+        this.height = yPosition;
+    }
+}
+
+class RenderableTechnique {
+    public readonly yPosition: number;
+    public readonly technique: Technique;
+    public readonly tactic: Tactic;
+    public readonly matrix: Matrix;
+    private readonly viewModel: ViewModel;
+    constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
+        this.yPosition = yPosition;
+        this.technique = technique;
+        this.tactic = tactic;
+        this.matrix = matrix;
+        this.viewModel = viewModel;
+    }
+    public get fill() {
+        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
+            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            if (!techniqueVM.enabled) return "white";
+            if (techniqueVM.color) return techniqueVM.color;
+            if (techniqueVM.score) return techniqueVM.scoreColor;
+        } 
+        return "white"; //default
+    }
+
+    public get textColor() {
+        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
+            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
+            if (!techniqueVM.enabled) return "#aaaaaa";
+        }
+        return tinycolor.mostReadable(this.fill, ["white", "black"]); //default;
+    }
+
+    public get text() {
+        let text = [];
+        if (this.viewModel.layout.showID) text.push(this.technique.attackID);
+        if (this.viewModel.layout.showName) text.push(this.technique.name);
+        return text.join(": ")
+    }
+}
+

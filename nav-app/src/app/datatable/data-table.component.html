@@ -175,7 +175,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- render layer to SVG -->
             <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                 <div class="control-row-button noselect"
-                    (click)="filteredTechniques.length > 0 ? exportRender() : pass"
+                    (click)="exportRender()"
                     matTooltipPosition="below"
                     matTooltip="render layer to SVG">
                     <img src="assets/icons/ic_camera_alt_black_24px.svg" alt="export render"/>

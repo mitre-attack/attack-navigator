@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, ɵregisterNgModuleType } from '@angular/core';
 import {DataService, Technique, Matrix} from '../data.service';
 import {ConfigService} from '../config.service';
-import { ExportData } from "../exporter/exporter.component";
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
@@ -227,7 +226,9 @@ export class DataTableComponent implements AfterViewInit {
     /**
      * Angular lifecycle hook
      */
-    ngAfterViewInit(): void {}
+    ngAfterViewInit(): void {
+        // setTimeout(() => this.exportRender(), 500);
+    }
 
     // open custom url in a new tab
     openCustomURL(event, technique, url){
@@ -311,9 +312,9 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        // let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
-        // viewModelCopy.deSerialize(this.viewModel.serialize());
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
+        viewModelCopy.deSerialize(this.viewModel.serialize());
         // let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
-        // this.tabs.newExporterTab(exportData);
+        this.tabs.newExporterTab(this.viewModel);
     }
 }

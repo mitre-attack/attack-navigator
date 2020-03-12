@@ -7,7 +7,6 @@ import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
-import { ExportData } from "../exporter/exporter.component";
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
@@ -269,8 +268,8 @@ export class TabsComponent implements AfterContentInit {
         this.openTab('help', this.helpTab, null, true, replace, false)
     }
 
-    newExporterTab(exportData: ExportData) {
-        this.openTab('render: ' + exportData.viewModel.name, this.exporterTab, exportData, true, false, true)
+    newExporterTab(vm: ViewModel) {
+        this.openTab('render: ' + vm.name, this.exporterTab, vm, true, false, true)
     }
 
     /**
