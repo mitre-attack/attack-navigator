@@ -79,7 +79,7 @@ export class DataTableComponent implements AfterViewInit {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // CREATE TACTIC COLUMNS
-            let columns = matrix.tactics.map(tactic => { return {header: tactic.name, key: tactic.name} });
+            let columns = matrix.tactics.map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
             worksheet.columns = columns;
 
             // CREATE CELLS
@@ -118,7 +118,7 @@ export class DataTableComponent implements AfterViewInit {
                 if(subtechniqueCells.length > 0) {
                     // add subtechniques column
                     let id = columns.findIndex(col => col.key == tactic.name);
-                    columns.splice(id + 1, 0, {header: tactic.name, key: tactic.name + "Subtechniques"});
+                    columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
                     worksheet.columns = columns;
 
                     // merge subtechniques header
@@ -139,7 +139,7 @@ export class DataTableComponent implements AfterViewInit {
                     });
                 }
                 tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
-                
+
                 // STYLE TECHNIQUE CELLS
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
@@ -178,9 +178,9 @@ export class DataTableComponent implements AfterViewInit {
      */
     getDisplayName(technique) {
         // cell value
-        if(this.viewModel.layout.showID && this.viewModel.layout.showName) {
+        if (this.viewModel.layout.showID && this.viewModel.layout.showName) {
             return technique.attackID + ':' + technique.name;
-        } else if(this.viewModel.layout.showID) {
+        } else if (this.viewModel.layout.showID) {
             return technique.attackID;
         } else {
             return technique.name;
@@ -212,10 +212,10 @@ export class DataTableComponent implements AfterViewInit {
         }
 
         // subtechniques border
-        if(tvm.showSubtechniques) {
-            cell.border = {top: {style: 'hair'}, bottom:{style: 'hair'}, left: {style: 'hair'}}
-        } else if(technique.isSubtechnique) {
-            cell.border = {top: {style: 'hair'}, bottom:{style: 'hair'}, right: {style: 'hair'}}
+        if (tvm.showSubtechniques) {
+            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, left: {style: 'thin'}}
+        } else if (technique.isSubtechnique) {
+            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, right: {style: 'thin'}}
         }
     }
 
