@@ -78,18 +78,18 @@ export class DataTableComponent implements AfterViewInit {
         for (let matrix of matrices) {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
-            // CREATE TACTIC COLUMNS
+            // create tactic columns
             let columns = matrix.tactics.map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
             worksheet.columns = columns;
 
-            // CREATE CELLS
+            // create cells
             for (let tactic of matrix.tactics) {
                 let tacticCol = worksheet.getColumn(tactic.name);
                 let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
                 let techniqueCells = techniques.map(technique => { return technique.name });
                 let subtechniqueList = [];
 
-                // SUBTECHNIQUES
+                // create subtechnique cells, if shown
                 let subtechniqueCells = [];
                 for (let technique of techniques) {
                     let techniqueRow = techniqueCells.indexOf(technique.name);
@@ -126,7 +126,7 @@ export class DataTableComponent implements AfterViewInit {
                     worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
                     subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
-                    // STYLE SUBTECHNIQUE CELLS
+                    // style subtechnique cells
                     subtechniqueCol.eachCell(cell => {
                         if(cell.row > 1) {
                             if(cell.value && cell.value !== undefined) {
@@ -140,7 +140,7 @@ export class DataTableComponent implements AfterViewInit {
                 }
                 tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
-                // STYLE TECHNIQUE CELLS
+                // style technique cells
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
                         if(cell.value && cell.value !== undefined) {
@@ -152,8 +152,8 @@ export class DataTableComponent implements AfterViewInit {
                     }
                 });
             }
-
-            // STYLE WORKSHEET HEADERS
+            
+            // style tactic headers
             worksheet.columns.forEach(column => {column.width = column.header.length < 30 ? 30 : column.header.length});
             if (this.viewModel.showTacticRowBackground) {
                 worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
@@ -165,7 +165,7 @@ export class DataTableComponent implements AfterViewInit {
             }
         }
 
-        // SAVE
+        // save file
         workbook.xlsx.writeBuffer().then(data => {
             const blob = new Blob( [data], {type: "application/octet-stream"} );
             const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
@@ -177,7 +177,6 @@ export class DataTableComponent implements AfterViewInit {
      * Get the display name for technique/tactic as shown in layout
      */
     getDisplayName(technique) {
-        // cell value
         if (this.viewModel.layout.showID && this.viewModel.layout.showName) {
             return technique.attackID + ':' + technique.name;
         } else if (this.viewModel.layout.showID) {
