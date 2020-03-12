@@ -18,6 +18,7 @@ declare var tinycolor: any; //use tinycolor2
 import * as FileSaver from 'file-saver';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { TechniquesSearchComponent } from '../techniques-search/techniques-search.component';
+import { TmplAstVariable } from '@angular/compiler';
 
 @Component({
     selector: 'DataTable',
@@ -71,12 +72,12 @@ export class DataTableComponent implements AfterViewInit {
     //     EXPORT TO EXCEL     //
     /////////////////////////////
 
-
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        var worksheet = workbook.addWorksheet(this.viewModel.name);
         let matrices = this.viewModel.filters.filterMatrices(this.dataService.matrices);
-        for (let matrix of matrices) {            
+        for (let matrix of matrices) {
+            var worksheet = workbook.addWorksheet(matrix.name);  
+                      
             // CREATE TACTIC COLUMNS
             let columns = matrix.tactics.map(tactic => { return {header: tactic.name, key: tactic.name} });
             worksheet.columns = columns;
@@ -137,7 +138,7 @@ export class DataTableComponent implements AfterViewInit {
                         }
                     });
                 }
-                tacticCol.values = [tactic.name.toString()].concat(techniqueCells);
+                tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
                 
                 // STYLE TECHNIQUE CELLS
                 tacticCol.eachCell(cell => {
@@ -172,13 +173,25 @@ export class DataTableComponent implements AfterViewInit {
         });
     }
 
-    styleCells(cell, technique, tvm) {
+    /**
+     * Get the display name for technique/tactic as shown in layout
+     */
+    getDisplayName(technique) {
         // cell value
         if(this.viewModel.layout.showID && this.viewModel.layout.showName) {
-            cell.value = technique.attackID + ':' + technique.name;
+            return technique.attackID + ':' + technique.name;
         } else if(this.viewModel.layout.showID) {
-            cell.value = technique.attackID;
+            return technique.attackID;
+        } else {
+            return technique.name;
         }
+    }
+
+    /**
+     * Helper function for exporting to excel to stylize cells
+     */
+    styleCells(cell, technique, tvm) {
+        cell.value = this.getDisplayName(technique);
 
         // cell format
         cell.alignment = {vertical: 'top', horizontal: 'left'};
@@ -196,6 +209,13 @@ export class DataTableComponent implements AfterViewInit {
             }
         } else { //disabled
             cell.font = {color: {'argb': 'FFBCBCBC'}}
+        }
+
+        // subtechniques border
+        if(tvm.showSubtechniques) {
+            cell.border = {top: {style: 'hair'}, bottom:{style: 'hair'}, left: {style: 'hair'}}
+        } else if(technique.isSubtechnique) {
+            cell.border = {top: {style: 'hair'}, bottom:{style: 'hair'}, right: {style: 'hair'}}
         }
     }
 
