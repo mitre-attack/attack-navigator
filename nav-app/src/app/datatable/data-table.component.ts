@@ -152,17 +152,17 @@ export class DataTableComponent implements AfterViewInit {
                     }
                 });
             }
-        }
 
-        // STYLE HEADERS
-        worksheet.columns.forEach(column => {column.width = column.header.length < 30 ? 30 : column.header.length});
-        if (this.viewModel.showTacticRowBackground) {
-            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
-            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
-            worksheet.getRow(1).alignment = {horizontal: 'center'};
-        } else {
-            worksheet.getRow(1).font = {bold: true};
-            worksheet.getRow(1).alignment = {horizontal: 'center'};
+            // STYLE WORKSHEET HEADERS
+            worksheet.columns.forEach(column => {column.width = column.header.length < 30 ? 30 : column.header.length});
+            if (this.viewModel.showTacticRowBackground) {
+                worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
+                worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+                worksheet.getRow(1).alignment = {horizontal: 'center'};
+            } else {
+                worksheet.getRow(1).font = {bold: true};
+                worksheet.getRow(1).alignment = {horizontal: 'center'};
+            }
         }
 
         // SAVE
