@@ -97,7 +97,7 @@ export class DataTableComponent implements AfterViewInit {
                         // retrieve subtechniques
                         let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
                             .map( sub => { return sub.name });
-                        technique.subtechniques.forEach(sub => subtechniqueList.push(sub));
+                        subtechniqueList = subtechniqueList.concat(technique.subtechniques);
 
                         // format technique cells for subtechniques
                         let excelIndex = 0;
@@ -130,7 +130,7 @@ export class DataTableComponent implements AfterViewInit {
                         if(cell.row > 1) {
                             if(cell.value && cell.value !== undefined) {
                                 let subtechnique = subtechniqueList.find(s => { 
-                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1) || s.attackID === cell.value });
+                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() || s.attackID === cell.value });
                                 let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
                                 this.styleCells(cell, subtechnique, svm);
                             }
@@ -144,7 +144,7 @@ export class DataTableComponent implements AfterViewInit {
                     if (cell.row > 1) {
                         if(cell.value && cell.value !== undefined) {
                             let technique = techniques.find( t => { 
-                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1) || t.attackID === cell.value });
+                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
                             let tvm = this.viewModel.getTechniqueVM(technique, tactic);
                             this.styleCells(cell, technique, tvm);
                         }
@@ -153,14 +153,20 @@ export class DataTableComponent implements AfterViewInit {
             }
             
             // style tactic headers
-            worksheet.columns.forEach(column => {column.width = column.header.length < 30 ? 30 : column.header.length});
+            worksheet.columns.forEach(column => {
+                if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                    column.width = column.header.length < 15 ? 15 : column.header.length;
+                } else {
+                    column.width = column.header.length < 30 ? 30 : column.header.length;
+                }
+            });
+
+            worksheet.getRow(1).alignment = {horizontal: 'center'};
+            worksheet.getRow(1).border = {bottom: {style: 'thin'}};
+            worksheet.getRow(1).font = {bold: true};
             if (this.viewModel.showTacticRowBackground) {
                 worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
                 worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
-                worksheet.getRow(1).alignment = {horizontal: 'center'};
-            } else {
-                worksheet.getRow(1).font = {bold: true};
-                worksheet.getRow(1).alignment = {horizontal: 'center'};
             }
         }
 
@@ -177,7 +183,7 @@ export class DataTableComponent implements AfterViewInit {
      */
     getDisplayName(technique) {
         if (this.viewModel.layout.showID && this.viewModel.layout.showName) {
-            return technique.attackID + ':' + technique.name;
+            return technique.attackID + ': ' + technique.name;
         } else if (this.viewModel.layout.showID) {
             return technique.attackID;
         } else {
