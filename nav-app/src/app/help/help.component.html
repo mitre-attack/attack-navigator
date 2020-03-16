@@ -30,11 +30,12 @@
                 </li>
                 <li><a href="#help_Hiding_Disabled_Techniques">Hiding Disabled Techniques</a></li>
                 <li>
-                    <a href="#help_Changing_Views">Changing Views</a>
+                    <a href="#help_Changing_Layout">Changing the Matrix Layout</a>
                     <ul>
-                        <li><a href="#help_Full_View">Full View</a></li>
-                        <li><a href="#help_Compact_View">Compact View</a></li>
-                        <li><a href="#help_Mini_View">Mini View</a></li>
+                        <li><a href="#help_Side_Layout">Side Layout</a></li>
+                        <li><a href="#help_Flat_Layout">Flat Layout</a></li>
+                        <li><a href="#help_Mini_Layout">Mini Layout</a></li>
+                        <li><a href="#help_IDs_Names">Showing IDs and Names</a></li>
                     </ul>
                 </li>
                 <li><a href="#help_Legend">Legend</a></li>
@@ -55,7 +56,7 @@
             <a href="#help_Selecting_Techniques">Selecting Techniques</a>
             <ul>
                 <li><a href="#help_Selecting_with_the_Mouse">Selecting with the Mouse</a></li>
-                <li><a href="#help_Lock_Multi-Tactic_Technique_Selection">Lock Multi-Tactic Technique Selection</a></li>
+                <li><a href="#help_Selection_Behavior">Selection Behavior</a></li>
                 <li><a href="#help_Search_Interface">Search Interface</a></li>
                 <li><a href="#help_Multiselct_Interface">Multiselect Interface</a></li>
             </ul>
@@ -117,7 +118,7 @@
     <p>
       A layer constitutes a view of the tactics and techniques matrix for a
       specific technology domain. Version {{nav_version}} of the Navigator can manipulate
-      either the Enterprise (Windows, Linux & Mac) or Mobile (Android & iOS)
+      either the Enterprise (Windows, Linux, Mac, AWS, GCP, Azure, Azure AD, Office 365 and SaaS) or Mobile (Android and iOS)
       ATT&CK technology domain knowledge bases. Within a technology domain, the
       Navigator allows you to filter your view of the matrix in a variety of
       ways, displaying the tactics and techniques that are important to you.
@@ -393,48 +394,51 @@
             groups of techniques from your view.
         </p>
 
-        <h2 id="help_Changing_Views">
-            Changing Views
+        <h2 id="help_Changing_Layout">
+            <img src="assets/icons/ic_view_large_black_24px.svg">
+            Configuring the layout
         </h2>
         <p>
-            The ATT&CK Navigator has multiple ways to view the data. Toggle between these views
-            with the "toggle view mode" button.
+            The ATT&CK Navigator has controls for how the ATT&CK Matrices are displayed. Access controls to change layout via the "Matrix Layout" dropdown menu. 
         </p>
-        <h3 id="help_Full_View">
-            <img src="assets/icons/ic_view_large_black_24px.svg">
-            Full View
+        <h3 id="help_Side_Layout">
+            Side Layout
         </h3>
         <p>
-            The full view (default), shows the full names of tactics
-            (column headers) and techniques (column cells). It also shows the
-            number of displayed techniques inside of each tactic. Techniques that are
-            hidden by filtering or by hiding disabled techniques do not count towards
-            this count.
+            The side layout displays sub-techniques adjacent to their parent techniques. Techniques with sub-techniques are denoted by the presence of a right-positioned sidebar which can be clicked to show sub-techniques. Sub-techniques are differentiated from techniques by position in the tactic column. 
         </p>
-        <h3 id="help_Compact_View">
-            <img src="assets/icons/ic_view_medium_black_24px.svg">
-            Compact View
+        <h3 id="help_Flat_Layout">
+            Flat Layout
         </h3>
         <p>
-            The compact view is designed to fit more techniques
-            on the screen simultaneously by reducing their size. To do so all text is
-            abbreviated to acronyms. Full technique and tactic names are displayed as tooltips when you hover over a technique. Otherwise it behaves the same as the <a href="#help_Full_View">full view</a>.
+            The flat layout displays subtechniques in-line with the techniques. Techniques with subtechniques are denoted by the presence of a left-positioned sidebar which can be clicked to show subtechniques. Subtechniques are differentiated from techniques by indentation.
         </p>
 
-        <h3 id="help_Mini_View">
-            <img src="assets/icons/ic_view_small_black_24px.svg">
-            Mini View
+        <h3 id="help_Mini_Layout">
+            Mini Layout
         </h3>
         <p>
-            The mini view is designed to fit more techniques on the screen
+            The mini layout is designed to fit more techniques on the screen
             simultaneously by reducing their size. To do so all text is removed
-            and techniques are visualized as boxes. In this view techniques can arrange themselves
-            as grids inside of each tactic column to conserve space. Tactic headers
-            are visualized as black cells above the columns. Technique
+            and techniques are visualized as squares under the tactic. Selecting this layout disables <a href="#help_IDs_Names">the "show IDs" and "show Names" controls</a>.
+            
+            Tactic headers are visualized as black cells above the columns. Technique
             and tactic names are displayed as tooltips when you hover over a
-            technique or tactic-header cell. The presence of a comment upon a technique
-            is not displayed in this mode, but comments can still be seen inside of
-            tooltips.
+            technique or tactic-header cell. 
+
+            Techniques and their sub-techniques are grouped inside of an outlined box. The technique is the dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques.
+
+            Techniques without sub-techniques are displayed without a grouping box, and may appear inline with other sub-techniques-less techniques.
+
+            Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
+        </p>
+        <h3 id="help_IDs_Names">
+            Showing IDs and Names
+        </h3>
+        <p>
+            In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default) will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.
+
+            These controls can be toggled independantly and turned off entirely to remove cell labels entirely. The mini layout forces both of these controls to be disabled.
         </p>
         <h2 id="help_Legend">
             Legend
@@ -522,7 +526,7 @@
             score. This color is determined according to the <a href="#help_Scoring">scoring gradient setup interface</a>. Colors
             assigned <a href="#help_Assigning_Manual_Colors">manually</a>
             supersede the score-generated color. It is a good idea to assign
-            techniques scores inside of a given range, such as 0-1 or 0-100. Set
+            techniques scores inside of a predetermined range, such as 0-1 or 0-100. Set
             the "high value" and "low value" inputs in the <a href="#help_Scoring">scoring gradient setup interface</a> to this
             range to make sure that the color for the score is properly mapped
             to the gradient. Techniques that are unscored are not assigned a
@@ -569,13 +573,17 @@
             <li><b>view technique:</b> For more information / details on the technique.</li>
         </ul>
 
-        <h2 id="help_Lock_Multi-Tactic_Technique_Selection">
+        <h2 id="help_Selection_Behavior">
             <img src="assets/icons/ic_lock_black_24px.svg">
-            Lock Multi-Tactic Technique Selection
+            Selection Behavior
         </h2>
         <p>
-            This control toggles whether selecting a technique selects that technique across all tactics or just that one instance.
+            The selection behavior controls affect how sub-techniques are selected with regards to tactics and sub-techniques.
         </p>
+        <ul>
+            <li><b>Select techniques across tactics</b> toggles whether selecting a technique that is found in multiple tactics selects it in all tactics, or just the one wherein it was clicked.</li> 
+            <li><b>Select sub-techniques with parent</b> toggles whether sub-techniques are selected alongside their parents, and vice versa. When enabled, clicking on a technique will also select all of the sub-techniques of that technique. In addition,clicking a sub-technique will also select the parent as well as all sibling sub-techniques. When disabled, sub-techniques are selected independantly of parents and siblings.</li> 
+        </ul>
 
         <h2 id="help_Search_Interface">
             <img src="assets/icons/ic_search_black_24px.svg">
@@ -705,49 +713,19 @@
             Configuring Text
         </h2>
         <p>
-            The text configuration dropdown allows for the configuration of various
-            aspects of the text in the rendered layer.
+            The text configuration dropdown allows for the configuration of the font
+            (serif, sans-serif, and monospace) of the exported render. 
         </p>
-        <ul>
-            <li>
-                <b>Title font size</b> controls the font size of rendered layer title,
-                which is the same as the layer name. If the title or header are disabled this control
-                will not be editable.
-            </li>
-            <li>
-                <b>Font size in header</b> controls the size of the font size in
-                the table header: description, filters, score gradient, and legend.
-                If the header is disabled this control will not be editable.
-            </li>
-            <li>
-                <b>Tactic header font size</b> controls the font size of the tactic names
-                and technique count in the header of each tactic column.
-            </li>
-            <li>
-                <b>Technique font size</b> controls the size of the text in the technique
-                cells. If no text is displayed in the technique cells this control
-                will not be editable.
-            </li>
-            <li>
-                <b>Font size unit</b> controls whether the font-size controls are
-                measured in points (pt) or pixels (px).
-            </li>
-            <li>
-                <b>Font</b> controls the font used in the entire table. Options are given
-                for serif, sans-serif and monospace.
-            </li>
-            <li>
-                <b>Technique text</b> controls which text is shown in the technique
-                cells. Technique name or ID can be shown, or all text can be removed.
-            </li>
-        </ul>
-
+        <p>
+            Unlike in previous versions of the Navigator, in ATT&CK Navigator Version {{nav_version}} text size is automatically
+            calculated to optimize readability.
+        </p>
         <h2 id="help_exporting_legend_config">
             <img src="assets/icons/ic_view_list_black_24px.svg">
             Customizing the Legend
         </h2>
         <p>
-            This menu can only be opened if a <a href="#help_Legend">legend</a> is present on the layer.
+            This menu can only be opened if a <a href="#help_Legend">legend</a> is present on the layer or if techniques have been assigned scores.
             The checkbox allows you to undock the legend from the SVG header.
             Once undocked, the X and Y position controls can be used to position
             the legend in the image. The width and height inputs control
@@ -769,31 +747,20 @@
                 the legend is undocked from the header it will still be shown.
             </li>
             <li>
-                <b>Show title</b> controls whether the layer name is visible in
-                the header. If the layer has no title, the control will be disabled and the description section automatically hidden.
-            </li>
-            <li>
-                <b>Show description</b> controls whether the layer description is visible in
-                the header. If the layer has no description, the control will be disabled and the description section automatically hidden.
+                <b>Show about</b> controls whether the about (layer name and description) section of the header is visible. If the layer has no name nor description, the control will be disabled and the section automatically hidden.
             </li>
             <li>
                 <b>Show filters</b> controls whether the current filters (selected stages and platforms) are visible in
                 the header. This control will be disabled if the header is hidden in entirety.
             </li>
             <li>
-                <b>Show score gradient</b> controls whether the score gradient is visible in the header.
-                If none of the techniques in the layer have a score, the control will be disabled and the score gradient section automatically hidden.
-            </li>
-            <li>
-                <b>Show Legend</b> controls whether the layer legend is visible.
-                If the layer has no defined legend items, the control will be disabled and the legend will be automatically hidden.
-            </li>
-            <li>
-                <b>Show technique count</b> controls whether the technique count is visible within the header of each tactic column. 
+                <b>Show legend</b> controls whether the layer legend is visible.
+                If the layer has no defined legend items or no scores, the control will be disabled and the legend will be automatically hidden.
             </li>
             <li>
                 <b>Cell border</b> controls the border of cells in the body of the table.
-                The borders in the header are not modified by this control.
+                The borders in the header are not modified by this control. Note that you must click "apply" in the color picker
+                for your change to take effect.
             </li>
         </ul>
 
