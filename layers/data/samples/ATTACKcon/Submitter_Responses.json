@@ -1,6 +1,6 @@
 {
 	"name": "Submitter Responses",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-enterprise",
 	"description": "Answers submitted to the ATT&CKcon CFP in response to \"What is your favorite technique?\"",
 	"filters": {
@@ -14,7 +14,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{

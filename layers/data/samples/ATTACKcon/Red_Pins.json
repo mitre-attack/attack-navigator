@@ -1,6 +1,6 @@
 {
 	"name": "Red Pins",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-enterprise",
 	"description": "ATT&CKcon Matrix Question: What’s the least likely\u000b ATT&CK technique to\u000b be seen in the wild?",
 	"filters": {
@@ -14,7 +14,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{

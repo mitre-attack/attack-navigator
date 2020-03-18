@@ -10,7 +10,7 @@
         "minValue": 0
     },
     "description": "hello, world",
-    "version": "2.2", 
+    "version": "3.0", 
     "techniques": [
         {
             "techniqueID": "T1001",

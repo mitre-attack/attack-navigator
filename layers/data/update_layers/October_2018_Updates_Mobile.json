@@ -1,6 +1,6 @@
 {
 	"name": "October 2018 Updates Mobile",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-mobile",
 	"description": "",
 	"filters": {
@@ -13,7 +13,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{
