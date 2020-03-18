@@ -1,5 +1,5 @@
-# v3.0 - unreleased
-The ATT&CK Navigator v3.0 release includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
+# v3.0 - sub-techniques beta
+ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
 ## New Features
 ### Major
 - Added support for sub-techniques. Techniques with sub-techniques will be denoted by a sidebar which can be clicked to show and hide the sub-techniques. Techniques without sub-techniques will not have a sidebar.
@@ -50,6 +50,10 @@ Custom context menu feature has been significantly improved for flexibility. See
 The "features" structure is used to enable/disable specific Navigator features. It also propagates to the "create customized Navigator" interface.
 - "toggle_view_mode" has been renamed to "layout_controls" and the description updated accordingly. 
 
+# v2.3.2 - 17 January 2020
+## Improvements
+- Updated trademark to registered trademark and updated copyright date to 2020. See issue [#125](https://github.com/mitre-attack/attack-navigator/pull/125).
+- Updated help page to be more legible by increasing page margins.
 
 # v2.3.1 - 29 October 2019
 ## Fixes

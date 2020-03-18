@@ -11,8 +11,10 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+        cursor: default;
     }
     .menu {
+        cursor: default;
         @include cell-popover(0.85);
         .contextMenu-section {
             &:not(:first-child) {
