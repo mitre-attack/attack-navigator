@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, ɵregisterNgModuleType } from '@angular/core';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import {DataService, Technique, Matrix} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
@@ -78,11 +78,11 @@ export class DataTableComponent implements AfterViewInit {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // create tactic columns
-            let columns = matrix.tactics.map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+            let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
             worksheet.columns = columns;
 
             // create cells
-            for (let tactic of matrix.tactics) {
+            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 let tacticCol = worksheet.getColumn(tactic.name);
                 let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
                 let techniqueCells = techniques.map(technique => { return technique.name });
