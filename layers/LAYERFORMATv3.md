@@ -130,7 +130,7 @@ The following example illustrates the layer file format:
                     "value": "T1053 metadata2 value" 
                 }
             ]
-        },
+        }
     ],
     "gradient": {
         "colors": [
