@@ -1031,19 +1031,46 @@ export class ViewModel {
             else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
         }
         if ("techniques" in obj) {
-            if(obj.techniques.length > 0){
-                if("tactic" in obj.techniques[0]){
-                    for (let i = 0; i < obj.techniques.length; i++) {
-                        var technique = obj.techniques[i];
+            if(obj.techniques.length > 0) {
+                for (let i = 0; i < obj.techniques.length; i++) {
+                    var obj_technique = obj.techniques[i];
+                    if ("tactic" in obj_technique) {
                         let tvm = new TechniqueVM("");
-                        tvm.deSerialize(JSON.stringify(technique),
-                                        technique.techniqueID,
-                                        technique.tactic);
+                        tvm.deSerialize(JSON.stringify(obj_technique),
+                                        obj_technique.techniqueID,
+                                        obj_technique.tactic);
                         this.setTechniqueVM(tvm);
+                    } else {
+                        // occurs in multiple tactics
+                        // match to Technique by attackID
+                        for (let technique of this.dataService.techniques) {
+                            if (technique.attackID == obj_technique.techniqueID) {
+                                // match technique
+                                for (let tactic of technique.tactics) {
+                                    let tvm = new TechniqueVM("");
+                                    tvm.deSerialize(JSON.stringify(obj_technique),
+                                                    obj_technique.techniqueID,
+                                                    tactic);
+                                    this.setTechniqueVM(tvm);
+                                }
+                                break;
+                            }
+                            //check against subtechniques
+                            for (let subtechnique of technique.subtechniques) {
+                                if (subtechnique.attackID == obj_technique.techniqueID) {
+                                    for (let tactic of subtechnique.tactics) {
+                                        let tvm = new TechniqueVM("");
+                                        tvm.deSerialize(JSON.stringify(obj_technique),
+                                                        obj_technique.techniqueID,
+                                                        tactic);
+                                        this.setTechniqueVM(tvm);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        
                     }
-                } else {
-                    this.needsToConstructTechniqueVMs = true;
-                    this.legacyTechniques = obj.techniques;
                 }
             }
         }
