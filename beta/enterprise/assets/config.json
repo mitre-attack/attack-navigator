@@ -1,7 +1,7 @@
 {
     "enterprise_attack_url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/enterprise-attack/enterprise-attack.json",
-    "pre_attack_url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/mobile-attack/mobile-attack.json",
-    "mobile_data_url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/pre-attack/pre-attack.json",
+    "pre_attack_url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/pre-attack/pre-attack.json",
+    "mobile_data_url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/mobile-attack/mobile-attack.json",
     "taxii_server": {
         "enabled": false,
         "url": "https://cti-taxii.mitre.org/",
