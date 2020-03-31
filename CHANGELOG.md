@@ -39,6 +39,11 @@ Layer file format updated to version 3.0. Older versions can still be loaded in 
 - Added "showSubtechniques" field to technique objects. 
 - Added "selectSubtechniquesWithParent" field setting the default value of the "select techniques with subtechniques" control.
 
+The sub-techniques update of ATT&CK caused many techniques to be replaced by sub-techniques. Since the replacing sub-techniques have different IDs, many layers created before the sub-technques release will still be using IDs for the replaced techniques and therefore won't work properly in the new version even if the annotation format is correct. A [conversion script](layers/update-layers.py) is provided in the layers folder which both updates layers to the most recent format and also updates technique IDs to their replacers where possible. There are however a few cases which won't be caught:
+1. Cases where techniques which have been replaced by multiple sub-techniques are ignored entirely due to limitations in the remapping data.
+2. Cases where the `tactic` field was present but the replacing technique is not in that tactic.
+Run `python3 update-layers.py -h` for usage instructions.
+
 ## Config File Format Changes
 ### Changes to `custom_context_menu_items`
 Custom context menu feature has been significantly improved for flexibility. See _Adding Custom Context Menu Options_ in [the readme](README.md) for more details on the format.
