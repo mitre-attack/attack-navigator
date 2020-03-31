@@ -1,0 +1,34 @@
+<div class="techniques-search">
+    <div class="query">
+        <mat-form-field style="width:100%; margin-top: 10px; box-sizing: content-box;">
+            <input matInput [(ngModel)]="query" placeholder="Search Techniques">
+        </mat-form-field>
+    </div>
+    <h1>properties searched</h1>
+    <div class="fields">
+        <div class="field" *ngFor="let field of fields">
+            <input [id]="field.field" class="checkbox-custom" type="checkbox" (click)="toggleFieldEnabled(field.field)" [checked]="field.enabled">
+            <label for="{{field.field}}" class="checkbox-custom-label noselect">{{field.label}}</label>
+        </div>
+    </div>
+    <div *ngIf="queryLength > 0">
+        <h1>results</h1>
+        <div class="allresults-buttons">
+            <button class="button" (click)="selectAll()">select all</button>
+            <button class="button" (click)="deselectAll()">deselect all</button>
+        </div>
+        <div class="results">
+            <table class="results" *ngIf="results.length > 0">
+                <tr *ngFor="let result of results">
+                    <td>
+                        <span *ngIf="result.isSubtechnique">{{result.parent.name}}: </span>{{result.name}}
+                    </td>
+                    <td><a href="{{result.url}}" target="_blank">view</a></td>
+                    <td><button class="button" (click)="select(result)">select</button></td>
+                    <td><button class="button" (click)="deselect(result)">deselect</button></td>
+                </tr>
+            </table>
+            <div class="no-results" *ngIf="results.length == 0"> no results </div>
+        </div>
+    </div>
+</div>

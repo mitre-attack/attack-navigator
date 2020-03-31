@@ -6,3 +6,72 @@ $panel-dark: #ddd;
 $panel-light: lighten($panel-dark, 8%);
 $tab-text-color: #555;
 $button-dark: #b8b8b8;
+
+// ATT&CK Brand colors
+$attack-colors: (
+    attack-orange: #c63f1f,
+    attack-blue: #062f4f
+);
+
+/**
+ * Colors used across the Navigator. Shared by the ATT&CK Website.
+ * For each color-pair:
+ *   - "color" refers to the color itself
+ *   - "on-color" refers to the most readable text-color to appear on top of the color. 
+ * Note: some colors don't define on-colors. This is because, for these colors, they aren't intended to
+ * appear with inner content. For example, "link" is only intended to be used for link text, which inherently
+ * cannot have inner text.
+ */
+$colors: (
+    primary: (color: map-get($attack-colors, attack-orange), on-color: white),  //used for header and some nav elements
+    secondary: (color: map-get($attack-colors, attack-blue), on-color: white),  //used for footer and some buttons
+    body: (color: white, on-color: #39434C),                                  //primary page body
+//  body: (color: rgb(50, 50, 50), on-color: #cdcdcd),                            //example of a dark theme for the site
+    link: (color: #4f7cac),                                                     //hyperlinks
+    matrix-header: (color: gray, on-color: white),                            //color of matrix headers
+
+    //bootstrap colors
+    bootstrap-primary: (color: #428bca, on-color: white),
+    bootstrap-success: (color: #5cb85c, on-color: white),
+    bootstrap-danger: (color: #d9534f, on-color: black),
+    bootstrap-warning: (color: #f0ad4e, on-color: black),
+    bootstrap-info: (color: #5bc0de, on-color: white),
+
+    //TODO deprecate with search page changes
+    search-results-border: (color: black, on-color: lightgrey),  
+);
+
+// accessor helper for $colors. Gets the color of the named pair
+@function color($name) {
+    @return map-get(map-get($colors, $name), "color");
+}
+
+// given a color name, get an alternate version of the color, for patterning
+// if the base color is dark, the alternate will be slightly lighter.
+// if the base color is light, the alternate will be slightly darker.
+// contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
+@function color-alternate($name, $contrast: 1) {
+    @return mix(invert(color($name)), color($name), $weight: $contrast * 5%); 
+}
+
+// accessor helper for $colors. Gets the on-color of the named pair
+@function on-color($name) {
+    @return map-get(map-get($colors, $name), "on-color");
+}
+
+// given a color-name, get an emphasized version of the on-color.
+// The emphasized on-color is less like the background color.
+@function on-color-emphasis($name) {
+    @return mix(invert(color($name)), on-color($name)); 
+}
+// given a color-name, get an deemphasized version of the on-color.
+// The deemphasized on-color is more like the background color.
+@function on-color-deemphasis($name) {
+    @return mix(color($name), on-color($name), 25%); 
+}
+
+// given a color name, compute a border color for the color
+@function border-color($name) {
+    @return mix(invert(color($name)), color($name), 12.5%); 
+    // @return rgba(invert(color($name)), 0.125);
+}

@@ -1,0 +1,17 @@
+@import "../cell-popover.scss";
+
+
+.tooltip {
+    @include cell-popover(0.75);
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        td {
+            padding: 3px;
+            vertical-align: top;
+        }
+        tr:nth-child(2) td {
+            border-top: 1px solid white;
+        }
+    }
+}

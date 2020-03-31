@@ -1,0 +1,37 @@
+@import "../matrix-common.scss";
+.matrix.mini {
+    .tactic { padding: 0 5px; }
+    .tactic.header {
+        padding: 5px;
+    }
+    .tactic.body {
+        padding-top: 5px;
+        vertical-align: top;
+        // display: flex;
+        // flex-wrap: wrap;
+        // justify-content: space-between;
+        
+        .cell-container {
+            margin-right: $sizeunit / 6;
+            margin-bottom: $sizeunit / 6;
+            &:not(.supertechnique-group) { display: inline-block; }
+            // margin: 0 2px 0 2px;
+            &.supertechnique-group {
+                // background: $panel-light;
+                // border-top: 1px solid darken($panel-light, 5%);
+                // border-bottom: 1px solid darken($panel-light, 5%);
+                // padding-top: 3px;
+                // transform: translateX(-3px);
+                box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+                // padding: 3px 0 0 3px;
+                padding-top: 1px + ($sizeunit/2);
+                padding-left: 1px + ($sizeunit/2);
+                padding-bottom: ($sizeunit/3);
+                padding-right: ($sizeunit/3);
+            }
+            &.supertechnique {
+                box-shadow: 0 0 0 1px on-color-deemphasis(body);
+            }
+        }
+    }
+}

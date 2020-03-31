@@ -1,0 +1,15 @@
+@import "../../../colors.scss";
+@import "../matrix-common.scss";
+.tactic-cell {
+    padding-top: 3px;
+    box-sizing: border-box;
+    &:not(.mini) { min-width: $sizeunit * 3; }
+    &.mini { 
+        width: $sizeunit;
+        background: black;
+    }
+    min-height: $sizeunit;
+    &.bordered {
+        border: 1px solid border-color(body);
+    }
+}

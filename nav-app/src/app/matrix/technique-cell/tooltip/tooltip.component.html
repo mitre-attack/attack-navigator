@@ -1,0 +1,25 @@
+<div [ngClass]="'tooltip ' + placement">
+    <table>
+        <tr>
+            <td colspan=2 class="technique-name">
+                {{technique.name}} ({{technique.attackID}})
+            </td>
+        </tr>
+        <tr *ngIf="!techniqueVM.enabled">
+            <td colspan=2>Disabled</td>
+        </tr>
+        <tr *ngIf="techniqueVM.score">
+            <td>Score:</td>
+            <td>{{techniqueVM.score}}
+            </td>
+        </tr>
+        <tr *ngIf="techniqueVM.comment">
+            <td>Comment:</td>
+            <td>{{techniqueVM.comment}}</td>
+        </tr>
+        <tr *ngFor="let metadata of techniqueVM.metadata">
+            <td>{{metadata.name}}:</td>
+            <td>{{metadata.value</td>
+        </tr>
+    </table>
+</div>
