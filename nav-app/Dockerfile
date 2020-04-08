@@ -13,3 +13,5 @@ RUN npm install --unsafe-perm
 EXPOSE 4200
 
 CMD npm start
+
+USER node
