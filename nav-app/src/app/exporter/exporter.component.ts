@@ -17,7 +17,10 @@ export class ExporterComponent implements AfterViewInit {
     @Input() viewModel: ViewModel;
 
     private config: any = {}
-        
+    private isIE() {
+        console.log(is.ie())
+        return is.ie();
+    }
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
@@ -312,14 +315,17 @@ export class ExporterComponent implements AfterViewInit {
         // add properties to the node to set the vertical alignment to center without using
         // dominant-baseline, which isn't widely supported
         function centerValign(node, fontSize=null) {
-            if (node.children.length > 0) {
+            if (node.children && node.children.length > 0) {
                 for (let child of node.children) centerValign(child, node.getAttribute("font-size"));
             } else {
                 // base case
                 // transform by half the font size - 1/2px for proper centering
                 fontSize = fontSize ? fontSize : node.getAttribute("font-size");
+                if (fontSize.endsWith("px")) fontSize = Number(fontSize.split("px")[0])
                 let currY = node.hasAttribute("y") ? Number(node.getAttribute("y")) : 0;
-                d3.select(node).attr("y", currY + Math.floor((fontSize * 0.3)));
+                let newY = currY + Math.floor((fontSize * 0.3))
+                console.log("before", node.hasAttribute("y"), node, currY, "after:", newY)
+                d3.select(node).attr("y", newY);
             }
         }
 
