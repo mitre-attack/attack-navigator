@@ -369,6 +369,7 @@ export class ViewModel {
 
 
     hideDisabled: boolean = false; //are disabled techniques hidden?
+    showAllSubtechniques: boolean = false;
 
 
     gradient: Gradient = new Gradient(); //gradient for scores
