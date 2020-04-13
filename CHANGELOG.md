@@ -1,3 +1,11 @@
+# v3.1 - sub-techniques beta
+## Improvements
+### Minor
+- Added update layers for March 2020 sub-techniques release. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138).
+## Fixes
+- Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
+
+
 # v3.0 - sub-techniques beta
 ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
 ## New Features
