@@ -65,7 +65,7 @@ def generate():
         "domain": "mitre-enterprise",
         "techniques": techniques_list,
         "legendItems": [{
-            "label": "has 'bear' in using group aliases",
+            "label": "Used by a group the phrase 'bear' in the group aliases",
             "color": "#ff6666"
         }]
     }
@@ -86,4 +86,4 @@ if __name__ == '__main__':
     # write the layerfile
     with open(args.output, "w") as f:
         print("writing", args.output)
-        f.write(json.dumps(layer))
+        f.write(json.dumps(layer, indent=4))
