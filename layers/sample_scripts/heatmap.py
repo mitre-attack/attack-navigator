@@ -5,6 +5,7 @@ import stix2
 import random
 
 def generate():
+    """parse the STIX on MITRE/CTI and return a layer dict with techniques with randomized scores"""
     # import the STIX data from MITRE/CTI
     stix = requests.get("https://raw.githubusercontent.com/mitre/cti/subtechniques/enterprise-attack/enterprise-attack.json", verify=False).json()
     ms = stix2.MemoryStore(stix_data=stix["objects"])
