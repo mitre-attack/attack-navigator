@@ -271,9 +271,14 @@ export class DataTableComponent implements AfterViewInit {
         this.populateEditFields();
     }
 
-    onShowSubtechniques(): void {
-        this.viewModel.showAllSubtechniques = !this.viewModel.showAllSubtechniques;
-        this.viewModel.updateShowSubtechniques();
+    expandSubtechniques(): void {
+        this.viewModel.techniqueVMs.forEach(function(tvm, key) {
+            tvm.showSubtechniques = true; });
+    }
+
+    collapseSubtechniques(): void {
+        this.viewModel.techniqueVMs.forEach(function(tvm, key) {
+            tvm.showSubtechniques = false; });
     }
 
     /**

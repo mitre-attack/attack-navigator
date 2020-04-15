@@ -367,10 +367,7 @@ export class ViewModel {
     
     layout: LayoutOptions = new LayoutOptions();
 
-
     hideDisabled: boolean = false; //are disabled techniques hidden?
-    showAllSubtechniques: boolean = false;
-
 
     gradient: Gradient = new Gradient(); //gradient for scores
 
@@ -1212,14 +1209,6 @@ export class ViewModel {
             return wordSplit[0].charAt(0).toUpperCase();
         }
     }
-
-    updateShowSubtechniques(): void {
-        let toggle = this.showAllSubtechniques;
-        this.techniqueVMs.forEach(function(tvm, key) {
-            tvm.showSubtechniques = toggle;
-        });
-    }
-
 }
 
 // the viewmodel for a specific technique

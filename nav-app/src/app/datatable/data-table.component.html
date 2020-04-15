@@ -305,13 +305,23 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
              </div>
 
-            <!-- show or hide sub-techniques -->
+            <!-- expand all sub-techniques -->
             <div *ngIf="configService.getFeature('toggle_subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="onShowSubtechniques();"
+                     (click)="expandSubtechniques()"
                      matTooltipPosition="below"
-                     matTooltip="show/hide sub-techniques">
-                     <img [src]="viewModel.showAllSubtechniques ? 'assets/icons/label_24px.svg' : 'assets/icons/label_off_24px.svg'" [alt]="viewModel.showAllSubtechniques ? 'hide sub-techniques' : 'show sub-techniques'"/>
+                     matTooltip="expand sub-techniques">
+                     <img src="assets/icons/unfold_more_24px.svg" alt="expand sub-techniques"/>
+                 </div>
+             </div>
+
+            <!-- collapse all sub-techniques -->
+            <div *ngIf="configService.getFeature('toggle_subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="collapseSubtechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="collapse sub-techniques">
+                     <img src="assets/icons/unfold_less_24px.svg" alt="collapse sub-techniques"/>
                  </div>
              </div>
 
