@@ -271,6 +271,11 @@ export class DataTableComponent implements AfterViewInit {
         this.populateEditFields();
     }
 
+    onShowSubtechniques(): void {
+        this.viewModel.showAllSubtechniques = !this.viewModel.showAllSubtechniques;
+        this.viewModel.updateShowSubtechniques();
+    }
+
     /**
      * populate edit fields. Gets common values if common values exist for all editing values
      */

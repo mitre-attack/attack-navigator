@@ -1212,6 +1212,14 @@ export class ViewModel {
             return wordSplit[0].charAt(0).toUpperCase();
         }
     }
+
+    updateShowSubtechniques(): void {
+        let toggle = this.showAllSubtechniques;
+        this.techniqueVMs.forEach(function(tvm, key) {
+            tvm.showSubtechniques = toggle;
+        });
+    }
+
 }
 
 // the viewmodel for a specific technique
