@@ -1,5 +1,8 @@
 <div class="controlsContainer">
     <ul class="control-sections">
+        <li class="iewarning" *ngIf="isIE()">
+            Warning: this interface is not fully compatable with your browser. For best results please switch to Edge, Chrome, Firefox or Safari.
+        </li>
         <li>
             <div class="control-row-item noselect">
                 <!-- {{config.unit}} -->
