@@ -109,8 +109,9 @@ export class DataTableComponent implements AfterViewInit {
                         }
 
                         // merge technique cells
-                        worksheet.mergeCells(techniqueRow + 2, tacticCol.number,
-                                             techniqueRow + excelIndex + 1, tacticCol.number);
+                        if (excelIndex > 0) {
+                            worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
+                        }
                     }
                 }
 
@@ -271,11 +272,23 @@ export class DataTableComponent implements AfterViewInit {
         this.populateEditFields();
     }
 
+    /**
+     * Show all sub-techniques in layout view
+     */
     expandSubtechniques(): void {
-        this.viewModel.techniqueVMs.forEach(function(tvm, key) {
-            tvm.showSubtechniques = true; });
+        for (let technique of this.dataService.techniques) {
+            if (technique.subtechniques.length > 0) {
+                for (let id of technique.get_all_technique_tactic_ids()) {
+                    let tvm = this.viewModel.getTechniqueVM_id(id);
+                    tvm.showSubtechniques = true;
+                }
+            }
+        }
     }
 
+    /**
+     * Hide all sub-techniques in layout view
+     */
     collapseSubtechniques(): void {
         this.viewModel.techniqueVMs.forEach(function(tvm, key) {
             tvm.showSubtechniques = false; });
