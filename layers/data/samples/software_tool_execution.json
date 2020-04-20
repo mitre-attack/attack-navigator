@@ -1,828 +1,777 @@
 {
-    "description": "all techniques that can be executed by software (in blue)",
-    "version": "3.0", 
-    "name": "Software(tools) Execution",
+    "name": "Software (tool) Execution",
+    "description": "All techniques that can be executed by software of subtype tool, where the score is the count of tools using the technique",
+    "version": "3.0",
     "domain": "mitre-enterprise",
     "techniques": [
         {
-            "color": "#ffffff",
-            "techniqueID": "T1045"
+            "techniqueID": "T1016",
+            "comment": "executed by Arp, Empire, Koadic, Nltest, PoshC2, Pupy, ifconfig, ipconfig, nbtstat, route",
+            "score": 10
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by cmd",
-            "techniqueID": "T1107"
+            "techniqueID": "T1048.003",
+            "comment": "executed by BITSAdmin, FTP",
+            "score": 2
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1074"
+            "techniqueID": "T1105",
+            "comment": "executed by BITSAdmin, Empire, Koadic, Pupy, QuasarRAT, Remcos, certutil, cmd, esentutl",
+            "score": 9
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1186"
+            "techniqueID": "T1197",
+            "comment": "executed by BITSAdmin, Cobalt Strike",
+            "score": 2
         },
         {
-            "color": "#66b1ff",
+            "techniqueID": "T1570",
+            "comment": "executed by BITSAdmin, Expand, PsExec, cmd, esentutl",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1003.005",
+            "comment": "executed by Cachedump, LaZagne, Pupy",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1059.003",
+            "comment": "executed by Cobalt Strike, Empire, Koadic, QuasarRAT, Remcos, cmd",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1029",
             "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1134"
+            "score": 1
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1170"
+            "techniqueID": "T1057",
+            "comment": "executed by Cobalt Strike, Empire, PowerSploit, Pupy, Tasklist",
+            "score": 5
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by netsh",
-            "techniqueID": "T1089"
+            "techniqueID": "T1106",
+            "comment": "executed by Cobalt Strike, Empire",
+            "score": 2
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1122"
+            "techniqueID": "T1543.003",
+            "comment": "executed by Cobalt Strike, Empire, PowerSploit",
+            "score": 3
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1011"
+            "techniqueID": "T1551.006",
+            "comment": "executed by Cobalt Strike, Empire",
+            "score": 2
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1101"
+            "techniqueID": "T1046",
+            "comment": "executed by Cobalt Strike, Empire, Koadic, PoshC2, Pupy",
+            "score": 5
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1183"
+            "techniqueID": "T1550.002",
+            "comment": "executed by Cobalt Strike, Empire, Mimikatz, Pass-The-Hash Toolkit, PoshC2",
+            "score": 5
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1001"
+            "techniqueID": "T1027.005",
+            "comment": "executed by Cobalt Strike, PowerSploit",
+            "score": 2
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1068"
+            "techniqueID": "T1059.001",
+            "comment": "executed by Cobalt Strike, Empire, PowerSploit, Pupy",
+            "score": 4
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by UACMe, Cobalt Strike",
-            "techniqueID": "T1088"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Net",
-            "techniqueID": "T1126"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1055"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1149"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1160"
-        },
-        {
-            "color": "#66b1ff",
+            "techniqueID": "T1021.002",
             "comment": "executed by Cobalt Strike, Net, PsExec",
-            "techniqueID": "T1077"
+            "score": 3
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by Ping, Cobalt Strike, Net",
-            "techniqueID": "T1018"
+            "techniqueID": "T1078.003",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
         },
         {
-            "color": "#66b1ff",
+            "techniqueID": "T1021.006",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1548.002",
+            "comment": "executed by Cobalt Strike, Empire, Koadic, PoshC2, Pupy, Remcos, UACMe",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1021.004",
+            "comment": "executed by Cobalt Strike, Empire",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1047",
+            "comment": "executed by Cobalt Strike, Empire, Impacket, Koadic, PoshC2, PowerSploit",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1068",
+            "comment": "executed by Cobalt Strike, Empire, PoshC2",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1090.001",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1005",
+            "comment": "executed by Cobalt Strike, Forfiles, Koadic, PowerSploit",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1572",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1113",
+            "comment": "executed by Cobalt Strike, Empire, PowerSploit, Pupy, Remcos",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1055",
+            "comment": "executed by Cobalt Strike, Empire, HTRAN, PoshC2, Remcos",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1134.001",
+            "comment": "executed by Cobalt Strike, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1569.002",
+            "comment": "executed by Cobalt Strike, Empire, Impacket, Koadic, Net, PoshC2, PsExec, Pupy, Winexe, xCmd",
+            "score": 10
+        },
+        {
+            "techniqueID": "T1185",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1003.002",
+            "comment": "executed by Cobalt Strike, Fgdump, Impacket, Koadic, Mimikatz, gsecdump, pwdump",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1021.001",
+            "comment": "executed by Cobalt Strike, Koadic, Pupy, QuasarRAT",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1056.001",
+            "comment": "executed by Cobalt Strike, Empire, PoshC2, PowerSploit, Pupy, QuasarRAT, Remcos",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1055.012",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1018",
+            "comment": "executed by Cobalt Strike, Net, Nltest, Ping",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1021.003",
+            "comment": "executed by Cobalt Strike, Empire",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1135",
+            "comment": "executed by Cobalt Strike, Empire, Koadic, Net, Pupy",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1134.004",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1134.003",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1078.002",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1071",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1071.004",
+            "comment": "executed by Cobalt Strike",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1071.001",
+            "comment": "executed by Cobalt Strike, Empire, PoshC2, Pupy",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1059",
+            "comment": "executed by Cobalt Strike, Empire",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1059.006",
+            "comment": "executed by Cobalt Strike, Pupy, Remcos",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1217",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1552.001",
+            "comment": "executed by Empire, LaZagne, PoshC2, Pupy, QuasarRAT",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1003.001",
+            "comment": "executed by Empire, Impacket, LaZagne, Lslsass, Mimikatz, PoshC2, PowerSploit, Pupy, Windows Credential Editor",
+            "score": 9
+        },
+        {
+            "techniqueID": "T1125",
+            "comment": "executed by Empire, Pupy, QuasarRAT, Remcos",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1083",
+            "comment": "executed by Empire, Forfiles, PoshC2, Pupy, Remcos, cmd",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1115",
+            "comment": "executed by Empire, Koadic, Remcos",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1558.001",
+            "comment": "executed by Empire, Mimikatz",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1552.004",
+            "comment": "executed by Empire, Mimikatz",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1558.003",
+            "comment": "executed by Empire, Impacket, PowerSploit",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1040",
+            "comment": "executed by Empire, Impacket, PoshC2, Responder",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1557.001",
+            "comment": "executed by Empire, Impacket, PoshC2, Pupy, Responder",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1056.004",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1210",
+            "comment": "executed by Empire, PoshC2",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1134.002",
+            "comment": "executed by Empire, PoshC2",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1053.005",
+            "comment": "executed by Empire, PowerSploit, QuasarRAT, schtasks",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1546.008",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1574.001",
+            "comment": "executed by Empire, PowerSploit",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1547.005",
+            "comment": "executed by Empire, Mimikatz, PowerSploit",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1134.005",
+            "comment": "executed by Empire, Mimikatz",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1547.009",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1136.001",
+            "comment": "executed by Empire, Net, Pupy",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1560",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1114.001",
+            "comment": "executed by Empire, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1547.001",
+            "comment": "executed by Empire, PowerSploit, Pupy, Remcos",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1087.002",
+            "comment": "executed by Empire, Net, PoshC2, dsquery",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1567.002",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1041",
+            "comment": "executed by Empire, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1049",
+            "comment": "executed by Empire, Net, PoshC2, Pupy, nbtstat, netstat",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1082",
+            "comment": "executed by Empire, PoshC2, Pupy, QuasarRAT, Systeminfo, cmd",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1518.001",
+            "comment": "executed by Empire, Tasklist, netsh",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1573.002",
+            "comment": "executed by Empire, Koadic, Pupy",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1027",
+            "comment": "executed by Empire, Invoke-PSImage, PowerSploit, Remcos",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1484",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1102.002",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1482",
+            "comment": "executed by Empire, Nltest, PoshC2, PowerSploit, dsquery",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1555.003",
+            "comment": "executed by Empire, LaZagne, Mimikatz, Pupy, QuasarRAT",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1136.002",
+            "comment": "executed by Empire, Net, Pupy",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1567.001",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1134",
+            "comment": "executed by Empire, PoshC2, PowerSploit",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1558.002",
+            "comment": "executed by Empire, Mimikatz",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1087.001",
+            "comment": "executed by Empire, Net, PoshC2, PowerSploit, Pupy",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1574.007",
+            "comment": "executed by Empire, PowerSploit",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1574.008",
+            "comment": "executed by Empire, PowerSploit",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1574.009",
+            "comment": "executed by Empire, PowerSploit",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1127.001",
+            "comment": "executed by Empire",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1564.004",
+            "comment": "executed by Expand, esentutl",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1140",
+            "comment": "executed by Expand, certutil",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1202",
+            "comment": "executed by Forfiles",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1090",
+            "comment": "executed by HTRAN, PoshC2, QuasarRAT, Remcos, netsh",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1014",
+            "comment": "executed by HTRAN",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1190",
+            "comment": "executed by Havij, sqlmap",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1003.003",
+            "comment": "executed by Impacket, Koadic, esentutl",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1003.004",
+            "comment": "executed by Impacket, LaZagne, Mimikatz, Pupy, gsecdump",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1055.001",
+            "comment": "executed by Koadic, PowerSploit, Pupy",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1218.011",
+            "comment": "executed by Koadic",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1218.005",
+            "comment": "executed by Koadic",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1218.010",
+            "comment": "executed by Koadic",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1059.005",
+            "comment": "executed by Koadic",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1033",
+            "comment": "executed by Koadic, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1555",
+            "comment": "executed by LaZagne, Mimikatz, PowerSploit, Pupy, QuasarRAT",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1555.001",
+            "comment": "executed by LaZagne",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1003.007",
+            "comment": "executed by LaZagne, MimiPenguin",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1003.008",
+            "comment": "executed by LaZagne",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1110.003",
+            "comment": "executed by MailSniper",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1114.002",
+            "comment": "executed by MailSniper",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1087.003",
+            "comment": "executed by MailSniper, Ruler",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1207",
+            "comment": "executed by Mimikatz",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1550.003",
+            "comment": "executed by Mimikatz, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1098",
+            "comment": "executed by Mimikatz",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1003.006",
+            "comment": "executed by Mimikatz",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1069.001",
+            "comment": "executed by Net, PoshC2",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1007",
+            "comment": "executed by Net, PoshC2, Tasklist",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1201",
+            "comment": "executed by Net, PoshC2",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1124",
+            "comment": "executed by Net",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1551.005",
+            "comment": "executed by Net",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1069.002",
+            "comment": "executed by Net, dsquery",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1110",
+            "comment": "executed by PoshC2",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1119",
+            "comment": "executed by PoshC2",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1546.003",
+            "comment": "executed by PoshC2",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1560.001",
+            "comment": "executed by PoshC2, Pupy",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1055.002",
+            "comment": "executed by PowerSploit",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1552.002",
+            "comment": "executed by PowerSploit, Reg",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1552.006",
+            "comment": "executed by PowerSploit",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1012",
+            "comment": "executed by PowerSploit, Reg",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1123",
+            "comment": "executed by PowerSploit, Pupy, Remcos",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1551.001",
+            "comment": "executed by Pupy",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1573",
+            "comment": "executed by Pupy, Tor",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1497.001",
+            "comment": "executed by Pupy, Remcos",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1543.002",
+            "comment": "executed by Pupy",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1573.001",
+            "comment": "executed by QuasarRAT",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1112",
+            "comment": "executed by QuasarRAT, Reg, Remcos",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1553.002",
+            "comment": "executed by QuasarRAT, SDelete",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1561.002",
+            "comment": "executed by RawDisk",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1485",
+            "comment": "executed by RawDisk, SDelete",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1561.001",
+            "comment": "executed by RawDisk",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1137.004",
+            "comment": "executed by Ruler",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1137.005",
+            "comment": "executed by Ruler",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1137.003",
+            "comment": "executed by Ruler",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1551.004",
+            "comment": "executed by SDelete, cmd",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1090.003",
+            "comment": "executed by Tor",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1053.002",
+            "comment": "executed by at",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1553.004",
             "comment": "executed by certutil",
-            "techniqueID": "T1140"
+            "score": 1
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1006"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Reg",
-            "techniqueID": "T1112"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1076"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1133"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1181"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1019"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1065"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Responder",
-            "techniqueID": "T1171"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1125"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1086"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1099"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1032"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1073"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1164"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1106"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1013"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1152"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike, Mimikatz, Pass-The-Hash Toolkit",
-            "techniqueID": "T1075"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by netsh",
-            "techniqueID": "T1128"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1165"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1061"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1129"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1020"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by cmd, certutil",
-            "techniqueID": "T1105"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1114"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1015"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1039"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1042"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by cmd",
-            "techniqueID": "T1083"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1022"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1148"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1027"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1084"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1141"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1162"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Net",
-            "techniqueID": "T1136"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1176"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1150"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Reg",
-            "techniqueID": "T1012"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1014"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1070"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1017"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1159"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1118"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1031"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Responder",
-            "techniqueID": "T1040"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1051"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1010"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1081"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1123"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1041"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Fgdump, Cachedump, gsecdump, Cobalt Strike, Lslsass, Mimikatz, Windows Credential Editor, MimiPenguin, pwdump",
-            "techniqueID": "T1003"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1005"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1137"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1153"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by HTRAN, Cobalt Strike, netsh",
-            "techniqueID": "T1090"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike, cmd",
-            "techniqueID": "T1059"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1028"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1143"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1030"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1187"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Systeminfo, cmd",
-            "techniqueID": "T1082"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1025"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1117"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by schtasks, at",
-            "techniqueID": "T1053"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1146"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1154"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1173"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1180"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Net",
-            "techniqueID": "T1124"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1067"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1080"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1096"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1147"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1103"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1182"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1060"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by FTP",
-            "techniqueID": "T1048"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by netsh, Tasklist",
-            "techniqueID": "T1063"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1184"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1024"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1098"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1021"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1052"
-        },
-        {
-            "color": "#66b1ff",
+            "techniqueID": "T1090.004",
             "comment": "executed by meek",
-            "techniqueID": "T1172"
+            "score": 1
         },
         {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1093"
+            "techniqueID": "T1562.004",
+            "comment": "executed by netsh",
+            "score": 1
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1091"
+            "techniqueID": "T1546.007",
+            "comment": "executed by netsh",
+            "score": 1
         },
         {
-            "color": "#ffffff",
-            "techniqueID": "T1104"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1002"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1179"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1119"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1142"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1175"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1029"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1026"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Tor",
-            "techniqueID": "T1079"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1138"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by xCmd, Cobalt Strike, Net, PsExec",
-            "techniqueID": "T1035"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1169"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1033"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by certutil",
-            "techniqueID": "T1130"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1092"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1050"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1036"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1066"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1038"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1168"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1155"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1139"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Tasklist, Net",
-            "techniqueID": "T1007"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1145"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1094"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1167"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1034"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1078"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Tor",
-            "techniqueID": "T1188"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Net, Cobalt Strike",
-            "techniqueID": "T1135"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1116"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by FTP, Cobalt Strike",
-            "techniqueID": "T1043"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1009"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1121"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1113"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1044"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1054"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1085"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1046"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1174"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1158"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1185"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1037"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1100"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1108"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1095"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1132"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1151"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1161"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1111"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1120"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1102"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1166"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1047"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1127"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1062"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1115"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1097"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1064"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1058"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by dsquery, Net",
-            "techniqueID": "T1087"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1110"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1071"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1023"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Cobalt Strike",
-            "techniqueID": "T1056"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1131"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1177"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by dsquery, Net",
-            "techniqueID": "T1069"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1156"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1008"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1072"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1157"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1004"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Mimikatz",
-            "techniqueID": "T1178"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by ipconfig, Arp, nbtstat, ifconfig, route",
-            "techniqueID": "T1016"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1109"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1144"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Tasklist, Cobalt Strike",
-            "techniqueID": "T1057"
-        },
-        {
-            "color": "#66b1ff",
-            "comment": "executed by Net, nbtstat, netstat",
-            "techniqueID": "T1049"
-        },
-        {
-            "color": "#ffffff",
-            "techniqueID": "T1163"
+            "techniqueID": "T1213.002",
+            "comment": "executed by spwebmember",
+            "score": 1
         }
-    ]
+    ],
+    "sorting": 3,
+    "gradient": {
+        "colors": [
+            "#fff7b3",
+            "#ff6666"
+        ],
+        "minValue": 1,
+        "maxValue": 10
+    }
 }
