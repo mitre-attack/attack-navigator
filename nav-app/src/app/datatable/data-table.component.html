@@ -311,7 +311,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      (click)="expandSubtechniques()"
                      matTooltipPosition="below"
                      matTooltip="expand sub-techniques">
-                     <img src="assets/icons/unfold_more_24px.svg" alt="expand sub-techniques"/>
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_black_24px.svg'" alt="expand sub-techniques"/>
                  </div>
              </div>
 
@@ -321,7 +321,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      (click)="collapseSubtechniques()"
                      matTooltipPosition="below"
                      matTooltip="collapse sub-techniques">
-                     <img src="assets/icons/unfold_less_24px.svg" alt="collapse sub-techniques"/>
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_less_gray_24px.svg' : 'assets/icons/unfold_less_24px.svg'" alt="collapse sub-techniques"/>
                  </div>
              </div>
 
