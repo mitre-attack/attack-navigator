@@ -276,6 +276,7 @@ export class DataTableComponent implements AfterViewInit {
      * Show all sub-techniques in layout view
      */
     expandSubtechniques(): void {
+        if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
         for (let technique of this.dataService.techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
@@ -290,6 +291,7 @@ export class DataTableComponent implements AfterViewInit {
      * Hide all sub-techniques in layout view
      */
     collapseSubtechniques(): void {
+        if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
         this.viewModel.techniqueVMs.forEach(function(tvm, key) {
             tvm.showSubtechniques = false; });
     }
