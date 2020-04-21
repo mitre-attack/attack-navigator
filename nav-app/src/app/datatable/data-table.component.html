@@ -305,6 +305,26 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
              </div>
 
+            <!-- expand all sub-techniques -->
+            <div *ngIf="configService.getFeature('toggle_subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="expandSubtechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="expand sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_black_24px.svg'" alt="expand sub-techniques"/>
+                 </div>
+             </div>
+
+            <!-- collapse all sub-techniques -->
+            <div *ngIf="configService.getFeature('toggle_subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="collapseSubtechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="collapse sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_less_gray_24px.svg' : 'assets/icons/unfold_less_black_24px.svg'" alt="collapse sub-techniques"/>
+                 </div>
+             </div>
+
              <!-- layout -->
              <div *ngIf="configService.getFeature('layout_controls')" class="control-row-item">
                  <div class="control-row-button dropdown noselect"
