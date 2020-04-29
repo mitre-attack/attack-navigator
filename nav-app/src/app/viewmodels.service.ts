@@ -377,7 +377,7 @@ export class ViewModel {
     legendColorPresets: string[] = [];
 
     selectTechniquesAcrossTactics: boolean = true;
-    selectSubtechniquesWithParent: boolean = true;
+    selectSubtechniquesWithParent: boolean = false;
 
     needsToConstructTechniqueVMs = false;
     legacyTechniques = [];
