@@ -100,7 +100,7 @@ export class DataService {
                         this.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case "relationship":
-                        if (sdo.relationship_type == "subtechnique-of") {
+                        if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
                             // record subtechnique:technique relationship
                             if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
                                 let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
@@ -137,10 +137,9 @@ export class DataService {
                         break;
                     case "attack-pattern":
                         idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique && this.subtechniquesEnabled) subtechniqueSDOs.push(sdo);
-                        //if (sdo.x_mitre_is_subtechnique) subtechniqueSDOs.push(sdo);
-                        else if (!sdo.x_mitre_is_subtechnique) techniqueSDOs.push(sdo);
-                        //else techniqueSDOs.push(sdo);
+                        if (sdo.x_mitre_is_subtechnique) {
+                            if (this.subtechniquesEnabled) subtechniqueSDOs.push(sdo);
+                        } else techniqueSDOs.push(sdo);
                         break;
                     case "x-mitre-tactic":
                         idToTacticSDO.set(sdo.id, sdo);
@@ -155,11 +154,13 @@ export class DataService {
         //create techniques
         for (let techniqueSDO of techniqueSDOs) {
             let subtechniques: Technique[] = [];
-            if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                    if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
-                    // else the target was revoked or deprecated and we can skip honoring the relationship
-                })
+            if (this.subtechniquesEnabled) {
+                if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
+                    this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+                        if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                        // else the target was revoked or deprecated and we can skip honoring the relationship
+                    })
+                }
             }
             this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
