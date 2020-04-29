@@ -53,10 +53,10 @@
             {"name": "comments", "enabled": true, "description": "Disable to the remove the ability to add comments to techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]},
-        {"name": "subtechniques", "enabled": true, "description": "Disable to to disable all sub-technique features", "subfeatures": [
+        {"name": "subtechniques", "enabled": false, "description": "Disable to to disable all sub-technique features", "subfeatures": [
             {"name": "show_hide_subtechniques", "enabled": true, "description": "Disable to remove the show sub-techniques button from the interface."},
             {"name": "toggle_subtechniques_ui", "enabled": true, "description": "Disable to remove the sub-techniques sidebar from technique cells."},
-            {"name": "toggle_subtechniques", "enabled": false, "description": "Disable to remove the sub-techniques sidebar from technique cells."}
+            {"name": "toggle_subtechniques", "enabled": true, "description": "Disable to remove the sub-techniques sidebar from technique cells."}
         ]}
     ]
 }

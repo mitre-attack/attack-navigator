@@ -31,7 +31,8 @@
                     <ng-template #supertechnique>
                         <table class="supertechnique">
                             <tr>
-                                <td *ngIf="configService.getFeature('toggle_subtechniques_ui')" class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)">
+                                <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)">
+                                <!-- <td *ngIf="configService.getFeature('toggle_subtechniques_ui')" class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)"> -->
                                     <div class="handle"> = </div>
                                 </td>
                                 <td class="technique">
@@ -46,7 +47,8 @@
                                     </technique-cell>
                                 </td>
                             </tr>
-                            <tr *ngIf="configService.getFeature('toggle_subtechniques_ui')" class="subtechniques-row subtechniques-container" [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">
+                            <tr class="subtechniques-row subtechniques-container" [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">
+                            <!-- <tr *ngIf="configService.getFeature('toggle_subtechniques_ui')" class="subtechniques-row subtechniques-container" [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques"> -->
                                 <td class="sidebar subtechniques">
                                     <svg width="12px" height="12px">
                                         <path d="M0 0H12V12Z"/>

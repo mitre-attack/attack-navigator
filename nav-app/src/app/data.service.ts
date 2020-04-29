@@ -54,6 +54,7 @@ export class DataService {
         mitigates: new Map<string, string[]>()
     }
 
+    public subtechniquesEnabled: boolean = true;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
 
@@ -70,7 +71,6 @@ export class DataService {
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
     parseBundle(stixBundle: any[]): void {
-
         let techniqueSDOs = [];
         let idToTechniqueSDO = new Map<string, any>();
         let subtechniqueSDOs = [];
@@ -137,8 +137,10 @@ export class DataService {
                         break;
                     case "attack-pattern":
                         idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique) subtechniqueSDOs.push(sdo);
-                        else techniqueSDOs.push(sdo);
+                        if (sdo.x_mitre_is_subtechnique && this.subtechniquesEnabled) subtechniqueSDOs.push(sdo);
+                        //if (sdo.x_mitre_is_subtechnique) subtechniqueSDOs.push(sdo);
+                        else if (!sdo.x_mitre_is_subtechnique) techniqueSDOs.push(sdo);
+                        //else techniqueSDOs.push(sdo);
                         break;
                     case "x-mitre-tactic":
                         idToTacticSDO.set(sdo.id, sdo);
@@ -381,10 +383,12 @@ export class Technique extends BaseStix {
         super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms;
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
-        this.subtechniques = subtechniques;
-        for (let subtechnique of this.subtechniques) {
-            subtechnique.parent = this;
-        }
+        //if(dataService.subtechniquesEnabled) {
+            this.subtechniques = subtechniques;
+            for (let subtechnique of this.subtechniques) {
+                subtechnique.parent = this;
+            }
+        //}
     }
 
     /**
