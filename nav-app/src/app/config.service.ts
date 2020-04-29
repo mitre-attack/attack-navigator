@@ -18,7 +18,7 @@ export class ConfigService {
             //parse feature preferences from config json
             config["features"].forEach(function(featureObject: any) {
                 self.setFeature_object(featureObject);
-                if (featureObject.name === "subtechniques") {
+                if (featureObject.name === "sub-techniques") {
                     dataService.subtechniquesEnabled = featureObject.enabled;
                 }
             })
