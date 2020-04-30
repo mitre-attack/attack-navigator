@@ -384,12 +384,12 @@ export class Technique extends BaseStix {
         super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms;
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
-        //if(dataService.subtechniquesEnabled) {
-            this.subtechniques = subtechniques;
-            for (let subtechnique of this.subtechniques) {
-                subtechnique.parent = this;
-            }
-        //}
+
+        this.subtechniques = subtechniques;
+        for (let subtechnique of this.subtechniques) {
+            subtechnique.parent = this;
+        }
+
     }
 
     /**
