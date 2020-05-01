@@ -18,22 +18,20 @@ export class ConfigService {
             //parse feature preferences from config json
             config["features"].forEach(function(featureObject: any) {
                 self.setFeature_object(featureObject);
-                if (featureObject.name === "sub-techniques") {
-                    dataService.subtechniquesEnabled = featureObject.enabled;
-                }
             })
             //override json preferences with preferences from URL fragment
             self.getAllFragments().forEach(function(value: string, key: string) {
                 let valueBool = (value == 'true');
                 if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                    // console.log("setting feature", key, valueBool)
+                    console.log("setting feature", key, valueBool)
                     self.setFeature(key, valueBool);
                 }
                 // else {
                 //     console.log(key, "is not a feature")
                 // }
             })
-            self.featureStructure = config["features"]
+            dataService.subtechniquesEnabled = self.getFeature("subtechniques");
+            self.featureStructure = config["features"];
             self.comment_color = config["comment_color"];
             for (let obj of config["custom_context_menu_items"]) {
                 self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
