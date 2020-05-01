@@ -29,7 +29,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <label for="select_behavior_tactic" class="checkbox-custom-label noselect">select techniques across tactics</label>
                     </div>
                     <!-- selectSubtechniquesWithParent -->
-                    <div *ngIf="configService.getFeature('sub-techniques')">
+                    <div *ngIf="configService.getFeature('subtechniques')">
                         <input id="select_behavior_subtechnique" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.selectSubtechniquesWithParent">
                         <label for="select_behavior_subtechnique" class="checkbox-custom-label noselect">select sub-techniques with parent</label>
                     </div>
@@ -306,7 +306,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
              </div>
 
             <!-- expand all sub-techniques -->
-            <div *ngIf="configService.getFeature('sub-techniques')" class="control-row-item">
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
                      (click)="expandSubtechniques()"
                      matTooltipPosition="below"
@@ -316,7 +316,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
              </div>
 
             <!-- collapse all sub-techniques -->
-            <div *ngIf="configService.getFeature('sub-techniques')" class="control-row-item">
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
                      (click)="collapseSubtechniques()"
                      matTooltipPosition="below"
