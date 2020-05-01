@@ -23,7 +23,7 @@ export class ConfigService {
             self.getAllFragments().forEach(function(value: string, key: string) {
                 let valueBool = (value == 'true');
                 if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                    console.log("setting feature", key, valueBool)
+                    // console.log("setting feature", key, valueBool)
                     self.setFeature(key, valueBool);
                 }
                 // else {
