@@ -6,7 +6,7 @@
 - Updated the [sample layers](layers/data/samples/) with sub-techniques support. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138). We've also released [some scripts on our attack-scripts repository](https://github.com/mitre-attack/attack-scripts/tree/develop/scripts/layers/samples) corresponding to the sample layers.
 - Added show/hide all sub-techniques controls under "layer controls". See issue [#141](https://github.com/mitre-attack/attack-navigator/issues/141).
 - Updated the "select sub-techniques with parent" control under the "selection controls" dropdown. Sub-techniques will be selected independently by default. See issue [#140](https://github.com/mitre-attack/attack-navigator/issues/140).
-- Added sub-techniques as a configurable Navigator feature. Sub-techniques features can be disabled by editing the `src/assets/config.json` file or using the "create customized Navigator" interface. See issue [#112](https://github.com/mitre-attack/attack-navigator/issues/112).
+- Added sub-techniques as a configurable Navigator feature. Sub-technique features can be disabled by editing the `src/assets/config.json` file or using the "create customized Navigator" interface. See issue [#112](https://github.com/mitre-attack/attack-navigator/issues/112).
 
 ## Fixes
 - Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
