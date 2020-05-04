@@ -380,6 +380,10 @@ export class Technique extends BaseStix {
     constructor(stixSDO: any, subtechniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms;
+      	if (stixSDO.x_mitre_data_sources !== undefined)
+		      this.datasources = stixSDO.x_mitre_data_sources.toString();
+	      else
+		      this.datasources = "";
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         this.subtechniques = subtechniques;
         for (let subtechnique of this.subtechniques) {
