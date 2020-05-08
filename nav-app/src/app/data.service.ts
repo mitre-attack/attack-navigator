@@ -370,6 +370,7 @@ export class Technique extends BaseStix {
     public readonly platforms: string[];        // platforms for this technique.
     public readonly tactics: string[];          // tactics this technique is found under in phase-name format
     public readonly subtechniques: Technique[]; // subtechniques under this technique
+    public readonly datasources: string;        // data sources of the technique
     public parent: Technique = null;            // parent technique. Only present if it's a sub-technique
     public get isSubtechnique() { return this.parent != null; }
     /**
