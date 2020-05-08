@@ -11,7 +11,7 @@ import { DataTableComponent} from '../datatable/data-table.component';
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
 import {ErrorStateMatcher} from '@angular/material/core'
-import {FormControl} from '@angular/forms';
+import {FormControl, FormArray} from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { log } from 'util';
@@ -524,6 +524,10 @@ export class TabsComponent implements AfterContentInit {
     // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     layerLinkURLs: string[] = [];
     customizedConfig = [];
+
+    trackByFunction(index: number, obj: any): any {
+        return index;
+    }
 
     /**
      * Add a new empty layer link to the layerLinkURLs array

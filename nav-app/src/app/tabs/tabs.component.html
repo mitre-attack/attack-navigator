@@ -222,12 +222,10 @@
                     <tr class="custom_nav_inputsection">
                         <td>
                             <ul class="layerLinks">
-                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index">
+                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index trackBy:trackByFunction">
                                     <mat-form-field>
-                                        <input type="text"
-                                        matInput
-                                        [placeholder]="'default layer URL ' + (i + 1)"
-                                        [(ngModel)]="layerLinkURLs[i]"/>
+                                        <input type="text" matInput
+                                            [placeholder]="'default layer URL ' + (i + 1)" [(ngModel)]="layerLinkURLs[i]"/>
                                         <button mat-button matSuffix mat-icon-button aria-label="remove" (click)="removeLayerLink(i)">
                                             x
                                         </button>
