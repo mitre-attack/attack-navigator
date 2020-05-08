@@ -18,7 +18,6 @@ export class ExporterComponent implements AfterViewInit {
 
     private config: any = {}
     private isIE() {
-        console.log(is.ie())
         return is.ie();
     }
 
@@ -31,16 +30,13 @@ export class ExporterComponent implements AfterViewInit {
             "headerHeight": 1,
 
             "unit": "in",
-            "fontUnit": "pt",
+
+            "showSubtechniques": "expanded",
 
             "font": 'sans-serif',
-            "tableFontSize": 5,
-            "tableTacticFontSize": 6,
             "tableBorderColor": "#6B7279",
 
             "showHeader": true,
-            "headerLayerNameFontSize": 18,
-            "headerFontSize": 12,
 
             "legendDocked": true,
             "legendX": 0,
@@ -57,6 +53,7 @@ export class ExporterComponent implements AfterViewInit {
     ngAfterViewInit() {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
+        //determine if the layer has any scores
         for (let matrix of this.dataService.matrices) {
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
@@ -133,24 +130,6 @@ export class ExporterComponent implements AfterViewInit {
         let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
         let legendWidth = Math.max(self.convertToPx(self.config.legendWidth, self.config.unit), 10);
         let legendHeight = Math.max(self.convertToPx(self.config.legendHeight, self.config.unit), 10);
-
-        let tableFontSize = Math.max(self.config.tableFontSize, 1); console.log('tableFontSize', tableFontSize)
-        let tableTextYOffset = ((tableFontSize/2) - (1/2));
-
-        let tableTacticFontSize = Math.max(self.config.tableTacticFontSize, 1); console.log("tableTacticFontSize", tableTacticFontSize);
-        let tableTacticTextYOffset = ((tableTacticFontSize/2) - (1/2));
-
-        let headerFontSize = Math.max(self.config.headerFontSize, 1); console.log("headerFontSize", headerFontSize)
-        let headerTextYOffset = ((headerFontSize/2) - (1/2))
-
-        let headerLayerNameFontSize = Math.max(self.config.headerLayerNameFontSize, 1); console.log("headerLayerNameFontSize", headerLayerNameFontSize);
-        let heafderLayerNameTextYOffset = ((headerLayerNameFontSize/2) - (1/2))
-
-        let fontUnits = self.config.fontUnit;
-
-        let headerTextPad = 6;
-        let bodyTextPad = 3;
-
 
         //remove previous graphic
         let element = <HTMLElement>document.getElementById(self.svgDivName);
@@ -324,7 +303,6 @@ export class ExporterComponent implements AfterViewInit {
                 if (fontSize.endsWith("px")) fontSize = Number(fontSize.split("px")[0])
                 let currY = node.hasAttribute("y") ? Number(node.getAttribute("y")) : 0;
                 let newY = currY + Math.floor((fontSize * 0.3))
-                console.log("before", node.hasAttribute("y"), node, currY, "after:", newY)
                 d3.select(node).attr("y", newY);
             }
         }
@@ -519,7 +497,7 @@ export class ExporterComponent implements AfterViewInit {
 
         // build data model
         let matrices: RenderableMatrix[] = this.viewModel.filters.filterMatrices(this.dataService.matrices).map(function(matrix: Matrix) {
-            return new RenderableMatrix(matrix, self.viewModel);
+            return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 
         let tactics: RenderableTactic[] = [];
@@ -610,7 +588,7 @@ export class ExporterComponent implements AfterViewInit {
                 ].join(" ");
             })
             .attr("fill", self.config.tableBorderColor)
-            .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 ? "visible" : "hidden"});
+            .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? "visible" : "hidden"});
 
         //   oooooooo8             o888  o888       ooooooooooo                          o8   
         // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo 
@@ -845,11 +823,11 @@ class RenderableMatrix {
         let heights = this.tactics.map(function(tactic: RenderableTactic) { return tactic.height; })
         return Math.max(...heights);
     }
-    constructor(matrix: Matrix, viewModel: ViewModel) {
+    constructor(matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.matrix = matrix;
         let filteredTactics = viewModel.filterTactics(matrix.tactics, matrix);
         for (let tactic of filteredTactics) {
-            this.tactics.push(new RenderableTactic(tactic, matrix, viewModel));
+            this.tactics.push(new RenderableTactic(tactic, matrix, viewModel, renderConfig));
         }
     }
 }
@@ -859,16 +837,22 @@ class RenderableTactic {
     public readonly techniques: RenderableTechnique[] = [];
     public readonly subtechniques: RenderableTechnique[] = [];
     public readonly height: number;
-    constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
+    constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
         let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
         let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
-            let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix)
-            this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel));
-            if (filteredSubtechniques.length > 0) {
+            let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
+            let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix);
+            
+            let showSubtechniques = renderConfig.showSubtechniques == "all" || (renderConfig.showSubtechniques == "expanded" && techniqueVM.showSubtechniques)
+
+            this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
+
+            
+            if (filteredSubtechniques.length > 0 && showSubtechniques) {
                 for (let subtechnique of filteredSubtechniques) {
-                    this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel));
+                    this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));
                 }
             }
         }
@@ -881,14 +865,17 @@ class RenderableTechnique {
     public readonly technique: Technique;
     public readonly tactic: Tactic;
     public readonly matrix: Matrix;
+    public readonly showSubtechniques;
     private readonly viewModel: ViewModel;
-    constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel) {
+    constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques=false) {
         this.yPosition = yPosition;
         this.technique = technique;
         this.tactic = tactic;
         this.matrix = matrix;
         this.viewModel = viewModel;
+        this.showSubtechniques = showSubtechniques;
     }
+
     public get fill() {
         if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
             let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);

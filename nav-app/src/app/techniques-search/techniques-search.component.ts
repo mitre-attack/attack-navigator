@@ -30,6 +30,11 @@ export class TechniquesSearchComponent implements OnInit {
             "field": "description",
             "enabled": true
         },
+        {
+            "label": "datasources",
+            "field": "datasources",
+            "enabled": true
+        }
     ]
 
     private _query: string = "";
