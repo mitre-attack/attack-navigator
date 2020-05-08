@@ -4,10 +4,14 @@
 - Added options to the SVG Export feature for the visibility of sub-techniques. See issue [#142](https://github.com/mitre-attack/attack-navigator/issues/142).
 - Added update layers for March 2020 sub-techniques release. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138).
 - Updated the [sample layers](layers/data/samples/) with sub-techniques support. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138). We've also released [some scripts on our attack-scripts repository](https://github.com/mitre-attack/attack-scripts/tree/develop/scripts/layers/samples) corresponding to the sample layers.
-- Added show/hide all sub-techniques controls under "layer controls". See issue [#141](https://github.com/mitre-attack/attack-navigator/issues/141)
-- Extended search interface to support searching for techniques based on data sources. See pull request [#158](https://github.com/mitre-attack/attack-navigator/pull/158)
+- Extended search interface to support searching for techniques based on data sources. See pull request [#158](https://github.com/mitre-attack/attack-navigator/pull/158).
+- Added show/hide all sub-techniques controls under "layer controls". See issue [#141](https://github.com/mitre-attack/attack-navigator/issues/141).
+- Updated the "select sub-techniques with parent" control under the "selection controls" dropdown. Sub-techniques will be selected independently by default. See issue [#140](https://github.com/mitre-attack/attack-navigator/issues/140).
+- Added sub-techniques as a configurable Navigator feature. Sub-technique features can be disabled by editing the `src/assets/config.json` file or using the "create customized Navigator" interface. See issue [#112](https://github.com/mitre-attack/attack-navigator/issues/112).
+
 ## Fixes
 - Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
+- Fixed a bug causing metadata values to be displayed improperly in tooltips. See issue [#153](https://github.com/mitre-attack/attack-navigator/issues/153).
 
 
 # v3.0 - sub-techniques beta
