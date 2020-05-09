@@ -74,7 +74,7 @@ export class ViewModelsService {
      * @param  filters            viewmodel to inherit filters from
      * @return                    new viewmodel inheriting above properties
      */
-    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
         let result = new ViewModel("layer by operation", this.domain, "vm" + this.getNonce(), this.dataService);
 
         if (scoreExpression) {
@@ -188,6 +188,7 @@ export class ViewModelsService {
         result.name = layerName;
         // console.log(result)
         this.viewModels.push(result)
+        if (gradient) result.gradient = gradient.gradient;
         result.updateGradient();
         return result;
     } //end layer layer operation
