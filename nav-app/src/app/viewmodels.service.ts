@@ -184,11 +184,15 @@ export class ViewModelsService {
         if (legendItems) {
             result.legendItems = JSON.parse(JSON.stringify(legendItems.legendItems));
         }
+
+        if (gradient) {
+            result.gradient = new Gradient();
+            result.gradient.deSerialize(gradient.gradient.serialize());
+        }
         
         result.name = layerName;
         // console.log(result)
         this.viewModels.push(result)
-        if (gradient) result.gradient = gradient.gradient;
         result.updateGradient();
         return result;
     } //end layer layer operation
