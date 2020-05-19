@@ -178,7 +178,7 @@ export class ViewModelsService {
         if (enabledness) inherit(enabledness, "enabled")
 
         if (filters) { //copy filter settings
-            result.filters = JSON.parse(JSON.stringify(filters.filters))
+            result.filters.deSerialize(JSON.parse(filters.filters.serialize()))
         }
 
         if (legendItems) {
@@ -289,7 +289,7 @@ export class Gradient {
      * @param  preset preset to use
      */
     setGradientPreset(preset: string): void {
-        this.colors = this.presets[preset];
+        this.colors = this.presets[preset].map((color: Gcolor) => new Gcolor(color.color)); //deep copy gradient preset
         this.updateGradient();
     }
 
