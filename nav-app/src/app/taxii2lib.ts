@@ -1,10 +1,10 @@
 /**
  * @file
- * A TAXII 2.0 Javascript client library. Converted to Typescript by Josh Trahan 24 May 2018
+ * A TAXII 2.0 Javascript client library. Converted to Typescript by Isabel Tuson 24 May 2018
  *
  * @see https://oasis-open.github.io/cti-documentation/
  *
- * @author R. Wathelet, September 2017, modified by J Trahan 24 May 2018
+ * @author R. Wathelet, September 2017, modified by I Tuson 24 May 2018
  * @version 0.2
  */
 

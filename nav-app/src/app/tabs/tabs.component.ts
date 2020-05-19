@@ -527,6 +527,13 @@ export class TabsComponent implements AfterContentInit {
     customizedConfig = [];
 
     /**
+     * Helper function to track which layerLinkURLs have been added or removed
+     */
+    trackByFunction(index: number, obj: any): any {
+        return index;
+    }
+
+    /**
      * Add a new empty layer link to the layerLinkURLs array
      */
     addLayerLink(): void {
