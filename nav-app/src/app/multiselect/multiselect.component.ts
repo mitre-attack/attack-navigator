@@ -17,7 +17,8 @@ export class MultiselectComponent implements OnInit {
     constructor(private dataService: DataService) { 
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.dataService.groups.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+            "objects": this.dataService.groups.filter((group, i, arr) => arr.findIndex(t => t.id === group.id) === i)
+                       .sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }, {
             "label": "software",
             "objects": this.dataService.software.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
