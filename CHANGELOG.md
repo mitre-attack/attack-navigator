@@ -16,6 +16,7 @@
 - Fixes a bug in which the default layer link input field in the "create customized Navigator" interface loses focus between characters. See issue [#136](https://github.com/mitre-attack/attack-navigator/issues/136).
 - Fixed a bug in "create layer from other layers" interface where inheriting filters would cause the application to crash. See issue [#168](https://github.com/mitre-attack/attack-navigator/issues/168).
 - Fixed a bug where editing the gradient would also change the most recently selected gradient preset. See issue [#167](https://github.com/mitre-attack/attack-navigator/issues/167).
+- Removed duplicate threat group entries from the multiselect interface and included sub-techniques in the selection of techniques related to threat groups, software, or mitigations. See issue [#164](https://github.com/mitre-attack/attack-navigator/issues/164).
 
 
 # v3.0 - sub-techniques beta
