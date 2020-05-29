@@ -36,6 +36,7 @@ export class DataService {
     public matrices: Matrix[] = [];
     public tactics: Tactic[] = [];
     public techniques: Technique[] = [];
+    public subtechniques: Technique[] = [];
     public software: Software[] = [];
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
@@ -73,7 +74,6 @@ export class DataService {
     parseBundle(stixBundle: any[]): void {
         let techniqueSDOs = [];
         let idToTechniqueSDO = new Map<string, any>();
-        let subtechniqueSDOs = [];
         let matrixSDOs = [];
 
         let idToTacticSDO = new Map<string, any>();
@@ -138,7 +138,9 @@ export class DataService {
                     case "attack-pattern":
                         idToTechniqueSDO.set(sdo.id, sdo);
                         if (sdo.x_mitre_is_subtechnique) {
-                            if (this.subtechniquesEnabled) subtechniqueSDOs.push(sdo);
+                            if (this.subtechniquesEnabled) {
+                                this.subtechniques.push(new Technique(sdo, [], this));
+                            }
                         } else techniqueSDOs.push(sdo);
                         break;
                     case "x-mitre-tactic":
