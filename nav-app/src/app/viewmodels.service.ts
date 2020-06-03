@@ -642,6 +642,45 @@ export class ViewModel {
     }
 
     /**
+     * Select all techniques with annotations if nothing is currently selected, or select a subset of
+     * the current selection that has annotations
+     */
+    public selectAnnotated(): void {
+        let self = this;
+        if (this.isCurrentlyEditing()) {
+            // deselect techniques without annotations
+            let selected = new Set(this.selectedTechniques);
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (selected.has(tvm.technique_tactic_union_id) && !tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+            })
+        } else {
+            // select all techniques with annotations
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (tvm.annotated()) self.selectedTechniques.add(tvm.technique_tactic_union_id);
+            });
+        }
+    }
+
+    /**
+     * Select all techniques without annotations if nothing is currently selected, or select a subset of
+     * the current selection that do not have annotations
+     */
+    public selectUnannotated(): void {
+        let self = this;
+        if (this.isCurrentlyEditing()) {
+            // deselect techniques with annotations
+            let selected = new Set(this.selectedTechniques);
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (selected.has(tvm.technique_tactic_union_id) && tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+            })
+        } else {
+            // select all techniques without annotations
+            this.selectAnnotated();
+            this.invertSelection();
+        }
+    }
+
+    /**
      * Return true if the given technique is selected, false otherwise
      * @param  {Technique}  technique the technique to check
     * * @param  {Tactic}  tactic wherein the technique occurs
@@ -1246,6 +1285,14 @@ export class TechniqueVM {
      */
     modified(): boolean {
         return (this.score != "" || this.color != "" || !this.enabled || this.comment != "" || this.showSubtechniques);
+    }
+
+    /**
+     * Check if this TechniqueVM has been annotated
+     * @return true if it has annotations, false otherwise
+     */
+    annotated(): boolean {
+        return (this.score != "" || this.color != "" || !this.enabled || this.comment != "");
     }
 
     /**

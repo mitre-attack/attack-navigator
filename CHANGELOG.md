@@ -9,6 +9,7 @@
 - Updated the "select sub-techniques with parent" control under the "selection controls" dropdown. Sub-techniques will be selected independently by default. See issue [#140](https://github.com/mitre-attack/attack-navigator/issues/140).
 - Added sub-techniques as a configurable Navigator feature. Sub-technique features can be disabled by editing the `src/assets/config.json` file or using the "create customized Navigator" interface. See issue [#112](https://github.com/mitre-attack/attack-navigator/issues/112).
 - Added option to select scoring gradient from an existing layer in the _create layers from other layers_ interface. See issue [#121](https://github.com/mitre-attack/attack-navigator/issues/121).
+- Added options to select all techniques and sub-techniques with or without annotations in the context menu. See issue [#163](https://github.com/mitre-attack/attack-navigator/issues/163).
 
 ## Fixes
 - Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
