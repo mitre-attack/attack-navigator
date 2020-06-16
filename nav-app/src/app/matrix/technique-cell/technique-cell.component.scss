@@ -2,7 +2,7 @@
 .technique-cell {
     cursor: pointer;
     height: 100%;
-    display: flex;
+    display: block;
     align-items: center;
 
     position: relative;
@@ -70,4 +70,9 @@
             outline: 1px solid rgba(black, 0.5);
         }
     }
+}
+
+.sub {
+    vertical-align: sub;
+    font-size: 2px;
 }
