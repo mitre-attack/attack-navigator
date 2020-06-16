@@ -126,6 +126,10 @@ export class TechniqueCellComponent implements OnInit {
         if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
             theclass += " disabled"
 
+        // classes by annotated sub-techniques
+        if (!this.annotatedSubtechniques())
+            theclass += " unannotated"
+
         return theclass
     }
 
