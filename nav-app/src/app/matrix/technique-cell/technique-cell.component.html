@@ -10,7 +10,7 @@
             <ng-container *ngIf="viewModel.layout.showID">{{technique.attackID}}</ng-container>
             <div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div>
             <ng-container *ngIf="viewModel.layout.showName">{{technique.name}} 
-                <sub *ngIf="technique.subtechniques.length > 0" class="sub">({{annotatedSubtechniques()}}/{{technique.subtechniques.length}})</sub>
+                <sub *ngIf="technique.subtechniques.length > 0" class="sub">({{annotatedSubtechniques()}}/{{applyControls(technique.subtechniques, tactic).length}})</sub>
             </ng-container>
         </span>
     </div>
