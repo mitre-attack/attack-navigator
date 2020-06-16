@@ -58,6 +58,15 @@ export class TechniqueCellComponent implements OnInit {
 
     ngOnInit() {
     }
+    
+    private annotatedSubtechniques() {
+        let annotatedSubs: Technique[] = []
+        for (let s of this.technique.subtechniques) {
+            let subVM = this.viewModel.getTechniqueVM(s, this.tactic);
+            if (subVM.annotated()) annotatedSubs.push(s);
+        }
+        return annotatedSubs.length;
+    }
 
     // events to pass to parent component
     private onMouseEnter() {
