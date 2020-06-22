@@ -60,15 +60,17 @@ export class TechniqueCellComponent implements OnInit {
     ngOnInit() {
     }
     
+    // count number of annotated sub-techniques on this technique
     private annotatedSubtechniques() {
         let annotatedSubs: Technique[] = []
         for (let s of this.technique.subtechniques) {
             let subVM = this.viewModel.getTechniqueVM(s, this.tactic);
             if (subVM.annotated()) annotatedSubs.push(s);
         }
-        return annotatedSubs.length;
+        return this.applyControls(annotatedSubs, this.tactic).length;
     }
 
+    // sort and filter techniques
     private applyControls(techniques: Technique[], tactic: Tactic): Technique[] {
         return this.viewModel.applyControls(techniques, tactic, this.matrix)
     }
