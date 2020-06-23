@@ -31,8 +31,7 @@
                     <ng-template #supertechnique>
                         <table class="supertechnique">
                             <tr>
-                                <!-- <td class="sidebar technique" [class.disabled]="applyControls(technique.subtechniques, tactic).length == 0" (click)="onToggleSubtechniquesVisible(technique, tactic)"> -->
-                                <td class="sidebar technique" (click)="onToggleSubtechniquesVisible(technique, tactic)">
+                                <td class="sidebar technique" [class.disabled]="applyControls(technique.subtechniques, tactic).length == 0" (click)="onToggleSubtechniquesVisible(technique, tactic)">
                                     <div class="handle"> = </div>
                                 </td>
                                 <td class="technique">
@@ -48,7 +47,7 @@
                                 </td>
                             </tr>
                             <tr class="subtechniques-row subtechniques-container" [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">
-                                <td class="sidebar subtechniques">
+                                <td *ngIf="applyControls(technique.subtechniques, tactic).length > 0" class="sidebar subtechniques">
                                     <svg width="12px" height="12px">
                                         <path d="M0 0H12V12Z"/>
                                     </svg>

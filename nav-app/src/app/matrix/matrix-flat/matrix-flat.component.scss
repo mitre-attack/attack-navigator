@@ -50,6 +50,11 @@
                         font-size: 16px;
                         line-height: 12px;
                     }
+                    &.disabled {
+                        background: lightgrey;
+                        border-color: transparent;
+                        box-shadow: none;
+                    }
                 }
                 &.sidebar.subtechniques {
                     svg { fill: on-color-deemphasis(body); }
