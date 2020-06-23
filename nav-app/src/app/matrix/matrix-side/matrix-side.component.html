@@ -47,8 +47,7 @@
                             </ng-template>
                         </td>
                         <!-- TODO onclick expand -->
-                        <td *ngIf="technique.subtechniques.length > 0" class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" [class.expanded]="viewModel.getTechniqueVM(technique, tactic).showSubtechniques" (click)="onToggleSubtechniquesVisible(technique, tactic)">
-                            <div class="angle top">
+                        <td *ngIf="applyControls(technique.subtechniques, tactic).length > 0" class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" [class.expanded]="viewModel.getTechniqueVM(technique, tactic).showSubtechniques" (click)="onToggleSubtechniquesVisible(technique, tactic)">                            <div class="angle top">
                                 <svg width="12px" height="12px">
                                     <path d="M0 12H12V0Z"/>
                                 </svg>
@@ -60,6 +59,7 @@
                                 </svg>
                             </div>
                         </td>
+                        <td *ngIf="technique.subtechniques.length > 0 && applyControls(technique.subtechniques, tactic).length == 0" class="sidebar disabled sidebar--{{tactic.id}}--{{technique.id}}"><div class="handle"> = </div></td>
                         <td class="subtechniques-td">
                             <div class="subtechniques"
                                     [class.hidden]="!viewModel.getTechniqueVM(technique, tactic).showSubtechniques">

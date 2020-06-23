@@ -101,6 +101,9 @@
         .angle {
             display: none;
         }
+        &.disabled {
+            background: lightgrey;
+        }
         &.expanded .angle {
             height: 12px;
             display:block;
