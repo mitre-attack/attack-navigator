@@ -19,7 +19,7 @@
 - Fixed a bug in "create layer from other layers" interface where inheriting filters would cause the application to crash. See issue [#168](https://github.com/mitre-attack/attack-navigator/issues/168).
 - Fixed a bug where editing the gradient would also change the most recently selected gradient preset. See issue [#167](https://github.com/mitre-attack/attack-navigator/issues/167).
 - Removed duplicate threat group entries from the multiselect interface and included sub-techniques in the selection of techniques related to threat groups, software, or mitigations. See issue [#164](https://github.com/mitre-attack/attack-navigator/issues/164).
-
+- Fixed a bug in the sub-technique sidebar that occurs when all sub-techniques of a given technique are disabled and hidden. See issue [#177](https://github.com/mitre-attack/attack-navigator/issues/177).
 
 # v3.0 - sub-techniques beta
 ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
