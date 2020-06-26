@@ -13,7 +13,7 @@ The ATT&CK Navigator is hosted live via GitHub Pages. You can find a live instan
 - [Enterprise ATT&CK](https://mitre-attack.github.io/attack-navigator/enterprise/)
 - [Mobile ATT&CK](https://mitre-attack.github.io/attack-navigator/mobile/)
 
-Users seeking to continue using [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) (the last release before sub-techniques) can find live instances of Navigator v2.3.2 here:
+Users seeking to continue using [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) (the last release before sub-techniques) can find live instances of [Navigator v2.3.2](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) here:
 - [Enterprise ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/enterprise/)
 - [Mobile ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/mobile/)
 
