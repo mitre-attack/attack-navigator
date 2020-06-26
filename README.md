@@ -12,12 +12,13 @@ The principal feature of the Navigator is the ability for users to define layers
 The ATT&CK Navigator is hosted live via GitHub Pages. You can find a live instance of the current version of the Navigator here:
 - [Enterprise ATT&CK](https://mitre-attack.github.io/attack-navigator/enterprise/)
 - [Mobile ATT&CK](https://mitre-attack.github.io/attack-navigator/mobile/)
+
 Users seeking to continue using [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) (the last release before sub-techniques) can find live instances of Navigator v2.3.2 here:
 - [Enterprise ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/enterprise/)
 - [Mobile ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/mobile/)
 
 
-Please see [Install and Run](#Install-and-Run) for information on how to get the ATT&CK Navigator up and running. Also see [Enterprise and Mobile Domains](#Enterprise-and-Mobile-Domains) below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
+Please see [Install and Run](#Install-and-Run) for information on how to get the ATT&CK Navigator set up locally. Also see [Enterprise and Mobile Domains](#Enterprise-and-Mobile-Domains) below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
 
 **Important Note:** Layer files uploaded when visiting our Navigator instance hosted on GitHub Pages are **NOT** being stored on the server side, as the Navigator is a client-side only application. However, we still recommend installing and running your own instance of the ATT&CK Navigator if your layer files contain any sensitive content.
 
