@@ -103,6 +103,7 @@
         }
         &.disabled {
             background: #aaaaaa;
+            pointer-events: none;
         }
         &.expanded .angle {
             height: 12px;
