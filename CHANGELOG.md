@@ -11,6 +11,7 @@
 - Added option to select scoring gradient from an existing layer in the _create layers from other layers_ interface. See issue [#121](https://github.com/mitre-attack/attack-navigator/issues/121).
 - Added options to select all techniques and sub-techniques with or without annotations in the context menu. See issue [#163](https://github.com/mitre-attack/attack-navigator/issues/163).
 - Added a subscript to the techniques which have sub-techniques. The subscript shows the number of sub-techniques under a given technique and how many of those sub-techniques have annotations while the parent is collapsed. See issue [#162](https://github.com/mitre-attack/attack-navigator/issues/162).
+- Updated the layout of the metadata value key. See issue [#189](https://github.com/mitre-attack/attack-navigator/issues/189).
 
 ## Fixes
 - Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
@@ -20,6 +21,7 @@
 - Fixed a bug where editing the gradient would also change the most recently selected gradient preset. See issue [#167](https://github.com/mitre-attack/attack-navigator/issues/167).
 - Removed duplicate threat group entries from the multiselect interface and included sub-techniques in the selection of techniques related to threat groups, software, or mitigations. See issue [#164](https://github.com/mitre-attack/attack-navigator/issues/164).
 - Fixed a bug in the sub-technique sidebar that occurs when all sub-techniques of a given technique are disabled and hidden. See issue [#177](https://github.com/mitre-attack/attack-navigator/issues/177).
+- Removed the comment underscore from the sub-technique count subscript. See issue [#184](https://github.com/mitre-attack/attack-navigator/issues/184).
 
 # v3.0 - sub-techniques beta
 ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
