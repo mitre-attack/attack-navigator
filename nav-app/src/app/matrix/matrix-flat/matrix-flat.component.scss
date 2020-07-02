@@ -50,6 +50,12 @@
                         font-size: 16px;
                         line-height: 12px;
                     }
+                    &.disabled {
+                        background: #aaaaaa;
+                        border-color: #aaaaaa;
+                        box-shadow: none;
+                        pointer-events: none;
+                    }
                 }
                 &.sidebar.subtechniques {
                     svg { fill: on-color-deemphasis(body); }
