@@ -4,9 +4,9 @@ import json
 
 revoked_by = {} #attackID => {replacing attackID, tactics[] of new technique}
 domains = {
-    "mitre-enterprise": {"url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/enterprise-attack/enterprise-attack.json", "downloaded": False },
-    "mitre-mobile": {"url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/mobile-attack/mobile-attack.json", "downloaded": False },
-    "mitre-pre": {"url": "https://raw.githubusercontent.com/mitre/cti/subtechniques/pre-attack/pre-attack.json", "downloaded": False }
+    "mitre-enterprise": {"url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json", "downloaded": False },
+    "mitre-mobile": {"url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json", "downloaded": False },
+    "mitre-pre": {"url": "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json", "downloaded": False }
 }
 
 def download_domain(domain):
