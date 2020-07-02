@@ -1,10 +1,21 @@
 # ATT&CK® Navigator
+
 The ATT&CK Navigator is designed to provide basic navigation and annotation of [ATT&CK](https://attack.mitre.org) matrices, something that people are already doing today in tools like Excel.  We've designed it to be simple and generic - you can use the Navigator to visualize your defensive coverage, your red/blue team planning, the frequency of detected techniques or anything else you want to do.  The Navigator doesn't care - it just allows you to manipulate the cells in the matrix (color coding, adding a comment, assigning a numerical value, etc.).  We thought having a simple tool that everyone could use to visualize the matrix would help make it easy to use ATT&CK.
 
 The principal feature of the Navigator is the ability for users to define layers - custom views of the ATT&CK knowledge base - e.g. showing just those techniques for a particular platform or highlighting techniques a specific adversary has been known to use. Layers can be created interactively within the Navigator or generated programmatically and then visualized via the Navigator.
 
 ## Usage
-There is an **Install and Run** section below that explains how to get the ATT&CK Navigator up and running. You can also try the Navigator out by pointing your browser [here](https://mitre-attack.github.io/attack-navigator). The default is the [Enterprise ATT&CK](https://attack.mitre.org/matrices/enterprise/) domain, but the [Mobile ATT&CK](https://attack.mitre.org/matrices/mobile) domain can be utilized [here](https://mitre-attack.github.io/attack-navigator/mobile/). See **Enterprise and Mobile Domains** below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
+
+The ATT&CK Navigator is hosted live via GitHub Pages. You can find a live instance of the current version of the Navigator here:
+- [Enterprise ATT&CK](https://mitre-attack.github.io/attack-navigator/enterprise/)
+- [Mobile ATT&CK](https://mitre-attack.github.io/attack-navigator/mobile/)
+
+Users seeking to continue using [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) (the last release before sub-techniques) can find live instances of [Navigator v2.3.2](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) here:
+- [Enterprise ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/enterprise/)
+- [Mobile ATT&CK v6.3](https://mitre-attack.github.io/attack-navigator/v2/mobile/)
+
+
+Please see [Install and Run](#Install-and-Run) for information on how to get the ATT&CK Navigator set up locally. Also see [Enterprise and Mobile Domains](#Enterprise-and-Mobile-Domains) below for information on how to set up the ATT&CK Navigator on local instances to use the two different domains.
 
 **Important Note:** Layer files uploaded when visiting our Navigator instance hosted on GitHub Pages are **NOT** being stored on the server side, as the Navigator is a client-side only application. However, we still recommend installing and running your own instance of the ATT&CK Navigator if your layer files contain any sensitive content.
 

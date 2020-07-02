@@ -1,4 +1,10 @@
 # v3.1 - sub-techniques beta
+ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 
+
+If you want to continue using the non-sub-techniques Navigator, please use the [v2.3.2 release](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) for local instances or the following live instances of Navigator v2.3.2:
+- [Enterprise ATT&CK](https://mitre-attack.github.io/attack-navigator/v2/enterprise/)
+- [Mobile ATT&CK](https://mitre-attack.github.io/attack-navigator/v2/mobile/)
+
 ## Improvements
 ### Minor
 - Added options to the SVG Export feature for the visibility of sub-techniques. See issue [#142](https://github.com/mitre-attack/attack-navigator/issues/142).
@@ -24,7 +30,6 @@
 - Removed the comment underscore from the sub-technique count subscript. See issue [#184](https://github.com/mitre-attack/attack-navigator/issues/184).
 
 # v3.0 - sub-techniques beta
-ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
 ## New Features
 ### Major
 - Added support for sub-techniques. Techniques with sub-techniques will be denoted by a sidebar which can be clicked to show and hide the sub-techniques. Techniques without sub-techniques will not have a sidebar.
