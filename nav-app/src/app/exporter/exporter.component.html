@@ -1,5 +1,8 @@
 <div class="controlsContainer">
     <ul class="control-sections">
+        <li class="iewarning" *ngIf="isIE()">
+            Warning: this interface is not fully compatable with your browser. For best results please switch to Edge, Chrome, Firefox or Safari.
+        </li>
         <li>
             <div class="control-row-item noselect">
                 <!-- {{config.unit}} -->
@@ -181,6 +184,15 @@
                         <li>
                             <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems() && !hasScores" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
                             <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems() && !hasScores" >show legend</label>
+                        </li>
+                        <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
+                            <mat-form-field>
+                                <mat-select placeholder="sub-techniques" [(ngModel)]="config.showSubtechniques" (selectionChange)="buildSVG()">
+                                    <mat-option value="all">show all</mat-option>
+                                    <mat-option value="expanded">show expanded</mat-option>
+                                    <mat-option value="none">show none</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </li>
                         <!-- <li>
                             <input [id]="uid+'checkboxtcount'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.showTechniqueCount" (change)="buildSVG()">

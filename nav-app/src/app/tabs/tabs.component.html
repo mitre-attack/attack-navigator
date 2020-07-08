@@ -135,6 +135,19 @@
                     <tr>
                         <td>
                             <mat-form-field>
+                                <mat-select placeholder="gradient" [(ngModel)]="gradient">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
                                 <mat-select placeholder="coloring" [(ngModel)]="coloring">
                                     <mat-option [value]="null">none</mat-option>
                                     <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
@@ -142,7 +155,7 @@
                             </mat-form-field>
                         </td>
                         <td>
-                            Choose which layer to import manually assigned colors from. Leave blank to initialze with no colors.
+                            Choose which layer to import manually assigned colors from. Leave blank to initialize with no colors.
                         </td>
                     </tr>
                     <tr>
@@ -222,12 +235,10 @@
                     <tr class="custom_nav_inputsection">
                         <td>
                             <ul class="layerLinks">
-                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index">
+                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index trackBy:trackByFunction">
                                     <mat-form-field>
-                                        <input type="text"
-                                        matInput
-                                        [placeholder]="'default layer URL ' + (i + 1)"
-                                        [(ngModel)]="layerLinkURLs[i]"/>
+                                        <input type="text" matInput
+                                            [placeholder]="'default layer URL ' + (i + 1)" [(ngModel)]="layerLinkURLs[i]"/>
                                         <button mat-button matSuffix mat-icon-button aria-label="remove" (click)="removeLayerLink(i)">
                                             x
                                         </button>

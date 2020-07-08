@@ -30,12 +30,13 @@ export class ConfigService {
                 //     console.log(key, "is not a feature")
                 // }
             })
-            self.featureStructure = config["features"]
+            dataService.subtechniquesEnabled = self.getFeature("subtechniques");
+            self.featureStructure = config["features"];
             self.comment_color = config["comment_color"];
             for (let obj of config["custom_context_menu_items"]) {
                 self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
             }
-        })
+        });
     }
 
     public getFeatureList(): object[] {
