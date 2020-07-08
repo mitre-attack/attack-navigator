@@ -74,7 +74,7 @@ export class ViewModelsService {
      * @param  filters            viewmodel to inherit filters from
      * @return                    new viewmodel inheriting above properties
      */
-    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
         let result = new ViewModel("layer by operation", this.domain, "vm" + this.getNonce(), this.dataService);
 
         if (scoreExpression) {
@@ -178,11 +178,16 @@ export class ViewModelsService {
         if (enabledness) inherit(enabledness, "enabled")
 
         if (filters) { //copy filter settings
-            result.filters = JSON.parse(JSON.stringify(filters.filters))
+            result.filters.deSerialize(JSON.parse(filters.filters.serialize()))
         }
 
         if (legendItems) {
             result.legendItems = JSON.parse(JSON.stringify(legendItems.legendItems));
+        }
+
+        if (gradient) {
+            result.gradient = new Gradient();
+            result.gradient.deSerialize(gradient.gradient.serialize());
         }
         
         result.name = layerName;
@@ -289,7 +294,7 @@ export class Gradient {
      * @param  preset preset to use
      */
     setGradientPreset(preset: string): void {
-        this.colors = this.presets[preset];
+        this.colors = this.presets[preset].map((color: Gcolor) => new Gcolor(color.color)); //deep copy gradient preset
         this.updateGradient();
     }
 
@@ -377,7 +382,7 @@ export class ViewModel {
     legendColorPresets: string[] = [];
 
     selectTechniquesAcrossTactics: boolean = true;
-    selectSubtechniquesWithParent: boolean = true;
+    selectSubtechniquesWithParent: boolean = false;
 
     needsToConstructTechniqueVMs = false;
     legacyTechniques = [];
@@ -634,6 +639,45 @@ export class ViewModel {
         this.techniqueVMs.forEach(function(tvm, key) {
             if (!previouslySelected.has(tvm.technique_tactic_union_id)) self.selectedTechniques.add(tvm.technique_tactic_union_id)
         });
+    }
+
+    /**
+     * Select all techniques with annotations if nothing is currently selected, or select a subset of
+     * the current selection that has annotations
+     */
+    public selectAnnotated(): void {
+        let self = this;
+        if (this.isCurrentlyEditing()) {
+            // deselect techniques without annotations
+            let selected = new Set(this.selectedTechniques);
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (selected.has(tvm.technique_tactic_union_id) && !tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+            })
+        } else {
+            // select all techniques with annotations
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (tvm.annotated()) self.selectedTechniques.add(tvm.technique_tactic_union_id);
+            });
+        }
+    }
+
+    /**
+     * Select all techniques without annotations if nothing is currently selected, or select a subset of
+     * the current selection that do not have annotations
+     */
+    public selectUnannotated(): void {
+        let self = this;
+        if (this.isCurrentlyEditing()) {
+            // deselect techniques with annotations
+            let selected = new Set(this.selectedTechniques);
+            this.techniqueVMs.forEach(function(tvm, key) {
+                if (selected.has(tvm.technique_tactic_union_id) && tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+            })
+        } else {
+            // select all techniques without annotations
+            this.selectAnnotated();
+            this.invertSelection();
+        }
     }
 
     /**
@@ -1241,6 +1285,14 @@ export class TechniqueVM {
      */
     modified(): boolean {
         return (this.score != "" || this.color != "" || !this.enabled || this.comment != "" || this.showSubtechniques);
+    }
+
+    /**
+     * Check if this TechniqueVM has been annotated
+     * @return true if it has annotations, false otherwise
+     */
+    annotated(): boolean {
+        return (this.score != "" || this.color != "" || !this.enabled || this.comment != "");
     }
 
     /**

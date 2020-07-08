@@ -30,6 +30,11 @@ export class TechniquesSearchComponent implements OnInit {
             "field": "description",
             "enabled": true
         },
+        {
+            "label": "datasources",
+            "field": "datasources",
+            "enabled": true
+        }
     ]
 
     private _query: string = "";
@@ -45,14 +50,11 @@ export class TechniquesSearchComponent implements OnInit {
                 allTechniques = allTechniques.concat(technique.subtechniques);
             }
 
-            let re = new RegExp(this._query.trim(), "gi");
             let results = allTechniques.filter(function(technique: Technique) {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
-                        let match = technique[field.field].search(re) != -1;
-                        // console.log("querying", field.label, "in", technique.name, ":", match)
-                        if (match) return true;
+                        return technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())
                     }
                 }
                 return false;

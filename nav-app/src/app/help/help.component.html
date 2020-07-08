@@ -29,6 +29,7 @@
                     </ul>
                 </li>
                 <li><a href="#help_Hiding_Disabled_Techniques">Hiding Disabled Techniques</a></li>
+                <li><a href="#help_Show_Hide_Subtechniques">Showing or Hiding Sub-techniques</a></li>
                 <li>
                     <a href="#help_Changing_Layout">Changing the Matrix Layout</a>
                     <ul>
@@ -222,6 +223,9 @@
                 </ul>
             </li>
             <li>
+                <b>Gradient:</b> choose which layer to inherit <a href="#help_Scoring_Gradient">scoring gradient</a> from.
+            </li>
+            <li>
                 <b>Coloring:</b> choose which layer to inherit <a href="#help_Assigning_Manual_Colors">manually assigned technique colors</a> from.
             </li>
             <li>
@@ -352,7 +356,7 @@
         </h3>
         <p>
             The background color of the tactic row can be set in the tactic row background section of the color setup menu. The color
-            will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the <a href="#help_Mini_View">mini view</a>.
+            will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the <a href="#help_Mini_Layout">mini view</a>.
         </p>
 
 
@@ -393,6 +397,30 @@
             disable them, and then turn on hiding disabled techniques to remove entire
             groups of techniques from your view.
         </p>
+
+        <h2 id="help_Show_Hide_Subtechniques">
+            Showing or Hiding Sub-techniques
+        </h2>
+        <p>
+            Sub-techniques in the view are nested under their parent technique and are hidden by default. 
+        </p>
+        <ul>
+            <li>
+                <img src="assets/icons/unfold_more_black_24px.svg">
+                All sub-techniques can be shown by clicking the "expand sub-techniques" button.
+            </li>
+            <li>
+                <img src="assets/icons/unfold_less_black_24px.svg">
+                All sub-techniques can be hidden by clicking the "collapse sub-techniques" button.
+            </li>
+        </ul>
+        <p>
+            <b>Tip:</b> Sub-techniques can also be shown or hidden on each individual 
+            technique when in the <a href="#help_Side_Layout">side layout</a> or 
+            <a href="#help_Flat_Layout">flat layout</a> by clicking the gray sidebar on the
+            technique cell.
+        </p>
+
 
         <h2 id="help_Changing_Layout">
             <img src="assets/icons/ic_view_large_black_24px.svg">
@@ -570,8 +598,13 @@
             <li><b>invert selection:</b> Select all techniques that are not currently selected and unselect all techniques that are currently selected.</li>
             <li><b>select all:</b> Select all techniques.</li>
             <li><b>deselect all:</b> Deselect all techniques. This action can also be completed by the "deselect" (<img src="assets/icons/ic_clear_black_24px.svg"/>) button.</li>
+            <li><b>select annotated:</b> Select all techniques and sub-techniques which have annotations or remove unnanotated techniques from an existing selection.</li>
+            <li><b>select unannotated:</b> Select all techniques and sub-techniques which do not have annotations or remove annotated techniques from an existing selection.</li>
             <li><b>view technique:</b> For more information / details on the technique.</li>
         </ul>
+        <p><b>Tip:</b> You can use "select unannotated" followed by disabling those techniques, and then hiding disabled techniques, 
+            to create a layer where only annotated techniques are visible.
+        </p>
 
         <h2 id="help_Selection_Behavior">
             <img src="assets/icons/ic_lock_black_24px.svg">
@@ -674,7 +707,11 @@
         <p>
             Clicking the "render layer to SVG" button will open a new tab allowing the current layer
             to be rendered to an SVG image. Changes to the layer after opening the render tab
-            will not be reflected in the render layer.
+            will not be reflected in the render layer. 
+        </p>
+        <p>
+            <b>Note:</b> this feature has minor compatability warnings
+            with the Internet Explorer browser. For best results, please use Safari, Firefox, Chrome or Edge.
         </p>
         <p>
             Clicking the <i>download svg</i> button (<img src="assets/icons/ic_file_download_black_24px.svg">) will download
@@ -756,6 +793,10 @@
             <li>
                 <b>Show legend</b> controls whether the layer legend is visible.
                 If the layer has no defined legend items or no scores, the control will be disabled and the legend will be automatically hidden.
+            </li>
+            <li>
+                The <b>sub-techniques</b> dropdown controls the visibility of sub-techniques in the rendered layer. 
+                Selecting "show all" will show all sub-techniques, "show expanded" will show sub-techniques whose parent techniques were expanded when the render button was clicked, and "show none" will show no sub-techniques.
             </li>
             <li>
                 <b>Cell border</b> controls the border of cells in the body of the table.

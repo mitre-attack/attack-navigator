@@ -70,4 +70,18 @@
             outline: 1px solid rgba(black, 0.5);
         }
     }
+
+    &.unannotated {
+        .sub {
+            color: gray;
+        }
+    }
+}
+
+.sub {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+    bottom: -.5em;
 }

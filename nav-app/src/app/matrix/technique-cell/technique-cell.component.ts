@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Technique, Tactic } from '../../data.service';
+import { Technique, Tactic, Matrix } from '../../data.service';
 import { ViewModel } from '../../viewmodels.service';
 import {ConfigService} from '../../config.service';
 
@@ -14,6 +14,7 @@ export class TechniqueCellComponent implements OnInit {
     @Input() tactic: Tactic;
     @Input() technique: Technique;
     @Input() viewModel: ViewModel;
+    @Input() matrix: Matrix;
     @Output() highlight = new EventEmitter<any>(); // emit with the highlighted technique, or null to unhighlight
     @Output() unhighlight = new EventEmitter<any>();
     @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
@@ -57,6 +58,21 @@ export class TechniqueCellComponent implements OnInit {
     constructor(private configService: ConfigService) { }
 
     ngOnInit() {
+    }
+    
+    // count number of annotated sub-techniques on this technique
+    private annotatedSubtechniques() {
+        let annotatedSubs: Technique[] = []
+        for (let s of this.technique.subtechniques) {
+            let subVM = this.viewModel.getTechniqueVM(s, this.tactic);
+            if (subVM.annotated()) annotatedSubs.push(s);
+        }
+        return this.applyControls(annotatedSubs, this.tactic).length;
+    }
+
+    // sort and filter techniques
+    private applyControls(techniques: Technique[], tactic: Tactic): Technique[] {
+        return this.viewModel.applyControls(techniques, tactic, this.matrix)
     }
 
     // events to pass to parent component
@@ -111,6 +127,10 @@ export class TechniqueCellComponent implements OnInit {
             theclass += " colored"
         if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
             theclass += " disabled"
+
+        // classes by annotated sub-techniques
+        if (!this.annotatedSubtechniques())
+            theclass += " unannotated"
 
         return theclass
     }

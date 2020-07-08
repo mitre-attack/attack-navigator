@@ -366,6 +366,7 @@ export class TabsComponent implements AfterContentInit {
         }
     }
 
+    gradient: ViewModel = null;
     coloring: ViewModel = null;
     comments: ViewModel = null;
     enabledness: ViewModel = null;
@@ -394,7 +395,7 @@ export class TabsComponent implements AfterContentInit {
 
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
-            let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
+            let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
             console.error(err)
@@ -524,6 +525,13 @@ export class TabsComponent implements AfterContentInit {
     // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     layerLinkURLs: string[] = [];
     customizedConfig = [];
+
+    /**
+     * Helper function to track which layerLinkURLs have been added or removed
+     */
+    trackByFunction(index: number, obj: any): any {
+        return index;
+    }
 
     /**
      * Add a new empty layer link to the layerLinkURLs array

@@ -1,5 +1,35 @@
+# v3.1 - 8 July 2020
+ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 
+
+If you want to continue using the non-sub-techniques Navigator, please use the [v2.3.2 release](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) for local instances or the following live instances of Navigator v2.3.2:
+- [Enterprise ATT&CK](https://mitre-attack.github.io/attack-navigator/v2/enterprise/)
+- [Mobile ATT&CK](https://mitre-attack.github.io/attack-navigator/v2/mobile/)
+
+## Improvements
+### Minor
+- Added options to the SVG Export feature for the visibility of sub-techniques. See issue [#142](https://github.com/mitre-attack/attack-navigator/issues/142).
+- Added update layers for March 2020 sub-techniques release. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138).
+- Updated the [sample layers](layers/data/samples/) with sub-techniques support. See issue [#138](https://github.com/mitre-attack/attack-navigator/issues/138). We've also released [some scripts on our attack-scripts repository](https://github.com/mitre-attack/attack-scripts/tree/develop/scripts/layers/samples) corresponding to the sample layers.
+- Extended search interface to support searching for techniques based on data sources. See pull request [#158](https://github.com/mitre-attack/attack-navigator/pull/158).
+- Added show/hide all sub-techniques controls under "layer controls". See issue [#141](https://github.com/mitre-attack/attack-navigator/issues/141).
+- Updated the "select sub-techniques with parent" control under the "selection controls" dropdown. Sub-techniques will be selected independently by default. See issue [#140](https://github.com/mitre-attack/attack-navigator/issues/140).
+- Added sub-techniques as a configurable Navigator feature. Sub-technique features can be disabled by editing the `src/assets/config.json` file or using the "create customized Navigator" interface. See issue [#112](https://github.com/mitre-attack/attack-navigator/issues/112).
+- Added option to select scoring gradient from an existing layer in the _create layers from other layers_ interface. See issue [#121](https://github.com/mitre-attack/attack-navigator/issues/121).
+- Added options to select all techniques and sub-techniques with or without annotations in the context menu. See issue [#163](https://github.com/mitre-attack/attack-navigator/issues/163).
+- Added a subscript to the techniques which have sub-techniques. The subscript shows the number of sub-techniques under a given technique and how many of those sub-techniques have annotations while the parent is collapsed. See issue [#162](https://github.com/mitre-attack/attack-navigator/issues/162).
+- Updated the layout of the metadata value key. See issue [#189](https://github.com/mitre-attack/attack-navigator/issues/189).
+
+## Fixes
+- Added internet explorer support for the sub-techniques features, and improved Edge compatibility. See issue [#135](https://github.com/mitre-attack/attack-navigator/issues/135).
+- Fixes a bug causing metadata values to be displayed improperly in tooltips. See issue [#153](https://github.com/mitre-attack/attack-navigator/issues/153).
+- Fixes a bug in which the default layer link input field in the "create customized Navigator" interface loses focus between characters. See issue [#136](https://github.com/mitre-attack/attack-navigator/issues/136).
+- Fixed a bug in "create layer from other layers" interface where inheriting filters would cause the application to crash. See issue [#168](https://github.com/mitre-attack/attack-navigator/issues/168).
+- Fixed a bug where editing the gradient would also change the most recently selected gradient preset. See issue [#167](https://github.com/mitre-attack/attack-navigator/issues/167).
+- Removed duplicate threat group entries from the multiselect interface and included sub-techniques in the selection of techniques related to threat groups, software, or mitigations. See issue [#164](https://github.com/mitre-attack/attack-navigator/issues/164).
+- Fixed a bug in the sub-technique sidebar that occurs when all sub-techniques of a given technique are disabled and hidden. See issue [#177](https://github.com/mitre-attack/attack-navigator/issues/177).
+- Removed the comment underscore from the sub-technique count subscript. See issue [#184](https://github.com/mitre-attack/attack-navigator/issues/184).
+
 # v3.0 - sub-techniques beta
-ATT&CK Navigator v3.0 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details.
 ## New Features
 ### Major
 - Added support for sub-techniques. Techniques with sub-techniques will be denoted by a sidebar which can be clicked to show and hide the sub-techniques. Techniques without sub-techniques will not have a sidebar.

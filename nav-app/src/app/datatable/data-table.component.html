@@ -29,7 +29,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <label for="select_behavior_tactic" class="checkbox-custom-label noselect">select techniques across tactics</label>
                     </div>
                     <!-- selectSubtechniquesWithParent -->
-                    <div>
+                    <div *ngIf="configService.getFeature('subtechniques')">
                         <input id="select_behavior_subtechnique" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.selectSubtechniquesWithParent">
                         <label for="select_behavior_subtechnique" class="checkbox-custom-label noselect">select sub-techniques with parent</label>
                     </div>
@@ -302,6 +302,26 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      matTooltipPosition="below"
                      matTooltip="show/hide disabled">
                      <img [src]="viewModel.hideDisabled ? 'assets/icons/ic_visibility_off_black_24px.svg' : 'assets/icons/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
+                 </div>
+             </div>
+
+            <!-- expand all sub-techniques -->
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="expandSubtechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="expand sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_black_24px.svg'" alt="expand sub-techniques"/>
+                 </div>
+             </div>
+
+            <!-- collapse all sub-techniques -->
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="collapseSubtechniques()"
+                     matTooltipPosition="below"
+                     matTooltip="collapse sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_less_gray_24px.svg' : 'assets/icons/unfold_less_black_24px.svg'" alt="collapse sub-techniques"/>
                  </div>
              </div>
 
