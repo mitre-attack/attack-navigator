@@ -6,7 +6,7 @@ See the [layer format specification](LAYERFORMATv3.md) for more information abou
 
 ## Sample Layers
 
-This repository includes [several layers demonstrating example use cases of layers and the ATT&CK Navigator](data/samples). The scripts used to generate these layer files can be found on our [attack-scripts repository here](https://github.com/mitre-attack/attack-scripts/tree/develop/scripts/layers/samples) to serve as an example on how to access and work with the [the source data on our MITRE/CTI repo](https://github.com/mitre/cti).
+This repository includes [several layers demonstrating example use cases of layers and the ATT&CK Navigator](data/samples). The scripts used to generate these layer files can be found on our [attack-scripts repository here](https://github.com/mitre-attack/attack-scripts/tree/master/scripts/layers/samples) to serve as an example on how to access and work with the [the source data on our MITRE/CTI repo](https://github.com/mitre/cti).
 
 Lastly, we've included [a tutorial on the programmatic generation of layers from CSV](attack_layers).
 
