@@ -1,6 +1,6 @@
 {
 	"name": "April 2018 Updates",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-enterprise",
 	"description": "Green techniques are techniques that are new to ATT&CK as of the April 2018 Update. Yellow techniques are techniques that changed in scope or content, including existing techniques that were added to new tactics.",
 	"filters": {
@@ -14,7 +14,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{

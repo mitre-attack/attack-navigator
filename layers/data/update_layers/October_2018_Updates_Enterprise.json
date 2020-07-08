@@ -1,6 +1,6 @@
 {
 	"name": "October 2018 Updates Enterprise",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-enterprise",
 	"description": "",
 	"filters": {
@@ -14,7 +14,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{

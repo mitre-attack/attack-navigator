@@ -1,0 +1,15 @@
+<div class="technique-cell" 
+     [ngStyle]="getTechniqueBackground()" 
+     [ngClass]="getClass()">
+    <div (click)="onLeftClick($event)" 
+         (contextmenu)="onRightClick($event)"
+         (mouseenter)="onMouseEnter()"
+         (mouseleave)="onMouseLeave()">
+        <span [style.border-color]="configService.comment_color"
+              [style.color]="getTechniqueTextColor()">
+            <ng-container *ngIf="viewModel.layout.showID">{{technique.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{technique.name}}</ng-container>
+        </span>
+    </div>
+    <app-tooltip *ngIf="showTooltip"  [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
+    <app-contextmenu *ngIf="showContextmenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false; onMouseLeave()"></app-contextmenu>
+</div>

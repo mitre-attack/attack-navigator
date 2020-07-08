@@ -1,0 +1,54 @@
+<table class="matrix mini">
+    <thead>
+        <tr>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic header">
+                <tactic-cell [viewModel]="viewModel" [tactic]="tactic"></tactic-cell>
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td *ngFor="let tactic of filterTactics(matrix.tactics)" class="tactic body">
+                <ng-container *ngFor="let technique of applyControls(tactic.techniques, tactic)">
+                    <div class="cell-container supertechnique-group" *ngIf="technique.subtechniques.length > 0 else elseblock">
+                        <div class="cell-container supertechnique">
+                            <technique-cell #elseblock
+                                        [tactic]="tactic"
+                                        [technique]="technique" 
+                                        [viewModel]="viewModel"
+                                        (leftclick)="onTechniqueLeftClick($event, technique, tactic)"
+                                        (rightclick)="onTechniqueRightClick($event, technique)"
+                                        (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                                        (unhighlight)="onTechniqueUnhighlight($event)">
+                            </technique-cell>
+                        </div>
+                        <div class="cell-container subtechnique" *ngFor="let subtechnique of applyControls(technique.subtechniques, tactic)">
+                            <technique-cell
+                                        [tactic]="tactic"
+                                        [technique]="subtechnique" 
+                                        [viewModel]="viewModel"
+                                        (leftclick)="onTechniqueLeftClick($event, subtechnique, tactic)"
+                                        (rightclick)="onTechniqueRightClick($event, subtechnique)"
+                                        (highlight)="onTechniqueHighlight($event, subtechnique, tactic)"
+                                        (unhighlight)="onTechniqueUnhighlight($event)">
+                            </technique-cell>
+                        </div>
+                    </div>
+                    <ng-template #elseblock>
+                        <div class="cell-container">
+                            <technique-cell 
+                                            [tactic]="tactic"
+                                            [technique]="technique" 
+                                            [viewModel]="viewModel"
+                                            (leftclick)="onTechniqueLeftClick($event, technique, tactic)"
+                                            (rightclick)="onTechniqueRightClick($event, technique)"
+                                            (highlight)="onTechniqueHighlight($event, technique, tactic)"
+                                            (unhighlight)="onTechniqueUnhighlight($event)">
+                            </technique-cell>
+                        </div>
+                    </ng-template>
+                </ng-container>
+            </td>
+        </tr>
+    </tbody>
+</table>

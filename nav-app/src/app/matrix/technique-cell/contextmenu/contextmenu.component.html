@@ -1,0 +1,47 @@
+<div class="contextmenu" (contextmenu)="closeContextmenu()">
+    <!-- covers entire screen -->
+    <div class="cover" (click)="closeContextmenu()"></div>
+    <!-- the actual menu -->
+    <div [ngClass]="'menu ' + placement">
+        <div class="contextMenu-section">
+            <div class="contextMenu-header">
+                {{technique.name}} ({{technique.attackID}})
+            </div>
+        </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="select()">
+                select
+            </div>
+            <div class="contextMenu-button" (click)="addSelection()">
+                add to selection
+            </div>
+            <div class="contextMenu-button" (click)="removeSelection()">
+                remove from selection
+            </div>
+        </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="selectAll()">
+                select all
+            </div>
+            <div class="contextMenu-button" (click)="deselectAll()">
+                deselect all
+            </div>
+            <div class="contextMenu-button" (click)="invertSelection()">
+                invert selection
+            </div>
+        </div>
+        <div class="contextMenu-section">
+            <div class="contextMenu-button" (click)="viewTechnique()">
+                view technique
+            </div>
+            <div class="contextMenu-button" (click)="viewTactic()">
+                view tactic
+            </div>
+        </div>
+        <div class="contextMenu-section" *ngIf="configService.contextMenuItems.length > 0">
+            <div class="contextMenu-button" *ngFor="let contextMenuItem of configService.contextMenuItems" (click)="openCustomContextMenuItem(contextMenuItem)">
+                {{contextMenuItem.label}}
+            </div>
+        </div>
+    </div>
+</div>

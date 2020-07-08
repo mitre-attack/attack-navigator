@@ -1,8 +1,7 @@
 @import "../../colors.scss";
 @import "../../styles.scss";
-@import "cell.scss";
-$cellSize: 15px;
 
+$cellSize: 15px;
 
 //  _  _ ___ ___ _  _ _    ___ ___ _  _ _____ ___ _  _  ___
 // | || |_ _/ __| || | |  |_ _/ __| || |_   _|_ _| \| |/ __|
@@ -17,53 +16,32 @@ $cellSize: 15px;
  // | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
  // |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
 
-.dataTable {
-    overflow-x: scroll;
-    overflow-y: hidden;
-    font-size: 9pt;
-    // table { border-collapse: collapse; table-layout: auto; width: 99%;}
-    table {
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-
-    &.compact {
-        text-align: center;
-    }
-
-    td {
-        vertical-align: top;
-        // padding: 0 3px;
-        // width: 100%;
-    }
-
-    .column {
-        padding: 2px 1px 0 1px;
-        // padding-right: 6px;
-        // border: 1px solid red;
-        // IMPORTANT: use 1% to make every cell equal size when expanding to fill space,
-        // and minimum width of their contents when collapsing
-        width: 1%;
-        &.mini {line-height: 3px;}
-    }
-
-    .techniques:hover {
-        background: $column-hover-color;
-    }
-
-    //fix border overlap issue
-    technique-cell.editing+technique-cell {
-        >.cell.highlight {
-            border-top: 1px solid black;
-        }
-    }
-}
 
 // content of each tab
-.tableContainer {
-    // width: 100%;
+.matrices {
+    overflow-x: scroll;
+    min-height: 50vh;
     border: 1px solid $panel-dark;
-    padding: 10px;
+    .matrices-columns {
+        // white-space: nowrap;
+        display: table;
+        .matrix-column {
+            display: table-cell;
+            white-space: normal;
+            // display: inline-block;
+            padding: 10px;
+            .matrix-name {
+                text-align: center;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+                font-size: 16px;
+                border-bottom: 1px solid $panel-dark;
+            }
+            &+.matrix-column {
+                border-left: 1px solid $panel-dark;
+            }
+        }
+    }
 }
 
 
@@ -190,6 +168,11 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
+.select_behavior {
+    padding: 5px;
+    text-align: left;
+}
+
 .contextMenu-cover {
     // covers entire page
     position: fixed;
@@ -228,37 +211,37 @@ $panel-light: lighten($panel-dark, 8%);
 
 }
 
-.tooltip {
-    position: absolute;
-    z-index: 100; //draw on top of other controls
+// .tooltip {
+//     position: absolute;
+//     z-index: 100; //draw on top of other controls
 
-    padding: 6px;
-    border-radius: 3px;
-    background: rgba(80, 80, 80, 0.75);
+//     padding: 6px;
+//     border-radius: 3px;
+//     background: rgba(80, 80, 80, 0.75);
 
-    font-size: 8pt;
-    color: white;
+//     font-size: 8pt;
+//     color: white;
 
-    max-width: 150px;
-    overflow-x: hidden;
+//     max-width: 150px;
+//     overflow-x: hidden;
 
-    .comment {
-        max-height: 300px;
-        overflow-y: hidden;
-    }
+//     .comment {
+//         max-height: 300px;
+//         overflow-y: hidden;
+//     }
 
-    .comment-overflow-note {
-        // color: rgb(255, 199, 190);
-    }
-    .metadatalist {
-        margin: 0;
-        margin-top: 1px;
-        padding-left: 6px;
-        list-style: none;
+//     .comment-overflow-note {
+//         // color: rgb(255, 199, 190);
+//     }
+//     .metadatalist {
+//         margin: 0;
+//         margin-top: 1px;
+//         padding-left: 6px;
+//         list-style: none;
 
-    }
+//     }
 
-}
+// }
 
 .mat-select{:focus {
     color: #63961C;
@@ -458,4 +441,18 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
+.layout {
+    width: 100px;
+    text-align: left;
+    select {
+        width: 100%;
+    }
+    
+    .section {
+        padding: 10px;
+        &+.section {
+            border-top: 1px solid $panel-light;
+        }
+    }
+}
 

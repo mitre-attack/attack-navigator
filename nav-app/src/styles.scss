@@ -120,6 +120,9 @@ body {
 .checkbox-custom {
     opacity: 0;
     position: absolute;
+    &:disabled {
+        cursor: default;
+    }
 }
 
 .checkbox-custom, .checkbox-custom-label {
@@ -133,6 +136,7 @@ body {
     position: relative;
     &.disabled {
         color: rgba(0,0,0,0.46);
+        cursor: default;
     }
 }
 

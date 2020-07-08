@@ -1,0 +1,81 @@
+@mixin cell-popover($opacity) {
+    position: absolute;
+    padding: 6px;
+    &:not(.top) { top: 0; }
+    z-index: 100;
+    min-width: 150px;
+    max-width: 300px;
+    text-align: left;
+    white-space: normal;
+    
+    border-radius: 3px;
+    background: rgba(80, 80, 80, $opacity);
+    font-size: 8pt;
+    color: white;
+    &.bottom.right {
+        /* ------------------
+         * |                |
+         * |       X XXXX   |
+         * |         XXXX   |
+         * ------------------
+         */
+        transform: translateX(10px);
+        &:before { 
+            left: -9.5px;
+            transform: rotate(90deg);
+        }
+    }
+    &.bottom.left {
+        /* ------------------
+         * |                |
+         * |  XXXX X        |
+         * |  XXXX          |
+         * ------------------
+         */
+        transform: translateX(-10px);
+        right: 100%;
+        &:before { 
+            right: -9px;
+            transform: rotate(-90deg);
+        }
+    }
+    &.top.right {
+        /* ------------------
+         * |        XXXX  |
+         * |        XXXX  |
+         * |       X      |
+         * |              |
+         * ------------------
+         */
+        transform: translateY(-10px);
+        bottom: 100%;
+        left: 0;
+        &:before {
+            bottom: -9px;
+            // transform: rotate(180deg);
+        }
+    }
+    &.top.left {
+        /* ------------------
+         * |    XXXX      |
+         * |    XXXX      |
+         * |       X      |
+         * |              |
+         * ------------------
+         */
+        transform: translateY(-10px);
+        bottom: 100%;
+        right: 0;
+        &:before {
+            bottom: -9px;
+            right: 6px;
+            // transform: rotate(180deg);
+        }
+    }
+    &:before {
+        position: absolute;
+        font-size: 12px;
+        content: '\25BC';
+        color: rgba(80, 80, 80, $opacity);
+    }
+}

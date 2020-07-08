@@ -1,0 +1,73 @@
+@import "../matrix-common.scss";
+.technique-cell {
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    position: relative;
+
+    font-size: $sizeunit - 1px;
+    line-height: $sizeunit;
+    
+    min-width: $sizeunit;
+    min-height: $sizeunit;
+    
+    >div { 
+        padding: $sizeunit /2 3px; 
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.showID:not(.showName) {
+        text-align: center;
+    }
+
+
+    .id-name-break {
+        outline-offset: -0.5px;
+        outline: 1px solid rgba(border-color(body), 0.5);
+    }
+       
+    &:not(.editing):not(.colored):not(.supertechniquecell) { 
+        box-shadow: 0 0 0 1px border-color(body) inset;
+    }
+
+    &.editing {
+        box-shadow: 0 0 0 1px black inset;
+    }
+
+    &.commented {
+        &.mini div:before {
+            position: absolute;
+            content: "i";
+            font-size: $sizeunit - 1px;
+            text-align: center;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        div span {
+            border-bottom: 2px solid transparent;
+        }
+    }
+
+    &.mini.disabled div:before {
+        position: absolute;
+        content: "\2715";
+        font-size: $sizeunit -1px;
+        text-align: center;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+
+    &.highlight {
+        background: $cell-highlight-color;
+        .id-name-break {
+            outline: 1px solid rgba(black, 0.5);
+        }
+    }
+}

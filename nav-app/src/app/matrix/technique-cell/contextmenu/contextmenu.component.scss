@@ -1,0 +1,36 @@
+@import "../cell-popover.scss";
+@import "../../../../colors.scss";
+.contextmenu {
+    
+    .cover {
+        z-index: 100;
+        // background: red;
+        // opacity: 0.5;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        cursor: default;
+    }
+    .menu {
+        cursor: default;
+        @include cell-popover(0.85);
+        .contextMenu-section {
+            &:not(:first-child) {
+                border-top: 1px solid white;
+                margin-top: 2px;
+                padding-top: 2px;
+            }
+            div {padding: 3px;}
+
+            .contextMenu-button {
+                
+                cursor: pointer;
+                &:hover {
+                    background: $cell-highlight-color;
+                }
+            }
+        }
+    }
+}

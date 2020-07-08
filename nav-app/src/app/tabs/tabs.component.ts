@@ -7,7 +7,6 @@ import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
-import { ExportData } from "../exporter/exporter.component";
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
@@ -23,7 +22,7 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService, ConfigService]
+    providers: [ViewModelsService]
 
 })
 export class TabsComponent implements AfterContentInit {
@@ -45,7 +44,7 @@ export class TabsComponent implements AfterContentInit {
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
     constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
-        let self = this;
+        console.log("tabs component initializing");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
@@ -60,20 +59,38 @@ export class TabsComponent implements AfterContentInit {
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
-                var replace = true;
+                var first = true;
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                     var url = urls_1[_i];
-                    console.log("loading initial layer", url)
-                    this.loadLayerFromURL(url, replace);
-                    replace = false;
+                    let self = this;
+                    let loadInitialVMCallback = function() {
+                        console.log(url);
+                        self.loadLayerFromURL(url, first);
+                        first = false;
+                    }
+                    //vms must load after data service loads data
+                    if (this.dataService.dataLoaded) {
+                        loadInitialVMCallback();
+                    } else {
+                        this.dataService.onDataLoad(loadInitialVMCallback);
+                    }
                 }
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
-                    console.log(url);
-                    this.loadLayerFromURL(url, first);
-                    first = false;
+                    let self = this;
+                    let loadInitialVMCallback = function() {
+                        console.log(url);
+                        self.loadLayerFromURL(url, first);
+                        first = false;
+                    }
+                    //vms must load after data service loads data
+                    if (this.dataService.dataLoaded) {
+                        loadInitialVMCallback();
+                    } else {
+                        this.dataService.onDataLoad(loadInitialVMCallback);
+                    }
                 }
                 // this.loadURL = config["default_layer"]["location"]
                 // console.log(this.loadURL)
@@ -269,8 +286,8 @@ export class TabsComponent implements AfterContentInit {
         this.openTab('help', this.helpTab, null, true, replace, false)
     }
 
-    newExporterTab(exportData: ExportData) {
-        this.openTab('render: ' + exportData.viewModel.name, this.exporterTab, exportData, true, false, true)
+    newExporterTab(vm: ViewModel) {
+        this.openTab('render: ' + vm.name, this.exporterTab, vm, true, false, true)
     }
 
     /**

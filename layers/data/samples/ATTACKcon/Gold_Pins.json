@@ -1,6 +1,6 @@
 {
 	"name": "Gold Pins",
-	"version": "2.2",
+	"version": "3.0",
 	"domain": "mitre-enterprise",
 	"description": "ATT&CKcon Matrix Question: What techniques keep you up at night?",
 	"filters": {
@@ -14,7 +14,6 @@
 		]
 	},
 	"sorting": 0,
-	"viewMode": 0,
 	"hideDisabled": false,
 	"techniques": [
 		{
