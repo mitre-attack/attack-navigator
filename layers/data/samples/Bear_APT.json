@@ -21,7 +21,7 @@
         },
         {
             "techniqueID": "T1105",
-            "comment": "used by Fancy Bear, Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Fancy Bear, Berserk Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -35,7 +35,7 @@
             "color": "#ff6666"
         },
         {
-            "techniqueID": "T1551.006",
+            "techniqueID": "T1070.006",
             "comment": "used by Fancy Bear",
             "color": "#ff6666"
         },
@@ -46,7 +46,7 @@
         },
         {
             "techniqueID": "T1120",
-            "comment": "used by Fancy Bear",
+            "comment": "used by Fancy Bear, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -60,13 +60,13 @@
             "color": "#ff6666"
         },
         {
-            "techniqueID": "T1551.001",
+            "techniqueID": "T1070.001",
             "comment": "used by Fancy Bear, Berserk Bear",
             "color": "#ff6666"
         },
         {
             "techniqueID": "T1204.002",
-            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear",
+            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -76,7 +76,7 @@
         },
         {
             "techniqueID": "T1566.001",
-            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -91,7 +91,7 @@
         },
         {
             "techniqueID": "T1040",
-            "comment": "used by Fancy Bear",
+            "comment": "used by Fancy Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -136,7 +136,7 @@
         },
         {
             "techniqueID": "T1078",
-            "comment": "used by Fancy Bear, Berserk Bear",
+            "comment": "used by Fancy Bear, Berserk Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -146,7 +146,7 @@
         },
         {
             "techniqueID": "T1218.011",
-            "comment": "used by Fancy Bear, Cozy Bear",
+            "comment": "used by Fancy Bear, Cozy Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -171,17 +171,17 @@
         },
         {
             "techniqueID": "T1003.001",
-            "comment": "used by Fancy Bear",
+            "comment": "used by Fancy Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
-            "techniqueID": "T1551.004",
-            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear",
+            "techniqueID": "T1070.004",
+            "comment": "used by Fancy Bear, Cozy Bear, Berserk Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
             "techniqueID": "T1027",
-            "comment": "used by Fancy Bear, Cozy Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Fancy Bear, Cozy Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -216,17 +216,17 @@
         },
         {
             "techniqueID": "T1056.001",
-            "comment": "used by Fancy Bear",
+            "comment": "used by Fancy Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
             "techniqueID": "T1140",
-            "comment": "used by Fancy Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Fancy Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
             "techniqueID": "T1203",
-            "comment": "used by Fancy Bear, Cozy Bear",
+            "comment": "used by Fancy Bear, Cozy Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -261,7 +261,7 @@
         },
         {
             "techniqueID": "T1071.001",
-            "comment": "used by Fancy Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Fancy Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -336,7 +336,7 @@
         },
         {
             "techniqueID": "T1069.002",
-            "comment": "used by Berserk Bear",
+            "comment": "used by Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -366,7 +366,7 @@
         },
         {
             "techniqueID": "T1189",
-            "comment": "used by Berserk Bear",
+            "comment": "used by Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -376,7 +376,7 @@
         },
         {
             "techniqueID": "T1018",
-            "comment": "used by Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Berserk Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -396,7 +396,7 @@
         },
         {
             "techniqueID": "T1016",
-            "comment": "used by Berserk Bear, WhiteBear (AKA VENOMOUS BEAR)",
+            "comment": "used by Berserk Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -411,7 +411,7 @@
         },
         {
             "techniqueID": "T1133",
-            "comment": "used by Berserk Bear",
+            "comment": "used by Berserk Bear, VOODOO BEAR",
             "color": "#ff6666"
         },
         {
@@ -431,7 +431,7 @@
         },
         {
             "techniqueID": "T1087.002",
-            "comment": "used by Berserk Bear",
+            "comment": "used by Berserk Bear, VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
@@ -455,6 +455,76 @@
             "color": "#ff6666"
         },
         {
+            "techniqueID": "T1132.001",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1090",
+            "comment": "used by VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1041",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1555.003",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1102.002",
+            "comment": "used by VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1036.005",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1485",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1561.002",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1059.005",
+            "comment": "used by VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1571",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1219",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1195.002",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1082",
+            "comment": "used by VOODOO BEAR, WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1087.003",
+            "comment": "used by VOODOO BEAR",
+            "color": "#ff6666"
+        },
+        {
             "techniqueID": "T1110",
             "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
@@ -465,17 +535,7 @@
             "color": "#ff6666"
         },
         {
-            "techniqueID": "T1102.002",
-            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
-            "color": "#ff6666"
-        },
-        {
             "techniqueID": "T1055",
-            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
-            "color": "#ff6666"
-        },
-        {
-            "techniqueID": "T1082",
             "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
@@ -520,22 +580,12 @@
             "color": "#ff6666"
         },
         {
-            "techniqueID": "T1090",
-            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
-            "color": "#ff6666"
-        },
-        {
             "techniqueID": "T1134.002",
             "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
         {
             "techniqueID": "T1555",
-            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
-            "color": "#ff6666"
-        },
-        {
-            "techniqueID": "T1059.005",
             "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         },
@@ -556,6 +606,31 @@
         },
         {
             "techniqueID": "T1570",
+            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1069.001",
+            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1087.001",
+            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1201",
+            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1213",
+            "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
+            "color": "#ff6666"
+        },
+        {
+            "techniqueID": "T1518.001",
             "comment": "used by WhiteBear (AKA VENOMOUS BEAR)",
             "color": "#ff6666"
         }

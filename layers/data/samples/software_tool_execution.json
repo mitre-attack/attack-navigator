@@ -6,8 +6,8 @@
     "techniques": [
         {
             "techniqueID": "T1016",
-            "comment": "executed by Arp, Empire, Koadic, Nltest, PoshC2, Pupy, ifconfig, ipconfig, nbtstat, route",
-            "score": 10
+            "comment": "executed by Arp, Empire, Koadic, Nltest, PoshC2, Pupy, ShimRatReporter, ifconfig, ipconfig, nbtstat, route",
+            "score": 11
         },
         {
             "techniqueID": "T1048.003",
@@ -16,8 +16,8 @@
         },
         {
             "techniqueID": "T1105",
-            "comment": "executed by BITSAdmin, Empire, Koadic, Pupy, QuasarRAT, Remcos, certutil, cmd, esentutl",
-            "score": 9
+            "comment": "executed by BITSAdmin, CARROTBALL, Empire, Koadic, Pupy, QuasarRAT, Remcos, ShimRatReporter, certutil, cmd, esentutl",
+            "score": 11
         },
         {
             "techniqueID": "T1197",
@@ -28,6 +28,21 @@
             "techniqueID": "T1570",
             "comment": "executed by BITSAdmin, Expand, PsExec, cmd, esentutl",
             "score": 5
+        },
+        {
+            "techniqueID": "T1071.002",
+            "comment": "executed by CARROTBALL",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1204.002",
+            "comment": "executed by CARROTBALL",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1027",
+            "comment": "executed by CARROTBALL, Empire, Imminent Monitor, Invoke-PSImage, PowerSploit, Remcos, ShimRatReporter",
+            "score": 7
         },
         {
             "techniqueID": "T1003.005",
@@ -46,13 +61,13 @@
         },
         {
             "techniqueID": "T1057",
-            "comment": "executed by Cobalt Strike, Empire, PowerSploit, Pupy, Tasklist",
-            "score": 5
+            "comment": "executed by Cobalt Strike, Empire, Imminent Monitor, PowerSploit, Pupy, ShimRatReporter, Tasklist",
+            "score": 7
         },
         {
             "techniqueID": "T1106",
-            "comment": "executed by Cobalt Strike, Empire",
-            "score": 2
+            "comment": "executed by Cobalt Strike, Empire, Imminent Monitor, ShimRatReporter",
+            "score": 4
         },
         {
             "techniqueID": "T1543.003",
@@ -60,7 +75,7 @@
             "score": 3
         },
         {
-            "techniqueID": "T1551.006",
+            "techniqueID": "T1070.006",
             "comment": "executed by Cobalt Strike, Empire",
             "score": 2
         },
@@ -166,13 +181,13 @@
         },
         {
             "techniqueID": "T1021.001",
-            "comment": "executed by Cobalt Strike, Koadic, Pupy, QuasarRAT",
-            "score": 4
+            "comment": "executed by Cobalt Strike, Imminent Monitor, Koadic, Pupy, QuasarRAT",
+            "score": 5
         },
         {
             "techniqueID": "T1056.001",
-            "comment": "executed by Cobalt Strike, Empire, PoshC2, PowerSploit, Pupy, QuasarRAT, Remcos",
-            "score": 7
+            "comment": "executed by Cobalt Strike, Empire, Imminent Monitor, PoshC2, PowerSploit, Pupy, QuasarRAT, Remcos",
+            "score": 8
         },
         {
             "techniqueID": "T1055.012",
@@ -221,12 +236,12 @@
         },
         {
             "techniqueID": "T1071.001",
-            "comment": "executed by Cobalt Strike, Empire, PoshC2, Pupy",
-            "score": 4
+            "comment": "executed by Cobalt Strike, Empire, PoshC2, Pupy, ShimRatReporter",
+            "score": 5
         },
         {
-            "techniqueID": "T1059",
-            "comment": "executed by Cobalt Strike, Empire",
+            "techniqueID": "T1059.005",
+            "comment": "executed by Cobalt Strike, Koadic",
             "score": 2
         },
         {
@@ -251,13 +266,13 @@
         },
         {
             "techniqueID": "T1125",
-            "comment": "executed by Empire, Pupy, QuasarRAT, Remcos",
-            "score": 4
+            "comment": "executed by Empire, Imminent Monitor, Pupy, QuasarRAT, Remcos",
+            "score": 5
         },
         {
             "techniqueID": "T1083",
-            "comment": "executed by Empire, Forfiles, PoshC2, Pupy, Remcos, cmd",
-            "score": 6
+            "comment": "executed by Empire, Forfiles, Imminent Monitor, PoshC2, Pupy, Remcos, cmd",
+            "score": 7
         },
         {
             "techniqueID": "T1115",
@@ -293,6 +308,11 @@
             "techniqueID": "T1056.004",
             "comment": "executed by Empire",
             "score": 1
+        },
+        {
+            "techniqueID": "T1059",
+            "comment": "executed by Empire, Imminent Monitor",
+            "score": 2
         },
         {
             "techniqueID": "T1210",
@@ -341,8 +361,8 @@
         },
         {
             "techniqueID": "T1560",
-            "comment": "executed by Empire",
-            "score": 1
+            "comment": "executed by Empire, ShimRatReporter",
+            "score": 2
         },
         {
             "techniqueID": "T1114.001",
@@ -366,18 +386,18 @@
         },
         {
             "techniqueID": "T1041",
-            "comment": "executed by Empire, Pupy",
-            "score": 2
+            "comment": "executed by Empire, Imminent Monitor, Pupy, ShimRatReporter",
+            "score": 4
         },
         {
             "techniqueID": "T1049",
-            "comment": "executed by Empire, Net, PoshC2, Pupy, nbtstat, netstat",
-            "score": 6
+            "comment": "executed by Empire, Net, PoshC2, Pupy, ShimRatReporter, nbtstat, netstat",
+            "score": 7
         },
         {
             "techniqueID": "T1082",
-            "comment": "executed by Empire, PoshC2, Pupy, QuasarRAT, Systeminfo, cmd",
-            "score": 6
+            "comment": "executed by Empire, PoshC2, Pupy, QuasarRAT, ShimRatReporter, Systeminfo, cmd",
+            "score": 7
         },
         {
             "techniqueID": "T1518.001",
@@ -386,12 +406,7 @@
         },
         {
             "techniqueID": "T1573.002",
-            "comment": "executed by Empire, Koadic, Pupy",
-            "score": 3
-        },
-        {
-            "techniqueID": "T1027",
-            "comment": "executed by Empire, Invoke-PSImage, PowerSploit, Remcos",
+            "comment": "executed by Empire, Koadic, Pupy, Tor",
             "score": 4
         },
         {
@@ -411,8 +426,8 @@
         },
         {
             "techniqueID": "T1555.003",
-            "comment": "executed by Empire, LaZagne, Mimikatz, Pupy, QuasarRAT",
-            "score": 5
+            "comment": "executed by Empire, Imminent Monitor, LaZagne, Mimikatz, Pupy, QuasarRAT",
+            "score": 6
         },
         {
             "techniqueID": "T1136.002",
@@ -466,8 +481,8 @@
         },
         {
             "techniqueID": "T1140",
-            "comment": "executed by Expand, certutil",
-            "score": 2
+            "comment": "executed by Expand, Imminent Monitor, certutil",
+            "score": 3
         },
         {
             "techniqueID": "T1202",
@@ -488,6 +503,31 @@
             "techniqueID": "T1190",
             "comment": "executed by Havij, sqlmap",
             "score": 2
+        },
+        {
+            "techniqueID": "T1564.001",
+            "comment": "executed by Imminent Monitor",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1496",
+            "comment": "executed by Imminent Monitor",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1123",
+            "comment": "executed by Imminent Monitor, PowerSploit, Pupy, Remcos",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1562.001",
+            "comment": "executed by Imminent Monitor",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1070.004",
+            "comment": "executed by Imminent Monitor, SDelete, cmd",
+            "score": 3
         },
         {
             "techniqueID": "T1003.003",
@@ -516,11 +556,6 @@
         },
         {
             "techniqueID": "T1218.010",
-            "comment": "executed by Koadic",
-            "score": 1
-        },
-        {
-            "techniqueID": "T1059.005",
             "comment": "executed by Koadic",
             "score": 1
         },
@@ -605,7 +640,7 @@
             "score": 1
         },
         {
-            "techniqueID": "T1551.005",
+            "techniqueID": "T1070.005",
             "comment": "executed by Net",
             "score": 1
         },
@@ -621,8 +656,8 @@
         },
         {
             "techniqueID": "T1119",
-            "comment": "executed by PoshC2",
-            "score": 1
+            "comment": "executed by PoshC2, ShimRatReporter",
+            "score": 2
         },
         {
             "techniqueID": "T1546.003",
@@ -655,19 +690,9 @@
             "score": 2
         },
         {
-            "techniqueID": "T1123",
-            "comment": "executed by PowerSploit, Pupy, Remcos",
-            "score": 3
-        },
-        {
-            "techniqueID": "T1551.001",
+            "techniqueID": "T1070.001",
             "comment": "executed by Pupy",
             "score": 1
-        },
-        {
-            "techniqueID": "T1573",
-            "comment": "executed by Pupy, Tor",
-            "score": 2
         },
         {
             "techniqueID": "T1497.001",
@@ -725,9 +750,29 @@
             "score": 1
         },
         {
-            "techniqueID": "T1551.004",
-            "comment": "executed by SDelete, cmd",
-            "score": 2
+            "techniqueID": "T1087",
+            "comment": "executed by ShimRatReporter",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1036.005",
+            "comment": "executed by ShimRatReporter",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1020",
+            "comment": "executed by ShimRatReporter",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1069",
+            "comment": "executed by ShimRatReporter",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1518",
+            "comment": "executed by ShimRatReporter",
+            "score": 1
         },
         {
             "techniqueID": "T1090.003",
@@ -772,6 +817,6 @@
             "#ff6666"
         ],
         "minValue": 1,
-        "maxValue": 10
+        "maxValue": 11
     }
 }
