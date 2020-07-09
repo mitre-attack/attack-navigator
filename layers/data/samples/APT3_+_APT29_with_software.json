@@ -7,17 +7,17 @@
         {
             "techniqueID": "T1569.002",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PsExec, RemoteCMD, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, RemoteCMD, PsExec"
         },
         {
             "techniqueID": "T1053.005",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, CosmicDuke, schtasks, RemoteCMD, CozyCar"
+            "comment": "used by APT3, APT29, schtasks, CozyCar, RemoteCMD, CosmicDuke"
         },
         {
             "techniqueID": "T1105",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, PowerDuke, CloudDuke, RemoteCMD, POSHSPY, SeaDuke, MiniDuke"
+            "comment": "used by APT3, APT29, POSHSPY, CloudDuke, PowerDuke, MiniDuke, SeaDuke, PlugX, RemoteCMD"
         },
         {
             "techniqueID": "T1074.001",
@@ -27,17 +27,17 @@
         {
             "techniqueID": "T1087.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, OSInfo, GeminiDuke, SHOTPUT"
+            "comment": "used by APT3, APT29, SHOTPUT, GeminiDuke, OSInfo"
         },
         {
             "techniqueID": "T1056.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, CosmicDuke, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PlugX, CosmicDuke"
         },
         {
             "techniqueID": "T1016",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, OSInfo, GeminiDuke, PowerDuke"
+            "comment": "used by APT3, APT29, GeminiDuke, OSInfo, PowerDuke"
         },
         {
             "techniqueID": "T1546.008",
@@ -52,12 +52,12 @@
         {
             "techniqueID": "T1005",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, CosmicDuke, PinchDuke, Cobalt Strike"
+            "comment": "used by APT3, APT29, PinchDuke, Cobalt Strike, CosmicDuke"
         },
         {
             "techniqueID": "T1083",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, PinchDuke, PowerDuke, CosmicDuke, SHOTPUT, GeminiDuke"
+            "comment": "used by APT3, APT29, CosmicDuke, PinchDuke, PowerDuke, GeminiDuke, SHOTPUT, PlugX"
         },
         {
             "techniqueID": "T1090.002",
@@ -67,12 +67,12 @@
         {
             "techniqueID": "T1018",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, OSInfo, SHOTPUT, Cobalt Strike"
+            "comment": "used by APT3, APT29, SHOTPUT, Cobalt Strike, OSInfo"
         },
         {
             "techniqueID": "T1059.003",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, PowerDuke, SeaDuke, CozyCar, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PowerDuke, SeaDuke, CozyCar, PlugX"
         },
         {
             "techniqueID": "T1078.002",
@@ -87,22 +87,22 @@
         {
             "techniqueID": "T1057",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, PowerDuke, SHOTPUT, GeminiDuke, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PowerDuke, GeminiDuke, SHOTPUT, PlugX"
         },
         {
             "techniqueID": "T1003.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, Mimikatz, LaZagne, CozyCar"
+            "comment": "used by APT3, APT29, CozyCar, LaZagne, Mimikatz"
         },
         {
             "techniqueID": "T1059.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, POSHSPY, SeaDuke, HAMMERTOSS, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, SeaDuke, POSHSPY, HAMMERTOSS"
         },
         {
             "techniqueID": "T1543.003",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, CosmicDuke, Cobalt Strike, CozyCar"
+            "comment": "used by APT3, APT29, CozyCar, Cobalt Strike, PlugX, CosmicDuke"
         },
         {
             "techniqueID": "T1104",
@@ -112,7 +112,7 @@
         {
             "techniqueID": "T1049",
             "color": "#6baed6",
-            "comment": "used by APT3, OSInfo, PlugX, SHOTPUT"
+            "comment": "used by APT3, SHOTPUT, PlugX, OSInfo"
         },
         {
             "techniqueID": "T1041",
@@ -122,12 +122,12 @@
         {
             "techniqueID": "T1218.011",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PowerDuke, CozyCar"
+            "comment": "used by APT3, APT29, CozyCar, PowerDuke"
         },
         {
             "techniqueID": "T1106",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PlugX"
         },
         {
             "techniqueID": "T1140",
@@ -142,12 +142,12 @@
         {
             "techniqueID": "T1071.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, PinchDuke, HAMMERTOSS, CloudDuke, CosmicDuke, OnionDuke, SeaDuke, GeminiDuke, CozyCar, MiniDuke, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, CloudDuke, CosmicDuke, PinchDuke, OnionDuke, GeminiDuke, MiniDuke, SeaDuke, CozyCar, PlugX, HAMMERTOSS"
         },
         {
             "techniqueID": "T1113",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, CosmicDuke, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PlugX, CosmicDuke"
         },
         {
             "techniqueID": "T1112",
@@ -157,12 +157,12 @@
         {
             "techniqueID": "T1012",
             "color": "#6baed6",
-            "comment": "used by APT3, OSInfo, PlugX"
+            "comment": "used by APT3, PlugX, OSInfo"
         },
         {
             "techniqueID": "T1102.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, MiniDuke"
+            "comment": "used by APT3, APT29, MiniDuke, PlugX"
         },
         {
             "techniqueID": "T1036.004",
@@ -177,12 +177,12 @@
         {
             "techniqueID": "T1547.001",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PowerDuke, PlugX, SeaDuke, CozyCar"
+            "comment": "used by APT3, APT29, CozyCar, PlugX, SeaDuke, PowerDuke"
         },
         {
             "techniqueID": "T1135",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, OSInfo, PlugX, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PlugX, OSInfo"
         },
         {
             "techniqueID": "T1497.001",
@@ -192,7 +192,7 @@
         {
             "techniqueID": "T1071.004",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PlugX, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PlugX"
         },
         {
             "techniqueID": "T1127.001",
@@ -207,7 +207,7 @@
         {
             "techniqueID": "T1027",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, SHOTPUT, POSHSPY, CozyCar"
+            "comment": "used by APT3, APT29, SHOTPUT, CozyCar, POSHSPY"
         },
         {
             "techniqueID": "T1033",
@@ -242,7 +242,7 @@
         {
             "techniqueID": "T1082",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, OSInfo, PowerDuke, PinchDuke, CozyCar"
+            "comment": "used by APT3, APT29, CozyCar, PinchDuke, OSInfo, PowerDuke"
         },
         {
             "techniqueID": "T1069.002",
@@ -257,7 +257,7 @@
         {
             "techniqueID": "T1021.002",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PsExec, Cobalt Strike"
+            "comment": "used by APT3, APT29, Cobalt Strike, PsExec"
         },
         {
             "techniqueID": "T1110.002",
@@ -265,19 +265,19 @@
             "comment": "used by APT3"
         },
         {
-            "techniqueID": "T1551.004",
+            "techniqueID": "T1070.004",
             "color": "#74c476",
             "comment": "used by APT3, APT29, SeaDuke, SDelete, PowerDuke"
         },
         {
             "techniqueID": "T1555",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PinchDuke, CosmicDuke, LaZagne, Mimikatz"
+            "comment": "used by APT3, APT29, PinchDuke, LaZagne, Mimikatz, CosmicDuke"
         },
         {
             "techniqueID": "T1555.003",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, PinchDuke, CosmicDuke, LaZagne, Mimikatz"
+            "comment": "used by APT3, APT29, PinchDuke, LaZagne, Mimikatz, CosmicDuke"
         },
         {
             "techniqueID": "T1552.001",
@@ -287,7 +287,7 @@
         {
             "techniqueID": "T1003.004",
             "color": "#74c476",
-            "comment": "used by APT3, APT29, CosmicDuke, Mimikatz, LaZagne"
+            "comment": "used by APT3, APT29, LaZagne, Mimikatz, CosmicDuke"
         },
         {
             "techniqueID": "T1003.005",
@@ -332,7 +332,7 @@
         {
             "techniqueID": "T1546.003",
             "color": "#fce93b",
-            "comment": "used by APT29, POSHSPY, SeaDuke"
+            "comment": "used by APT29, SeaDuke, POSHSPY"
         },
         {
             "techniqueID": "T1090.004",
@@ -342,7 +342,7 @@
         {
             "techniqueID": "T1003",
             "color": "#fce93b",
-            "comment": "used by APT29, OnionDuke, PinchDuke"
+            "comment": "used by APT29, PinchDuke, OnionDuke"
         },
         {
             "techniqueID": "T1090.003",
@@ -355,14 +355,14 @@
             "comment": "used by APT29"
         },
         {
-            "techniqueID": "T1573",
+            "techniqueID": "T1573.002",
             "color": "#fce93b",
-            "comment": "used by APT29, Tor"
+            "comment": "used by APT29, Tor, POSHSPY"
         },
         {
             "techniqueID": "T1102.002",
             "color": "#fce93b",
-            "comment": "used by APT29, CloudDuke, CozyCar"
+            "comment": "used by APT29, CozyCar, CloudDuke"
         },
         {
             "techniqueID": "T1518.001",
@@ -377,7 +377,7 @@
         {
             "techniqueID": "T1003.002",
             "color": "#fce93b",
-            "comment": "used by APT29, CosmicDuke, Mimikatz, Cobalt Strike, CozyCar"
+            "comment": "used by APT29, CozyCar, Cobalt Strike, Mimikatz, CosmicDuke"
         },
         {
             "techniqueID": "T1497",
@@ -392,7 +392,7 @@
         {
             "techniqueID": "T1550.003",
             "color": "#fce93b",
-            "comment": "used by APT29, Mimikatz, SeaDuke"
+            "comment": "used by APT29, SeaDuke, Mimikatz"
         },
         {
             "techniqueID": "T1564.004",
@@ -452,12 +452,12 @@
         {
             "techniqueID": "T1068",
             "color": "#fce93b",
-            "comment": "used by APT29, CosmicDuke, Cobalt Strike"
+            "comment": "used by APT29, Cobalt Strike, CosmicDuke"
         },
         {
             "techniqueID": "T1573.001",
             "color": "#fce93b",
-            "comment": "used by APT29, CosmicDuke, SeaDuke, HAMMERTOSS"
+            "comment": "used by APT29, SeaDuke, HAMMERTOSS, CosmicDuke"
         },
         {
             "techniqueID": "T1039",
@@ -482,7 +482,7 @@
         {
             "techniqueID": "T1102.003",
             "color": "#fce93b",
-            "comment": "used by APT29, OnionDuke, HAMMERTOSS"
+            "comment": "used by APT29, HAMMERTOSS, OnionDuke"
         },
         {
             "techniqueID": "T1001.002",
@@ -507,7 +507,7 @@
         {
             "techniqueID": "T1550.002",
             "color": "#fce93b",
-            "comment": "used by APT29, Mimikatz, Cobalt Strike"
+            "comment": "used by APT29, Cobalt Strike, Mimikatz"
         },
         {
             "techniqueID": "T1207",
@@ -540,14 +540,9 @@
             "comment": "used by APT29, POSHSPY"
         },
         {
-            "techniqueID": "T1551.006",
+            "techniqueID": "T1070.006",
             "color": "#fce93b",
-            "comment": "used by APT29, POSHSPY, Cobalt Strike"
-        },
-        {
-            "techniqueID": "T1573.002",
-            "color": "#fce93b",
-            "comment": "used by APT29, POSHSPY"
+            "comment": "used by APT29, Cobalt Strike, POSHSPY"
         },
         {
             "techniqueID": "T1568.002",
@@ -640,7 +635,7 @@
             "comment": "used by APT29, Cobalt Strike"
         },
         {
-            "techniqueID": "T1059",
+            "techniqueID": "T1059.005",
             "color": "#fce93b",
             "comment": "used by APT29, Cobalt Strike"
         },
