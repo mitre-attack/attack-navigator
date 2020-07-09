@@ -7,31 +7,31 @@
     "techniques": [
         {
             "techniqueID": "T1546.004",
-            "score": 11
+            "score": 20
         },
         {
             "techniqueID": "T1003.008",
-            "score": 19
+            "score": 46
         },
         {
             "techniqueID": "T1548",
-            "score": 98
+            "score": 77
         },
         {
             "techniqueID": "T1134",
-            "score": 13
+            "score": 44
         },
         {
             "techniqueID": "T1546.008",
-            "score": 37
+            "score": 57
         },
         {
             "techniqueID": "T1531",
-            "score": 51
+            "score": 37
         },
         {
             "techniqueID": "T1087",
-            "score": 93
+            "score": 7
         },
         {
             "techniqueID": "T1098",
@@ -39,371 +39,379 @@
         },
         {
             "techniqueID": "T1098.003",
-            "score": 3
+            "score": 8
         },
         {
             "techniqueID": "T1137.006",
-            "score": 83
+            "score": 1
         },
         {
             "techniqueID": "T1098.001",
-            "score": 26
+            "score": 22
         },
         {
             "techniqueID": "T1546.009",
-            "score": 86
+            "score": 97
         },
         {
             "techniqueID": "T1546.010",
-            "score": 96
+            "score": 7
         },
         {
             "techniqueID": "T1059.002",
-            "score": 7
+            "score": 87
         },
         {
             "techniqueID": "T1550.001",
-            "score": 3
+            "score": 25
         },
         {
             "techniqueID": "T1499.003",
-            "score": 17
+            "score": 52
         },
         {
             "techniqueID": "T1071",
-            "score": 51
+            "score": 41
         },
         {
             "techniqueID": "T1546.011",
-            "score": 76
+            "score": 46
         },
         {
             "techniqueID": "T1010",
-            "score": 14
+            "score": 84
         },
         {
             "techniqueID": "T1499.004",
-            "score": 52
+            "score": 55
         },
         {
             "techniqueID": "T1560",
-            "score": 62
+            "score": 37
         },
         {
             "techniqueID": "T1560.003",
-            "score": 79
+            "score": 49
         },
         {
             "techniqueID": "T1560.002",
-            "score": 54
+            "score": 47
         },
         {
             "techniqueID": "T1560.001",
-            "score": 92
-        },
-        {
-            "techniqueID": "T1573.002",
-            "score": 90
-        },
-        {
-            "techniqueID": "T1055.004",
-            "score": 100
-        },
-        {
-            "techniqueID": "T1053.001",
-            "score": 24
-        },
-        {
-            "techniqueID": "T1053.002",
-            "score": 92
-        },
-        {
-            "techniqueID": "T1123",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1547.002",
-            "score": 7
-        },
-        {
-            "techniqueID": "T1119",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1020",
-            "score": 7
-        },
-        {
-            "techniqueID": "T1197",
-            "score": 29
-        },
-        {
-            "techniqueID": "T1059.004",
             "score": 80
         },
         {
-            "techniqueID": "T1552.003",
-            "score": 26
+            "techniqueID": "T1573.002",
+            "score": 85
         },
         {
-            "techniqueID": "T1102.002",
-            "score": 81
+            "techniqueID": "T1055.004",
+            "score": 68
         },
         {
-            "techniqueID": "T1027.001",
-            "score": 52
+            "techniqueID": "T1053.001",
+            "score": 93
         },
         {
-            "techniqueID": "T1547",
-            "score": 98
+            "techniqueID": "T1053.002",
+            "score": 13
         },
         {
-            "techniqueID": "T1037",
-            "score": 33
+            "techniqueID": "T1123",
+            "score": 5
         },
         {
-            "techniqueID": "T1542.003",
-            "score": 20
+            "techniqueID": "T1547.002",
+            "score": 42
         },
         {
-            "techniqueID": "T1217",
-            "score": 45
+            "techniqueID": "T1119",
+            "score": 66
         },
         {
-            "techniqueID": "T1176",
+            "techniqueID": "T1020",
+            "score": 85
+        },
+        {
+            "techniqueID": "T1197",
             "score": 54
         },
         {
-            "techniqueID": "T1110",
-            "score": 56
-        },
-        {
-            "techniqueID": "T1548.002",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1218.003",
-            "score": 19
-        },
-        {
-            "techniqueID": "T1003.005",
-            "score": 30
-        },
-        {
-            "techniqueID": "T1546.001",
+            "techniqueID": "T1552.003",
             "score": 70
         },
         {
-            "techniqueID": "T1551.003",
+            "techniqueID": "T1102.002",
+            "score": 79
+        },
+        {
+            "techniqueID": "T1027.001",
             "score": 40
         },
         {
-            "techniqueID": "T1551.002",
-            "score": 86
+            "techniqueID": "T1547",
+            "score": 49
         },
         {
-            "techniqueID": "T1551.001",
+            "techniqueID": "T1037",
+            "score": 43
+        },
+        {
+            "techniqueID": "T1542.003",
+            "score": 63
+        },
+        {
+            "techniqueID": "T1217",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1176",
+            "score": 78
+        },
+        {
+            "techniqueID": "T1110",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1548.002",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1218.003",
+            "score": 90
+        },
+        {
+            "techniqueID": "T1574.012",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1003.005",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1546.001",
+            "score": 90
+        },
+        {
+            "techniqueID": "T1070.003",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1070.002",
+            "score": 87
+        },
+        {
+            "techniqueID": "T1070.001",
             "score": 43
         },
         {
             "techniqueID": "T1115",
-            "score": 66
+            "score": 15
         },
         {
             "techniqueID": "T1136.003",
-            "score": 61
+            "score": 28
         },
         {
             "techniqueID": "T1087.004",
-            "score": 26
+            "score": 55
         },
         {
             "techniqueID": "T1078.004",
-            "score": 87
+            "score": 12
         },
         {
             "techniqueID": "T1069.003",
-            "score": 39
+            "score": 31
         },
         {
             "techniqueID": "T1552.005",
-            "score": 44
-        },
-        {
-            "techniqueID": "T1538",
-            "score": 33
-        },
-        {
-            "techniqueID": "T1526",
-            "score": 57
-        },
-        {
-            "techniqueID": "T1553.002",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1059",
-            "score": 98
-        },
-        {
-            "techniqueID": "T1092",
-            "score": 97
-        },
-        {
-            "techniqueID": "T1027.004",
-            "score": 6
-        },
-        {
-            "techniqueID": "T1218.001",
-            "score": 34
-        },
-        {
-            "techniqueID": "T1542.002",
-            "score": 32
-        },
-        {
-            "techniqueID": "T1559.001",
-            "score": 84
-        },
-        {
-            "techniqueID": "T1546.015",
-            "score": 49
-        },
-        {
-            "techniqueID": "T1554",
-            "score": 63
-        },
-        {
-            "techniqueID": "T1195.003",
-            "score": 48
-        },
-        {
-            "techniqueID": "T1195.001",
-            "score": 78
-        },
-        {
-            "techniqueID": "T1195.002",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1213.001",
-            "score": 81
-        },
-        {
-            "techniqueID": "T1218.002",
-            "score": 96
-        },
-        {
-            "techniqueID": "T1136",
-            "score": 70
-        },
-        {
-            "techniqueID": "T1134.002",
-            "score": 7
-        },
-        {
-            "techniqueID": "T1543",
-            "score": 53
-        },
-        {
-            "techniqueID": "T1056.004",
-            "score": 95
-        },
-        {
-            "techniqueID": "T1110.004",
-            "score": 17
-        },
-        {
-            "techniqueID": "T1552.001",
-            "score": 67
-        },
-        {
-            "techniqueID": "T1555",
-            "score": 9
-        },
-        {
-            "techniqueID": "T1555.003",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1552.002",
-            "score": 5
-        },
-        {
-            "techniqueID": "T1053.003",
-            "score": 97
-        },
-        {
-            "techniqueID": "T1003.006",
-            "score": 91
-        },
-        {
-            "techniqueID": "T1574.001",
-            "score": 33
-        },
-        {
-            "techniqueID": "T1574.002",
-            "score": 33
-        },
-        {
-            "techniqueID": "T1071.004",
-            "score": 2
-        },
-        {
-            "techniqueID": "T1568.003",
-            "score": 16
-        },
-        {
-            "techniqueID": "T1485",
-            "score": 95
-        },
-        {
-            "techniqueID": "T1132",
-            "score": 11
-        },
-        {
-            "techniqueID": "T1486",
-            "score": 17
-        },
-        {
-            "techniqueID": "T1565",
-            "score": 64
-        },
-        {
-            "techniqueID": "T1001",
-            "score": 73
-        },
-        {
-            "techniqueID": "T1074",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1030",
-            "score": 43
-        },
-        {
-            "techniqueID": "T1530",
-            "score": 21
-        },
-        {
-            "techniqueID": "T1213",
-            "score": 37
-        },
-        {
-            "techniqueID": "T1005",
             "score": 38
         },
         {
+            "techniqueID": "T1538",
+            "score": 15
+        },
+        {
+            "techniqueID": "T1526",
+            "score": 72
+        },
+        {
+            "techniqueID": "T1553.002",
+            "score": 75
+        },
+        {
+            "techniqueID": "T1059",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1092",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1027.004",
+            "score": 43
+        },
+        {
+            "techniqueID": "T1218.001",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1542.002",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1559.001",
+            "score": 70
+        },
+        {
+            "techniqueID": "T1546.015",
+            "score": 1
+        },
+        {
+            "techniqueID": "T1554",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1195.003",
+            "score": 67
+        },
+        {
+            "techniqueID": "T1195.001",
+            "score": 58
+        },
+        {
+            "techniqueID": "T1195.002",
+            "score": 46
+        },
+        {
+            "techniqueID": "T1213.001",
+            "score": 63
+        },
+        {
+            "techniqueID": "T1218.002",
+            "score": 97
+        },
+        {
+            "techniqueID": "T1136",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1578.002",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1134.002",
+            "score": 82
+        },
+        {
+            "techniqueID": "T1578.001",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1543",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1056.004",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1110.004",
+            "score": 77
+        },
+        {
+            "techniqueID": "T1552.001",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1555",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1555.003",
+            "score": 2
+        },
+        {
+            "techniqueID": "T1552.002",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1053.003",
+            "score": 62
+        },
+        {
+            "techniqueID": "T1003.006",
+            "score": 79
+        },
+        {
+            "techniqueID": "T1574.001",
+            "score": 49
+        },
+        {
+            "techniqueID": "T1574.002",
+            "score": 16
+        },
+        {
+            "techniqueID": "T1071.004",
+            "score": 43
+        },
+        {
+            "techniqueID": "T1568.003",
+            "score": 18
+        },
+        {
+            "techniqueID": "T1485",
+            "score": 75
+        },
+        {
+            "techniqueID": "T1132",
+            "score": 52
+        },
+        {
+            "techniqueID": "T1486",
+            "score": 60
+        },
+        {
+            "techniqueID": "T1565",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1001",
+            "score": 19
+        },
+        {
+            "techniqueID": "T1074",
+            "score": 54
+        },
+        {
+            "techniqueID": "T1030",
+            "score": 17
+        },
+        {
+            "techniqueID": "T1530",
+            "score": 17
+        },
+        {
+            "techniqueID": "T1213",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1005",
+            "score": 18
+        },
+        {
             "techniqueID": "T1039",
-            "score": 3
+            "score": 29
         },
         {
             "techniqueID": "T1025",
-            "score": 8
+            "score": 16
         },
         {
             "techniqueID": "T1102.001",
-            "score": 10
+            "score": 94
         },
         {
             "techniqueID": "T1491",
@@ -411,163 +419,175 @@
         },
         {
             "techniqueID": "T1078.001",
-            "score": 3
-        },
-        {
-            "techniqueID": "T1140",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1498.001",
-            "score": 46
-        },
-        {
-            "techniqueID": "T1006",
-            "score": 75
-        },
-        {
-            "techniqueID": "T1562.002",
-            "score": 21
-        },
-        {
-            "techniqueID": "T1562.004",
-            "score": 5
-        },
-        {
-            "techniqueID": "T1562.001",
-            "score": 80
-        },
-        {
-            "techniqueID": "T1561.001",
-            "score": 48
-        },
-        {
-            "techniqueID": "T1561.002",
-            "score": 11
-        },
-        {
-            "techniqueID": "T1561",
-            "score": 43
-        },
-        {
-            "techniqueID": "T1021.003",
-            "score": 51
-        },
-        {
-            "techniqueID": "T1136.002",
-            "score": 34
-        },
-        {
-            "techniqueID": "T1087.002",
-            "score": 83
-        },
-        {
-            "techniqueID": "T1078.002",
-            "score": 9
-        },
-        {
-            "techniqueID": "T1556.001",
-            "score": 94
-        },
-        {
-            "techniqueID": "T1090.004",
-            "score": 93
-        },
-        {
-            "techniqueID": "T1568.002",
-            "score": 37
-        },
-        {
-            "techniqueID": "T1069.002",
-            "score": 30
-        },
-        {
-            "techniqueID": "T1482",
-            "score": 65
-        },
-        {
-            "techniqueID": "T1189",
-            "score": 55
-        },
-        {
-            "techniqueID": "T1574.004",
-            "score": 70
-        },
-        {
-            "techniqueID": "T1559.002",
             "score": 96
         },
         {
-            "techniqueID": "T1568",
-            "score": 51
+            "techniqueID": "T1578.003",
+            "score": 60
         },
         {
-            "techniqueID": "T1055.001",
-            "score": 32
+            "techniqueID": "T1140",
+            "score": 67
         },
         {
-            "techniqueID": "T1548.004",
-            "score": 22
-        },
-        {
-            "techniqueID": "T1087.003",
-            "score": 70
-        },
-        {
-            "techniqueID": "T1114",
-            "score": 78
-        },
-        {
-            "techniqueID": "T1114.003",
-            "score": 75
-        },
-        {
-            "techniqueID": "T1546.014",
-            "score": 52
-        },
-        {
-            "techniqueID": "T1573",
-            "score": 87
-        },
-        {
-            "techniqueID": "T1499",
+            "techniqueID": "T1498.001",
             "score": 54
         },
         {
-            "techniqueID": "T1546",
-            "score": 10
+            "techniqueID": "T1006",
+            "score": 60
         },
         {
-            "techniqueID": "T1098.002",
-            "score": 99
+            "techniqueID": "T1562.002",
+            "score": 31
         },
         {
-            "techniqueID": "T1574.005",
-            "score": 70
+            "techniqueID": "T1562.007",
+            "score": 2
         },
         {
-            "techniqueID": "T1480",
-            "score": 49
+            "techniqueID": "T1562.004",
+            "score": 84
         },
         {
-            "techniqueID": "T1048",
-            "score": 8
+            "techniqueID": "T1562.001",
+            "score": 74
         },
         {
-            "techniqueID": "T1048.002",
-            "score": 1
+            "techniqueID": "T1561.001",
+            "score": 40
         },
         {
-            "techniqueID": "T1011.001",
-            "score": 70
+            "techniqueID": "T1561.002",
+            "score": 26
         },
         {
-            "techniqueID": "T1041",
+            "techniqueID": "T1561",
+            "score": 11
+        },
+        {
+            "techniqueID": "T1021.003",
+            "score": 54
+        },
+        {
+            "techniqueID": "T1136.002",
+            "score": 92
+        },
+        {
+            "techniqueID": "T1087.002",
+            "score": 5
+        },
+        {
+            "techniqueID": "T1078.002",
+            "score": 63
+        },
+        {
+            "techniqueID": "T1556.001",
+            "score": 45
+        },
+        {
+            "techniqueID": "T1090.004",
             "score": 4
         },
         {
+            "techniqueID": "T1568.002",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1069.002",
+            "score": 16
+        },
+        {
+            "techniqueID": "T1482",
+            "score": 85
+        },
+        {
+            "techniqueID": "T1189",
+            "score": 33
+        },
+        {
+            "techniqueID": "T1574.004",
+            "score": 23
+        },
+        {
+            "techniqueID": "T1559.002",
+            "score": 64
+        },
+        {
+            "techniqueID": "T1568",
+            "score": 22
+        },
+        {
+            "techniqueID": "T1055.001",
+            "score": 23
+        },
+        {
+            "techniqueID": "T1548.004",
+            "score": 86
+        },
+        {
+            "techniqueID": "T1087.003",
+            "score": 37
+        },
+        {
+            "techniqueID": "T1114",
+            "score": 72
+        },
+        {
+            "techniqueID": "T1114.003",
+            "score": 77
+        },
+        {
+            "techniqueID": "T1546.014",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1573",
+            "score": 60
+        },
+        {
+            "techniqueID": "T1499",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1480.001",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1546",
+            "score": 43
+        },
+        {
+            "techniqueID": "T1098.002",
+            "score": 92
+        },
+        {
+            "techniqueID": "T1574.005",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1480",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1048",
+            "score": 16
+        },
+        {
+            "techniqueID": "T1048.002",
+            "score": 98
+        },
+        {
+            "techniqueID": "T1011.001",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1041",
+            "score": 18
+        },
+        {
             "techniqueID": "T1011",
-            "score": 66
+            "score": 100
         },
         {
             "techniqueID": "T1052",
@@ -575,127 +595,131 @@
         },
         {
             "techniqueID": "T1048.001",
-            "score": 63
+            "score": 40
         },
         {
             "techniqueID": "T1048.003",
-            "score": 60
+            "score": 46
         },
         {
             "techniqueID": "T1567",
-            "score": 99
+            "score": 18
         },
         {
             "techniqueID": "T1052.001",
-            "score": 46
+            "score": 99
         },
         {
             "techniqueID": "T1567.002",
-            "score": 46
+            "score": 75
         },
         {
             "techniqueID": "T1567.001",
-            "score": 23
+            "score": 27
         },
         {
             "techniqueID": "T1190",
-            "score": 91
-        },
-        {
-            "techniqueID": "T1203",
-            "score": 55
-        },
-        {
-            "techniqueID": "T1212",
-            "score": 26
-        },
-        {
-            "techniqueID": "T1211",
-            "score": 44
-        },
-        {
-            "techniqueID": "T1068",
-            "score": 53
-        },
-        {
-            "techniqueID": "T1210",
-            "score": 38
-        },
-        {
-            "techniqueID": "T1491.002",
-            "score": 78
-        },
-        {
-            "techniqueID": "T1090.002",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1133",
-            "score": 26
-        },
-        {
-            "techniqueID": "T1055.011",
             "score": 39
         },
         {
+            "techniqueID": "T1203",
+            "score": 37
+        },
+        {
+            "techniqueID": "T1212",
+            "score": 47
+        },
+        {
+            "techniqueID": "T1211",
+            "score": 57
+        },
+        {
+            "techniqueID": "T1068",
+            "score": 89
+        },
+        {
+            "techniqueID": "T1210",
+            "score": 59
+        },
+        {
+            "techniqueID": "T1491.002",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1090.002",
+            "score": 20
+        },
+        {
+            "techniqueID": "T1133",
+            "score": 52
+        },
+        {
+            "techniqueID": "T1055.011",
+            "score": 61
+        },
+        {
             "techniqueID": "T1008",
-            "score": 66
+            "score": 57
         },
         {
             "techniqueID": "T1568.001",
-            "score": 14
+            "score": 73
         },
         {
-            "techniqueID": "T1551.004",
-            "score": 80
+            "techniqueID": "T1070.004",
+            "score": 78
         },
         {
             "techniqueID": "T1071.002",
-            "score": 65
+            "score": 12
         },
         {
             "techniqueID": "T1083",
-            "score": 26
+            "score": 84
         },
         {
             "techniqueID": "T1222",
-            "score": 10
+            "score": 56
         },
         {
             "techniqueID": "T1495",
-            "score": 16
+            "score": 5
         },
         {
             "techniqueID": "T1187",
-            "score": 77
+            "score": 53
         },
         {
             "techniqueID": "T1056.002",
-            "score": 54
+            "score": 11
         },
         {
             "techniqueID": "T1553.001",
-            "score": 16
+            "score": 67
         },
         {
             "techniqueID": "T1558.001",
-            "score": 21
+            "score": 62
         },
         {
             "techniqueID": "T1484",
-            "score": 7
+            "score": 94
         },
         {
             "techniqueID": "T1552.006",
-            "score": 41
+            "score": 61
         },
         {
             "techniqueID": "T1562.003",
-            "score": 98
+            "score": 4
         },
         {
             "techniqueID": "T1200",
-            "score": 100
+            "score": 30
+        },
+        {
+            "techniqueID": "T1564.005",
+            "score": 97
         },
         {
             "techniqueID": "T1564.001",
@@ -703,343 +727,351 @@
         },
         {
             "techniqueID": "T1564.002",
-            "score": 15
-        },
-        {
-            "techniqueID": "T1564.003",
-            "score": 14
-        },
-        {
-            "techniqueID": "T1564",
-            "score": 52
-        },
-        {
-            "techniqueID": "T1574",
-            "score": 85
-        },
-        {
-            "techniqueID": "T1546.012",
-            "score": 52
-        },
-        {
-            "techniqueID": "T1562",
-            "score": 71
-        },
-        {
-            "techniqueID": "T1525",
-            "score": 4
-        },
-        {
-            "techniqueID": "T1562.006",
-            "score": 58
-        },
-        {
-            "techniqueID": "T1027.005",
-            "score": 90
-        },
-        {
-            "techniqueID": "T1551",
-            "score": 42
-        },
-        {
-            "techniqueID": "T1202",
-            "score": 28
-        },
-        {
-            "techniqueID": "T1105",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1490",
-            "score": 47
-        },
-        {
-            "techniqueID": "T1056",
-            "score": 100
-        },
-        {
-            "techniqueID": "T1553.004",
-            "score": 74
-        },
-        {
-            "techniqueID": "T1218.004",
-            "score": 100
-        },
-        {
-            "techniqueID": "T1559",
-            "score": 48
-        },
-        {
-            "techniqueID": "T1491.001",
-            "score": 77
-        },
-        {
-            "techniqueID": "T1090.001",
-            "score": 46
-        },
-        {
-            "techniqueID": "T1534",
-            "score": 57
-        },
-        {
-            "techniqueID": "T1036.001",
-            "score": 52
-        },
-        {
-            "techniqueID": "T1001.001",
-            "score": 67
-        },
-        {
-            "techniqueID": "T1558.003",
-            "score": 81
-        },
-        {
-            "techniqueID": "T1547.006",
-            "score": 21
-        },
-        {
-            "techniqueID": "T1555.001",
-            "score": 54
-        },
-        {
-            "techniqueID": "T1056.001",
-            "score": 17
-        },
-        {
-            "techniqueID": "T1546.006",
-            "score": 78
-        },
-        {
-            "techniqueID": "T1574.006",
-            "score": 91
-        },
-        {
-            "techniqueID": "T1557.001",
-            "score": 35
-        },
-        {
-            "techniqueID": "T1003.004",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1547.008",
-            "score": 8
-        },
-        {
-            "techniqueID": "T1003.001",
-            "score": 100
-        },
-        {
-            "techniqueID": "T1570",
-            "score": 32
-        },
-        {
-            "techniqueID": "T1543.001",
             "score": 84
         },
         {
-            "techniqueID": "T1543.004",
-            "score": 50
+            "techniqueID": "T1564.003",
+            "score": 78
         },
         {
-            "techniqueID": "T1569.001",
-            "score": 82
-        },
-        {
-            "techniqueID": "T1053.004",
-            "score": 82
-        },
-        {
-            "techniqueID": "T1222.002",
-            "score": 22
-        },
-        {
-            "techniqueID": "T1136.001",
-            "score": 31
-        },
-        {
-            "techniqueID": "T1087.001",
-            "score": 31
-        },
-        {
-            "techniqueID": "T1078.003",
-            "score": 99
-        },
-        {
-            "techniqueID": "T1074.001",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1114.001",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1069.001",
-            "score": 97
-        },
-        {
-            "techniqueID": "T1037.002",
-            "score": 18
-        },
-        {
-            "techniqueID": "T1037.001",
-            "score": 75
-        },
-        {
-            "techniqueID": "T1127.001",
-            "score": 94
-        },
-        {
-            "techniqueID": "T1071.003",
-            "score": 63
-        },
-        {
-            "techniqueID": "T1134.003",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1204.002",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1204.001",
-            "score": 85
-        },
-        {
-            "techniqueID": "T1185",
-            "score": 17
-        },
-        {
-            "techniqueID": "T1557",
-            "score": 49
-        },
-        {
-            "techniqueID": "T1036.004",
-            "score": 4
-        },
-        {
-            "techniqueID": "T1036",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1036.005",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1556",
-            "score": 53
-        },
-        {
-            "techniqueID": "T1112",
-            "score": 92
-        },
-        {
-            "techniqueID": "T1218.005",
+            "techniqueID": "T1564",
             "score": 98
         },
         {
-            "techniqueID": "T1218.007",
-            "score": 42
+            "techniqueID": "T1574",
+            "score": 58
         },
         {
-            "techniqueID": "T1104",
-            "score": 56
+            "techniqueID": "T1546.012",
+            "score": 14
         },
         {
-            "techniqueID": "T1090.003",
-            "score": 59
-        },
-        {
-            "techniqueID": "T1003.003",
-            "score": 94
-        },
-        {
-            "techniqueID": "T1564.004",
-            "score": 98
-        },
-        {
-            "techniqueID": "T1106",
-            "score": 86
-        },
-        {
-            "techniqueID": "T1546.007",
+            "techniqueID": "T1562",
             "score": 32
         },
         {
-            "techniqueID": "T1498",
-            "score": 52
+            "techniqueID": "T1525",
+            "score": 12
         },
         {
-            "techniqueID": "T1037.003",
-            "score": 36
+            "techniqueID": "T1562.006",
+            "score": 68
         },
         {
-            "techniqueID": "T1046",
-            "score": 22
+            "techniqueID": "T1027.005",
+            "score": 24
         },
         {
-            "techniqueID": "T1551.005",
-            "score": 99
+            "techniqueID": "T1070",
+            "score": 60
         },
         {
-            "techniqueID": "T1135",
-            "score": 80
+            "techniqueID": "T1202",
+            "score": 76
         },
         {
-            "techniqueID": "T1040",
-            "score": 35
+            "techniqueID": "T1105",
+            "score": 44
         },
         {
-            "techniqueID": "T1095",
-            "score": 45
+            "techniqueID": "T1490",
+            "score": 90
         },
         {
-            "techniqueID": "T1132.002",
-            "score": 7
+            "techniqueID": "T1056",
+            "score": 5
         },
         {
-            "techniqueID": "T1571",
-            "score": 95
-        },
-        {
-            "techniqueID": "T1003",
-            "score": 64
-        },
-        {
-            "techniqueID": "T1499.001",
-            "score": 83
-        },
-        {
-            "techniqueID": "T1027",
-            "score": 15
-        },
-        {
-            "techniqueID": "T1218.008",
-            "score": 41
-        },
-        {
-            "techniqueID": "T1137",
-            "score": 56
-        },
-        {
-            "techniqueID": "T1137.001",
-            "score": 81
-        },
-        {
-            "techniqueID": "T1137.002",
-            "score": 10
-        },
-        {
-            "techniqueID": "T1102.003",
+            "techniqueID": "T1553.004",
             "score": 69
         },
         {
+            "techniqueID": "T1218.004",
+            "score": 4
+        },
+        {
+            "techniqueID": "T1559",
+            "score": 96
+        },
+        {
+            "techniqueID": "T1491.001",
+            "score": 82
+        },
+        {
+            "techniqueID": "T1090.001",
+            "score": 15
+        },
+        {
+            "techniqueID": "T1534",
+            "score": 11
+        },
+        {
+            "techniqueID": "T1036.001",
+            "score": 86
+        },
+        {
+            "techniqueID": "T1059.007",
+            "score": 84
+        },
+        {
+            "techniqueID": "T1001.001",
+            "score": 63
+        },
+        {
+            "techniqueID": "T1558.003",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1547.006",
+            "score": 63
+        },
+        {
+            "techniqueID": "T1555.001",
+            "score": 88
+        },
+        {
+            "techniqueID": "T1056.001",
+            "score": 87
+        },
+        {
+            "techniqueID": "T1546.006",
+            "score": 53
+        },
+        {
+            "techniqueID": "T1574.006",
+            "score": 84
+        },
+        {
+            "techniqueID": "T1557.001",
+            "score": 70
+        },
+        {
+            "techniqueID": "T1003.004",
+            "score": 55
+        },
+        {
+            "techniqueID": "T1547.008",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1003.001",
+            "score": 49
+        },
+        {
+            "techniqueID": "T1570",
+            "score": 88
+        },
+        {
+            "techniqueID": "T1543.001",
+            "score": 97
+        },
+        {
+            "techniqueID": "T1543.004",
+            "score": 47
+        },
+        {
+            "techniqueID": "T1569.001",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1053.004",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1222.002",
+            "score": 67
+        },
+        {
+            "techniqueID": "T1136.001",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1087.001",
+            "score": 97
+        },
+        {
+            "techniqueID": "T1078.003",
+            "score": 41
+        },
+        {
+            "techniqueID": "T1074.001",
+            "score": 10
+        },
+        {
+            "techniqueID": "T1114.001",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1069.001",
+            "score": 33
+        },
+        {
+            "techniqueID": "T1037.002",
+            "score": 73
+        },
+        {
+            "techniqueID": "T1037.001",
+            "score": 51
+        },
+        {
+            "techniqueID": "T1127.001",
+            "score": 53
+        },
+        {
+            "techniqueID": "T1071.003",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1134.003",
+            "score": 78
+        },
+        {
+            "techniqueID": "T1204.002",
+            "score": 14
+        },
+        {
+            "techniqueID": "T1204.001",
+            "score": 21
+        },
+        {
+            "techniqueID": "T1185",
+            "score": 54
+        },
+        {
+            "techniqueID": "T1557",
+            "score": 90
+        },
+        {
+            "techniqueID": "T1036.004",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1036",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1036.005",
+            "score": 53
+        },
+        {
+            "techniqueID": "T1556",
+            "score": 50
+        },
+        {
+            "techniqueID": "T1578",
+            "score": 90
+        },
+        {
+            "techniqueID": "T1112",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1218.005",
+            "score": 86
+        },
+        {
+            "techniqueID": "T1218.007",
+            "score": 62
+        },
+        {
+            "techniqueID": "T1104",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1090.003",
+            "score": 35
+        },
+        {
+            "techniqueID": "T1003.003",
+            "score": 13
+        },
+        {
+            "techniqueID": "T1564.004",
+            "score": 59
+        },
+        {
+            "techniqueID": "T1106",
+            "score": 41
+        },
+        {
+            "techniqueID": "T1546.007",
+            "score": 82
+        },
+        {
+            "techniqueID": "T1498",
+            "score": 27
+        },
+        {
+            "techniqueID": "T1037.003",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1046",
+            "score": 20
+        },
+        {
+            "techniqueID": "T1070.005",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1135",
+            "score": 96
+        },
+        {
+            "techniqueID": "T1040",
+            "score": 66
+        },
+        {
+            "techniqueID": "T1095",
+            "score": 11
+        },
+        {
+            "techniqueID": "T1132.002",
+            "score": 86
+        },
+        {
+            "techniqueID": "T1571",
+            "score": 17
+        },
+        {
+            "techniqueID": "T1003",
+            "score": 87
+        },
+        {
+            "techniqueID": "T1499.001",
+            "score": 45
+        },
+        {
+            "techniqueID": "T1027",
+            "score": 52
+        },
+        {
+            "techniqueID": "T1218.008",
+            "score": 73
+        },
+        {
+            "techniqueID": "T1137",
+            "score": 74
+        },
+        {
+            "techniqueID": "T1137.001",
+            "score": 64
+        },
+        {
+            "techniqueID": "T1137.002",
+            "score": 81
+        },
+        {
+            "techniqueID": "T1102.003",
+            "score": 17
+        },
+        {
             "techniqueID": "T1137.003",
-            "score": 61
+            "score": 69
         },
         {
             "techniqueID": "T1137.004",
-            "score": 36
+            "score": 13
         },
         {
             "techniqueID": "T1137.005",
@@ -1047,111 +1079,115 @@
         },
         {
             "techniqueID": "T1134.004",
-            "score": 56
-        },
-        {
-            "techniqueID": "T1550.002",
-            "score": 24
-        },
-        {
-            "techniqueID": "T1550.003",
-            "score": 62
-        },
-        {
-            "techniqueID": "T1110.002",
-            "score": 29
-        },
-        {
-            "techniqueID": "T1556.002",
-            "score": 81
-        },
-        {
-            "techniqueID": "T1110.001",
-            "score": 56
-        },
-        {
-            "techniqueID": "T1201",
-            "score": 34
-        },
-        {
-            "techniqueID": "T1110.003",
-            "score": 46
-        },
-        {
-            "techniqueID": "T1574.007",
-            "score": 30
-        },
-        {
-            "techniqueID": "T1574.008",
-            "score": 48
-        },
-        {
-            "techniqueID": "T1574.009",
-            "score": 79
-        },
-        {
-            "techniqueID": "T1120",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1069",
-            "score": 90
-        },
-        {
-            "techniqueID": "T1566",
-            "score": 60
-        },
-        {
-            "techniqueID": "T1547.011",
-            "score": 18
-        },
-        {
-            "techniqueID": "T1545.001",
-            "score": 97
-        },
-        {
-            "techniqueID": "T1547.010",
-            "score": 51
-        },
-        {
-            "techniqueID": "T1055.002",
             "score": 25
         },
         {
-            "techniqueID": "T1059.001",
-            "score": 94
+            "techniqueID": "T1550.002",
+            "score": 46
         },
         {
-            "techniqueID": "T1546.013",
-            "score": 73
+            "techniqueID": "T1550.003",
+            "score": 100
         },
         {
-            "techniqueID": "T1542",
+            "techniqueID": "T1110.002",
+            "score": 79
+        },
+        {
+            "techniqueID": "T1556.002",
+            "score": 79
+        },
+        {
+            "techniqueID": "T1110.001",
+            "score": 66
+        },
+        {
+            "techniqueID": "T1201",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1110.003",
             "score": 14
         },
         {
+            "techniqueID": "T1574.007",
+            "score": 51
+        },
+        {
+            "techniqueID": "T1574.008",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1574.009",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1120",
+            "score": 55
+        },
+        {
+            "techniqueID": "T1069",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1566",
+            "score": 6
+        },
+        {
+            "techniqueID": "T1547.011",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1556.003",
+            "score": 49
+        },
+        {
+            "techniqueID": "T1205.001",
+            "score": 51
+        },
+        {
+            "techniqueID": "T1547.010",
+            "score": 59
+        },
+        {
+            "techniqueID": "T1055.002",
+            "score": 86
+        },
+        {
+            "techniqueID": "T1059.001",
+            "score": 77
+        },
+        {
+            "techniqueID": "T1546.013",
+            "score": 44
+        },
+        {
+            "techniqueID": "T1542",
+            "score": 53
+        },
+        {
             "techniqueID": "T1552.004",
-            "score": 66
+            "score": 48
         },
         {
             "techniqueID": "T1003.007",
-            "score": 38
+            "score": 11
         },
         {
             "techniqueID": "T1055.009",
-            "score": 68
+            "score": 51
         },
         {
             "techniqueID": "T1057",
-            "score": 66
+            "score": 72
         },
         {
             "techniqueID": "T1055.013",
-            "score": 37
+            "score": 57
         },
         {
             "techniqueID": "T1055.012",
-            "score": 60
+            "score": 16
         },
         {
             "techniqueID": "T1055",
@@ -1159,115 +1195,119 @@
         },
         {
             "techniqueID": "T1001.003",
-            "score": 76
+            "score": 4
         },
         {
             "techniqueID": "T1572",
-            "score": 37
+            "score": 69
         },
         {
             "techniqueID": "T1090",
-            "score": 27
+            "score": 54
         },
         {
             "techniqueID": "T1055.008",
-            "score": 99
+            "score": 61
         },
         {
             "techniqueID": "T1216.001",
-            "score": 90
+            "score": 23
         },
         {
             "techniqueID": "T1059.006",
-            "score": 8
+            "score": 4
         },
         {
             "techniqueID": "T1012",
-            "score": 26
+            "score": 100
         },
         {
             "techniqueID": "T1563.002",
-            "score": 22
+            "score": 61
         },
         {
             "techniqueID": "T1037.004",
-            "score": 83
+            "score": 25
         },
         {
             "techniqueID": "T1547.007",
-            "score": 9
+            "score": 20
         },
         {
             "techniqueID": "T1498.002",
-            "score": 45
+            "score": 85
         },
         {
             "techniqueID": "T1547.001",
-            "score": 10
+            "score": 50
         },
         {
             "techniqueID": "T1218.009",
-            "score": 94
+            "score": 40
         },
         {
             "techniqueID": "T1218.010",
-            "score": 53
+            "score": 21
         },
         {
             "techniqueID": "T1219",
-            "score": 24
+            "score": 21
         },
         {
             "techniqueID": "T1074.002",
-            "score": 52
+            "score": 14
         },
         {
             "techniqueID": "T1021.001",
-            "score": 60
-        },
-        {
-            "techniqueID": "T1114.002",
-            "score": 68
-        },
-        {
-            "techniqueID": "T1563",
-            "score": 72
-        },
-        {
-            "techniqueID": "T1021",
-            "score": 47
-        },
-        {
-            "techniqueID": "T1018",
-            "score": 68
-        },
-        {
-            "techniqueID": "T1036.003",
-            "score": 64
-        },
-        {
-            "techniqueID": "T1091",
-            "score": 88
-        },
-        {
-            "techniqueID": "T1496",
             "score": 80
         },
         {
-            "techniqueID": "T1536",
-            "score": 45
+            "techniqueID": "T1114.002",
+            "score": 97
+        },
+        {
+            "techniqueID": "T1563",
+            "score": 8
+        },
+        {
+            "techniqueID": "T1021",
+            "score": 79
+        },
+        {
+            "techniqueID": "T1018",
+            "score": 97
+        },
+        {
+            "techniqueID": "T1036.003",
+            "score": 8
+        },
+        {
+            "techniqueID": "T1091",
+            "score": 59
+        },
+        {
+            "techniqueID": "T1496",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1578.004",
+            "score": 99
         },
         {
             "techniqueID": "T1036.002",
-            "score": 48
+            "score": 56
         },
         {
             "techniqueID": "T1207",
-            "score": 47
+            "score": 73
         },
         {
             "techniqueID": "T1014",
-            "score": 13
+            "score": 91
+        },
+        {
+            "techniqueID": "T1564.006",
+            "score": 64
         },
         {
             "techniqueID": "T1218.011",
@@ -1275,27 +1315,31 @@
         },
         {
             "techniqueID": "T1565.003",
-            "score": 92
+            "score": 53
         },
         {
             "techniqueID": "T1134.005",
-            "score": 47
+            "score": 45
         },
         {
             "techniqueID": "T1553.003",
-            "score": 76
+            "score": 14
         },
         {
             "techniqueID": "T1021.002",
-            "score": 12
+            "score": 25
         },
         {
             "techniqueID": "T1505.001",
-            "score": 88
+            "score": 95
         },
         {
             "techniqueID": "T1021.004",
-            "score": 28
+            "score": 70
+        },
+        {
+            "techniqueID": "T1098.004",
+            "score": 63
         },
         {
             "techniqueID": "T1563.001",
@@ -1303,263 +1347,263 @@
         },
         {
             "techniqueID": "T1053.005",
-            "score": 85
+            "score": 26
         },
         {
             "techniqueID": "T1053",
-            "score": 10
-        },
-        {
-            "techniqueID": "T1029",
-            "score": 10
-        },
-        {
-            "techniqueID": "T1113",
-            "score": 30
-        },
-        {
-            "techniqueID": "T1546.002",
-            "score": 6
-        },
-        {
-            "techniqueID": "T1003.002",
-            "score": 64
-        },
-        {
-            "techniqueID": "T1518.001",
-            "score": 24
-        },
-        {
-            "techniqueID": "T1547.005",
-            "score": 66
-        },
-        {
-            "techniqueID": "T1555.002",
-            "score": 20
-        },
-        {
-            "techniqueID": "T1505",
-            "score": 34
-        },
-        {
-            "techniqueID": "T1569.002",
-            "score": 93
-        },
-        {
-            "techniqueID": "T1499.002",
-            "score": 81
-        },
-        {
-            "techniqueID": "T1489",
-            "score": 35
-        },
-        {
-            "techniqueID": "T1574.010",
-            "score": 28
-        },
-        {
-            "techniqueID": "T1574.011",
-            "score": 20
-        },
-        {
-            "techniqueID": "T1548.001",
-            "score": 76
-        },
-        {
-            "techniqueID": "T1129",
-            "score": 79
-        },
-        {
-            "techniqueID": "T1213.002",
             "score": 68
         },
         {
-            "techniqueID": "T1547.009",
-            "score": 27
-        },
-        {
-            "techniqueID": "T1218",
-            "score": 44
-        },
-        {
-            "techniqueID": "T1216",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1558.002",
-            "score": 8
-        },
-        {
-            "techniqueID": "T1072",
-            "score": 89
-        },
-        {
-            "techniqueID": "T1518",
-            "score": 22
-        },
-        {
-            "techniqueID": "T1027.002",
-            "score": 15
-        },
-        {
-            "techniqueID": "T1036.006",
-            "score": 70
-        },
-        {
-            "techniqueID": "T1566.001",
-            "score": 97
-        },
-        {
-            "techniqueID": "T1566.002",
-            "score": 35
-        },
-        {
-            "techniqueID": "T1566.003",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1132.001",
-            "score": 37
-        },
-        {
-            "techniqueID": "T1037.005",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1528",
-            "score": 35
-        },
-        {
-            "techniqueID": "T1539",
-            "score": 5
-        },
-        {
-            "techniqueID": "T1558",
-            "score": 14
-        },
-        {
-            "techniqueID": "T1027.003",
-            "score": 83
-        },
-        {
-            "techniqueID": "T1001.002",
-            "score": 92
-        },
-        {
-            "techniqueID": "T1565.001",
-            "score": 76
-        },
-        {
-            "techniqueID": "T1553",
-            "score": 54
-        },
-        {
-            "techniqueID": "T1548.003",
-            "score": 32
-        },
-        {
-            "techniqueID": "T1195",
-            "score": 18
-        },
-        {
-            "techniqueID": "T1573.001",
-            "score": 12
-        },
-        {
-            "techniqueID": "T1497.001",
-            "score": 53
-        },
-        {
-            "techniqueID": "T1542.001",
-            "score": 19
-        },
-        {
-            "techniqueID": "T1082",
-            "score": 96
-        },
-        {
-            "techniqueID": "T1016",
-            "score": 75
-        },
-        {
-            "techniqueID": "T1049",
-            "score": 48
-        },
-        {
-            "techniqueID": "T1033",
-            "score": 21
-        },
-        {
-            "techniqueID": "T1007",
-            "score": 6
-        },
-        {
-            "techniqueID": "T1569",
-            "score": 30
-        },
-        {
-            "techniqueID": "T1529",
-            "score": 28
-        },
-        {
-            "techniqueID": "T1124",
-            "score": 17
-        },
-        {
-            "techniqueID": "T1543.002",
-            "score": 13
-        },
-        {
-            "techniqueID": "T1080",
-            "score": 43
-        },
-        {
-            "techniqueID": "T1221",
-            "score": 2
-        },
-        {
-            "techniqueID": "T1055.003",
+            "techniqueID": "T1029",
             "score": 40
         },
         {
-            "techniqueID": "T1055.005",
-            "score": 41
+            "techniqueID": "T1113",
+            "score": 36
         },
         {
-            "techniqueID": "T1497.003",
+            "techniqueID": "T1546.002",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1003.002",
             "score": 11
         },
         {
-            "techniqueID": "T1547.003",
-            "score": 87
+            "techniqueID": "T1518.001",
+            "score": 55
         },
         {
-            "techniqueID": "T1551.006",
-            "score": 97
+            "techniqueID": "T1547.005",
+            "score": 74
+        },
+        {
+            "techniqueID": "T1555.002",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1505",
+            "score": 45
+        },
+        {
+            "techniqueID": "T1569.002",
+            "score": 34
+        },
+        {
+            "techniqueID": "T1499.002",
+            "score": 10
+        },
+        {
+            "techniqueID": "T1489",
+            "score": 23
+        },
+        {
+            "techniqueID": "T1574.010",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1574.011",
+            "score": 89
+        },
+        {
+            "techniqueID": "T1548.001",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1129",
+            "score": 64
+        },
+        {
+            "techniqueID": "T1213.002",
+            "score": 55
+        },
+        {
+            "techniqueID": "T1547.009",
+            "score": 55
+        },
+        {
+            "techniqueID": "T1218",
+            "score": 96
+        },
+        {
+            "techniqueID": "T1216",
+            "score": 85
+        },
+        {
+            "techniqueID": "T1558.002",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1072",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1518",
+            "score": 28
+        },
+        {
+            "techniqueID": "T1027.002",
+            "score": 93
+        },
+        {
+            "techniqueID": "T1036.006",
+            "score": 66
+        },
+        {
+            "techniqueID": "T1566.001",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1566.002",
+            "score": 22
+        },
+        {
+            "techniqueID": "T1566.003",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1132.001",
+            "score": 57
+        },
+        {
+            "techniqueID": "T1037.005",
+            "score": 41
+        },
+        {
+            "techniqueID": "T1528",
+            "score": 23
+        },
+        {
+            "techniqueID": "T1539",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1558",
+            "score": 40
+        },
+        {
+            "techniqueID": "T1027.003",
+            "score": 67
+        },
+        {
+            "techniqueID": "T1001.002",
+            "score": 62
+        },
+        {
+            "techniqueID": "T1565.001",
+            "score": 62
+        },
+        {
+            "techniqueID": "T1553",
+            "score": 55
+        },
+        {
+            "techniqueID": "T1548.003",
+            "score": 94
+        },
+        {
+            "techniqueID": "T1195",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1573.001",
+            "score": 58
+        },
+        {
+            "techniqueID": "T1497.001",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1542.001",
+            "score": 11
+        },
+        {
+            "techniqueID": "T1082",
+            "score": 100
+        },
+        {
+            "techniqueID": "T1016",
+            "score": 33
+        },
+        {
+            "techniqueID": "T1049",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1033",
+            "score": 49
+        },
+        {
+            "techniqueID": "T1007",
+            "score": 29
+        },
+        {
+            "techniqueID": "T1569",
+            "score": 53
+        },
+        {
+            "techniqueID": "T1529",
+            "score": 7
+        },
+        {
+            "techniqueID": "T1124",
+            "score": 74
+        },
+        {
+            "techniqueID": "T1543.002",
+            "score": 81
+        },
+        {
+            "techniqueID": "T1080",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1221",
+            "score": 71
+        },
+        {
+            "techniqueID": "T1055.003",
+            "score": 71
+        },
+        {
+            "techniqueID": "T1055.005",
+            "score": 3
+        },
+        {
+            "techniqueID": "T1497.003",
+            "score": 58
+        },
+        {
+            "techniqueID": "T1547.003",
+            "score": 95
+        },
+        {
+            "techniqueID": "T1070.006",
+            "score": 38
         },
         {
             "techniqueID": "T1134.001",
-            "score": 28
+            "score": 49
         },
         {
-            "techniqueID": "T1545",
-            "score": 43
+            "techniqueID": "T1205",
+            "score": 90
         },
         {
             "techniqueID": "T1537",
-            "score": 47
+            "score": 51
         },
         {
             "techniqueID": "T1565.002",
-            "score": 46
+            "score": 48
         },
         {
             "techniqueID": "T1505.002",
-            "score": 28
+            "score": 95
         },
         {
             "techniqueID": "T1546.005",
-            "score": 47
+            "score": 34
         },
         {
             "techniqueID": "T1127",
@@ -1567,107 +1611,111 @@
         },
         {
             "techniqueID": "T1199",
-            "score": 11
+            "score": 13
         },
         {
             "techniqueID": "T1111",
-            "score": 39
+            "score": 87
+        },
+        {
+            "techniqueID": "T1059.004",
+            "score": 43
         },
         {
             "techniqueID": "T1552",
-            "score": 71
+            "score": 94
         },
         {
             "techniqueID": "T1535",
-            "score": 20
+            "score": 11
         },
         {
             "techniqueID": "T1550",
-            "score": 3
+            "score": 52
         },
         {
             "techniqueID": "T1497.002",
-            "score": 49
-        },
-        {
-            "techniqueID": "T1204",
-            "score": 93
-        },
-        {
-            "techniqueID": "T1059.005",
-            "score": 22
-        },
-        {
-            "techniqueID": "T1055.014",
-            "score": 14
-        },
-        {
-            "techniqueID": "T1021.005",
-            "score": 24
-        },
-        {
-            "techniqueID": "T1078",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1125",
-            "score": 54
-        },
-        {
-            "techniqueID": "T1497",
-            "score": 56
-        },
-        {
-            "techniqueID": "T1056.003",
-            "score": 69
-        },
-        {
-            "techniqueID": "T1071.001",
-            "score": 91
-        },
-        {
-            "techniqueID": "T1102",
-            "score": 45
-        },
-        {
-            "techniqueID": "T1550.004",
-            "score": 75
-        },
-        {
-            "techniqueID": "T1505.003",
-            "score": 98
-        },
-        {
-            "techniqueID": "T1059.003",
-            "score": 5
-        },
-        {
-            "techniqueID": "T1222.001",
-            "score": 4
-        },
-        {
-            "techniqueID": "T1047",
-            "score": 36
-        },
-        {
-            "techniqueID": "T1546.003",
-            "score": 62
-        },
-        {
-            "techniqueID": "T1021.006",
             "score": 46
         },
         {
+            "techniqueID": "T1204",
+            "score": 11
+        },
+        {
+            "techniqueID": "T1055.014",
+            "score": 36
+        },
+        {
+            "techniqueID": "T1021.005",
+            "score": 74
+        },
+        {
+            "techniqueID": "T1078",
+            "score": 73
+        },
+        {
+            "techniqueID": "T1125",
+            "score": 53
+        },
+        {
+            "techniqueID": "T1497",
+            "score": 77
+        },
+        {
+            "techniqueID": "T1059.005",
+            "score": 99
+        },
+        {
+            "techniqueID": "T1056.003",
+            "score": 90
+        },
+        {
+            "techniqueID": "T1071.001",
+            "score": 12
+        },
+        {
+            "techniqueID": "T1102",
+            "score": 74
+        },
+        {
+            "techniqueID": "T1550.004",
+            "score": 26
+        },
+        {
+            "techniqueID": "T1505.003",
+            "score": 75
+        },
+        {
+            "techniqueID": "T1059.003",
+            "score": 96
+        },
+        {
+            "techniqueID": "T1222.001",
+            "score": 10
+        },
+        {
+            "techniqueID": "T1047",
+            "score": 69
+        },
+        {
+            "techniqueID": "T1546.003",
+            "score": 81
+        },
+        {
+            "techniqueID": "T1021.006",
+            "score": 87
+        },
+        {
             "techniqueID": "T1543.003",
-            "score": 33
+            "score": 2
         },
         {
             "techniqueID": "T1547.004",
-            "score": 47
+            "score": 21
         },
         {
             "techniqueID": "T1220",
-            "score": 41
+            "score": 74
         }
     ]
 }

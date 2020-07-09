@@ -67,7 +67,7 @@
         {
             "techniqueID": "T1018",
             "color": "#74c476",
-            "comment": "considered detectable by a notional organization because it has data-sources Network protocol analysis, Process monitoring, Process use of network, Process command-line parameters"
+            "comment": "considered detectable by a notional organization because it has data-sources Azure activity logs, Stackdriver logs, AWS CloudTrail logs, Network protocol analysis, Process monitoring, Process use of network, Process command-line parameters"
         },
         {
             "techniqueID": "T1059.003",
@@ -97,7 +97,7 @@
         {
             "techniqueID": "T1059.001",
             "color": "#74c476",
-            "comment": "considered detectable by a notional organization because it has data-sources Windows Registry, Process monitoring, Process command-line parameters, PowerShell logs, Loaded DLLs, File monitoring, DLL monitoring"
+            "comment": "considered detectable by a notional organization because it has data-sources Windows event logs, Process monitoring, Process command-line parameters, PowerShell logs, Loaded DLLs, File monitoring, DLL monitoring"
         },
         {
             "techniqueID": "T1543.003",
@@ -127,7 +127,7 @@
         {
             "techniqueID": "T1106",
             "color": "#74c476",
-            "comment": "considered detectable by a notional organization because it has data-sources Loaded DLLs, API monitoring, Process monitoring"
+            "comment": "considered detectable by a notional organization because it has data-sources System calls, Loaded DLLs, API monitoring, Process monitoring"
         },
         {
             "techniqueID": "T1140",
@@ -265,7 +265,7 @@
             "comment": "considered detectable by a notional organization because it has data-sources Authentication logs, Office 365 account logs"
         },
         {
-            "techniqueID": "T1551.004",
+            "techniqueID": "T1070.004",
             "color": "#74c476",
             "comment": "considered detectable by a notional organization because it has data-sources Binary file metadata, Process command-line parameters, File monitoring"
         },
@@ -355,9 +355,9 @@
             "comment": "considered detectable by a notional organization because it has data-sources File monitoring, Packet capture, Network intrusion detection system, Detonation chamber, Email gateway, Mail server"
         },
         {
-            "techniqueID": "T1573",
+            "techniqueID": "T1573.002",
             "color": "#fce93b",
-            "comment": "considered detectable by a notional organization because it has data-sources SSL/TLS inspection, Process monitoring, Process use of network, Malware reverse engineering, Netflow/Enclave netflow, Packet capture"
+            "comment": "considered detectable by a notional organization because it has data-sources Process monitoring, Process use of network, Malware reverse engineering, Netflow/Enclave netflow, Packet capture"
         },
         {
             "techniqueID": "T1102.002",
@@ -367,7 +367,7 @@
         {
             "techniqueID": "T1518.001",
             "color": "#fce93b",
-            "comment": "considered detectable by a notional organization because it has data-sources File monitoring, Process monitoring, Process command-line parameters"
+            "comment": "considered detectable by a notional organization because it has data-sources Stackdriver logs, Azure activity logs, AWS CloudTrail logs, File monitoring, Process monitoring, Process command-line parameters"
         },
         {
             "techniqueID": "T1036.003",
@@ -540,14 +540,9 @@
             "comment": "considered detectable by a notional organization because it has data-sources Packet capture, Netflow/Enclave netflow, Process use of network, Process monitoring"
         },
         {
-            "techniqueID": "T1551.006",
+            "techniqueID": "T1070.006",
             "color": "#fce93b",
             "comment": "considered detectable by a notional organization because it has data-sources Process command-line parameters, Process monitoring, File monitoring"
-        },
-        {
-            "techniqueID": "T1573.002",
-            "color": "#fce93b",
-            "comment": "considered detectable by a notional organization because it has data-sources Process monitoring, Process use of network, Malware reverse engineering, Netflow/Enclave netflow, Packet capture"
         },
         {
             "techniqueID": "T1568.002",
@@ -640,9 +635,9 @@
             "comment": "considered detectable by a notional organization because it has data-sources DNS records, Network protocol analysis, Packet capture, Netflow/Enclave netflow, Process use of network, Process monitoring"
         },
         {
-            "techniqueID": "T1059",
+            "techniqueID": "T1059.005",
             "color": "#fce93b",
-            "comment": "considered detectable by a notional organization because it has data-sources Windows Registry, Windows event logs, PowerShell logs, Process monitoring, Process command-line parameters"
+            "comment": "considered detectable by a notional organization because it has data-sources DLL monitoring, Loaded DLLs, File monitoring, Process monitoring, Process command-line parameters"
         },
         {
             "techniqueID": "T1059.006",
