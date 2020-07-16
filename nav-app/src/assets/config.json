@@ -14,6 +14,16 @@
 
     "domain": "mitre-enterprise",
 
+    "versions": [
+        {
+            "name": "ATT&CK-v7", 
+            "domains": [
+                {"name": "Enterprise", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]},
+                {"name": "Mobile", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]}
+            ]
+        }
+    ],
+
     "custom_context_menu_items": [
 
     ],
