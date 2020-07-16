@@ -5,5 +5,5 @@
  //
 'use strict';
 
-export const nav_version: string="3.1"
+export const nav_version: string="4.0"
 export const layer_version: string="3.0"
