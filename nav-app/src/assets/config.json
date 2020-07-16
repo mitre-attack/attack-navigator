@@ -21,6 +21,13 @@
                 {"name": "Enterprise", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]},
                 {"name": "Mobile", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]}
             ]
+        },
+        {
+            "name": "ATT&CK-v6", 
+            "domains": [
+                {"name": "Enterprise", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/enterprise-attack/enterprise-attack.json"]},
+                {"name": "Mobile", "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/mobile-attack/mobile-attack.json"]}
+            ]
         }
     ],
 
