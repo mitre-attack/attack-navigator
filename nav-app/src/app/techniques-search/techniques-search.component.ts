@@ -54,7 +54,7 @@ export class TechniquesSearchComponent implements OnInit {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
-                        return technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())
+                        if (technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())) return true;
                     }
                 }
                 return false;
