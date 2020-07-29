@@ -31,7 +31,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "datasources",
+            "label": "data sources",
             "field": "datasources",
             "enabled": true
         }
