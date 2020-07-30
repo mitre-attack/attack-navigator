@@ -457,8 +457,6 @@ export class ExporterComponent implements AfterViewInit {
                 "title": "filters",
                 "contents": [{
                     "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
-                }, {
-                    "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
                 }]
             });
 
