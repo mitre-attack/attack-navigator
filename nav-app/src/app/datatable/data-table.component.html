@@ -192,7 +192,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <img src="assets/icons/ic_filter_list_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="filter" *ngFor="let filter of ['platforms', 'stages']">
+                    <div class="filter" *ngFor="let filter of ['platforms']">
                         <b class="filter-label">{{filter}}</b>
                         <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
                             <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
