@@ -16,7 +16,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "attack ID",
+            "label": "ATT&CK ID",
             "field": "attackID",
             "enabled": true
         },
