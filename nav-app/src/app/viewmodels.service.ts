@@ -1372,18 +1372,11 @@ export class TechniqueVM {
 
 // the data for a specific filter
 export class Filter {
-    stages: {
-        options: string[]
-        selection: string[]
-    }
     platforms: {
         options: string[]
         selection: string[]
     }
     constructor(domain) {
-        this.stages = {options: ["prepare", "act"], selection: ["act"]}
-        // this.stages.selection = ["act"];
-        // this.stages.options = ["prepare", "act"];
         if (domain == "mitre-enterprise") {
             this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
         } else if (domain == "mitre-mobile") {
@@ -1408,13 +1401,7 @@ export class Filter {
     }
 
     filterMatrices(matrices: Matrix[]) {
-        return matrices.filter((matrix) => {
-            if (matrix.name == "PRE-ATT&CK") {
-                return this.inFilter("stages", "prepare");
-            } else {
-                return this.inFilter("stages", "act");
-            }
-        });
+        return matrices;
     }
 
     /**
@@ -1422,7 +1409,7 @@ export class Filter {
      * @return [description]
      */
     serialize(): string {
-        return JSON.stringify({"stages": this.stages.selection, "platforms": this.platforms.selection})
+        return JSON.stringify({"platforms": this.platforms.selection})
     }
 
     /**
@@ -1461,11 +1448,6 @@ export class Filter {
                 });
             }
             else console.error("TypeError: filter platforms field is not a string[]");
-        }
-        if (rep.stages) {
-            if (isStringArray(rep.stages)) this.stages.selection = rep.stages
-            else console.error("TypeError: filter stages field is not a string[]");
-
         }
     }
 }
