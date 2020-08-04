@@ -16,7 +16,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "attack ID",
+            "label": "ATT&CK ID",
             "field": "attackID",
             "enabled": true
         },
@@ -31,7 +31,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "datasources",
+            "label": "data sources",
             "field": "datasources",
             "enabled": true
         }
@@ -54,7 +54,7 @@ export class TechniquesSearchComponent implements OnInit {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
-                        return technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())
+                        if (technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())) return true;
                     }
                 }
                 return false;

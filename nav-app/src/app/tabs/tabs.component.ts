@@ -54,6 +54,13 @@ export class TabsComponent implements AfterContentInit {
 
 
     ngAfterContentInit() {
+        // invokes callback function with an explicit copy of the url
+        function callbackClosure(url, callback) {
+            return function() {
+                return callback(url);
+            }
+        }
+
         this.ds.getConfig().subscribe((config: Object) => {
             this.viewModelsService.domain = config["domain"];
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
@@ -63,16 +70,16 @@ export class TabsComponent implements AfterContentInit {
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                     var url = urls_1[_i];
                     let self = this;
-                    let loadInitialVMCallback = function() {
-                        console.log(url);
-                        self.loadLayerFromURL(url, first);
+                    let loadInitialVMCallback = function(loadUrl) {
+                        console.log(loadUrl);
+                        self.loadLayerFromURL(loadUrl, first);
                         first = false;
                     }
                     //vms must load after data service loads data
                     if (this.dataService.dataLoaded) {
-                        loadInitialVMCallback();
+                        loadInitialVMCallback(url);
                     } else {
-                        this.dataService.onDataLoad(loadInitialVMCallback);
+                        this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
                     }
                 }
                 if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
@@ -80,16 +87,16 @@ export class TabsComponent implements AfterContentInit {
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
                     let self = this;
-                    let loadInitialVMCallback = function() {
-                        console.log(url);
-                        self.loadLayerFromURL(url, first);
+                    let loadInitialVMCallback = function(loadUrl) {
+                        console.log(loadUrl);
+                        self.loadLayerFromURL(loadUrl, first);
                         first = false;
                     }
                     //vms must load after data service loads data
                     if (this.dataService.dataLoaded) {
-                        loadInitialVMCallback();
+                        loadInitialVMCallback(url);
                     } else {
-                        this.dataService.onDataLoad(loadInitialVMCallback);
+                        this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
                     }
                 }
                 // this.loadURL = config["default_layer"]["location"]
