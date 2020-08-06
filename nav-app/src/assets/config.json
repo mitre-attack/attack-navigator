@@ -6,7 +6,6 @@
         "url": "https://cti-taxii.mitre.org/",
         "collections": {
             "enterprise_attack": "95ecc380-afe9-11e4-9b6c-751b66dd541e",
-            "pre_attack": "062767bd-02d2-4b72-84ba-56caef0f8658",
             "mobile_attack": "2f669986-b40b-4423-b720-4396ca6a462b"
         }
     },
