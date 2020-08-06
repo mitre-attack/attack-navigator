@@ -77,77 +77,71 @@ export class DataService {
 
         let idToTacticSDO = new Map<string, any>();
         
-        
-        let phases = [
-            {name: "act",     objects: stixBundle[0]["objects"]}
-        ];
-        for (let phase of phases) {
-            for (let sdo of phase.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle
-                if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
-                // parse according to type
-                switch(sdo.type) {
-                    case "intrusion-set":
-                        this.groups.push(new Group(sdo, this));
-                        break;
-                    case "malware":
-                    case "tool":
-                        this.software.push(new Software(sdo, this));
-                        break;
-                    case "course-of-action":
-                        this.mitigations.push(new Mitigation(sdo, this));
-                        break;
-                    case "relationship":
-                        if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
-                            // record subtechnique:technique relationship
-                            if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
-                                let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
-                                ids.push(sdo.source_ref);
-                            } else {
-                                this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
-                            }
-                        } else if (sdo.relationship_type == "uses") {
-                            if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
-                                // record group:technique relationship
-                                if (this.relationships["group_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["group_uses"].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
-                                }
-                            } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
-                                // record software:technique relationship
-                                if (this.relationships["software_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["software_uses"].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
-                                }
-                            }
-                        } else if (sdo.relationship_type == "mitigates") {
-                            if (this.relationships["mitigates"].has(sdo.source_ref)) {
-                                let ids = this.relationships["mitigates"].get(sdo.source_ref);
+        for (let sdo of stixBundle[0].objects) { //iterate through stix domain objects in the bundle
+            // ignore deprecated and revoked objects in the bundle
+            if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
+            // parse according to type
+            switch(sdo.type) {
+                case "intrusion-set":
+                    this.groups.push(new Group(sdo, this));
+                    break;
+                case "malware":
+                case "tool":
+                    this.software.push(new Software(sdo, this));
+                    break;
+                case "course-of-action":
+                    this.mitigations.push(new Mitigation(sdo, this));
+                    break;
+                case "relationship":
+                    if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
+                        // record subtechnique:technique relationship
+                        if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
+                            let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
+                            ids.push(sdo.source_ref);
+                        } else {
+                            this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
+                        }
+                    } else if (sdo.relationship_type == "uses") {
+                        if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
+                            // record group:technique relationship
+                            if (this.relationships["group_uses"].has(sdo.source_ref)) {
+                                let ids = this.relationships["group_uses"].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
                             } else {
-                                this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                                this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
+                            }
+                        } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
+                            // record software:technique relationship
+                            if (this.relationships["software_uses"].has(sdo.source_ref)) {
+                                let ids = this.relationships["software_uses"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                             }
                         }
-                        break;
-                    case "attack-pattern":
-                        idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique) {
-                            if (this.subtechniquesEnabled) {
-                                this.subtechniques.push(new Technique(sdo, [], this));
-                            }
-                        } else techniqueSDOs.push(sdo);
-                        break;
-                    case "x-mitre-tactic":
-                        idToTacticSDO.set(sdo.id, sdo);
-                        break;
-                    case "x-mitre-matrix":
-                        matrixSDOs.push(sdo);
-                        break;
-                }
+                    } else if (sdo.relationship_type == "mitigates") {
+                        if (this.relationships["mitigates"].has(sdo.source_ref)) {
+                            let ids = this.relationships["mitigates"].get(sdo.source_ref);
+                            ids.push(sdo.target_ref);
+                        } else {
+                            this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                        }
+                    }
+                    break;
+                case "attack-pattern":
+                    idToTechniqueSDO.set(sdo.id, sdo);
+                    if (sdo.x_mitre_is_subtechnique) {
+                        if (this.subtechniquesEnabled) {
+                            this.subtechniques.push(new Technique(sdo, [], this));
+                        }
+                    } else techniqueSDOs.push(sdo);
+                    break;
+                case "x-mitre-tactic":
+                    idToTacticSDO.set(sdo.id, sdo);
+                    break;
+                case "x-mitre-matrix":
+                    matrixSDOs.push(sdo);
+                    break;
             }
         }
 
