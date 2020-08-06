@@ -1400,10 +1400,6 @@ export class Filter {
         return this[filterName].selection.includes(value)
     }
 
-    filterMatrices(matrices: Matrix[]) {
-        return matrices;
-    }
-
     /**
      * Return the string representation of this filter
      * @return [description]

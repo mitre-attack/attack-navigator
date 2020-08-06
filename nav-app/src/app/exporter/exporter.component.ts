@@ -494,7 +494,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         // build data model
-        let matrices: RenderableMatrix[] = this.viewModel.filters.filterMatrices(this.dataService.matrices).map(function(matrix: Matrix) {
+        let matrices: RenderableMatrix[] = this.dataService.matrices.map(function(matrix: Matrix) {
             return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 
