@@ -555,9 +555,8 @@ export class ViewModel {
     /**
      * select all techniques under the given tactic
      * @param {Tactic} tactic wherein the techniques occur
-     * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public selectAllTechniquesInTactic(tactic: Tactic, walkChildren=true): void {
+    public selectAllTechniquesInTactic(tactic: Tactic): void {
         for (let technique of tactic.techniques) {
             this.selectTechnique(technique, tactic);
         }
@@ -602,6 +601,16 @@ export class ViewModel {
             }
         }
         this.selectedTechniques.delete(technique.get_technique_tactic_id(tactic));
+    }
+
+    /**
+     * unselect all techniques in the given tactic
+     * @param {Tactic} tactic wherein the techniques occur
+     */
+    public unselectAllTechniquesInTactic(tactic: Tactic): void {
+        for (let technique of tactic.techniques) {
+            this.unselectTechnique(technique, tactic);
+        }
     }
     
     /**
@@ -790,15 +799,14 @@ export class ViewModel {
      */
     public selectTactic(tactic: Tactic): void {
         this.selectedTactic = tactic;
-        this.clearSelectedTechniques();
         this.selectAllTechniquesInTactic(this.selectedTactic);
     }
     /**
      * clear the selected tactic
      */
     public clearSelectedTactic(): void {
+        this.unselectAllTechniquesInTactic(this.selectedTactic);
         this.selectedTactic = null;
-        this.clearSelectedTechniques();
     }
     /**
      * get the currently selected tactic
