@@ -1,7 +1,18 @@
 # v4.0 - mixed domains and versions
+## New Features
+### Major
+- Removed the pre-ATT&CK domain from the Navigator in support of the next ATT&CK release. See issue [#207](https://github.com/mitre-attack/attack-navigator/issues/207).
+    - Removed the "stages" section of the filters and layer format.
+    - Added functionality to select or deselect techniques in a tactic. This can be done within the context menu or by clicking on the name of the tactic and follows the user's behavior preference under "selection behavior" in the selection controls.
+
 ## Fixes
 - Fixed a bug in "selection controls" where searching for techniques would return results only from the first enabled search property. See issue [#200](https://github.com/mitre-attack/attack-navigator/issues/200).
 - Fixed a bug in the "default layers" interface where specifying multiple default layers would open the last specified URL multiple times. See issue [#199](https://github.com/mitre-attack/attack-navigator/issues/199).
+
+## Layer File Format Changes
+Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
+
+This update supports the removal of the pre-ATT&CK domain with the next release of ATT&CK. The "stages" section of the filters has been removed to reflect the migration of Pre-ATT&CK techniques to a new tactic under the enterprise domain.
 
 # v3.1 - 8 July 2020
 ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 
