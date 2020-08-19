@@ -1486,7 +1486,7 @@ export class Metadata {
             else console.error("TypeError: Metadata field 'value' is not a string")
         } else console.error("Error: Metadata required field 'value' not present");
     }
-    valid(): boolean { return this.name.length > 0 && this.value.length > 0 }
+    valid(): boolean { return this.name && this.name.length > 0 && this.value && this.value.length > 0 }
 }
 
 export class LayoutOptions {
