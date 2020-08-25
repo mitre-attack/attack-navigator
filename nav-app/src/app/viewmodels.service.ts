@@ -791,38 +791,17 @@ export class ViewModel {
         }
     }
 
-    //currently selected tactic
-    private selectedTactic: Tactic = null;
-    /**
-     * Select the given tactic
-     * @param  {Tactic}  tactic to select
-     */
-    public selectTactic(tactic: Tactic): void {
-        this.selectedTactic = tactic;
-        this.selectAllTechniquesInTactic(this.selectedTactic);
-    }
-    /**
-     * clear the selected tactic
-     */
-    public clearSelectedTactic(): void {
-        this.unselectAllTechniquesInTactic(this.selectedTactic);
-        this.selectedTactic = null;
-    }
-    /**
-     * get the currently selected tactic
-     * @return {Tactic} the tactic that is currently selected, or null if none is selected
-     */
-    public hasSelectedTactic(): boolean {
-        return this.selectedTactic != null;
-    }
     /**
      * Returns true if the given tactic is selected
      * @param  {Tactic}  tactic to check
      * @return {boolean} true if selected
      */
     public isTacticSelected(tactic: Tactic) {
-        if (!this.hasSelectedTactic()) return false;
-        else return this.selectedTactic.id == tactic.id;
+        let self = this;
+        var result = tactic.techniques.every(function(technique) {
+            return self.isTechniqueSelected(technique, tactic)
+        });
+        return result;
     }
 
 
