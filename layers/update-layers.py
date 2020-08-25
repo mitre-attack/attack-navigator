@@ -84,6 +84,10 @@ def update_layer(layerfile, replace=False):
                 platforms.append(platform)
         layer["filters"]["platforms"] = platforms
 
+    # remove stages filter
+    if "filters" in layer and "stages" in layer["filters"]:
+        layer["filters"].pop("stages")
+
     # update techniques by revocations
     for technique in layer["techniques"]:
         if technique["techniqueID"] in revoked_by:
