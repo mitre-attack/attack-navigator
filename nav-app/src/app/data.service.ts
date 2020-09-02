@@ -14,7 +14,6 @@ export class DataService {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
             this.setUpURLs(config["enterprise_attack_url"],
-                           config["pre_attack_url"],
                            config["mobile_data_url"],
                            config["taxii_server"]["enabled"],
                            config["taxii_server"]["url"],
@@ -78,78 +77,71 @@ export class DataService {
 
         let idToTacticSDO = new Map<string, any>();
         
-        
-        let phases = [
-            {name: "prepare", objects: stixBundle[1]["objects"]},
-            {name: "act",     objects: stixBundle[0]["objects"]}
-        ];
-        for (let phase of phases) {
-            for (let sdo of phase.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle
-                if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
-                // parse according to type
-                switch(sdo.type) {
-                    case "intrusion-set":
-                        this.groups.push(new Group(sdo, this));
-                        break;
-                    case "malware":
-                    case "tool":
-                        this.software.push(new Software(sdo, this));
-                        break;
-                    case "course-of-action":
-                        this.mitigations.push(new Mitigation(sdo, this));
-                        break;
-                    case "relationship":
-                        if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
-                            // record subtechnique:technique relationship
-                            if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
-                                let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
-                                ids.push(sdo.source_ref);
-                            } else {
-                                this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
-                            }
-                        } else if (sdo.relationship_type == "uses") {
-                            if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
-                                // record group:technique relationship
-                                if (this.relationships["group_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["group_uses"].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
-                                }
-                            } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
-                                // record software:technique relationship
-                                if (this.relationships["software_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["software_uses"].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
-                                }
-                            }
-                        } else if (sdo.relationship_type == "mitigates") {
-                            if (this.relationships["mitigates"].has(sdo.source_ref)) {
-                                let ids = this.relationships["mitigates"].get(sdo.source_ref);
+        for (let sdo of stixBundle[0].objects) { //iterate through stix domain objects in the bundle
+            // ignore deprecated and revoked objects in the bundle
+            if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
+            // parse according to type
+            switch(sdo.type) {
+                case "intrusion-set":
+                    this.groups.push(new Group(sdo, this));
+                    break;
+                case "malware":
+                case "tool":
+                    this.software.push(new Software(sdo, this));
+                    break;
+                case "course-of-action":
+                    this.mitigations.push(new Mitigation(sdo, this));
+                    break;
+                case "relationship":
+                    if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
+                        // record subtechnique:technique relationship
+                        if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
+                            let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
+                            ids.push(sdo.source_ref);
+                        } else {
+                            this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
+                        }
+                    } else if (sdo.relationship_type == "uses") {
+                        if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
+                            // record group:technique relationship
+                            if (this.relationships["group_uses"].has(sdo.source_ref)) {
+                                let ids = this.relationships["group_uses"].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
                             } else {
-                                this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                                this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
+                            }
+                        } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
+                            // record software:technique relationship
+                            if (this.relationships["software_uses"].has(sdo.source_ref)) {
+                                let ids = this.relationships["software_uses"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                             }
                         }
-                        break;
-                    case "attack-pattern":
-                        idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique) {
-                            if (this.subtechniquesEnabled) {
-                                this.subtechniques.push(new Technique(sdo, [], this));
-                            }
-                        } else techniqueSDOs.push(sdo);
-                        break;
-                    case "x-mitre-tactic":
-                        idToTacticSDO.set(sdo.id, sdo);
-                        break;
-                    case "x-mitre-matrix":
-                        matrixSDOs.push(sdo);
-                        break;
-                }
+                    } else if (sdo.relationship_type == "mitigates") {
+                        if (this.relationships["mitigates"].has(sdo.source_ref)) {
+                            let ids = this.relationships["mitigates"].get(sdo.source_ref);
+                            ids.push(sdo.target_ref);
+                        } else {
+                            this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                        }
+                    }
+                    break;
+                case "attack-pattern":
+                    idToTechniqueSDO.set(sdo.id, sdo);
+                    if (sdo.x_mitre_is_subtechnique) {
+                        if (this.subtechniquesEnabled) {
+                            this.subtechniques.push(new Technique(sdo, [], this));
+                        }
+                    } else techniqueSDOs.push(sdo);
+                    break;
+                case "x-mitre-tactic":
+                    idToTacticSDO.set(sdo.id, sdo);
+                    break;
+                case "x-mitre-matrix":
+                    matrixSDOs.push(sdo);
+                    break;
             }
         }
 
@@ -187,7 +179,6 @@ export class DataService {
 
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    private pre_attack_URL: string = "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json";
     private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
@@ -204,9 +195,8 @@ export class DataService {
      * @param {string[]} taxiiCollections taxii collections to fetch from
      * @memberof DataService
      */
-    setUpURLs(eAttackURL: string, preAttackURL: string, mURL: string, useTAXIIServer: boolean, taxiiURL: string, taxiiCollections: string[]){
+    setUpURLs(eAttackURL: string, mURL: string, useTAXIIServer: boolean, taxiiURL: string, taxiiCollections: string[]){
         this.enterpriseAttackURL = eAttackURL;
-        this.pre_attack_URL = preAttackURL;
         this.mobileDataURL = mURL;
         this.useTAXIIServer = useTAXIIServer;
         this.taxiiURL = taxiiURL;
@@ -241,27 +231,14 @@ export class DataService {
             }
             const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
 
-            let preattackCollectionInfo: any = {
-                'id': this.taxiiCollections['pre_attack'],
-                'title': 'Pre-ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
-
-            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
             this.enterpriseData$ = Observable.forkJoin(
                 fromPromise(enterpriseCollection.getObjects('', undefined)),
-                fromPromise(preattackCollection.getObjects('', undefined))
             )
         }
         else if (refresh || !this.enterpriseData$){
             console.log("retrieving data", this.enterpriseAttackURL),
             this.enterpriseData$ = Observable.forkJoin(
                 this.http.get(this.enterpriseAttackURL),
-                this.http.get(this.pre_attack_URL)
             );
         }
         return this.enterpriseData$ //observable
@@ -285,27 +262,14 @@ export class DataService {
             }
             const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
 
-            let preattackCollectionInfo: any = {
-                'id': this.taxiiCollections['pre_attack'],
-                'title': 'Pre-ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
-
-            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
             this.mobileData$ = Observable.forkJoin(
                 fromPromise(mobileCollection.getObjects('', undefined)),
-                fromPromise(preattackCollection.getObjects('', undefined))
             )
         }
         else if (refresh || !this.mobileData$){
             console.log("retrieving data", this.mobileDataURL),
             this.mobileData$ = Observable.forkJoin(
                 this.http.get(this.mobileDataURL),
-                this.http.get(this.pre_attack_URL)
             );
         }
         return this.mobileData$ //observable
@@ -321,14 +285,12 @@ export abstract class BaseStix {
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
-    public readonly stage: string;       // prepare or act
     protected readonly dataService: DataService;
     constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
         this.attackID = stixSDO.external_references[0].external_id;
-        this.stage = stixSDO.external_references[0].source_name == "mitre-pre-attack" ? "prepare" : "act";
         this.url = stixSDO.external_references[0].url;
         this.dataService = dataService;
     }

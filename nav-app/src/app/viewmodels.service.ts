@@ -553,7 +553,17 @@ export class ViewModel {
     }
 
     /**
-     * select the given technque across all tactics in which it occurs
+     * select all techniques under the given tactic
+     * @param {Tactic} tactic wherein the techniques occur
+     */
+    public selectAllTechniquesInTactic(tactic: Tactic): void {
+        for (let technique of tactic.techniques) {
+            this.selectTechnique(technique, tactic);
+        }
+    }
+
+    /**
+     * select the given technique across all tactics in which it occurs
      * @param {Technique} technique to select
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
@@ -592,9 +602,19 @@ export class ViewModel {
         }
         this.selectedTechniques.delete(technique.get_technique_tactic_id(tactic));
     }
+
+    /**
+     * unselect all techniques in the given tactic
+     * @param {Tactic} tactic wherein the techniques occur
+     */
+    public unselectAllTechniquesInTactic(tactic: Tactic): void {
+        for (let technique of tactic.techniques) {
+            this.unselectTechnique(technique, tactic);
+        }
+    }
     
     /**
-     * unselect the given technque across all tactics in which it occurs
+     * unselect the given technique across all tactics in which it occurs
      * @param {Technique} technique to unselect
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
@@ -771,36 +791,17 @@ export class ViewModel {
         }
     }
 
-    //currently selected tactic
-    private selectedTactic: Tactic = null;
-    /**
-     * Select the given tactic
-     * @param  {Tactic}  tactic to select
-     */
-    public selectTactic(tactic: Tactic): void {
-        this.selectedTactic = tactic;
-    }
-    /**
-     * clear the selected tactic
-     */
-    public clearSelectedTactic(): void {
-        this.selectedTactic = null;
-    }
-    /**
-     * get the currently selected tactic
-     * @return {Tactic} the tactic that is currently selected, or null if none is selected
-     */
-    public hasSelectedTactic(): boolean {
-        return this.selectedTactic != null;
-    }
     /**
      * Returns true if the given tactic is selected
      * @param  {Tactic}  tactic to check
      * @return {boolean} true if selected
      */
     public isTacticSelected(tactic: Tactic) {
-        if (!this.hasSelectedTactic()) return false;
-        else return this.selectedTactic.id == tactic.id;
+        let self = this;
+        var result = tactic.techniques.every(function(technique) {
+            return self.isTechniqueSelected(technique, tactic)
+        });
+        return result;
     }
 
 
@@ -1372,18 +1373,11 @@ export class TechniqueVM {
 
 // the data for a specific filter
 export class Filter {
-    stages: {
-        options: string[]
-        selection: string[]
-    }
     platforms: {
         options: string[]
         selection: string[]
     }
     constructor(domain) {
-        this.stages = {options: ["prepare", "act"], selection: ["act"]}
-        // this.stages.selection = ["act"];
-        // this.stages.options = ["prepare", "act"];
         if (domain == "mitre-enterprise") {
             this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
         } else if (domain == "mitre-mobile") {
@@ -1407,22 +1401,12 @@ export class Filter {
         return this[filterName].selection.includes(value)
     }
 
-    filterMatrices(matrices: Matrix[]) {
-        return matrices.filter((matrix) => {
-            if (matrix.name == "PRE-ATT&CK") {
-                return this.inFilter("stages", "prepare");
-            } else {
-                return this.inFilter("stages", "act");
-            }
-        });
-    }
-
     /**
      * Return the string representation of this filter
      * @return [description]
      */
     serialize(): string {
-        return JSON.stringify({"stages": this.stages.selection, "platforms": this.platforms.selection})
+        return JSON.stringify({"platforms": this.platforms.selection})
     }
 
     /**
@@ -1461,11 +1445,6 @@ export class Filter {
                 });
             }
             else console.error("TypeError: filter platforms field is not a string[]");
-        }
-        if (rep.stages) {
-            if (isStringArray(rep.stages)) this.stages.selection = rep.stages
-            else console.error("TypeError: filter stages field is not a string[]");
-
         }
     }
 }

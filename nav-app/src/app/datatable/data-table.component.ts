@@ -73,8 +73,7 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        let matrices = this.viewModel.filters.filterMatrices(this.dataService.matrices);
-        for (let matrix of matrices) {
+        for (let matrix of this.dataService.matrices) {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // create tactic columns
