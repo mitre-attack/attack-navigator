@@ -13,22 +13,21 @@ export class DataService {
     constructor(private http: HttpClient) {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
-            this.setUpURLs(config["enterprise_attack_url"],
-                           config["mobile_data_url"],
-                           config["taxii_server"]["enabled"],
-                           config["taxii_server"]["url"],
-                           config["taxii_server"]["collections"]);
-            if(config["domain"] === "mitre-enterprise") {
-                console.log("using enterprise data")
-                this.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
-                    this.parseBundle(enterpriseData);
-                });
-            } else if (config["domain"] === "mitre-mobile") {
-                console.log("using mobile data")
-                this.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
-                    this.parseBundle(mobileData);
-                });
-            }
+            this.setUpURLs(config["versions"]);
+            this.getData(false, false).subscribe((data: Object[]) => {
+                this.parseBundle(data);
+            });
+            // if(config["domain"] === "mitre-enterprise") {
+            //     console.log("using enterprise data")
+            //     this.getEnterpriseData(false, false).subscribe((enterpriseData: Object[]) => {
+            //         this.parseBundle(enterpriseData);
+            //     });
+            // } else if (config["domain"] === "mitre-mobile") {
+            //     console.log("using mobile data")
+            //     this.getMobileData(false, false).subscribe((mobileData: Object[]) => {
+            //         this.parseBundle(mobileData);
+            //     });
+            // }
         })
     }
 
@@ -174,16 +173,19 @@ export class DataService {
     private configData$: Observable<Object>;
 
     // Observables for data
-    private enterpriseData$: Observable<Object>;
-    private mobileData$: Observable<Object>;
+    // private enterpriseData$: Observable<Object>;
+    //private mobileData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
-    private taxiiURL: string = '';
-    private taxiiCollections: String[] = [];
+    //private taxiiURL: string = '';
+    //private taxiiCollections: String[] = [];
+
+    private domainData$: Observable<Object>;
+    private versions: any[] = [];
 
     /**
      * Set up the URLs for data
@@ -195,12 +197,32 @@ export class DataService {
      * @param {string[]} taxiiCollections taxii collections to fetch from
      * @memberof DataService
      */
-    setUpURLs(eAttackURL: string, mURL: string, useTAXIIServer: boolean, taxiiURL: string, taxiiCollections: string[]){
-        this.enterpriseAttackURL = eAttackURL;
-        this.mobileDataURL = mURL;
-        this.useTAXIIServer = useTAXIIServer;
-        this.taxiiURL = taxiiURL;
-        this.taxiiCollections = taxiiCollections;
+    setUpURLs(versions: []){
+        for (let version of versions) {
+            let name: string = version["name"];
+            let domains: any[] = version["domains"];
+
+            if (domains && domains.length) {
+                for (let domain of domains) {
+                    if (domain["taxii_url"]) {
+                        this.useTAXIIServer = true;
+                        let v: any = {
+                            "id": name.concat('-', domain["name"].replace(/\s/g, "-")),
+                            "name": domain["name"],
+                            "urls": domain[""
+                            ]
+                        }
+                    } else {
+                        let v: any = {
+                            "id": name.concat('-', domain["name"].replace(/\s/g, "-")),
+                            "name": domain["name"],
+                            "urls": domain["data"]
+                        };
+                        this.versions.push(v)
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -214,66 +236,106 @@ export class DataService {
         return this.configData$;
     }
 
+
+    getData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
+        if (refresh || !this.domainData$ || !this.versions) {
+            let urls = this.versions[0]["urls"]
+            console.log("retrieving data", urls)
+            let bundleData = [];
+            urls.forEach((url) => {
+                bundleData.push(this.http.get(url));
+            })
+            this.domainData$ = Observable.forkJoin(bundleData);
+        }
+        return this.domainData$;
+    }
+
     /**
      * fetch the enterprise data from the endpoint
      */
-    getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
-        if (useTAXIIServer) {
-            console.log("fetching data from TAXII server") 
-            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-            let enterpriseCollectionInfo: any = {
-                'id': this.taxiiCollections['enterprise_attack'],
-                'title': 'Enterprise ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
-            const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
+    // getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
+    //     if (useTAXIIServer) {
+    //         console.log("fetching data from TAXII server") 
+    //         let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
+    //         let enterpriseCollectionInfo: any = {
+    //             'id': this.taxiiCollections['enterprise_attack'],
+    //             'title': 'Enterprise ATT&CK',
+    //             'description': '',
+    //             'can_read': true,
+    //             'can_write': false,
+    //             'media_types': ['application/vnd.oasis.stix+json']
+    //         }
+    //         const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
 
-            this.enterpriseData$ = Observable.forkJoin(
-                fromPromise(enterpriseCollection.getObjects('', undefined)),
-            )
-        }
-        else if (refresh || !this.enterpriseData$){
-            console.log("retrieving data", this.enterpriseAttackURL),
-            this.enterpriseData$ = Observable.forkJoin(
-                this.http.get(this.enterpriseAttackURL),
-            );
-        }
-        return this.enterpriseData$ //observable
-    }
+    //         let preattackCollectionInfo: any = {
+    //             'id': this.taxiiCollections['pre_attack'],
+    //             'title': 'Pre-ATT&CK',
+    //             'description': '',
+    //             'can_read': true,
+    //             'can_write': false,
+    //             'media_types': ['application/vnd.oasis.stix+json']
+    //         }
+
+    //         const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
+
+    //         this.enterpriseData$ = Observable.forkJoin(
+    //             fromPromise(enterpriseCollection.getObjects('', undefined)),
+    //             fromPromise(preattackCollection.getObjects('', undefined))
+    //         )
+    //     }
+    //     else if (refresh || !this.enterpriseData$){
+    //         console.log("retrieving data", this.enterpriseAttackURL),
+    //         this.enterpriseData$ = Observable.forkJoin(
+    //             this.http.get(this.enterpriseAttackURL),
+    //             this.http.get(this.pre_attack_URL)
+    //         );
+    //     }
+    //     return this.enterpriseData$ //observable
+    // }
 
     /**
      * fetch the mobile data from the endpoint
      */
-    getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false): Observable<Object> {
-        //load from remote if not yet loaded or refresh=true
-        if (useTAXIIServer) {
-            console.log("fetching data from TAXII server")
-            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-            let mobileCollectionInfo: any = {
-                'id': this.taxiiCollections['mobile_attack'],
-                'title': 'Mobile ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
-            const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
+    // getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false): Observable<Object> {
+    //     //load from remote if not yet loaded or refresh=true
+    //     if (useTAXIIServer) {
+    //         console.log("fetching data from TAXII server")
+    //         let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
+    //         let mobileCollectionInfo: any = {
+    //             'id': this.taxiiCollections['mobile_attack'],
+    //             'title': 'Mobile ATT&CK',
+    //             'description': '',
+    //             'can_read': true,
+    //             'can_write': false,
+    //             'media_types': ['application/vnd.oasis.stix+json']
+    //         }
+    //         const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
 
-            this.mobileData$ = Observable.forkJoin(
-                fromPromise(mobileCollection.getObjects('', undefined)),
-            )
-        }
-        else if (refresh || !this.mobileData$){
-            console.log("retrieving data", this.mobileDataURL),
-            this.mobileData$ = Observable.forkJoin(
-                this.http.get(this.mobileDataURL),
-            );
-        }
-        return this.mobileData$ //observable
-    }
+    //         let preattackCollectionInfo: any = {
+    //             'id': this.taxiiCollections['pre_attack'],
+    //             'title': 'Pre-ATT&CK',
+    //             'description': '',
+    //             'can_read': true,
+    //             'can_write': false,
+    //             'media_types': ['application/vnd.oasis.stix+json']
+    //         }
+
+    //         const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
+
+    //         this.mobileData$ = Observable.forkJoin(
+    //             fromPromise(mobileCollection.getObjects('', undefined)),
+    //             fromPromise(preattackCollection.getObjects('', undefined))
+    //         )
+    //     }
+    //     else if (refresh || !this.mobileData$){
+    //         console.log("retrieving data", this.mobileDataURL),
+    //         this.mobileData$ = Observable.forkJoin(
+    //             this.http.get(this.mobileDataURL),
+    //             this.http.get(this.pre_attack_URL)
+    //         );
+    //     }
+    //     return this.mobileData$ //observable
+    // }
 }
 
 /** 
