@@ -59,7 +59,7 @@ export class TechniquesSearchComponent implements OnInit {
                 }
                 return false;
             });
-            // decoflict IDs for cross-tactic techniques
+            // deconflict IDs for cross-tactic techniques
             let seenIDs = new Set();
             results = results.filter(function(technique: Technique) {
                 if (seenIDs.has(technique.id)) return false;
@@ -68,8 +68,7 @@ export class TechniquesSearchComponent implements OnInit {
                     return true;
                 }
             })
-            //remove out of stage results
-            results = results.filter((technique: Technique) => this.viewModel.filters.stages.selection.includes(technique.stage));
+
             results = results.sort((tA: Technique, tB: Technique) => {
                 let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
                 let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;

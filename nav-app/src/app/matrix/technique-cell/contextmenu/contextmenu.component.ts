@@ -73,6 +73,16 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.closeContextmenu();
     }
 
+    private selectAllInTactic(){
+        this.viewModel.selectAllTechniquesInTactic(this.tactic);
+        this.closeContextmenu();
+    }
+
+    private deselectAllInTactic(){
+        this.viewModel.unselectAllTechniquesInTactic(this.tactic);
+        this.closeContextmenu();
+    }
+
     private viewTechnique() {
         window.open(this.technique.url, "_blank");
         this.closeContextmenu();
