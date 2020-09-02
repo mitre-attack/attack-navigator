@@ -1,18 +1,4 @@
 {
-<<<<<<< HEAD
-=======
-    "enterprise_attack_url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
-    "mobile_data_url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
-    "taxii_server": {
-        "enabled": false,
-        "url": "https://cti-taxii.mitre.org/",
-        "collections": {
-            "enterprise_attack": "95ecc380-afe9-11e4-9b6c-751b66dd541e",
-            "mobile_attack": "2f669986-b40b-4423-b720-4396ca6a462b"
-        }
-    },
-
->>>>>>> feature/v4.0
     "domain": "mitre-enterprise",
 
     "versions": [
@@ -20,13 +6,10 @@
             "name": "ATT&CK-v7", 
             "domains": [
                 {   "name": "Enterprise", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"],
-
-                    "taxii_collection": "95ecc380-afe9-11e4-9b6c-751b66dd541e"
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]
                 },
                 {   "name": "Mobile", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"],
-                    "taxii_collection": "2f669986-b40b-4423-b720-4396ca6a462b"
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]
                 }
             ]
         }
