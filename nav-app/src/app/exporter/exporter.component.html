@@ -185,6 +185,10 @@
                             <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems() && !hasScores" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
                             <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems() && !hasScores" >show legend</label>
                         </li>
+                        <li>
+                            <input [id]="uid+'checkboxGradient'" type="checkbox" [disabled]="!hasScores" class="checkbox-custom" [(ngModel)]="config.showGradient" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxGradient'" class="checkbox-custom-label noselect" [class.disabled]="!hasScores">show gradient score</label>
+                        </li>
                         <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
                             <mat-form-field>
                                 <mat-select placeholder="sub-techniques" [(ngModel)]="config.showSubtechniques" (selectionChange)="buildSVG()">

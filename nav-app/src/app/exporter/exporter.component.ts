@@ -45,6 +45,7 @@ export class ExporterComponent implements AfterViewInit {
             "legendHeight": 1,
 
             "showLegend": true,
+            "showGradient": true,
             "showFilters": true,
             "showAbout": true,
         }
@@ -96,7 +97,7 @@ export class ExporterComponent implements AfterViewInit {
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showLegend && this.hasScores  && this.config.showHeader}
+    showGradient(): boolean {return this.config.showGradient && this.hasScores  && this.config.showHeader}
     showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
     showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
@@ -319,7 +320,7 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         let legend = {"title": "legend", "contents": []};
-        if (self.hasScores) legend.contents.push({
+        if (self.hasScores && self.showGradient()) legend.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
