@@ -839,7 +839,7 @@ class RenderableTactic {
     public readonly height: number;
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
-        let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
+        let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
         let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
