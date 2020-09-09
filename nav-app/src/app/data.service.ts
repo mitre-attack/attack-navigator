@@ -14,20 +14,12 @@ export class DataService {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
             this.setUpURLs(config["versions"]);
-            this.getData(false, false).subscribe((data: Object[]) => {
-                this.parseBundle(data);
-            });
-            // if(config["domain"] === "mitre-enterprise") {
-            //     console.log("using enterprise data")
-            //     this.getEnterpriseData(false, false).subscribe((enterpriseData: Object[]) => {
-            //         this.parseBundle(enterpriseData);
-            //     });
-            // } else if (config["domain"] === "mitre-mobile") {
-            //     console.log("using mobile data")
-            //     this.getMobileData(false, false).subscribe((mobileData: Object[]) => {
-            //         this.parseBundle(mobileData);
-            //     });
-            // }
+            //TODO: default open latest version of enterprise attack
+            this.dynamicLoadData("https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json", false);
+            //this.dynamicLoadData(this.domainVersions[0]["urls"], false);
+            // this.getData(this.enterpriseAttackURL, false).subscribe((data: Object[]) => {
+            //     this.parseBundle(data);
+            // });
         })
     }
 
@@ -39,7 +31,7 @@ export class DataService {
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
     public relationships: any = {
-        // subtechniqye subtechnique-of technique
+        // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
         subtechniques_of: new Map<string, string[]>(), 
         // group uses technique
@@ -173,19 +165,22 @@ export class DataService {
     private configData$: Observable<Object>;
 
     // Observables for data
+    // TODO: remove unused data observables
     // private enterpriseData$: Observable<Object>;
     //private mobileData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
+    // TODO: remove default URLs
     //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
+    private taxiiVersions: any[] = [];
     //private taxiiURL: string = '';
     //private taxiiCollections: String[] = [];
 
     private domainData$: Observable<Object>;
-    private versions: any[] = [];
+    private domainVersions: any[] = [];
 
     /**
      * Set up the URLs for data
@@ -198,31 +193,30 @@ export class DataService {
      * @memberof DataService
      */
     setUpURLs(versions: []){
-        for (let version of versions) {
-            let name: string = version["name"];
-            let domains: any[] = version["domains"];
-
-            if (domains && domains.length) {
-                for (let domain of domains) {
-                    if (domain["taxii_url"]) {
-                        this.useTAXIIServer = true;
-                        let v: any = {
-                            "id": name.concat('-', domain["name"].replace(/\s/g, "-")),
-                            "name": domain["name"],
-                            "urls": domain[""
-                            ]
-                        }
-                    } else {
-                        let v: any = {
-                            "id": name.concat('-', domain["name"].replace(/\s/g, "-")),
-                            "name": domain["name"],
-                            "urls": domain["data"]
-                        };
-                        this.versions.push(v)
-                    }
+        versions.forEach( (version: any) => {
+            let v: string = version["name"];
+            version["domains"].forEach( (domain: any) => {
+                if (domain["taxii_url"] && domain["taxii_collection"]) {
+                    this.useTAXIIServer = true;
+                    let domainVersion: any = {
+                        "id": v.concat('-', domain["name"].replace(/\s/g, "-")),
+                        "name": domain["name"],
+                        "version": v,
+                        "taxii_url": domain["taxii_url"],
+                        "taxii_collection": domain["taxii_collection"]
+                    };
+                    this.taxiiVersions.push(domainVersion);
+                } else {
+                    let domainVersion: any = {
+                        "id": v.concat('-', domain["name"].replace(/\s/g, "-")),
+                        "name": domain["name"],
+                        "version": v,
+                        "urls": domain["data"]
+                    };
+                    this.domainVersions.push(domainVersion)
                 }
-            }
-        }
+            });
+        });
     }
 
     /**
@@ -237,19 +231,32 @@ export class DataService {
     }
 
 
-    getData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
-        if (refresh || !this.domainData$ || !this.versions) {
-            let urls = this.versions[0]["urls"]
-            console.log("retrieving data", urls)
+    getData(loadURLs: string[], refresh: boolean = false) : Observable<Object>{
+        if (this.useTAXIIServer) {
+            //TODO: add data fetch from taxii server
+            console.log("fetching data from TAXII server");
+        } else if (refresh || !this.domainData$ || !this.domainVersions) {
+            // let urls = this.domainVersions[0]["urls"]
+            console.log("retrieving data", loadURLs)
             let bundleData = [];
-            urls.forEach((url) => {
+            loadURLs.forEach((url) => {
                 bundleData.push(this.http.get(url));
             })
+
             this.domainData$ = Observable.forkJoin(bundleData);
         }
         return this.domainData$;
     }
 
+    //TODO: log data into separate data structure
+    dynamicLoadData(domainURL: string, refresh: boolean = false): void {
+        this.getData([domainURL], false).subscribe((data: Object[]) => {
+            this.parseBundle(data);
+        });
+        console.log("MATIRCES", this.matrices)
+    }
+
+    //TODO: remove individual Mobile/Enterprise data retrieval
     /**
      * fetch the enterprise data from the endpoint
      */
