@@ -524,6 +524,13 @@ export class TabsComponent implements AfterContentInit {
 
     }
 
+    loadLayerFromDomain(domainURL, replace): void {
+        //TODO: dynamically load domain data
+        console.log("retreiving data from ", domainURL);
+        this.dataService.dynamicLoadData(domainURL, true);
+        this.newLayer();
+    }
+
 
     //   ___ _   _ ___ _____ ___  __  __ ___ _______ ___    _  _   ___   _____ ___   _ _____ ___  ___   ___ _____ _   _ ___ ___
     //  / __| | | / __|_   _/ _ \|  \/  |_ _|_  / __|   \  | \| | /_\ \ / /_ _/ __| /_\_   _/ _ \| _ \ / __|_   _| | | | __| __|

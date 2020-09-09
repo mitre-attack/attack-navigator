@@ -48,7 +48,7 @@
     </div> -->
     <div class="newTab border">
         <mat-accordion class="headers-align">
-            <mat-expansion-panel #newlayer hideToggle="true" (click)="newLayer(); newlayer.close()">
+            <mat-expansion-panel #newlayer>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Create New Layer
@@ -58,7 +58,31 @@
                     </mat-panel-description>
 
                 </mat-expansion-panel-header>
-                <!-- this content will never be shown because clicking opens a new layer tab -->
+
+                <table class="inputTable">
+                    <tr>
+                        <td><button mat-button (click)="loadLayerFromDomain(dataService.enterpriseAttackURL, true)">Enterprise</button></td>
+
+                        <td><button mat-button (click)="loadLayerFromDomain(dataService.mobileDataURL, true)">Mobile</button></td>
+                    </tr>
+                </table>
+                
+                <!--TODO: add more options to tab-->
+                <!-- <table class="inputTable">
+                    <tr>
+                        <td><b style="font-size: 12pt">Domain from config: </b></td>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="domain" [(ngModel)]="domain">
+                                    <!-- <mat-option [value]="null">none</mat-option> -->
+                                    <!-- <mat-option *ngFor="let domain of dataService.domainVersions" [value]=domain>{{domain.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+
+                    </tr>
+                </table> --> 
+
             </mat-expansion-panel>
 
             <!-- <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">
