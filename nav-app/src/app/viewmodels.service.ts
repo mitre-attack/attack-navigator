@@ -12,10 +12,11 @@ import * as is from 'is_js';
 @Injectable()
 export class ViewModelsService {
 
-    domain = "mitre-mobile";
+    domain = "enterprise-attack";
+    domainID = "";
 
     constructor(private dataService: DataService) {
-
+        
         // attempt to restore viewmodels
         // console.log(this.getCookie("viewModels"))
         // this.saveViewModelsCookies()
@@ -28,7 +29,7 @@ export class ViewModelsService {
      * @return {ViewModel} the created ViewModel
      */
     newViewModel(name: string) {
-        let vm = new ViewModel(name, this.domain, "vm"+ this.getNonce(), this.dataService);
+        let vm = new ViewModel(name, this.domain, this.domainID, "vm"+ this.getNonce(), this.dataService);
         this.viewModels.push(vm);
         // console.log("created new viewModel", this.viewModels)
 
@@ -75,7 +76,7 @@ export class ViewModelsService {
      * @return                    new viewmodel inheriting above properties
      */
     layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", this.domain, "vm" + this.getNonce(), this.dataService);
+        let result = new ViewModel("layer by operation", this.domain, this.domainID, "vm" + this.getNonce(), this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -352,9 +353,11 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    domain: string; //layer domain, TODO
+    domain: string; //layer domain
+    // domainVersion: string; // domain version
+    domainID: string; // layer domain & version
     description: string = ""; //layer description
-    version: string = "";
+    version: string = ""; // layer version
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
     filters: Filter;
@@ -392,10 +395,11 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
-    constructor(name: string, domain: string, uid: string, private dataService: DataService) {
+    constructor(name: string, domain: string, domainID: string, uid: string, private dataService: DataService) {
         this.domain = domain;
+        this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
-        this.filters = new Filter(this.domain);
+        this.filters = new Filter(this.domainID);
         this.name = name;
         this.version = globals.layer_version;
         this.uid = uid;
@@ -1378,9 +1382,10 @@ export class Filter {
         selection: string[]
     }
     constructor(domain) {
-        if (domain == "mitre-enterprise") {
+        //TODO: temporary change until adaptable platforms are added to config
+        if (domain.includes("enterprise")) {
             this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
-        } else if (domain == "mitre-mobile") {
+        } else if (domain.includes("mobile")) {
             this.platforms = {selection: ["Android", "iOS"], options: ["Android", "iOS"]}
         } else {
             console.error("unknown domain", domain);
