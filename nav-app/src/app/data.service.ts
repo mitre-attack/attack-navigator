@@ -15,8 +15,8 @@ export class DataService {
         this.getConfig().subscribe((config) => {
             this.setUpURLs(config["versions"]);
             //TODO: default open latest version of enterprise attack
-            this.dynamicLoadData("https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json", false);
-            //this.dynamicLoadData(this.domainVersions[0]["urls"], false);
+            //this.dynamicLoadData("https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json", false);
+            this.dynamicLoadData(this.domainVersions[0], false);
             // this.getData(this.enterpriseAttackURL, false).subscribe((data: Object[]) => {
             //     this.parseBundle(data);
             // });
@@ -45,6 +45,8 @@ export class DataService {
         mitigates: new Map<string, string[]>()
     }
 
+    public domains: {[id: string]: Domain} = {};
+
     public subtechniquesEnabled: boolean = true;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
@@ -58,14 +60,14 @@ export class DataService {
     }
 
     /**
-     * Parse the given stix bundle into the relevant data holders (above)
+     * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
+    //TODO: (STRUCT) update function to parse into new Domain structure
     parseBundle(stixBundle: any[]): void {
         let techniqueSDOs = [];
-        let idToTechniqueSDO = new Map<string, any>();
         let matrixSDOs = [];
-
+        let idToTechniqueSDO = new Map<string, any>();
         let idToTacticSDO = new Map<string, any>();
         
         for (let sdo of stixBundle[0].objects) { //iterate through stix domain objects in the bundle
@@ -165,12 +167,12 @@ export class DataService {
     private configData$: Observable<Object>;
 
     // Observables for data
-    // TODO: remove unused data observables
+    //TODO: remove unused data observables
     // private enterpriseData$: Observable<Object>;
     //private mobileData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    // TODO: remove default URLs
+    //TODO: remove default URLs
     //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
@@ -194,12 +196,12 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: string = version["name"];
+            let v: string = version["name"].replace(/\s/g, "-");
             version["domains"].forEach( (domain: any) => {
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     this.useTAXIIServer = true;
                     let domainVersion: any = {
-                        "id": v.concat('-', domain["name"].replace(/\s/g, "-")),
+                        "id": domain["name"].replace(/\s/g, "-").concat('-', v),
                         "name": domain["name"],
                         "version": v,
                         "taxii_url": domain["taxii_url"],
@@ -208,7 +210,7 @@ export class DataService {
                     this.taxiiVersions.push(domainVersion);
                 } else {
                     let domainVersion: any = {
-                        "id": v.concat('-', domain["name"].replace(/\s/g, "-")),
+                        "id": domain["name"].replace(/\s/g, "-").concat('-', v),
                         "name": domain["name"],
                         "version": v,
                         "urls": domain["data"]
@@ -248,12 +250,16 @@ export class DataService {
         return this.domainData$;
     }
 
-    //TODO: log data into separate data structure
-    dynamicLoadData(domainURL: string, refresh: boolean = false): void {
-        this.getData([domainURL], false).subscribe((data: Object[]) => {
+    //TODO: (STRUCT) log data into separate data structure
+    dynamicLoadData(domainVersion: any, refresh: boolean = false): void {
+        let domain = new Domain(domainVersion, this)
+        // 1. check if already loaded by id in domains list
+        // 3. if not loaded, create new Domain
+        //      4.  retrieve data with getData and parsebundle
+        //          send domain object to parsebundle?
+        this.getData(domainVersion["urls"], false).subscribe((data: Object[]) => {
             this.parseBundle(data);
         });
-        console.log("MATIRCES", this.matrices)
     }
 
     //TODO: remove individual Mobile/Enterprise data retrieval
@@ -509,5 +515,40 @@ export class Mitigation extends BaseStix {
      */
     public relatedTechniques(): string[] {
         return this.mitigated();
+    }
+}
+
+export class Domain {
+    public readonly id: string;
+    public readonly name: string;
+    public readonly version: string;
+
+    //public matrices: Matrix[] = [];
+    public tactics: Tactic[] = [];
+    public techniques: Technique[] = [];
+    public subtechniques: Technique[] = [];
+    public software: Software[] = [];
+    public groups: Group[] = [];
+    public mitigations: Mitigation[] = [];
+    public relationships: any = {
+        // subtechnique subtechnique-of technique
+        // ID of technique to [] of subtechnique IDs
+        subtechniques_of: new Map<string, string[]>(), 
+        // group uses technique
+        // ID of group to [] of technique IDs
+        group_uses: new Map<string, string[]>(), 
+        // group uses technique
+        // ID of group to [] of technique IDs
+        software_uses: new Map<string, string[]>(),
+        // mitigation mitigates technique
+        // ID of mitigation to [] of technique IDs
+        mitigates: new Map<string, string[]>()
+    }
+
+    //TODO: (STRUCT) add a constructor
+    constructor(domainVersion: any, dataService: DataService) {
+        this.id = domainVersion.id;
+        this.name = domainVersion.name;
+        this.version = domainVersion.version;
     }
 }
