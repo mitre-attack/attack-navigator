@@ -16,10 +16,7 @@ export class DataService {
             this.setUpURLs(config["versions"]);
             //TODO: default open latest version of enterprise attack
             //this.dynamicLoadData("https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json", false);
-            this.dynamicLoadData(this.domainVersions[0], false);
-            // this.getData(this.enterpriseAttackURL, false).subscribe((data: Object[]) => {
-            //     this.parseBundle(data);
-            // });
+            this.dynamicLoadData(this.domainVersions[0]["id"], false);
         })
     }
 
@@ -45,7 +42,7 @@ export class DataService {
         mitigates: new Map<string, string[]>()
     }
 
-    public domains: {[id: string]: Domain} = {};
+    public domains = new Map<string, Domain>();
 
     public subtechniquesEnabled: boolean = true;
     public dataLoaded: boolean = false;
@@ -64,7 +61,8 @@ export class DataService {
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
     //TODO: (STRUCT) update function to parse into new Domain structure
-    parseBundle(stixBundle: any[]): void {
+    parseBundle(domainVersion: any, stixBundle: any[]): void {
+        let domain = new Domain(domainVersion, this)
         let techniqueSDOs = [];
         let matrixSDOs = [];
         let idToTechniqueSDO = new Map<string, any>();
@@ -76,18 +74,27 @@ export class DataService {
             // parse according to type
             switch(sdo.type) {
                 case "intrusion-set":
+                    domain.groups.push(new Group(sdo, this));
                     this.groups.push(new Group(sdo, this));
                     break;
                 case "malware":
                 case "tool":
+                    domain.software.push(new Software(sdo, this));
                     this.software.push(new Software(sdo, this));
                     break;
                 case "course-of-action":
+                    domain.mitigations.push(new Mitigation(sdo, this));
                     this.mitigations.push(new Mitigation(sdo, this));
                     break;
                 case "relationship":
                     if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
                         // record subtechnique:technique relationship
+                        if (domain.relationships["subtechniques_of"].has(sdo.target_ref)) {
+                            let ids = domain.relationships["subtechniques_of"].get(sdo.target_ref);
+                            ids.push(sdo.source_ref);
+                        } else {
+                            domain.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
+                        }
                         if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
                             let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
                             ids.push(sdo.source_ref);
@@ -97,6 +104,12 @@ export class DataService {
                     } else if (sdo.relationship_type == "uses") {
                         if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
                             // record group:technique relationship
+                            if (domain.relationships["group_uses"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["group_uses"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
+                            }
                             if (this.relationships["group_uses"].has(sdo.source_ref)) {
                                 let ids = this.relationships["group_uses"].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
@@ -105,6 +118,12 @@ export class DataService {
                             }
                         } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
                             // record software:technique relationship
+                            if (domain.relationships["software_uses"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["software_uses"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                domain.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
+                            }
                             if (this.relationships["software_uses"].has(sdo.source_ref)) {
                                 let ids = this.relationships["software_uses"].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
@@ -113,6 +132,12 @@ export class DataService {
                             }
                         }
                     } else if (sdo.relationship_type == "mitigates") {
+                        if (domain.relationships["mitigates"].has(sdo.source_ref)) {
+                            let ids = domain.relationships["mitigates"].get(sdo.source_ref);
+                            ids.push(sdo.target_ref);
+                        } else {
+                            domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                        }
                         if (this.relationships["mitigates"].has(sdo.source_ref)) {
                             let ids = this.relationships["mitigates"].get(sdo.source_ref);
                             ids.push(sdo.target_ref);
@@ -125,6 +150,7 @@ export class DataService {
                     idToTechniqueSDO.set(sdo.id, sdo);
                     if (sdo.x_mitre_is_subtechnique) {
                         if (this.subtechniquesEnabled) {
+                            domain.subtechniques.push(new Technique(sdo, [], this));
                             this.subtechniques.push(new Technique(sdo, [], this));
                         }
                     } else techniqueSDOs.push(sdo);
@@ -142,6 +168,12 @@ export class DataService {
         for (let techniqueSDO of techniqueSDOs) {
             let subtechniques: Technique[] = [];
             if (this.subtechniquesEnabled) {
+                if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
+                    domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+                        if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                        // else the target was revoked or deprecated and we can skip honoring the relationship
+                    })
+                }
                 if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
                     this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
                         if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
@@ -149,12 +181,16 @@ export class DataService {
                     })
                 }
             }
+            domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
         //create matrices, which also creates tactics and filters techniques
         for (let matrixSDO of matrixSDOs) {
+            domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
             this.matrices.push(new Matrix(matrixSDO, idToTacticSDO, this.techniques, this));
         }
+    
+        this.domains.set(domain.id, domain);
 
         console.log("data.service parsing complete")
         this.dataLoaded = true;
@@ -173,7 +209,7 @@ export class DataService {
 
     // URLs in case config file doesn't load properly
     //TODO: remove default URLs
-    //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
@@ -182,7 +218,7 @@ export class DataService {
     //private taxiiCollections: String[] = [];
 
     private domainData$: Observable<Object>;
-    private domainVersions: any[] = [];
+    public domainVersions: any[] = [];
 
     /**
      * Set up the URLs for data
@@ -196,13 +232,13 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: string = version["name"].replace(/\s/g, "-");
+            let v: string = version["name"].replace(/\s/g, "-").toLowerCase();
             version["domains"].forEach( (domain: any) => {
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     this.useTAXIIServer = true;
                     let domainVersion: any = {
-                        "id": domain["name"].replace(/\s/g, "-").concat('-', v),
-                        "name": domain["name"],
+                        "id": domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase(),
+                        "name": domain["name"].toLowerCase(),
                         "version": v,
                         "taxii_url": domain["taxii_url"],
                         "taxii_collection": domain["taxii_collection"]
@@ -210,8 +246,8 @@ export class DataService {
                     this.taxiiVersions.push(domainVersion);
                 } else {
                     let domainVersion: any = {
-                        "id": domain["name"].replace(/\s/g, "-").concat('-', v),
-                        "name": domain["name"],
+                        "id": domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase(),
+                        "name": domain["name"].toLowerCase(),
                         "version": v,
                         "urls": domain["data"]
                     };
@@ -238,7 +274,6 @@ export class DataService {
             //TODO: add data fetch from taxii server
             console.log("fetching data from TAXII server");
         } else if (refresh || !this.domainData$ || !this.domainVersions) {
-            // let urls = this.domainVersions[0]["urls"]
             console.log("retrieving data", loadURLs)
             let bundleData = [];
             loadURLs.forEach((url) => {
@@ -250,16 +285,13 @@ export class DataService {
         return this.domainData$;
     }
 
-    //TODO: (STRUCT) log data into separate data structure
-    dynamicLoadData(domainVersion: any, refresh: boolean = false): void {
-        let domain = new Domain(domainVersion, this)
-        // 1. check if already loaded by id in domains list
-        // 3. if not loaded, create new Domain
-        //      4.  retrieve data with getData and parsebundle
-        //          send domain object to parsebundle?
-        this.getData(domainVersion["urls"], false).subscribe((data: Object[]) => {
-            this.parseBundle(data);
-        });
+    dynamicLoadData(domainVersionID: string, refresh: boolean = false): void {
+        let domainVersion = this.domainVersions.find((dv) => dv.id == domainVersionID);
+        if (domainVersion) { //exists
+            this.getData(domainVersion["urls"], false).subscribe((data: Object[]) => {
+                this.parseBundle(domainVersion, data);
+            });
+        }
     }
 
     //TODO: remove individual Mobile/Enterprise data retrieval
@@ -523,7 +555,7 @@ export class Domain {
     public readonly name: string;
     public readonly version: string;
 
-    //public matrices: Matrix[] = [];
+    public matrices: Matrix[] = [];
     public tactics: Tactic[] = [];
     public techniques: Technique[] = [];
     public subtechniques: Technique[] = [];
