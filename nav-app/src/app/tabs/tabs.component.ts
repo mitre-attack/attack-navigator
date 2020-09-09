@@ -62,7 +62,8 @@ export class TabsComponent implements AfterContentInit {
         }
 
         this.ds.getConfig().subscribe((config: Object) => {
-            this.viewModelsService.domain = config["domain"];
+            this.viewModelsService.domain = this.ds.domainVersions[0].name;
+            this.viewModelsService.domainID = this.ds.domainVersions[0].id;
             // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
