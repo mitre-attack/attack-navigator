@@ -202,23 +202,29 @@ export class DataService {
     // Observable for data in config.json
     private configData$: Observable<Object>;
 
-    // Observables for data
-    //TODO: remove unused data observables
-    // private enterpriseData$: Observable<Object>;
-    //private mobileData$: Observable<Object>;
+    // Observable for data
+    private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    //TODO: remove default URLs
-    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
     private taxiiVersions: any[] = [];
-    //private taxiiURL: string = '';
-    //private taxiiCollections: String[] = [];
-
-    private domainData$: Observable<Object>;
-    public domainVersions: any[] = [];
+    public domainVersions: any[] = [
+        { // default enterprise attack domain
+            "id": "enterprise-latest",
+            "name": "enterprise",
+            "version": "latest",
+            "urls": ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"]
+        },
+        { // default mobile attack domain
+            "id": "mobile-latest",
+            "name": "mobile",
+            "version": "latest",
+            "urls": ["https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"]
+        }
+    ];
 
     /**
      * Set up the URLs for data
@@ -328,59 +334,6 @@ export class DataService {
     //             fromPromise(preattackCollection.getObjects('', undefined))
     //         )
     //     }
-    //     else if (refresh || !this.enterpriseData$){
-    //         console.log("retrieving data", this.enterpriseAttackURL),
-    //         this.enterpriseData$ = Observable.forkJoin(
-    //             this.http.get(this.enterpriseAttackURL),
-    //             this.http.get(this.pre_attack_URL)
-    //         );
-    //     }
-    //     return this.enterpriseData$ //observable
-    // }
-
-    /**
-     * fetch the mobile data from the endpoint
-     */
-    // getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false): Observable<Object> {
-    //     //load from remote if not yet loaded or refresh=true
-    //     if (useTAXIIServer) {
-    //         console.log("fetching data from TAXII server")
-    //         let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-    //         let mobileCollectionInfo: any = {
-    //             'id': this.taxiiCollections['mobile_attack'],
-    //             'title': 'Mobile ATT&CK',
-    //             'description': '',
-    //             'can_read': true,
-    //             'can_write': false,
-    //             'media_types': ['application/vnd.oasis.stix+json']
-    //         }
-    //         const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
-
-    //         let preattackCollectionInfo: any = {
-    //             'id': this.taxiiCollections['pre_attack'],
-    //             'title': 'Pre-ATT&CK',
-    //             'description': '',
-    //             'can_read': true,
-    //             'can_write': false,
-    //             'media_types': ['application/vnd.oasis.stix+json']
-    //         }
-
-    //         const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
-    //         this.mobileData$ = Observable.forkJoin(
-    //             fromPromise(mobileCollection.getObjects('', undefined)),
-    //             fromPromise(preattackCollection.getObjects('', undefined))
-    //         )
-    //     }
-    //     else if (refresh || !this.mobileData$){
-    //         console.log("retrieving data", this.mobileDataURL),
-    //         this.mobileData$ = Observable.forkJoin(
-    //             this.http.get(this.mobileDataURL),
-    //             this.http.get(this.pre_attack_URL)
-    //         );
-    //     }
-    //     return this.mobileData$ //observable
-    // }
 }
 
 /** 
@@ -554,6 +507,10 @@ export class Domain {
     public readonly id: string;
     public readonly name: string;
     public readonly version: string;
+    protected readonly dataService: DataService;
+
+    public dataLoaded: boolean = false;
+    //public dataLoadedCallbacks: any[] = [];
 
     public matrices: Matrix[] = [];
     public tactics: Tactic[] = [];
@@ -577,10 +534,10 @@ export class Domain {
         mitigates: new Map<string, string[]>()
     }
 
-    //TODO: (STRUCT) add a constructor
     constructor(domainVersion: any, dataService: DataService) {
         this.id = domainVersion.id;
         this.name = domainVersion.name;
         this.version = domainVersion.version;
+        this.dataService = dataService;
     }
 }
