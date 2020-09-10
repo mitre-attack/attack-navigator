@@ -525,10 +525,10 @@ export class TabsComponent implements AfterContentInit {
 
     }
 
-    loadLayerFromDomain(domainURL, replace): void {
-        //TODO: dynamically load domain data
-        console.log("retreiving data from ", domainURL);
-        this.dataService.dynamicLoadData(domainURL, true);
+    loadLayerFromDomain(domainID, replace): void {
+        this.dataService.dynamicLoadData(domainID, replace);
+        let viewModel = this.viewModelsService.newViewModeld("loading layer...", domainID);
+        // this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
         this.newLayer();
     }
 
