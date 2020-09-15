@@ -477,7 +477,7 @@ oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o 
                                                                  -->
 
-<div class="matrices" oncontextmenu="return false">
+<!-- <div class="matrices" oncontextmenu="return false">
     <div class="matrices-columns">
         <div class="matrix-column" *ngFor="let matrix of dataService.matrices">
             <div *ngIf="dataService.matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
@@ -492,7 +492,24 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
             </div>
         </div>
     </div>
-</div>
+</div> -->
+
+<div class="matrices" oncontextmenu="return false">
+        <div class="matrices-columns">
+            <div class="matrix-column" *ngFor="let matrix of matrices">
+                <div *ngIf="dataService.domains.get(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                <div *ngIf="viewModel.layout.layout == 'side'">
+                    <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+                </div>
+                <div *ngIf="viewModel.layout.layout == 'flat'">
+                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
+                </div>
+                <div *ngIf="viewModel.layout.layout == 'mini'">
+                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <!--

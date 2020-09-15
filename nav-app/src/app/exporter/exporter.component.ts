@@ -54,7 +54,7 @@ export class ExporterComponent implements AfterViewInit {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
         //determine if the layer has any scores
-        for (let matrix of this.dataService.matrices) {
+        for (let matrix of this.dataService.domains.get(this.viewModel.domainID).matrices) {
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
                     if (technique.subtechniques.length > 0) {
@@ -494,7 +494,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         // build data model
-        let matrices: RenderableMatrix[] = this.dataService.matrices.map(function(matrix: Matrix) {
+        let matrices: RenderableMatrix[] = this.dataService.domains.get(this.viewModel.domainID).matrices.map(function(matrix: Matrix) {
             return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 

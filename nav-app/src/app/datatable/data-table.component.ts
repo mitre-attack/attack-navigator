@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import {DataService, Technique, Matrix} from '../data.service';
+import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
@@ -73,7 +73,7 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        for (let matrix of this.dataService.matrices) {
+        for (let matrix of this.matrices) {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // create tactic columns
@@ -223,6 +223,8 @@ export class DataTableComponent implements AfterViewInit {
         }
     }
 
+    matrices: Matrix[] = [];
+
     constructor(private dataService: DataService, 
                 private tabs: TabsComponent, 
                 private sanitizer: DomSanitizer, 
@@ -234,6 +236,14 @@ export class DataTableComponent implements AfterViewInit {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
+    }
+
+    ngOnInit(): void {
+        this.dataService.onDataLoad((callback) => this.loadMatrix(this.viewModel.domainID))
+    }
+
+    loadMatrix(domainID: string): void {
+        this.matrices = this.dataService.domains.get(domainID).matrices;
     }
 
     // open custom url in a new tab
@@ -276,7 +286,7 @@ export class DataTableComponent implements AfterViewInit {
      */
     expandSubtechniques(): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        for (let technique of this.dataService.techniques) {
+        for (let technique of this.dataService.domains.get(this.viewModel.domainID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
@@ -342,7 +352,7 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
+        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, this.viewModel.domainID, "vm" + this.viewModelsService.getNonce(), this.dataService);
         viewModelCopy.deSerialize(this.viewModel.serialize());
         // let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(this.viewModel);

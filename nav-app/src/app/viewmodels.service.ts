@@ -37,6 +37,12 @@ export class ViewModelsService {
         return vm;
     }
 
+    newViewModeld(name: string, domainID: string) {
+        let vm = new ViewModel(name, this.domain, domainID, "vm"+ this.getNonce(), this.dataService);
+        this.viewModels.push(vm);
+        return vm;
+    }
+
     nonce: number = 0;
     /**
      * Get a nonce.
@@ -413,7 +419,7 @@ export class ViewModel {
 
     initTechniqueVMs() {
         console.log(this.name, "initializing technique VMs");
-        for (let technique of this.dataService.techniques) {
+        for (let technique of this.dataService.domains.get(this.domainID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
@@ -1092,7 +1098,7 @@ export class ViewModel {
                     } else {
                         // occurs in multiple tactics
                         // match to Technique by attackID
-                        for (let technique of this.dataService.techniques) {
+                        for (let technique of this.dataService.domains.get(this.domainID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
                                 for (let tactic of technique.tactics) {
