@@ -14,32 +14,38 @@ export class MultiselectComponent implements OnInit {
     
     private stixTypes: any[];
 
-    constructor(private dataService: DataService) { 
+    constructor(private dataService: DataService) {
+        this.stixTypes = [];
+    }
+
+    ngOnInit() {
+        let domain = this.dataService.domains.get(this.viewModel.domainID)
+
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.dataService.groups.filter((group, i, arr) => arr.findIndex(t => t.id === group.id) === i)
+            "objects": domain.groups.filter((group, i, arr) => arr.findIndex(t => t.id === group.id) === i)
                        .sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }, {
             "label": "software",
-            "objects": this.dataService.software.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+            "objects": domain.software.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }, {
             "label": "mitigations",
-            "objects": this.dataService.mitigations.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+            "objects": domain.mitigations.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }]
     }
 
-    ngOnInit() {}
-
     private getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
-        let allTechniques = this.dataService.techniques.concat(this.dataService.subtechniques);
+        let techniques = this.dataService.domains.get(this.viewModel.domainID).techniques;
+        let allTechniques = techniques.concat(this.dataService.domains.get(this.viewModel.domainID).subtechniques);
+        let domainID = this.viewModel.domainID;
 
         if (stixObject instanceof Group) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques().includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainID).includes(technique.id));
         } else if (stixObject instanceof Software) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques().includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques().includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainID).includes(technique.id));
         }
     }
 

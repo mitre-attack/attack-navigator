@@ -20,28 +20,6 @@ export class DataService {
         })
     }
 
-    // public matrices: Matrix[] = [];
-    // public tactics: Tactic[] = [];
-    // public techniques: Technique[] = [];
-    // public subtechniques: Technique[] = [];
-    // public software: Software[] = [];
-    // public groups: Group[] = [];
-    // public mitigations: Mitigation[] = [];
-    // public relationships: any = {
-    //     // subtechnique subtechnique-of technique
-    //     // ID of technique to [] of subtechnique IDs
-    //     subtechniques_of: new Map<string, string[]>(), 
-    //     // group uses technique
-    //     // ID of group to [] of technique IDs
-    //     group_uses: new Map<string, string[]>(), 
-    //     // group uses technique
-    //     // ID of group to [] of technique IDs
-    //     software_uses: new Map<string, string[]>(),
-    //     // mitigation mitigates technique
-    //     // ID of mitigation to [] of technique IDs
-    //     mitigates: new Map<string, string[]>()
-    // }
-
     public domains = new Map<string, Domain>();
 
     public subtechniquesEnabled: boolean = true;
@@ -74,16 +52,13 @@ export class DataService {
             switch(sdo.type) {
                 case "intrusion-set":
                     domain.groups.push(new Group(sdo, this));
-                    // this.groups.push(new Group(sdo, this));
                     break;
                 case "malware":
                 case "tool":
                     domain.software.push(new Software(sdo, this));
-                    // this.software.push(new Software(sdo, this));
                     break;
                 case "course-of-action":
                     domain.mitigations.push(new Mitigation(sdo, this));
-                    // this.mitigations.push(new Mitigation(sdo, this));
                     break;
                 case "relationship":
                     if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
@@ -94,12 +69,6 @@ export class DataService {
                         } else {
                             domain.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
                         }
-                        // if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
-                        //     let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
-                        //     ids.push(sdo.source_ref);
-                        // } else {
-                        //     this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
-                        // }
                     } else if (sdo.relationship_type == "uses") {
                         if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
                             // record group:technique relationship
@@ -109,12 +78,6 @@ export class DataService {
                             } else {
                                 domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
                             }
-                            // if (this.relationships["group_uses"].has(sdo.source_ref)) {
-                            //     let ids = this.relationships["group_uses"].get(sdo.source_ref);
-                            //     ids.push(sdo.target_ref);
-                            // } else {
-                            //     this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
-                            // }
                         } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
                             // record software:technique relationship
                             if (domain.relationships["software_uses"].has(sdo.source_ref)) {
@@ -123,12 +86,6 @@ export class DataService {
                             } else {
                                 domain.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                             }
-                            // if (this.relationships["software_uses"].has(sdo.source_ref)) {
-                            //     let ids = this.relationships["software_uses"].get(sdo.source_ref);
-                            //     ids.push(sdo.target_ref);
-                            // } else {
-                            //     this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
-                            // }
                         }
                     } else if (sdo.relationship_type == "mitigates") {
                         if (domain.relationships["mitigates"].has(sdo.source_ref)) {
@@ -137,12 +94,6 @@ export class DataService {
                         } else {
                             domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
                         }
-                        // if (this.relationships["mitigates"].has(sdo.source_ref)) {
-                        //     let ids = this.relationships["mitigates"].get(sdo.source_ref);
-                        //     ids.push(sdo.target_ref);
-                        // } else {
-                        //     this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
-                        // }
                     }
                     break;
                 case "attack-pattern":
@@ -150,7 +101,6 @@ export class DataService {
                     if (sdo.x_mitre_is_subtechnique) {
                         if (this.subtechniquesEnabled) {
                             domain.subtechniques.push(new Technique(sdo, [], this));
-                            // this.subtechniques.push(new Technique(sdo, [], this));
                         }
                     } else techniqueSDOs.push(sdo);
                     break;
@@ -173,20 +123,12 @@ export class DataService {
                         // else the target was revoked or deprecated and we can skip honoring the relationship
                     })
                 }
-                // if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                //     this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                //         if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
-                //         // else the target was revoked or deprecated and we can skip honoring the relationship
-                //     })
-                // }
             }
             domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
-            // this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
         //create matrices, which also creates tactics and filters techniques
         for (let matrixSDO of matrixSDOs) {
             domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
-            // this.matrices.push(new Matrix(matrixSDO, idToTacticSDO, this.techniques, this));
         }
     
         this.domains.set(domain.id, domain);
@@ -448,16 +390,16 @@ export class Software extends BaseStix {
      * get techniques used by this software
      * @returns {string[]} technique IDs used by this software
      */
-    public used(): string[] {
-        let rels = this.dataService.relationships.software_uses;
+    public used(domainID): string[] {
+        let rels = this.dataService.domains.get(domainID).relationships.software_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.used();
+    public relatedTechniques(domainID): string[] {
+        return this.used(domainID);
     }
 }
 /**
@@ -468,16 +410,17 @@ export class Group extends BaseStix {
      * get techniques used by this group
      * @returns {string[]} technique IDs used by this group
      */
-    public used(): string[] {
-        let rels = this.dataService.relationships.group_uses;
+    public used(domainID): string[] {
+        // let rels = this.dataService.domains.get(this.domainID).relationships.group_uses;
+        let rels = this.dataService.domains.get(domainID).relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.used();
+    public relatedTechniques(domainID): string[] {
+        return this.used(domainID);
     }
 }
 
@@ -489,21 +432,23 @@ export class Mitigation extends BaseStix {
      * get techniques mitigated by this mitigation
      * @returns {string[]} list of technique IDs
      */
-    public mitigated(): string[] {
-        let rels = this.dataService.relationships.mitigates;
-        if (rels.has(this.id)) return rels.get(this.id);
+    public mitigated(domainID): string[] {
+        let rels = this.dataService.domains.get(domainID).relationships.mitigates;
+        if (rels.has(this.id)) {
+            return rels.get(this.id);
+        } 
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.mitigated();
+    public relatedTechniques(domainID): string[] {
+        return this.mitigated(domainID);
     }
 }
 
 export class Domain {
-    public readonly id: string;
+    public readonly id: string; // domain ID
     public readonly name: string;
     public readonly version: string;
     protected readonly dataService: DataService;
