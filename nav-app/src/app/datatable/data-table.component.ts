@@ -73,7 +73,7 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        for (let matrix of this.matrices) {
+        for (let matrix of this.dataService.domains.get(this.viewModel.domainID).matrices) {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // create tactic columns
@@ -223,8 +223,6 @@ export class DataTableComponent implements AfterViewInit {
         }
     }
 
-    matrices: Matrix[] = [];
-
     constructor(private dataService: DataService, 
                 private tabs: TabsComponent, 
                 private sanitizer: DomSanitizer, 
@@ -236,14 +234,6 @@ export class DataTableComponent implements AfterViewInit {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
-    }
-
-    ngOnInit(): void {
-        this.dataService.onDataLoad((callback) => this.loadMatrix(this.viewModel.domainID))
-    }
-
-    loadMatrix(domainID: string): void {
-        this.matrices = this.dataService.domains.get(domainID).matrices;
     }
 
     // open custom url in a new tab
