@@ -14,16 +14,14 @@ export class DataService {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
             this.setUpURLs(config["versions"]);
-            //TODO: default open latest version of enterprise attack
-            //this.dynamicLoadData("https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json", false);
-            this.dynamicLoadData(this.domainVersions[0]["id"], false);
+            //TODO: default open new tab
+            this.dynamicLoadData("enterprise-latest")
         })
     }
 
     public domains = new Map<string, Domain>();
 
     public subtechniquesEnabled: boolean = true;
-    public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
 
     /**
@@ -38,8 +36,7 @@ export class DataService {
      * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
-    parseBundle(domainVersion: any, stixBundle: any[]): void {
-        let domain = new Domain(domainVersion, this)
+    parseBundle(domain: Domain, stixBundle: any[]): void {
         let techniqueSDOs = [];
         let matrixSDOs = [];
         let idToTechniqueSDO = new Map<string, any>();
@@ -130,11 +127,9 @@ export class DataService {
         for (let matrixSDO of matrixSDOs) {
             domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
         }
-    
-        this.domains.set(domain.id, domain);
-
+        domain.dataLoaded = true;
         console.log("data.service parsing complete")
-        this.dataLoaded = true;
+
         for (let callback of this.dataLoadedCallbacks) {
             callback();
         }
@@ -147,25 +142,11 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    //private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    //private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     private useTAXIIServer: boolean = false;
-    private taxiiVersions: any[] = [];
-    public domainVersions: any[] = [
-        { // default enterprise attack domain
-            "id": "enterprise-latest",
-            "name": "enterprise",
-            "version": "latest",
-            "urls": ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"]
-        },
-        { // default mobile attack domain
-            "id": "mobile-latest",
-            "name": "mobile",
-            "version": "latest",
-            "urls": ["https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"]
-        }
-    ];
+
 
     /**
      * Set up the URLs for data
@@ -178,28 +159,30 @@ export class DataService {
      * @memberof DataService
      */
     setUpURLs(versions: []){
+        // default URLs
+        let enterpriseDomain = new Domain("enterprise-latest", "enterprise", "latest", this);
+        enterpriseDomain.urls.push(this.enterpriseAttackURL);
+        this.domains.set(enterpriseDomain.id, enterpriseDomain);
+        let mobileDomain = new Domain("mobile-latest", "mobile", "latest", this);
+        mobileDomain.urls.push(this.mobileAttackURL);
+        this.domains.set(mobileDomain.id, mobileDomain);
+
+        // configured domains/versions
         versions.forEach( (version: any) => {
             let v: string = version["name"].replace(/\s/g, "-").toLowerCase();
             version["domains"].forEach( (domain: any) => {
+                let id = domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase();
+                let name = domain["name"].toLowerCase();
+                let domainObject = new Domain(id, name, v, this)
+
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     this.useTAXIIServer = true;
-                    let domainVersion: any = {
-                        "id": domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase(),
-                        "name": domain["name"].toLowerCase(),
-                        "version": v,
-                        "taxii_url": domain["taxii_url"],
-                        "taxii_collection": domain["taxii_collection"]
-                    };
-                    this.taxiiVersions.push(domainVersion);
+                    domainObject.taxii_url = domain["taxii_url"];
+                    domainObject.taxii_collection = domain["taxii_collection"];
                 } else {
-                    let domainVersion: any = {
-                        "id": domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase(),
-                        "name": domain["name"].toLowerCase(),
-                        "version": v,
-                        "urls": domain["data"]
-                    };
-                    this.domainVersions.push(domainVersion)
+                    domainObject.urls = domain["data"]
                 }
+                this.domains.set(id, domainObject);
             });
         });
     }
@@ -220,7 +203,7 @@ export class DataService {
         if (this.useTAXIIServer) {
             //TODO: add data fetch from taxii server
             console.log("fetching data from TAXII server");
-        } else if (refresh || !this.domainData$ || !this.domainVersions) {
+        } else if (refresh || !this.domainData$ || !this.domains) {
             console.log("retrieving data", loadURLs)
             let bundleData = [];
             loadURLs.forEach((url) => {
@@ -232,13 +215,19 @@ export class DataService {
         return this.domainData$;
     }
 
-    dynamicLoadData(domainVersionID: string, refresh: boolean = false): void {
-        let domainVersion = this.domainVersions.find((dv) => dv.id == domainVersionID);
-        if (domainVersion) { //exists
-            this.getData(domainVersion["urls"], false).subscribe((data: Object[]) => {
-                this.parseBundle(domainVersion, data);
+    dynamicLoadData(domainID: string, refresh: boolean = false): void {
+        let domain = this.domains.get(domainID);
+        console.log('retrieving domain: ', domain)
+        if (domain && !domain.dataLoaded) { // domain data is not loaded
+            console.log('dynamically loading domain')
+            this.getData(domain.urls, false).subscribe((data: Object[]) => {
+                this.parseBundle(domain, data);
             });
+        } else {
+            console.log('domain already loaded')
+            // domain data already loaded
         }
+        // }
     }
 
     //TODO: remove individual Mobile/Enterprise data retrieval
@@ -453,6 +442,9 @@ export class Domain {
     public readonly version: string;
     protected readonly dataService: DataService;
 
+    public urls: string[] = [];
+    public taxii_url: string = "";
+    public taxii_collection: string = "";
     public dataLoaded: boolean = false;
     //public dataLoadedCallbacks: any[] = [];
 
@@ -478,10 +470,10 @@ export class Domain {
         mitigates: new Map<string, string[]>()
     }
 
-    constructor(domainVersion: any, dataService: DataService) {
-        this.id = domainVersion.id;
-        this.name = domainVersion.name;
-        this.version = domainVersion.version;
+    constructor(id: string, name: string, version: string, dataService: DataService) {
+        this.id = id;
+        this.name = name;
+        this.version = version;
         this.dataService = dataService;
     }
 }
