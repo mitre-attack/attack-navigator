@@ -102,8 +102,8 @@ export class TabsComponent implements AfterContentInit {
                 // console.log(this.loadURL)
                 // this.loadLayerFromLocalFile();
                 if (this.dynamicTabs.length == 0) this.newLayer('enterprise-latest'); // failed load from url, so create new blank layer
-            } else {
-                this.newLayer('enterprise-latest');
+            } else { // default to blank tab interface
+                this.newBlankTab();
             }
             let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
 

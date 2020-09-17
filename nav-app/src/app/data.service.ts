@@ -14,8 +14,6 @@ export class DataService {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
             this.setUpURLs(config["versions"]);
-            //TODO: default open new tab
-            this.dynamicLoadData("enterprise-latest")
         })
     }
 
