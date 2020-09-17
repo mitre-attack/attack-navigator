@@ -158,10 +158,10 @@ export class DataService {
      */
     setUpURLs(versions: []){
         // default URLs
-        let enterpriseDomain = new Domain("enterprise-latest", "enterprise", "latest", this);
+        let enterpriseDomain = new Domain("enterprise-latest", "enterprise", "latest");
         enterpriseDomain.urls.push(this.enterpriseAttackURL);
         this.domains.set(enterpriseDomain.id, enterpriseDomain);
-        let mobileDomain = new Domain("mobile-latest", "mobile", "latest", this);
+        let mobileDomain = new Domain("mobile-latest", "mobile", "latest");
         mobileDomain.urls.push(this.mobileAttackURL);
         this.domains.set(mobileDomain.id, mobileDomain);
 
@@ -171,7 +171,7 @@ export class DataService {
             version["domains"].forEach( (domain: any) => {
                 let id = domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase();
                 let name = domain["name"].toLowerCase();
-                let domainObject = new Domain(id, name, v, this)
+                let domainObject = new Domain(id, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     this.useTAXIIServer = true;
@@ -436,7 +436,6 @@ export class Domain {
     public readonly id: string; // domain ID
     public readonly name: string;
     public readonly version: string;
-    protected readonly dataService: DataService;
 
     public urls: string[] = [];
     public taxii_url: string = "";
@@ -466,10 +465,9 @@ export class Domain {
         mitigates: new Map<string, string[]>()
     }
 
-    constructor(id: string, name: string, version: string, dataService: DataService) {
+    constructor(id: string, name: string, version: string) {
         this.id = id;
         this.name = name;
         this.version = version;
-        this.dataService = dataService;
     }
 }
