@@ -194,7 +194,6 @@ export class TabsComponent implements AfterContentInit {
 
         // activate the tab the user has clicked on.
         tab.active = true;
-        console.log('dynamic tabs: ', this.dynamicTabs)
     }
 
     /**
@@ -530,12 +529,8 @@ export class TabsComponent implements AfterContentInit {
 
     }
 
-    loadLayerFromDomain(domainID, replace): void {
-        this.dataService.dynamicLoadData(domainID, replace);
-        // let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
-        // this.openTab('new tab', this.blankTab, null, true, replace, true, false)
-        // let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
-        // this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
+    loadLayerFromDomain(domainID, refresh): void {
+        this.dataService.dynamicLoadData(domainID, refresh);
         this.newLayer(domainID);
     }
 

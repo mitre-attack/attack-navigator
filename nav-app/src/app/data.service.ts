@@ -217,13 +217,10 @@ export class DataService {
         let domain = this.domains.get(domainID);
         if (domain && !domain.dataLoaded) { // domain data is not loaded
             console.log("loading domain data for '" + domain.id + "'")
-            this.getData(domain.urls, false).subscribe((data: Object[]) => {
+            this.getData(domain.urls, refresh).subscribe((data: Object[]) => {
                 this.parseBundle(domain, data);
             });
-        } else {
-            console.log('domain already loaded')
         }
-        // }
     }
 
     //TODO: remove individual Mobile/Enterprise data retrieval
