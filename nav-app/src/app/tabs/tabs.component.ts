@@ -339,8 +339,6 @@ export class TabsComponent implements AfterContentInit {
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainID);
-
-        console.log("new vm: ", vm)
         this.openTab(name, this.layerTab, vm, true, true, true, true)
     }
 
@@ -482,7 +480,7 @@ export class TabsComponent implements AfterContentInit {
         var reader = new FileReader();
 
         //TODO: update constructor with domainID from URL
-        let viewModel = this.viewModelsService.newViewModel('enterprise-latest', "loading layer...");
+        let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-latest');
 
         reader.onload = (e) =>{
             var string = String(reader.result);
@@ -508,7 +506,7 @@ export class TabsComponent implements AfterContentInit {
         this.http.get(loadURL).subscribe((res) => {
 
             //TODO: update constructor with domainID from URL
-            let viewModel = this.viewModelsService.newViewModel('enterprise-latest', "loading layer...");
+            let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-latest');
             try {
                 viewModel.deSerialize(res)
                 console.log("loaded layer from", loadURL);
@@ -534,6 +532,7 @@ export class TabsComponent implements AfterContentInit {
 
     loadLayerFromDomain(domainID, replace): void {
         this.dataService.dynamicLoadData(domainID, replace);
+        // let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
         // this.openTab('new tab', this.blankTab, null, true, replace, true, false)
         // let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
         // this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)

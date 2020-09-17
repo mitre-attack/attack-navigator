@@ -217,15 +217,13 @@ export class DataService {
 
     dynamicLoadData(domainID: string, refresh: boolean = false): void {
         let domain = this.domains.get(domainID);
-        console.log('retrieving domain: ', domain)
         if (domain && !domain.dataLoaded) { // domain data is not loaded
-            console.log('dynamically loading domain')
+            console.log("loading domain data for '" + domain.id + "'")
             this.getData(domain.urls, false).subscribe((data: Object[]) => {
                 this.parseBundle(domain, data);
             });
         } else {
             console.log('domain already loaded')
-            // domain data already loaded
         }
         // }
     }
