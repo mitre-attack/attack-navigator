@@ -62,9 +62,7 @@ export class TabsComponent implements AfterContentInit {
         }
 
         this.ds.getConfig().subscribe((config: Object) => {
-            this.viewModelsService.domain = this.ds.domainVersions[0].name;
-            this.viewModelsService.domainID = this.ds.domainVersions[0].id;
-            // console.log("INITIALIZING APPLICATION FOR DOMAIN: " + this.viewModelsService.domain);
+            let defaultDomain = this.dataService.domains.get('enterprise-latest');
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
                 var first = true;
@@ -77,13 +75,13 @@ export class TabsComponent implements AfterContentInit {
                         first = false;
                     }
                     //vms must load after data service loads data
-                    if (this.dataService.dataLoaded) {
+                    if (defaultDomain.dataLoaded) {
                         loadInitialVMCallback(url);
                     } else {
                         this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
                     }
                 }
-                if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-latest'); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
@@ -94,7 +92,7 @@ export class TabsComponent implements AfterContentInit {
                         first = false;
                     }
                     //vms must load after data service loads data
-                    if (this.dataService.dataLoaded) {
+                    if (defaultDomain.dataLoaded) {
                         loadInitialVMCallback(url);
                     } else {
                         this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
@@ -103,9 +101,9 @@ export class TabsComponent implements AfterContentInit {
                 // this.loadURL = config["default_layer"]["location"]
                 // console.log(this.loadURL)
                 // this.loadLayerFromLocalFile();
-                if (this.dynamicTabs.length == 0) this.newLayer(); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-latest'); // failed load from url, so create new blank layer
             } else {
-                this.newLayer();
+                this.newLayer('enterprise-latest');
             }
             let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
 
@@ -196,6 +194,7 @@ export class TabsComponent implements AfterContentInit {
 
         // activate the tab the user has clicked on.
         tab.active = true;
+        console.log('dynamic tabs: ', this.dynamicTabs)
     }
 
     /**
@@ -334,12 +333,14 @@ export class TabsComponent implements AfterContentInit {
     /**
      * Open a new blank layer tab
      */
-    newLayer() {
+    newLayer(domainID: string) {
         // find non conflicting name
         let name = this.getUniqueLayerName("layer")
 
         // create and open VM
-        let vm = this.viewModelsService.newViewModel(name);
+        let vm = this.viewModelsService.newViewModel(name, domainID);
+
+        console.log("new vm: ", vm)
         this.openTab(name, this.layerTab, vm, true, true, true, true)
     }
 
@@ -385,6 +386,10 @@ export class TabsComponent implements AfterContentInit {
      * layer layer operation
      */
     layerByOperation(): void {
+        // TODO: restrict to layers of the same domain
+        // let domainID = self.dynamicTabls[index].dataContext.domainID
+        let domainID = 'enterprise-latest'
+
         // build score expression map, mapping inline variables to their actual VMs
         let scoreVariables = new Map<string, ViewModel>();
         let regex = /\b[a-z]\b/g //\b matches word boundary
@@ -399,11 +404,10 @@ export class TabsComponent implements AfterContentInit {
                 scoreVariables.set(match, vm);
             });
         }
-        // console.log(scoreVariables);
 
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
-            let vm = this.viewModelsService.layerLayerOperation(this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
+            let vm = this.viewModelsService.layerLayerOperation(domainID, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
             console.error(err)
@@ -476,7 +480,9 @@ export class TabsComponent implements AfterContentInit {
     readJSONFile(file: File) {
         // var input = (<HTMLInputElement>document.getElementById("uploader"));
         var reader = new FileReader();
-        let viewModel = this.viewModelsService.newViewModel("loading layer...");
+
+        //TODO: update constructor with domainID from URL
+        let viewModel = this.viewModelsService.newViewModel('enterprise-latest', "loading layer...");
 
         reader.onload = (e) =>{
             var string = String(reader.result);
@@ -501,7 +507,8 @@ export class TabsComponent implements AfterContentInit {
         // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
         this.http.get(loadURL).subscribe((res) => {
 
-            let viewModel = this.viewModelsService.newViewModel("loading layer...");
+            //TODO: update constructor with domainID from URL
+            let viewModel = this.viewModelsService.newViewModel('enterprise-latest', "loading layer...");
             try {
                 viewModel.deSerialize(res)
                 console.log("loaded layer from", loadURL);
@@ -527,9 +534,10 @@ export class TabsComponent implements AfterContentInit {
 
     loadLayerFromDomain(domainID, replace): void {
         this.dataService.dynamicLoadData(domainID, replace);
-        let viewModel = this.viewModelsService.newViewModeld("loading layer...", domainID);
+        // this.openTab('new tab', this.blankTab, null, true, replace, true, false)
+        // let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
         // this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
-        this.newLayer();
+        this.newLayer(domainID);
     }
 
 

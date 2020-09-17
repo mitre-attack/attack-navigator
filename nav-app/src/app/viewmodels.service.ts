@@ -12,8 +12,8 @@ import * as is from 'is_js';
 @Injectable()
 export class ViewModelsService {
 
-    domain = "enterprise-attack";
-    domainID = "";
+    // domain = "enterprise-attack";
+    // domainID = "";
 
     constructor(private dataService: DataService) {
         
@@ -28,18 +28,12 @@ export class ViewModelsService {
      * @param {string} name the viewmodel name
      * @return {ViewModel} the created ViewModel
      */
-    newViewModel(name: string) {
-        let vm = new ViewModel(name, this.domain, this.domainID, "vm"+ this.getNonce(), this.dataService);
+    newViewModel(name: string, domainID: string) {
+        let vm = new ViewModel(name, domainID, "vm"+ this.getNonce(), this.dataService);
         this.viewModels.push(vm);
         // console.log("created new viewModel", this.viewModels)
 
         // this.saveViewModelsCookies()
-        return vm;
-    }
-
-    newViewModeld(name: string, domainID: string) {
-        let vm = new ViewModel(name, this.domain, domainID, "vm"+ this.getNonce(), this.dataService);
-        this.viewModels.push(vm);
         return vm;
     }
 
@@ -81,8 +75,9 @@ export class ViewModelsService {
      * @param  filters            viewmodel to inherit filters from
      * @return                    new viewmodel inheriting above properties
      */
-    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", this.domain, this.domainID, "vm" + this.getNonce(), this.dataService);
+    // TODO: update to limit operations by domain
+    layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+        let result = new ViewModel("layer by operation", domainID, "vm" + this.getNonce(), this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -359,8 +354,7 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    domain: string; //layer domain
-    // domainVersion: string; // domain version
+    // domain: string; //layer domain
     domainID: string; // layer domain & version
     description: string = ""; //layer description
     version: string = ""; // layer version
@@ -401,15 +395,14 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
-    constructor(name: string, domain: string, domainID: string, uid: string, private dataService: DataService) {
-        this.domain = domain;
+    constructor(name: string, domainID: string, uid: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
         this.filters = new Filter(this.domainID);
         this.name = name;
         this.version = globals.layer_version;
         this.uid = uid;
-        if (!this.dataService.dataLoaded) {
+        if (!this.dataService.domains.get(domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
             this.dataService.onDataLoad(() => this.initTechniqueVMs()); //arrow function preserves `this` in callback
         } else {
@@ -986,7 +979,7 @@ export class ViewModel {
         let rep: {[k: string]: any } = {};
         rep.name = this.name;
         rep.version = String(this.version);
-        rep.domain = this.domain
+        rep.domain = this.domainID
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1012,7 +1005,7 @@ export class ViewModel {
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
-        this.domain = obj.domain;
+        this.domainID = obj.domain;
 
         if(obj.version !== globals.layer_version){
             alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
