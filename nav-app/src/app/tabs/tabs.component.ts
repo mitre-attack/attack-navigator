@@ -61,7 +61,7 @@ export class TabsComponent implements AfterContentInit {
             if (fragment_value && fragment_value.length > 0) {
                 var first = true;
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
-                    var url = urls_1[_i];
+                    let url = urls_1[_i];
                     let self = this;
                     let loadInitialVMCallback = function() {
                         console.log(url);
