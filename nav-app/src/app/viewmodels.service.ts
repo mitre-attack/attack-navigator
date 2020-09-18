@@ -398,7 +398,7 @@ export class ViewModel {
     constructor(name: string, domainID: string, uid: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
-        this.filters = new Filter(this.domainID, this.dataService);
+        this.filters = new Filter();
         this.name = name;
         this.version = globals.layer_version;
         this.uid = uid;
