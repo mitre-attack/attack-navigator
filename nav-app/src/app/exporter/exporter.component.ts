@@ -24,7 +24,7 @@ export class ExporterComponent implements AfterViewInit {
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
     constructor(private configService: ConfigService, private dataService: DataService) {
-        this.config = { 
+        this.config = {
             "width": 11,
             "height": 8.5,
             "headerHeight": 1,
@@ -74,11 +74,11 @@ export class ExporterComponent implements AfterViewInit {
         let legendSectionCount = 0;
         if (self.hasScores) legendSectionCount++;
         if (self.hasLegendItems()) legendSectionCount++;
-        self.config.legendHeight = 0.5 * legendSectionCount; 
+        self.config.legendHeight = 0.5 * legendSectionCount;
         //initial legend position for undocked legend
         this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
         this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
-        if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
+        if (this.config.showHeader) this.config.legendY -= this.config.headerHeight;
 
         //put at the end of the function queue so that the page can render before building the svg
         window.setTimeout(function() {self.buildSVG(self)}, 0)
@@ -145,14 +145,14 @@ export class ExporterComponent implements AfterViewInit {
             .style("font-family", self.config.font);
         let stroke_width = 1;
 
-        // ooooo ooooo            o888                                                 
-        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
-        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
-        //  888   888 888          888  888    888 888          888                888 
-        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
-        //                             o888                                            
+        // ooooo ooooo            o888
+        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8
+        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo
+        //  888   888 888          888  888    888 888          888                888
+        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88
+        //                             o888
 
-        // Essentially, the following functions brute force the optimal text arrangement for each cell 
+        // Essentially, the following functions brute force the optimal text arrangement for each cell
         // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
         // in the cell text.
 
@@ -174,7 +174,7 @@ export class ExporterComponent implements AfterViewInit {
         };
 
         /**
-         * Magic function to insert line breaks. 
+         * Magic function to insert line breaks.
         * @param  {string[]} words         array of words to space
         * @param  {dom node} self          the dom element with the text
         * @param  {number} xpos            x pos to place multiline text at
@@ -246,7 +246,7 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         /**
-         * Given text, a dom node, and sizing parameters, 
+         * Given text, a dom node, and sizing parameters,
          * try all combinations of word breaks to maximize font size inside of the given space
          * returns font size in pixels
          * @param {string} text                   the text to render in the cell
@@ -342,7 +342,7 @@ export class ExporterComponent implements AfterViewInit {
                     .scale(colorScale)
                     .labelOffset(2)
                     .labelFormat(d3.format("0.02r"))
-                    
+
                     // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
                 )
             }
@@ -436,12 +436,12 @@ export class ExporterComponent implements AfterViewInit {
             }
         }
 
-        // ooooo ooooo                             oooo                        
-        //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo   
-        //  888ooo888 888oooooo8   ooooo888 888    888 888oooooo8   888    888 
-        //  888   888 888        888    888 888    888 888          888        
-        // o888o o888o  88oooo888 88ooo88 8o  88ooo888o  88oooo888 o888o       
-                                                                            
+        // ooooo ooooo                             oooo
+        //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo
+        //  888ooo888 888oooooo8   ooooo888 888    888 888oooooo8   888    888
+        //  888   888 888        888    888 888    888 888          888
+        // o888o o888o  88oooo888 88ooo88 8o  88ooo888o  88oooo888 o888o
+
 
         if (self.config.showHeader) {
             let headerSections: HeaderSection[] = []
@@ -456,7 +456,7 @@ export class ExporterComponent implements AfterViewInit {
             if (self.showFilters()) headerSections.push({
                 "title": "filters",
                 "contents": [{
-                    "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
+                    "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")
                 }, {
                     "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
                 }]
@@ -471,7 +471,7 @@ export class ExporterComponent implements AfterViewInit {
                 // .align(0.5)
                 .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
                 .range([0, width]);
-            
+
             for (let section of headerSections) {
                 let sectionGroup = headerGroup.append("g");
                 if (headerSections.length > 1) sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
@@ -485,12 +485,12 @@ export class ExporterComponent implements AfterViewInit {
 
 
 
-        // oooo     oooo            o8              o88               
-        //  8888o   888   ooooooo o888oo oo oooooo  oooo  oooo   oooo 
-        //  88 888o8 88   ooooo888 888    888    888 888    888o888   
-        //  88  888  88 888    888 888    888        888    o88 88o   
-        // o88o  8  o88o 88ooo88 8o 888o o888o      o888o o88o   o88o 
-                                                                   
+        // oooo     oooo            o8              o88
+        //  8888o   888   ooooooo o888oo oo oooooo  oooo  oooo   oooo
+        //  88 888o8 88   ooooo888 888    888    888 888    888o888
+        //  88  888  88 888    888 888    888        888    o88 88o
+        // o88o  8  o88o 88ooo88 8o 888o o888o      o888o o88o   o88o
+
 
         let tablebody = svg.append("g")
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
@@ -503,7 +503,7 @@ export class ExporterComponent implements AfterViewInit {
         let tactics: RenderableTactic[] = [];
         //flattened list of tactics
         for (let matrix of matrices) { tactics = tactics.concat(matrix.tactics); }
-        
+
 
         let x = d3.scaleBand()
             .paddingInner(0.1)
@@ -514,11 +514,11 @@ export class ExporterComponent implements AfterViewInit {
         let y = d3.scaleLinear()
             .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height}), 0])
             .range([height - (headerHeight), 0])
-            
+
         // let subtechniqueIndent = (1/3) * x.bandwidth(); //2/3 of full techinque width
         // let subtechniqueIndent = 2 * y(1); //2*the height of a cell, to make room for y(1) width sidebar
-        let subtechniqueIndent = Math.min(2 * y(1), 15);     
-        
+        let subtechniqueIndent = Math.min(2 * y(1), 15);
+
         //add tactic row backgroun
         if (self.viewModel.showTacticRowBackground) {
             tablebody.append("rect")
@@ -590,16 +590,16 @@ export class ExporterComponent implements AfterViewInit {
             .attr("fill", self.config.tableBorderColor)
             .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? "visible" : "hidden"});
 
-        //   oooooooo8             o888  o888       ooooooooooo                          o8   
-        // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo 
-        // 888         888oooooo8   888   888           888    888oooooo8    888o888    888   
-        // 888o     oo 888          888   888           888    888           o88 88o    888   
-        //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
-                                                                                           
-        
+        //   oooooooo8             o888  o888       ooooooooooo                          o8
+        // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo
+        // 888         888oooooo8   888   888           888    888oooooo8    888o888    888
+        // 888o     oo 888          888   888           888    888           o88 88o    888
+        //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o
+
+
 
         techniqueGroups.append("text")
-            .text(function(technique: RenderableTechnique) { 
+            .text(function(technique: RenderableTechnique) {
                 return technique.text;
             })
             .attr("font-size", function(technique: RenderableTechnique) {
@@ -610,7 +610,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
 
         subtechniqueGroups.append("text")
-            .text(function(subtechnique: RenderableTechnique) { 
+            .text(function(subtechnique: RenderableTechnique) {
                 return subtechnique.text;
             })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
@@ -619,7 +619,7 @@ export class ExporterComponent implements AfterViewInit {
             // .attr("dominant-baseline", "middle")
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
             .each(function() { centerValign(this); })
-    
+
         let tacticLabels = tacticGroups.append("g")
             .attr("class", "tactic-label");
         tacticLabels.append("text")
@@ -631,18 +631,18 @@ export class ExporterComponent implements AfterViewInit {
             })
             // .attr("dominant-baseline", "middle")
             .attr("fill", function(tactic: RenderableTactic) {
-                if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
+                if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]);
                 else return "black";
             })
             .attr("font-weight", "bold")
             .each(function() { centerValign(this); })
 
-        //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
-        // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
-        // 888    88  888   888 888    888 888     888 888     888 888o888   888oooooo8 888    888        888        888oooooo8  888    88o 888oooooo8   888   888 888    888  
-        // 888    88  888   888 888    888 888     888 888         8888 88o  888        888    888        888      o 888          888oo888o 888          888   888 888    888  
-        // 888oo88  o888o o888o  88ooo888o  88ooo88     88ooo888 o888o o888o  88oooo888  88ooo888o      o888ooooo88   88oooo888 888     888  88oooo888 o888o o888o  88ooo888o 
-        //                                                                                                                         888ooo888                                    
+        //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo
+        // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888
+        // 888    88  888   888 888    888 888     888 888     888 888o888   888oooooo8 888    888        888        888oooooo8  888    88o 888oooooo8   888   888 888    888
+        // 888    88  888   888 888    888 888     888 888         8888 88o  888        888    888        888      o 888          888oo888o 888          888   888 888    888
+        // 888oo88  o888o o888o  88ooo888o  88ooo88     88ooo888 o888o o888o  88oooo888  88ooo888o      o888ooooo88   88oooo888 888     888  88oooo888 o888o o888o  88ooo888o
+        //                                                                                                                         888ooo888
 
 
         if (self.showLegend() && !self.showLegendInHeader()) {
@@ -839,17 +839,17 @@ class RenderableTactic {
     public readonly height: number;
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
-        let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
+        let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
         let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
             let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix);
-            
+
             let showSubtechniques = renderConfig.showSubtechniques == "all" || (renderConfig.showSubtechniques == "expanded" && techniqueVM.showSubtechniques)
 
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
 
-            
+
             if (filteredSubtechniques.length > 0 && showSubtechniques) {
                 for (let subtechnique of filteredSubtechniques) {
                     this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));
@@ -882,7 +882,7 @@ class RenderableTechnique {
             if (!techniqueVM.enabled) return "white";
             if (techniqueVM.color) return techniqueVM.color;
             if (techniqueVM.score) return techniqueVM.scoreColor;
-        } 
+        }
         return "white"; //default
     }
 
