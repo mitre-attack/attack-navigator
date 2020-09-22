@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
+import { platformBrowser } from '@angular/platform-browser';
 
 @Injectable({
     providedIn: 'root',
@@ -50,7 +51,8 @@ export class DataService {
                     break;
                 case "malware":
                 case "tool":
-                    domain.software.push(new Software(sdo, this));
+                    let soft = new Software(sdo, this)
+                    domain.software.push(soft);
                     break;
                 case "course-of-action":
                     domain.mitigations.push(new Mitigation(sdo, this));
@@ -121,10 +123,27 @@ export class DataService {
             }
             domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
+        
         //create matrices, which also creates tactics and filters techniques
         for (let matrixSDO of matrixSDOs) {
             domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
         }
+        
+        // parse platforms
+        let platforms = new Set<String>();
+        for (let technique of domain.techniques) {
+            for (let platform of technique.platforms) {
+                platforms.add(platform)
+            }
+        }
+        for (let subtechnique of domain.subtechniques) {
+            for (let platform of subtechnique.platforms) {
+                platforms.add(platform)
+            }
+        }
+        domain.platforms = Array.from(platforms); // convert to array
+
+        // data loading complete; update watchers
         domain.dataLoaded = true;
         console.log("data.service parsing complete")
 
@@ -368,6 +387,18 @@ export class Technique extends BaseStix {
  * Object representing a Software (tool, malware) in the ATT&CK catalogue
  */
 export class Software extends BaseStix {
+    public readonly platforms: string[] = []; //platforms for this software
+
+    /**
+     * Creates an instance of Software.
+     * @param {*} stixSDO for the software
+     * @param {DataService} DataService the software occurs within
+    */
+    constructor(stixSDO: any, dataService: DataService) {
+        super(stixSDO, dataService);
+        this.platforms = stixSDO.x_mitre_platforms;
+    }
+
     /**
      * get techniques used by this software
      * @returns {string[]} technique IDs used by this software
@@ -443,6 +474,7 @@ export class Domain {
     public matrices: Matrix[] = [];
     public tactics: Tactic[] = [];
     public techniques: Technique[] = [];
+    public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
     public groups: Group[] = [];

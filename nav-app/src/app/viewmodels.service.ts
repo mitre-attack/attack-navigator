@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix } from "./data.service";
+import { DataService, Technique, Tactic, Matrix, Domain } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -398,15 +398,20 @@ export class ViewModel {
     constructor(name: string, domainID: string, uid: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
-        this.filters = new Filter(this.domainID);
+        this.filters = new Filter();
         this.name = name;
         this.version = globals.layer_version;
         this.uid = uid;
         if (!this.dataService.domains.get(domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
-            this.dataService.onDataLoad(() => this.initTechniqueVMs()); //arrow function preserves `this` in callback
+            let self = this;
+            this.dataService.onDataLoad(function() {
+                self.initTechniqueVMs()
+                self.filters.initPlatformOptions(self.dataService.domains.get(domainID));
+            }); 
         } else {
             this.initTechniqueVMs();
+            this.filters.initPlatformOptions(this.dataService.domains.get(domainID));
         }
     }
 
@@ -1376,22 +1381,35 @@ export class TechniqueVM {
 
 // the data for a specific filter
 export class Filter {
+    private readonly domain: string;
     platforms: {
-        options: string[]
+        options: string[],
         selection: string[]
     }
-    constructor(domain) {
-        //TODO: temporary change until adaptable platforms are added to config
-        if (domain.includes("enterprise")) {
-            this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
-        } else if (domain.includes("mobile")) {
-            this.platforms = {selection: ["Android", "iOS"], options: ["Android", "iOS"]}
-        } else {
-            console.error("unknown domain", domain);
+    constructor() {
+        this.platforms = {
+            selection: [],
+            options: []
         }
     }
 
-    toggleInFilter(filterName, value): void {
+    /**
+     * Initialize the platform options according to the data in the domain
+     * @param {Domain} domain the domain to parse for platform options
+     */
+    public initPlatformOptions(domain: Domain): void {
+        this.platforms = {
+            selection: JSON.parse(JSON.stringify(domain.platforms)),
+            options: JSON.parse(JSON.stringify(domain.platforms))
+        }
+    }
+
+    /**
+     * toggle the given value in the given filter
+     * @param {*} filterName the name of the filter
+     * @param {*} value the value to toggle
+     */
+    toggleInFilter(filterName: string, value: string): void {
         if (!this[filterName].options.includes(value)) { console.log("not a valid option to toggle", value, this[filterName]); return }
         if (this[filterName].selection.includes(value)) {
             let index = this[filterName].selection.indexOf(value)
@@ -1401,13 +1419,19 @@ export class Filter {
         }
     }
 
+    /**
+     * determine if the given value is active in the filter
+     * @param {*} filterName the name of the filter
+     * @param {*} value the value to determine
+     * @returns {boolean} true if value is currently enabled in the filter
+     */
     inFilter(filterName, value): boolean {
         return this[filterName].selection.includes(value)
     }
 
     /**
      * Return the string representation of this filter
-     * @return [description]
+     * @return stringified filter
      */
     serialize(): string {
         return JSON.stringify({"platforms": this.platforms.selection})
