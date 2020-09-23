@@ -97,9 +97,10 @@ export class ExporterComponent implements AfterViewInit {
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showGradient && this.hasScores  && this.config.showHeader}
-    showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
-    showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
+    showGradient(): boolean {return this.config.showGradient && this.hasScores && this.config.showHeader}
+    showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
+    showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
+    showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
@@ -348,7 +349,7 @@ export class ExporterComponent implements AfterViewInit {
                 )
             }
         });
-        if (self.hasLegendItems()) legend.contents.push({
+        if (self.showLegend()) legend.contents.push({
             "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
                 let colorScale = d3.scaleOrdinal()
                     .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
@@ -463,7 +464,7 @@ export class ExporterComponent implements AfterViewInit {
                 }]
             });
 
-            if (self.showLegend() && self.showLegendInHeader()) headerSections.push(legend);
+            if (self.showLegendContainer() && self.showLegendInHeader()) headerSections.push(legend);
 
             let headerGroup = svg.append("g");
 
@@ -646,7 +647,7 @@ export class ExporterComponent implements AfterViewInit {
         //                                                                                                                         888ooo888                                    
 
 
-        if (self.showLegend() && !self.showLegendInHeader()) {
+        if (self.showLegendContainer() && !self.showLegendInHeader()) {
             let legendGroup = tablebody.append("g")
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
