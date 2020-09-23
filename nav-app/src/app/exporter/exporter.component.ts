@@ -45,6 +45,7 @@ export class ExporterComponent implements AfterViewInit {
             "legendHeight": 1,
 
             "showLegend": true,
+            "showGradient": true,
             "showFilters": true,
             "showAbout": true,
         }
@@ -96,9 +97,10 @@ export class ExporterComponent implements AfterViewInit {
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showLegend && this.hasScores  && this.config.showHeader}
-    showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
-    showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
+    showGradient(): boolean {return this.config.showGradient && this.hasScores && this.config.showHeader}
+    showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
+    showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
+    showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
@@ -319,7 +321,7 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         let legend = {"title": "legend", "contents": []};
-        if (self.hasScores) legend.contents.push({
+        if (self.hasScores && self.showGradient()) legend.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
@@ -347,7 +349,7 @@ export class ExporterComponent implements AfterViewInit {
                 )
             }
         });
-        if (self.hasLegendItems()) legend.contents.push({
+        if (self.showLegend()) legend.contents.push({
             "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
                 let colorScale = d3.scaleOrdinal()
                     .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
@@ -462,7 +464,7 @@ export class ExporterComponent implements AfterViewInit {
                 }]
             });
 
-            if (self.showLegend() && self.showLegendInHeader()) headerSections.push(legend);
+            if (self.showLegendContainer() && self.showLegendInHeader()) headerSections.push(legend);
 
             let headerGroup = svg.append("g");
 
@@ -645,7 +647,7 @@ export class ExporterComponent implements AfterViewInit {
         //                                                                                                                         888ooo888                                    
 
 
-        if (self.showLegend() && !self.showLegendInHeader()) {
+        if (self.showLegendContainer() && !self.showLegendInHeader()) {
             let legendGroup = tablebody.append("g")
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
@@ -839,7 +841,7 @@ class RenderableTactic {
     public readonly height: number;
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
-        let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
+        let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
         let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);

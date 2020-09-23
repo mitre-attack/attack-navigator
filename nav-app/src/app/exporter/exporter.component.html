@@ -91,11 +91,11 @@
             </div>
             <div class="control-row-item">
                 <div class="control-row-button dropdown noselect"
-                     (click)="showLegend()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : continue;"
+                     (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : continue;"
                      matTooltipPosition="below"
                      matTooltip="legend"
-                     [style.color]="showLegend() ? '#000000' : '#aaaaaa'">
-                    <img [src]="showLegend()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
+                     [style.color]="showLegendContainer() ? '#000000' : '#aaaaaa'">
+                    <img [src]="showLegendContainer()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
                 </div>
                 <div class="dropdown-container legend left" *ngIf="currentDropdown === 'legend'">
                     <ul>
@@ -182,8 +182,12 @@
                             <label [for]="uid+'checkboxfilters'" class="checkbox-custom-label noselect" [class.disabled]="!config.showHeader">show filters</label>
                         </li>
                         <li>
-                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems() && !hasScores" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
-                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems() && !hasScores" >show legend</label>
+                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems()" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()">show legend</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxGradient'" type="checkbox" [disabled]="!hasScores" class="checkbox-custom" [(ngModel)]="config.showGradient" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxGradient'" class="checkbox-custom-label noselect" [class.disabled]="!hasScores">show gradient score</label>
                         </li>
                         <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
                             <mat-form-field>
