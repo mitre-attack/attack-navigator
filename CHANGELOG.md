@@ -4,6 +4,7 @@
 - Allow legend and gradient to be hidden separately within the legend block in the SVG exporter. See pull request [#223](https://github.com/mitre-attack/attack-navigator/pull/223).
 ## Fixes
 - SVG exporter now honors layer sorting configuration. See pull request [#223](https://github.com/mitre-attack/attack-navigator/pull/223).
+- Removed text selection in tactic headers. See issue [#222](https://github.com/mitre-attack/attack-navigator/pull/223).
 
 # v3.1 - 8 July 2020
 ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 
