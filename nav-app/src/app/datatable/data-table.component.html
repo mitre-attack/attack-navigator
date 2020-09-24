@@ -479,8 +479,8 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
 
 <div class="matrices" oncontextmenu="return false">
         <div class="matrices-columns">
-            <div class="matrix-column" *ngFor="let matrix of dataService.domains.get(viewModel.domainID).matrices">
-                <div *ngIf="dataService.domains.get(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
+                <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
                 <div *ngIf="viewModel.layout.layout == 'side'">
                     <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
                 </div>

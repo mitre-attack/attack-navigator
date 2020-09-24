@@ -62,7 +62,7 @@ export class TabsComponent implements AfterContentInit {
         }
 
         this.ds.getConfig().subscribe((config: Object) => {
-            let defaultDomain = this.dataService.domains.get('enterprise-attack');
+            let defaultDomain = this.dataService.getDomain('enterprise-attack');
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
                 var first = true;
@@ -266,6 +266,10 @@ export class TabsComponent implements AfterContentInit {
     getActiveTab() {
         let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
         return activeTabs[0];
+    }
+
+    filterDomains(version: string) {
+        return this.dataService.domains.filter((d) => d.version === version)
     }
 
 
@@ -482,9 +486,10 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 let obj = (typeof(string) == "string")? JSON.parse(string) : string
+                console.log(obj.domain)
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
                 viewModel.deSerialize(string)
-                if(!this.dataService.domains.get(obj.domain).dataLoaded) {
+                if(!this.dataService.getDomain(obj.domain).dataLoaded) {
                     this.dataService.dynamicLoadData(obj.domain, true);
                 }
                 this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)

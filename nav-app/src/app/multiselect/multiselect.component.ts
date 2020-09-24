@@ -19,7 +19,7 @@ export class MultiselectComponent implements OnInit {
     }
 
     ngOnInit() {
-        let domain = this.dataService.domains.get(this.viewModel.domainID)
+        let domain = this.dataService.getDomain(this.viewModel.domainID)
 
         this.stixTypes = [{
             "label": "threat groups",
@@ -36,8 +36,8 @@ export class MultiselectComponent implements OnInit {
 
     private getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
-        let techniques = this.dataService.domains.get(this.viewModel.domainID).techniques;
-        let allTechniques = techniques.concat(this.dataService.domains.get(this.viewModel.domainID).subtechniques);
+        let techniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
+        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainID).subtechniques);
         let domainID = this.viewModel.domainID;
 
         if (stixObject instanceof Group) {

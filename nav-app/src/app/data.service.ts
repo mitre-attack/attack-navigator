@@ -18,7 +18,9 @@ export class DataService {
         })
     }
 
-    public domains = new Map<string, Domain>();
+    // public domains = new Map<string, Domain>();
+    public domains: Domain[] = [];
+    public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
     public dataLoadedCallbacks: any[] = [];
@@ -180,17 +182,18 @@ export class DataService {
         // default URLs
         let enterpriseDomain = new Domain("enterprise-attack", "enterprise", "attack");
         enterpriseDomain.urls.push(this.enterpriseAttackURL);
-        this.domains.set(enterpriseDomain.id, enterpriseDomain);
+        this.domains.push(enterpriseDomain);
         let mobileDomain = new Domain("mobile-attack", "mobile", "attack");
         mobileDomain.urls.push(this.mobileAttackURL);
-        this.domains.set(mobileDomain.id, mobileDomain);
+        this.domains.push(mobileDomain);
 
         // configured domains/versions
         versions.forEach( (version: any) => {
-            let v: string = version["name"].replace(/\s/g, "-").toLowerCase();
+            let v: string = version["name"];
+            this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let id = domain["name"].replace(/\s/g, "-").concat('-', v).toLowerCase();
-                let name = domain["name"].toLowerCase();
+                let id = domain["name"].replace(/\s/g, "-").concat('-', v.replace(/\s/g, "-").toLowerCase()).toLowerCase();
+                let name = domain["name"];
                 let domainObject = new Domain(id, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
@@ -200,7 +203,7 @@ export class DataService {
                 } else {
                     domainObject.urls = domain["data"]
                 }
-                this.domains.set(id, domainObject);
+                this.domains.push(domainObject);
             });
         });
     }
@@ -245,9 +248,11 @@ export class DataService {
         return this.domainData$;
     }
 
-    
+    /**
+     * lazy load domain data
+     */
     dynamicLoadData(domainID: string, refresh: boolean = false): void {
-        let domain = this.domains.get(domainID);
+        let domain = this.getDomain(domainID);
         if (domain && !domain.dataLoaded) { // domain data is not loaded
             this.getData(domain, refresh).subscribe((data: Object[]) => {
                 this.parseBundle(domain, data);
@@ -255,6 +260,13 @@ export class DataService {
         } else {
             //TODO: domain not found in config
         }
+    }
+
+    /**
+     * Get domain object by domain ID
+     */
+    getDomain(domainID: string): Domain {
+        return this.domains.find((d) => d.id === domainID);
     }
 }
 
@@ -384,7 +396,7 @@ export class Software extends BaseStix {
      * @returns {string[]} technique IDs used by this software
      */
     public used(domainID): string[] {
-        let rels = this.dataService.domains.get(domainID).relationships.software_uses;
+        let rels = this.dataService.getDomain(domainID).relationships.software_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
@@ -404,8 +416,7 @@ export class Group extends BaseStix {
      * @returns {string[]} technique IDs used by this group
      */
     public used(domainID): string[] {
-        // let rels = this.dataService.domains.get(this.domainID).relationships.group_uses;
-        let rels = this.dataService.domains.get(domainID).relationships.group_uses;
+        let rels = this.dataService.getDomain(domainID).relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
@@ -426,7 +437,7 @@ export class Mitigation extends BaseStix {
      * @returns {string[]} list of technique IDs
      */
     public mitigated(domainID): string[] {
-        let rels = this.dataService.domains.get(domainID).relationships.mitigates;
+        let rels = this.dataService.getDomain(domainID).relationships.mitigates;
         if (rels.has(this.id)) {
             return rels.get(this.id);
         } 

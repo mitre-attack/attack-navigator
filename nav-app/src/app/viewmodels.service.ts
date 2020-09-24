@@ -402,22 +402,22 @@ export class ViewModel {
         this.name = name;
         this.version = globals.layer_version;
         this.uid = uid;
-        if (!this.dataService.domains.get(domainID).dataLoaded) {
+        if (!this.dataService.getDomain(domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
             let self = this;
             this.dataService.onDataLoad(function() {
                 self.initTechniqueVMs()
-                self.filters.initPlatformOptions(self.dataService.domains.get(domainID));
+                self.filters.initPlatformOptions(self.dataService.getDomain(domainID));
             }); 
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.domains.get(domainID));
+            this.filters.initPlatformOptions(this.dataService.getDomain(domainID));
         }
     }
 
     initTechniqueVMs() {
         console.log(this.name, "initializing technique VMs");
-        for (let technique of this.dataService.domains.get(this.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
@@ -1096,7 +1096,7 @@ export class ViewModel {
                     } else {
                         // occurs in multiple tactics
                         // match to Technique by attackID
-                        for (let technique of this.dataService.domains.get(this.domainID).techniques) {
+                        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
                                 for (let tactic of technique.tactics) {

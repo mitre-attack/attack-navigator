@@ -73,7 +73,7 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        for (let matrix of this.dataService.domains.get(this.viewModel.domainID).matrices) {
+        for (let matrix of this.dataService.getDomain(this.viewModel.domainID).matrices) {
             var worksheet = workbook.addWorksheet(matrix.name);  
                       
             // create tactic columns
@@ -276,7 +276,7 @@ export class DataTableComponent implements AfterViewInit {
      */
     expandSubtechniques(): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        for (let technique of this.dataService.domains.get(this.viewModel.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
