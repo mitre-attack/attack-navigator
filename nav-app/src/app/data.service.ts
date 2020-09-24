@@ -161,8 +161,9 @@ export class DataService {
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    private taxiiServerURL: string = "https://cti-taxii.mitre.org/";
 
-    private useTAXIIServer: boolean = false;
+    // private useTAXIIServer: boolean = false;
 
 
     /**
@@ -177,10 +178,10 @@ export class DataService {
      */
     setUpURLs(versions: []){
         // default URLs
-        let enterpriseDomain = new Domain("enterprise-latest", "enterprise", "latest");
+        let enterpriseDomain = new Domain("enterprise-attack", "enterprise", "attack");
         enterpriseDomain.urls.push(this.enterpriseAttackURL);
         this.domains.set(enterpriseDomain.id, enterpriseDomain);
-        let mobileDomain = new Domain("mobile-latest", "mobile", "latest");
+        let mobileDomain = new Domain("mobile-attack", "mobile", "attack");
         mobileDomain.urls.push(this.mobileAttackURL);
         this.domains.set(mobileDomain.id, mobileDomain);
 
@@ -193,7 +194,7 @@ export class DataService {
                 let domainObject = new Domain(id, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
-                    this.useTAXIIServer = true;
+                    // this.useTAXIIServer = true;
                     domainObject.taxii_url = domain["taxii_url"];
                     domainObject.taxii_collection = domain["taxii_collection"];
                 } else {
@@ -215,15 +216,28 @@ export class DataService {
         return this.configData$;
     }
 
-
-    getData(loadURLs: string[], refresh: boolean = false) : Observable<Object>{
-        if (this.useTAXIIServer) {
-            //TODO: add data fetch from taxii server
+    /**
+     * Fetch the domain data from the endpoint
+     */
+    getData(domain: Domain, refresh: boolean = false) : Observable<Object>{
+        if (domain.taxii_collection && domain.taxii_url) {
             console.log("fetching data from TAXII server");
-        } else if (refresh || !this.domainData$ || !this.domains) {
-            console.log("retrieving data", loadURLs)
+            let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
+            let collectionInfo: any = {
+                'id': domain.taxii_collection,
+                'title': domain.name,
+                'description': '',
+                'can_read': true,
+                'can_write': false,
+                'media_types': ['application/vnd.oasis.stix+json']
+            }
+            console.log(collectionInfo)
+            const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
+            this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
+        } else if (refresh || !this.domainData$) {
+            console.log("retrieving data", domain.urls)
             let bundleData = [];
-            loadURLs.forEach((url) => {
+            domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url));
             })
 
@@ -232,50 +246,17 @@ export class DataService {
         return this.domainData$;
     }
 
+    
     dynamicLoadData(domainID: string, refresh: boolean = false): void {
         let domain = this.domains.get(domainID);
         if (domain && !domain.dataLoaded) { // domain data is not loaded
-            console.log("loading domain data for '" + domain.id + "'")
-            this.getData(domain.urls, refresh).subscribe((data: Object[]) => {
+            this.getData(domain, refresh).subscribe((data: Object[]) => {
                 this.parseBundle(domain, data);
             });
+        } else {
+            //TODO: domain not found in config
         }
     }
-
-    //TODO: remove individual Mobile/Enterprise data retrieval
-    /**
-     * fetch the enterprise data from the endpoint
-     */
-    // getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
-    //     if (useTAXIIServer) {
-    //         console.log("fetching data from TAXII server") 
-    //         let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-    //         let enterpriseCollectionInfo: any = {
-    //             'id': this.taxiiCollections['enterprise_attack'],
-    //             'title': 'Enterprise ATT&CK',
-    //             'description': '',
-    //             'can_read': true,
-    //             'can_write': false,
-    //             'media_types': ['application/vnd.oasis.stix+json']
-    //         }
-    //         const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
-
-    //         let preattackCollectionInfo: any = {
-    //             'id': this.taxiiCollections['pre_attack'],
-    //             'title': 'Pre-ATT&CK',
-    //             'description': '',
-    //             'can_read': true,
-    //             'can_write': false,
-    //             'media_types': ['application/vnd.oasis.stix+json']
-    //         }
-
-    //         const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
-    //         this.enterpriseData$ = Observable.forkJoin(
-    //             fromPromise(enterpriseCollection.getObjects('', undefined)),
-    //             fromPromise(preattackCollection.getObjects('', undefined))
-    //         )
-    //     }
 }
 
 /** 
