@@ -257,8 +257,8 @@ export class DataService {
             this.getData(domain, refresh).subscribe((data: Object[]) => {
                 this.parseBundle(domain, data);
             });
-        } else {
-            //TODO: domain not found in config
+        } else if (!domain) { // domain not in config
+            throw new Error("'" + domainID + "' is not a valid domain.");
         }
     }
 
