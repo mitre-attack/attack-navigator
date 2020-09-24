@@ -62,7 +62,7 @@ export class TabsComponent implements AfterContentInit {
         }
 
         this.ds.getConfig().subscribe((config: Object) => {
-            let defaultDomain = this.dataService.domains.get('enterprise-latest');
+            let defaultDomain = this.dataService.domains.get('enterprise-attack');
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
                 var first = true;
@@ -81,7 +81,7 @@ export class TabsComponent implements AfterContentInit {
                         this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
                     }
                 }
-                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-latest'); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-attack'); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
@@ -101,7 +101,7 @@ export class TabsComponent implements AfterContentInit {
                 // this.loadURL = config["default_layer"]["location"]
                 // console.log(this.loadURL)
                 // this.loadLayerFromLocalFile();
-                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-latest'); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-attack'); // failed load from url, so create new blank layer
             } else { // default to blank tab interface
                 this.newBlankTab();
             }
@@ -385,7 +385,7 @@ export class TabsComponent implements AfterContentInit {
     layerByOperation(): void {
         // TODO: restrict to layers of the same domain
         // let domainID = self.dynamicTabls[index].dataContext.domainID
-        let domainID = 'enterprise-latest'
+        let domainID = 'enterprise-attack'
 
         // build score expression map, mapping inline variables to their actual VMs
         let scoreVariables = new Map<string, ViewModel>();
@@ -478,19 +478,20 @@ export class TabsComponent implements AfterContentInit {
         // var input = (<HTMLInputElement>document.getElementById("uploader"));
         var reader = new FileReader();
 
-        //TODO: update constructor with domainID from URL
-        let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-latest');
-
         reader.onload = (e) =>{
             var string = String(reader.result);
             try{
+                let obj = (typeof(string) == "string")? JSON.parse(string) : string
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
                 viewModel.deSerialize(string)
+                if(!this.dataService.domains.get(obj.domain).dataLoaded) {
+                    this.dataService.dynamicLoadData(obj.domain, true);
+                }
                 this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
                 alert("ERROR: Either the file is not JSON formatted, or the file structure is invalid.");
-                this.viewModelsService.destroyViewModel(viewModel)
             }
         }
         reader.readAsText(file);
@@ -505,7 +506,7 @@ export class TabsComponent implements AfterContentInit {
         this.http.get(loadURL).subscribe((res) => {
 
             //TODO: update constructor with domainID from URL
-            let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-latest');
+            let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-attack');
             try {
                 viewModel.deSerialize(res)
                 console.log("loaded layer from", loadURL);

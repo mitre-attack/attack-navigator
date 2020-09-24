@@ -354,7 +354,7 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    // domain: string; //layer domain
+    domain: string; //layer domain
     domainID: string; // layer domain & version
     description: string = ""; //layer description
     version: string = ""; // layer version
