@@ -337,6 +337,9 @@ export class TabsComponent implements AfterContentInit {
      * Open a new blank layer tab
      */
     newLayer(domainID: string) {
+        // load domain data, if not yet loaded
+        this.dataService.dynamicLoadData(domainID, true);
+
         // find non conflicting name
         let name = this.getUniqueLayerName("layer")
 
@@ -486,7 +489,8 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 let obj = (typeof(string) == "string")? JSON.parse(string) : string
-                console.log(obj.domain)
+                if (!this.dataService.getDomain(obj.domain)) {throw new Error("'" + obj.domain + "' is not a valid domain.");}
+
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
                 viewModel.deSerialize(string)
                 if(!this.dataService.getDomain(obj.domain).dataLoaded) {
@@ -510,16 +514,20 @@ export class TabsComponent implements AfterContentInit {
         // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
         this.http.get(loadURL).subscribe((res) => {
 
-            //TODO: update constructor with domainID from URL
-            let viewModel = this.viewModelsService.newViewModel("loading layer...", 'enterprise-attack');
             try {
+                let obj = (typeof(res) == "string")? JSON.parse(res) : res
+                if (!this.dataService.getDomain(obj.domain)) {throw new Error("'" + obj.domain + "' is not a valid domain.");}
+
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
                 viewModel.deSerialize(res)
+                if (!this.dataService.getDomain(obj.domain).dataLoaded) {
+                    this.dataService.dynamicLoadData(obj.domain, true);
+                }
                 console.log("loaded layer from", loadURL);
                 this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
             } catch(err) {
                 console.error(err)
                 alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
-                this.viewModelsService.destroyViewModel(viewModel)
             }
         }, (err) => {
             console.error(err)
@@ -533,11 +541,6 @@ export class TabsComponent implements AfterContentInit {
 
         })
 
-    }
-
-    loadLayerFromDomain(domainID, refresh): void {
-        this.dataService.dynamicLoadData(domainID, refresh);
-        this.newLayer(domainID);
     }
 
 

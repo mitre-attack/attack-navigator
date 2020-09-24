@@ -60,8 +60,8 @@
 
                 <table class="inputTable">
                     <tr>
-                        <td><button mat-button (click)="loadLayerFromDomain('enterprise-attack', true)">Enterprise</button></td>
-                        <td><button mat-button (click)="loadLayerFromDomain('mobile-attack', true)">Mobile</button></td>
+                        <td><button mat-button (click)="newLayer('enterprise-attack')">Enterprise</button></td>
+                        <td><button mat-button (click)="newLayer('mobile-attack')">Mobile</button></td>
                     </tr>
                 </table>
                 <mat-expansion-panel>
@@ -75,7 +75,7 @@
                         <ng-template ngFor let-version [ngForOf]="ds.versions" let-versionIndex="index">
                             <tr><b>{{version}}</b></tr>
                             <ng-template ngFor let-domain [ngForOf]="filterDomains(version)" let-domainIndex="index">
-                                <td><button mat-button (click)="loadLayerFromDomain(domain.id, true)">{{domain.name}}</button></td>
+                                <td><button mat-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
                             </ng-template>
                         </ng-template>
                     </table>
