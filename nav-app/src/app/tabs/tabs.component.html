@@ -56,33 +56,36 @@
                     <mat-panel-description>
                         Create a new empty layer
                     </mat-panel-description>
-
                 </mat-expansion-panel-header>
 
                 <table class="inputTable">
                     <tr>
                         <td><button mat-button (click)="loadLayerFromDomain('enterprise-attack', true)">Enterprise</button></td>
-
                         <td><button mat-button (click)="loadLayerFromDomain('mobile-attack', true)">Mobile</button></td>
                     </tr>
                 </table>
+                <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                More Options
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                    
+                    <!-- <table class="inputTable">
+                        <tr>
+                            <td><b style="font-size: 12pt">Domain from config: </b></td>
+                            <td>
+                                <mat-form-field>
+                                        <mat-select placeholder="domain" [(ngModel)]="domain">
+                                                <mat-option [value]="null">none</mat-option>
+                                                <mat-option *ngFor="let domain of dataService.domains" [value]=domain>{{domain.name}}</mat-option>
+                                            </mat-select>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </table> -->
                 
-                <!--TODO: add more options to tab-->
-                <!-- <table class="inputTable">
-                    <tr>
-                        <td><b style="font-size: 12pt">Domain from config: </b></td>
-                        <td>
-                            <mat-form-field>
-                                <mat-select placeholder="domain" [(ngModel)]="domain">
-                                    <!-- <mat-option [value]="null">none</mat-option> -->
-                                    <!-- <mat-option *ngFor="let domain of dataService.domains" [value]=domain>{{domain.name}}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </td>
-
-                    </tr>
-                </table> --> 
-
+                </mat-expansion-panel>
             </mat-expansion-panel>
 
             <!-- <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">

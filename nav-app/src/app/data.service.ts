@@ -231,7 +231,6 @@ export class DataService {
                 'can_write': false,
                 'media_types': ['application/vnd.oasis.stix+json']
             }
-            console.log(collectionInfo)
             const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
