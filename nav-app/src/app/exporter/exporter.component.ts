@@ -263,10 +263,15 @@ export class ExporterComponent implements AfterViewInit {
             let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
-            let bestBinary = ""; //arrangement of line breaks, see below
-            for (let j = 0; j < 2**(words.length - 1); j++) { //try no breaks first
-                let wordSet = []; //build this array
 
+            //optimization: avoid a complete search by only trying a few of the possible combinations
+            let combinations = 2**(words.length - 1); // how many combinations of spaces there are
+            let searchGranularity = 1000; //try this number of combinations of spaces
+            let increment = combinations < searchGranularity? 1 : Math.round(combinations/searchGranularity) // how many combinations to skip
+            // console.log("combinations:", combinations, 'increment:', increment)
+            for (let j = 0; j < combinations; j += increment) { //try no breaks first
+                let wordSet = []; //build this array
+                
                 //binary representation of newline locations, e.g 001011
                 //where 1 is newline and 0 is no newline
                 let binaryString = j.toString(2).padStart(words.length, "0");
@@ -284,7 +289,6 @@ export class ExporterComponent implements AfterViewInit {
                 if (size > bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
-                    bestBinary = binaryString;
                 }
                 if (size == maxFontSize) break; //if largest text found, no need to search more
             }
