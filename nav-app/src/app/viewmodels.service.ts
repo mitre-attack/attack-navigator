@@ -75,7 +75,6 @@ export class ViewModelsService {
      * @param  filters            viewmodel to inherit filters from
      * @return                    new viewmodel inheriting above properties
      */
-    // TODO: update to limit operations by domain
     layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
         let result = new ViewModel("layer by operation", domainID, "vm" + this.getNonce(), this.dataService);
 

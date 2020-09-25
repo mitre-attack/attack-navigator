@@ -162,6 +162,7 @@ export class TabsComponent implements AfterContentInit {
         instance.dataContext = data;
         instance.isCloseable = isCloseable;
         instance.showScoreVariables = false;
+        instance.domain = data? data.domainID : "";
         instance.isDataTable = dataTable
 
         // remember the dynamic component for rendering the
@@ -408,6 +409,11 @@ export class TabsComponent implements AfterContentInit {
 
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
+            // all layers must be of the same domain/version
+            let vms = Array.from(scoreVariables.values());
+            if(vms && !vms.every((vm) => vm.domainID === vms[0].domainID)) {
+                throw {message: "cannot apply operations to layers of different domains"};
+            }
             let vm = this.viewModelsService.layerLayerOperation(this.domain, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
@@ -446,6 +452,8 @@ export class TabsComponent implements AfterContentInit {
                     // console.log("chartoindex["+match+"]", self.charToIndex(match))
                     if (typeof(self.charToIndex(match)) == "undefined") {
                         noMatch = "Variable " + match + " does not match any layers"
+                    } else if (self.domain && self.dynamicTabs[self.charToIndex(match)].dataContext.domainID !== self.domain) {
+                        noMatch = "Layer " + match + " does not match the chosen domain"
                     }
                 });
                 // console.log(noMatch)
