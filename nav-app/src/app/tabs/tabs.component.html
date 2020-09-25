@@ -141,6 +141,19 @@
                     <tr>
                         <td>
                             <mat-form-field>
+                                <mat-select placeholder="domain" [(ngModel)]="domain" required>
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let domain of ds.domains" [value]=domain>{{domain.name}} {{domain.version}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            Choose the domain and version for the new layer.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-form-field>
                                 <input type="text"
                                        matInput
                                        placeholder="score expression"
