@@ -143,7 +143,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let domain of ds.domains" [value]=domain>{{domain.name}} {{domain.version}}</mat-option>
+                                    <mat-option *ngFor="let domain of ds.domains" [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -172,7 +172,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="gradient" [(ngModel)]="gradient">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -185,7 +185,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="coloring" [(ngModel)]="coloring">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -198,7 +198,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="comments" [(ngModel)]="comments">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -211,7 +211,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="states" [(ngModel)]="enabledness">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -224,7 +224,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="filters" [(ngModel)]="filters">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -237,7 +237,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="legend" [(ngModel)]="legendItems">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of viewModelsService.viewModels" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -247,7 +247,7 @@
                     </tr>
                 </table>
 
-                <button mat-button [disabled]="getScoreExpressionError()" (click)="layerByOperation(); showScoreVariables = false">Create</button>
+                <button mat-button [disabled]="getScoreExpressionError() || !domain" (click)="layerByOperation(); showScoreVariables = false">Create</button>
 
             </mat-expansion-panel>
 

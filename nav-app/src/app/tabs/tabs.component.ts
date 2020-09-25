@@ -379,6 +379,7 @@ export class TabsComponent implements AfterContentInit {
         }
     }
 
+    domain: string = "";
     gradient: ViewModel = null;
     coloring: ViewModel = null;
     comments: ViewModel = null;
@@ -390,10 +391,6 @@ export class TabsComponent implements AfterContentInit {
      * layer layer operation
      */
     layerByOperation(): void {
-        // TODO: restrict to layers of the same domain
-        // let domainID = self.dynamicTabls[index].dataContext.domainID
-        let domainID = 'enterprise-attack'
-
         // build score expression map, mapping inline variables to their actual VMs
         let scoreVariables = new Map<string, ViewModel>();
         let regex = /\b[a-z]\b/g //\b matches word boundary
@@ -411,7 +408,7 @@ export class TabsComponent implements AfterContentInit {
 
         let layerName = this.getUniqueLayerName("layer by operation")
         try {
-            let vm = this.viewModelsService.layerLayerOperation(domainID, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
+            let vm = this.viewModelsService.layerLayerOperation(this.domain, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             this.openTab(layerName, this.layerTab, vm, true, true, true, true)
         } catch (err) {
             console.error(err)
@@ -419,6 +416,13 @@ export class TabsComponent implements AfterContentInit {
         }
 
 
+    }
+
+    /**
+     * Retrieves a list of view models with the chosen domain
+     */
+    getLayers(): ViewModel[] {
+        return this.viewModelsService.viewModels.filter((vm) => vm.domainID == this.domain)
     }
 
     /**
