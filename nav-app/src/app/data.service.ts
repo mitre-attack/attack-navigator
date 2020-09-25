@@ -179,14 +179,6 @@ export class DataService {
      * @memberof DataService
      */
     setUpURLs(versions: []){
-        // default URLs
-        let enterpriseDomain = new Domain("enterprise-attack", "enterprise", "attack");
-        enterpriseDomain.urls.push(this.enterpriseAttackURL);
-        this.domains.push(enterpriseDomain);
-        let mobileDomain = new Domain("mobile-attack", "mobile", "attack");
-        mobileDomain.urls.push(this.mobileAttackURL);
-        this.domains.push(mobileDomain);
-
         // configured domains/versions
         versions.forEach( (version: any) => {
             let v: string = version["name"];
@@ -206,6 +198,16 @@ export class DataService {
                 this.domains.push(domainObject);
             });
         });
+
+        if(!this.domains.length) {
+            // default URLs if none are defined in config
+            let enterpriseDomain = new Domain("enterprise-attack", "Enterprise", "ATT&CK");
+            enterpriseDomain.urls.push(this.enterpriseAttackURL);
+            let mobileDomain = new Domain("mobile-attack", "Mobile", "ATT&CK");
+            mobileDomain.urls.push(this.mobileAttackURL);
+            this.domains.push(enterpriseDomain, mobileDomain);
+            this.versions.push("ATT&CK")
+        }
     }
 
     /**

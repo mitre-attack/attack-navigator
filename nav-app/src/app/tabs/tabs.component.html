@@ -58,11 +58,10 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <table class="inputTable">
-                    <tr>
-                        <td><button mat-button (click)="newLayer('enterprise-attack')">Enterprise</button></td>
-                        <td><button mat-button (click)="newLayer('mobile-attack')">Mobile</button></td>
-                    </tr>
+                <table class="inputTable">                        
+                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
+                        <td><button mat-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
+                    </ng-template>
                 </table>
                 <mat-expansion-panel>
                         <mat-expansion-panel-header>
