@@ -1,7 +1,7 @@
 {
     "versions": [
         {
-            "name": "ATTACK V7", 
+            "name": "ATT&CK V7", 
             "domains": [
                 {   "name": "Enterprise", 
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]

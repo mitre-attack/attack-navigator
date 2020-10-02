@@ -150,8 +150,9 @@ export class DataService {
         console.log("data.service parsing complete")
 
         for (let callback of this.dataLoadedCallbacks) {
-            callback();
+            callback();            
         }
+        this.dataLoadedCallbacks = [];
     }
 
     // Observable for data in config.json
@@ -198,16 +199,6 @@ export class DataService {
                 this.domains.push(domainObject);
             });
         });
-
-        if(!this.domains.length) {
-            // default URLs if none are defined in config
-            let enterpriseDomain = new Domain("enterprise-attack", "Enterprise", "ATT&CK");
-            enterpriseDomain.urls.push(this.enterpriseAttackURL);
-            let mobileDomain = new Domain("mobile-attack", "Mobile", "ATT&CK");
-            mobileDomain.urls.push(this.mobileAttackURL);
-            this.domains.push(enterpriseDomain, mobileDomain);
-            this.versions.push("ATT&CK")
-        }
     }
 
     /**
@@ -253,15 +244,19 @@ export class DataService {
     /**
      * lazy load domain data
      */
-    dynamicLoadData(domainID: string, refresh: boolean = false): void {
-        let domain = this.getDomain(domainID);
-        if (domain && !domain.dataLoaded) { // domain data is not loaded
-            this.getData(domain, refresh).subscribe((data: Object[]) => {
-                this.parseBundle(domain, data);
-            });
-        } else if (!domain) { // domain not in config
-            throw new Error("'" + domainID + "' is not a valid domain.");
-        }
+    loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
+        let dataPromise: Promise<any> = new Promise((resolve, reject) => {
+            let domain = this.getDomain(domainID);
+            if (domain) {
+                this.getData(domain, refresh).subscribe((data: Object[]) => {
+                    this.parseBundle(domain, data);
+                    resolve()
+                });
+            } else { // domain not defined in config
+                reject("'" + domainID + "' is not a valid domain.")
+            }     
+        });
+        return dataPromise;
     }
 
     /**

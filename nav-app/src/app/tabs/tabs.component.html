@@ -142,7 +142,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let domain of ds.domains" [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
+                                    <mat-option *ngFor="let domain of getActiveDomains()" [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>

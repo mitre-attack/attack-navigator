@@ -55,53 +55,39 @@ export class TabsComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         // invokes callback function with an explicit copy of the url
-        function callbackClosure(url, callback) {
+        function callbackClosure(url, replace, callback) {
             return function() {
-                return callback(url);
+                return callback(url, replace);
             }
         }
 
         this.ds.getConfig().subscribe((config: Object) => {
-            let defaultDomain = this.dataService.getDomain('enterprise-attack');
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
                 var first = true;
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                     var url = urls_1[_i];
                     let self = this;
-                    let loadInitialVMCallback = function(loadUrl) {
-                        console.log(loadUrl);
-                        self.loadLayerFromURL(loadUrl, first);
-                        first = false;
+                    let loadInitialVMCallback = function(loadUrl, replace) {
+                        self.loadLayerFromURL(loadUrl, replace);
                     }
                     //vms must load after data service loads data
-                    if (defaultDomain.dataLoaded) {
-                        loadInitialVMCallback(url);
-                    } else {
-                        this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
-                    }
+                    this.dataService.onDataLoad(callbackClosure(url, first, loadInitialVMCallback));
+                    first = false;
                 }
-                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-attack'); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
                     let self = this;
-                    let loadInitialVMCallback = function(loadUrl) {
-                        console.log(loadUrl);
-                        self.loadLayerFromURL(loadUrl, first);
-                        first = false;
+                    let loadInitialVMCallback = function(loadUrl, replace) {
+                        self.loadLayerFromURL(loadUrl, replace);
                     }
-                    //vms must load after data service loads data
-                    if (defaultDomain.dataLoaded) {
-                        loadInitialVMCallback(url);
-                    } else {
-                        this.dataService.onDataLoad(callbackClosure(url, loadInitialVMCallback));
-                    }
+                    // vms must load after data service loads data
+                    this.dataService.onDataLoad(callbackClosure(url, first, loadInitialVMCallback));
+                    first = false;
                 }
-                // this.loadURL = config["default_layer"]["location"]
-                // console.log(this.loadURL)
-                // this.loadLayerFromLocalFile();
-                if (this.dynamicTabs.length == 0) this.newLayer('enterprise-attack'); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
             } else { // default to blank tab interface
                 this.newBlankTab();
             }
@@ -269,6 +255,11 @@ export class TabsComponent implements AfterContentInit {
         return activeTabs[0];
     }
 
+    getActiveDomains() {
+        let tabDomains = this.dynamicTabs.map(t => t.domain)
+        return this.dataService.domains.filter((d) => tabDomains.includes(d.id))
+    }
+
     filterDomains(version: string) {
         return this.dataService.domains.filter((d) => d.version === version)
     }
@@ -339,7 +330,9 @@ export class TabsComponent implements AfterContentInit {
      */
     newLayer(domainID: string) {
         // load domain data, if not yet loaded
-        this.dataService.dynamicLoadData(domainID, true);
+        if (!this.dataService.getDomain(domainID).dataLoaded) {
+            this.dataService.loadDomainData(domainID, true);
+        }
 
         // find non conflicting name
         let name = this.getUniqueLayerName("layer")
@@ -506,9 +499,12 @@ export class TabsComponent implements AfterContentInit {
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
                 viewModel.deSerialize(string)
                 if(!this.dataService.getDomain(obj.domain).dataLoaded) {
-                    this.dataService.dynamicLoadData(obj.domain, true);
-                }
-                this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
+                    this.dataService.loadDomainData(obj.domain, true).then( () => {
+                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
+                    });
+                } else {
+                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
+                }   
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
@@ -525,18 +521,22 @@ export class TabsComponent implements AfterContentInit {
     loadLayerFromURL(loadURL, replace): void {
         // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
         this.http.get(loadURL).subscribe((res) => {
-
             try {
                 let obj = (typeof(res) == "string")? JSON.parse(res) : res
                 if (!this.dataService.getDomain(obj.domain)) {throw new Error("'" + obj.domain + "' is not a valid domain.");}
-
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
-                viewModel.deSerialize(res)
                 if (!this.dataService.getDomain(obj.domain).dataLoaded) {
-                    this.dataService.dynamicLoadData(obj.domain, true);
+                    this.dataService.loadDomainData(obj.domain, true).then( () => { // wait for data to load before creating new ViewModel
+                        let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
+                        viewModel.deSerialize(res)
+                        console.log("loaded layer from", loadURL);
+                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
+                    });
+                } else { // data is already loaded, create new ViewModel
+                    let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
+                    viewModel.deSerialize(res)
+                    console.log("loaded layer from", loadURL);
+                    this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                 }
-                console.log("loaded layer from", loadURL);
-                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
             } catch(err) {
                 console.error(err)
                 alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
