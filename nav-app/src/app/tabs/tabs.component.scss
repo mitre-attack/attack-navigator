@@ -152,6 +152,9 @@
 .layerOpTable {
     td {
         padding: 5px;
+        &.disabled {
+            color: gray;
+        }
     }
 }
 

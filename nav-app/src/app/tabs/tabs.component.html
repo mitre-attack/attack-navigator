@@ -142,7 +142,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let domain of getActiveDomains()" [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
+                                    <mat-option *ngFor="let domain of this.dataService.domains" [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -163,7 +163,7 @@
                                 <mat-hint style="color: red" align="start">{{getScoreExpressionError()}}</mat-hint>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Use constants (numbers) and layer variables (yellow, above) to write an expression for the initial value of scores in the new layer. A full list of supported operations can be found <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to initialize scores to 0.
                         </td>
                     </tr>
@@ -176,7 +176,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.
                         </td>
                     </tr>
@@ -189,7 +189,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import manually assigned colors from. Leave blank to initialize with no colors.
                         </td>
                     </tr>
@@ -202,7 +202,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import comments from. Leave blank to initialize with no comments.
                         </td>
                     </tr>
@@ -215,7 +215,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.
                         </td>
                     </tr>
@@ -228,7 +228,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import filters from. Leave blank to initialize with no filters.
                         </td>
                     </tr>
@@ -241,7 +241,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td>
+                        <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import the legend from. Leave blank to initialize with an empty legend.
                         </td>
                     </tr>

@@ -255,10 +255,10 @@ export class TabsComponent implements AfterContentInit {
         return activeTabs[0];
     }
 
-    getActiveDomains() {
-        let tabDomains = this.dynamicTabs.map(t => t.domain)
-        return this.dataService.domains.filter((d) => tabDomains.includes(d.id))
-    }
+    // getActiveDomains() {
+    //     let tabDomains = this.dynamicTabs.map(t => t.domain)
+    //     return this.dataService.domains.filter((d) => tabDomains.includes(d.id))
+    // }
 
     filterDomains(version: string) {
         return this.dataService.domains.filter((d) => d.version === version)
