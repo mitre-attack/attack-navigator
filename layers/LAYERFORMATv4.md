@@ -5,7 +5,7 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| version | Version object | No | | See Version object definition below |
+| versions | Version object | No | | See Version object definition below |
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack" or "mobile-attack" |
