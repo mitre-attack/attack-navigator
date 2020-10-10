@@ -150,7 +150,7 @@ export class DataService {
         console.log("data.service parsing complete")
 
         for (let callback of this.dataLoadedCallbacks) {
-            callback();            
+            callback();
         }
         this.dataLoadedCallbacks = [];
     }
@@ -185,12 +185,11 @@ export class DataService {
             let v: string = version["name"];
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let id = domain["name"].replace(/\s/g, "-").concat('-', v.replace(/\s/g, "-").toLowerCase()).toLowerCase();
+                let id = this.getDomainID(domain["name"], v);
                 let name = domain["name"];
                 let domainObject = new Domain(id, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
-                    // this.useTAXIIServer = true;
                     domainObject.taxii_url = domain["taxii_url"];
                     domainObject.taxii_collection = domain["taxii_collection"];
                 } else {
@@ -264,6 +263,23 @@ export class DataService {
      */
     getDomain(domainID: string): Domain {
         return this.domains.find((d) => d.id === domainID);
+    }
+
+    /**
+     * Get domain ID from domain name & version
+     */
+    getDomainID(domain: string, version: string): string {
+        if (!version) { // layer with no specified version defaults to current version
+            version = this.versions[0];
+        }
+        return domain.replace(/\s/g, "-").concat('-', version.replace(/\s/g, "-").replace("&", "a").toLowerCase()).toLowerCase();
+    }
+
+    /**
+     * Retrieves the first version defined in the config file
+     */
+    getCurrentVersion() {
+        return this.versions[0].replace(/\s/g, "-").replace("&", "a").toLowerCase();
     }
 }
 
@@ -449,9 +465,9 @@ export class Mitigation extends BaseStix {
 }
 
 export class Domain {
-    public readonly id: string; // domain ID
-    public readonly name: string;
-    public readonly version: string;
+    public readonly id: string; // domain ID (name + version)
+    public readonly name: string; // domain display name
+    public readonly version: string; // ATT&CK version number
 
     public urls: string[] = [];
     public taxii_url: string = "";
@@ -486,5 +502,12 @@ export class Domain {
         this.id = id;
         this.name = name;
         this.version = version;
+    }
+
+    /**
+     * Get version of domain object
+     */
+    getVersion() {
+        return this.version.replace(/\s/g, "-").replace("&", "a").toLowerCase()
     }
 }

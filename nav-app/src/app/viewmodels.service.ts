@@ -29,7 +29,8 @@ export class ViewModelsService {
      * @return {ViewModel} the created ViewModel
      */
     newViewModel(name: string, domainID: string) {
-        let vm = new ViewModel(name, domainID, "vm"+ this.getNonce(), this.dataService);
+        let v = this.dataService.getDomain(domainID).getVersion();
+        let vm = new ViewModel(name, domainID, v, "vm"+ this.getNonce(), this.dataService);
         this.viewModels.push(vm);
         // console.log("created new viewModel", this.viewModels)
 
@@ -76,7 +77,8 @@ export class ViewModelsService {
      * @return                    new viewmodel inheriting above properties
      */
     layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", domainID, "vm" + this.getNonce(), this.dataService);
+        let v = this.dataService.getDomain(domainID).getVersion();
+        let result = new ViewModel("layer by operation", domainID, v, "vm" + this.getNonce(), this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -394,12 +396,12 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
-    constructor(name: string, domainID: string, uid: string, private dataService: DataService) {
+    constructor(name: string, domainID: string, version: string, uid: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
         this.filters = new Filter();
         this.name = name;
-        this.version = globals.layer_version;
+        this.version = version;
         this.uid = uid;
         if (!this.dataService.getDomain(domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
@@ -982,8 +984,14 @@ export class ViewModel {
         })
         let rep: {[k: string]: any } = {};
         rep.name = this.name;
-        rep.version = String(this.version);
-        rep.domain = this.domainID
+
+        rep.versions = {
+            "layer": globals.layer_version,
+            "attack": this.version.match(/[0-9]/g)[0],
+            "navigator": globals.nav_version
+        }
+
+        rep.domain = this.domainID.substr(0, this.domainID.search(/-v[0-9]/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1009,11 +1017,20 @@ export class ViewModel {
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
-        this.domainID = obj.domain;
 
-        if(obj.version !== globals.layer_version){
-            alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
-            + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+        if ("versions" in obj) {
+            if ("attack" in obj.versions) {
+                if (typeof(obj.versions.attack) === "string") this.version = "v" + obj.versions.attack;
+                else console.error("TypeError: attack version field is not a string");
+            }
+
+            if(obj.versions["layer"] !== globals.layer_version){
+                alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
+                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+            }
+        }
+        else { // layer with no specified version defaults to current version
+            this.version = this.dataService.getCurrentVersion();
         }
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;

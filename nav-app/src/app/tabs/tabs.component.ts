@@ -55,36 +55,26 @@ export class TabsComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         // invokes callback function with an explicit copy of the url
-        function callbackClosure(url, replace, callback) {
-            return function() {
-                return callback(url, replace);
-            }
-        }
+        // function callbackClosure(url, callback) {
+        //     return function() {
+        //         return callback(url);
+        //     }
+        // }
 
         this.ds.getConfig().subscribe((config: Object) => {
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
-                var first = true;
+                let first = true;
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                     var url = urls_1[_i];
-                    let self = this;
-                    let loadInitialVMCallback = function(loadUrl, replace) {
-                        self.loadLayerFromURL(loadUrl, replace);
-                    }
-                    //vms must load after data service loads data
-                    this.dataService.onDataLoad(callbackClosure(url, first, loadInitialVMCallback));
+                    this.loadLayerFromURL(url, first);
                     first = false;
                 }
                 if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
                 let first = true;
                 for (let url of config["default_layers"]["urls"]) {
-                    let self = this;
-                    let loadInitialVMCallback = function(loadUrl, replace) {
-                        self.loadLayerFromURL(loadUrl, replace);
-                    }
-                    // vms must load after data service loads data
-                    this.dataService.onDataLoad(callbackClosure(url, first, loadInitialVMCallback));
+                    this.loadLayerFromURL(url, first);
                     first = false;
                 }
                 if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
@@ -494,12 +484,17 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 let obj = (typeof(string) == "string")? JSON.parse(string) : string
-                if (!this.dataService.getDomain(obj.domain)) {throw new Error("'" + obj.domain + "' is not a valid domain.");}
+                let version = this.dataService.getCurrentVersion();
+                if (obj.versions && obj.versions.attack) version = "v" + obj.versions.attack;
+                let domainID = this.dataService.getDomainID(obj.domain, version);
+                if (!this.dataService.getDomain(domainID)) {
+                    throw new Error("'" + domainID + "' is not a valid domain.");
+                }
 
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
                 viewModel.deSerialize(string)
-                if(!this.dataService.getDomain(obj.domain).dataLoaded) {
-                    this.dataService.loadDomainData(obj.domain, true).then( () => {
+                if (!this.dataService.getDomain(domainID).dataLoaded) {
+                    this.dataService.loadDomainData(domainID, true).then( () => {
                         this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                     });
                 } else {
