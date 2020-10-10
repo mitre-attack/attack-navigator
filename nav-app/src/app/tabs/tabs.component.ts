@@ -77,7 +77,7 @@ export class TabsComponent implements AfterContentInit {
                     this.loadLayerFromURL(url, first);
                     first = false;
                 }
-                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
+                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from file, so create new blank layer
             } else { // default to blank tab interface
                 this.newBlankTab();
             }
@@ -329,6 +329,7 @@ export class TabsComponent implements AfterContentInit {
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainID);
+        vm.loadVMData();
         this.openTab(name, this.layerTab, vm, true, true, true, true)
     }
 
@@ -483,18 +484,11 @@ export class TabsComponent implements AfterContentInit {
         reader.onload = (e) =>{
             var string = String(reader.result);
             try{
-                let obj = (typeof(string) == "string")? JSON.parse(string) : string
-                let version = this.dataService.getCurrentVersion();
-                if (obj.versions && obj.versions.attack) version = "v" + obj.versions.attack;
-                let domainID = this.dataService.getDomainID(obj.domain, version);
-                if (!this.dataService.getDomain(domainID)) {
-                    throw new Error("'" + domainID + "' is not a valid domain.");
-                }
-
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", domainID);
-                viewModel.deSerialize(string)
-                if (!this.dataService.getDomain(domainID).dataLoaded) {
-                    this.dataService.loadDomainData(domainID, true).then( () => {
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                viewModel.deSerialize(string);
+                viewModel.loadVMData();
+                if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                    this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                         this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                     });
                 } else {
@@ -517,18 +511,15 @@ export class TabsComponent implements AfterContentInit {
         // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
         this.http.get(loadURL).subscribe((res) => {
             try {
-                let obj = (typeof(res) == "string")? JSON.parse(res) : res
-                if (!this.dataService.getDomain(obj.domain)) {throw new Error("'" + obj.domain + "' is not a valid domain.");}
-                if (!this.dataService.getDomain(obj.domain).dataLoaded) {
-                    this.dataService.loadDomainData(obj.domain, true).then( () => { // wait for data to load before creating new ViewModel
-                        let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
-                        viewModel.deSerialize(res)
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                viewModel.deSerialize(res);
+                viewModel.loadVMData();
+                if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                    this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                         console.log("loaded layer from", loadURL);
                         this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                     });
                 } else { // data is already loaded, create new ViewModel
-                    let viewModel = this.viewModelsService.newViewModel("loading layer...", obj.domain);
-                    viewModel.deSerialize(res)
                     console.log("loaded layer from", loadURL);
                     this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                 }

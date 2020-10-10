@@ -18,19 +18,17 @@ export class DataService {
         })
     }
 
-    // public domains = new Map<string, Domain>();
     public domains: Domain[] = [];
     public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
-    public dataLoadedCallbacks: any[] = [];
 
     /**
      * Callback functions passed to this function will be called after data is loaded
      * @param {*} callback callback function to call when data is done loading
      */
-    public onDataLoad(callback) {
-        this.dataLoadedCallbacks.push(callback);
+    public onDataLoad(domainID, callback) {
+        this.getDomain(domainID).dataLoadedCallbacks.push(callback);
     }
 
     /**
@@ -149,10 +147,9 @@ export class DataService {
         domain.dataLoaded = true;
         console.log("data.service parsing complete")
 
-        for (let callback of this.dataLoadedCallbacks) {
+        for (let callback of domain.dataLoadedCallbacks) {
             callback();
         }
-        this.dataLoadedCallbacks = [];
     }
 
     // Observable for data in config.json
@@ -279,7 +276,7 @@ export class DataService {
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].replace(/\s/g, "-").replace("&", "a").toLowerCase();
+        return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
     }
 }
 
@@ -473,7 +470,7 @@ export class Domain {
     public taxii_url: string = "";
     public taxii_collection: string = "";
     public dataLoaded: boolean = false;
-    //public dataLoadedCallbacks: any[] = [];
+    public dataLoadedCallbacks: any[] = [];
 
     public matrices: Matrix[] = [];
     public tactics: Tactic[] = [];
@@ -508,6 +505,6 @@ export class Domain {
      * Get version of domain object
      */
     getVersion() {
-        return this.version.replace(/\s/g, "-").replace("&", "a").toLowerCase()
+        return this.version.match(/[0-9]/g)[0];
     }
 }

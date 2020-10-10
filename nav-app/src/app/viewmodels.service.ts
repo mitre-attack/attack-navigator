@@ -12,9 +12,6 @@ import * as is from 'is_js';
 @Injectable()
 export class ViewModelsService {
 
-    // domain = "enterprise-attack";
-    // domainID = "";
-
     constructor(private dataService: DataService) {
         
         // attempt to restore viewmodels
@@ -29,12 +26,8 @@ export class ViewModelsService {
      * @return {ViewModel} the created ViewModel
      */
     newViewModel(name: string, domainID: string) {
-        let v = this.dataService.getDomain(domainID).getVersion();
-        let vm = new ViewModel(name, domainID, v, "vm"+ this.getNonce(), this.dataService);
+        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainID, this.dataService);
         this.viewModels.push(vm);
-        // console.log("created new viewModel", this.viewModels)
-
-        // this.saveViewModelsCookies()
         return vm;
     }
 
@@ -77,8 +70,7 @@ export class ViewModelsService {
      * @return                    new viewmodel inheriting above properties
      */
     layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let v = this.dataService.getDomain(domainID).getVersion();
-        let result = new ViewModel("layer by operation", domainID, v, "vm" + this.getNonce(), this.dataService);
+        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainID, this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -355,10 +347,10 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    domain: string; //layer domain
+    // domain: string; //layer domain
     domainID: string; // layer domain & version
     description: string = ""; //layer description
-    version: string = ""; // layer version
+    // version: string = ""; // layer version
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
     filters: Filter;
@@ -396,23 +388,25 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
-    constructor(name: string, domainID: string, version: string, uid: string, private dataService: DataService) {
+    constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
         this.filters = new Filter();
         this.name = name;
-        this.version = version;
         this.uid = uid;
-        if (!this.dataService.getDomain(domainID).dataLoaded) {
+    }
+
+    loadVMData() {
+        if (!this.domainID || !this.dataService.getDomain(this.domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
             let self = this;
-            this.dataService.onDataLoad(function() {
+            this.dataService.onDataLoad(this.domainID, function() {
                 self.initTechniqueVMs()
-                self.filters.initPlatformOptions(self.dataService.getDomain(domainID));
+                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
             }); 
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.getDomain(domainID));
+            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
         }
     }
 
@@ -987,7 +981,7 @@ export class ViewModel {
 
         rep.versions = {
             "layer": globals.layer_version,
-            "attack": this.version.match(/[0-9]/g)[0],
+            "attack": this.dataService.getDomain(this.domainID).getVersion(),
             "navigator": globals.nav_version
         }
 
@@ -1018,19 +1012,29 @@ export class ViewModel {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
 
+        let version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
-                if (typeof(obj.versions.attack) === "string") this.version = "v" + obj.versions.attack;
+                if (typeof(obj.versions.attack) === "string") version = "v" + obj.versions.attack;
                 else console.error("TypeError: attack version field is not a string");
             }
-
             if(obj.versions["layer"] !== globals.layer_version){
+                alert("WARNING: Uploaded layer version (" + String(obj.versions["layer"]) + ") does not match Navigator's layer version ("
+                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+            }
+        }
+        if ("version" in obj) { // backwards compatibility with Layer Format 3
+            if (obj.version !== globals.layer_version){
                 alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        else { // layer with no specified version defaults to current version
-            this.version = this.dataService.getCurrentVersion();
+        if ("domain" in obj) {
+            if (typeof(obj.domain === "string")) {
+                this.domainID = this.dataService.getDomainID(obj.domain, version);
+                if (!this.dataService.getDomain(this.domainID)) console.error("Error: '", obj.domain, "' is an invalid domain." )
+            }
+            else console.error("TypeError: domain field is not a string");
         }
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
