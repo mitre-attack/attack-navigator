@@ -103,7 +103,11 @@ def update_layer(layerfile, replace=False):
             technique["techniqueID"] = newID
     
     # set the version to current
-    layer["version"] = "4.0"
+    layer["versions"] = {
+        "navigator": "4.0",
+        "layer": "4.0",
+        "attack": "8"
+    }
 
     # output layer
     outfile = layerfile if replace else layerfile.split(".")[0] + "-updated.json"
