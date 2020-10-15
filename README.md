@@ -16,7 +16,7 @@ Previous versions of the Navigator application are also hosted via GitHub Pages 
 | ATT&CK Version | Navigator Version | Domains | |
 |:---------------|:------------------|:--------|-|
 | [ATT&CK v7.2](https://attack.mitre.org/resources/versions/) | [Navigator v3.1](https://github.com/mitre-attack/attack-navigator/releases/tag/v3.1) | [Enterprise](https://mitre-attack.github.io/attack-navigator/v3/enterprise/) | [Mobile](https://mitre-attack.github.io/attack-navigator/v3/mobile/) |
-| [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) | [Navigator v2.3.2](ttps://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) | [Enterprise](https://mitre-attack.github.io/attack-navigator/v2/enterprise/) | [Mobile](https://mitre-attack.github.io/attack-navigator/v2/mobile/) |
+| [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) | [Navigator v2.3.2](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) | [Enterprise](https://mitre-attack.github.io/attack-navigator/v2/enterprise/) | [Mobile](https://mitre-attack.github.io/attack-navigator/v2/mobile/) |
 
 
 Please see [Install and Run](#Install-and-Run) for information on how to get the ATT&CK Navigator set up locally. 
