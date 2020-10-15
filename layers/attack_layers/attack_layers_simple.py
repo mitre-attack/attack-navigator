@@ -9,10 +9,11 @@ import json
 import sys
 
 # Static ATT&CK Navigator layer JSON fields
-VERSION = "2.2"
+LAYER_VERSION = "2.2"
+NAV_VERSION = "2.3.2"
 NAME = "example"
 DESCRIPTION = "hello, world"
-DOMAIN = "mitre-enterprise"
+DOMAIN = "enterprise-attack"
 
 # Main
 def main():
@@ -26,7 +27,10 @@ def main():
 
     # Base ATT&CK Navigator layer
     layer_json = {
-        "version": VERSION,
+        "versions": {
+            "layer": VERSION,
+            "navigator": NAV_VERSION
+        },
         "name": NAME,
         "description": DESCRIPTION,
         "domain": DOMAIN,

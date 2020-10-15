@@ -8,7 +8,7 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 | version | String | Yes | n/a | Must be "4.0" |
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
-| domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "mitre-enterprise", "mitre-mobile", "mitre-ics" |
+| domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack", "mobile-attack", "ics-attack" |
 | filters |Filter object | No | | See Filter object definition below
 | sorting | Number | No | 0 | Specifies the ordering of the techniques within each tactic category as follows: <br>**0**: sort ascending alphabetically by technique name <br>**1**: sort descending alphabetically by technique name <br>**2**: sort ascending by technique score <br>**3**: sort descending by technique score |
 | layout | Layout object | No | | See definition of Layout object below |
@@ -27,7 +27,7 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| platforms | Array of String | No | all platforms within domain | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=mitre-enterprise**: "PRE", "Windows", "Linux", "macOS", "Network", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mitre-mobile**: "Android", "iOS". <br>**domain=mitre-ics**: "Windows", "Control Server", "Data Historian", "Engineering Workstation", "Field Controller/RTU/PLC/IED", "Human-Machine Interface", "Input/Output Server", "Safety Instrumented System/Protection Relay" |
+| platforms | Array of String | No | all platforms within domain | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=enterprise-attack**: "PRE", "Windows", "Linux", "macOS", "Network", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mobile-attack**: "Android", "iOS". <br>**domain=ics-attack**: "Windows", "Control Server", "Data Historian", "Engineering Workstation", "Field Controller/RTU/PLC/IED", "Human-Machine Interface", "Input/Output Server", "Safety Instrumented System/Protection Relay" |
 
 ## Technique Object properties
 
@@ -75,8 +75,12 @@ The following example illustrates the layer file format:
 ```json
 {
     "name": "example layer",
-    "version": "4.0",
-    "domain": "mitre-enterprise",
+    "versions": {
+        "attack": "8",
+        "navigator": "4.0",
+        "layer": "4.0"
+    },
+    "domain": "enterprise-attack",
     "description": "hello, world",
     "filters": {
         "platforms": [
