@@ -27,7 +27,7 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| platforms | Array of String | No | **domain=mitre-enterprise**: "Windows", "Linux", "macOS" <br> **domain=mitre-mobile**: "Android", "iOS" | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=mitre-enterprise**: "Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mitre-mobile**: "Android", "iOS" |
+| platforms | Array of String | No | **domain=mitre-enterprise**: "Windows", "Linux", "macOS" <br> **domain=mitre-mobile**: "Android", "iOS" | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=mitre-enterprise**: "PRE", "Windows", "Linux", "macOS", "Network", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mitre-mobile**: "Android", "iOS" |
 
 ## Technique Object properties
 
