@@ -8,9 +8,9 @@ The principal feature of the Navigator is the ability for users to define layers
 
 The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live instance of the current version of the Navigator here](https://mitre-attack.github.io/attack-navigator). 
 
-Version 4.0 of the ATT&CK Navigator supports all ATT&CK domains in a single instance of the application instead of requiring a different instance for each domain. 
+Version 4.0 of the ATT&CK Navigator supports all ATT&CK domains in a single instance of the application instead of requiring a different instance for each domain. It also sees the introduction of support for the ICS domain. See [the changelog](CHANGELOG.md) for more information.
 
-Additionally, older versions of ATT&CK can now be loaded in the application. The ATT&CK Navigator supports ATT&CK versions 8, 7, 6, [TODO list other compatible versions]. Older versions do not work in the applications since their data model is too outdated.
+Additionally, older versions of ATT&CK can now be loaded in the application. The ATT&CK Navigator supports ATT&CK versions 8, 7, 6, [TODO list other compatible versions]. Older versions do not work in the application since their data model is too outdated.
 
 Previous versions of the Navigator application are also hosted via GitHub Pages for users who want a more classic experience:
 | ATT&CK Version | Navigator Version | Domains | |
