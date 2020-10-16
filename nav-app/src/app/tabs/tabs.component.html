@@ -70,14 +70,18 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
                     
-                    <table class="inputTable">                        
+                    <table class="inputTable">                     
                         <ng-template ngFor let-version [ngForOf]="ds.versions" let-versionIndex="index">
-                            <tr><b>{{version}}</b></tr>
-                            <ng-template ngFor let-domain [ngForOf]="filterDomains(version)" let-domainIndex="index">
-                                <td><button mat-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
-                            </ng-template>
+                            <tr><h3>{{version}}</h3></tr>
+                            <tr class="versionRow">
+                                <ng-template ngFor let-domain [ngForOf]="filterDomains(version)" let-domainIndex="index">
+                                    <td><button mat-button class="versionRow-button" (click)="newLayer(domain.id)">{{domain.name}}</button></td>
+                                </ng-template>
+                            </tr>
                         </ng-template>
                     </table>
+
+                    <p>Versions prior to {{ds.versions[ds.versions.length-1]}} are not supported by Navigator v{{nav_version}}.</p>
                 
                 </mat-expansion-panel>
             </mat-expansion-panel>

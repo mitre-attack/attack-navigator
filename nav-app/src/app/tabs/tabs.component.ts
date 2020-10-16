@@ -46,6 +46,7 @@ export class TabsComponent implements AfterContentInit {
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
     alwaysUpgradeVersion: boolean;
+    nav_version = globals.nav_version;
     constructor(private _componentFactoryResolver: ComponentFactoryResolver, private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
         console.log("tabs component initializing");
         this.ds = dataService;
