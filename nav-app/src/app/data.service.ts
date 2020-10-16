@@ -132,8 +132,10 @@ export class DataService {
         // parse platforms
         let platforms = new Set<String>();
         for (let technique of domain.techniques) {
-            for (let platform of technique.platforms) {
-                platforms.add(platform)
+            if (technique.platforms) {
+                for (let platform of technique.platforms) {
+                    platforms.add(platform)
+                }
             }
         }
         for (let subtechnique of domain.subtechniques) {
@@ -248,7 +250,7 @@ export class DataService {
                     this.parseBundle(domain, data);
                     resolve()
                 });
-            } else { // domain not defined in config
+            } else if (!domain) { // domain not defined in config
                 reject("'" + domainID + "' is not a valid domain.")
             }     
         });

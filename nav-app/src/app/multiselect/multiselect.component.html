@@ -3,7 +3,7 @@
         <h1>
             {{stixType.label}}
         </h1>
-        <div class="objects">
+        <div *ngIf="stixType.objects.length !== 0" class="objects">
             <table>
                 <tr *ngFor="let stixObject of stixType.objects">
                     <td>{{stixObject.name}}</td>
@@ -12,6 +12,9 @@
                     <td><button class="button" (click)="deselect(stixObject)">deselect</button></td>
                 </tr>
             </table>
+        </div>
+        <div *ngIf="stixType.objects.length == 0">
+            Data does not include {{stixType.label}}
         </div>
     </div>
 </div>
