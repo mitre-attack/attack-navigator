@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatDialogModule, MatCheckboxModule} from '@angular/material';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -30,6 +31,7 @@ import { MultiselectComponent } from './multiselect/multiselect.component';
 import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
+import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 
 
 @NgModule({
@@ -49,7 +51,8 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
     MultiselectComponent,
     TechniquesSearchComponent,
     ContextmenuComponent,
-    TacticCellComponent
+    TacticCellComponent,
+    VersionUpgradeComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,9 +63,11 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatTooltipModule,
     MatMenuModule,
     MatExpansionModule,
+    MatDialogModule,
     ColorPickerModule,
   ],
   exports: [
@@ -75,6 +80,6 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ TabComponent ]
+  entryComponents: [ TabComponent, VersionUpgradeComponent ]
 })
 export class AppModule { }

@@ -347,10 +347,10 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    // domain: string; //layer domain
+    domain: string = ""; // attack domain
+    version: string = ""; // attack version
     domainID: string; // layer domain & version
     description: string = ""; //layer description
-    // version: string = ""; // layer version
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
     filters: Filter;
@@ -1012,10 +1012,12 @@ export class ViewModel {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
 
-        let version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
+        this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
-                if (typeof(obj.versions.attack) === "string") version = "v" + obj.versions.attack;
+                if (typeof(obj.versions.attack) === "string") {
+                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]/g)[0];
+                }
                 else console.error("TypeError: attack version field is not a string");
             }
             if(obj.versions["layer"] !== globals.layer_version){
@@ -1029,13 +1031,12 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        if ("domain" in obj) {
-            if (typeof(obj.domain === "string")) {
-                this.domainID = this.dataService.getDomainID(obj.domain, version);
-                if (!this.dataService.getDomain(this.domainID)) console.error("Error: '", obj.domain, "' is an invalid domain." )
-            }
-            else console.error("TypeError: domain field is not a string");
-        }
+        
+        this.domain = obj.domain;
+        this.domainID = this.dataService.getDomainID(obj.domain, this.version);
+        if (!this.dataService.getDomain(this.domainID)) 
+            console.error("Error: " + obj.domain + " " + this.version + " is an invalid domain and version." )
+
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")

@@ -462,7 +462,7 @@ export class Mitigation extends BaseStix {
 }
 
 export class Domain {
-    public readonly id: string; // domain ID (name + version)
+    public readonly id: string; // domain ID
     public readonly name: string; // domain display name
     public readonly version: string; // ATT&CK version number
 

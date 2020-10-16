@@ -7,11 +7,13 @@ import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
+import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
 import {ErrorStateMatcher} from '@angular/material/core'
 import {FormControl} from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { log } from 'util';
@@ -43,7 +45,8 @@ export class TabsComponent implements AfterContentInit {
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
+    alwaysUpgradeVersion: boolean;
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
         console.log("tabs component initializing");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
@@ -64,7 +67,7 @@ export class TabsComponent implements AfterContentInit {
         this.ds.getConfig().subscribe((config: Object) => {
             let fragment_value = this.getNamedFragmentValue("layerURL");
             if (fragment_value && fragment_value.length > 0) {
-                let first = true;
+                let first = false;
                 for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                     var url = urls_1[_i];
                     this.loadLayerFromURL(url, first);
@@ -72,7 +75,7 @@ export class TabsComponent implements AfterContentInit {
                 }
                 if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
             } else if (config["default_layers"]["enabled"]){
-                let first = true;
+                let first = false;
                 for (let url of config["default_layers"]["urls"]) {
                     this.loadLayerFromURL(url, first);
                     first = false;
@@ -461,6 +464,43 @@ export class TabsComponent implements AfterContentInit {
     }
 
     /**
+     * Dialog to upgrade version if layer is not the latest version
+     */
+    versionUpgradeDialog(viewModel): Promise<any> {
+        let dataPromise: Promise<any> = new Promise((resolve, reject) => {
+            let currVersion = this.dataService.getCurrentVersion();
+            if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
+                viewModel.version = currVersion;
+                viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
+                resolve();
+            } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
+                const dialogConfig = new MatDialogConfig();
+                dialogConfig.disableClose = true;
+                dialogConfig.width = '20%';
+                dialogConfig.data = {
+                    layerName: viewModel.name,
+                    vmVersion: viewModel.version,
+                    currVersion: currVersion
+                }
+                const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
+                dialogRef.afterClosed().subscribe(result => {
+                    if (result.dontAsk) {
+                        this.alwaysUpgradeVersion = result.upgrade;
+                    }
+                    if (result.upgrade) {
+                        viewModel.version = currVersion
+                        viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
+                    }
+                    resolve();
+                });
+            } else { // remember user choice not to upgrade or layer is already current version
+                resolve();
+            }
+        });
+        return dataPromise;
+    }
+
+    /**
      * Loads an existing layer into a tab
      */
     loadLayerFromFile(): void {
@@ -486,14 +526,17 @@ export class TabsComponent implements AfterContentInit {
             try{
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 viewModel.deSerialize(string);
-                viewModel.loadVMData();
-                if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                    this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
-                    });
-                } else {
-                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
-                }   
+
+                this.versionUpgradeDialog(viewModel).then( () => {
+                    viewModel.loadVMData();
+                    if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                            this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
+                        });
+                    } else {
+                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
+                    }
+                });
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
@@ -513,16 +556,19 @@ export class TabsComponent implements AfterContentInit {
             try {
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 viewModel.deSerialize(res);
-                viewModel.loadVMData();
-                if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                    this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+
+                this.versionUpgradeDialog(viewModel).then( () => {
+                    viewModel.loadVMData();
+                    if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                            console.log("loaded layer from", loadURL);
+                            this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
+                        });
+                    } else { // data is already loaded, create new ViewModel
                         console.log("loaded layer from", loadURL);
                         this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                    });
-                } else { // data is already loaded, create new ViewModel
-                    console.log("loaded layer from", loadURL);
-                    this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                }
+                    }
+                });
             } catch(err) {
                 console.error(err)
                 alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
