@@ -238,11 +238,6 @@ input[type=file]{
         margin-top: 5px;
         border-radius: 5px;
 
-        &.versionRow {
-            border-left: 1px solid $panel-dark;
-            border-bottom: 1px solid $panel-dark;
-            text-align: center;
-        }
         td {
             text-align: left;
             width: 1%;
@@ -257,9 +252,6 @@ input[type=file]{
                 &.last {
                     border-bottom: 1px solid $panel-dark;
                 }
-            }
-            &.versionRow-button {
-                display: inline-block;
             }
         }
     }

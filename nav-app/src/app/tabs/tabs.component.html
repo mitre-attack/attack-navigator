@@ -63,26 +63,44 @@
                         <td><button mat-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
                     </ng-template>
                 </table>
+
                 <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 More Options
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                    
-                    <table class="inputTable">                     
-                        <ng-template ngFor let-version [ngForOf]="ds.versions" let-versionIndex="index">
-                            <tr><h3>{{version}}</h3></tr>
-                            <tr class="versionRow">
-                                <ng-template ngFor let-domain [ngForOf]="filterDomains(version)" let-domainIndex="index">
-                                    <td><button mat-button class="versionRow-button" (click)="newLayer(domain.id)">{{domain.name}}</button></td>
-                                </ng-template>
-                            </tr>
-                        </ng-template>
+
+                    <table class="layerOpTable">
+                        <tr>
+                            <td>
+                                <mat-form-field>
+                                    <mat-select placeholder="version" [(ngModel)]="nVersion" required>
+                                        <mat-option [value]="null">none</mat-option>
+                                        <mat-option *ngFor="let nVersion of this.dataService.versions" [value]="nVersion">{{nVersion}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                Choose the version for the new layer. <em>*Versions prior to {{ds.versions[ds.versions.length-1]}} are not supported by Navigator v{{nav_version}}.</em>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-form-field>
+                                    <mat-select placeholder="domain" [(ngModel)]="nDomain" [disabled]="!nVersion" required>
+                                        <mat-option [value]="null">none</mat-option>
+                                        <mat-option *ngFor="let nDomain of filterDomains(nVersion)" [value]=nDomain>{{nDomain.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td [ngClass]="{disabled: !nVersion}">
+                                Choose a domain for the new layer.
+                            </td>
+                        </tr>
                     </table>
 
-                    <p>Versions prior to {{ds.versions[ds.versions.length-1]}} are not supported by Navigator v{{nav_version}}.</p>
-                
+                    <button mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">Create</button>
                 </mat-expansion-panel>
             </mat-expansion-panel>
 
