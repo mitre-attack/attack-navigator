@@ -1031,11 +1031,12 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        
+
+        if (!this.dataService.validDomains.includes(obj.domain)) {
+            throw {message: "Error: '" + obj.domain + "' is not a valid domain."};
+        }
         this.domain = obj.domain;
         this.domainID = this.dataService.getDomainID(obj.domain, this.version);
-        if (!this.dataService.getDomain(this.domainID)) 
-            console.error("Error: " + obj.domain + " " + this.version + " is an invalid domain and version." )
 
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;

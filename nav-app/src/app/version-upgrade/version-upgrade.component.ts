@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ViewModelsService } from '../viewmodels.service';
+import { DataService } from '../data.service';
+import * as globals from './../globals';
 
 @Component({
     selector: 'app-version-upgrade',
@@ -10,12 +12,14 @@ import { ViewModelsService } from '../viewmodels.service';
 })
 export class VersionUpgradeComponent implements OnInit {
 
+    nav_version = globals.nav_version;
     currVersion: string;
     vmVersion: string;
     layerName: string;
     dontAsk: boolean = false;
 
     constructor(private dialogRef: MatDialogRef<VersionUpgradeComponent>, 
+                private dataService: DataService,
                 private viewModelsService: ViewModelsService,
                 @Inject(MAT_DIALOG_DATA) public data) { }
 

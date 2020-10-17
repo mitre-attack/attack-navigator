@@ -18,6 +18,7 @@ export class DataService {
         })
     }
 
+    public validDomains = ['enterprise-attack', 'mobile-attack', 'ics-attack'];
     public domains: Domain[] = [];
     public versions: any[] = [];
 
@@ -132,10 +133,8 @@ export class DataService {
         // parse platforms
         let platforms = new Set<String>();
         for (let technique of domain.techniques) {
-            if (technique.platforms) {
-                for (let platform of technique.platforms) {
-                    platforms.add(platform)
-                }
+            for (let platform of technique.platforms) {
+                platforms.add(platform)
             }
         }
         for (let subtechnique of domain.subtechniques) {
@@ -279,6 +278,13 @@ export class DataService {
      */
     getCurrentVersion() {
         return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
+    }
+
+    /**
+     * Is the given version supported?
+     */
+    isSupported(version: string) {
+        return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
     }
 }
 

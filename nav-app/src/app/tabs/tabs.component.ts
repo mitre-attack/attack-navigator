@@ -477,7 +477,7 @@ export class TabsComponent implements AfterContentInit {
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
                 const dialogConfig = new MatDialogConfig();
                 dialogConfig.disableClose = true;
-                dialogConfig.width = '20%';
+                dialogConfig.width = '25%';
                 dialogConfig.data = {
                     layerName: viewModel.name,
                     vmVersion: viewModel.version,
@@ -485,6 +485,9 @@ export class TabsComponent implements AfterContentInit {
                 }
                 const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
                 dialogRef.afterClosed().subscribe(result => {
+                    if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
+                        reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
+                    }
                     if (result.dontAsk) {
                         this.alwaysUpgradeVersion = result.upgrade;
                     }
@@ -537,6 +540,10 @@ export class TabsComponent implements AfterContentInit {
                     } else {
                         this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
+                })
+                .catch( (err) => {
+                    console.error("ERROR: Unable to upgrade file version or version is invalid.", err);
+                    alert("ERROR: Unable to upgrade file version or version is invalid.");
                 });
             }
             catch(err){

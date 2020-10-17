@@ -1,7 +1,9 @@
 <div class="mat-dialog">
     <h3 mat-dialog-title>Upgrade Version</h3>
     <mat-dialog-content>
-        <p>Layer "{{layerName}}" uses an outdated version of ATT&CK ({{vmVersion}})</p>
+        <p>The layer "{{layerName}}" uses an outdated version of ATT&CK ({{vmVersion}}).
+            <em *ngIf="!this.dataService.isSupported(this.vmVersion)">This version is not supported by Navigator v{{nav_version}} and must be upgraded for use.</em>
+        </p>
         <p>Upgrade layer to ATT&CK {{currVersion}}?</p>
     </mat-dialog-content>
 
