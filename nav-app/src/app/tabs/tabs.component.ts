@@ -414,7 +414,17 @@ export class TabsComponent implements AfterContentInit {
                 throw {message: "cannot apply operations to layers of different domains"};
             }
             let vm = this.viewModelsService.layerLayerOperation(this.domain, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
-            this.openTab(layerName, this.layerTab, vm, true, true, true, true)
+            if (!this.dataService.getDomain(this.domain).dataLoaded) {
+                this.dataService.loadDomainData(this.domain, true).then( () => {
+                    vm.loadVMData();
+                    vm.updateGradient();
+                    this.openTab(layerName, this.layerTab, vm, true, true, true, true)
+                })
+            } else {
+                vm.loadVMData();
+                vm.updateGradient();
+                this.openTab(layerName, this.layerTab, vm, true, true, true, true)
+            }
         } catch (err) {
             console.error(err)
             alert("Layer Layer operation error: " + err.message)
