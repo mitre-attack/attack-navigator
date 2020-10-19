@@ -58,42 +58,53 @@ export class TabsComponent implements AfterContentInit {
 
 
     ngAfterContentInit() {
-        // invokes callback function with an explicit copy of the url
-        // function callbackClosure(url, callback) {
-        //     return function() {
-        //         return callback(url);
-        //     }
-        // }
-
         this.ds.getConfig().subscribe((config: Object) => {
-            let fragment_value = this.getNamedFragmentValue("layerURL");
-            if (fragment_value && fragment_value.length > 0) {
-                let first = false;
-                for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
-                    var url = urls_1[_i];
-                    this.loadLayerFromURL(url, first);
-                    first = false;
+            this.loadTabs(config["default_layers"]).then( () => {
+                if (this.dynamicTabs.length == 0) {
+                    this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
                 }
-                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
-            } else if (config["default_layers"]["enabled"]){
-                let first = false;
-                for (let url of config["default_layers"]["urls"]) {
-                    this.loadLayerFromURL(url, first);
-                    first = false;
-                }
-                if (this.dynamicTabs.length == 0) this.newLayer(this.dataService.domains[0].id); // failed load from file, so create new blank layer
-            } else { // default to blank tab interface
-                this.newBlankTab();
-            }
-            let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
+                let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
 
-            // if there is no active tab set, activate the first
-            if(activeTabs.length === 0) {
-                this.selectTab(this.dynamicTabs[0]);
-            }
-
+                // if there is no active tab set, activate the first
+                if(activeTabs.length === 0) { this.selectTab(this.dynamicTabs[0]); }
+            });
             this.customizedConfig = this.configService.getFeatureList()
         });
+    }
+
+    /**
+     * Open initial tabs on application load
+     */
+    loadTabs(defaultLayers): Promise<any> {
+        let loadPromise: Promise<any> = new Promise( (resolve, reject) => {
+            let fragment_value = this.getNamedFragmentValue("layerURL");
+            if (fragment_value && fragment_value.length > 0) {
+                let first = true;
+                let self = this;
+                (async function() {
+                    for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
+                        var url = urls_1[_i];
+                        await self.loadLayerFromURL(url, first);
+                        first = false;
+                    }
+                    resolve()
+                })();
+            } else if (defaultLayers["enabled"]) {
+                let first = true;
+                let self = this;
+                (async function() {
+                    for (let url of defaultLayers["urls"]) {
+                        await self.loadLayerFromURL(url, first);
+                        first = false;
+                    }
+                    resolve();
+                })();
+            } else {
+                this.newBlankTab(); // default to blank tab interface
+                resolve();
+            }
+        });
+        return loadPromise;
     }
 
     /**
@@ -558,41 +569,46 @@ export class TabsComponent implements AfterContentInit {
     /**
      * attempt an HTTP GET to loadURL, and load the response (if it exists) as a layer.
      */
-    loadLayerFromURL(loadURL, replace): void {
-        // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
-        this.http.get(loadURL).subscribe((res) => {
-            try {
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                viewModel.deSerialize(res);
+    loadLayerFromURL(loadURL, replace): Promise<any> {
+        let layerPromise: Promise<any> = new Promise((resolve, reject) => {
+            // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
+            this.http.get(loadURL).subscribe((res) => {
+                try {
+                    let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                    viewModel.deSerialize(res);
 
-                this.versionUpgradeDialog(viewModel).then( () => {
-                    viewModel.loadVMData();
-                    if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                    this.versionUpgradeDialog(viewModel).then( () => {
+                        viewModel.loadVMData();
+                        if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                            this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                                console.log("loaded layer from", loadURL);
+                                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
+                                resolve();
+                            });
+                        } else { // data is already loaded, create new ViewModel
                             console.log("loaded layer from", loadURL);
                             this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                        });
-                    } else { // data is already loaded, create new ViewModel
-                        console.log("loaded layer from", loadURL);
-                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                    }
-                });
-            } catch(err) {
+                            resolve();
+                        }
+                    });
+                } catch(err) {
+                    console.error(err)
+                    alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
+                    resolve(); //continue
+                }
+            }, (err) => {
                 console.error(err)
-                alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
-            }
-        }, (err) => {
-            console.error(err)
-            if (err.status == 0) {
-                // no response
-                alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-            } else {
-                // response, but not a good one
-                alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-            }
-
-        })
-
+                if (err.status == 0) {
+                    // no response
+                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                } else {
+                    // response, but not a good one
+                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                }
+                resolve(); //continue
+            })
+        });
+        return layerPromise;
     }
 
 
