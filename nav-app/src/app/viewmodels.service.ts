@@ -1005,13 +1005,11 @@ export class ViewModel {
     }
 
     /**
-     * restore this vm from a string
-     * @param  rep string to restore from
+     * restore the domain and version from a string
+     * @param rep string to restore from
      */
-    deSerialize(rep: any): void {
+    deSerializeDomainID(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        this.name = obj.name
-
         this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
@@ -1031,12 +1029,20 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-
         if (!this.dataService.validDomains.includes(obj.domain)) {
             throw {message: "Error: '" + obj.domain + "' is not a valid domain."};
         }
         this.domain = obj.domain;
         this.domainID = this.dataService.getDomainID(obj.domain, this.version);
+    }
+
+    /**
+     * restore this vm from a string
+     * @param  rep string to restore from
+     */
+    deSerialize(rep: any): void {
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        this.name = obj.name
 
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;

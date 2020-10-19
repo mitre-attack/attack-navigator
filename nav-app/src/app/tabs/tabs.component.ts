@@ -550,15 +550,17 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                viewModel.deSerialize(string);
+                viewModel.deSerializeDomainID(string);
+                viewModel.loadVMData();
 
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    viewModel.loadVMData();
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                            viewModel.deSerialize(string);
                             this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                         });
                     } else {
+                        viewModel.deSerialize(string);
                         this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
                 })
@@ -585,22 +587,23 @@ export class TabsComponent implements AfterContentInit {
             this.http.get(loadURL).subscribe((res) => {
                 try {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                    viewModel.deSerialize(res);
+                    viewModel.deSerializeDomainID(res);
+                    viewModel.loadVMData();
 
                     this.versionUpgradeDialog(viewModel).then( () => {
-                        viewModel.loadVMData();
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                                console.log("loaded layer from", loadURL);
+                                viewModel.deSerialize(res);
                                 this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                                 resolve();
                             });
-                        } else { // data is already loaded, create new ViewModel
-                            console.log("loaded layer from", loadURL);
+                        } else { // data is already loaded
+                            viewModel.deSerialize(res);
                             this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                             resolve();
                         }
                     });
+                    console.log("loaded layer from", loadURL);
                 } catch(err) {
                     console.error(err)
                     alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
