@@ -17,7 +17,6 @@ export class DataService {
         })
     }
 
-    public validDomains = ['enterprise-attack', 'mobile-attack', 'ics-attack'];
     public domains: Domain[] = [];
     public versions: any[] = [];
 

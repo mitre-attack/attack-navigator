@@ -1032,9 +1032,6 @@ export class ViewModel {
         }
         this.domain = obj.domain;
         this.domainID = this.dataService.getDomainID(obj.domain, this.version);
-        if (!this.dataService.getDomain(this.domainID)) {
-            throw {message: "Error: '" + obj.domain + "' is not a valid domain."};
-        }
     }
 
     /**

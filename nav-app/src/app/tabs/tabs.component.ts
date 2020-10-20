@@ -547,6 +547,9 @@ export class TabsComponent implements AfterContentInit {
                 viewModel.deSerializeDomainID(string);
 
                 this.versionUpgradeDialog(viewModel).then( () => {
+                    if (!this.dataService.getDomain(viewModel.domainID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' is not a valid domain."};
+                    }
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
