@@ -13,7 +13,7 @@ import * as is from 'is_js';
 export class ViewModelsService {
 
     constructor(private dataService: DataService) {
-        
+
         // attempt to restore viewmodels
         // console.log(this.getCookie("viewModels"))
         // this.saveViewModelsCookies()

@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
-import { platformBrowser } from '@angular/platform-browser';
 
 @Injectable({
     providedIn: 'root',
@@ -162,23 +161,13 @@ export class DataService {
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
-    private taxiiServerURL: string = "https://cti-taxii.mitre.org/";
-
-    // private useTAXIIServer: boolean = false;
-
 
     /**
      * Set up the URLs for data
-     * @param {string} eAttackURL enterprise domain url
-     * @param {string} preAttackURL pre-attack domain url
-     * @param {string} mURL mobile-attack url
-     * @param {boolean} useTAXIIServer use taxii server?
-     * @param {string} taxiiURL the URL of the taxii server
-     * @param {string[]} taxiiCollections taxii collections to fetch from
+     * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
     setUpURLs(versions: []){
-        // configured domains/versions
         versions.forEach( (version: any) => {
             let v: string = version["name"];
             this.versions.push(v);
@@ -196,6 +185,19 @@ export class DataService {
                 this.domains.push(domainObject);
             });
         });
+
+        if (this.domains.length == 0) { // issue loading config
+            let currVersion = "ATT&CK v7";
+            let enterpriseDomain = new Domain(this.getDomainID("Enterprise", currVersion), "Enterprise", currVersion);
+            enterpriseDomain.urls = [this.enterpriseAttackURL];
+            let mobileDomain = new Domain(this.getDomainID("Mobile", currVersion), "Mobile", currVersion);
+            mobileDomain.urls = [this.mobileAttackURL];
+
+            this.versions.push(currVersion);
+            this.domains.push(enterpriseDomain);
+            this.domains.push(mobileDomain);
+            console.log(this.domains)
+        }
     }
 
     /**
@@ -212,7 +214,7 @@ export class DataService {
     /**
      * Fetch the domain data from the endpoint
      */
-    getData(domain: Domain, refresh: boolean = false) : Observable<Object>{
+    getDomainData(domain: Domain, refresh: boolean = false) : Observable<Object>{
         if (domain.taxii_collection && domain.taxii_url) {
             console.log("fetching data from TAXII server");
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
@@ -231,7 +233,7 @@ export class DataService {
             let bundleData = [];
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url));
-            })
+            });
 
             this.domainData$ = Observable.forkJoin(bundleData);
         }
@@ -239,19 +241,19 @@ export class DataService {
     }
 
     /**
-     * lazy load domain data
+     * Load and parse domain data
      */
     loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain) {
-                this.getData(domain, refresh).subscribe((data: Object[]) => {
+                this.getDomainData(domain, refresh).subscribe((data: Object[]) => {
                     this.parseBundle(domain, data);
-                    resolve()
+                    resolve();
                 });
             } else if (!domain) { // domain not defined in config
                 reject("'" + domainID + "' is not a valid domain.")
-            }     
+            }
         });
         return dataPromise;
     }
@@ -510,7 +512,7 @@ export class Domain {
     }
 
     /**
-     * Get version of domain object
+     * Get version of this domain
      */
     getVersion() {
         return this.version.match(/[0-9]/g)[0];

@@ -259,11 +259,6 @@ export class TabsComponent implements AfterContentInit {
         return activeTabs[0];
     }
 
-    // getActiveDomains() {
-    //     let tabDomains = this.dynamicTabs.map(t => t.domain)
-    //     return this.dataService.domains.filter((d) => tabDomains.includes(d.id))
-    // }
-
     filterDomains(version: string) {
         return this.dataService.domains.filter((d) => d.version === version)
     }
@@ -544,11 +539,11 @@ export class TabsComponent implements AfterContentInit {
     readJSONFile(file: File) {
         // var input = (<HTMLInputElement>document.getElementById("uploader"));
         var reader = new FileReader();
+        let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
 
         reader.onload = (e) =>{
             var string = String(reader.result);
             try{
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 viewModel.deSerializeDomainID(string);
 
                 this.versionUpgradeDialog(viewModel).then( () => {
@@ -572,6 +567,7 @@ export class TabsComponent implements AfterContentInit {
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
                 alert("ERROR: Either the file is not JSON formatted, or the file structure is invalid.");
+                this.viewModelsService.destroyViewModel(viewModel);
             }
         }
         reader.readAsText(file);
@@ -585,8 +581,8 @@ export class TabsComponent implements AfterContentInit {
         let layerPromise: Promise<any> = new Promise((resolve, reject) => {
             // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
             this.http.get(loadURL).subscribe((res) => {
+                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 try {
-                    let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     viewModel.deSerializeDomainID(res);
 
                     this.versionUpgradeDialog(viewModel).then( () => {
@@ -603,10 +599,15 @@ export class TabsComponent implements AfterContentInit {
                             this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                             resolve();
                         }
+                    })
+                    .catch( (err) => {
+                        console.error("ERROR: Unable to upgrade file version or version is invalid.", err);
+                        alert("ERROR: Unable to upgrade file version or version is invalid.");
                     });
                     console.log("loaded layer from", loadURL);
                 } catch(err) {
                     console.error(err)
+                    this.viewModelsService.destroyViewModel(viewModel);
                     alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
                     resolve(); //continue
                 }
