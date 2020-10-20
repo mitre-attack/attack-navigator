@@ -59,6 +59,7 @@ export class TabsComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         this.ds.getConfig().subscribe((config: Object) => {
+            this.newBlankTab();
             this.loadTabs(config["default_layers"]).then( () => {
                 if (this.dynamicTabs.length == 0) {
                     this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
@@ -87,7 +88,7 @@ export class TabsComponent implements AfterContentInit {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve()
+                    resolve();
                 })();
             } else if (defaultLayers["enabled"]) {
                 let first = true;
@@ -99,10 +100,8 @@ export class TabsComponent implements AfterContentInit {
                     }
                     resolve();
                 })();
-            } else {
-                this.newBlankTab(); // default to blank tab interface
-                resolve();
             }
+            resolve();
         });
         return loadPromise;
     }
@@ -551,16 +550,17 @@ export class TabsComponent implements AfterContentInit {
             try{
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 viewModel.deSerializeDomainID(string);
-                viewModel.loadVMData();
 
                 this.versionUpgradeDialog(viewModel).then( () => {
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
+                            viewModel.loadVMData();
                             this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                         });
                     } else {
                         viewModel.deSerialize(string);
+                        viewModel.loadVMData();
                         this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
                 })
@@ -588,17 +588,18 @@ export class TabsComponent implements AfterContentInit {
                 try {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     viewModel.deSerializeDomainID(res);
-                    viewModel.loadVMData();
 
                     this.versionUpgradeDialog(viewModel).then( () => {
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                 viewModel.deSerialize(res);
+                                viewModel.loadVMData();
                                 this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                                 resolve();
                             });
                         } else { // data is already loaded
                             viewModel.deSerialize(res);
+                            viewModel.loadVMData();
                             this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                             resolve();
                         }

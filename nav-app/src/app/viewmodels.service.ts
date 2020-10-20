@@ -1010,6 +1010,7 @@ export class ViewModel {
      */
     deSerializeDomainID(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        this.name = obj.name
         this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
@@ -1042,8 +1043,7 @@ export class ViewModel {
      */
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        this.name = obj.name
-
+        
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
