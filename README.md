@@ -10,7 +10,7 @@ The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live insta
 
 Version 4.0 of the ATT&CK Navigator supports all ATT&CK domains in a single instance of the application instead of requiring a different instance for each domain. It also sees the introduction of support for the ICS domain. See [the changelog](CHANGELOG.md) for more information.
 
-Additionally, older versions of ATT&CK can now be loaded in the application. The ATT&CK Navigator supports ATT&CK versions 8, 7, 6, [TODO list other compatible versions]. Older versions do not work in the application since their data model is too outdated.
+Additionally, older versions of ATT&CK can now be loaded in the application. The ATT&CK Navigator supports ATT&CK versions 8, 7, 6, 5, and 4. Older versions do not work in the application since their data model is too outdated.
 
 Previous versions of the Navigator application are also hosted via GitHub Pages for users who want a more classic experience:
 | ATT&CK Version | Navigator Version | Domains | |
@@ -113,20 +113,38 @@ Example custom context menu objects:
 ```
 
 ## Loading content from a TAXII server
-*By default, the Navigator loads content from the MITRE CTI TAXII server at https://cti-taxii.mitre.org.*
-1. Edit the `config.json` file in the **nav-app/src/assets** directory
-2. Set the `enabled` property in `taxii_server` to **true**
-3. Set the `url` property in `taxii_server` to your server's URL
-4. Set the values of the `collections` dictionary to the collection UUIDs your TAXII server has set
+*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work).*
+
+1. Edit the `config.json` file in the **nav-app/src/assets** directory.
+2. Define the `taxii_url` property in place of the `data` property and set the value to your server's URL.
+3. Define the `taxii_collection` property and set the value to the collection UUIDs your TAXII server has set.
+
+Example loading content from a TAXII server:
+```json
+"domains": [
+    {
+        "name": "Enterprise",
+        "taxii_url": "https://cti-taxii.mitre.org/",
+        "taxii_collection": "95ecc380-afe9-11e4-9b6c-751b66dd541e"
+    }
+]
+```
 
 ## Loading content from local files
 *It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
 1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
-2. Configure the navigator to use these files. In `src/assets/config.json`:
-    1.  Change `enterprise_attack_url` to the path to the enterprise-attack bundle (e.g `assets/enterprise-attack.json`).
-    2. Change `mobile_attack_url` to the path to the mobile-attack bundle (e.g `assets/mobile-attack.json`).
-    3. Change `pre_attack_url` to the path to the pre-attack bundle (e.g `assets/pre-attack.json`).
-    4. Change `taxii_server.enabled` to false.
+2. Edit the `config.json` file in the **nav-app/src/assets** directory.
+3. Change the URL specified in the `data` array to the path to the STIX bundle (e.g `assets/enterprise-attack.json`). Multiple paths may be added to the `data` array to display multiple STIX bundles in a single instance.
+
+Example loading content from local files:
+```json
+"domains": [
+    {
+        "name": "Enterprise",
+        "data": ["assets/enterprise-attack.json"]
+    }
+]
+```
 
 ## Running the Docker File
 1. Navigate to the **nav-app** directory
