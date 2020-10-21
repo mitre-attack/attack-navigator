@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, Input, AfterContentInit } from '@angular/core';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
@@ -12,7 +12,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     templateUrl: './exporter.component.html',
     styleUrls: ['./exporter.component.scss']
 })
-export class ExporterComponent implements AfterViewInit {
+export class ExporterComponent implements AfterContentInit {
 
     @Input() viewModel: ViewModel;
 
@@ -50,7 +50,7 @@ export class ExporterComponent implements AfterViewInit {
         }
      }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
         //determine if the layer has any scores

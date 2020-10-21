@@ -980,9 +980,9 @@ export class ViewModel {
         rep.name = this.name;
 
         rep.versions = {
-            "layer": globals.layer_version,
             "attack": this.dataService.getDomain(this.domainID).getVersion(),
-            "navigator": globals.nav_version
+            "navigator": globals.nav_version,
+            "layer": globals.layer_version
         }
 
         rep.domain = this.domainID.substr(0, this.domainID.search(/-v[0-9]/g));
