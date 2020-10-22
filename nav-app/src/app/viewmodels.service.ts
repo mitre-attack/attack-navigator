@@ -1030,8 +1030,11 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        this.domain = obj.domain;
-        this.domainID = this.dataService.getDomainID(obj.domain, this.version);
+        // patch for old domain name convention 
+        if(obj.domain in this.dataService.domain_backwards_compatibility) {
+            this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
+        } else { this.domain = obj.domain; }
+        this.domainID = this.dataService.getDomainID(this.domain, this.version);
     }
 
     /**

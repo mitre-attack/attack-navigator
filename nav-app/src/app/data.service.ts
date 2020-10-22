@@ -17,6 +17,10 @@ export class DataService {
         })
     }
 
+    public domain_backwards_compatibility = {
+        "mitre-enterprise": "enterprise-attack",
+        "mitre-mobile": "mobile-attack"
+    }
     public domains: Domain[] = [];
     public versions: any[] = [];
 
