@@ -1,18 +1,25 @@
-# v4.0 - mixed domains and versions
+# v4.0
 ## New Features
 ### Major
+- Added support for mixed domains and versions. Layers can be opened with different ATT&CK versions and now support custom domains. See issues [#180](https://github.com/mitre-attack/attack-navigator/issues/180) and [#182](https://github.com/mitre-attack/attack-navigator/issues/182).
+    - Users can specify the ATT&CK version and domain for each layer. A layer with no specified ATT&CK version will default to the current version.
+    - Updated "create new layer" interface to provide access to previous versions of ATT&CK.
+    - Added ability to upgrade an uploaded layer to the current version of ATT&CK.
+    - Updated "create layer from other layers" interface to restrict layer operations to layers of the same domain and version.
+    - Updated configuration file to support dynamic domains and versions. Users can update this file to display multiple domains in a single instance (see _Loading content from local files_ in [the readme](README.md) for more details). See issue [#183](https://github.com/mitre-attack/attack-navigator/issues/183).
 - Removed the pre-ATT&CK domain from the Navigator in support of the next ATT&CK release. See issue [#207](https://github.com/mitre-attack/attack-navigator/issues/207).
     - Removed the "stages" section of the filters and layer format.
     - Added functionality to select or deselect techniques in a tactic. This can be done within the context menu or by clicking on the name of the tactic and follows the user's behavior preference under "selection behavior" in the selection controls.
 
 ## Fixes
+- Fixed a bug preventing layer downloads with an empty metadata field. See issue [#214](https://github.com/mitre-attack/attack-navigator/issues/214).
 - Fixed a bug in "selection controls" where searching for techniques would return results only from the first enabled search property. See issue [#200](https://github.com/mitre-attack/attack-navigator/issues/200).
 - Fixed a bug in the "default layers" interface where specifying multiple default layers would open the last specified URL multiple times. See issue [#199](https://github.com/mitre-attack/attack-navigator/issues/199).
 
 ## Layer File Format Changes
-Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
-
-This update supports the removal of the pre-ATT&CK domain with the next release of ATT&CK. The "stages" section of the filters has been removed to reflect the migration of Pre-ATT&CK techniques to a new tactic under the enterprise domain.
+Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the Pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
+- This update supports the removal of the pre-ATT&CK domain with the next release of ATT&CK. The `stages` section of the filters has been removed to reflect the migration of Pre-ATT&CK techniques to a new tactic under the enterprise domain.
+- Replaced `version` field with `versions` object which specifies the layer format, Navigator, and ATT&CK content versions in support of the mixed domains and versions update.
 
 # v3.1 - 8 July 2020
 ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 
