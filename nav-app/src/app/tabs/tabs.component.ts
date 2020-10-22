@@ -548,7 +548,7 @@ export class TabsComponent implements AfterContentInit {
 
                 this.versionUpgradeDialog(viewModel).then( () => {
                     if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' is not a valid domain."};
+                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is not a valid domain."};
                     }
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
@@ -563,8 +563,8 @@ export class TabsComponent implements AfterContentInit {
                     }
                 })
                 .catch( (err) => {
-                    console.error("ERROR: Unable to upgrade file version or version is invalid.", err);
-                    alert("ERROR: Unable to upgrade file version or version is invalid.");
+                    console.error(err.message);
+                    alert("ERROR parsing file, check the javascript console for more information.");
                 });
             }
             catch(err){
@@ -589,6 +589,9 @@ export class TabsComponent implements AfterContentInit {
                     viewModel.deSerializeDomainID(res);
 
                     this.versionUpgradeDialog(viewModel).then( () => {
+                        if (!this.dataService.getDomain(viewModel.domainID)) {
+                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is not a valid domain."};
+                        }
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                 viewModel.deSerialize(res);
@@ -604,8 +607,8 @@ export class TabsComponent implements AfterContentInit {
                         }
                     })
                     .catch( (err) => {
-                        console.error("ERROR: Unable to upgrade file version or version is invalid.", err);
-                        alert("ERROR: Unable to upgrade file version or version is invalid.");
+                        console.error(err.message);
+                        alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
                     });
                     console.log("loaded layer from", loadURL);
                 } catch(err) {
