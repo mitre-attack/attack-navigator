@@ -548,7 +548,7 @@ export class TabsComponent implements AfterContentInit {
 
                 this.versionUpgradeDialog(viewModel).then( () => {
                     if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is not a valid domain."};
+                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                     }
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
@@ -590,7 +590,7 @@ export class TabsComponent implements AfterContentInit {
 
                     this.versionUpgradeDialog(viewModel).then( () => {
                         if (!this.dataService.getDomain(viewModel.domainID)) {
-                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is not a valid domain."};
+                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                         }
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {

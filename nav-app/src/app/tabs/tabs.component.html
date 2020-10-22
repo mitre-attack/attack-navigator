@@ -58,9 +58,9 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <table class="inputTable">                        
+                <table class="btn-group" role="group">                        
                     <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
-                        <td><button mat-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
+                        <td><button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
                     </ng-template>
                 </table>
 
@@ -169,7 +169,7 @@
                             </mat-form-field>
                         </td>
                         <td>
-                            Choose the domain and version for the new layer.
+                            Choose the domain and version for the new layer. Only layers of the same domain and version can be merged.
                         </td>
                     </tr>
                     <tr>

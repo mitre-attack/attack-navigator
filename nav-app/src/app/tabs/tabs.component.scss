@@ -223,6 +223,16 @@ input[type=file]{
     }
 }
 
+.btn-group {
+    width: 100%;
+    table-layout: fixed;
+    padding: 0 24px;
+    margin-bottom: 5px;
+    
+    button {
+        width: 100%;
+    }
+}
 
 .inputTable {
     width: 100%;
