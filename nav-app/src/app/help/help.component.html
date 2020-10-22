@@ -119,7 +119,7 @@
     <p>
       A layer constitutes a view of the tactics and techniques matrix for a
       specific technology domain. Version {{nav_version}} of the Navigator can manipulate
-      either the Enterprise (Windows, Linux, Mac, AWS, GCP, Azure, Azure AD, Office 365 and SaaS) or Mobile (Android and iOS)
+      either the Enterprise, Mobile, or ICS
       ATT&CK technology domain knowledge bases. Within a technology domain, the
       Navigator allows you to filter your view of the matrix in a variety of
       ways, displaying the tactics and techniques that are important to you.
@@ -153,9 +153,12 @@
 
     <h2 id="help_Creating_New_Layers">Creating New Layers</h2>
     <p>
-        To create a new layer, open a new tab and click the "Create New Layer" button.
-        Note that for performance reasons, the Navigator currently imposes a limit of
-        ten (10) active layers at any given point in time.
+        To create a new layer, open a new tab and click the "Create New Layer" dropdown.
+        The quick access buttons will create a layer with the current version of ATT&CK.
+        Past versions of ATT&CK compatible with the Navigator are accessible in the 
+        "More Options" dropdown. This interface allows you to specify the desired version
+        and domain for the new layer. Note that for performance reasons, the Navigator 
+        currently imposes a limit of ten (10) active layers at any given point in time.
     </p>
     <h2 id="help_Saving_and_Loading_Layers">Saving and Loading Layers</h2>
     <p>
@@ -167,11 +170,11 @@
         view configuration.
     </p>
     <p>
-        Saved layer configuration files can be opened in the ATT&CK navigator to
+        Saved layer configuration files can be opened in the ATT&CK Navigator to
         restore a layer you've worked on previously. To do so, open a new tab
         and open the "Open Existing Layer" panel. Then click "Upload from
         local", and select your saved configuration file. Doing so will restore
-        your saved layer to the ATT&CK navigator. This interface also has a "load from URL"
+        your saved layer to the ATT&CK Navigator. This interface also has a "load from URL"
         input allowing you to open a layer json from a remote source.
     </p>
     <h2 id="help_Creating_Layers_from_Other_Layers">Creating Layers from Other Layers</h2>
@@ -180,6 +183,12 @@
         exist which can be used to choose which layers to inherit properties from:
     </p>
     <ul>
+        <li>
+            <p>
+                <b>Domain:</b> choose the domain and version for the new layer. Layers can only inherit
+                properties from other layers of the same domain and version.
+            </p>
+        </li>
         <li>
             <p>
                 <b>Score Expression:</b> Technique <a href="#help_Scoring_Techniques">scores</a>  in the created layer are
@@ -242,7 +251,6 @@
             </li>
         </ul>
         <p>
-            <!-- TODO: update this with links to main doc section for feature -->
             Tactic-spanning Techniques are evaluated individually: if a technique is annotated differently
             in two tactics, the output layers' techniques will honor this difference.
         </p>
@@ -314,8 +322,8 @@
             applies to a particular technology platform.  Technology platforms
             are tied to the specific technology domain you are visualizing. For
             the Enterprise technology domain, the defined platforms are:
-            Windows, Linux, macOS, AWS, GCP, Azure, Azure AD, Office 365, and SaaS.  For the Mobile technology domain, the
-            defined platforms are: Android and iOS. 
+            PRE, Windows, Linux, macOS, Network, AWS, GCP, Azure, Azure AD, Office 365, and SaaS.  For the Mobile technology domain, the
+            defined platforms are: Android and iOS. For the ICS technology domain, the defined platforms are Windows, Control Server, Data Historian, "Engineering Workstation", Field Controller/RTU/PLC/IED, Human-Machine Interface, Input/Output Server, Safety Instrumented System/Protection Relay.
         </p>
         <p>
             Each technique in an ATT&CK matrix is tied to one or more platforms.

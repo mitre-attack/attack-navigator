@@ -4,8 +4,18 @@ import json
 
 revoked_by = {} #attackID => {replacing attackID, tactics[] of new technique}
 domains = {
-    "mitre-enterprise": {"url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json", "downloaded": False },
-    "mitre-mobile": {"url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json", "downloaded": False }
+    "enterprise-attack": {"url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json", "downloaded": False },
+    "mobile-attack": {"url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json", "downloaded": False }
+}
+
+# backwards compatability for domain format
+domain_backwards_compatability = {
+    "enterprise-attack": "enterprise-attack", # no change
+    "mitre-enterprise": "enterprise-attack",
+    "mobile-attack": "mobile-attack", # no change
+    "mitre-mobile": "mobile-attack",
+    "ics-attack": "ics-attack" # no change
+    # ICS had no old format domain
 }
 
 def download_domain(domain):
@@ -35,6 +45,8 @@ def update_layer(layerfile, replace=False):
     print("processing", layerfile)
     with open(layerfile, "r") as f:
         layer = json.load(f)
+
+    layer["domain"] = domain_backwards_compatability[layer["domain"]] # patch old domain setup
 
     # download data for appropriate domains
     if not domains[layer["domain"]]["downloaded"]:
@@ -103,7 +115,11 @@ def update_layer(layerfile, replace=False):
             technique["techniqueID"] = newID
     
     # set the version to current
-    layer["version"] = "4.0"
+    layer["versions"] = {
+        "navigator": "4.0",
+        "layer": "4.0",
+        "attack": "8"
+    }
 
     # output layer
     outfile = layerfile if replace else layerfile.split(".")[0] + "-updated.json"

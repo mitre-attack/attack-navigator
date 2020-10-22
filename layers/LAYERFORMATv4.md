@@ -8,8 +8,8 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 | versions | Version object | No | | See Version object definition below |
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
-| domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack" or "mobile-attack" |
-| filters |Filter object | No | | See Filter object definition below
+| domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack", "mobile-attack", "ics-attack" |
+| filters | Filter object | No | | See Filter object definition below
 | sorting | Number | No | 0 | Specifies the ordering of the techniques within each tactic category as follows: <br>**0**: sort ascending alphabetically by technique name <br>**1**: sort descending alphabetically by technique name <br>**2**: sort ascending by technique score <br>**3**: sort descending by technique score |
 | layout | Layout object | No | | See definition of Layout object below |
 | hideDisabled | Boolean | No | false | Specifies whether techniques that have been disabled are still displayed (greyed-out) or omitted from the view as follows: <br>**true**: omit techniques marked as disabled from the view <br>**false**: include disabled techniques in the view but display as greyed-out |
@@ -27,17 +27,15 @@ This document describes **Version 4.0** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| platforms | Array of String | No | **domain=enterprise-attack**: "Windows", "Linux", "macOS" <br> **domain=mobile-attack**: "Android", "iOS" | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=enterprise-attack**: "Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mobile-attack**: "Android", "iOS" |
-
+| platforms | Array of String | No | all platforms within domain | Specifies the platforms within the technology domain – only those techniques tagged with these platforms are to be displayed. Valid values are as follows: <br>**domain=enterprise-attack**: "PRE", "Windows", "Linux", "macOS", "Network", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS" <br>**domain=mobile-attack**: "Android", "iOS". <br>**domain=ics-attack**: "Windows", "Control Server", "Data Historian", "Engineering Workstation", "Field Controller/RTU/PLC/IED", "Human-Machine Interface", "Input/Output Server", "Safety Instrumented System/Protection Relay" |
 
 ## Version Object Properties
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| layer | String | Yes | | Must be "4.0" |
-| attack | String | No | Current version of ATT&CK: "7" | ATT&CK version of this layer |
+| attack | String | No | Current version of ATT&CK: "8" | ATT&CK version of this layer |
 | navigator | String | Yes | | Must be "4.0" |
-
+| layer | String | Yes | | Must be "4.0" |
 
 ## Technique Object properties
 
@@ -86,9 +84,9 @@ The following example illustrates the layer file format:
 {
     "name": "example layer",
     "versions": {
-        "layer": "4.0",
-        "attack": "7",
-        "navigator": "4.0"
+        "attack": "8",
+        "navigator": "4.0",
+        "layer": "4.0"
     },
     "domain": "enterprise-attack",
     "description": "hello, world",
