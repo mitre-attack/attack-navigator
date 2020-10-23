@@ -22,6 +22,17 @@ $cellSize: 15px;
     overflow-x: scroll;
     min-height: 50vh;
     border: 1px solid $panel-dark;
+
+    .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+        
+        mat-progress-spinner circle {
+            stroke: on-color-deemphasis(body);
+        }
+    }
     .matrices-columns {
         // white-space: nowrap;
         display: table;
@@ -43,8 +54,6 @@ $cellSize: 15px;
         }
     }
 }
-
-
 
 .multiselect-dropdown{
     display: inline-block;

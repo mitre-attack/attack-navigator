@@ -3,22 +3,23 @@ import { NgModule } from '@angular/core';
 import 'rxjs/add/operator/map'
 
 // material
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatDialogModule, MatCheckboxModule} from '@angular/material';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule, MatCheckboxModule } from '@angular/material';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
-import {DynamicTabsDirective} from './tabs/dynamic-tabs.directive';
+import { DynamicTabsDirective } from './tabs/dynamic-tabs.directive';
 import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
@@ -63,6 +64,7 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     MatCheckboxModule,
     MatTooltipModule,
     MatMenuModule,

@@ -609,6 +609,7 @@ export class TabsComponent implements AfterContentInit {
                     .catch( (err) => {
                         console.error(err.message);
                         alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
+                        resolve();
                     });
                     console.log("loaded layer from", loadURL);
                 } catch(err) {
