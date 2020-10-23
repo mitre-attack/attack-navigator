@@ -1,6 +1,6 @@
 {
   "name": "nav-app",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "license": "Apache",
   "scripts": {
     "ng": "ng",
@@ -11,7 +11,6 @@
     "e2e": "ng e2e",
     "postinstall": "node patch-webpack.js"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^8.0.0",
     "@angular/cdk": "^8.0.0",

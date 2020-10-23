@@ -1,18 +1,54 @@
-# v4.0 - mixed domains and versions
+# v4.0
 ## New Features
 ### Major
+- Added support for mixed domains and versions. Layers can be opened with different ATT&CK versions and now support custom domains. See issues [#180](https://github.com/mitre-attack/attack-navigator/issues/180) and [#182](https://github.com/mitre-attack/attack-navigator/issues/182).
+    - Users can specify the ATT&CK version and domain for each layer. A layer with no specified ATT&CK version will default to the current version.
+    - Updated "create new layer" interface to provide access to previous versions of ATT&CK.
+    - Added ability to upgrade an uploaded layer to the current version of ATT&CK.
+    - Updated "create layer from other layers" interface to restrict layer operations to layers of the same domain and version.
+    - Updated config file to support dynamic domains and versions. See _Config File Format Changes_ below for more details.
 - Removed the pre-ATT&CK domain from the Navigator in support of the next ATT&CK release. See issue [#207](https://github.com/mitre-attack/attack-navigator/issues/207).
     - Removed the "stages" section of the filters and layer format.
     - Added functionality to select or deselect techniques in a tactic. This can be done within the context menu or by clicking on the name of the tactic and follows the user's behavior preference under "selection behavior" in the selection controls.
 
 ## Fixes
+- Fixed a bug preventing layer downloads with an empty metadata field. See issue [#214](https://github.com/mitre-attack/attack-navigator/issues/214).
 - Fixed a bug in "selection controls" where searching for techniques would return results only from the first enabled search property. See issue [#200](https://github.com/mitre-attack/attack-navigator/issues/200).
 - Fixed a bug in the "default layers" interface where specifying multiple default layers would open the last specified URL multiple times. See issue [#199](https://github.com/mitre-attack/attack-navigator/issues/199).
 
 ## Layer File Format Changes
-Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
+Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the Pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
+- ATT&CK version 8.0 removed the pre-ATT&CK domain, which became two tactics tagged with the `PRE` platform in the Enterprise domain. The `stages` section of filters have been removed to reflect this migration.
+- Replaced `version` field with `versions` object which specifies the layer format, Navigator, and ATT&CK content versions in support of the mixed domains and versions update.
 
-This update supports the removal of the pre-ATT&CK domain with the next release of ATT&CK. The "stages" section of the filters has been removed to reflect the migration of Pre-ATT&CK techniques to a new tactic under the enterprise domain.
+## Config File Format Changes
+
+### Replaced `enterprise_attack_url` and `mobile_data_url` with `versions`
+To support the addition of dynamic versions and domains, paths to ATT&CK STIX bundles have been migrated to `versions`. See issue [#183](https://github.com/mitre-attack/attack-navigator/issues/183).
+- The `versions` object defines a list of ATT&CK content versions. Each version must conform the schema `{"name": string, "domains": []}`, where the `domains` property is a list of domain objects.
+- Each domain specifies a `name` and a `data` string array, where the `data` array is a list of paths to one or more STIX bundles. Multiple paths can be added to the `data` property to view multiple STIX bundles in a single layer instance.
+
+For example, the paths to the current version of the Enterprise and Mobile domains are now formatted as follows:
+```json
+"versions": [
+    {
+        "name": "ATT&CK v8",
+        "domains": [
+            {
+                "name": "Enterprise",
+                "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/enterprise-attack/enterprise-attack.json"]
+            },
+            {
+                "name": "Mobile",
+                "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/mobile-attack/mobile-attack.json"]
+            }
+        ]
+    }
+]
+```
+
+### Removal of `taxii_server`
+The `taxii_server` property has been removed. It was previously used to specify the TAXII server URL and data collections for loading content into the Navigator. This is now done by defining a `taxii_url` and `taxii_collection` property in place of the `data` property for a given domain. For more information on TAXII support see _Loading content from a TAXII server_ in [the readme](README.md).
 
 # v3.1 - 8 July 2020
 ATT&CK Navigator v3.0 and v3.1 includes support for sub-techniques as well as improvements to several of the interfaces and a major refactor of the codebase. The format for the config file and layer file have both changed: please see _Layer File Format Changes_ and _Config File Format Changes_ below for more details. 

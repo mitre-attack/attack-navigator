@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix } from "./data.service";
+import { DataService, Technique, Tactic, Matrix, Domain } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -11,8 +11,6 @@ import * as is from 'is_js';
 
 @Injectable()
 export class ViewModelsService {
-
-    domain = "mitre-mobile";
 
     constructor(private dataService: DataService) {
 
@@ -27,12 +25,9 @@ export class ViewModelsService {
      * @param {string} name the viewmodel name
      * @return {ViewModel} the created ViewModel
      */
-    newViewModel(name: string) {
-        let vm = new ViewModel(name, this.domain, "vm"+ this.getNonce(), this.dataService);
+    newViewModel(name: string, domainID: string) {
+        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainID, this.dataService);
         this.viewModels.push(vm);
-        // console.log("created new viewModel", this.viewModels)
-
-        // this.saveViewModelsCookies()
         return vm;
     }
 
@@ -74,8 +69,8 @@ export class ViewModelsService {
      * @param  filters            viewmodel to inherit filters from
      * @return                    new viewmodel inheriting above properties
      */
-    layerLayerOperation(scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", this.domain, "vm" + this.getNonce(), this.dataService);
+    layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainID, this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -352,9 +347,10 @@ export class ViewModel {
     // PROPERTIES & DEFAULTS
 
     name: string; // layer name
-    domain: string; //layer domain, TODO
+    domain: string = ""; // attack domain
+    version: string = ""; // attack version
+    domainID: string; // layer domain & version
     description: string = ""; //layer description
-    version: string = "";
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
     filters: Filter;
@@ -392,24 +388,31 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
-    constructor(name: string, domain: string, uid: string, private dataService: DataService) {
-        this.domain = domain;
+    constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
+        this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
-        this.filters = new Filter(this.domain);
+        this.filters = new Filter();
         this.name = name;
-        this.version = globals.layer_version;
         this.uid = uid;
-        if (!this.dataService.dataLoaded) {
+    }
+
+    loadVMData() {
+        if (!this.domainID || !this.dataService.getDomain(this.domainID).dataLoaded) {
             console.log("subscribing to data loaded callback")
-            this.dataService.onDataLoad(() => this.initTechniqueVMs()); //arrow function preserves `this` in callback
+            let self = this;
+            this.dataService.onDataLoad(this.domainID, function() {
+                self.initTechniqueVMs()
+                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
+            }); 
         } else {
             this.initTechniqueVMs();
+            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
         }
     }
 
     initTechniqueVMs() {
         console.log(this.name, "initializing technique VMs");
-        for (let technique of this.dataService.techniques) {
+        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
@@ -975,8 +978,14 @@ export class ViewModel {
         })
         let rep: {[k: string]: any } = {};
         rep.name = this.name;
-        rep.version = String(this.version);
-        rep.domain = this.domain
+
+        rep.versions = {
+            "attack": this.dataService.getDomain(this.domainID).getVersion(),
+            "navigator": globals.nav_version,
+            "layer": globals.layer_version
+        }
+
+        rep.domain = this.domainID.substr(0, this.domainID.search(/-v[0-9]/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -996,18 +1005,45 @@ export class ViewModel {
     }
 
     /**
+     * restore the domain and version from a string
+     * @param rep string to restore from
+     */
+    deSerializeDomainID(rep: any): void {
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        this.name = obj.name
+        this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
+        if ("versions" in obj) {
+            if ("attack" in obj.versions) {
+                if (typeof(obj.versions.attack) === "string") {
+                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]/g)[0];
+                }
+                else console.error("TypeError: attack version field is not a string");
+            }
+            if(obj.versions["layer"] !== globals.layer_version){
+                alert("WARNING: Uploaded layer version (" + String(obj.versions["layer"]) + ") does not match Navigator's layer version ("
+                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+            }
+        }
+        if ("version" in obj) { // backwards compatibility with Layer Format 3
+            if (obj.version !== globals.layer_version){
+                alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
+                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+            }
+        }
+        // patch for old domain name convention 
+        if(obj.domain in this.dataService.domain_backwards_compatibility) {
+            this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
+        } else { this.domain = obj.domain; }
+        this.domainID = this.dataService.getDomainID(this.domain, this.version);
+    }
+
+    /**
      * restore this vm from a string
      * @param  rep string to restore from
      */
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        this.name = obj.name
-        this.domain = obj.domain;
-
-        if(obj.version !== globals.layer_version){
-            alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
-            + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
-        }
+        
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
@@ -1088,7 +1124,7 @@ export class ViewModel {
                     } else {
                         // occurs in multiple tactics
                         // match to Technique by attackID
-                        for (let technique of this.dataService.techniques) {
+                        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
                                 for (let tactic of technique.tactics) {
@@ -1373,21 +1409,35 @@ export class TechniqueVM {
 
 // the data for a specific filter
 export class Filter {
+    private readonly domain: string;
     platforms: {
-        options: string[]
+        options: string[],
         selection: string[]
     }
-    constructor(domain) {
-        if (domain == "mitre-enterprise") {
-            this.platforms = {selection: ["Windows", "Linux", "macOS"], options: ["Windows", "Linux", "macOS", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS"]}
-        } else if (domain == "mitre-mobile") {
-            this.platforms = {selection: ["Android", "iOS"], options: ["Android", "iOS"]}
-        } else {
-            console.error("unknown domain", domain);
+    constructor() {
+        this.platforms = {
+            selection: [],
+            options: []
         }
     }
 
-    toggleInFilter(filterName, value): void {
+    /**
+     * Initialize the platform options according to the data in the domain
+     * @param {Domain} domain the domain to parse for platform options
+     */
+    public initPlatformOptions(domain: Domain): void {
+        this.platforms = {
+            selection: JSON.parse(JSON.stringify(domain.platforms)),
+            options: JSON.parse(JSON.stringify(domain.platforms))
+        }
+    }
+
+    /**
+     * toggle the given value in the given filter
+     * @param {*} filterName the name of the filter
+     * @param {*} value the value to toggle
+     */
+    toggleInFilter(filterName: string, value: string): void {
         if (!this[filterName].options.includes(value)) { console.log("not a valid option to toggle", value, this[filterName]); return }
         if (this[filterName].selection.includes(value)) {
             let index = this[filterName].selection.indexOf(value)
@@ -1397,13 +1447,19 @@ export class Filter {
         }
     }
 
+    /**
+     * determine if the given value is active in the filter
+     * @param {*} filterName the name of the filter
+     * @param {*} value the value to determine
+     * @returns {boolean} true if value is currently enabled in the filter
+     */
     inFilter(filterName, value): boolean {
         return this[filterName].selection.includes(value)
     }
 
     /**
      * Return the string representation of this filter
-     * @return [description]
+     * @return stringified filter
      */
     serialize(): string {
         return JSON.stringify({"platforms": this.platforms.selection})
@@ -1465,7 +1521,7 @@ export class Metadata {
             else console.error("TypeError: Metadata field 'value' is not a string")
         } else console.error("Error: Metadata required field 'value' not present");
     }
-    valid(): boolean { return this.name.length > 0 && this.value.length > 0 }
+    valid(): boolean { return this.name && this.name.length > 0 && this.value && this.value.length > 0 }
 }
 
 export class LayoutOptions {

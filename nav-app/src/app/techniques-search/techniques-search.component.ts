@@ -45,7 +45,7 @@ export class TechniquesSearchComponent implements OnInit {
             // search
 
             //get master list of techniques and sub-techniques
-            let allTechniques = this.dataService.techniques;
+            let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
             for (let technique of allTechniques) {
                 allTechniques = allTechniques.concat(technique.subtechniques);
             }

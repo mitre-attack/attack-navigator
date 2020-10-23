@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, Input, AfterContentInit } from '@angular/core';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
@@ -12,7 +12,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     templateUrl: './exporter.component.html',
     styleUrls: ['./exporter.component.scss']
 })
-export class ExporterComponent implements AfterViewInit {
+export class ExporterComponent implements AfterContentInit {
 
     @Input() viewModel: ViewModel;
 
@@ -50,11 +50,11 @@ export class ExporterComponent implements AfterViewInit {
         }
      }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
         //determine if the layer has any scores
-        for (let matrix of this.dataService.matrices) {
+        for (let matrix of this.dataService.getDomain(this.viewModel.domainID).matrices) {
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
                     if (technique.subtechniques.length > 0) {
@@ -494,7 +494,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         // build data model
-        let matrices: RenderableMatrix[] = this.dataService.matrices.map(function(matrix: Matrix) {
+        let matrices: RenderableMatrix[] = this.dataService.getDomain(this.viewModel.domainID).matrices.map(function(matrix: Matrix) {
             return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 
