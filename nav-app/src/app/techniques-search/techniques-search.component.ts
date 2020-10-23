@@ -16,7 +16,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "attack ID",
+            "label": "ATT&CK ID",
             "field": "attackID",
             "enabled": true
         },
@@ -31,7 +31,7 @@ export class TechniquesSearchComponent implements OnInit {
             "enabled": true
         },
         {
-            "label": "datasources",
+            "label": "data sources",
             "field": "datasources",
             "enabled": true
         }
@@ -45,7 +45,7 @@ export class TechniquesSearchComponent implements OnInit {
             // search
 
             //get master list of techniques and sub-techniques
-            let allTechniques = this.dataService.techniques;
+            let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
             for (let technique of allTechniques) {
                 allTechniques = allTechniques.concat(technique.subtechniques);
             }
@@ -54,12 +54,12 @@ export class TechniquesSearchComponent implements OnInit {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
-                        return technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())
+                        if (technique[field.field].toLowerCase().includes(self._query.trim().toLowerCase())) return true;
                     }
                 }
                 return false;
             });
-            // decoflict IDs for cross-tactic techniques
+            // deconflict IDs for cross-tactic techniques
             let seenIDs = new Set();
             results = results.filter(function(technique: Technique) {
                 if (seenIDs.has(technique.id)) return false;
@@ -68,8 +68,7 @@ export class TechniquesSearchComponent implements OnInit {
                     return true;
                 }
             })
-            //remove out of stage results
-            results = results.filter((technique: Technique) => this.viewModel.filters.stages.selection.includes(technique.stage));
+
             results = results.sort((tA: Technique, tB: Technique) => {
                 let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
                 let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;

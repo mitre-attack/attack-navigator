@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import {DataService, Technique, Matrix} from '../data.service';
+import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
@@ -73,9 +73,9 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        let matrices = this.viewModel.filters.filterMatrices(this.dataService.matrices);
-        for (let matrix of matrices) {
-            var worksheet = workbook.addWorksheet(matrix.name);  
+        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        for (let matrix of domain.matrices) {
+            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");  
                       
             // create tactic columns
             let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
@@ -277,7 +277,7 @@ export class DataTableComponent implements AfterViewInit {
      */
     expandSubtechniques(): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        for (let technique of this.dataService.techniques) {
+        for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
@@ -343,7 +343,7 @@ export class DataTableComponent implements AfterViewInit {
      * open an export layer render tab for the current layer
      */
     exportRender(): void {
-        let viewModelCopy = new ViewModel(this.viewModel.name, this.viewModel.domain, "vm" + this.viewModelsService.getNonce(), this.dataService);
+        let viewModelCopy = new ViewModel(this.viewModel.name, "vm" + this.viewModelsService.getNonce(), this.viewModel.domainID, this.dataService);
         viewModelCopy.deSerialize(this.viewModel.serialize());
         // let exportData = new ExportData(viewModelCopy, JSON.parse(JSON.stringify(this.tactics)), this.dataService.tacticNames(this.filteredTechniques),  JSON.parse(JSON.stringify(this.filteredTechniques)));
         this.tabs.newExporterTab(this.viewModel);

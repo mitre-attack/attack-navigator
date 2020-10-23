@@ -94,8 +94,8 @@ export abstract class MatrixCommon {
     }
 
     private onTacticClick(tactic: Tactic) {
-        if (this.viewModel.isTacticSelected(tactic)) this.viewModel.clearSelectedTactic();
-        else this.viewModel.selectTactic(tactic);
+        if (this.viewModel.isTacticSelected(tactic)) this.viewModel.unselectAllTechniquesInTactic(tactic);
+        else this.viewModel.selectAllTechniquesInTactic(tactic);
     }
 
     private get tacticRowStyle(): any {

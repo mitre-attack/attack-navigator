@@ -13,6 +13,7 @@ export class TabComponent {
     @Input() template;
     @Input() dataContext;
     @Input() showScoreVariables = false;
+    @Input() domain = "";
     @Input() isDataTable: boolean;
 
 }

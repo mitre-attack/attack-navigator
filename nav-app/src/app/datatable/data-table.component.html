@@ -192,12 +192,17 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <img src="assets/icons/ic_filter_list_black_24px.svg"/>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="filter" *ngFor="let filter of ['platforms', 'stages']">
+                    <div class="filter" *ngFor="let filter of ['platforms']">
                         <b class="filter-label">{{filter}}</b>
-                        <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
-                            <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
-                            <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption);" [checked]="viewModel.filters.inFilter(filter, filterOption)">
-                            <label for="{{filterOption}}" class="checkbox-custom-label noselect">{{filterOption}}</label>
+                        <div *ngIf="viewModel.filters[filter].options.length !== 0">
+                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
+                                <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
+                                <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption);" [checked]="viewModel.filters.inFilter(filter, filterOption)">
+                                <label for="{{filterOption}}" class="checkbox-custom-label noselect">{{filterOption}}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="viewModel.filters[filter].options.length == 0">
+                            Data does not include {{filter}}
                         </div>
                         <!-- <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()">
                             {{filterOption}}  {{viewModel.filters.inFilter(filter, filterOption)}}
@@ -478,21 +483,24 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
 
 <div class="matrices" oncontextmenu="return false">
-    <div class="matrices-columns">
-        <div class="matrix-column" *ngFor="let matrix of viewModel.filters.filterMatrices(dataService.matrices)">
-            <div *ngIf="viewModel.filters.filterMatrices(dataService.matrices).length > 1" class="matrix-name">{{matrix.name}}</div>
-            <div *ngIf="viewModel.layout.layout == 'side'">
-                <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
-            </div>
-            <div *ngIf="viewModel.layout.layout == 'flat'">
-                <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
-            </div>
-            <div *ngIf="viewModel.layout.layout == 'mini'">
-                <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+        <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <div class="matrices-columns">
+            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
+                <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                <div *ngIf="viewModel.layout.layout == 'side'">
+                    <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+                </div>
+                <div *ngIf="viewModel.layout.layout == 'flat'">
+                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
+                </div>
+                <div *ngIf="viewModel.layout.layout == 'mini'">
+                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 <!--

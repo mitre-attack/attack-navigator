@@ -1,18 +1,75 @@
 {
-    "enterprise_attack_url": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
-    "pre_attack_url": "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json",
-    "mobile_data_url": "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
-    "taxii_server": {
-        "enabled": false,
-        "url": "https://cti-taxii.mitre.org/",
-        "collections": {
-            "enterprise_attack": "95ecc380-afe9-11e4-9b6c-751b66dd541e",
-            "pre_attack": "062767bd-02d2-4b72-84ba-56caef0f8658",
-            "mobile_attack": "2f669986-b40b-4423-b720-4396ca6a462b"
+    "versions": [
+        {
+            "name": "ATT&CK v8", 
+            "domains": [
+                {   
+                    "name": "Enterprise", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v7", 
+            "domains": [
+                {   
+                    "name": "Enterprise", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v6", 
+            "domains": [
+                {   
+                    "name": "Enterprise", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/mobile-attack/mobile-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v5",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.2/enterprise-attack/enterprise-attack.json"]
+                },
+                {
+                    "name": "Mobile",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.2/mobile-attack/mobile-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v4",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v4.0/enterprise-attack/enterprise-attack.json"]
+                },
+                {
+                    "name": "Mobile",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v4.0/mobile-attack/mobile-attack.json"]
+                }
+            ]
         }
-    },
-
-    "domain": "mitre-enterprise",
+    ],
 
     "custom_context_menu_items": [
 
