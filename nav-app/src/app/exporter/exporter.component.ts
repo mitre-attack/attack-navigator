@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input } from '@angular/core';
+import { Component, Input, AfterContentInit } from '@angular/core';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
@@ -12,7 +12,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
     templateUrl: './exporter.component.html',
     styleUrls: ['./exporter.component.scss']
 })
-export class ExporterComponent implements AfterViewInit {
+export class ExporterComponent implements AfterContentInit {
 
     @Input() viewModel: ViewModel;
 
@@ -45,16 +45,17 @@ export class ExporterComponent implements AfterViewInit {
             "legendHeight": 1,
 
             "showLegend": true,
+            "showGradient": true,
             "showFilters": true,
             "showAbout": true,
         }
      }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         this.svgDivName = "svgInsert" + this.viewModel.uid;
         let self = this;
         //determine if the layer has any scores
-        for (let matrix of this.dataService.matrices) {
+        for (let matrix of this.dataService.getDomain(this.viewModel.domainID).matrices) {
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
                     if (technique.subtechniques.length > 0) {
@@ -96,9 +97,10 @@ export class ExporterComponent implements AfterViewInit {
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showLegend && this.hasScores  && this.config.showHeader}
-    showLegend(): boolean {return this.config.showLegend && (this.hasLegendItems() || this.hasScores)}
-    showLegendInHeader(): boolean {return this.config.legendDocked && this.showLegend();}
+    showGradient(): boolean {return this.config.showGradient && this.hasScores && this.config.showHeader}
+    showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
+    showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
+    showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
@@ -261,14 +263,42 @@ export class ExporterComponent implements AfterViewInit {
             let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
-            let bestBinary = ""; //arrangement of line breaks, see below
-            for (let j = 0; j < 2**(words.length - 1); j++) { //try no breaks first
-                let wordSet = []; //build this array
 
-                //binary representation of newline locations, e.g 001011
+            /**
+             * determine placement of line breaks to try. Shorter lists of words can try more positions
+             * @param {number} num_spaces the number of spaces in the words, aka words.length - 1
+             * @param {number} [num_breaks=3]  the number of breaks to insert
+             * @returns str[] where each index is a combination of breaks represented as [01]+ where 1 is a break and 0 is a space
+             */
+            function find_breaks(num_spaces:number, num_breaks=3) {
+                let breaks = new Set<string>();
+                function recurse(breakset_inherit, depth, num_breaks) {
+                    for (let i = 0; i < breakset_inherit.length; i++) {
+                        let breakset = JSON.parse(JSON.stringify(breakset_inherit)); //deep copy
+                        breakset[i] = 1; // insert break at this location
+                        breaks.add(breakset.join("")); //save this combination
+                        if (depth < num_breaks - 1) recurse(breakset, depth + 1, num_breaks);
+                    }
+                }
+                let initial_breaks = []
+                while (initial_breaks.length < num_spaces) initial_breaks.push(0); //fill with 0s
+                breaks.add(initial_breaks.join("")); //save this combination
+                recurse(initial_breaks, 0, num_breaks)
+                return breaks
+            }
+
+            let num_spaces = words.length;
+            // longer strings can't try as many combinations without the page lagging
+            let num_breaks = 1;
+            if (num_spaces < 20) num_breaks = 3;
+            else if (num_spaces < 50) num_breaks = 2;
+            else num_breaks = 1;
+            let breaks = Array.from(find_breaks(num_spaces, num_breaks))
+            for (let binaryString of breaks) { // find the best option of the proposed placements generated by find_breaks
+                //binaryString: binary representation of newline locations, e.g 001011
                 //where 1 is newline and 0 is no newline
-                let binaryString = j.toString(2).padStart(words.length, "0");
-
+                let wordSet = []; //build this array
+                
                 for (let k = 0; k < binaryString.length; k++) {
                     if (binaryString[k] === "0") {//join with space
                         if (wordSet.length == 0) wordSet.push(words[k]);
@@ -282,7 +312,6 @@ export class ExporterComponent implements AfterViewInit {
                 if (size > bestSize) { //found new optimum
                     bestSize = size;
                     bestWordArrangement = wordSet;
-                    bestBinary = binaryString;
                 }
                 if (size == maxFontSize) break; //if largest text found, no need to search more
             }
@@ -319,7 +348,7 @@ export class ExporterComponent implements AfterViewInit {
         }
 
         let legend = {"title": "legend", "contents": []};
-        if (self.hasScores) legend.contents.push({
+        if (self.hasScores && self.showGradient()) legend.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
@@ -347,7 +376,7 @@ export class ExporterComponent implements AfterViewInit {
                 )
             }
         });
-        if (self.hasLegendItems()) legend.contents.push({
+        if (self.showLegend()) legend.contents.push({
             "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
                 let colorScale = d3.scaleOrdinal()
                     .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
@@ -457,12 +486,10 @@ export class ExporterComponent implements AfterViewInit {
                 "title": "filters",
                 "contents": [{
                     "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
-                }, {
-                    "label": "stages", "data": this.viewModel.filters.stages.selection.join(", ")
                 }]
             });
 
-            if (self.showLegend() && self.showLegendInHeader()) headerSections.push(legend);
+            if (self.showLegendContainer() && self.showLegendInHeader()) headerSections.push(legend);
 
             let headerGroup = svg.append("g");
 
@@ -496,7 +523,7 @@ export class ExporterComponent implements AfterViewInit {
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         // build data model
-        let matrices: RenderableMatrix[] = this.viewModel.filters.filterMatrices(this.dataService.matrices).map(function(matrix: Matrix) {
+        let matrices: RenderableMatrix[] = this.dataService.getDomain(this.viewModel.domainID).matrices.map(function(matrix: Matrix) {
             return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 
@@ -645,7 +672,7 @@ export class ExporterComponent implements AfterViewInit {
         //                                                                                                                         888ooo888                                    
 
 
-        if (self.showLegend() && !self.showLegendInHeader()) {
+        if (self.showLegendContainer() && !self.showLegendInHeader()) {
             let legendGroup = tablebody.append("g")
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
@@ -839,7 +866,7 @@ class RenderableTactic {
     public readonly height: number;
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
-        let filteredTechniques = viewModel.filterTechniques(tactic.techniques, tactic, matrix);
+        let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
         let yPosition = 1; //start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);

@@ -162,7 +162,6 @@ export class TechniqueCellComponent implements OnInit {
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
-        if (this.viewModel.hasSelectedTactic() && !this.viewModel.isTacticSelected(this.tactic)) return "#aaaaaa";
         else return "black"
     }
 

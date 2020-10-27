@@ -38,6 +38,14 @@
                 select unannotated
             </div>
         </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="selectAllInTactic()">
+                select all techniques in tactic
+            </div>
+            <div class="contextMenu-button" (click)="deselectAllInTactic()">
+                deselect all techniques in tactic
+            </div>
+        </div>
         <div class="contextMenu-section">
             <div class="contextMenu-button" (click)="viewTechnique()">
                 view technique

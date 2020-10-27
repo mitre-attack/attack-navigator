@@ -13,125 +13,87 @@ export class DataService {
     constructor(private http: HttpClient) {
         console.log("initializing data service singleton")
         this.getConfig().subscribe((config) => {
-            this.setUpURLs(config["enterprise_attack_url"],
-                           config["pre_attack_url"],
-                           config["mobile_data_url"],
-                           config["taxii_server"]["enabled"],
-                           config["taxii_server"]["url"],
-                           config["taxii_server"]["collections"]);
-            if(config["domain"] === "mitre-enterprise") {
-                console.log("using enterprise data")
-                this.getEnterpriseData(false, config["taxii_server"]["enabled"]).subscribe((enterpriseData: Object[]) => {
-                    this.parseBundle(enterpriseData);
-                });
-            } else if (config["domain"] === "mitre-mobile") {
-                console.log("using mobile data")
-                this.getMobileData(false, config["taxii_server"]["enabled"]).subscribe((mobileData: Object[]) => {
-                    this.parseBundle(mobileData);
-                });
-            }
+            this.setUpURLs(config["versions"]);
         })
     }
 
-    public matrices: Matrix[] = [];
-    public tactics: Tactic[] = [];
-    public techniques: Technique[] = [];
-    public subtechniques: Technique[] = [];
-    public software: Software[] = [];
-    public groups: Group[] = [];
-    public mitigations: Mitigation[] = [];
-    public relationships: any = {
-        // subtechniqye subtechnique-of technique
-        // ID of technique to [] of subtechnique IDs
-        subtechniques_of: new Map<string, string[]>(), 
-        // group uses technique
-        // ID of group to [] of technique IDs
-        group_uses: new Map<string, string[]>(), 
-        // group uses technique
-        // ID of group to [] of technique IDs
-        software_uses: new Map<string, string[]>(),
-        // mitigation mitigates technique
-        // ID of mitigation to [] of technique IDs
-        mitigates: new Map<string, string[]>()
+    public domain_backwards_compatibility = {
+        "mitre-enterprise": "enterprise-attack",
+        "mitre-mobile": "mobile-attack"
     }
+    public domains: Domain[] = [];
+    public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
-    public dataLoaded: boolean = false;
-    public dataLoadedCallbacks: any[] = [];
 
     /**
      * Callback functions passed to this function will be called after data is loaded
      * @param {*} callback callback function to call when data is done loading
      */
-    public onDataLoad(callback) {
-        this.dataLoadedCallbacks.push(callback);
+    public onDataLoad(domainID, callback) {
+        this.getDomain(domainID).dataLoadedCallbacks.push(callback);
     }
 
     /**
-     * Parse the given stix bundle into the relevant data holders (above)
+     * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
-    parseBundle(stixBundle: any[]): void {
-        let techniqueSDOs = [];
-        let idToTechniqueSDO = new Map<string, any>();
-        let matrixSDOs = [];
-
-        let idToTacticSDO = new Map<string, any>();
-        
-        
-        let phases = [
-            {name: "prepare", objects: stixBundle[1]["objects"]},
-            {name: "act",     objects: stixBundle[0]["objects"]}
-        ];
-        for (let phase of phases) {
-            for (let sdo of phase.objects) { //iterate through stix domain objects in the bundle
+    parseBundle(domain: Domain, stixBundles: any[]): void {
+        let platforms = new Set<String>();
+        for (let bundle of stixBundles) {
+            let techniqueSDOs = [];
+            let matrixSDOs = [];
+            let idToTechniqueSDO = new Map<string, any>();
+            let idToTacticSDO = new Map<string, any>();
+            for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // ignore deprecated and revoked objects in the bundle
                 if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
                 // parse according to type
                 switch(sdo.type) {
                     case "intrusion-set":
-                        this.groups.push(new Group(sdo, this));
+                        domain.groups.push(new Group(sdo, this));
                         break;
                     case "malware":
                     case "tool":
-                        this.software.push(new Software(sdo, this));
+                        let soft = new Software(sdo, this)
+                        domain.software.push(soft);
                         break;
                     case "course-of-action":
-                        this.mitigations.push(new Mitigation(sdo, this));
+                        domain.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case "relationship":
                         if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
                             // record subtechnique:technique relationship
-                            if (this.relationships["subtechniques_of"].has(sdo.target_ref)) {
-                                let ids = this.relationships["subtechniques_of"].get(sdo.target_ref);
+                            if (domain.relationships["subtechniques_of"].has(sdo.target_ref)) {
+                                let ids = domain.relationships["subtechniques_of"].get(sdo.target_ref);
                                 ids.push(sdo.source_ref);
                             } else {
-                                this.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
+                                domain.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
                             }
                         } else if (sdo.relationship_type == "uses") {
                             if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
                                 // record group:technique relationship
-                                if (this.relationships["group_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["group_uses"].get(sdo.source_ref);
+                                if (domain.relationships["group_uses"].has(sdo.source_ref)) {
+                                    let ids = domain.relationships["group_uses"].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    this.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                    domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
                                 }
                             } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
                                 // record software:technique relationship
-                                if (this.relationships["software_uses"].has(sdo.source_ref)) {
-                                    let ids = this.relationships["software_uses"].get(sdo.source_ref);
+                                if (domain.relationships["software_uses"].has(sdo.source_ref)) {
+                                    let ids = domain.relationships["software_uses"].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    this.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                    domain.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                                 }
                             }
                         } else if (sdo.relationship_type == "mitigates") {
-                            if (this.relationships["mitigates"].has(sdo.source_ref)) {
-                                let ids = this.relationships["mitigates"].get(sdo.source_ref);
+                            if (domain.relationships["mitigates"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["mitigates"].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
                             } else {
-                                this.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                                domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
                             }
                         }
                         break;
@@ -139,7 +101,7 @@ export class DataService {
                         idToTechniqueSDO.set(sdo.id, sdo);
                         if (sdo.x_mitre_is_subtechnique) {
                             if (this.subtechniquesEnabled) {
-                                this.subtechniques.push(new Technique(sdo, [], this));
+                                domain.subtechniques.push(new Technique(sdo, [], this));
                             }
                         } else techniqueSDOs.push(sdo);
                         break;
@@ -151,29 +113,44 @@ export class DataService {
                         break;
                 }
             }
-        }
 
-        //create techniques
-        for (let techniqueSDO of techniqueSDOs) {
-            let subtechniques: Technique[] = [];
-            if (this.subtechniquesEnabled) {
-                if (this.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                    this.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                        if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
-                        // else the target was revoked or deprecated and we can skip honoring the relationship
-                    })
+            //create techniques
+            for (let techniqueSDO of techniqueSDOs) {
+                let subtechniques: Technique[] = [];
+                if (this.subtechniquesEnabled) {
+                    if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
+                        domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+                            if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                            // else the target was revoked or deprecated and we can skip honoring the relationship
+                        })
+                    }
+                }
+                domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
+            }
+            
+            //create matrices, which also creates tactics and filters techniques
+            for (let matrixSDO of matrixSDOs) {
+                domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
+            }
+            
+            // parse platforms
+            for (let technique of domain.techniques) {
+                for (let platform of technique.platforms) {
+                    platforms.add(platform)
                 }
             }
-            this.techniques.push(new Technique(techniqueSDO, subtechniques, this));
+            for (let subtechnique of domain.subtechniques) {
+                for (let platform of subtechnique.platforms) {
+                    platforms.add(platform)
+                }
+            }
         }
-        //create matrices, which also creates tactics and filters techniques
-        for (let matrixSDO of matrixSDOs) {
-            this.matrices.push(new Matrix(matrixSDO, idToTacticSDO, this.techniques, this));
-        }
+        domain.platforms = Array.from(platforms); // convert to array
 
+        // data loading complete; update watchers
+        domain.dataLoaded = true;
         console.log("data.service parsing complete")
-        this.dataLoaded = true;
-        for (let callback of this.dataLoadedCallbacks) {
+        for (let callback of domain.dataLoadedCallbacks) {
             callback();
         }
     }
@@ -181,36 +158,49 @@ export class DataService {
     // Observable for data in config.json
     private configData$: Observable<Object>;
 
-    // Observables for data
-    private enterpriseData$: Observable<Object>;
-    private mobileData$: Observable<Object>;
+    // Observable for data
+    private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    private pre_attack_URL: string = "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json";
-    private mobileDataURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
-
-    private useTAXIIServer: boolean = false;
-    private taxiiURL: string = '';
-    private taxiiCollections: String[] = [];
+    private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     /**
      * Set up the URLs for data
-     * @param {string} eAttackURL enterprise domain url
-     * @param {string} preAttackURL pre-attack domain url
-     * @param {string} mURL mobile-attack url
-     * @param {boolean} useTAXIIServer use taxii server?
-     * @param {string} taxiiURL the URL of the taxii server
-     * @param {string[]} taxiiCollections taxii collections to fetch from
+     * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(eAttackURL: string, preAttackURL: string, mURL: string, useTAXIIServer: boolean, taxiiURL: string, taxiiCollections: string[]){
-        this.enterpriseAttackURL = eAttackURL;
-        this.pre_attack_URL = preAttackURL;
-        this.mobileDataURL = mURL;
-        this.useTAXIIServer = useTAXIIServer;
-        this.taxiiURL = taxiiURL;
-        this.taxiiCollections = taxiiCollections;
+    setUpURLs(versions: []){
+        versions.forEach( (version: any) => {
+            let v: string = version["name"];
+            this.versions.push(v);
+            version["domains"].forEach( (domain: any) => {
+                let id = this.getDomainID(domain["name"], v);
+                let name = domain["name"];
+                let domainObject = new Domain(id, name, v)
+
+                if (domain["taxii_url"] && domain["taxii_collection"]) {
+                    domainObject.taxii_url = domain["taxii_url"];
+                    domainObject.taxii_collection = domain["taxii_collection"];
+                } else {
+                    domainObject.urls = domain["data"]
+                }
+                this.domains.push(domainObject);
+            });
+        });
+
+        if (this.domains.length == 0) { // issue loading config
+            let currVersion = "ATT&CK v7";
+            let enterpriseDomain = new Domain(this.getDomainID("Enterprise", currVersion), "Enterprise", currVersion);
+            enterpriseDomain.urls = [this.enterpriseAttackURL];
+            let mobileDomain = new Domain(this.getDomainID("Mobile", currVersion), "Mobile", currVersion);
+            mobileDomain.urls = [this.mobileAttackURL];
+
+            this.versions.push(currVersion);
+            this.domains.push(enterpriseDomain);
+            this.domains.push(mobileDomain);
+            console.log(this.domains)
+        }
     }
 
     /**
@@ -225,90 +215,81 @@ export class DataService {
     }
 
     /**
-     * fetch the enterprise data from the endpoint
+     * Fetch the domain data from the endpoint
      */
-    getEnterpriseData(refresh: boolean = false, useTAXIIServer: boolean = false) : Observable<Object>{
-        if (useTAXIIServer) {
-            console.log("fetching data from TAXII server") 
-            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-            let enterpriseCollectionInfo: any = {
-                'id': this.taxiiCollections['enterprise_attack'],
-                'title': 'Enterprise ATT&CK',
+    getDomainData(domain: Domain, refresh: boolean = false) : Observable<Object>{
+        if (domain.taxii_collection && domain.taxii_url) {
+            console.log("fetching data from TAXII server");
+            let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
+            let collectionInfo: any = {
+                'id': domain.taxii_collection,
+                'title': domain.name,
                 'description': '',
                 'can_read': true,
                 'can_write': false,
                 'media_types': ['application/vnd.oasis.stix+json']
             }
-            const enterpriseCollection = new Collection(enterpriseCollectionInfo, this.taxiiURL + 'stix', conn);
+            const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
+            this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
+        } else if (refresh || !this.domainData$) {
+            console.log("retrieving data", domain.urls)
+            let bundleData = [];
+            domain.urls.forEach((url) => {
+                bundleData.push(this.http.get(url));
+            });
 
-            let preattackCollectionInfo: any = {
-                'id': this.taxiiCollections['pre_attack'],
-                'title': 'Pre-ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
-
-            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
-            this.enterpriseData$ = Observable.forkJoin(
-                fromPromise(enterpriseCollection.getObjects('', undefined)),
-                fromPromise(preattackCollection.getObjects('', undefined))
-            )
+            this.domainData$ = Observable.forkJoin(bundleData);
         }
-        else if (refresh || !this.enterpriseData$){
-            console.log("retrieving data", this.enterpriseAttackURL),
-            this.enterpriseData$ = Observable.forkJoin(
-                this.http.get(this.enterpriseAttackURL),
-                this.http.get(this.pre_attack_URL)
-            );
-        }
-        return this.enterpriseData$ //observable
+        return this.domainData$;
     }
 
     /**
-     * fetch the mobile data from the endpoint
+     * Load and parse domain data
      */
-    getMobileData(refresh: boolean = false, useTAXIIServer: boolean = false): Observable<Object> {
-        //load from remote if not yet loaded or refresh=true
-        if (useTAXIIServer) {
-            console.log("fetching data from TAXII server")
-            let conn = new TaxiiConnect(this.taxiiURL, '', '', 5000);
-            let mobileCollectionInfo: any = {
-                'id': this.taxiiCollections['mobile_attack'],
-                'title': 'Mobile ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
+    loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
+        let dataPromise: Promise<any> = new Promise((resolve, reject) => {
+            let domain = this.getDomain(domainID);
+            if (domain) {
+                this.getDomainData(domain, refresh).subscribe((data: Object[]) => {
+                    this.parseBundle(domain, data);
+                    resolve();
+                });
+            } else if (!domain) { // domain not defined in config
+                reject("'" + domainID + "' is not a valid domain.")
             }
-            const mobileCollection = new Collection(mobileCollectionInfo, this.taxiiURL + 'stix', conn);
+        });
+        return dataPromise;
+    }
 
-            let preattackCollectionInfo: any = {
-                'id': this.taxiiCollections['pre_attack'],
-                'title': 'Pre-ATT&CK',
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
+    /**
+     * Get domain object by domain ID
+     */
+    getDomain(domainID: string): Domain {
+        return this.domains.find((d) => d.id === domainID);
+    }
 
-            const preattackCollection = new Collection(preattackCollectionInfo, this.taxiiURL + 'stix', conn);
-
-            this.mobileData$ = Observable.forkJoin(
-                fromPromise(mobileCollection.getObjects('', undefined)),
-                fromPromise(preattackCollection.getObjects('', undefined))
-            )
+    /**
+     * Get domain ID from domain name & version
+     */
+    getDomainID(domain: string, version: string): string {
+        if (!version) { // layer with no specified version defaults to current version
+            version = this.versions[0];
         }
-        else if (refresh || !this.mobileData$){
-            console.log("retrieving data", this.mobileDataURL),
-            this.mobileData$ = Observable.forkJoin(
-                this.http.get(this.mobileDataURL),
-                this.http.get(this.pre_attack_URL)
-            );
-        }
-        return this.mobileData$ //observable
+        return domain.replace(/\s/g, "-").concat('-', version.replace(/\s/g, "-").replace("&", "a").toLowerCase()).toLowerCase();
+    }
+
+    /**
+     * Retrieves the first version defined in the config file
+     */
+    getCurrentVersion() {
+        return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
+    }
+
+    /**
+     * Is the given version supported?
+     */
+    isSupported(version: string) {
+        return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
     }
 }
 
@@ -316,19 +297,17 @@ export class DataService {
  * Common attributes for STIX objects
  */ 
 export abstract class BaseStix {
-    public readonly id: string;          //STIX ID
+    public readonly id: string;          // STIX ID
     public readonly attackID: string;    // ATT&CK ID
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
-    public readonly stage: string;       // prepare or act
     protected readonly dataService: DataService;
     constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
         this.attackID = stixSDO.external_references[0].external_id;
-        this.stage = stixSDO.external_references[0].source_name == "mitre-pre-attack" ? "prepare" : "act";
         this.url = stixSDO.external_references[0].url;
         this.dataService = dataService;
     }
@@ -423,20 +402,32 @@ export class Technique extends BaseStix {
  * Object representing a Software (tool, malware) in the ATT&CK catalogue
  */
 export class Software extends BaseStix {
+    public readonly platforms: string[] = []; //platforms for this software
+
+    /**
+     * Creates an instance of Software.
+     * @param {*} stixSDO for the software
+     * @param {DataService} DataService the software occurs within
+    */
+    constructor(stixSDO: any, dataService: DataService) {
+        super(stixSDO, dataService);
+        this.platforms = stixSDO.x_mitre_platforms;
+    }
+
     /**
      * get techniques used by this software
      * @returns {string[]} technique IDs used by this software
      */
-    public used(): string[] {
-        let rels = this.dataService.relationships.software_uses;
+    public used(domainID): string[] {
+        let rels = this.dataService.getDomain(domainID).relationships.software_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.used();
+    public relatedTechniques(domainID): string[] {
+        return this.used(domainID);
     }
 }
 /**
@@ -447,16 +438,16 @@ export class Group extends BaseStix {
      * get techniques used by this group
      * @returns {string[]} technique IDs used by this group
      */
-    public used(): string[] {
-        let rels = this.dataService.relationships.group_uses;
+    public used(domainID): string[] {
+        let rels = this.dataService.getDomain(domainID).relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.used();
+    public relatedTechniques(domainID): string[] {
+        return this.used(domainID);
     }
 }
 
@@ -468,15 +459,65 @@ export class Mitigation extends BaseStix {
      * get techniques mitigated by this mitigation
      * @returns {string[]} list of technique IDs
      */
-    public mitigated(): string[] {
-        let rels = this.dataService.relationships.mitigates;
-        if (rels.has(this.id)) return rels.get(this.id);
+    public mitigated(domainID): string[] {
+        let rels = this.dataService.getDomain(domainID).relationships.mitigates;
+        if (rels.has(this.id)) {
+            return rels.get(this.id);
+        } 
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(): string[] {
-        return this.mitigated();
+    public relatedTechniques(domainID): string[] {
+        return this.mitigated(domainID);
+    }
+}
+
+export class Domain {
+    public readonly id: string; // domain ID
+    public readonly name: string; // domain display name
+    public readonly version: string; // ATT&CK version number
+
+    public urls: string[] = [];
+    public taxii_url: string = "";
+    public taxii_collection: string = "";
+    public dataLoaded: boolean = false;
+    public dataLoadedCallbacks: any[] = [];
+
+    public matrices: Matrix[] = [];
+    public tactics: Tactic[] = [];
+    public techniques: Technique[] = [];
+    public platforms: String[] = []; // platforms defined on techniques and software of the domain
+    public subtechniques: Technique[] = [];
+    public software: Software[] = [];
+    public groups: Group[] = [];
+    public mitigations: Mitigation[] = [];
+    public relationships: any = {
+        // subtechnique subtechnique-of technique
+        // ID of technique to [] of subtechnique IDs
+        subtechniques_of: new Map<string, string[]>(), 
+        // group uses technique
+        // ID of group to [] of technique IDs
+        group_uses: new Map<string, string[]>(), 
+        // group uses technique
+        // ID of group to [] of technique IDs
+        software_uses: new Map<string, string[]>(),
+        // mitigation mitigates technique
+        // ID of mitigation to [] of technique IDs
+        mitigates: new Map<string, string[]>()
+    }
+
+    constructor(id: string, name: string, version: string) {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+    }
+
+    /**
+     * Get version of this domain
+     */
+    getVersion() {
+        return this.version.match(/[0-9]/g)[0];
     }
 }

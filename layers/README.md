@@ -2,7 +2,7 @@
 
 A layer constitutes a set of annotations on the ATT&CK matrix for a specific technology domain. Layers can also store a default configuration of the view such as sorting, visible platforms, and more. The ATT&CK Navigator includes functionalities for exporting annotations into layer files, as well as the ability to import layer files for viewing.
 
-See the [layer format specification](LAYERFORMATv3.md) for more information about Layer files.
+See the [layer format specification](LAYERFORMATv4.md) for more information about Layer files.
 
 ## Sample Layers
 
