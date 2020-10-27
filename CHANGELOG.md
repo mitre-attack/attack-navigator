@@ -1,4 +1,4 @@
-# v4.0
+# v4.0 - 27 October 2020
 ## New Features
 ### Major
 - Added support for mixed domains and versions. Layers can be opened with different ATT&CK versions and now support custom domains. See issues [#180](https://github.com/mitre-attack/attack-navigator/issues/180) and [#182](https://github.com/mitre-attack/attack-navigator/issues/182).
