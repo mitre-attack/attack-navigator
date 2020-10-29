@@ -117,20 +117,20 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 </textarea>
                             </mat-form-field>
 
-                            <!-- layer version (uneditable) -->
-                            <mat-form-field>
-                                <input matInput readonly
-                                    type="text"
-                                    placeholder="version"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).version" />
-                            </mat-form-field>
-
                             <!-- layer domain (uneditable) -->
                             <mat-form-field>
                                 <input matInput readonly
                                     type="text"
                                     placeholder="domain"
                                     [(ngModel)]="dataService.getDomain(viewModel.domainID).name" />
+                            </mat-form-field>
+
+                            <!-- layer version (uneditable) -->
+                            <mat-form-field>
+                                <input matInput readonly
+                                    type="text"
+                                    placeholder="version"
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).version" />
                             </mat-form-field>
 
                     </div>
