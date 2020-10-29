@@ -88,12 +88,14 @@ export class ExporterComponent implements AfterContentInit {
     //visibility of SVG parts
     //assess data in viewModel
     hasName(): boolean {return this.viewModel.name.length > 0}
+    hasDomain(): boolean {return this.viewModel.domainID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
     hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
     //above && user preferences
     showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
+    showDomain(): boolean {return this.config.showAbout && this.hasDomain() && this.config.showHeader}
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
@@ -478,6 +480,10 @@ export class ExporterComponent implements AfterContentInit {
             if (self.showName() || self.showDescription()) {
                 let about = {"title": "about", "contents": []};
                 if (self.showName()) about.contents.push({"label": "name", "data": this.viewModel.name});
+                if (self.showDomain()) {
+                    let domain = this.dataService.getDomain(this.viewModel.domainID);
+                    about.contents.push({"label": "domain", "data": domain.name + " " + domain.version})
+                }
                 if (self.showDescription()) about.contents.push({"label": "description", "data": this.viewModel.description});
                 headerSections.push(about)
             }
