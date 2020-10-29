@@ -1,3 +1,7 @@
+# v4.1
+## Improvements
+- Layer domain and version is indicated in the layer information and the "about" section of the SVG exporter. See issue [#239](https://github.com/mitre-attack/attack-navigator/issues/239).
+
 # v4.0 - 27 October 2020
 ## New Features
 ### Major
