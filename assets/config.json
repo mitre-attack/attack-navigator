@@ -5,15 +5,15 @@
             "domains": [
                 {   
                     "name": "Enterprise", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.1/enterprise-attack/enterprise-attack.json"]
                 },
                 {   
                     "name": "Mobile", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.0/mobile-attack/mobile-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.1/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.1/ics-attack/ics-attack.json"]
                 }
             ]
         },
