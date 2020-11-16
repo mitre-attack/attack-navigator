@@ -1,0 +1,882 @@
+{
+	"name": "Wizard Spider (G0102)",
+	"versions": {
+		"attack": "8",
+		"navigator": "4.0",
+		"layer": "4.0"
+	},
+	"domain": "enterprise-attack",
+	"description": "Enterprise techniques used by Wizard Spider, ATT&CK group G0102 v1.1",
+	"filters": {
+		"platforms": [
+			"Linux",
+			"macOS",
+			"Windows",
+			"Office 365",
+			"Azure AD",
+			"AWS",
+			"GCP",
+			"Azure",
+			"SaaS",
+			"PRE",
+			"Network"
+		]
+	},
+	"sorting": 0,
+	"layout": {
+		"layout": "side",
+		"showID": false,
+		"showName": true
+	},
+	"hideDisabled": false,
+	"techniques": [
+		{
+			"techniqueID": "T1071",
+			"tactic": "command-and-control",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1071.001",
+			"tactic": "command-and-control",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used HTTP for network communications.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1059",
+			"tactic": "execution",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1059.001",
+			"tactic": "execution",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used macros to execute PowerShell scripts to download malware on victims machines.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1543",
+			"tactic": "persistence",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1543",
+			"tactic": "privilege-escalation",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1543.003",
+			"tactic": "persistence",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has installed [TrickBot](https://attack.mitre.org/software/S0266) as a service named ControlServiceA in order to establish persistence.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1543.003",
+			"tactic": "privilege-escalation",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has installed [TrickBot](https://attack.mitre.org/software/S0266) as a service named ControlServiceA in order to establish persistence.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1074",
+			"tactic": "collection",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has collected and staged credentials and network enumeration information, using  the networkdll and psfin [TrickBot](https://attack.mitre.org/software/S0266) modules.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1482",
+			"tactic": "discovery",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used AdFind.exe to collect information about Active Directory organizational units and trust objects.(Citation: FireEye Ryuk and Trickbot January 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1041",
+			"tactic": "exfiltration",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has exfiltrated domain credentials and network enumeration information over command and control (C2) channels.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1070",
+			"tactic": "defense-evasion",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1070.004",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used file deletion to remove some modules and configurations from an infected host after use.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1570",
+			"tactic": "lateral-movement",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used stolen credentials to copy tools into the %TEMP% directory of domain controllers.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1036",
+			"tactic": "defense-evasion",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1036.004",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used scheduled tasks to install [TrickBot](https://attack.mitre.org/software/S0266), using task names to appear legitimate such as WinDotNet, GoogleTask, or Sysnetsf.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1112",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has modified the Registry key HKLM\\System\\CurrentControlSet\\Control\\SecurityProviders\\WDigest by setting the UseLogonCredential registry value to 1 in order to force credentials to be stored in clear text in memory.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1027",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) used base64 encoding to obfuscate an [Empire](https://attack.mitre.org/software/S0363) service.(Citation: FireEye Ryuk and Trickbot January 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1069",
+			"tactic": "discovery",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1069.002",
+			"tactic": "discovery",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used AdFind.exe to collect information about Active Directory groups and accounts.(Citation: FireEye Ryuk and Trickbot January 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1566",
+			"tactic": "initial-access",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1566.001",
+			"tactic": "initial-access",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used spearphishing attachments to deliver Microsoft documents containing macros to download either [Emotet](https://attack.mitre.org/software/S0367), Bokbot, or [TrickBot](https://attack.mitre.org/software/S0266).(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1021",
+			"tactic": "lateral-movement",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1021.001",
+			"tactic": "lateral-movement",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used RDP for lateral movement.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1018",
+			"tactic": "discovery",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used networkdll for network discovery and psfin specifically for financial and point of sale indicators. [Wizard Spider](https://attack.mitre.org/groups/G0102) has also used AdFind.exe to enumerate domain computers, including the domain controller.(Citation: FireEye Ryuk and Trickbot January 2019)(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1053",
+			"tactic": "execution",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1053",
+			"tactic": "persistence",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1053",
+			"tactic": "privilege-escalation",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1053.005",
+			"tactic": "execution",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used scheduled tasks establish persistence for [TrickBot](https://attack.mitre.org/software/S0266).(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1053.005",
+			"tactic": "persistence",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used scheduled tasks establish persistence for [TrickBot](https://attack.mitre.org/software/S0266).(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1053.005",
+			"tactic": "privilege-escalation",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used scheduled tasks establish persistence for [TrickBot](https://attack.mitre.org/software/S0266).(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1204",
+			"tactic": "execution",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1204.002",
+			"tactic": "execution",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has lured victims to execute malware with spearphishing attachments containing macros to download either [Emotet](https://attack.mitre.org/software/S0367), Bokbot, or [TrickBot](https://attack.mitre.org/software/S0266).(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used valid credentials for privileged accounts with the goal of accessing domain controllers.(Citation: CrowdStrike Grim Spider May 2019) ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "persistence",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used valid credentials for privileged accounts with the goal of accessing domain controllers.(Citation: CrowdStrike Grim Spider May 2019) ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "privilege-escalation",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used valid credentials for privileged accounts with the goal of accessing domain controllers.(Citation: CrowdStrike Grim Spider May 2019) ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "initial-access",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used valid credentials for privileged accounts with the goal of accessing domain controllers.(Citation: CrowdStrike Grim Spider May 2019) ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1047",
+			"tactic": "execution",
+			"score": 1,
+			"color": "",
+			"comment": "[Wizard Spider](https://attack.mitre.org/groups/G0102) has used WMI and LDAP queries for network discovery.(Citation: CrowdStrike Grim Spider May 2019)",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1003",
+			"tactic": "credential-access",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1003.003",
+			"tactic": "credential-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has gained access to credentials via exported copies of the ntds.dit  Active Directory database.\n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1566.002",
+			"tactic": "initial-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has sent phishing emails containing a link to an actor-controlled Google Drive document or other free online file hosting  services.\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n\nhttps://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1055",
+			"tactic": "privilege-escalation",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1055.001",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has injected malicious DLLs into memory with read, write, and execute permissions.\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n\nhttps://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1055.001",
+			"tactic": "privilege-escalation",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has injected malicious DLLs into memory with read, write, and execute permissions.\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n\nhttps://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1204.001",
+			"tactic": "execution",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has lured victims into clicking a malicious link delivered through spearphishing.\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1547",
+			"tactic": "persistence",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1547.001",
+			"tactic": "persistence",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has established persistence via the Registry key HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run and a shortcut within the startup folder\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1547.001",
+			"tactic": "privilege-escalation",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has established persistence via the Registry key HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run and a shortcut within the startup folder\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1547.004",
+			"tactic": "persistence",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has established persistence using Userinit by adding the Registry key HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1547.004",
+			"tactic": "privilege-escalation",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has established persistence using Userinit by adding the Registry key HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1059.003",
+			"tactic": "execution",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used cmd.exe to execute commands on a victim’s machine. \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1048",
+			"tactic": "exfiltration",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1048.003",
+			"tactic": "exfiltration",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has exfiltrated victim information using FTP.  \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/ \n  https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ \n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1210",
+			"tactic": "lateral-movement",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has exploited or attempted to exploit Zerologon (CVE-2020-1472) and EternalBlue (MS17-010) vulnerabilities.\n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html \n  https://thedfirreport.com/2020/10/08/ryuks-return/ \n  https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/ \n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1133",
+			"tactic": "persistence",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has accessed victim networks by using stolen credentials to access the corporate VPN infrastructure.  \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1133",
+			"tactic": "initial-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has accessed victim networks by using stolen credentials to access the corporate VPN infrastructure.  \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1222",
+			"tactic": "defense-evasion",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1222.001",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used the icacls command to modify access control to backup servers, providing them with full control of all the system folders. \n\nhttps://news.sophos.com/en-us/2020/10/14/inside-a-new-ryuk-ransomware-attack/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1562",
+			"tactic": "defense-evasion",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1562.001",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has shut down or uninstalled security applications on victim systems that might prevent ransomware from executing.   \n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a\n  https://thedfirreport.com/2020/10/08/ryuks-return/\n  www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html \n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1557",
+			"tactic": "credential-access",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1557.001",
+			"tactic": "credential-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used the Invoke-Inveigh  PowerShell cmdlets, likely for name service poisoning.  \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1557.001",
+			"tactic": "collection",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used the Invoke-Inveigh  PowerShell cmdlets, likely for name service poisoning.  \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1135",
+			"tactic": "discovery",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used the “net view”   command to locate mapped network shares. \n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1003.002",
+			"tactic": "credential-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has acquired credentials from the SAM/SECURITY registry hives. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1588",
+			"tactic": "resource-development",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1588.003",
+			"tactic": "resource-development",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER obtained a code signing certificate signed by Digicert for BazarLoader.\n\nhttps://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/  ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1021.002",
+			"tactic": "lateral-movement",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used SMB to drop Cobalt Strike Beacon on a domain controller for lateral movement.  \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/\n  https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ \n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1021.006",
+			"tactic": "lateral-movement",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used Window Remote Management to move laterally through a victim network.\n\nhttps://us-cert.cisa.gov/ncas/alerts/aa20-302a",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1489",
+			"tactic": "impact",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used taskkill.exe,  and net.exe to stop backup, catalog, cloud, and other services prior to network encryption.  \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1518",
+			"tactic": "discovery",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1518.001",
+			"tactic": "discovery",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has use WMI to identify anti-virus products installed on a victim’s machine. \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1558",
+			"tactic": "credential-access",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1558.003",
+			"tactic": "credential-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used Rubeus, MimiKatz Kerberos module, and the Invoke-Kerberoast cmdlet to steal AES hashes.\n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/\n  www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html \n  https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ \n  https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html \n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1553",
+			"tactic": "defense-evasion",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1553.002",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used Digicert code-signing certificates for some of its malware. \n\nhttps://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1082",
+			"tactic": "discovery",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used “systeminfo” and similar commands to acquire detailed configuration information of a victim machine. \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1016",
+			"tactic": "discovery",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used the ipconfig command to identify the network configuration of a victim machine.\n\nhttps://news.sophos.com/en-us/2020/10/14/inside-a-new-ryuk-ransomware-attack/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1033",
+			"tactic": "discovery",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used whoami to identify the local user and their privileges.  \n\nhttps://news.sophos.com/en-us/2020/10/14/inside-a-new-ryuk-ransomware-attack/ ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1569",
+			"tactic": "execution",
+			"color": "",
+			"comment": "",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": true
+		},
+		{
+			"techniqueID": "T1569.002",
+			"tactic": "execution",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used services.exe to execute scripts and executables during lateral movement within a victim network.  \n\nhttps://thedfirreport.com/2020/10/08/ryuks-return/\n  https://thedfirreport.com/2020/10/18/ryuk-in-5-hours/\n",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078.002",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used administrative accounts, including Domain Admin,  to move laterally within a victim network. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078.002",
+			"tactic": "persistence",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used administrative accounts, including Domain Admin,  to move laterally within a victim network. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078.002",
+			"tactic": "privilege-escalation",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used administrative accounts, including Domain Admin,  to move laterally within a victim network. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		},
+		{
+			"techniqueID": "T1078.002",
+			"tactic": "initial-access",
+			"score": 2,
+			"color": "#a1d99b",
+			"comment": "WIZARD SPIDER has used administrative accounts, including Domain Admin,  to move laterally within a victim network. \n\nhttps://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html ",
+			"enabled": true,
+			"metadata": [],
+			"showSubtechniques": false
+		}
+	],
+	"gradient": {
+		"colors": [
+			"#ffffff",
+			"#66b1ff"
+		],
+		"minValue": 0,
+		"maxValue": 1
+	},
+	"legendItems": [
+		{
+			"color": "#66b1ff",
+			"label": "used by Wizard Spider"
+		},
+		{
+			"color": "#a1d99b",
+			"label": "New Wizard Spider techniques as of Nov 2020 "
+		}
+	],
+	"metadata": [],
+	"showTacticRowBackground": false,
+	"tacticRowBackground": "#dddddd",
+	"selectTechniquesAcrossTactics": true,
+	"selectSubtechniquesWithParent": false
+}
