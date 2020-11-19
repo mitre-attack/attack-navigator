@@ -545,11 +545,10 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 viewModel.deSerializeDomainID(string);
-
+                if (!this.dataService.getDomain(viewModel.domainID)) {
+                    throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                }
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                    }
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
