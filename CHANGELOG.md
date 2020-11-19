@@ -4,7 +4,8 @@
 - Added support for section breaks in the technique metadata format (see _Layer File Format Changes_ below for more details). See issue [#189](https://github.com/mitre-attack/attack-navigator/issues/189).
 
 ## Improvements
-- Layer domain and version is indicated in the layer information and the "about" section of the SVG exporter. See issue [#239](https://github.com/mitre-attack/attack-navigator/issues/239).
+- Layer domain and version is displayed under "layer information" in layer controls and in the "about" section of the SVG exporter. See issue [#239](https://github.com/mitre-attack/attack-navigator/issues/239).
+- Layer loading is indicated in the UI when uploading a layer from the _Open Existing Layer_ interface. See issue [#240](https://github.com/mitre-attack/attack-navigator/issues/240).
 
 ## Layer File Format Changes
 Layer file format updated to version 4.1. This update is fully backwards compatible with layer format v4.0 since the added field is optional. See [layers/LAYERFORMATv4_1.md](layers/LAYERFORMATv4_1.md) for the full specification.
