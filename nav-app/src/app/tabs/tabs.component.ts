@@ -549,16 +549,15 @@ export class TabsComponent implements AfterContentInit {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
                 this.versionUpgradeDialog(viewModel).then( () => {
+                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                         });
                     } else {
                         viewModel.deSerialize(string);
                         viewModel.loadVMData();
-                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
                 })
                 .catch( (err) => {
