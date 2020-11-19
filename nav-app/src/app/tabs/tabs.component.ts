@@ -551,14 +551,10 @@ export class TabsComponent implements AfterContentInit {
                 this.versionUpgradeDialog(viewModel).then( () => {
                     this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                            viewModel.deSerialize(string);
-                            viewModel.loadVMData();
-                        });
-                    } else {
-                        viewModel.deSerialize(string);
-                        viewModel.loadVMData();
+                        this.dataService.loadDomainData(viewModel.domainID, true);
                     }
+                    viewModel.deSerialize(string);
+                    viewModel.loadVMData();
                 })
                 .catch( (err) => {
                     console.error(err.message);
@@ -585,24 +581,17 @@ export class TabsComponent implements AfterContentInit {
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 try {
                     viewModel.deSerializeDomainID(res);
-
+                    if (!this.dataService.getDomain(viewModel.domainID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                    }
                     this.versionUpgradeDialog(viewModel).then( () => {
-                        if (!this.dataService.getDomain(viewModel.domainID)) {
-                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                        }
+                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                            this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                                viewModel.deSerialize(res);
-                                viewModel.loadVMData();
-                                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                                resolve();
-                            });
-                        } else { // data is already loaded
-                            viewModel.deSerialize(res);
-                            viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
-                            resolve();
+                            this.dataService.loadDomainData(viewModel.domainID, true);
                         }
+                        viewModel.deSerialize(res);
+                        viewModel.loadVMData();
+                        resolve();
                     })
                     .catch( (err) => {
                         console.error(err.message);
