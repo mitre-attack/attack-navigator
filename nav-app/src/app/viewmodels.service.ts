@@ -1426,9 +1426,9 @@ export class Filter {
      * @param {Domain} domain the domain to parse for platform options
      */
     public initPlatformOptions(domain: Domain): void {
-        this.platforms = {
-            selection: JSON.parse(JSON.stringify(domain.platforms)),
-            options: JSON.parse(JSON.stringify(domain.platforms))
+        this.platforms.options = JSON.parse(JSON.stringify(domain.platforms));
+        if (!this.platforms.selection.length) { // prevent overwriting current selection
+            this.platforms.selection = JSON.parse(JSON.stringify(domain.platforms));
         }
     }
 
