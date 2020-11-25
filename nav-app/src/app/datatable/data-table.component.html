@@ -119,7 +119,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
                             <!-- layer domain (uneditable) -->
                             <mat-form-field>
-                                <input matInput readonly
+                                <input matInput readonly disabled
                                     type="text"
                                     placeholder="domain"
                                     [(ngModel)]="dataService.getDomain(viewModel.domainID).name" />
@@ -127,7 +127,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
                             <!-- layer version (uneditable) -->
                             <mat-form-field>
-                                <input matInput readonly
+                                <input matInput readonly disabled
                                     type="text"
                                     placeholder="version"
                                     [(ngModel)]="dataService.getDomain(viewModel.domainID).version" />
