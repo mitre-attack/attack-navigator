@@ -178,6 +178,10 @@
                             <label [for]="uid+'checkboxAbout'" class="checkbox-custom-label noselect" [class.disabled]="(!hasName() && !hasDescription()) || !config.showHeader">show about</label>
                         </li>
                         <li>
+                            <input [id]="uid+'checkboxDomain'" type="checkbox" [disabled]="(!hasDomain()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showDomain" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxDomain'" class="checkbox-custom-label noselect" [class.disabled]="(!hasDomain()) || !config.showHeader">show domain</label>
+                        </li>
+                        <li>
                             <input [id]="uid+'checkboxfilters'" type="checkbox" class="checkbox-custom" [disabled]="!config.showHeader"[(ngModel)]="config.showFilters" (change)="buildSVG()">
                             <label [for]="uid+'checkboxfilters'" class="checkbox-custom-label noselect" [class.disabled]="!config.showHeader">show filters</label>
                         </li>

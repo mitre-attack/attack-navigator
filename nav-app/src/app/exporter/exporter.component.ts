@@ -48,6 +48,7 @@ export class ExporterComponent implements AfterContentInit {
             "showGradient": true,
             "showFilters": true,
             "showAbout": true,
+            "showDomain": true,
         }
      }
 
@@ -95,7 +96,7 @@ export class ExporterComponent implements AfterContentInit {
 
     //above && user preferences
     showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
-    showDomain(): boolean {return this.config.showAbout && this.hasDomain() && this.config.showHeader}
+    showDomain(): boolean {return this.config.showDomain && this.hasDomain() && this.config.showHeader}
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
@@ -480,12 +481,18 @@ export class ExporterComponent implements AfterContentInit {
             if (self.showName() || self.showDescription()) {
                 let about = {"title": "about", "contents": []};
                 if (self.showName()) about.contents.push({"label": "name", "data": this.viewModel.name});
-                if (self.showDomain()) {
-                    let domain = this.dataService.getDomain(this.viewModel.domainID);
-                    about.contents.push({"label": "domain", "data": domain.name + " " + domain.version})
-                }
                 if (self.showDescription()) about.contents.push({"label": "description", "data": this.viewModel.description});
                 headerSections.push(about)
+            }
+
+            if (self.showDomain()) {
+                let domain = this.dataService.getDomain(this.viewModel.domainID);
+                headerSections.push({
+                    "title": "domain",
+                    "contents": [{
+                        "label": "domain", "data": domain.name + " " + domain.version 
+                    }]
+                });
             }
 
             if (self.showFilters()) headerSections.push({
