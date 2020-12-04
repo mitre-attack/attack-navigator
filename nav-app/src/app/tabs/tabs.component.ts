@@ -551,10 +551,14 @@ export class TabsComponent implements AfterContentInit {
                 this.versionUpgradeDialog(viewModel).then( () => {
                     this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                        this.dataService.loadDomainData(viewModel.domainID, true);
+                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                            viewModel.deSerialize(string);
+                            viewModel.loadVMData();
+                        });
+                    } else {
+                        viewModel.deSerialize(string);
+                        viewModel.loadVMData();
                     }
-                    viewModel.deSerialize(string);
-                    viewModel.loadVMData();
                 })
                 .catch( (err) => {
                     console.error(err.message);
@@ -587,11 +591,16 @@ export class TabsComponent implements AfterContentInit {
                     this.versionUpgradeDialog(viewModel).then( () => {
                         this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                            this.dataService.loadDomainData(viewModel.domainID, true);
+                            this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                                viewModel.deSerialize(res);
+                                viewModel.loadVMData();
+                                resolve();
+                            });
+                        } else {
+                            viewModel.deSerialize(res);
+                            viewModel.loadVMData();
+                            resolve();
                         }
-                        viewModel.deSerialize(res);
-                        viewModel.loadVMData();
-                        resolve();
                     })
                     .catch( (err) => {
                         console.error(err.message);
@@ -615,7 +624,7 @@ export class TabsComponent implements AfterContentInit {
                     alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
                 }
                 resolve(); //continue
-            })
+            });
         });
         return layerPromise;
     }
