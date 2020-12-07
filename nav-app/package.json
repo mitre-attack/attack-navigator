@@ -1,7 +1,12 @@
 {
-  "name": "nav-app",
+  "name": "attack-navigator",
+  "description": "Web app that provides basic navigation and annotation of ATT&CK matrices",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mitre-attack/attack-navigator.git"
+  },
   "version": "4.0.0",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
