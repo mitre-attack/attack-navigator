@@ -34,13 +34,14 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 ## Supported Browsers
 * Chrome
 * Firefox
-* Internet Explorer<sup>1</sup>
-* Safari<sup>2</sup>
+* Internet Explorer 11<sup>[1]</sup>
+* Safari<sup>[2]</sup>
 * Edge
 * Opera
 
-<sup>1</sup> There is a recorded issue with the SVG export feature on Internet Explorer. Because of a [missing functionality on SVGElements](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children) in that browser, text will not be properly vertically centered in SVGs exported in that browser. We recommend switching to a more modern browser for optimal results.
-<sup>2</sup> There is a recorded issue with using the **ATT&CK Navigator** on Safari. If the user reloads the page but cancels the action when prompted, the refresh icon in the browser window remains in the `cancel reload` state. This is believed to be an issue with Safari and not with the application.
+**[1]** There is a recorded issue with the SVG export feature on Internet Explorer. Because of a [missing functionality on SVGElements](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children) in that browser, text will not be properly vertically centered in SVGs exported in that browser. We recommend switching to a more modern browser for optimal results.
+
+**[2]** There is a recorded issue with using the **ATT&CK Navigator** on Safari. If the user reloads the page but cancels the action when prompted, the refresh icon in the browser window remains in the `cancel reload` state. This is believed to be an issue with Safari and not with the application.
 
 ## Install and Run
 #### First time
