@@ -13,14 +13,14 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
     @Input() tactic: Tactic;
     @Input() viewModel: ViewModel;
-    private placement: string;
+    public placement: string;
     @Output() close = new EventEmitter<any>();
 
     private get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 
-    constructor(private element: ElementRef, private configService: ConfigService) {
+    constructor(private element: ElementRef, public configService: ConfigService) {
         super(element);
     }
 
@@ -28,72 +28,72 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.placement = this.getPosition();
     }
 
-    private closeContextmenu() {
+    public closeContextmenu() {
         this.close.emit();
     }
 
-    private select() {
+    public select() {
         this.viewModel.clearSelectedTechniques();
         this.viewModel.selectTechnique(this.technique, this.tactic);
         this.closeContextmenu();
     }
 
-    private addSelection() {
+    public addSelection() {
         this.viewModel.selectTechnique(this.technique, this.tactic);
         this.closeContextmenu();
     }
 
-    private removeSelection() {
+    public removeSelection() {
         this.viewModel.unselectTechnique(this.technique, this.tactic);
         this.closeContextmenu();
     }
 
-    private selectAll() {
+    public selectAll() {
         this.viewModel.selectAllTechniques();
         this.closeContextmenu();
     }
 
-    private deselectAll() {
+    public deselectAll() {
         this.viewModel.clearSelectedTechniques();
         this.closeContextmenu();
     }
 
-    private invertSelection() {
+    public invertSelection() {
         this.viewModel.invertSelection();
         this.closeContextmenu();
     }
 
-    private selectAnnotated() {
+    public selectAnnotated() {
         this.viewModel.selectAnnotated();
         this.closeContextmenu();
     }
 
-    private selectUnannotated() {
+    public selectUnannotated() {
         this.viewModel.selectUnannotated();
         this.closeContextmenu();
     }
 
-    private selectAllInTactic(){
+    public selectAllInTactic(){
         this.viewModel.selectAllTechniquesInTactic(this.tactic);
         this.closeContextmenu();
     }
 
-    private deselectAllInTactic(){
+    public deselectAllInTactic(){
         this.viewModel.unselectAllTechniquesInTactic(this.tactic);
         this.closeContextmenu();
     }
 
-    private viewTechnique() {
+    public viewTechnique() {
         window.open(this.technique.url, "_blank");
         this.closeContextmenu();
     }
 
-    private viewTactic() {
+    public viewTactic() {
         window.open(this.tactic.url, "_blank");
         this.closeContextmenu();
     }
 
-    private openCustomContextMenuItem(customItem: ContextMenuItem) {
+    public openCustomContextMenuItem(customItem: ContextMenuItem) {
         window.open(customItem.getReplacedURL(this.technique, this.tactic), "_blank");
         this.closeContextmenu();
     }

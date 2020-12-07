@@ -19,7 +19,7 @@ export class VersionUpgradeComponent implements OnInit {
     dontAsk: boolean = false;
 
     constructor(private dialogRef: MatDialogRef<VersionUpgradeComponent>, 
-                private dataService: DataService,
+                public dataService: DataService,
                 private viewModelsService: ViewModelsService,
                 @Inject(MAT_DIALOG_DATA) public data) { }
 

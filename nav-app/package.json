@@ -12,17 +12,17 @@
     "postinstall": "node patch-webpack.js"
   },
   "dependencies": {
-    "@angular/animations": "^8.2.14",
+    "@angular/animations": "^9.1.12",
     "@angular/cdk": "^8.2.3",
-    "@angular/common": "^8.2.14",
-    "@angular/compiler": "^8.2.14",
-    "@angular/core": "^8.2.14",
-    "@angular/forms": "^8.2.14",
+    "@angular/common": "^9.1.12",
+    "@angular/compiler": "^9.1.12",
+    "@angular/core": "^9.1.12",
+    "@angular/forms": "^9.1.12",
     "@angular/http": "^7.2.16",
     "@angular/material": "^8.2.3",
-    "@angular/platform-browser": "^8.2.14",
-    "@angular/platform-browser-dynamic": "^8.2.14",
-    "@angular/router": "^8.2.14",
+    "@angular/platform-browser": "^9.1.12",
+    "@angular/platform-browser-dynamic": "^9.1.12",
+    "@angular/router": "^9.1.12",
     "@types/file-saver": "^2.0.1",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.12",
@@ -37,17 +37,17 @@
     "rxjs-compat": "^6.6.3",
     "tinygradient": "^0.4.3",
     "tslib": "^1.10.0",
-    "zone.js": "^0.9.1"
+    "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.29",
-    "@angular/cli": "^8.3.29",
-    "@angular/compiler-cli": "^8.2.14",
-    "@angular/language-service": "^8.2.14",
+    "@angular-devkit/build-angular": "~0.901.12",
+    "@angular/cli": "^9.1.12",
+    "@angular/compiler-cli": "^9.1.12",
+    "@angular/language-service": "^9.1.12",
     "@types/jasmine": "^3.3.16",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^10.12.30",
-    "codelyzer": "~4.5.0",
+    "@types/node": "^12.11.1",
+    "codelyzer": "^5.1.2",
     "exceljs": "^2.0.1",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -60,6 +60,6 @@
     "protractor": "^5.4.4",
     "ts-node": "~7.0.1",
     "tslint": "~5.11.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.8.3"
   }
 }

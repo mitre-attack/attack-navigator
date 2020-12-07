@@ -14,16 +14,18 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class ExporterComponent implements AfterContentInit {
 
+    public currentDropdown: string = null;
+
     @Input() viewModel: ViewModel;
 
-    private config: any = {}
-    private isIE() {
+    public config: any = {}
+    public isIE() {
         return is.ie();
     }
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
-    constructor(private configService: ConfigService, private dataService: DataService) {
+    constructor(public configService: ConfigService, private dataService: DataService) {
         this.config = { 
             "width": 11,
             "height": 8.5,

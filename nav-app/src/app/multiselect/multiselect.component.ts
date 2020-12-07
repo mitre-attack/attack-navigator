@@ -10,9 +10,9 @@ import { DataService, BaseStix, Group, Technique, Mitigation, Software } from '.
 export class MultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
 
-    private openedPanel: string = "";
+    public openedPanel: string = "";
     
-    private stixTypes: any[];
+    public stixTypes: any[];
 
     constructor(private dataService: DataService) {
         this.stixTypes = [];
@@ -34,7 +34,7 @@ export class MultiselectComponent implements OnInit {
         }]
     }
 
-    private getRelated(stixObject: BaseStix): Technique[] {
+    public getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
         let techniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
         let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainID).subtechniques);
@@ -49,13 +49,13 @@ export class MultiselectComponent implements OnInit {
         }
     }
 
-    private deselect(stixObject: BaseStix): void {
+    public deselect(stixObject: BaseStix): void {
        for (let technique of this.getRelated(stixObject)) {
             this.viewModel.unselectTechniqueAcrossTactics(technique);
        }
     }
 
-    private select(stixObject: BaseStix): void {
+    public select(stixObject: BaseStix): void {
         for (let technique of this.getRelated(stixObject)) {
             this.viewModel.selectTechniqueAcrossTactics(technique);
         }
