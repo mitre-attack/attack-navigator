@@ -16,6 +16,6 @@
       "dom"
     ],
     "module": "esnext",
-    "baseUrl": "./",
+    "baseUrl": "./"
   }
 }
