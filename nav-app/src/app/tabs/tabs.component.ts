@@ -545,21 +545,19 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 viewModel.deSerializeDomainID(string);
-
+                if (!this.dataService.getDomain(viewModel.domainID)) {
+                    throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                }
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                    }
+                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                         });
                     } else {
                         viewModel.deSerialize(string);
                         viewModel.loadVMData();
-                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
                 })
                 .catch( (err) => {
@@ -587,22 +585,20 @@ export class TabsComponent implements AfterContentInit {
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 try {
                     viewModel.deSerializeDomainID(res);
-
+                    if (!this.dataService.getDomain(viewModel.domainID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                    }
                     this.versionUpgradeDialog(viewModel).then( () => {
-                        if (!this.dataService.getDomain(viewModel.domainID)) {
-                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                        }
+                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                 viewModel.deSerialize(res);
                                 viewModel.loadVMData();
-                                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                                 resolve();
                             });
-                        } else { // data is already loaded
+                        } else {
                             viewModel.deSerialize(res);
                             viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                             resolve();
                         }
                     })
@@ -628,7 +624,7 @@ export class TabsComponent implements AfterContentInit {
                     alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
                 }
                 resolve(); //continue
-            })
+            });
         });
         return layerPromise;
     }

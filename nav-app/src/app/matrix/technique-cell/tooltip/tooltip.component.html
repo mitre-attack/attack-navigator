@@ -18,8 +18,9 @@
             <td>{{techniqueVM.comment}}</td>
         </tr>
         <tr *ngFor="let metadata of techniqueVM.metadata">
-            <td>{{metadata.name}}:</td>
-            <td>{{metadata.value}}</td>
+            <td *ngIf="metadata.divider" class="divider" colspan=2><hr></td>
+            <td *ngIf="!metadata.divider">{{metadata.name}}:</td>
+            <td *ngIf="!metadata.divider">{{metadata.value}}</td>
         </tr>
     </table>
 </div>
