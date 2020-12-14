@@ -368,13 +368,6 @@
     <DataTable *ngIf="active" [viewModel]=data></DataTable>
 </ng-template>
 
-<ng-template #helpTab>
-    <div class="border help">
-        <help></help>
-    </div>
-
-</ng-template>
-
 <ng-template #exporterTab let-data="data">
     <div class="border">
         <exporter [viewModel]=data></exporter>
