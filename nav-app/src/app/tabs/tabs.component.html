@@ -3,7 +3,7 @@
     <div class="logo">
         <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
     </div>
-    <div *ngIf="configService.getFeature('tabs')" class="helpButton" matTooltip="help" (click)="newHelpTab(forceNew=false)">
+    <div *ngIf="configService.getFeature('tabs')" class="helpButton" matTooltip="help" (click)="openHelpDialog()">
         ?
     </div>
 </div>
@@ -357,7 +357,7 @@
         </mat-accordion>
 
         <div class="helpButtonContainer">
-            <button mat-button (click)="newHelpTab(replace=false, forceNew=false)">help</button>
+            <button mat-button (click)="openHelpDialog()">help</button>
         </div>
 
     </div>

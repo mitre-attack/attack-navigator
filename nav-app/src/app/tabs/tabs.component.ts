@@ -8,6 +8,7 @@ import { DataService, Technique } from '../data.service'; //import the DataServi
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
+import { HelpComponent } from '../help/help.component';
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
@@ -278,13 +279,10 @@ export class TabsComponent implements AfterContentInit {
     }
 
     /**
-     * create a new help tab
-     * @param replace=false  replace currently open tab?
-     * @param forceNew=false if false, select currently open help tab if possible
+     * open the help dialog
      */
-    newHelpTab(replace=false, forceNew=false): void {
-        if (replace) this.closeActiveTab()
-        this.openTab('help', this.helpTab, null, true, replace, false)
+    openHelpDialog() {
+        this.dialog.open(HelpComponent, {maxHeight: "75vh", maxWidth: "75vw"});
     }
 
     newExporterTab(vm: ViewModel) {
