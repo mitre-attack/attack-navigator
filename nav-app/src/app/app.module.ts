@@ -82,6 +82,6 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ TabComponent, VersionUpgradeComponent, HelpComponent ]
+  entryComponents: [ TabComponent, VersionUpgradeComponent, HelpComponent, ExporterComponent ]
 })
 export class AppModule { }

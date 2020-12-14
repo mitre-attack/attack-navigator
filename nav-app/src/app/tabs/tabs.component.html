@@ -367,9 +367,3 @@
 <ng-template #layerTab let-data="data" let-active="active">
     <DataTable *ngIf="active" [viewModel]=data></DataTable>
 </ng-template>
-
-<ng-template #exporterTab let-data="data">
-    <div class="border">
-        <exporter [viewModel]=data></exporter>
-    </div>
-</ng-template>

@@ -1,4 +1,5 @@
-import { Component, Input, AfterContentInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
@@ -12,18 +13,18 @@ import { ColorPickerModule } from 'ngx-color-picker';
     templateUrl: './exporter.component.html',
     styleUrls: ['./exporter.component.scss']
 })
-export class ExporterComponent implements AfterContentInit {
-
-    @Input() viewModel: ViewModel;
-
+export class ExporterComponent implements OnInit {
+    
+    viewModel: ViewModel;
     private config: any = {}
-    private isIE() {
-        return is.ie();
-    }
+    private isIE() { return is.ie(); }
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
-    constructor(private configService: ConfigService, private dataService: DataService) {
+    constructor(private dialogRef: MatDialogRef<ExporterComponent>, 
+                private configService: ConfigService, 
+                private dataService: DataService,
+                @Inject(MAT_DIALOG_DATA) public data) {
         this.config = { 
             "width": 11,
             "height": 8.5,
@@ -50,10 +51,12 @@ export class ExporterComponent implements AfterContentInit {
             "showAbout": true,
             "showDomain": true,
         }
-     }
+    }
 
-    ngAfterContentInit() {
+    ngOnInit() {
+        this.viewModel = this.data.vm;
         this.svgDivName = "svgInsert" + this.viewModel.uid;
+        
         let self = this;
         //determine if the layer has any scores
         for (let matrix of this.dataService.getDomain(this.viewModel.domainID).matrices) {

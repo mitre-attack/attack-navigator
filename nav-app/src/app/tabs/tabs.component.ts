@@ -1,7 +1,6 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, ComponentFactoryResolver } from '@angular/core';
 
-
 import { DynamicTabsDirective } from './dynamic-tabs.directive';
 import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
@@ -9,7 +8,7 @@ import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
-
+import { ExporterComponent } from '../exporter/exporter.component';
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
 import {ErrorStateMatcher} from '@angular/material/core'
@@ -17,7 +16,6 @@ import {FormControl} from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
-import { log } from 'util';
 
 declare var math: any; //use mathjs
 
@@ -40,8 +38,6 @@ export class TabsComponent implements AfterContentInit {
     // to open a tab use one of these variables as the template variable.
     @ViewChild('blankTab', {static: false}) blankTab;
     @ViewChild('layerTab', {static: false}) layerTab;
-    @ViewChild('helpTab', {static: true}) helpTab;
-    @ViewChild('exporterTab', {static: false}) exporterTab;
 
     ds: DataService = null;
     vms: ViewModelsService = null;
@@ -285,8 +281,16 @@ export class TabsComponent implements AfterContentInit {
         this.dialog.open(HelpComponent, {maxHeight: "75vh", maxWidth: "75vw"});
     }
 
-    newExporterTab(vm: ViewModel) {
-        this.openTab('render: ' + vm.name, this.exporterTab, vm, true, false, true)
+    /**
+     * open the SVG exporter dialog
+     * @param {ViewModel} vm    the viewModel to render
+     */
+    openSVGDialog(vm: ViewModel) {
+        this.dialog.open(ExporterComponent, {
+            data: {vm: vm},
+            minHeight: "85vh", maxHeight: "85vh",
+            minWidth: "85vw", maxWidth: "85vw"
+        });
     }
 
     /**
