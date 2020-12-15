@@ -12,14 +12,10 @@ import * as is from 'is_js';
 @Injectable()
 export class ViewModelsService {
 
-    constructor(private dataService: DataService) {
-
-        // attempt to restore viewmodels
-        // console.log(this.getCookie("viewModels"))
-        // this.saveViewModelsCookies()
-    }
+    constructor(private dataService: DataService) { }
 
     viewModels: ViewModel[] = [];
+
     /**
      * Create and return a new viewModel
      * @param {string} name the viewmodel name
@@ -41,8 +37,6 @@ export class ViewModelsService {
     getNonce(): number {
         return this.nonce++;
     }
-
-
 
     /**
      * Destroy the viewmodel completely Nessecary if tab is closed!

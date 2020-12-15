@@ -19,7 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { DynamicTabsDirective } from './tabs/dynamic-tabs.directive';
 import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
@@ -41,7 +40,6 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     DataTableComponent,
     TabsComponent,
     TabComponent,
-    DynamicTabsDirective,
     HelpComponent,
     ExporterComponent,
     TechniqueCellComponent,

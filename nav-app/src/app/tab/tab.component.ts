@@ -1,5 +1,4 @@
-// https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/s
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'tab',
@@ -7,13 +6,22 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./tab.component.scss']
 })
 export class TabComponent {
-    @Input('tabTitle') title: string;
-    @Input() active = false;
-    @Input() isCloseable = false;
-    @Input() template;
-    @Input() dataContext;
-    @Input() showScoreVariables = false;
-    @Input() domain = "";
-    @Input() isDataTable: boolean;
+    // PROPERTIES & DEFAULTS
+    title: string;
+    dataContext;
+    domain: string = "";
+    isDataTable: boolean;
+
+    active: boolean = false;
+    isCloseable: boolean = false;
+    showScoreVariables: boolean = false;
+
+    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string, dataTable: boolean) {
+        this.title = title;
+        this.isCloseable = isCloseable;
+        this.showScoreVariables = showScoreVariables;
+        this.domain = domain;
+        this.isDataTable = dataTable;
+    }
 
 }

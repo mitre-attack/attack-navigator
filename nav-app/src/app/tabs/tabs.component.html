@@ -11,10 +11,10 @@
 </div>
 
 <!-- Tabs display -->
-<div [style.margin-top]="configService.getFeature('header') ? '0px' : '15px'" *ngIf="dynamicTabs.length > 0 && configService.getFeature('tabs')">
+<div [style.margin-top]="configService.getFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && configService.getFeature('tabs')">
     <ul class="tabs">
         <!-- dynamic tabs (can be opened and closed) -->
-        <li *ngFor="let tab of dynamicTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
+        <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
             <a *ngIf="!tab.active || !tab.isDataTable" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</a>
             <input *ngIf="!(!tab.active || !tab.isDataTable)" [style.cursor]="tab.active ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
@@ -24,12 +24,10 @@
         </li>
 
         <!-- open new tab button -->
-        <li *ngIf="dynamicTabs.length < 10" class="addTab" (click)="newBlankTab()">
-            +
-        </li>
+        <li *ngIf="layerTabs.length < 10" class="addTab" (click)="newBlankTab()">+</li>
     </ul>
 </div>
-<div *ngIf="dynamicTabs.length == 0" class="newTab">
+<div *ngIf="layerTabs.length == 0" class="newTab">
     <!-- you shouldn't ever see this, but just in case -->
     <button (click)="newBlankTab()">Start</button>
 </div>
@@ -38,7 +36,7 @@
 <ng-template dynamic-tabs #container></ng-template>
 
 <!-- New tab template -->
-<ng-template #blankTab>
+<ng-template [ngIf]="getActiveTab() && !getActiveTab().isDataTable">
     <div class="newTab border">
         <mat-accordion class="headers-align">
 
@@ -369,6 +367,6 @@
     </div>
 </ng-template>
 
-<ng-template #layerTab let-data="data" let-active="active">
-    <DataTable *ngIf="active" [viewModel]=data></DataTable>
+<ng-template [ngIf]="getActiveTab() && getActiveTab().isDataTable">
+    <DataTable [viewModel]="getActiveTab().dataContext"></DataTable>
 </ng-template>
