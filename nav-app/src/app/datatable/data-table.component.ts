@@ -224,11 +224,11 @@ export class DataTableComponent implements AfterViewInit {
         }
     }
 
-    constructor(private dataService: DataService, 
+    constructor(public dataService: DataService, 
                 private tabs: TabsComponent, 
                 private sanitizer: DomSanitizer, 
                 private viewModelsService: ViewModelsService, 
-                private configService: ConfigService) { }
+                public configService: ConfigService) { }
 
     /**
      * Angular lifecycle hook
