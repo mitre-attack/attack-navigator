@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { VersionUpgradeComponent } from './version-upgrade.component';
 
@@ -6,7 +6,7 @@ describe('VersionUpgradeComponent', () => {
   let component: VersionUpgradeComponent;
   let fixture: ComponentFixture<VersionUpgradeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ VersionUpgradeComponent ]
     })

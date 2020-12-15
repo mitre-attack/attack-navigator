@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MatrixMiniComponent } from './matrix-mini.component';
 
@@ -6,7 +6,7 @@ describe('MatrixMiniComponent', () => {
   let component: MatrixMiniComponent;
   let fixture: ComponentFixture<MatrixMiniComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MatrixMiniComponent ]
     })

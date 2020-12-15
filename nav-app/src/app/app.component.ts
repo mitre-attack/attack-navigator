@@ -8,7 +8,7 @@ import * as globals from "./globals";
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    @ViewChild(TabsComponent, {static: false}) tabsComponent;
+    @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
 

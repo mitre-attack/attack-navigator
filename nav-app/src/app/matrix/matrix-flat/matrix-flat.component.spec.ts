@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MatrixFlatComponent } from './matrix-flat.component';
 
@@ -6,7 +6,7 @@ describe('MatrixFlatComponent', () => {
   let component: MatrixFlatComponent;
   let fixture: ComponentFixture<MatrixFlatComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MatrixFlatComponent ]
     })

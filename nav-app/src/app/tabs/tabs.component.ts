@@ -37,24 +37,24 @@ export class TabsComponent implements AfterContentInit {
 
     // these variables refer to the templates of the same name defined in the HTML.
     // to open a tab use one of these variables as the template variable.
-    @ViewChild('blankTab', {static: false}) blankTab;
-    @ViewChild('layerTab', {static: false}) layerTab;
+    @ViewChild('blankTab') blankTab;
+    @ViewChild('layerTab') layerTab;
     @ViewChild('helpTab', {static: true}) helpTab;
-    @ViewChild('exporterTab', {static: false}) exporterTab;
+    @ViewChild('exporterTab') exporterTab;
 
     ds: DataService = null;
     vms: ViewModelsService = null;
     techniques: Technique[] = [];
     alwaysUpgradeVersion: boolean;
     nav_version = globals.nav_version;
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
+    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, public configService: ConfigService) {
         console.log("tabs component initializing");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
 
     dynamicTabs: TabComponent[] = [];
-    @ViewChild(DynamicTabsDirective, {static: false}) dynamicTabPlaceholder: DynamicTabsDirective;
+    @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
 
 
     ngAfterContentInit() {
@@ -545,21 +545,19 @@ export class TabsComponent implements AfterContentInit {
             var string = String(reader.result);
             try{
                 viewModel.deSerializeDomainID(string);
-
+                if (!this.dataService.getDomain(viewModel.domainID)) {
+                    throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                }
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                    }
+                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, true, true, true)
                         });
                     } else {
                         viewModel.deSerialize(string);
                         viewModel.loadVMData();
-                        this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
                     }
                 })
                 .catch( (err) => {
@@ -587,22 +585,20 @@ export class TabsComponent implements AfterContentInit {
                 let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                 try {
                     viewModel.deSerializeDomainID(res);
-
+                    if (!this.dataService.getDomain(viewModel.domainID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                    }
                     this.versionUpgradeDialog(viewModel).then( () => {
-                        if (!this.dataService.getDomain(viewModel.domainID)) {
-                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                        }
+                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                 viewModel.deSerialize(res);
                                 viewModel.loadVMData();
-                                this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                                 resolve();
                             });
-                        } else { // data is already loaded
+                        } else {
                             viewModel.deSerialize(res);
                             viewModel.loadVMData();
-                            this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true)
                             resolve();
                         }
                     })
@@ -628,7 +624,7 @@ export class TabsComponent implements AfterContentInit {
                     alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
                 }
                 resolve(); //continue
-            })
+            });
         });
         return layerPromise;
     }

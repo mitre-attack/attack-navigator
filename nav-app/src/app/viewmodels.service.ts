@@ -1426,9 +1426,9 @@ export class Filter {
      * @param {Domain} domain the domain to parse for platform options
      */
     public initPlatformOptions(domain: Domain): void {
-        this.platforms = {
-            selection: JSON.parse(JSON.stringify(domain.platforms)),
-            options: JSON.parse(JSON.stringify(domain.platforms))
+        this.platforms.options = JSON.parse(JSON.stringify(domain.platforms));
+        if (!this.platforms.selection.length) { // prevent overwriting current selection
+            this.platforms.selection = JSON.parse(JSON.stringify(domain.platforms));
         }
     }
 
@@ -1509,19 +1509,27 @@ export class Filter {
 export class Metadata {
     public name: string;
     public value: string;
+    public divider: boolean;
     constructor() {};
-    serialize(): object { return {name: this.name, value: this.value} }
+    serialize(): object { return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider} }
     deSerialize(rep: any) {
-        if (rep.name) {
+        if (rep.name) { // name & value object
             if (typeof(rep.name) === "string") this.name = rep.name;
-            else console.error("TypeError: Metadata field 'name' is not a string")
-        } else console.error("Error: Metadata required field 'name' not present");
-        if (rep.value) {
-            if (typeof(rep.value) === "string") this.value = rep.value;
-            else console.error("TypeError: Metadata field 'value' is not a string")
-        } else console.error("Error: Metadata required field 'value' not present");
+            else console.error("TypeError: Metadata field 'name' is not a string");
+
+            if (rep.value) {
+                if (typeof(rep.value) === "string") this.value = rep.value;
+                else console.error("TypeError: Metadata field 'value' is not a string")
+            } 
+            else console.error("Error: Metadata required field 'value' not present");
+        } 
+        else if ("divider" in rep) { // divider object
+            if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
+            else  console.error("TypeError: Metadata field 'divider' is not a boolean");
+        }
+        else console.error("Error: Metadata required field 'name' or 'divider' not present");
     }
-    valid(): boolean { return this.name && this.name.length > 0 && this.value && this.value.length > 0 }
+    valid(): boolean { return (this.name && this.name.length > 0 && this.value && this.value.length > 0) || (this.divider !== undefined) }
 }
 
 export class LayoutOptions {

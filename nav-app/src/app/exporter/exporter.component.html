@@ -91,7 +91,7 @@
             </div>
             <div class="control-row-item">
                 <div class="control-row-button dropdown noselect"
-                     (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : continue;"
+                     (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : null;"
                      matTooltipPosition="below"
                      matTooltip="legend"
                      [style.color]="showLegendContainer() ? '#000000' : '#aaaaaa'">
@@ -176,6 +176,10 @@
                         <li>
                             <input [id]="uid+'checkboxAbout'" type="checkbox" [disabled]="(!hasName() && !hasDescription()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showAbout" (change)="buildSVG()">
                             <label [for]="uid+'checkboxAbout'" class="checkbox-custom-label noselect" [class.disabled]="(!hasName() && !hasDescription()) || !config.showHeader">show about</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxDomain'" type="checkbox" [disabled]="(!hasDomain()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showDomain" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxDomain'" class="checkbox-custom-label noselect" [class.disabled]="(!hasDomain()) || !config.showHeader">show domain</label>
                         </li>
                         <li>
                             <input [id]="uid+'checkboxfilters'" type="checkbox" class="checkbox-custom" [disabled]="!config.showHeader"[(ngModel)]="config.showFilters" (change)="buildSVG()">
