@@ -10,7 +10,7 @@ export class ConfigService {
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];
 
-    private contextMenuItems: ContextMenuItem[] = [];
+    public contextMenuItems: ContextMenuItem[] = [];
     constructor(private dataService: DataService) {
         console.log("initializing config service");
         let self = this;

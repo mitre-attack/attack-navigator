@@ -77,7 +77,7 @@ export class TabsComponent implements AfterContentInit {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve();
+                    resolve(null);
                 })();
             } else if (defaultLayers["enabled"]) {
                 let first = true;
@@ -87,10 +87,10 @@ export class TabsComponent implements AfterContentInit {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve();
+                    resolve(null);
                 })();
             }
-            resolve();
+            resolve(null);
         });
         return loadPromise;
     }
@@ -448,7 +448,7 @@ export class TabsComponent implements AfterContentInit {
             if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
                 viewModel.version = currVersion;
                 viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                resolve();
+                resolve(null);
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
                 const dialogConfig = new MatDialogConfig();
                 dialogConfig.disableClose = true;
@@ -470,10 +470,10 @@ export class TabsComponent implements AfterContentInit {
                         viewModel.version = currVersion
                         viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
                     }
-                    resolve();
+                    resolve(null);
                 });
             } else { // remember user choice not to upgrade or layer is already current version
-                resolve();
+                resolve(null);
             }
         });
         return dataPromise;
@@ -554,25 +554,25 @@ export class TabsComponent implements AfterContentInit {
                             this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                 viewModel.deSerialize(res);
                                 viewModel.loadVMData();
-                                resolve();
+                                resolve(null);
                             });
                         } else {
                             viewModel.deSerialize(res);
                             viewModel.loadVMData();
-                            resolve();
+                            resolve(null);
                         }
                     })
                     .catch( (err) => {
                         console.error(err.message);
                         alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
-                        resolve();
+                        resolve(null);
                     });
                     console.log("loaded layer from", loadURL);
                 } catch(err) {
                     console.error(err)
                     this.viewModelsService.destroyViewModel(viewModel);
                     alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
-                    resolve(); //continue
+                    resolve(null); //continue
                 }
             }, (err) => {
                 console.error(err)
@@ -583,7 +583,7 @@ export class TabsComponent implements AfterContentInit {
                     // response, but not a good one
                     alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
                 }
-                resolve(); //continue
+                resolve(null); //continue
             });
         });
         return layerPromise;

@@ -9,7 +9,7 @@ import { DataService, Technique } from '../data.service';
 })
 export class TechniquesSearchComponent implements OnInit {
     @Input() viewModel: ViewModel;
-    private fields = [
+    public fields = [
         {
             "label": "name",
             "field": "name",
@@ -38,7 +38,7 @@ export class TechniquesSearchComponent implements OnInit {
     ]
 
     private _query: string = "";
-    private set query(newQuery: string) {
+    public set query(newQuery: string) {
         let self = this;
         this._query = newQuery;
         if (this._query.trim() != "") {
@@ -80,10 +80,10 @@ export class TechniquesSearchComponent implements OnInit {
             this.results = [];
         }
     }
-    private get queryLength(): number {
+    public get queryLength(): number {
         return this._query.length;
     }
-    private results: Technique[] = [];
+    public results: Technique[] = [];
 
     constructor(private dataService: DataService) {
 
@@ -92,7 +92,7 @@ export class TechniquesSearchComponent implements OnInit {
     ngOnInit() {
     }
 
-    private toggleFieldEnabled(field: string) {
+    public toggleFieldEnabled(field: string) {
         for (let thefield of this.fields) {
             if (thefield.field == field) {
                 thefield.enabled = !thefield.enabled;
@@ -102,19 +102,19 @@ export class TechniquesSearchComponent implements OnInit {
         this.query = this._query;
     }
 
-    private select(technique: Technique): void {
+    public select(technique: Technique): void {
         this.viewModel.selectTechniqueAcrossTactics(technique);
     }
 
-    private deselect(technique: Technique): void {
+    public deselect(technique: Technique): void {
         this.viewModel.unselectTechniqueAcrossTactics(technique);
     }
 
-    private selectAll(): void {
+    public selectAll(): void {
         for (let result of this.results) this.select(result);
     }
 
-    private deselectAll(): void {
+    public deselectAll(): void {
         for (let result of this.results) this.deselect(result);
     }
 

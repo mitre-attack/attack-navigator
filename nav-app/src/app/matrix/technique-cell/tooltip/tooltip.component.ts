@@ -12,9 +12,9 @@ export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
     @Input() tactic: Tactic;
     @Input() viewModel: ViewModel;
-    private placement: string;
+    public placement: string;
 
-    private get techniqueVM(): TechniqueVM {
+    public get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 

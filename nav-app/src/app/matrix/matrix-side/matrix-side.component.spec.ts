@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MatrixSideComponent } from './matrix-side.component';
 
@@ -6,7 +6,7 @@ describe('MatrixSideComponent', () => {
   let component: MatrixSideComponent;
   let fixture: ComponentFixture<MatrixSideComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MatrixSideComponent ]
     })

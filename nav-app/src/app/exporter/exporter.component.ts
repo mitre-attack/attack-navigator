@@ -17,7 +17,10 @@ export class ExporterComponent implements OnInit {
     
     viewModel: ViewModel;
     private config: any = {}
-    private isIE() { return is.ie(); }
+    
+    private isIE() {
+        return is.ie();
+    }
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
