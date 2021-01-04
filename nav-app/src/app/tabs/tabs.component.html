@@ -1,17 +1,17 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500" rel="stylesheet">
 
 <!-- Header/Help -->
-<div *ngIf="configService.getFeature('header')" [style.margin-bottom]="configService.getFeature('tabs') ? '0px' : '15px'" class="header" >
+<div *ngIf="hasFeature('header')" [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="header" >
     <div class="logo">
         <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
     </div>
-    <div *ngIf="configService.getFeature('tabs')" class="helpButton" matTooltip="help" (click)="openHelpDialog()">
+    <div *ngIf="hasFeature('tabs')" class="helpButton" matTooltip="help" (click)="openHelpDialog()">
         ?
     </div>
 </div>
 
 <!-- Tabs display -->
-<div [style.margin-top]="configService.getFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && configService.getFeature('tabs')">
+<div [style.margin-top]="hasFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && hasFeature('tabs')">
     <ul class="tabs">
         <!-- dynamic tabs (can be opened and closed) -->
         <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">

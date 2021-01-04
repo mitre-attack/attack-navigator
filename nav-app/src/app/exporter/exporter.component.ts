@@ -15,10 +15,11 @@ import { ColorPickerModule } from 'ngx-color-picker';
 })
 export class ExporterComponent implements OnInit {
     
+    public currentDropdown: string = null;
     viewModel: ViewModel;
-    private config: any = {}
+    public config: any = {}
     
-    private isIE() {
+    public isIE() {
         return is.ie();
     }
 

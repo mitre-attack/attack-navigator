@@ -252,7 +252,7 @@ export class DataService {
             if (domain) {
                 this.getDomainData(domain, refresh).subscribe((data: Object[]) => {
                     this.parseBundle(domain, data);
-                    resolve();
+                    resolve(null);
                 });
             } else if (!domain) { // domain not defined in config
                 reject("'" + domainID + "' is not a valid domain.")

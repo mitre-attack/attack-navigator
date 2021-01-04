@@ -220,6 +220,10 @@ export class TabsComponent implements AfterContentInit {
         return this.dataService.domains.filter((d) => d.version === version)
     }
 
+    hasFeature(featureName: string): boolean {
+        return this.configService.getFeature(featureName);
+    }
+
 
     //  _      ___   _____ ___   ___ _____ _   _ ___ ___
     // | |    /_\ \ / / __| _ \ / __|_   _| | | | __| __|
