@@ -1,4 +1,0 @@
-<div [hidden]="!active" class="pane">
-    <ng-content></ng-content>
-    <ng-container *ngIf="template" [ngTemplateOutlet]="template"  [ngTemplateOutletContext]="{ data: dataContext, active: active }"></ng-container>
-</div>

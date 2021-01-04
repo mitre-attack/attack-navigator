@@ -1,5 +1,4 @@
 import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild } from '@angular/core';
-import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
@@ -34,7 +33,7 @@ export class TabsComponent implements AfterContentInit {
     ds: DataService = null;
     vms: ViewModelsService = null;
 
-    layerTabs: TabComponent[] = [];
+    layerTabs: Tab[] = [];
     techniques: Technique[] = [];
 
     alwaysUpgradeVersion: boolean;
@@ -118,7 +117,7 @@ export class TabsComponent implements AfterContentInit {
 
         // create a new tab
         let domain = data? data.domainID : "";
-        let tab = new TabComponent(title, isCloseable, false, domain, dataTable);
+        let tab = new Tab(title, isCloseable, false, domain, dataTable);
         tab.dataContext = data;
 
         // select new tab
@@ -140,9 +139,9 @@ export class TabsComponent implements AfterContentInit {
 
     /**
      * Select a given tab: deselects other tabs.
-     * @param  {TabComponent} tab tab to select
+     * @param  {Tab} tab tab to select
      */
-    selectTab(tab: TabComponent){
+    selectTab(tab: Tab){
         // deactivate all tabs
         this.layerTabs.forEach(tab => tab.active = false);
 
@@ -152,10 +151,10 @@ export class TabsComponent implements AfterContentInit {
 
     /**
      * close a tab
-     * @param  {TabComponent} tab              tab to close
+     * @param  {Tab} tab              tab to close
      * @param  {[type]}       allowNoTab=false if true, doesn't select another tab, and won't open a new tab if there are none
      */
-    closeTab(tab: TabComponent, allowNoTab=false) {
+    closeTab(tab: Tab, allowNoTab=false) {
         let action = 0; //controls post close-tab behavior
 
         // destroy tab viewmodel
@@ -712,4 +711,23 @@ export class TabsComponent implements AfterContentInit {
         return results
     }
 
+}
+
+export class Tab {
+    title: string;
+    dataContext;
+    domain: string = "";
+    isDataTable: boolean;
+
+    active: boolean = false;
+    isCloseable: boolean = false;
+    showScoreVariables: boolean = false;
+
+    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string, dataTable: boolean) {
+        this.title = title;
+        this.isCloseable = isCloseable;
+        this.showScoreVariables = showScoreVariables;
+        this.domain = domain;
+        this.isDataTable = dataTable;
+    }
 }
