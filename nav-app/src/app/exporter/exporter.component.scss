@@ -1,6 +1,22 @@
+@import "../../colors.scss";
+
 .svgcontainer {
     overflow-x: auto;
     text-align: center;
+
+    min-height: 75vh;
+    max-height: 75vh;
+    min-width: 60vw;
+}
+
+.close-button {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    text-align: center;
+
+    button:focus {
+        background: transparent !important;
+    }
 }
 
 .dropdown-container {

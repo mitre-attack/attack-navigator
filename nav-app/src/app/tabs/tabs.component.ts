@@ -241,7 +241,7 @@ export class TabsComponent implements AfterContentInit {
      * open the help dialog
      */
     openHelpDialog() {
-        this.dialog.open(HelpComponent, {maxHeight: "75vh", maxWidth: "75vw"});
+        this.dialog.open(HelpComponent);
     }
 
     /**
@@ -249,11 +249,7 @@ export class TabsComponent implements AfterContentInit {
      * @param {ViewModel} vm    the viewModel to render
      */
     openSVGDialog(vm: ViewModel) {
-        this.dialog.open(ExporterComponent, {
-            data: {vm: vm},
-            minHeight: "85vh", maxHeight: "85vh",
-            minWidth: "85vw", maxWidth: "85vw"
-        });
+        this.dialog.open(ExporterComponent, {data: {vm: vm}});
     }
 
     /**
