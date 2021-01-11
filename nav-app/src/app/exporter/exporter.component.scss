@@ -3,20 +3,17 @@
 .svgcontainer {
     overflow-x: auto;
     text-align: center;
-
-    min-height: 75vh;
-    max-height: 75vh;
-    min-width: 60vw;
+    min-height: 60vh;
+    max-height: 60vh;
+    min-width: 75vw;
+    max-width: 75vw;
+    padding:25px;
 }
 
 .close-button {
     margin-top: 25px;
     margin-bottom: 25px;
     text-align: center;
-
-    button:focus {
-        background: transparent !important;
-    }
 }
 
 .dropdown-container {
