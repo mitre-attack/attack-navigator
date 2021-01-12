@@ -15,7 +15,7 @@
     <ul class="tabs">
         <!-- dynamic tabs (can be opened and closed) -->
         <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
-            <a *ngIf="!tab.active || !tab.isDataTable" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</a>
+            <span *ngIf="!tab.active || !tab.isDataTable" class="tab-title" [style.cursor]="tab.active? 'default': 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</span>
             <input *ngIf="!(!tab.active || !tab.isDataTable)" [style.cursor]="tab.active ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
 
