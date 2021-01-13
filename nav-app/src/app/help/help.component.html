@@ -3,87 +3,80 @@
         <h1>Table of Contents</h1>
 
         <ul class="toc">
+            <li (click)="scrollTo('about')">About</li>
             <li>
-                <a href="#about">About</a>
-            </li>
-            <li>
-                <a href="#help_Layers">Layers</a>
+                <span (click)="scrollTo('help_Layers')">Layers</span>
                 <ul>
-                    <li><a href="#help_Creating_New_Layers">Creating New Layers</a></li>
-                    <li><a href="#help_Saving_and_Loading_Layers">Saving and Loading Layers</a></li>
-                    <li><a href="#help_Creating_Layers_from_Other_Layers">Creating Layers from Other Layers</a></li>
+                    <li (click)="scrollTo('help_Creating_New_Layers')">Creating New Layers</li>
+                    <li (click)="scrollTo('help_Saving_and_Loading_Layers')">Saving and Loading Layers</li>
+                    <li (click)="scrollTo('help_Creating_Layers_from_Other_Layers')">Creating Layers from Other Layers</li>
                 </ul>
             </li>
-
             <li>
-                <a href="#help_Layer_Controls">Layer Controls</a>
+                <span (click)="scrollTo('help_Layer_Controls')">Layer Controls</span>
                 <ul>
-                    <li><a href="#help_Layer_Information">Layer Information</a></li>
-                    <li><a href="#help_Sorting">Sorting</a></li>
-                    <li><a href="#help_Filtering">Filtering</a></li>
+                    <li (click)="scrollTo('help_Layer_Information')">Layer Information</li>
+                    <li (click)="scrollTo('help_Sorting')">Sorting</li>
+                    <li (click)="scrollTo('help_Filtering')">Filtering</li>
                     <li>
-                        <a href="#help_Color_Setup">Color Setup</a>
+                        <span (click)="scrollTo('help_Color_Setup')">Color Setup</span>
                         <ul>
-                            <li><a href="#help_Tactic_Row_Background">Tactic Row Background</a></li>
-                            <li><a href="#help_Scoring_Gradient">Scoring Gradient</a></li>
+                            <li (click)="scrollTo('help_Tactic_Row_Background')">Tactic Row Background</li>
+                            <li (click)="scrollTo('help_Scoring_Gradient')">Scoring Gradient</li>
                         </ul>
                     </li>
-                    <li><a href="#help_Hiding_Disabled_Techniques">Hiding Disabled Techniques</a></li>
-                    <li><a href="#help_Show_Hide_Subtechniques">Showing or Hiding Sub-techniques</a></li>
+                    <li (click)="scrollTo('help_Hiding_Disabled_Techniques')">Hiding Disabled Techniques</li>
+                    <li (click)="scrollTo('help_Show_Hide_Subtechniques')">Showing or Hiding Sub-techniques</li>
                     <li>
-                        <a href="#help_Changing_Layout">Changing the Matrix Layout</a>
+                        <span (click)="scrollTo('help_Changing_Layout')">Changing the Matrix Layout</span>
                         <ul>
-                            <li><a href="#help_Side_Layout">Side Layout</a></li>
-                            <li><a href="#help_Flat_Layout">Flat Layout</a></li>
-                            <li><a href="#help_Mini_Layout">Mini Layout</a></li>
-                            <li><a href="#help_IDs_Names">Showing IDs and Names</a></li>
+                            <li (click)="scrollTo('help_Side_Layout')">Side Layout</li>
+                            <li (click)="scrollTo('help_Flat_Layout')">Flat Layout</li>
+                            <li (click)="scrollTo('help_Mini_Layout')">Mini Layout</li>
+                            <li (click)="scrollTo('help_IDs_Names')">Showing IDs and Names</li>
                         </ul>
                     </li>
-                    <li><a href="#help_Legend">Legend</a></li>
+                    <li (click)="scrollTo('help_Legend')">Legend</li>
                 </ul>
             </li>
             <li>
-                <a href="#help_Technique_Controls">Technique Controls</a>
+                <span (click)="scrollTo('help_Technique_Controls')">Technique Controls</span>
                 <ul>
-
-                    <li><a href="#help_Disabling_Techniques">Disabling Techniques</a></li>
-                    <li><a href="#help_Assigning_Manual_Colors">Assigning Manual Colors</a></li>
-                    <li><a href="#help_Scoring_Techniques">Scoring Techniques</a></li>
-                    <li><a href="#help_Adding_Comments_to_Techniques">Adding Comments to Techniques</a></li>
-                    <li><a href="#help_Clearing_Selected_Techniques_Annotations">Clearing Annotations on Techniques</a> </li>
+                    <li (click)="scrollTo('help_Disabling_Techniques')">Disabling Techniques</li>
+                    <li (click)="scrollTo('help_Assigning_Manual_Colors')">Assigning Manual Colors</li>
+                    <li (click)="scrollTo('help_Scoring_Techniques')">Scoring Techniques</li>
+                    <li (click)="scrollTo('help_Adding_Comments_to_Techniques')">Adding Comments to Techniques</li>
+                    <li (click)="scrollTo('help_Clearing_Selected_Techniques_Annotations')">Clearing Annotations on Techniques</li>
                 </ul>
             </li>
             <li>
-                <a href="#help_Selecting_Techniques">Selecting Techniques</a>
+                <span (click)="scrollTo('help_Selecting_Techniques')">Selecting Techniques</span>
                 <ul>
-                    <li><a href="#help_Selecting_with_the_Mouse">Selecting with the Mouse</a></li>
-                    <li><a href="#help_Selection_Behavior">Selection Behavior</a></li>
-                    <li><a href="#help_Search_Interface">Search Interface</a></li>
-                    <li><a href="#help_Multiselct_Interface">Multiselect Interface</a></li>
+                    <li (click)="scrollTo('help_Selecting_with_the_Mouse')">Selecting with the Mouse</li>
+                    <li (click)="scrollTo('help_Selection_Behavior')">Selection Behavior</li>
+                    <li (click)="scrollTo('help_Search_Interface')">Search Interface</li>
+                    <li (click)="scrollTo('help_Multiselct_Interface')">Multiselect Interface</li>
                 </ul>
             </li>
             <li>
-                <a href="#help_Customizing_The_Navigator">Customizing The Navigator</a>
+                <span (click)="scrollTo('help_Customizing_The_Navigator')">Customizing The Navigator</span>
                 <ul>
-                    <li><a href="#help_Default_Layers">Default Layers</a></li>
-                    <li><a href="#help_Disable_Features">Disabling Features</a></li>
+                    <li (click)="scrollTo('help_Default_Layers')">Default Layers</li>
+                    <li (click)="scrollTo('help_Disable_Features')">Disabling Features</li>
                 </ul>
             </li>
             <li>
-                <a href="#help_Rendering_Layers_As_SVG">Exporting Layers as SVG</a>
+                <span (click)="scrollTo('help_Rendering_Layers_As_SVG')">Exporting Layers as SVG</span>
                 <ul>
-                    <li><a href="#help_exporting_units">Measurement Units</a></li>
-                    <li><a href="#help_exporting_image_size">Configuring Image Size</a></li>
-                    <li><a href="#help_exporting_text">Configuring Text</a></li>
-                    <li><a href="#help_exporting_legend_config">Customizing the Legend</a></li>
-                    <li><a href="#help_exporting_display_settings">Display Settings</a></li>
+                    <li (click)="scrollTo('help_exporting_units')">Measurement Units</li>
+                    <li (click)="scrollTo('help_exporting_image_size')">Configuring Image Size</li>
+                    <li (click)="scrollTo('help_exporting_text')">Configuring Text</li>
+                    <li (click)="scrollTo('help_exporting_legend_config')">Customizing the Legend</li>
+                    <li (click)="scrollTo('help_exporting_display_settings')">Display Settings</li>
                 </ul>
             </li>
-            <li>
-                <a href="#help_Rendering_Layers_As_XLSX">Exporting Layers to MS Excel</a>
-            </li>
-            <li><a href="#notice">Notice</a></li>
-
+            <li (click)="scrollTo('help_Rendering_Layers_As_XLSX')">Exporting Layers to MS Excel</li>
+            <li (click)="scrollTo('notice')">Notice</li>
         </ul>
 
         <h1 id="about"> MITRE ATT&CK® Navigator Version {{nav_version}}</h1>
@@ -133,8 +126,12 @@
         </p>
         <p>
         Beyond the filters, layers also provide a means to customize your view of
-        the matrix. To that end you can <a href="#help_Assigning_Manual_Colors">color</a>, <a href="#help_Hiding_Disabled_Techniques">hide</a>, <a href="#help_Adding_Comments_to_Techniques">comment</a>, and assign <a href="#help_Scoring_Techniques">numeric
-        scores</a> to techniques to aid in analysis of threats and your defenses
+        the matrix. To that end you can
+        <span (click)="scrollTo('help_Assigning_Manual_Colors')">color</span>, 
+        <span (click)="scrollTo('help_Hiding_Disabled_Techniques')">hide</span>, 
+        <span (click)="scrollTo('help_Adding_Comments_to_Techniques')">comment</span>, 
+        and assign <span (click)="scrollTo('help_Scoring_Techniques')">numeric scores</span> 
+        to techniques to aid in analysis of threats and your defenses
         against those threats. As stated earlier, the Navigator is designed to be
         simple, allowing you to assign whatever meaning you want to the
         color-codings, scores, and comments. This way the Navigator can support
@@ -143,7 +140,9 @@
         </p>
         <p>
         Each layer created is independent of other layers. However, layers can be
-        <a href="#help_Creating_Layers_from_Other_Layers">combined</a> in ways to support analysis, or <a href="#help_Saving_and_Loading_Layers">saved locally</a>. Layer files are
+        <span (click)="scrollTo('help_Creating_Layers_from_Other_Layers')">combined</span> 
+        in ways to support analysis, or 
+        <span (click)="scrollTo('help_Saving_and_Loading_Layers')">saved locally</span>. Layer files are
         saved in easy to parse and easy to generate JSON file so that ATT&CK data
         can be used in other applications, analyzed beyond the capability of the
         ATT&CK Navigator, and generated by tools for import into the Navigator.
@@ -191,7 +190,8 @@
             </li>
             <li>
                 <p>
-                    <b>Score Expression:</b> Technique <a href="#help_Scoring_Techniques">scores</a>  in the created layer are
+                    <b>Score Expression:</b> Technique 
+                    <span (click)="scrollTo('help_Scoring_Techniques')">scores</span> in the created layer are
                     initialized to the result of this expression. This field should take
                     the form of an equation or constant, using variables for layers.
                     Layer variables are shown in yellow on tabs when the "create layer
@@ -232,22 +232,22 @@
                     </ul>
                 </li>
                 <li>
-                    <b>Gradient:</b> choose which layer to inherit <a href="#help_Scoring_Gradient">scoring gradient</a> from.
+                    <b>Gradient:</b> choose which layer to inherit <span (click)="scrollTo('help_Scoring_Gradient')">scoring gradient</span> from.
                 </li>
                 <li>
-                    <b>Coloring:</b> choose which layer to inherit <a href="#help_Assigning_Manual_Colors">manually assigned technique colors</a> from.
+                    <b>Coloring:</b> choose which layer to inherit <span (click)="scrollTo('help_Assigning_Manual_Colors')">manually assigned technique colors</span> from.
                 </li>
                 <li>
-                    <b>Comments:</b> choose which layer to inherit <a href="#help_Adding_Comments_to_Techniques">technique comments</a> from.
+                    <b>Comments:</b> choose which layer to inherit <span (click)="scrollTo('help_Adding_Comments_to_Techniques')">technique comments</span> from.
                 </li>
                 <li>
-                    <b>States:</b> choose which layer to inherit technique <a href="#help_Disabling_Techniques">enabled/disabled states</a> from.
+                    <b>States:</b> choose which layer to inherit technique <span (click)="scrollTo('help_Disabling_Techniques')">enabled/disabled states</span> from.
                 </li>
                 <li>
-                    <b>Filters:</b> choose which layer to inherit <a href="#help_Filtering">layer filter configuration</a> from.
+                    <b>Filters:</b> choose which layer to inherit <span (click)="scrollTo('help_Filtering')">layer filter configuration</span> from.
                 </li>
                 <li>
-                    <b>Legend:</b> choose which layer to inherit <a href="#help_Legend">legend items</a> from.
+                    <b>Legend:</b> choose which layer to inherit <span (click)="scrollTo('help_Legend')">legend items</span> from.
                 </li>
             </ul>
             <p>
@@ -336,8 +336,8 @@
             </p>
 
             <p>
-                <b>Tip:</b> Techniques can also be hidden from your view by using the <a href="#help_Hiding_Disabled_Techniques">hide disabled techniques</a>
-                button. Couple this with the <a href="#help_Multiselct_Interface">multiselect interface</a>
+                <b>Tip:</b> Techniques can also be hidden from your view by using the <span (click)="scrollTo('help_Hiding_Disabled_Techniques')">hide disabled techniques</span>
+                button. Couple this with the <span (click)="scrollTo('help_Multiselct_Interface')">multiselect interface</span>
                 to hide techniques which are contained in specific threat or software groupings.
             </p>
 
@@ -350,7 +350,8 @@
             </h3>
             <p>
                 The background color of the tactic row can be set in the tactic row background section of the color setup menu. The color
-                will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the <a href="#help_Mini_Layout">mini view</a>.
+                will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the 
+                <span (click)="scrollTo('help_Mini_Layout')">mini view</span>.
             </p>
 
 
@@ -381,12 +382,12 @@
                 Hiding Disabled Techniques
             </h2>
             <p>
-                Techniques that are <a href="#help_Disabling_Techniques">disabled</a> can be hidden by toggling the "hide disabled techniques" button.
+                Techniques that are <span (click)="scrollTo('help_Disabling_Techniques')">disabled</span> can be hidden by toggling the "hide disabled techniques" button.
                 Hidden techniques are still present in the data when saved and can still be annotated, but won't be visible in the view.
             </p>
             <p>
-                <b>Tip:</b> This button has powerful synergy with the <a
-                href="#help_Multiselct_Interface">multiselect interface</a>. Use the
+                <b>Tip:</b> This button has powerful synergy with the 
+                <span (click)="scrollTo('help_Multiselct_Interface')">multiselect interface</span>. Use the
                 multiselect interface to select techniques which match your criteria,
                 disable them, and then turn on hiding disabled techniques to remove entire
                 groups of techniques from your view.
@@ -410,11 +411,10 @@
             </ul>
             <p>
                 <b>Tip:</b> Sub-techniques can also be shown or hidden on each individual 
-                technique when in the <a href="#help_Side_Layout">side layout</a> or 
-                <a href="#help_Flat_Layout">flat layout</a> by clicking the gray sidebar on the
+                technique when in the <span (click)="scrollTo('help_Side_Layout')">side layout</span> or 
+                <span (click)="scrollTo('help_Flat_Layout')">flat layout</span> by clicking the gray sidebar on the
                 technique cell.
             </p>
-
 
             <h2 id="help_Changing_Layout">
                 <img src="assets/icons/ic_view_large_black_24px.svg">
@@ -442,7 +442,8 @@
             <p>
                 The mini layout is designed to fit more techniques on the screen
                 simultaneously by reducing their size. To do so all text is removed
-                and techniques are visualized as squares under the tactic. Selecting this layout disables <a href="#help_IDs_Names">the "show IDs" and "show Names" controls</a>.
+                and techniques are visualized as squares under the tactic. Selecting this layout disables 
+                <span (click)="scrollTo('help_IDs_Names')">the "show IDs" and "show Names" controls</span>.
                 
                 Tactic headers are visualized as black cells above the columns. Technique
                 and tactic names are displayed as tooltips when you hover over a
@@ -478,7 +479,7 @@
             <h1 id="help_Technique_Controls">Technique Controls</h1>
             <p>
                 Techniques in the layer can be annotated. The technique controls on the menubar
-                are only enabled when one or more techniques are <a href="#help_Selecting_Techniques">selected</a>.
+                are only enabled when one or more techniques are <span (click)="scrollTo('help_Selecting_Techniques')">selected</span>.
                 If multiple techniques are selected, they will all be annotated simultaneously.
             </p>
 
@@ -491,11 +492,11 @@
             <p>
                 Clicking the "toggle state" button toggles selected techniques between an
                 enabled and disabled state. In the disabled state, the technique text is greyed
-                out and no colors (<a href="#help_Assigning_Manual_Colors">assigned manually</a> or via <a href="#help_Scoring_Techniques">score</a>)
-                will be displayed.
+                out and no colors (<span (click)="scrollTo('help_Assigning_Manual_Colors')">assigned manually</span> or via 
+                <span (click)="scrollTo('help_Scoring_Techniques')">score</span>) will be displayed.
             </p>
             <p>
-                The <a href="#help_Hiding_Disabled_Techniques">hide disabled techniques</a>
+                The <span (click)="scrollTo('help_Hiding_Disabled_Techniques')">hide disabled techniques</span>
                 button can be used to hide disabled techniques from the view.
             </p>
 
@@ -545,11 +546,11 @@
             </p>
             <p>
                 Techniques are automatically assigned a color according to its
-                score. This color is determined according to the <a href="#help_Scoring">scoring gradient setup interface</a>. Colors
-                assigned <a href="#help_Assigning_Manual_Colors">manually</a>
+                score. This color is determined according to the <span (click)="scrollTo('help_Scoring_Gradient')">scoring gradient setup interface</span>. Colors
+                assigned <span (click)="scrollTo('help_Assigning_Manual_Colors')">manually</span>
                 supersede the score-generated color. It is a good idea to assign
                 techniques scores inside of a predetermined range, such as 0-1 or 0-100. Set
-                the "high value" and "low value" inputs in the <a href="#help_Scoring">scoring gradient setup interface</a> to this
+                the "high value" and "low value" inputs in the <span (click)="scrollTo('help_Scoring_Gradient')">scoring gradient setup interface</span> to this
                 range to make sure that the color for the score is properly mapped
                 to the gradient. Techniques that are unscored are not assigned a
                 color based on the gradient - they are displayed with a white
@@ -594,9 +595,9 @@
                 <li><b>deselect all:</b> Deselect all techniques. This action can also be completed by the "deselect" (<img src="assets/icons/ic_clear_black_24px.svg"/>) button.</li>
                 <li><b>select annotated:</b> Select all techniques and sub-techniques which have annotations or remove unnanotated techniques from an existing selection.</li>
                 <li><b>select unannotated:</b> Select all techniques and sub-techniques which do not have annotations or remove annotated techniques from an existing selection.</li>
-                <li><b>select all techniques in tactic:</b> Select all techniques in this tactic. This action can also be completed by clicking on the tactic header and follows the behavior preference under <a href="#help_Selection_Behavior">selection behavior</a> in the selection controls.
+                <li><b>select all techniques in tactic:</b> Select all techniques in this tactic. This action can also be completed by clicking on the tactic header and follows the behavior preference under <span (click)="scrollTo('help_Selection_Behavior')">selection behavior</span> in the selection controls.
                     If the “select techniques across tactics” control is enabled, the selection will include instances of techniques that are in other tactics. Disable this control to select only the instances of techniques that are within this tactic. Sub-techniques within the tactic can be selected along with their parent technique by enabling the “select sub-techniques with parent” control. </li>
-                <li><b>deselect all techniques in tactic:</b> Deselect all techniques in this tactic. This action follows the behavior preference under <a href="#help_Selection_Behavior">selection behavior</a> in the selection controls.
+                <li><b>deselect all techniques in tactic:</b> Deselect all techniques in this tactic. This action follows the behavior preference under <span (click)="scrollTo('help_Selection_Behavior')">selection behavior</span> in the selection controls.
                     If the “select techniques across tactics” control is enabled, instances of techniques across all tactics will be deselected. Disable this control to remove only the instances of techniques within this tactic from the selection. Sub-techniques in this tactic will be deselected with their parent technique if the “select sub-techniques with parent” control is enabled. Note that currently selected sub-techniques will remain selected if the control is disabled when using this option.</li>
                 <li><b>view technique:</b> For more information / details on the technique.</li>
                 <li><b>view tactic:</b> For more information / details on the tactic.</li>
@@ -732,7 +733,7 @@
             <p>
                 The image size controls allow you to specify the width and height of
                 the image, as well as the height of the header if one is present.
-                The measurements are in units specified by the <a href="#help_exporting_units">measurement units</a> control.
+                The measurements are in units specified by the <span (click)="scrollTo('help_exporting_units')">measurement units</span> control.
             </p>
             <p>
                 The header height contributes to the total image height: if you have specified
@@ -757,11 +758,11 @@
                 Customizing the Legend
             </h2>
             <p>
-                This menu can only be opened if a <a href="#help_Legend">legend</a> is present on the layer or if techniques have been assigned scores.
+                This menu can only be opened if a <span (click)="scrollTo('help_Legend')">legend</span> is present on the layer or if techniques have been assigned scores.
                 The checkbox allows you to undock the legend from the SVG header.
                 Once undocked, the X and Y position controls can be used to position
                 the legend in the image. The width and height inputs control
-                the size of the legend when it is undocked. The measurements are in units specified by the <a href="#help_exporting_units">measurement units</a> control.
+                the size of the legend when it is undocked. The measurements are in units specified by the <span (click)="scrollTo('help_exporting_units')">measurement units</span> control.
             </p>
 
             <h2 id="help_exporting_display_settings">
