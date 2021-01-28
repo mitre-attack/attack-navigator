@@ -4,6 +4,9 @@ Refactored the implementation of tabs to reduce performance issues when opening 
 - The help page and SVG exporter have been moved to a pop-up window and are no longer displayed in a separate tab.
 - The process for displaying layer information and switching between tabs has been refactored. The creation and deletion of new DOM elements for each tab has been removed. Previously, the contents of each tab were contained in their own DOM element causing poor performance.
 
+## Fixes
+- Fixed a bug preventing required packages to install when building the Navigator through Docker. See issue [#258](https://github.com/mitre-attack/attack-navigator/issues/258).
+
 # v4.1 - 15 December 2020
 ## New Features
 - Added support for section breaks in the technique metadata format (see _Layer File Format Changes_ below for more details). See issue [#189](https://github.com/mitre-attack/attack-navigator/issues/189).
