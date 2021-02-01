@@ -44,8 +44,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         this.viewModelsService = viewModelsService;
     }
 
-    dynamicTabs: TabComponent[] = [];
-    @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
     @ViewChild('safariWarning') safariWarning : TemplateRef<any>;
 
     ngAfterContentInit() {
