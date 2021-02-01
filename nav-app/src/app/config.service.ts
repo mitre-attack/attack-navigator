@@ -14,28 +14,31 @@ export class ConfigService {
     constructor(private dataService: DataService) {
         console.log("initializing config service");
         let self = this;
-        dataService.getConfig().subscribe(function(config: any) {
-            //parse feature preferences from config json
-            config["features"].forEach(function(featureObject: any) {
-                self.setFeature_object(featureObject);
-            })
-            //override json preferences with preferences from URL fragment
-            self.getAllFragments().forEach(function(value: string, key: string) {
-                let valueBool = (value == 'true');
-                if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                    // console.log("setting feature", key, valueBool)
-                    self.setFeature(key, valueBool);
+        let subscription = dataService.getConfig().subscribe({
+            next: function(config: any) {
+                //parse feature preferences from config json
+                config["features"].forEach(function(featureObject: any) {
+                    self.setFeature_object(featureObject);
+                })
+                //override json preferences with preferences from URL fragment
+                self.getAllFragments().forEach(function(value: string, key: string) {
+                    let valueBool = (value == 'true');
+                    if (self.isFeature(key) || self.isFeatureGroup(key)) {
+                        // console.log("setting feature", key, valueBool)
+                        self.setFeature(key, valueBool);
+                    }
+                    // else {
+                    //     console.log(key, "is not a feature")
+                    // }
+                })
+                dataService.subtechniquesEnabled = self.getFeature("subtechniques");
+                self.featureStructure = config["features"];
+                self.comment_color = config["comment_color"];
+                for (let obj of config["custom_context_menu_items"]) {
+                    self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
                 }
-                // else {
-                //     console.log(key, "is not a feature")
-                // }
-            })
-            dataService.subtechniquesEnabled = self.getFeature("subtechniques");
-            self.featureStructure = config["features"];
-            self.comment_color = config["comment_color"];
-            for (let obj of config["custom_context_menu_items"]) {
-                self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
-            }
+            }, 
+            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks 
         });
     }
 

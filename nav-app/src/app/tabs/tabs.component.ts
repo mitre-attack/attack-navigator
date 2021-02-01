@@ -32,7 +32,7 @@ export class TabsComponent implements AfterContentInit {
 
     ds: DataService = null;
     vms: ViewModelsService = null;
-
+    activeTab: Tab = null;
     layerTabs: Tab[] = [];
     techniques: Technique[] = [];
 
@@ -46,18 +46,21 @@ export class TabsComponent implements AfterContentInit {
     }
 
     ngAfterContentInit() {
-        this.ds.getConfig().subscribe((config: Object) => {
-            this.newBlankTab();
-            this.loadTabs(config["default_layers"]).then( () => {
-                if (this.layerTabs.length == 0) {
-                    this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
-                }
-                let activeTabs = this.layerTabs.filter((tab)=>tab.active);
+        let subscription = this.ds.getConfig().subscribe({
+            next: (config: Object) => {
+                this.newBlankTab();
+                this.loadTabs(config["default_layers"]).then( () => {
+                    if (this.layerTabs.length == 0) {
+                        this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
+                    }
+                    // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
 
-                // if there is no active tab set, activate the first
-                if(activeTabs.length === 0) { this.selectTab(this.layerTabs[0]); }
-            });
-            this.customizedConfig = this.configService.getFeatureList()
+                    // if there is no active tab set, activate the first
+                    if(!this.activeTab) { this.selectTab(this.layerTabs[0]); }
+                });
+                this.customizedConfig = this.configService.getFeatureList()
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
     }
 
@@ -127,7 +130,7 @@ export class TabsComponent implements AfterContentInit {
         } else {
             // find active tab index
             for (let i = 0; i < this.layerTabs.length; i++) {
-                if (this.layerTabs[i].active) {
+                if (this.layerTabs[i] == this.activeTab) {
                     this.closeActiveTab(true) //close current and don't let it create a replacement tab
                     this.layerTabs.splice(i, 0, tab) //replace
                     this.selectTab(this.layerTabs[i]);
@@ -143,10 +146,10 @@ export class TabsComponent implements AfterContentInit {
      */
     selectTab(tab: Tab){
         // deactivate all tabs
-        this.layerTabs.forEach(tab => tab.active = false);
-
+        // this.layerTabs.forEach(tab => tab.active = false);
+        this.activeTab = tab;
         // activate the tab the user has clicked on.
-        tab.active = true;
+        // tab.active = true;
     }
 
     /**
@@ -163,7 +166,7 @@ export class TabsComponent implements AfterContentInit {
         for(let i=0; i<this.layerTabs.length;i++) {
             if(this.layerTabs[i] === tab) { //close this tab
 
-                if (this.layerTabs[i].active) { //is the tab we're closing currently open??
+                if (this.layerTabs[i] == this.activeTab) { //is the tab we're closing currently open??
                     if (i == 0 && this.layerTabs.length > 1) { //closing first tab, first tab is active, and more tabs exist
                         action = 1;
                     } else if (i > 0) { //closing not first tab, implicitly more tabs exist
@@ -203,16 +206,19 @@ export class TabsComponent implements AfterContentInit {
      * @param  {[type]} allowNoTab=false if true, doesn't select another tab, and won't open a new tab if there are none
      */
     closeActiveTab(allowNoTab=false) {
-        let activeTabs = this.layerTabs.filter((tab)=>tab.active);
-        if(activeTabs.length > 0)  {
-            // close the 1st active tab (should only be one at a time)
-            this.closeTab(activeTabs[0], allowNoTab);
-        }
+        if (this.activeTab) this.closeTab(this.activeTab, allowNoTab);
+        // this.activeTab = null;
+        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
+        // if(activeTabs.length > 0)  {
+        //     // close the 1st active tab (should only be one at a time)
+        //     this.closeTab(activeTabs[0], allowNoTab);
+        // }
     }
 
     getActiveTab() {
-        let activeTabs = this.layerTabs.filter((tab)=>tab.active);
-        return activeTabs[0];
+        return this.activeTab;
+        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
+        // return activeTabs[0];
     }
 
     filterDomains(version: string) {
@@ -458,18 +464,21 @@ export class TabsComponent implements AfterContentInit {
                     currVersion: currVersion
                 }
                 const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
-                dialogRef.afterClosed().subscribe(result => {
-                    if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
-                        reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
-                    }
-                    if (result.dontAsk) {
-                        this.alwaysUpgradeVersion = result.upgrade;
-                    }
-                    if (result.upgrade) {
-                        viewModel.version = currVersion
-                        viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                    }
-                    resolve(null);
+                let subscription = dialogRef.afterClosed().subscribe({
+                    next: (result) => {
+                        if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
+                            reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
+                        }
+                        if (result.dontAsk) {
+                            this.alwaysUpgradeVersion = result.upgrade;
+                        }
+                        if (result.upgrade) {
+                            viewModel.version = currVersion
+                            viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
+                        }
+                        resolve(null);
+                    },
+                    complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
             } else { // remember user choice not to upgrade or layer is already current version
                 resolve(null);
@@ -540,49 +549,53 @@ export class TabsComponent implements AfterContentInit {
     loadLayerFromURL(loadURL, replace): Promise<any> {
         let layerPromise: Promise<any> = new Promise((resolve, reject) => {
             // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
-            this.http.get(loadURL).subscribe((res) => {
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                try {
-                    viewModel.deSerializeDomainID(res);
-                    if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                    }
-                    this.versionUpgradeDialog(viewModel).then( () => {
-                        this.openTab("new layer", viewModel, true, replace, true, true);
-                        if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                            this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+            let subscription = this.http.get(loadURL).subscribe({
+                next: (res) => {
+                    let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                    try {
+                        viewModel.deSerializeDomainID(res);
+                        if (!this.dataService.getDomain(viewModel.domainID)) {
+                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                        }
+                        this.versionUpgradeDialog(viewModel).then( () => {
+                            this.openTab("new layer", viewModel, true, replace, true, true);
+                            if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                                this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                                    viewModel.deSerialize(res);
+                                    viewModel.loadVMData();
+                                    resolve(null);
+                                });
+                            } else {
                                 viewModel.deSerialize(res);
                                 viewModel.loadVMData();
                                 resolve(null);
-                            });
-                        } else {
-                            viewModel.deSerialize(res);
-                            viewModel.loadVMData();
+                            }
+                        })
+                        .catch( (err) => {
+                            console.error(err.message);
+                            alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
                             resolve(null);
-                        }
-                    })
-                    .catch( (err) => {
-                        console.error(err.message);
-                        alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
-                        resolve(null);
-                    });
-                    console.log("loaded layer from", loadURL);
-                } catch(err) {
+                        });
+                        console.log("loaded layer from", loadURL);
+                    } catch(err) {
+                        console.error(err)
+                        this.viewModelsService.destroyViewModel(viewModel);
+                        alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
+                        resolve(null); //continue
+                    }
+                }, 
+                error: (err) => {
                     console.error(err)
-                    this.viewModelsService.destroyViewModel(viewModel);
-                    alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
+                    if (err.status == 0) {
+                        // no response
+                        alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                    } else {
+                        // response, but not a good one
+                        alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                    }
                     resolve(null); //continue
-                }
-            }, (err) => {
-                console.error(err)
-                if (err.status == 0) {
-                    // no response
-                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-                } else {
-                    // response, but not a good one
-                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-                }
-                resolve(null); //continue
+                },
+                complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
             });
         });
         return layerPromise;
@@ -715,7 +728,6 @@ export class Tab {
     domain: string = "";
     isDataTable: boolean;
 
-    active: boolean = false;
     isCloseable: boolean = false;
     showScoreVariables: boolean = false;
 
