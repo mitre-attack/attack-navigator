@@ -12,8 +12,11 @@ export class DataService {
 
     constructor(private http: HttpClient) {
         console.log("initializing data service singleton")
-        this.getConfig().subscribe((config) => {
-            this.setUpURLs(config["versions"]);
+        let subscription = this.getConfig().subscribe({
+            next: (config) => {
+                this.setUpURLs(config["versions"]);
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         })
     }
 
@@ -250,9 +253,12 @@ export class DataService {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain) {
-                this.getDomainData(domain, refresh).subscribe((data: Object[]) => {
-                    this.parseBundle(domain, data);
-                    resolve();
+                let subscription = this.getDomainData(domain, refresh).subscribe({
+                    next: (data: Object[]) => {
+                        this.parseBundle(domain, data);
+                        resolve(null);
+                    },
+                    complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
             } else if (!domain) { // domain not defined in config
                 reject("'" + domainID + "' is not a valid domain.")

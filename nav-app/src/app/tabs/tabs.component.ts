@@ -1,14 +1,10 @@
-// https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, ComponentFactoryResolver } from '@angular/core';
-
-
-import { DynamicTabsDirective } from './dynamic-tabs.directive';
-import { TabComponent } from '../tab/tab.component';
+import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
-
+import { HelpComponent } from '../help/help.component';
+import { ExporterComponent } from '../exporter/exporter.component';
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
 
 import {ErrorStateMatcher} from '@angular/material/core'
@@ -16,7 +12,6 @@ import {FormControl} from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
-import { log } from 'util';
 
 declare var math: any; //use mathjs
 
@@ -35,41 +30,37 @@ export class TabsComponent implements AfterContentInit {
     //   |_/_/ \_\___/ |___/ |_|  \___/|_| |_|
 
 
-    // these variables refer to the templates of the same name defined in the HTML.
-    // to open a tab use one of these variables as the template variable.
-    @ViewChild('blankTab') blankTab;
-    @ViewChild('layerTab') layerTab;
-    @ViewChild('helpTab', {static: true}) helpTab;
-    @ViewChild('exporterTab') exporterTab;
-
     ds: DataService = null;
     vms: ViewModelsService = null;
+    activeTab: Tab = null;
+    layerTabs: Tab[] = [];
     techniques: Technique[] = [];
+
     alwaysUpgradeVersion: boolean;
     nav_version = globals.nav_version;
-    constructor(private _componentFactoryResolver: ComponentFactoryResolver, private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, public configService: ConfigService) {
+
+    constructor(private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
         console.log("tabs component initializing");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
 
-    dynamicTabs: TabComponent[] = [];
-    @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
-
-
     ngAfterContentInit() {
-        this.ds.getConfig().subscribe((config: Object) => {
-            this.newBlankTab();
-            this.loadTabs(config["default_layers"]).then( () => {
-                if (this.dynamicTabs.length == 0) {
-                    this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
-                }
-                let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
+        let subscription = this.ds.getConfig().subscribe({
+            next: (config: Object) => {
+                this.newBlankTab();
+                this.loadTabs(config["default_layers"]).then( () => {
+                    if (this.layerTabs.length == 0) {
+                        this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
+                    }
+                    // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
 
-                // if there is no active tab set, activate the first
-                if(activeTabs.length === 0) { this.selectTab(this.dynamicTabs[0]); }
-            });
-            this.customizedConfig = this.configService.getFeatureList()
+                    // if there is no active tab set, activate the first
+                    if(!this.activeTab) { this.selectTab(this.layerTabs[0]); }
+                });
+                this.customizedConfig = this.configService.getFeatureList()
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
     }
 
@@ -88,7 +79,7 @@ export class TabsComponent implements AfterContentInit {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve();
+                    resolve(null);
                 })();
             } else if (defaultLayers["enabled"]) {
                 let first = true;
@@ -98,10 +89,10 @@ export class TabsComponent implements AfterContentInit {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve();
+                    resolve(null);
                 })();
             }
-            resolve();
+            resolve(null);
         });
         return loadPromise;
     }
@@ -109,7 +100,6 @@ export class TabsComponent implements AfterContentInit {
     /**
      * Open a new tab
      * @param  {[type]}  title               title of new tab
-     * @param  {[type]}  template            template of content
      * @param  {[type]}  data                data to put in template
      * @param  {Boolean} [isCloseable=false] can this tab be closed?
      * @param  {Boolean} [replace=false]     replace the current tab with the new tab, TODO
@@ -117,92 +107,67 @@ export class TabsComponent implements AfterContentInit {
      * @param  {Boolean} [dataTable=false]   is this a data-table tab? if so tab text should be editable
 
      */
-    openTab(title: string, template, data, isCloseable = false, replace = true, forceNew = false, dataTable = false) {
-
-        if (!template) {
-            console.error("ERROR: no template defined for tab titled ''", title, "''");
-        }
-
+    openTab(title: string, data, isCloseable = false, replace = true, forceNew = false, dataTable = false) {
         // determine if tab is already open. If it is, just change to that tab
         if (!forceNew) {
-            for (let i = 0; i < this.dynamicTabs.length; i++) {
-                if (this.dynamicTabs[i].title === title) {
-                    this.selectTab(this.dynamicTabs[i])
+            for (let i = 0; i < this.layerTabs.length; i++) {
+                if (this.layerTabs[i].title === title) {
+                    this.selectTab(this.layerTabs[i])
                     return;
                 }
             }
         }
 
-        // get a component factory for our TabComponent
-        let componentFactory = this._componentFactoryResolver.resolveComponentFactory(TabComponent);
+        // create a new tab
+        let domain = data? data.domainID : "";
+        let tab = new Tab(title, isCloseable, false, domain, dataTable);
+        tab.dataContext = data;
 
-        // fetch the view container reference from our anchor directive
-        let viewContainerRef = this.dynamicTabPlaceholder.viewContainer;
-
-        // alternatively...
-        // let viewContainerRef = this.dynamicTabPlaceholder;
-
-        // create a component instance
-        let componentRef = viewContainerRef.createComponent(componentFactory);
-
-        // set the according properties on our component instance
-        let instance: TabComponent = componentRef.instance as TabComponent;
-        instance.title = title;
-        instance.template = template;
-        instance.dataContext = data;
-        instance.isCloseable = isCloseable;
-        instance.showScoreVariables = false;
-        instance.domain = data? data.domainID : "";
-        instance.isDataTable = dataTable
-
-        // remember the dynamic component for rendering the
-        // tab navigation headers
-        // this.dynamicTabs.push(componentRef.instance as TabComponent); //don't replace
-        if (!replace || this.dynamicTabs.length === 0) {
-            this.dynamicTabs.push(componentRef.instance as TabComponent); //don't replace
-            this.selectTab(this.dynamicTabs[this.dynamicTabs.length - 1]);
+        // select new tab
+        if (!replace || this.layerTabs.length === 0) {
+            this.layerTabs.push(tab); //don't replace
+            this.selectTab(this.layerTabs[this.layerTabs.length - 1]);
         } else {
             // find active tab index
-            for (let i = 0; i < this.dynamicTabs.length; i++) {
-                if (this.dynamicTabs[i].active) {
+            for (let i = 0; i < this.layerTabs.length; i++) {
+                if (this.layerTabs[i] == this.activeTab) {
                     this.closeActiveTab(true) //close current and don't let it create a replacement tab
-                    this.dynamicTabs.splice(i,0,componentRef.instance as TabComponent) //replace
-                    this.selectTab(this.dynamicTabs[i]);
+                    this.layerTabs.splice(i, 0, tab) //replace
+                    this.selectTab(this.layerTabs[i]);
                     return
                 }
             }
-
         }
     }
 
     /**
      * Select a given tab: deselects other tabs.
-     * @param  {TabComponent} tab tab to select
+     * @param  {Tab} tab tab to select
      */
-    selectTab(tab: TabComponent){
+    selectTab(tab: Tab){
         // deactivate all tabs
-        this.dynamicTabs.forEach(tab => tab.active = false);
-
+        // this.layerTabs.forEach(tab => tab.active = false);
+        this.activeTab = tab;
         // activate the tab the user has clicked on.
-        tab.active = true;
+        // tab.active = true;
     }
 
     /**
      * close a tab
-     * @param  {TabComponent} tab              tab to close
+     * @param  {Tab} tab              tab to close
      * @param  {[type]}       allowNoTab=false if true, doesn't select another tab, and won't open a new tab if there are none
      */
-    closeTab(tab: TabComponent, allowNoTab=false) {
+    closeTab(tab: Tab, allowNoTab=false) {
         let action = 0; //controls post close-tab behavior
 
         // destroy tab viewmodel
         this.viewModelsService.destroyViewModel(tab.dataContext);
 
-        for(let i=0; i<this.dynamicTabs.length;i++) {
-            if(this.dynamicTabs[i] === tab) { //close this tab
+        for(let i=0; i<this.layerTabs.length;i++) {
+            if(this.layerTabs[i] === tab) { //close this tab
 
-                if (this.dynamicTabs[i].active) { //is the tab we're closing currently open??
-                    if (i == 0 && this.dynamicTabs.length > 1) { //closing first tab, first tab is active, and more tabs exist
+                if (this.layerTabs[i] == this.activeTab) { //is the tab we're closing currently open??
+                    if (i == 0 && this.layerTabs.length > 1) { //closing first tab, first tab is active, and more tabs exist
                         action = 1;
                     } else if (i > 0) { //closing not first tab, implicitly more tabs exist
                         action = 2;
@@ -210,28 +175,22 @@ export class TabsComponent implements AfterContentInit {
                         action = 3;
                     }
                 }
-
                 // remove the tab from our array
-                this.dynamicTabs.splice(i,1);
-
-                // destroy our dynamically created component again
-                let viewContainerRef = this.dynamicTabPlaceholder.viewContainer;
-                // let viewContainerRef = this.dynamicTabPlaceholder;
-                viewContainerRef.remove(i);
-
+                this.layerTabs.splice(i,1);
                 break;
             }
         }
+
         // post close-tab behavior: select new tab?
         if (!allowNoTab) {
             switch (action) {
                 case 0: //should only occur if the active tab is not closed: don't select another tab
                     break;
                 case 1: //closing the first tab, more exist
-                    this.selectTab(this.dynamicTabs[0]) // select first tab
+                    this.selectTab(this.layerTabs[0]) // select first tab
                     break;
                 case 2: //closing any tab other than the first
-                    this.selectTab(this.dynamicTabs[0]); //select first tab
+                    this.selectTab(this.layerTabs[0]); //select first tab
                     break;
                 case 3://closing first tab and no other tab exist
                     this.newBlankTab(); //make a new blank tab, automatically opens this tab
@@ -247,20 +206,27 @@ export class TabsComponent implements AfterContentInit {
      * @param  {[type]} allowNoTab=false if true, doesn't select another tab, and won't open a new tab if there are none
      */
     closeActiveTab(allowNoTab=false) {
-        let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
-        if(activeTabs.length > 0)  {
-            // close the 1st active tab (should only be one at a time)
-            this.closeTab(activeTabs[0], allowNoTab);
-        }
+        if (this.activeTab) this.closeTab(this.activeTab, allowNoTab);
+        // this.activeTab = null;
+        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
+        // if(activeTabs.length > 0)  {
+        //     // close the 1st active tab (should only be one at a time)
+        //     this.closeTab(activeTabs[0], allowNoTab);
+        // }
     }
 
     getActiveTab() {
-        let activeTabs = this.dynamicTabs.filter((tab)=>tab.active);
-        return activeTabs[0];
+        return this.activeTab;
+        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
+        // return activeTabs[0];
     }
 
     filterDomains(version: string) {
         return this.dataService.domains.filter((d) => d.version === version)
+    }
+
+    hasFeature(featureName: string): boolean {
+        return this.configService.getFeature(featureName);
     }
 
 
@@ -274,21 +240,25 @@ export class TabsComponent implements AfterContentInit {
      * @param  {[type]} replace=false replace the current tab with this blank tab?
      */
     newBlankTab(replace=false) {
-        this.openTab('new tab', this.blankTab, null, true, replace, true, false)
+        this.openTab('new tab', null, true, replace, true, false)
     }
 
     /**
-     * create a new help tab
-     * @param replace=false  replace currently open tab?
-     * @param forceNew=false if false, select currently open help tab if possible
+     * open the help dialog
      */
-    newHelpTab(replace=false, forceNew=false): void {
-        if (replace) this.closeActiveTab()
-        this.openTab('help', this.helpTab, null, true, replace, false)
+    openHelpDialog() {
+        this.dialog.open(HelpComponent);
     }
 
-    newExporterTab(vm: ViewModel) {
-        this.openTab('render: ' + vm.name, this.exporterTab, vm, true, false, true)
+    /**
+     * open the SVG exporter dialog
+     * @param {ViewModel} vm    the viewModel to render
+     */
+    openSVGDialog(vm: ViewModel) {
+        this.dialog.open(ExporterComponent, 
+            { data: {vm: vm},
+              panelClass: 'dialog-custom'
+            });
     }
 
     /**
@@ -339,7 +309,7 @@ export class TabsComponent implements AfterContentInit {
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainID);
         vm.loadVMData();
-        this.openTab(name, this.layerTab, vm, true, true, true, true)
+        this.openTab(name, vm, true, true, true, true)
     }
 
     /**
@@ -350,7 +320,7 @@ export class TabsComponent implements AfterContentInit {
     indexToChar(index: number) {
         let realIndex = 0;
         for (let i = 0; i < index; i++) {
-            if (this.dynamicTabs[i].dataContext) realIndex++;
+            if (this.layerTabs[i].dataContext) realIndex++;
         }
         return String.fromCharCode(97+realIndex);
     }
@@ -363,10 +333,9 @@ export class TabsComponent implements AfterContentInit {
     charToIndex(char: string): number {
         // console.log("searching for char", char)
         let realIndex = 0;
-        for (let i = 0; i < this.dynamicTabs.length; i++) {
-            if (this.dynamicTabs[i].dataContext) {
+        for (let i = 0; i < this.layerTabs.length; i++) {
+            if (this.layerTabs[i].dataContext) {
                 let charHere = String.fromCharCode(97+realIndex);
-                // console.log(charHere, this.dynamicTabs[i].dataContext.name)
                 realIndex++;
                 if (charHere == char) return i;
             }
@@ -394,8 +363,7 @@ export class TabsComponent implements AfterContentInit {
             matches.forEach(function(match) {
                 // trim
                 let index = self.charToIndex(match);
-                // console.log(match, index)
-                let vm = self.dynamicTabs[index].dataContext;
+                let vm = self.layerTabs[index].dataContext;
                 scoreVariables.set(match, vm);
             });
         }
@@ -412,12 +380,12 @@ export class TabsComponent implements AfterContentInit {
                 this.dataService.loadDomainData(this.domain, true).then( () => {
                     vm.loadVMData();
                     vm.updateGradient();
-                    this.openTab(layerName, this.layerTab, vm, true, true, true, true)
+                    this.openTab(layerName, vm, true, true, true, true)
                 })
             } else {
                 vm.loadVMData();
                 vm.updateGradient();
-                this.openTab(layerName, this.layerTab, vm, true, true, true, true)
+                this.openTab(layerName, vm, true, true, true, true)
             }
         } catch (err) {
             console.error(err)
@@ -455,7 +423,7 @@ export class TabsComponent implements AfterContentInit {
                     // console.log("chartoindex["+match+"]", self.charToIndex(match))
                     if (typeof(self.charToIndex(match)) == "undefined") {
                         noMatch = "Variable " + match + " does not match any layers"
-                    } else if (self.domain && self.dynamicTabs[self.charToIndex(match)].dataContext.domainID !== self.domain) {
+                    } else if (self.domain && self.layerTabs[self.charToIndex(match)].dataContext.domainID !== self.domain) {
                         noMatch = "Layer " + match + " does not match the chosen domain"
                     }
                 });
@@ -488,7 +456,7 @@ export class TabsComponent implements AfterContentInit {
             if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
                 viewModel.version = currVersion;
                 viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                resolve();
+                resolve(null);
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
                 const dialogConfig = new MatDialogConfig();
                 dialogConfig.disableClose = true;
@@ -499,21 +467,24 @@ export class TabsComponent implements AfterContentInit {
                     currVersion: currVersion
                 }
                 const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
-                dialogRef.afterClosed().subscribe(result => {
-                    if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
-                        reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
-                    }
-                    if (result.dontAsk) {
-                        this.alwaysUpgradeVersion = result.upgrade;
-                    }
-                    if (result.upgrade) {
-                        viewModel.version = currVersion
-                        viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                    }
-                    resolve();
+                let subscription = dialogRef.afterClosed().subscribe({
+                    next: (result) => {
+                        if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
+                            reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
+                        }
+                        if (result.dontAsk) {
+                            this.alwaysUpgradeVersion = result.upgrade;
+                        }
+                        if (result.upgrade) {
+                            viewModel.version = currVersion
+                            viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
+                        }
+                        resolve(null);
+                    },
+                    complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
             } else { // remember user choice not to upgrade or layer is already current version
-                resolve();
+                resolve(null);
             }
         });
         return dataPromise;
@@ -549,7 +520,7 @@ export class TabsComponent implements AfterContentInit {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    this.openTab("new layer", this.layerTab, viewModel, true, true, true, true);
+                    this.openTab("new layer", viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
@@ -581,49 +552,53 @@ export class TabsComponent implements AfterContentInit {
     loadLayerFromURL(loadURL, replace): Promise<any> {
         let layerPromise: Promise<any> = new Promise((resolve, reject) => {
             // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
-            this.http.get(loadURL).subscribe((res) => {
-                let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                try {
-                    viewModel.deSerializeDomainID(res);
-                    if (!this.dataService.getDomain(viewModel.domainID)) {
-                        throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
-                    }
-                    this.versionUpgradeDialog(viewModel).then( () => {
-                        this.openTab("new layer", this.layerTab, viewModel, true, replace, true, true);
-                        if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                            this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+            let subscription = this.http.get(loadURL).subscribe({
+                next: (res) => {
+                    let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                    try {
+                        viewModel.deSerializeDomainID(res);
+                        if (!this.dataService.getDomain(viewModel.domainID)) {
+                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                        }
+                        this.versionUpgradeDialog(viewModel).then( () => {
+                            this.openTab("new layer", viewModel, true, replace, true, true);
+                            if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                                this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
+                                    viewModel.deSerialize(res);
+                                    viewModel.loadVMData();
+                                    resolve(null);
+                                });
+                            } else {
                                 viewModel.deSerialize(res);
                                 viewModel.loadVMData();
-                                resolve();
-                            });
-                        } else {
-                            viewModel.deSerialize(res);
-                            viewModel.loadVMData();
-                            resolve();
-                        }
-                    })
-                    .catch( (err) => {
-                        console.error(err.message);
-                        alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
-                        resolve();
-                    });
-                    console.log("loaded layer from", loadURL);
-                } catch(err) {
+                                resolve(null);
+                            }
+                        })
+                        .catch( (err) => {
+                            console.error(err.message);
+                            alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
+                            resolve(null);
+                        });
+                        console.log("loaded layer from", loadURL);
+                    } catch(err) {
+                        console.error(err)
+                        this.viewModelsService.destroyViewModel(viewModel);
+                        alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
+                        resolve(null); //continue
+                    }
+                }, 
+                error: (err) => {
                     console.error(err)
-                    this.viewModelsService.destroyViewModel(viewModel);
-                    alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
-                    resolve(); //continue
-                }
-            }, (err) => {
-                console.error(err)
-                if (err.status == 0) {
-                    // no response
-                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-                } else {
-                    // response, but not a good one
-                    alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
-                }
-                resolve(); //continue
+                    if (err.status == 0) {
+                        // no response
+                        alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                    } else {
+                        // response, but not a good one
+                        alert("ERROR retrieving layer from " + loadURL + ", check the javascript console for more information.")
+                    }
+                    resolve(null); //continue
+                },
+                complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
             });
         });
         return layerPromise;
@@ -748,4 +723,22 @@ export class TabsComponent implements AfterContentInit {
         return results
     }
 
+}
+
+export class Tab {
+    title: string;
+    dataContext;
+    domain: string = "";
+    isDataTable: boolean;
+
+    isCloseable: boolean = false;
+    showScoreVariables: boolean = false;
+
+    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string, dataTable: boolean) {
+        this.title = title;
+        this.isCloseable = isCloseable;
+        this.showScoreVariables = showScoreVariables;
+        this.domain = domain;
+        this.isDataTable = dataTable;
+    }
 }

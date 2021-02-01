@@ -1,53 +1,46 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500" rel="stylesheet">
-<div *ngIf="configService.getFeature('header')" [style.margin-bottom]="configService.getFeature('tabs') ? '0px' : '15px'" class="header" >
+
+<!-- Header/Help -->
+<div *ngIf="hasFeature('header')" [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="header" >
     <div class="logo">
         <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
     </div>
-    <div *ngIf="configService.getFeature('tabs')" class="helpButton" matTooltip="help" (click)="newHelpTab(forceNew=false)">
+    <div *ngIf="hasFeature('tabs')" class="helpButton" matTooltip="help" (click)="openHelpDialog()">
         ?
     </div>
 </div>
-<div [style.margin-top]="configService.getFeature('header') ? '0px' : '15px'" *ngIf="dynamicTabs.length > 0 && configService.getFeature('tabs')">
+
+<!-- Tabs display -->
+<div [style.margin-top]="hasFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && hasFeature('tabs')">
     <ul class="tabs">
         <!-- dynamic tabs (can be opened and closed) -->
-        <li *ngFor="let tab of dynamicTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
-            <!-- <input *ngIf="tab.dataContext" [disabled]="!tab.active" [style.cursor]="tab.active ? 'text' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : ''"> -->
-            <!-- <a   *ngIf="!tab.dataContext" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.title}}</a> -->
-
-            <!-- <input [disabled]="!tab.active || !tab.dataContext" (click)="!tab.active || !tab.dataContext ? selectTab(tab) : selectTab(tab)" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
-            <!-- <input [id]="'tabtitleinput' + $i" (click)="!tab.active || !tab.dataContext ? selectTab(tab, 'tabtitleinput' + $i) : continue" [style.cursor]="tab.active ? tab.dataContext ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext ? tab.dataContext.name : tab.title" [style.width]="tab.dataContext ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' "> -->
-
-            <a *ngIf="!tab.active || !tab.isDataTable" href="#" [style.cursor]="tab.active ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</a>
-            <input *ngIf="!(!tab.active || !tab.isDataTable)" [style.cursor]="tab.active ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
+        <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab == activeTab">
+            <span *ngIf="!tab == activeTab || !tab.isDataTable" class="tab-title" [style.cursor]="tab == activeTab ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</span>
+            <input *ngIf="!(!tab == activeTab || !tab.isDataTable)" [style.cursor]="tab == activeTab ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
 
+            <!-- tab enumerator (for layer operations) -->
             <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
         </li>
+
         <!-- open new tab button -->
-        <!-- <li (click)="openTab('new tab', blankTab, null, true, false, true)"> -->
-        <li *ngIf="dynamicTabs.length < 10" class="addTab" (click)="newBlankTab()">
-            +
-        </li>
+        <li *ngIf="layerTabs.length < 10" class="addTab" (click)="newBlankTab()">+</li>
     </ul>
 </div>
-<div *ngIf="dynamicTabs.length == 0" class="newTab">
+<div *ngIf="layerTabs.length == 0" class="newTab">
     <!-- you shouldn't ever see this, but just in case -->
     <button (click)="newBlankTab()">Start</button>
 </div>
 
+<!-- Dynamic tabs container template -->
+<!-- <ng-template dynamic-tabs #container></ng-template> -->
 
-<div [style.margin-top]="configService.getFeature('tabs') || configService.getFeature('header') ? '0px' : '15px'">
-    <ng-content></ng-content>
-</div>
-
-<ng-template dynamic-tabs #container></ng-template>
-
-
-<ng-template #blankTab>
-    <!-- <div style="background-color: #ddd; height: 3px;">
-    </div> -->
+<!-- New tab template -->
+<ng-template [ngIf]="activeTab && !activeTab.isDataTable">
     <div class="newTab border">
         <mat-accordion class="headers-align">
+
+            <!-- Create new layer interface -->
             <mat-expansion-panel #newlayer>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -58,12 +51,14 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
+                <!-- Domain buttons for latest version -->
                 <table class="btn-group" role="group">                        
                     <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
                         <td><button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
                     </ng-template>
                 </table>
 
+                <!-- More domain/version options -->
                 <mat-expansion-panel>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
@@ -72,6 +67,7 @@
                         </mat-expansion-panel-header>
 
                     <table class="layerOpTable">
+                        <!-- Choose version -->
                         <tr>
                             <td>
                                 <mat-form-field>
@@ -85,6 +81,7 @@
                                 Choose the version for the new layer. <em>*Versions prior to {{ds.versions[ds.versions.length-1]}} are not supported by Navigator v{{nav_version}}.</em>
                             </td>
                         </tr>
+                        <!-- Choose domain -->
                         <tr>
                             <td>
                                 <mat-form-field>
@@ -100,24 +97,12 @@
                         </tr>
                     </table>
 
+                    <!-- Create new layer with chosen version & domain -->
                     <button mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">Create</button>
                 </mat-expansion-panel>
             </mat-expansion-panel>
 
-            <!-- <mat-expansion-panel #uploadlayer hideToggle="true" (click)="openUploadPrompt(); uploadlayer.close()">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Upload Existing Layer
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        Upload a layer from your computer
-                    </mat-panel-description>
-
-                </mat-expansion-panel-header>
-                <input id="uploader" type="file" style="display: none" (change)="loadLayer()"/>
-                <!-- this content will never be shown because clicking opens a new layer tab -->
-            <!--</mat-expansion-panel> -->
-
+            <!-- Open existing layer interface -->
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -129,10 +114,13 @@
                 </mat-expansion-panel-header>
                 <table class="inputTable">
                     <tr>
+                        <!-- Upload file from local -->
                         <td><button mat-button (click)="openUploadPrompt()">Upload from local</button>
                         <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/></td>
 
                         <td><b style="font-size: 8pt">OR</b></td>
+
+                        <!-- Upload layer via URL -->
                         <td><mat-form-field>
                             <input type="text"
                                    matInput
@@ -142,13 +130,10 @@
                         </mat-form-field></td>
                     </tr>
                 </table>
-
-
-
             </mat-expansion-panel>
 
-            <!-- <mat-expansion-panel [disabled]="viewModelsService.viewModels.length < 2"> -->
-            <mat-expansion-panel (opened)="getActiveTab().showScoreVariables = true" (closed)="getActiveTab().showScoreVariables = false">
+            <!-- Create layer from other layers -->
+            <mat-expansion-panel (opened)="activeTab.showScoreVariables = true" (closed)="activeTab.showScoreVariables = false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Create Layer from other layers
@@ -159,6 +144,7 @@
                 </mat-expansion-panel-header>
 
                 <table class="layerOpTable">
+                    <!-- Domain -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -172,6 +158,8 @@
                             Choose the domain and version for the new layer. Only layers of the same domain and version can be merged.
                         </td>
                     </tr>
+
+                    <!-- Score expression -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -189,6 +177,8 @@
                             Use constants (numbers) and layer variables (yellow, above) to write an expression for the initial value of scores in the new layer. A full list of supported operations can be found <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to initialize scores to 0.
                         </td>
                     </tr>
+
+                    <!-- Gradient -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -202,6 +192,8 @@
                             Choose which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.
                         </td>
                     </tr>
+
+                    <!-- Coloring -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -215,6 +207,8 @@
                             Choose which layer to import manually assigned colors from. Leave blank to initialize with no colors.
                         </td>
                     </tr>
+
+                    <!-- Comments -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -228,6 +222,8 @@
                             Choose which layer to import comments from. Leave blank to initialize with no comments.
                         </td>
                     </tr>
+
+                    <!-- States -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -241,6 +237,8 @@
                             Choose which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.
                         </td>
                     </tr>
+
+                    <!-- Filters -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -254,6 +252,8 @@
                             Choose which layer to import filters from. Leave blank to initialize with no filters.
                         </td>
                     </tr>
+
+                    <!-- Legend -->
                     <tr>
                         <td>
                             <mat-form-field>
@@ -269,10 +269,11 @@
                     </tr>
                 </table>
 
+                <!-- Create -->
                 <button mat-button [disabled]="getScoreExpressionError() || !domain" (click)="layerByOperation(); showScoreVariables = false">Create</button>
-
             </mat-expansion-panel>
 
+            <!-- Customized Navigator-->
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
@@ -283,8 +284,8 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-
                 <table class="inputTable">
+                    <!-- Default layers -->
                     <tr>
                         <td><h1>Default Layers</h1></td>
                         <td></td>
@@ -310,18 +311,21 @@
                         </td>
                         <td>Enter the URLs of layers hosted on the web. The custom navigator will open these layers by default.</td>
                     </tr>
+
+                    <!-- Navigator Features -->
                     <tr>
                         <td><h1>Navigator Features</h1></td>
                         <td></td>
                     </tr>
                     <ng-template ngFor let-featureItem [ngForOf]="customizedConfig" let-featureItemIndex="index">
+                        <!-- features -->
                         <tr class="featureRow noselect" *ngIf="!featureItem.subfeatures"  (click)="featureItem.enabled = !featureItem.enabled">
                             <td class="featureRow-button">
                                 <img height="16px" [src]="featureItem.enabled ? 'assets/icons/ic_check_box_black_24px.svg' : 'assets/icons/ic_check_box_outline_blank_black_24px.svg'"/> {{featureItem.name.split("_").join(" ")}}
                             </td>
                             <td>{{featureItem.description}}</td>
-
                         </tr>
+                        <!-- sub-featuers -->
                         <tr *ngIf="featureItem.subfeatures">
                             <td>
                                 <h2>{{featureItem.name.split("_").join(" ")}}</h2>
@@ -338,6 +342,8 @@
                         </ng-template>
                     </ng-template>
                 </table>
+
+                <!-- Custom Navigator URL -->
                 <div style="text-align: center; margin-top: 20px">
                     <mat-form-field id="layerlinkfield">
                         <input id="layerLink" type="text"
@@ -350,33 +356,17 @@
                         <mat-hint *ngIf="copiedRecently">copied</mat-hint>
                     </mat-form-field>
                 </div>
-
-
-
             </mat-expansion-panel>
         </mat-accordion>
 
+        <!-- Help dialog -->
         <div class="helpButtonContainer">
-            <button mat-button (click)="newHelpTab(replace=false, forceNew=false)">help</button>
+            <button mat-button (click)="openHelpDialog()">help</button>
         </div>
 
     </div>
-
 </ng-template>
 
-<ng-template #layerTab let-data="data" let-active="active">
-    <DataTable *ngIf="active" [viewModel]=data></DataTable>
-</ng-template>
-
-<ng-template #helpTab>
-    <div class="border help">
-        <help></help>
-    </div>
-
-</ng-template>
-
-<ng-template #exporterTab let-data="data">
-    <div class="border">
-        <exporter [viewModel]=data></exporter>
-    </div>
+<ng-template [ngIf]="activeTab && activeTab.isDataTable">
+    <DataTable [viewModel]="activeTab.dataContext"></DataTable>
 </ng-template>

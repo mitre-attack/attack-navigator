@@ -20,8 +20,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { DynamicTabsDirective } from './tabs/dynamic-tabs.directive';
-import { TabComponent } from './tab/tab.component';
 import { HelpComponent } from './help/help.component';
 import { ExporterComponent } from './exporter/exporter.component';
 import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.component';
@@ -41,8 +39,6 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     AppComponent,
     DataTableComponent,
     TabsComponent,
-    TabComponent,
-    DynamicTabsDirective,
     HelpComponent,
     ExporterComponent,
     TechniqueCellComponent,
@@ -83,6 +79,6 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
   ],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [ TabComponent, VersionUpgradeComponent ]
+  entryComponents: [ VersionUpgradeComponent, HelpComponent, ExporterComponent ]
 })
 export class AppModule { }
