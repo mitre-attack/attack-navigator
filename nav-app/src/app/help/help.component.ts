@@ -15,4 +15,8 @@ export class HelpComponent implements OnInit {
 
     ngOnInit() { }
 
+    scrollTo(sectionID: string): void {
+        let element = document.getElementById(sectionID);
+        element.scrollIntoView();
+    }
 }

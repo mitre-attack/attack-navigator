@@ -255,7 +255,10 @@ export class TabsComponent implements AfterContentInit {
      * @param {ViewModel} vm    the viewModel to render
      */
     openSVGDialog(vm: ViewModel) {
-        this.dialog.open(ExporterComponent, {data: {vm: vm}});
+        this.dialog.open(ExporterComponent, 
+            { data: {vm: vm},
+              panelClass: 'dialog-custom'
+            });
     }
 
     /**
