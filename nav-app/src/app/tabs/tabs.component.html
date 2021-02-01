@@ -14,9 +14,9 @@
 <div [style.margin-top]="hasFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && hasFeature('tabs')">
     <ul class="tabs">
         <!-- dynamic tabs (can be opened and closed) -->
-        <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab.active">
-            <span *ngIf="!tab.active || !tab.isDataTable" class="tab-title" [style.cursor]="tab.active? 'default': 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</span>
-            <input *ngIf="!(!tab.active || !tab.isDataTable)" [style.cursor]="tab.active ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
+        <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab == activeTab">
+            <span *ngIf="!tab == activeTab || !tab.isDataTable" class="tab-title" [style.cursor]="tab == activeTab ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</span>
+            <input *ngIf="!(!tab == activeTab || !tab.isDataTable)" [style.cursor]="tab == activeTab ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text" [(ngModel)]="tab.dataContext.name" [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
 
             <!-- tab enumerator (for layer operations) -->
@@ -33,10 +33,10 @@
 </div>
 
 <!-- Dynamic tabs container template -->
-<ng-template dynamic-tabs #container></ng-template>
+<!-- <ng-template dynamic-tabs #container></ng-template> -->
 
 <!-- New tab template -->
-<ng-template [ngIf]="getActiveTab() && !getActiveTab().isDataTable">
+<ng-template [ngIf]="activeTab && !activeTab.isDataTable">
     <div class="newTab border">
         <mat-accordion class="headers-align">
 
@@ -133,7 +133,7 @@
             </mat-expansion-panel>
 
             <!-- Create layer from other layers -->
-            <mat-expansion-panel (opened)="getActiveTab().showScoreVariables = true" (closed)="getActiveTab().showScoreVariables = false">
+            <mat-expansion-panel (opened)="activeTab.showScoreVariables = true" (closed)="activeTab.showScoreVariables = false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Create Layer from other layers
@@ -367,6 +367,6 @@
     </div>
 </ng-template>
 
-<ng-template [ngIf]="getActiveTab() && getActiveTab().isDataTable">
-    <DataTable [viewModel]="getActiveTab().dataContext"></DataTable>
+<ng-template [ngIf]="activeTab && activeTab.isDataTable">
+    <DataTable [viewModel]="activeTab.dataContext"></DataTable>
 </ng-template>
