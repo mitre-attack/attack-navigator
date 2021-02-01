@@ -32,8 +32,18 @@
     <button (click)="newBlankTab()">Start</button>
 </div>
 
-<!-- Dynamic tabs container template -->
-<!-- <ng-template dynamic-tabs #container></ng-template> -->
+<ng-template #safariWarning>
+    <div class="safari-warning">
+        <h3>WARNING</h3>
+        <p>
+            We’ve detected that you are using the Safari browser. As of Navigator version <b>4.2</b>, Safari is no longer supported due to an unfixable freeze that can occur when selecting a layer tab.
+        </p>
+        <p>
+            We recommend you use Chrome or Firefox instead. You can continue to use the Navigator in Safari, but you may lose work if the application freezes.
+        </p>
+        <button mat-button (click)="safariDialogRef.close()">Dismiss</button>
+    </div>
+</ng-template>
 
 <!-- New tab template -->
 <ng-template [ngIf]="activeTab && !activeTab.isDataTable">

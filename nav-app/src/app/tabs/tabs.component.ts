@@ -1,14 +1,13 @@
-import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild } from '@angular/core';
+// https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
+import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
-import { DataTableComponent} from '../datatable/data-table.component';
+import * as is from 'is_js';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
-import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
+import { ViewModelsService, ViewModel } from "../viewmodels.service";
 
-import {ErrorStateMatcher} from '@angular/material/core'
-import {FormControl} from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
@@ -22,7 +21,7 @@ declare var math: any; //use mathjs
     providers: [ViewModelsService]
 
 })
-export class TabsComponent implements AfterContentInit {
+export class TabsComponent implements AfterContentInit, AfterViewInit {
 
     //  _____ _   ___   ___ _____ _   _ ___ ___
     // |_   _/_\ | _ ) / __|_   _| | | | __| __|
@@ -45,6 +44,10 @@ export class TabsComponent implements AfterContentInit {
         this.viewModelsService = viewModelsService;
     }
 
+    dynamicTabs: TabComponent[] = [];
+    @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
+    @ViewChild('safariWarning') safariWarning : TemplateRef<any>;
+
     ngAfterContentInit() {
         let subscription = this.ds.getConfig().subscribe({
             next: (config: Object) => {
@@ -62,6 +65,16 @@ export class TabsComponent implements AfterContentInit {
             },
             complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
+    }
+
+    public safariDialogRef;
+    ngAfterViewInit() {
+        if (is.safari()) {
+            this.safariDialogRef = this.dialog.open(this.safariWarning, {
+                width: '350px',
+                disableClose: true
+            });
+        }
     }
 
     /**
