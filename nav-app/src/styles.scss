@@ -162,3 +162,7 @@ body {
     box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
 
 }
+
+.mat-button-focus-overlay {
+    background-color: transparent!important;
+}

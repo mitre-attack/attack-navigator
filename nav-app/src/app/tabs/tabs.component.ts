@@ -1,5 +1,5 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, ComponentFactoryResolver } from '@angular/core';
+import { Component, AfterContentInit, QueryList, ContentChildren, ViewChild, ComponentFactoryResolver, TemplateRef, AfterViewInit } from '@angular/core';
 
 
 import { DynamicTabsDirective } from './dynamic-tabs.directive';
@@ -7,6 +7,7 @@ import { TabComponent } from '../tab/tab.component';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import { DataTableComponent} from '../datatable/data-table.component';
+import * as is from 'is_js';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 
 import { ViewModelsService, ViewModel, TechniqueVM, Gradient, Gcolor } from "../viewmodels.service";
@@ -27,7 +28,7 @@ declare var math: any; //use mathjs
     providers: [ViewModelsService]
 
 })
-export class TabsComponent implements AfterContentInit {
+export class TabsComponent implements AfterContentInit, AfterViewInit {
 
     //  _____ _   ___   ___ _____ _   _ ___ ___
     // |_   _/_\ | _ ) / __|_   _| | | | __| __|
@@ -55,7 +56,7 @@ export class TabsComponent implements AfterContentInit {
 
     dynamicTabs: TabComponent[] = [];
     @ViewChild(DynamicTabsDirective) dynamicTabPlaceholder: DynamicTabsDirective;
-
+    @ViewChild('safariWarning') safariWarning : TemplateRef<any>;
 
     ngAfterContentInit() {
         this.ds.getConfig().subscribe((config: Object) => {
@@ -71,6 +72,16 @@ export class TabsComponent implements AfterContentInit {
             });
             this.customizedConfig = this.configService.getFeatureList()
         });
+    }
+
+    public safariDialogRef;
+    ngAfterViewInit() {
+        if (is.safari()) {
+            this.safariDialogRef = this.dialog.open(this.safariWarning, {
+                width: '350px',
+                disableClose: true
+            });
+        }
     }
 
     /**
