@@ -1,4 +1,4 @@
-# v4.2
+# v4.2 - 3 February 2021
 
 With version 4.2 of the Navigator we are retiring support for the Safari browser. A bug introduced in the sub-techniques release (version 3.0) causes safari to freeze when changing between layer tabs (see issue [#251](https://github.com/mitre-attack/attack-navigator/issues/251)). We have been unable to determine the cause of the freeze and thus are retiring official support for that browser. Safari users can continue to use the application, but will be warned of possible freezes via a dialog window when they first load the app.
 
