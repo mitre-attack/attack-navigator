@@ -1,7 +1,7 @@
 <div class="controlsContainer">
     <ul class="control-sections">
         <li class="iewarning" *ngIf="isIE()">
-            Warning: this interface is not fully compatable with your browser. For best results please switch to Edge, Chrome, Firefox or Safari.
+            Warning: this interface is not fully compatable with your browser. For best results please switch to Edge, Chrome, or Firefox.
         </li>
         <li>
             <div class="control-row-item noselect">
@@ -233,4 +233,8 @@
 
 <div class="svgcontainer" [id]="'svgInsert' + viewModel.uid">
     loading...
+</div>
+
+<div class="close-button">
+    <button mat-button mat-dialog-close>close</button>
 </div>

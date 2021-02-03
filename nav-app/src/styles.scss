@@ -162,3 +162,14 @@ body {
     box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
 
 }
+
+//////////////////////
+/// Dialog Styling ///
+//////////////////////
+.dialog-custom .mat-dialog-container {
+    padding: 0px !important;
+}
+
+.mat-button-focus-overlay {
+    background-color: transparent!important;
+}

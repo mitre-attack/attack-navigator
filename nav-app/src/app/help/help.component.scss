@@ -1,21 +1,42 @@
 @import "../../colors.scss";
 
-.help {
+.help-dialog {
     font-size: 11pt;
-    padding: 25px 20%;
-    // margin: 0 10%;
+    padding: 25px;
+
     h1 {
         text-align: center;
         border-bottom: 1px solid black;
     }
+
+    .content {
+        overflow-y: scroll;
+        max-height: 60vh;
+
+        .section-link {
+            cursor:pointer;
+            color:blue;
+            text-decoration:underline;
+        }
+    }
     
+    .close-button {
+        margin-top: 25px;
+        text-align: center;
+    }
 }
+
 // table of contents
 .toc {
-    
     list-style: none;
     ul {
         list-style: none;
+    }
+
+    li {
+        cursor:pointer;
+        color:blue;
+        text-decoration:underline;
     }
 }
 
