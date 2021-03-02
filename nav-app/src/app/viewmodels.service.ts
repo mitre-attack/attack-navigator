@@ -1330,6 +1330,8 @@ export class TechniqueVM {
     metadata: Metadata[] = [];
 
     showSubtechniques: boolean = false;
+    showAggregateScore: boolean = true; // TODO: set to false later
+    aggregateScore: any;
 
     //print this object to the console
     print(): void {
