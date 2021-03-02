@@ -826,7 +826,7 @@ export class ViewModel {
      */
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
-            this.getTechniqueVM_id(id).score = "";
+            this.getTechniqueVM_id(id).score = ""; // TODO do subtechnique scores not need to be reset?
             this.getTechniqueVM_id(id).comment = "";
             this.getTechniqueVM_id(id).color = "";
             this.getTechniqueVM_id(id).enabled = true;
@@ -924,7 +924,9 @@ export class ViewModel {
             let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
             let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
 
-            let totalScore = (technique1.subtechniques.length > 0 && technique2.subtechniques.length) ? this.sortSubTechniques(technique1, tactic) - this.sortSubTechniques(technique2, tactic) : 0;
+            techniqueVM1.aggregateScore = score1 + this.sortSubTechniques(technique1, tactic);
+            techniqueVM2.aggregateScore = score2 + this.sortSubTechniques(technique2, tactic);
+            let totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
             if (totalScore < 0) score2 -= totalScore;
             else if (totalScore > 0) score1 += totalScore;
 
@@ -952,7 +954,7 @@ export class ViewModel {
             let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
             let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
             // maxScore = score1 > score2 ? score1 : score2;
-            aggScore += score1 + score2;
+            // aggScore += score1 + score2;
             switch(this.sorting) {
                 case 2:
                     return score1 - score2;
@@ -963,6 +965,10 @@ export class ViewModel {
             }
             
         });
+        technique.subtechniques.forEach((technique) => {
+            let techniqueVM = this.getTechniqueVM(technique, tactic);
+            aggScore += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
+        })
         return aggScore;
     }
 
