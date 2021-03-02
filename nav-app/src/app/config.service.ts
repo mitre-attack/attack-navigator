@@ -212,26 +212,26 @@ export class ContextMenuItem {
 
     public getReplacedURL(technique: Technique, tactic: Tactic): string {
         if (this.subtechnique_url && technique.isSubtechnique) {
-            return this.subtechnique_url.replace("{{parent_technique_attackID}}", technique.parent.attackID)
-                                        .replace("{{parent_technique_stixID}}", technique.parent.id)
-                                        .replace("{{parent_technique_name}}", technique.parent.name.replace(/ /g, "-").toLowerCase())
+            return this.subtechnique_url.replace(/{{parent_technique_attackID}}/g, technique.parent.attackID)
+                                        .replace(/{{parent_technique_stixID}}/g, technique.parent.id)
+                                        .replace(/{{parent_technique_name}}/g, technique.parent.name.replace(/ /g, "-").toLowerCase())
 
-                                        .replace("{{subtechnique_attackID}}", technique.attackID)
-                                        .replace("{{subtechnique_attackID_suffix}}", technique.attackID.split(".")[1])
-                                        .replace("{{subtechnique_stixID}}", technique.id)
-                                        .replace("{{subtechnique_name}}", technique.name.replace(/ /g, "-").toLowerCase())
+                                        .replace(/{{subtechnique_attackID}}/g, technique.attackID)
+                                        .replace(/{{subtechnique_attackID_suffix}}/g, technique.attackID.split(".")[1])
+                                        .replace(/{{subtechnique_stixID}}/g, technique.id)
+                                        .replace(/{{subtechnique_name}}/g, technique.name.replace(/ /g, "-").toLowerCase())
 
-                                        .replace("{{tactic_attackID}}", tactic.attackID)
-                                        .replace("{{tactic_stixID}}", tactic.id)
-                                        .replace("{{tactic_name}}", tactic.shortname);
+                                        .replace(/{{tactic_attackID}}/g, tactic.attackID)
+                                        .replace(/{{tactic_stixID}}/g, tactic.id)
+                                        .replace(/{{tactic_name}}/g, tactic.shortname);
         } else {
-            return this.url.replace("{{technique_attackID}}", technique.attackID)
-                           .replace("{{technique_stixID}}", technique.id)
-                           .replace("{{technique_name}}", technique.name.replace(/ /g, "-").toLowerCase())
+            return this.url.replace(/{{technique_attackID}}/g, technique.attackID)
+                           .replace(/{{technique_stixID}}/g, technique.id)
+                           .replace(/{{technique_name}}/g, technique.name.replace(/ /g, "-").toLowerCase())
 
-                           .replace("{{tactic_attackID}}", tactic.attackID)
-                           .replace("{{tactic_stixID}}", tactic.id)
-                           .replace("{{tactic_name}}", tactic.shortname);
+                           .replace(/{{tactic_attackID}}/g, tactic.attackID)
+                           .replace(/{{tactic_stixID}}/g, tactic.id)
+                           .replace(/{{tactic_name}}/g, tactic.shortname);
         }
     }
 }

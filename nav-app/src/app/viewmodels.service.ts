@@ -923,6 +923,11 @@ export class ViewModel {
             let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
             let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
             let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+
+            let totalScore = (technique1.subtechniques.length > 0 && technique2.subtechniques.length) ? this.sortSubTechniques(technique1, tactic) - this.sortSubTechniques(technique2, tactic) : 0;
+            if (totalScore < 0) score2 -= totalScore;
+            else if (totalScore > 0) score1 += totalScore;
+
             switch(this.sorting) {
                 default:
                 case 0:
@@ -937,6 +942,28 @@ export class ViewModel {
                     else return score2 - score1;
             }
         })
+    }
+
+    public sortSubTechniques(technique: Technique, tactic: Tactic): number {
+        let aggScore = 0;
+        technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
+            let techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            // maxScore = score1 > score2 ? score1 : score2;
+            aggScore += score1 + score2;
+            switch(this.sorting) {
+                case 2:
+                    return score1 - score2;
+                case 3:
+                    return score2 - score1;
+                default:
+                    return 0
+            }
+            
+        });
+        return aggScore;
     }
 
     /**
