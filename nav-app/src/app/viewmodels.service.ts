@@ -1336,7 +1336,6 @@ export class TechniqueVM {
     metadata: Metadata[] = [];
 
     showSubtechniques: boolean = false;
-    showAggregateScore: boolean = true; // TODO: set to false later
     aggregateScore: any;
 
     //print this object to the console
@@ -1597,12 +1596,20 @@ export class LayoutOptions {
         if (newval == true && this._layout == "mini") this._layout = "side";
     }
     public get showName(): boolean { return this._showName; }
+    
+    public _showAggregateScores: boolean = false; 
+    public set showAggregateScores(newval: boolean) {
+        this._showAggregateScores = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
+    }
+    public get showAggregateScores(): boolean { return this._showAggregateScores; }
 
     public serialize(): object {
         return {
             "layout": this.layout,
             "showID": this.showID,
-            "showName": this.showName
+            "showName": this.showName,
+            "showAggregateScores": this.showAggregateScores
         }
     }
     public deserialize(rep: any) {

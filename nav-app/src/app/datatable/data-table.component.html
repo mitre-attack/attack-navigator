@@ -371,7 +371,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             <input [disabled]="viewModel.layout.layout == 'mini'" id="showName-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showName">
                             <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option" class="checkbox-custom-label noselect">show names</label>
                         </div>
-
+                        <div>
+                            <input [disabled]="viewModel.layout.layout == 'mini'" id="showAggregateScores-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showAggregateScores">
+                            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
+                        </div>
                      </div>
                  </div>
              </div>
