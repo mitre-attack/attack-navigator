@@ -911,66 +911,83 @@ export class ViewModel {
         })
     }
 
-    /**
-     * sort techniques accoding to viewModel state
-     * @param {Technique[]} techniques techniques to sort
-     * @param {Tactic} tactic tactic the techniques fall under
-     * @returns {Technique[]} sorted techniques
-     */
-    public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
-        return techniques.sort((technique1: Technique, technique2: Technique) => {
-            let techniqueVM1 = this.getTechniqueVM(technique1, tactic);
-            let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+  /**
+   * sort techniques accoding to viewModel state
+   * @param {Technique[]} techniques techniques to sort
+   * @param {Tactic} tactic tactic the techniques fall under
+   * @returns {Technique[]} sorted techniques
+   */
+  public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
+    return techniques.sort((technique1: Technique, technique2: Technique) => {
+      const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+      const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+      let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+      let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
 
-            techniqueVM1.aggregateScore = score1 + this.sortSubTechniques(technique1, tactic);
-            techniqueVM2.aggregateScore = score2 + this.sortSubTechniques(technique2, tactic);
-            let totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
-            if (totalScore < 0) score2 -= totalScore;
-            else if (totalScore > 0) score1 += totalScore;
+      this.sortSubTechniques(technique1, tactic);
+      this.sortSubTechniques(technique2, tactic);
+      techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
+      techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
+      const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
+      if (totalScore < 0) {
+        score2 -= totalScore;
+      } else if (totalScore > 0) {
+        score1 += totalScore;
+      }
 
-            switch(this.sorting) {
-                default:
-                case 0:
-                    return technique1.name.localeCompare(technique2.name);
-                case 1:
-                    return technique2.name.localeCompare(technique1.name);
-                case 2:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score1 - score2;
-                case 3:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score2 - score1;
-            }
-        })
-    }
+      switch (this.sorting) {
+        default:
+        case 0:
+          return technique1.name.localeCompare(technique2.name);
+        case 1:
+          return technique2.name.localeCompare(technique1.name);
+        case 2:
+          if (score1 === score2) {
+            return technique1.name.localeCompare(technique2.name);
+          } else {
+            return score1 - score2;
+          }
+        case 3:
+          if (score1 === score2) {
+            return technique1.name.localeCompare(technique2.name);
+          } else {
+            return score2 - score1;
+          }
+      }
+    });
+  }
 
-    public sortSubTechniques(technique: Technique, tactic: Tactic): number {
-        let aggScore = 0;
-        technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
-            let techniqueVM1 = this.getTechniqueVM(technique1, tactic);
-            let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-            // maxScore = score1 > score2 ? score1 : score2;
-            // aggScore += score1 + score2;
-            switch(this.sorting) {
-                case 2:
-                    return score1 - score2;
-                case 3:
-                    return score2 - score1;
-                default:
-                    return 0
-            }
-            
-        });
-        technique.subtechniques.forEach((technique) => {
-            let techniqueVM = this.getTechniqueVM(technique, tactic);
-            aggScore += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
-        })
-        return aggScore;
-    }
+  public sortSubTechniques(technique: Technique, tactic: Tactic) {
+    technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
+      const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+      const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+      const score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+      const score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+      switch (this.sorting) {
+        case 2:
+          return score1 - score2;
+        case 3:
+          return score2 - score1;
+        default:
+          return 0;
+      }
+    });
+  }
+
+  public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
+    // TODO, add toggle feature to count unscored subtechniques in aggScore division
+    const countUnscored = false;
+    let aggScore = techniqueScore;
+    let validSubtechniquesCount = (techniqueScore > 0) ? 1 : 0;
+    technique.subtechniques.forEach((subtechnique) => {
+      const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
+      if (techniqueVM.score.length > 0) {
+        validSubtechniquesCount += 1;
+      }
+      aggScore += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
+    });
+    return +(aggScore / ((countUnscored) ? technique.subtechniques.length : validSubtechniquesCount)).toFixed(2);
+  }
 
     /**
      * apply sort and filter state to techniques
