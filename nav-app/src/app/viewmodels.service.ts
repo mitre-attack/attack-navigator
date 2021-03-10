@@ -926,13 +926,17 @@ export class ViewModel {
 
       this.sortSubTechniques(technique1, tactic);
       this.sortSubTechniques(technique2, tactic);
-      techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
-      techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
-      const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
-      if (totalScore < 0) {
-        score2 -= totalScore;
-      } else if (totalScore > 0) {
-        score1 += totalScore;
+
+      // if show aggregate scores is enabled, factor that into sorting
+      if (this.layout.showAggregateScores) {
+        techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
+        techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
+        const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
+        if (totalScore < 0) {
+          score2 -= totalScore;
+        } else if (totalScore > 0) {
+          score1 += totalScore;
+        }
       }
 
       switch (this.sorting) {
@@ -977,16 +981,19 @@ export class ViewModel {
   public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
     // TODO, add toggle feature to count unscored subtechniques in aggScore division
     const countUnscored = false;
-    let aggScore = techniqueScore;
-    let validSubtechniquesCount = (techniqueScore > 0) ? 1 : 0;
+    const tvm = this.getTechniqueVM(technique, tactic);
+    let score = techniqueScore;
+    let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
     technique.subtechniques.forEach((subtechnique) => {
       const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
       if (techniqueVM.score.length > 0) {
-        validSubtechniquesCount += 1;
+        validSubTechniquesCount += 1;
       }
-      aggScore += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
+      score += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
     });
-    return +(aggScore / ((countUnscored) ? technique.subtechniques.length : validSubtechniquesCount)).toFixed(2);
+    const aggScore = +(score / ((countUnscored) ? technique.subtechniques.length : validSubTechniquesCount)).toFixed(2);
+    tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
+    return aggScore;
   }
 
     /**
@@ -1352,8 +1359,9 @@ export class TechniqueVM {
     comment: string = ""
     metadata: Metadata[] = [];
 
-    showSubtechniques: boolean = false;
-    aggregateScore: any;
+  showSubtechniques = false;
+  aggregateScore: any; // number rather than string as this is not based on an input from user
+  aggregateScoreColor: any;
 
     //print this object to the console
     print(): void {
