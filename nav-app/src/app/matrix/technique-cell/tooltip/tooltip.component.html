@@ -14,7 +14,7 @@
             </td>
         </tr>
         <tr *ngIf="technique.subtechniques.length > 0 && techniqueVM.aggregateScore > 0 && viewModel.layout.showAggregateScores">
-            <td>Aggregate Score:</td>
+            <td>Aggregate Score ({{viewModel.layout.aggregateFunction}}):</td>
             <td>{{techniqueVM.aggregateScore}}</td>
         </tr>
         <tr *ngIf="techniqueVM.comment">
