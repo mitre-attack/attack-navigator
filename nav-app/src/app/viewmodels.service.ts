@@ -980,7 +980,6 @@ export class ViewModel {
 
   public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
     // TODO, add toggle feature to count unscored subtechniques in aggScore division
-    const countUnscored = false;
     const tvm = this.getTechniqueVM(technique, tactic);
     let score = techniqueScore;
     let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
@@ -991,7 +990,10 @@ export class ViewModel {
       }
       score += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
     });
-    const aggScore = +(score / ((countUnscored) ? technique.subtechniques.length : validSubTechniquesCount)).toFixed(2);
+
+    // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
+    // Otherwise, divide by count of all scored only
+    const aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
     tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
     return aggScore;
   }
@@ -1586,71 +1588,108 @@ export class Metadata {
 }
 
 export class LayoutOptions {
-    // current layout selection
-    public readonly layoutOptions: string[] = ["side", "flat", "mini"];
-    private _layout = this.layoutOptions[0]; //current selection
-    public set layout(newLayout) {
-        if (!this.layoutOptions.includes(newLayout)) {
-            console.warn("invalid matrix layout", newLayout);
-            return;
-        }
-        let oldLayout = this._layout;
-        this._layout = newLayout;
-        if (this._layout == "mini") { //mini-table cannot show ID or name
-            this.showID = false;
-            this.showName = false;
-        }
-        if (oldLayout == "mini" && newLayout != "mini") {
-            this.showName = true; //restore default show value for name
-        }
+  // current layout selection
+  public readonly layoutOptions: string[] = ["side", "flat", "mini"];
+  private _layout = this.layoutOptions[0]; //current selection
+  public set layout(newLayout) {
+    if (!this.layoutOptions.includes(newLayout)) {
+      console.warn("invalid matrix layout", newLayout);
+      return;
     }
-    public get layout(): string { return this._layout; }
-    
-    //show technique/tactic IDs in the view?
-    public _showID: boolean = false; 
-    public set showID(newval: boolean) {
-        this._showID = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
+    let oldLayout = this._layout;
+    this._layout = newLayout;
+    if (this._layout == "mini") { //mini-table cannot show ID or name
+      this.showID = false;
+      this.showName = false;
     }
-    public get showID(): boolean { return this._showID; }
-    
-    //show technique/tactic names in the view?
-    public _showName: boolean = true; 
-    public set showName(newval: boolean) {
-        this._showName = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
+    if (oldLayout == "mini" && newLayout != "mini") {
+      this.showName = true; //restore default show value for name
     }
-    public get showName(): boolean { return this._showName; }
-    
-    public _showAggregateScores: boolean = false; 
-    public set showAggregateScores(newval: boolean) {
-        this._showAggregateScores = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
-    }
-    public get showAggregateScores(): boolean { return this._showAggregateScores; }
+  }
 
-    public serialize(): object {
-        return {
-            "layout": this.layout,
-            "showID": this.showID,
-            "showName": this.showName,
-            "showAggregateScores": this.showAggregateScores
-        }
+  public get layout(): string {
+    return this._layout;
+  }
+
+  public readonly aggregateFunctionOptions: string[] = ["avg", "min", "max", "sum"];
+  private _aggregateFunction = this.aggregateFunctionOptions[0];
+  public set aggregateFunction(newAggregateFunction) {
+    if (!this.aggregateFunctionOptions.includes(newAggregateFunction)) {
+      console.warn("invalid aggregate fx option", newAggregateFunction);
+      return;
     }
-    public deserialize(rep: any) {
-        if (rep.showID) {
-            if (typeof(rep.showID) === "boolean") this.showID = rep.showID;
-            else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof(rep.showID), ")");
-        }
-        if (rep.showName) {
-            if (typeof(rep.showName) === "boolean") this.showName = rep.showName;
-            else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof(rep.showName), ")");
-        }
-        //make sure this one goes last so that it can override name and ID if layout == 'mini'
-        if (rep.layout) {
-            if (typeof(rep.layout) === "string") this.layout = rep.layout;
-            else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof(rep.layout), ")");
-        }
+    this._aggregateFunction = newAggregateFunction;
+  }
+  public get aggregateFunction(): string {
+    return this._aggregateFunction; }
+
+  //show technique/tactic IDs in the view?
+  public _showID: boolean = false;
+  public set showID(newval: boolean) {
+    this._showID = newval;
+    if (newval == true && this._layout == "mini") this._layout = "side";
+  }
+
+  public get showID(): boolean {
+    return this._showID;
+  }
+
+  //show technique/tactic names in the view?
+  public _showName: boolean = true;
+  public set showName(newval: boolean) {
+    this._showName = newval;
+    if (newval == true && this._layout == "mini") this._layout = "side";
+  }
+
+  public get showName(): boolean {
+    return this._showName;
+  }
+
+  public _showAggregateScores: boolean = false;
+  public set showAggregateScores(newval: boolean) {
+    this._showAggregateScores = newval;
+    if (newval == true && this._layout == "mini") this._layout = "side";
+  }
+
+  public get showAggregateScores(): boolean {
+    return this._showAggregateScores;
+  }
+
+  public _countUnscored: boolean = false;
+  public set countUnscored(newval: boolean) {
+    this._countUnscored = newval;
+  }
+
+  public get countUnscored(): boolean {
+    return this._countUnscored;
+  }
+
+  public serialize(): object {
+    return {
+      "layout": this.layout,
+      "showID": this.showID,
+      "showName": this.showName,
+      "showAggregateScores": this.showAggregateScores
+    };
+  }
+
+  public deserialize(rep: any) {
+    if (rep.showID) {
+      if (typeof (rep.showID) === "boolean") this.showID = rep.showID;
+      else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof (rep.showID), ")");
+    }
+    if (rep.showName) {
+      if (typeof (rep.showName) === "boolean") this.showName = rep.showName;
+      else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof (rep.showName), ")");
+    }
+    if (rep.showAggregateScores) {
+      if (typeof (rep.showAggregateScores) === "boolean") this.showAggregateScores = rep.showAggregateScores;
+      else console.error("TypeError: layout field 'showAggregateScores' is not a boolean:", rep.showAggregateScores, "(", typeof (rep.showAggregateScores), ")");
+    }
+    //make sure this one goes last so that it can override name and ID if layout == 'mini'
+    if (rep.layout) {
+      if (typeof (rep.layout) === "string") this.layout = rep.layout;
+      else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof (rep.layout), ")");
     }
 }
 
