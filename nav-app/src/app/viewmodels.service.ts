@@ -994,7 +994,7 @@ export class ViewModel {
     let aggScore = 0;
     switch (this.layout.aggregateFunction) {
       default:
-      case "avg":
+      case "average":
         // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
         // Otherwise, divide by count of all scored only
         aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
@@ -1627,7 +1627,7 @@ export class LayoutOptions {
     return this._layout;
   }
 
-  public readonly aggregateFunctionOptions: string[] = ["avg", "min", "max", "sum"];
+  public readonly aggregateFunctionOptions: string[] = ["average", "min", "max", "sum"];
   private _aggregateFunction = this.aggregateFunctionOptions[0];
   public set aggregateFunction(newAggregateFunction) {
     if (!this.aggregateFunctionOptions.includes(newAggregateFunction)) {
