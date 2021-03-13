@@ -410,7 +410,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
         <div class="control-row-button dropdown noselect"
              (click)="currentDropdown = currentDropdown !== 'layout' ? 'layout' : null;"
              matTooltipPosition="below"
-             matTooltip="matrix layout">
+             matTooltip="matrix configuration">
           <img src="assets/icons/ic_view_large_black_24px.svg"/>
         </div>
         <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown
@@ -421,6 +421,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             </select>
           </div>
           <div class="section">
+            <b class="filter-label">labels</b>
             <div>
               <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom"
                      type="checkbox" [(ngModel)]="viewModel.layout.showID">
@@ -433,6 +434,9 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
               <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option"
                      class="checkbox-custom-label noselect">show names</label>
             </div>
+          </div>
+          <div class="section">
+            <b class="filter-label">aggregate scores</b>
             <div>
               <input [disabled]="viewModel.layout.layout == 'mini'" id="showAggregateScores-option"
                      class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showAggregateScores">
@@ -447,11 +451,11 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      class="checkbox-custom-label noselect">count unscored techniques</label>
             </div>
               <div class="subsection">
+                <label for="aggregateFunctionDropdown">aggregate function: </label>
                 <select [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.layout == 'mini'"
+                        id="aggregateFunctionDropdown"
                         [(ngModel)]="viewModel.layout.aggregateFunction" placeholder="function">
-                  <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions" [value]="option">{{option}}
-                    function
-                  </option>
+                  <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions" [value]="option">{{option}}</option>
                 </select>
               </div>
           </div>
