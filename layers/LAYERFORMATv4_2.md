@@ -1,5 +1,5 @@
 # ATT&CK<sup>TM</sup> Navigator Layer File Format Definition
-This document describes **Version 4.1** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
+This document describes **Version 4.2** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
 
 ## Property Table
 
@@ -80,102 +80,106 @@ Technique objects are used to store both techniques and subtechniques. The only 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | layout | String | No | "side' | The layout of the matrix. Either "side", "flat" or "mini" |
+| aggregateFunction | String | No | "average' | The aggregate function used to calculate aggregate scores for techniques in the matrix. Either "average", "min" or "sum" |
 | showID | Boolean | No | false | if true, show the ATT&CK ID of techniques and tactics in the matrix |
 | showName | Boolean | No | true | if true, show the name of techniques and tactics in the matrix |
+| showAggregateScores | Boolean | No | false | if true, show the aggregate scores of techniques and its subtechniques in the matrix |
+| countUnscored | Boolean | No | false | if true, count the unscored techniques in the calculation of the aggregate score of techniques in the matrix |
 
 ## Example
 The following example illustrates the layer file format:
 ```json
 {
-  "name": "example layer",
-  "versions": {
-    "attack": "8",
-    "navigator": "4.2",
-    "layer": "4.1"
-  },
-  "domain": "enterprise-attack",
-  "description": "hello, world",
-  "filters": {
-    "platforms": [
-      "Windows",
-      "macOS"
-    ]
-  },
-  "sorting": 2,
-  "layout": {
-    "layout": "side",
-    "showName": true,
-    "showID": false
-  },
-  "hideDisabled": false,
-  "techniques": [
-    {
-      "techniqueID": "T1110",
-      "color": "#fd8d3c",
-      "comment": "This is a comment for technique T1110",
-      "showSubtechniques": true
+    "name": "example layer",
+    "versions": {
+        "attack": "8",
+        "navigator": "4.2",
+        "layer": "4.1"
     },
-    {
-      "techniqueID": "T1110.001",
-      "comment": "This is a comment for T1110.001 - the first subtechnique of technique T1110.001"
+    "domain": "enterprise-attack",
+    "description": "hello, world",
+    "filters": {
+        "platforms": [
+            "Windows",
+            "macOS"
+        ]
     },
-    {
-      "techniqueID": "T1134",
-      "tactic": "defense-evasion",
-      "score": 75,
-      "comment": "this is a comment for T1134 which is only applied on the defense-evasion tactic"
+    "sorting": 2,
+    "layout": {
+        "layout": "side",
+        "showName": true,
+        "showID": false,
+        "showAggregateScores": true
     },
-    {
-      "techniqueID": "T1078",
-      "tactic": "discovery",
-      "enabled": false
-    },
-    {
-      "techniqueID": "T1053",
-      "tactic": "privilege-escalation",
-      "metadata": [
+    "hideDisabled": false,
+    "techniques": [
         {
-          "name": "T1053 metadata1",
-          "value": "T1053 metadata1 value"
+            "techniqueID": "T1110",
+            "color": "#fd8d3c",
+            "comment": "This is a comment for technique T1110",
+            "showSubtechniques": true
         },
         {
-          "divider": true
+            "techniqueID": "T1110.001",
+            "comment": "This is a comment for T1110.001 - the first subtechnique of technique T1110.001"
         },
         {
-          "name": "T1053 metadata2",
-          "value": "T1053 metadata2 value"
+            "techniqueID": "T1134",
+            "tactic": "defense-evasion",
+            "score": 75,
+            "comment": "this is a comment for T1134 which is only applied on the defense-evasion tactic"
+        },
+        {
+            "techniqueID": "T1078",
+            "tactic": "discovery",
+            "enabled": false
+        },
+        {
+            "techniqueID": "T1053",
+            "tactic": "privilege-escalation",
+            "metadata": [
+                { 
+                    "name": "T1053 metadata1", 
+                    "value": "T1053 metadata1 value" 
+                },
+                {
+                    "divider": true
+                },
+                { 
+                    "name": "T1053 metadata2", 
+                    "value": "T1053 metadata2 value" 
+                }
+            ]
         }
-      ]
-    }
-  ],
-  "gradient": {
-    "colors": [
-      "#ff6666",
-      "#ffe766",
-      "#8ec843"
     ],
-    "minValue": 0,
-    "maxValue": 100
-  },
-  "legendItems": [
-    {
-      "label": "Legend Item Label",
-      "color": "#FF00FF"
-    }
-  ],
-  "showTacticRowBackground": true,
-  "tacticRowBackground": "#dddddd",
-  "selectTechniquesAcrossTactics": false,
-  "selectSubtechniquesWithParent": false,
-  "metadata": [
-    {
-      "name": "layer metadata 1",
-      "value": "layer metadata 1 value"
+    "gradient": {
+        "colors": [
+            "#ff6666",
+            "#ffe766",
+            "#8ec843"
+        ],
+        "minValue": 0,
+        "maxValue": 100
     },
-    {
-      "name": "layer metadata 2",
-      "value": "layer metadata 2 value"
-    }
-  ]
+    "legendItems": [
+        {
+            "label": "Legend Item Label",
+            "color": "#FF00FF"
+        }
+    ],
+    "showTacticRowBackground": true,
+    "tacticRowBackground": "#dddddd",
+    "selectTechniquesAcrossTactics": false,
+    "selectSubtechniquesWithParent": false,
+    "metadata": [
+        { 
+            "name": "layer metadata 1", 
+            "value": "layer metadata 1 value" 
+        },
+        { 
+            "name": "layer metadata 2", 
+            "value": "layer metadata 2 value" 
+        }
+    ]
 }
 ```
