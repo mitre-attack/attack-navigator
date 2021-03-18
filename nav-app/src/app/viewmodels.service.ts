@@ -980,41 +980,43 @@ export class ViewModel {
     });
   }
 
-  public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
-    const tvm = this.getTechniqueVM(technique, tactic);
-    let score = techniqueScore;
-    const scores = [techniqueScore];
-    let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
-    technique.subtechniques.forEach((subtechnique) => {
-      const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
-      if (techniqueVM.score.length > 0) {
-        validSubTechniquesCount += 1;
-      }
-      score += techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
-      scores.push(+techniqueVM.score);
-    });
-    let aggScore = 0;
-    switch (this.layout.aggregateFunction) {
-      default:
-      case "average":
-        // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
-        // Otherwise, divide by count of all scored only
-        aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
-        break;
-      case "min":
-        const reducer = (min, currentValue) =>  min < currentValue && min > 0 ? min : currentValue;
-        aggScore = (this.layout.countUnscored) ? Math.min(...scores) : scores.reduce(reducer);
-        break;
-      case "max":
-        aggScore = Math.max(...scores);
-        break;
-      case "sum":
-        aggScore = score;
-        break;
+    public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
+        const tvm = this.getTechniqueVM(technique, tactic);
+        let score = techniqueScore;
+        const scores = [techniqueScore];
+        let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
+        technique.subtechniques.forEach((subtechnique) => {
+            const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
+            if (techniqueVM.score.length > 0) {
+                validSubTechniquesCount += 1;
+            }
+            score += techniqueVM.score.length !== 0 ? Number(techniqueVM.score) : 0;
+            scores.push(+techniqueVM.score);
+        });
+        let aggScore = 0;
+        // Make sure validSubTechniquesCount is not 0, to prevent division by number <= 0
+        if (validSubTechniquesCount <= 0) validSubTechniquesCount = 1;
+        switch (this.layout.aggregateFunction) {
+            default:
+            case "average":
+                // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
+                // Otherwise, divide by count of all scored only
+                aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
+                break;
+            case "min":
+                const reducer = (min, currentValue) => (min < currentValue && min !== 0) ? min : currentValue;
+                aggScore = (this.layout.countUnscored) ? Math.min(...scores) : scores.reduce(reducer);
+                break;
+            case "max":
+                aggScore = Math.max(...scores);
+                break;
+            case "sum":
+                aggScore = score;
+                break;
+        }
+        tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
+        return aggScore;
     }
-    tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
-    return aggScore;
-  }
 
     /**
      * apply sort and filter state to techniques
