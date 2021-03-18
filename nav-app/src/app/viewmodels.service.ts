@@ -826,10 +826,12 @@ export class ViewModel {
      */
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
-            this.getTechniqueVM_id(id).score = ""; // TODO do subtechnique scores not need to be reset?
+            this.getTechniqueVM_id(id).score = "";
             this.getTechniqueVM_id(id).comment = "";
             this.getTechniqueVM_id(id).color = "";
             this.getTechniqueVM_id(id).enabled = true;
+            this.getTechniqueVM_id(id).aggregateScore = "";
+            this.getTechniqueVM_id(id).aggregateScoreColor = "";
         })
     }
 
