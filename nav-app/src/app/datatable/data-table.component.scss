@@ -530,6 +530,10 @@ $panel-light: lighten($panel-dark, 8%);
 
   .subsection {
     padding-left: 5px;
+
+    .inner-dropdown-container {
+      margin: 5px;
+    }
   }
 }
 
