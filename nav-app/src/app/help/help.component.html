@@ -219,7 +219,7 @@
                     extended using <code>and</code>, <code>or</code>, <code>xor</code>
                     and <code>not</code>. You can also use ternary expressions such as <code>a > b ? 25 : 10</code>
                     See <a href="http://mathjs.org/docs/expressions/syntax.html#operators">
-                        this page</a> for a  full list of operators.
+                        this page</a> for a full list of operators.
                     </p>
                     Some example score expressions:
                     <ul>
@@ -297,7 +297,7 @@
             <ul>
                 <li>
                     <img src="assets/icons/ic_sort_alphabetically_ascending_black_24px.svg"/>
-                    The table will sort techniques alphabietically by name in ascending order.
+                    The table will sort techniques alphabetically by name in ascending order.
                 </li>
                 <li>
                     <img src="assets/icons/ic_sort_alphabetically_descending_black_24px.svg"/>
@@ -470,44 +470,45 @@
             <p>
                 In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default) will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.
 
-            These controls can be toggled independently and turned off entirely to remove cell labels entirely. The mini
-            layout forces both of these controls to be disabled.
-        </p>
-        <h2 id="help_Aggregate_Scores">
-            Aggregate Scores
-        </h2>
-        <p>
-            Aggregate scores will combine the scores of a technique and all of its sub-techniques, and can be calculated
-            using either the average, max, min or sum function.
-            They will display only on techniques with sub-techniques. The display of aggregate scores in the matrix view
-            and the score calculations can be customized via the "Matrix Configuration" dropdown menu.
-        </p>
-        <h3 id="help_Show_Hide_Aggregate">
-            Showing or Hiding Aggregate Scores
-        </h3>
-        <p>
-            Aggregate scores in the view are displayed in the tooltip when hovering over a technique, and are hidden by
-            default. When this is enabled, the technique's background color will be calculated using the aggregate score
-            by default.
-        </p>
-        <h3 id="help_Count_Unscored">
-            Counting Unscored Techniques
-        </h3>
-        <p>
-            By default, techniques which are unscored are not included in aggregate score computations. Enabling
-            "count unscored techniques as 0" will make unscored techniques count as if their scores were 0 when
-            computing an aggregate score.
-        </p>
-        <h3 id="help_Choose_Aggregate">
-            Choosing an Aggregate Function
-        </h3>
-        <p>
-            There are 4 available functions to calculate the aggregate score: average, min, max, and sum.
-        </p>
-        <ul>
+                These controls can be toggled independently and turned off entirely to remove cell labels entirely. The mini
+                layout forces both of these controls to be disabled.
+            </p>
+            <h2 id="help_Aggregate_Scores">
+                Aggregate Scores
+            </h2>
+            <p>
+                Aggregate scores will combine the scores of a technique and all of its sub-techniques, and can be calculated
+                using either the average, max, min or sum function.
+                They will display only on techniques with sub-techniques. The display of aggregate scores in the matrix view
+                and the score calculations can be customized via the "Matrix Configuration" dropdown menu.
+            </p>
+            <h3 id="help_Show_Hide_Aggregate">
+                Showing or Hiding Aggregate Scores
+            </h3>
+            <p>
+                Aggregate scores in the view are displayed in the tooltip when hovering over a technique, and are hidden by
+                default. When this is enabled, the technique's background color will be calculated using the aggregate score
+                by default.
+            </p>
+            <h3 id="help_Count_Unscored">
+                Counting Unscored Techniques
+            </h3>
+            <p>
+                By default, techniques which are unscored are not included in aggregate score computations. Enabling
+                "count unscored techniques as 0" will make unscored techniques count as if their scores were 0 when
+                computing an aggregate score.
+            </p>
+            <h3 id="help_Choose_Aggregate">
+                Choosing an Aggregate Function
+            </h3>
+            <p>
+                There are 4 available functions to calculate the aggregate score: average, min, max, and sum.
+            </p>
+            <ul>
             <li>Average:
                 <ul>
-                    <li>if including unscored techniques, will add up the scores of a technique and all of its
+                    <li>
+                        if including unscored techniques, will add up the scores of a technique and all of its
                         sub-techniques, and divide by all; if not including unscored techniques, will add up the only
                         the nonzero scores of a technique and its sub-techniques, and divide by the count of non-zero
                         scores.
@@ -516,7 +517,8 @@
             </li>
             <li>Min:
                 <ul>
-                    <li>if including unscored techniques, will take the minimum of the scores of a technique and all of
+                    <li>
+                        if including unscored techniques, will take the minimum of the scores of a technique and all of
                         its sub-techniques; if not including unscored techniques, will take the minimum of only the
                         nonzero scores of a technique and its sub-techniques.
                     </li>

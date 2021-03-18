@@ -70,9 +70,9 @@ export class ViewModelsService {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
             let score_min = Infinity;
             let score_max = -Infinity;
-            
+
             //get list of all technique IDs used in the VMs
-            let techniqueIDs = new Set<string>(); 
+            let techniqueIDs = new Set<string>();
             scoreVariables.forEach(function(vm, key) {
                 vm.techniqueVMs.forEach(function(techniqueVM, techniqueID) {
                     techniqueIDs.add(techniqueID);
@@ -120,7 +120,7 @@ export class ViewModelsService {
                     });
                     //don't record a result if none of VMs had a score for this technique
                     //did at least one technique have a score for this technique?
-                    if (misses < scoreVariables.size) { 
+                    if (misses < scoreVariables.size) {
                         // console.log(scope);
                         let mathResult = math.eval(scoreExpression, scope);
                         if (is.boolean(mathResult)) {
@@ -178,7 +178,7 @@ export class ViewModelsService {
             result.gradient = new Gradient();
             result.gradient.deSerialize(gradient.gradient.serialize());
         }
-        
+
         result.name = layerName;
         // console.log(result)
         this.viewModels.push(result)
@@ -359,7 +359,7 @@ export class ViewModel {
      * 3: descending numerically
      */
     sorting: number = 0;
-    
+
     layout: LayoutOptions = new LayoutOptions();
 
 
@@ -397,7 +397,7 @@ export class ViewModel {
             this.dataService.onDataLoad(this.domainID, function() {
                 self.initTechniqueVMs()
                 self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
-            }); 
+            });
         } else {
             this.initTechniqueVMs();
             this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
@@ -505,9 +505,9 @@ export class ViewModel {
     }
 
     /**
-     * currently selected techniques in technique_tactic_id format 
+     * currently selected techniques in technique_tactic_id format
      */
-    private selectedTechniques: Set<string> = new Set<string>(); 
+    private selectedTechniques: Set<string> = new Set<string>();
 
     /**
      * Select the given technique. Depending on selectTechniquesAcrossTactics, either selects in all tactics or in given tactic
@@ -579,7 +579,7 @@ export class ViewModel {
             this.selectedTechniques.add(id);
         }
     }
-    
+
     /**
      * unselect the given technique in the given tactic
      * @param {Technique} technique to unselect
@@ -609,7 +609,7 @@ export class ViewModel {
             this.unselectTechnique(technique, tactic);
         }
     }
-    
+
     /**
      * unselect the given technique across all tactics in which it occurs
      * @param {Technique} technique to unselect
@@ -742,9 +742,9 @@ export class ViewModel {
             if (this.selectSubtechniquesWithParent) {
                 // match across tactics
                 // match subtechniques and parents
-                
+
                 // matches this part
-                // vvvvv     
+                // vvvvv
                 // T1001.001^TA1000
                 let ids = new Set();
                 this.selectedTechniques.forEach((unionID) => ids.add(unionID.split("^")[0].split(".")[0]));
@@ -867,19 +867,19 @@ export class ViewModel {
         this.metadata.splice(index, 1)
     }
 
-    
-    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8                           
-    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo    
-    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888  
-    //         888 888     888 888        888     o88       888         888   888  888  888          888         
-    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o        
-    //                                         o88                                                               
-    //    ooooo ooooo            o888                                                 
-    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
-    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
-    //     888   888 888          888  888    888 888          888                888 
-    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
-    //                                o888                                            
+
+    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8
+    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo
+    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888
+    //         888 888     888 888        888     o88       888         888   888  888  888          888
+    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o
+    //                                         o88
+    //    ooooo ooooo            o888
+    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8
+    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo
+    //     888   888 888          888  888    888 888          888                888
+    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88
+    //                                o888
 
     /**
      * filter tactics according to viewmodel state
@@ -1030,7 +1030,7 @@ export class ViewModel {
         return this.sortTechniques(this.filterTechniques(techniques, tactic, matrix), tactic);
     }
 
-    
+
 
 
 
@@ -1103,7 +1103,7 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        // patch for old domain name convention 
+        // patch for old domain name convention
         if(obj.domain in this.dataService.domain_backwards_compatibility) {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
@@ -1116,7 +1116,7 @@ export class ViewModel {
      */
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        
+
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
@@ -1223,7 +1223,7 @@ export class ViewModel {
                                 }
                             }
                         }
-                        
+
                     }
                 }
             }
@@ -1263,7 +1263,7 @@ export class ViewModel {
             }
             else console.error("TypeError: viewMode field is not a number")
         }
-        
+
         this.updateGradient();
     }
 
@@ -1424,8 +1424,8 @@ export class TechniqueVM {
         if (this.aggregateScore !== "" && !(isNaN(Number(this.aggregateScore)))) {
             rep.aggregateScore = Number(this.aggregateScore);
         }
-//rep.technique_tactic_union_id = this.technique_tactic_union_id;
-//console.log(rep);
+        //rep.technique_tactic_union_id = this.technique_tactic_union_id;
+        //console.log(rep);
         return JSON.stringify(rep, null, "\t")
     }
 
@@ -1602,9 +1602,9 @@ export class Metadata {
             if (rep.value) {
                 if (typeof(rep.value) === "string") this.value = rep.value;
                 else console.error("TypeError: Metadata field 'value' is not a string")
-            } 
+            }
             else console.error("Error: Metadata required field 'value' not present");
-        } 
+        }
         else if ("divider" in rep) { // divider object
             if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
             else  console.error("TypeError: Metadata field 'divider' is not a boolean");
@@ -1730,4 +1730,5 @@ export class LayoutOptions {
     }
   }
 }
+
 

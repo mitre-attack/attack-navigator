@@ -1,6 +1,6 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
-import {Technique, Tactic, Matrix} from '../../data.service';
-import {ViewModel} from '../../viewmodels.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Technique, Tactic, Matrix } from '../../data.service';
+import { ViewModel } from '../../viewmodels.service';
 import {ConfigService} from '../../config.service';
 
 declare var tinycolor: any; //use tinycolor2
