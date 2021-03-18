@@ -450,13 +450,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         </div>
                         <div>
                             <input
-                                [disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores"
+                                [disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
                                 id="countUnscored-option" class="checkbox-custom" type="checkbox"
                                 [(ngModel)]="viewModel.layout.countUnscored">
                             <label
-                                [class.disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores"
+                                [class.disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
                                 for="countUnscored-option"
-                                class="checkbox-custom-label noselect">count unscored techniques</label>
+                                class="checkbox-custom-label noselect">count unscored techniques as 0</label>
                         </div>
                         <div class="subsection">
                             <label for="aggregateFunctionDropdown">aggregate function: </label>
