@@ -987,7 +987,7 @@ export class ViewModel {
         let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
         technique.subtechniques.forEach((subtechnique) => {
             const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
-            if (techniqueVM.score.length > 0) {
+            if (techniqueVM.score.length > 0 && Number(techniqueVM.score) !== 0) {
                 validSubTechniquesCount += 1;
             }
             score += techniqueVM.score.length !== 0 ? Number(techniqueVM.score) : 0;
