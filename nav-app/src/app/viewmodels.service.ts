@@ -1670,43 +1670,47 @@ export class LayoutOptions {
     }
     public get showAggregateScores(): boolean { return this._showAggregateScores; }
 
-  public serialize(): object {
-    return {
-      "layout": this.layout,
-      "aggregateFunction": this.aggregateFunction,
-      "showID": this.showID,
-      "showName": this.showName,
-      "showAggregateScores": this.showAggregateScores,
-      "countUnscored": this.countUnscored
-    };
-  }
+    public _countUnscored: boolean = false;
+    public set countUnscored(newval: boolean) { this._countUnscored = newval; }
+    public get countUnscored(): boolean { return this._countUnscored; }
 
-  public deserialize(rep: any) {
-    if (rep.showID) {
-      if (typeof (rep.showID) === "boolean") this.showID = rep.showID;
-      else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof (rep.showID), ")");
+    public serialize(): object {
+        return {
+            "layout": this.layout,
+            "aggregateFunction": this.aggregateFunction,
+            "showID": this.showID,
+            "showName": this.showName,
+            "showAggregateScores": this.showAggregateScores,
+            "countUnscored": this.countUnscored
+        };
     }
-    if (rep.showName) {
-      if (typeof (rep.showName) === "boolean") this.showName = rep.showName;
-      else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof (rep.showName), ")");
-    }
-    //make sure this one goes last so that it can override name and ID if layout == 'mini'
-    if (rep.layout) {
-      if (typeof (rep.layout) === "string") this.layout = rep.layout;
-      else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof (rep.layout), ")");
-    }
-    if (rep.aggregateFunction) {
-      if (typeof (rep.aggregateFunction) === "string") this.aggregateFunction = rep.aggregateFunction;
-      else console.error("TypeError: layout field 'aggregateFunction' is not a boolean:", rep.aggregateFunction, "(", typeof (rep.aggregateFunction), ")");
-    }
-    if (rep.showAggregateScores) {
-      if (typeof (rep.showAggregateScores) === "boolean") this.showAggregateScores = rep.showAggregateScores;
-      else console.error("TypeError: layout field 'showAggregateScores' is not a boolean:", rep.showAggregateScores, "(", typeof (rep.showAggregateScores), ")");
-    }
-    if (rep.countUnscored) {
-      if (typeof (rep.countUnscored) === "boolean") this.countUnscored = rep.countUnscored;
-      else console.error("TypeError: layout field 'countUnscored' is not a boolean:", rep.countUnscored, "(", typeof (rep.countUnscored), ")");
-    }
+
+    public deserialize(rep: any) {
+        if (rep.showID) {
+            if (typeof (rep.showID) === "boolean") this.showID = rep.showID;
+            else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof (rep.showID), ")");
+        }
+      if (rep.showName) {
+          if (typeof (rep.showName) === "boolean") this.showName = rep.showName;
+          else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof (rep.showName), ")");
+      }
+      //make sure this one goes last so that it can override name and ID if layout == 'mini'
+      if (rep.layout) {
+          if (typeof (rep.layout) === "string") this.layout = rep.layout;
+          else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof (rep.layout), ")");
+      }
+      if (rep.aggregateFunction) {
+          if (typeof (rep.aggregateFunction) === "string") this.aggregateFunction = rep.aggregateFunction;
+          else console.error("TypeError: layout field 'aggregateFunction' is not a boolean:", rep.aggregateFunction, "(", typeof (rep.aggregateFunction), ")");
+      }
+      if (rep.showAggregateScores) {
+          if (typeof (rep.showAggregateScores) === "boolean") this.showAggregateScores = rep.showAggregateScores;
+          else console.error("TypeError: layout field 'showAggregateScores' is not a boolean:", rep.showAggregateScores, "(", typeof (rep.showAggregateScores), ")");
+      }
+      if (rep.countUnscored) {
+          if (typeof (rep.countUnscored) === "boolean") this.countUnscored = rep.countUnscored;
+          else console.error("TypeError: layout field 'countUnscored' is not a boolean:", rep.countUnscored, "(", typeof (rep.countUnscored), ")");
+      }
   }
 }
 
