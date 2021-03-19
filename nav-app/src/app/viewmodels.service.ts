@@ -913,72 +913,72 @@ export class ViewModel {
         })
     }
 
-  /**
-   * sort techniques accoding to viewModel state
-   * @param {Technique[]} techniques techniques to sort
-   * @param {Tactic} tactic tactic the techniques fall under
-   * @returns {Technique[]} sorted techniques
-   */
-  public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
-    return techniques.sort((technique1: Technique, technique2: Technique) => {
-      const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
-      const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-      let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-      let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+    /**
+     * sort techniques accoding to viewModel state
+     * @param {Technique[]} techniques techniques to sort
+     * @param {Tactic} tactic tactic the techniques fall under
+     * @returns {Technique[]} sorted techniques
+     */
+    public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
+        return techniques.sort((technique1: Technique, technique2: Technique) => {
+            const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
 
-      this.sortSubTechniques(technique1, tactic);
-      this.sortSubTechniques(technique2, tactic);
+            this.sortSubTechniques(technique1, tactic);
+            this.sortSubTechniques(technique2, tactic);
 
-      // if show aggregate scores is enabled, factor that into sorting
-      if (this.layout.showAggregateScores) {
-        techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
-        techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
-        const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
-        if (totalScore < 0) {
-          score2 -= totalScore;
-        } else if (totalScore > 0) {
-          score1 += totalScore;
-        }
-      }
+            // if show aggregate scores is enabled, factor that into sorting
+            if (this.layout.showAggregateScores) {
+                techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
+                techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
+                const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
+                if (totalScore < 0) {
+                    score2 -= totalScore;
+                } else if (totalScore > 0) {
+                    score1 += totalScore;
+                }
+            }
 
-      switch (this.sorting) {
-        default:
-        case 0:
-          return technique1.name.localeCompare(technique2.name);
-        case 1:
-          return technique2.name.localeCompare(technique1.name);
-        case 2:
-          if (score1 === score2) {
-            return technique1.name.localeCompare(technique2.name);
-          } else {
-            return score1 - score2;
-          }
-        case 3:
-          if (score1 === score2) {
-            return technique1.name.localeCompare(technique2.name);
-          } else {
-            return score2 - score1;
-          }
-      }
-    });
-  }
+            switch (this.sorting) {
+                default:
+                case 0:
+                    return technique1.name.localeCompare(technique2.name);
+                case 1:
+                    return technique2.name.localeCompare(technique1.name);
+                case 2:
+                    if (score1 === score2) {
+                        return technique1.name.localeCompare(technique2.name);
+                    } else {
+                        return score1 - score2;
+                    }
+                case 3:
+                    if (score1 === score2) {
+                        return technique1.name.localeCompare(technique2.name);
+                    } else {
+                        return score2 - score1;
+                    }
+            }
+        });
+    }
 
-  public sortSubTechniques(technique: Technique, tactic: Tactic) {
-    technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
-      const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
-      const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-      const score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-      const score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-      switch (this.sorting) {
-        case 2:
-          return score1 - score2;
-        case 3:
-          return score2 - score1;
-        default:
-          return 0;
-      }
-    });
-  }
+    public sortSubTechniques(technique: Technique, tactic: Tactic) {
+        technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
+            const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            const score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+            const score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            switch (this.sorting) {
+                case 2:
+                    return score1 - score2;
+                case 3:
+                    return score2 - score1;
+                default:
+                    return 0;
+            }
+        });
+    }
 
     public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
         const tvm = this.getTechniqueVM(technique, tactic);
@@ -1381,9 +1381,9 @@ export class TechniqueVM {
     comment: string = ""
     metadata: Metadata[] = [];
 
-  showSubtechniques = false;
-  aggregateScore: any; // number rather than string as this is not based on an input from user
-  aggregateScoreColor: any;
+    showSubtechniques = false;
+    aggregateScore: any; // number rather than string as this is not based on an input from user
+    aggregateScoreColor: any;
 
     //print this object to the console
     print(): void {
@@ -1615,81 +1615,60 @@ export class Metadata {
 }
 
 export class LayoutOptions {
-  // current layout selection
-  public readonly layoutOptions: string[] = ["side", "flat", "mini"];
-  private _layout = this.layoutOptions[0]; //current selection
-  public set layout(newLayout) {
-    if (!this.layoutOptions.includes(newLayout)) {
-      console.warn("invalid matrix layout", newLayout);
-      return;
+    // current layout selection
+    public readonly layoutOptions: string[] = ["side", "flat", "mini"];
+    private _layout = this.layoutOptions[0]; //current selection
+    public set layout(newLayout) {
+        if (!this.layoutOptions.includes(newLayout)) {
+            console.warn("invalid matrix layout", newLayout);
+            return;
+        }
+        let oldLayout = this._layout;
+        this._layout = newLayout;
+        if (this._layout == "mini") { //mini-table cannot show ID or name
+            this.showID = false;
+            this.showName = false;
+        }
+        if (oldLayout == "mini" && newLayout != "mini") {
+            this.showName = true; //restore default show value for name
+        }
     }
-    let oldLayout = this._layout;
-    this._layout = newLayout;
-    if (this._layout == "mini") { //mini-table cannot show ID or name
-      this.showID = false;
-      this.showName = false;
+    public get layout(): string { return this._layout; }
+
+    public readonly aggregateFunctionOptions: string[] = ["average", "min", "max", "sum"];
+    private _aggregateFunction = this.aggregateFunctionOptions[0];
+    public set aggregateFunction(newAggregateFunction) {
+        if (!this.aggregateFunctionOptions.includes(newAggregateFunction)) {
+            console.warn("invalid aggregate fx option", newAggregateFunction);
+            return;
+        }
+        this._aggregateFunction = newAggregateFunction;
     }
-    if (oldLayout == "mini" && newLayout != "mini") {
-      this.showName = true; //restore default show value for name
+
+    public get aggregateFunction(): string { return this._aggregateFunction; }
+
+    //show technique/tactic IDs in the view?
+    public _showID: boolean = false;
+    public set showID(newval: boolean) {
+        this._showID = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
     }
-  }
+    public get showID(): boolean { return this._showID; }
 
-  public get layout(): string {
-    return this._layout;
-  }
-
-  public readonly aggregateFunctionOptions: string[] = ["average", "min", "max", "sum"];
-  private _aggregateFunction = this.aggregateFunctionOptions[0];
-  public set aggregateFunction(newAggregateFunction) {
-    if (!this.aggregateFunctionOptions.includes(newAggregateFunction)) {
-      console.warn("invalid aggregate fx option", newAggregateFunction);
-      return;
+    //show technique/tactic names in the view?
+    public _showName: boolean = true;
+    public set showName(newval: boolean) {
+        this._showName = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
     }
-    this._aggregateFunction = newAggregateFunction;
-  }
-  public get aggregateFunction(): string {
-    return this._aggregateFunction; }
+    public get showName(): boolean { return this._showName; }
 
-  //show technique/tactic IDs in the view?
-  public _showID: boolean = false;
-  public set showID(newval: boolean) {
-    this._showID = newval;
-    if (newval == true && this._layout == "mini") this._layout = "side";
-  }
-
-  public get showID(): boolean {
-    return this._showID;
-  }
-
-  //show technique/tactic names in the view?
-  public _showName: boolean = true;
-  public set showName(newval: boolean) {
-    this._showName = newval;
-    if (newval == true && this._layout == "mini") this._layout = "side";
-  }
-
-  public get showName(): boolean {
-    return this._showName;
-  }
-
-  public _showAggregateScores: boolean = false;
-  public set showAggregateScores(newval: boolean) {
-    this._showAggregateScores = newval;
-    if (newval == true && this._layout == "mini") this._layout = "side";
-  }
-
-  public get showAggregateScores(): boolean {
-    return this._showAggregateScores;
-  }
-
-  public _countUnscored: boolean = false;
-  public set countUnscored(newval: boolean) {
-    this._countUnscored = newval;
-  }
-
-  public get countUnscored(): boolean {
-    return this._countUnscored;
-  }
+    public _showAggregateScores: boolean = false;
+    public set showAggregateScores(newval: boolean) {
+        this._showAggregateScores = newval;
+        if (newval == true && this._layout == "mini") this._layout = "side";
+    }
+    public get showAggregateScores(): boolean { return this._showAggregateScores; }
 
   public serialize(): object {
     return {
