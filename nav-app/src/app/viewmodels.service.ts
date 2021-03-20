@@ -982,16 +982,21 @@ export class ViewModel {
 
     public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
         const tvm = this.getTechniqueVM(technique, tactic);
-        let score = techniqueScore;
-        const scores = [techniqueScore];
-        let validSubTechniquesCount = (techniqueScore > 0) ? 1 : 0;
+        let score = 0, validSubTechniquesCount = 0;
+        let scores = [];
+        if (tvm.score.length > 0 && !isNaN(Number(tvm.score))) {
+            score = Number(tvm.score);
+            scores.push(score);
+            validSubTechniquesCount += 1;
+        }
         technique.subtechniques.forEach((subtechnique) => {
             const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
-            if (techniqueVM.score.length > 0 && Number(techniqueVM.score) !== 0) {
+            const scoreNum = Number(techniqueVM.score);
+            if (techniqueVM.score.length > 0 && !isNaN(scoreNum)) {
                 validSubTechniquesCount += 1;
+                score += scoreNum;
+                scores.push(scoreNum);
             }
-            score += techniqueVM.score.length !== 0 ? Number(techniqueVM.score) : 0;
-            scores.push(+techniqueVM.score);
         });
         let aggScore = 0;
         // Make sure validSubTechniquesCount is not 0, to prevent division by number <= 0
@@ -1004,11 +1009,10 @@ export class ViewModel {
                 aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
                 break;
             case "min":
-                const reducer = (min, currentValue) => (min < currentValue && min !== 0) ? min : currentValue;
-                aggScore = (this.layout.countUnscored) ? Math.min(...scores) : scores.reduce(reducer);
+                if (scores.length > 0) aggScore = Math.min(...scores);
                 break;
             case "max":
-                aggScore = Math.max(...scores);
+                if (scores.length > 0) aggScore = Math.max(...scores);
                 break;
             case "sum":
                 aggScore = score;
