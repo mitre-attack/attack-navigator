@@ -931,8 +931,8 @@ export class ViewModel {
 
             // if show aggregate scores is enabled, factor that into sorting
             if (this.layout.showAggregateScores) {
-                techniqueVM1.aggregateScore = this.calculateAggregateScore(score1, technique1, tactic);
-                techniqueVM2.aggregateScore = this.calculateAggregateScore(score2, technique2, tactic);
+                techniqueVM1.aggregateScore = this.calculateAggregateScore(technique1, tactic);
+                techniqueVM2.aggregateScore = this.calculateAggregateScore(technique2, tactic);
                 const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
                 if (totalScore < 0) {
                     score2 -= totalScore;
@@ -980,7 +980,7 @@ export class ViewModel {
         });
     }
 
-    public calculateAggregateScore(techniqueScore: number, technique: Technique, tactic: Tactic): number {
+    public calculateAggregateScore(technique: Technique, tactic: Tactic): number {
         const tvm = this.getTechniqueVM(technique, tactic);
         let score = 0, validSubTechniquesCount = 0;
         let scores = [];
