@@ -380,8 +380,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
                         </div>
                         <div>
-                            <input
-                                [disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                            <input [disabled]="viewModel.layout.layout == 'mini' || !viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
                                 id="countUnscored-option" class="checkbox-custom" type="checkbox"
                                 [(ngModel)]="viewModel.layout.countUnscored">
                             <label

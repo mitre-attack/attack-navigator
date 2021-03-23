@@ -1669,7 +1669,7 @@ export class LayoutOptions {
 
     public _countUnscored: boolean = false;
     public set countUnscored(newval: boolean) { this._countUnscored = newval; }
-    public get countUnscored(): boolean { return this._countUnscored; }
+    public get countUnscored(): boolean { return (this.aggregateFunction === "average") ? this._countUnscored : false; }
 
     public serialize(): object {
         return {
