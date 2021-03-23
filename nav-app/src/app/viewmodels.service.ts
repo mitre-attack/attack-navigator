@@ -980,7 +980,7 @@ export class ViewModel {
         });
     }
 
-    public calculateAggregateScore(technique: Technique, tactic: Tactic): number {
+    public calculateAggregateScore(technique: Technique, tactic: Tactic): any {
         const tvm = this.getTechniqueVM(technique, tactic);
         let score = 0, validSubTechniquesCount = 0;
         let scores = [];
@@ -998,9 +998,8 @@ export class ViewModel {
                 scores.push(scoreNum);
             }
         });
+        if (validSubTechniquesCount === 0) return;
         let aggScore = 0;
-        // Make sure validSubTechniquesCount is not 0, to prevent division by number <= 0
-        if (validSubTechniquesCount <= 0) validSubTechniquesCount = 1;
         switch (this.layout.aggregateFunction) {
             default:
             case "average":
