@@ -1425,9 +1425,6 @@ export class TechniqueVM {
         rep.enabled = this.enabled;
         rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
         rep.showSubtechniques = this.showSubtechniques;
-        if (this.aggregateScore !== "" && !(isNaN(Number(this.aggregateScore)))) {
-            rep.aggregateScore = Number(this.aggregateScore);
-        }
         //rep.technique_tactic_union_id = this.technique_tactic_union_id;
         //console.log(rep);
         return JSON.stringify(rep, null, "\t")
@@ -1464,10 +1461,6 @@ export class TechniqueVM {
         if ("showSubtechniques" in obj) {
             if (typeof(obj.showSubtechniques) === "boolean") this.showSubtechniques = obj.showSubtechniques;
             else console.error("TypeError: technique showSubtechnique field is not a boolean:", obj.showSubtechniques, "(", typeof(obj.showSubtechniques), ")");
-        }
-        if ("aggregateScore" in obj) {
-            if (typeof (obj.aggregateScore) === "number") this.aggregateScore = String(obj.aggregateScore);
-            else console.error("TypeError: technique aggregateScore field is not a number:", obj.aggregateScore, "(", typeof (obj.aggregateScore), ")");
         }
         if (this.tactic !== undefined && this.techniqueID !== undefined) {
             this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;

@@ -80,11 +80,11 @@ Technique objects are used to store both techniques and subtechniques. The only 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | layout | String | No | "side' | The layout of the matrix. Either "side", "flat" or "mini" |
-| aggregateFunction | String | No | "average' | The aggregate function used to calculate aggregate scores for techniques in the matrix. Either "average", "min" or "sum" |
 | showID | Boolean | No | false | if true, show the ATT&CK ID of techniques and tactics in the matrix |
 | showName | Boolean | No | true | if true, show the name of techniques and tactics in the matrix |
 | showAggregateScores | Boolean | No | false | if true, show the aggregate scores of techniques and its subtechniques in the matrix |
 | countUnscored | Boolean | No | false | if true, count the unscored techniques in the calculation of the aggregate score of techniques in the matrix |
+| aggregateFunction | String | No | "average" | The aggregate function used to calculate aggregate scores for techniques in the matrix. Either "average", "min", "max" or "sum" |
 
 ## Example
 The following example illustrates the layer file format:
@@ -109,7 +109,9 @@ The following example illustrates the layer file format:
         "layout": "side",
         "showName": true,
         "showID": false,
-        "showAggregateScores": true
+        "showAggregateScores": true,
+        "countUnscored": true,
+        "aggregateFunction": "average"
     },
     "hideDisabled": false,
     "techniques": [
