@@ -33,9 +33,9 @@ This document describes **Version 4.2** of the MITRE ATT&CK Navigator Layer file
 
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| attack | String | No | Current version of ATT&CK: "8" | ATT&CK version of this layer |
-| navigator | String | Yes | | Must be "4.2" |
-| layer | String | Yes | | Must be "4.1" |
+| attack | String | No | Current version of ATT&CK: "9" | ATT&CK version of this layer |
+| navigator | String | Yes | | Must be "4.3" |
+| layer | String | Yes | | Must be "4.2" |
 
 ## Technique Object properties
 
