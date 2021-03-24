@@ -117,12 +117,14 @@ The following example illustrates the layer file format:
     "techniques": [
         {
             "techniqueID": "T1110",
+            "score": 0,
             "color": "#fd8d3c",
             "comment": "This is a comment for technique T1110",
             "showSubtechniques": true
         },
         {
             "techniqueID": "T1110.001",
+            "score": 100,
             "comment": "This is a comment for T1110.001 - the first subtechnique of technique T1110.001"
         },
         {
