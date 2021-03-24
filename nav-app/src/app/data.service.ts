@@ -484,7 +484,7 @@ export class Mitigation extends BaseStix {
 }
 
 export class Note {
-    public readonly abstract: string; // brief summary of note content
+    public readonly abstract?: string; // brief summary of note content
     public readonly content: string; // content of the note
     public readonly object_refs: string[]; // list of STIX objects the note is applied to
 
