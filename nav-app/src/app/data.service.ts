@@ -114,6 +114,9 @@ export class DataService {
                     case "x-mitre-matrix":
                         matrixSDOs.push(sdo);
                         break;
+                    case "note":
+                        domain.notes.push(new Note(sdo));
+                        break;
                 }
             }
 
@@ -480,6 +483,22 @@ export class Mitigation extends BaseStix {
     }
 }
 
+export class Note {
+    public readonly abstract: string; // brief summary of note content
+    public readonly content: string; // content of the note
+    public readonly object_refs: string[]; // list of STIX objects the note is applied to
+
+    /**
+     * Creates an instance of Note.
+     * @param {*} stixSDO for the note
+    */
+    constructor(stixSDO: any) {
+        if (stixSDO.abstract) this.abstract = stixSDO.abstract;
+        this.content = stixSDO.content;
+        this.object_refs = stixSDO.object_refs;
+    }
+}
+
 export class Domain {
     public readonly id: string; // domain ID
     public readonly name: string; // domain display name
@@ -499,6 +518,7 @@ export class Domain {
     public software: Software[] = [];
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
+    public notes: Note[] = [];
     public relationships: any = {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
