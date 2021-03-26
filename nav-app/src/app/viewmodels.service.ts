@@ -1660,10 +1660,7 @@ export class LayoutOptions {
     public get showName(): boolean { return this._showName; }
 
     public _showAggregateScores: boolean = false;
-    public set showAggregateScores(newval: boolean) {
-        this._showAggregateScores = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
-    }
+    public set showAggregateScores(newval: boolean) { this._showAggregateScores = newval; }
     public get showAggregateScores(): boolean { return this._showAggregateScores; }
 
     public _countUnscored: boolean = false;
