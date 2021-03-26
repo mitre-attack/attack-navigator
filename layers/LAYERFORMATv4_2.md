@@ -93,8 +93,8 @@ The following example illustrates the layer file format:
     "name": "example layer",
     "versions": {
         "attack": "8",
-        "navigator": "4.2",
-        "layer": "4.1"
+        "navigator": "4.3",
+        "layer": "4.2"
     },
     "domain": "enterprise-attack",
     "description": "hello, world",
