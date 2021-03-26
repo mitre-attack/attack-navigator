@@ -502,9 +502,10 @@ export class ExporterComponent implements OnInit {
             }
             if (self.showFilters()) {
               const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
-              if (!self.showAggregate()) {
-                filterConfig.contents.push(filterData);
-              } else config.contents.push(filterData);
+              if (self.showAggregate()) {
+                config.title = "domain & platforms";
+                config.contents.push(filterData);
+              } else filterConfig.contents.push(filterData);
             }
             if (config.contents.length > 0) headerSections.push(config);
             if (filterConfig.contents.length > 0) headerSections.push(filterConfig);
