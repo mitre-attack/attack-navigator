@@ -54,6 +54,7 @@ export class ExporterComponent implements OnInit {
             "showFilters": true,
             "showAbout": true,
             "showDomain": true,
+            "showAggregate": false,
         }
     }
 
@@ -104,6 +105,7 @@ export class ExporterComponent implements OnInit {
     //above && user preferences
     showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
     showDomain(): boolean {return this.config.showDomain && this.hasDomain() && this.config.showHeader}
+    showAggregate(): boolean {return this.viewModel.layout.showAggregateScores && this.config.showHeader}
     showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
     showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
     showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
@@ -492,22 +494,28 @@ export class ExporterComponent implements OnInit {
                 headerSections.push(about)
             }
 
+            const config = {"title": "domain", "contents": []};
+            let filterConfig = {"title": "platforms", "contents": []};
             if (self.showDomain()) {
                 let domain = this.dataService.getDomain(this.viewModel.domainID);
-                headerSections.push({
-                    "title": "domain",
-                    "contents": [{
-                        "label": "domain", "data": domain.name + " " + domain.version 
-                    }]
-                });
+                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version});
             }
+            if (self.showFilters()) {
+              const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
+              if (self.showAggregate()) {
+                config.title = "domain & platforms";
+                config.contents.push(filterData);
+              } else filterConfig.contents.push(filterData);
+            }
+            if (config.contents.length > 0) headerSections.push(config);
+            if (filterConfig.contents.length > 0) headerSections.push(filterConfig);
 
-            if (self.showFilters()) headerSections.push({
-                "title": "filters",
-                "contents": [{
-                    "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") 
-                }]
-            });
+            if (self.showAggregate()) {
+              const aggregateConfig = { "title": "aggregate", "contents": []};
+              aggregateConfig.contents.push({"label": "function", "data": "showing aggregate scores using the " + this.viewModel.layout.aggregateFunction + " aggregate function"});
+              if (this.viewModel.layout.countUnscored) aggregateConfig.contents.push({"label": "unscored", "data": "includes unscored techniques as having a score of 0"});
+              headerSections.push(aggregateConfig);
+            }
 
             if (self.showLegendContainer() && self.showLegendInHeader()) headerSections.push(legend);
 
@@ -928,6 +936,7 @@ class RenderableTechnique {
             let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
             if (!techniqueVM.enabled) return "white";
             if (techniqueVM.color) return techniqueVM.color;
+            if (this.viewModel.layout.showAggregateScores && techniqueVM.aggregateScoreColor) return techniqueVM.aggregateScoreColor;
             if (techniqueVM.score) return techniqueVM.scoreColor;
         } 
         return "white"; //default

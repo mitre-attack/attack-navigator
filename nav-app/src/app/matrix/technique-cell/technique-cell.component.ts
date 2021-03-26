@@ -23,7 +23,7 @@ export class TechniqueCellComponent implements OnInit {
     public get showTooltip(): boolean {
         if (this.showContextmenu) return false;
         if (!this.viewModel.highlightedTechnique) return false;
-        
+
         return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
@@ -59,7 +59,7 @@ export class TechniqueCellComponent implements OnInit {
 
     ngOnInit() {
     }
-    
+
     // count number of annotated sub-techniques on this technique
     public annotatedSubtechniques() {
         let annotatedSubs: Technique[] = []
@@ -114,11 +114,11 @@ export class TechniqueCellComponent implements OnInit {
         }
 
         // classes added by layout config
-        if (this.viewModel.layout.showID) 
+        if (this.viewModel.layout.showID)
             theclass += " showID"
-        if (this.viewModel.layout.showName) 
+        if (this.viewModel.layout.showName)
             theclass += " showName"
-        theclass += " " + this.viewModel.layout.layout; 
+        theclass += " " + this.viewModel.layout.layout;
 
         // classes according to annotations
         if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0)
@@ -144,12 +144,13 @@ export class TechniqueCellComponent implements OnInit {
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
         if (!tvm.enabled || this.isHighlighted) return null
-        if (tvm.color) return {"background": tvm.color }
-        if (tvm.score) return {"background": tvm.scoreColor }
+        if (tvm.color) return {"background": tvm.color}
+        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return {"background": tvm.aggregateScoreColor}
+        if (tvm.score) return {"background": tvm.scoreColor}
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 
-     /**
+    /**
      * Get most readable text color for the given technique
      * @param  technique     the technique to get the text color for
      * @param  antihighlight boolean, true if the column is not selected.
@@ -161,6 +162,7 @@ export class TechniqueCellComponent implements OnInit {
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
+        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
         else return "black"
     }
