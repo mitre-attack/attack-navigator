@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { Technique, Tactic, Matrix } from '../../data.service';
+import { Technique, Tactic, Matrix, DataService } from '../../data.service';
 import { ViewModel } from '../../viewmodels.service';
 import {ConfigService} from '../../config.service';
 
@@ -55,7 +55,7 @@ export class TechniqueCellComponent implements OnInit {
         return this.showContextmenu;
     }
 
-    constructor(public configService: ConfigService) { }
+    constructor(public configService: ConfigService, public dataService: DataService) { }
 
     ngOnInit() {
     }
@@ -121,7 +121,7 @@ export class TechniqueCellComponent implements OnInit {
         theclass += " " + this.viewModel.layout.layout;
 
         // classes according to annotations
-        if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0)
+        if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0 || this.hasNotes())
             theclass += " commented"
         if (this.getTechniqueBackground())
             theclass += " colored"
@@ -165,6 +165,18 @@ export class TechniqueCellComponent implements OnInit {
         if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
         else return "black"
+    }
+
+    /**
+     * Check if technique has notes
+     * @return      true if technique has notes, false otherwise
+     */
+    public hasNotes() {
+        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let notes = domain.notes.filter(note => {
+            return note.object_refs.includes(this.technique.id);
+        });
+        return notes.length > 0;
     }
 
 }

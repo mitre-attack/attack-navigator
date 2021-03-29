@@ -13,6 +13,9 @@
         td:first-child {
             white-space: nowrap;
         }
+        td.wrap {
+            white-space: normal;
+        }
         tr:nth-child(2) td {
             border-top: 1px solid white;
         }

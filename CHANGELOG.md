@@ -1,6 +1,7 @@
 # v4.3 - 26 February 2021
 
 - Added aggregate score that displays the combined score of the technique and all of its sub-techniques. See issue [#269](https://github.com/mitre-attack/attack-navigator/issues/269).
+- Added support for displaying notes in tooltips. Notes on a technique are indicated in the same style as a comment.
 
 # v4.2 - 3 February 2021
 

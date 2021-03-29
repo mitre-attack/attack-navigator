@@ -111,7 +111,7 @@ Example custom context menu objects:
 ```
 
 ## Loading content from a TAXII server
-*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work).*
+*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work). Note: TAXII 2.1/STIX 2.1 bundles are **not** supported when loading content from a TAXII server.*
 
 1. Edit the `config.json` file in the **nav-app/src/assets** directory.
 2. Define the `taxii_url` property in place of the `data` property and set the value to your server's URL.
@@ -129,7 +129,7 @@ Example loading content from a TAXII server:
 ```
 
 ## Loading content from local files
-*It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
+*It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file. STIX 2.0 and STIX 2.1 bundles are supported.*
 1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
 2. Edit the `config.json` file in the **nav-app/src/assets** directory.
 3. Change the URL specified in the `data` array to the path to the STIX bundle (e.g `assets/enterprise-attack.json`). Multiple paths may be added to the `data` array to display multiple STIX bundles in a single instance.
