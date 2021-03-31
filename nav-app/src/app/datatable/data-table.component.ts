@@ -148,27 +148,33 @@ export class DataTableComponent implements AfterViewInit {
         }
         tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
-                // style technique cells
-                tacticCol.eachCell(cell => {
-                    if (cell.row > 1) {
-                        if(cell.value && cell.value !== undefined) {
-                            let technique = techniques.find( t => { 
-                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
-                            let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-                            this.styleCells(cell, technique, tvm);
-                        }
-                    }
-                });
-            }
-            
-            // style tactic headers
-            worksheet.columns.forEach(column => {
-                if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
-                    column.width = column.header.length < 15 ? 15 : column.header.length;
-                } else {
-                    column.width = column.header.length < 30 ? 30 : column.header.length;
+        // style technique cells
+        let techniquesCopy = techniques;
+        tacticCol.eachCell(cell => {
+          if (cell.row > 1) {
+            if (cell.value) {
+              const cellNames = cell.value.split(': ');
+              let isFirstElement = true;
+              techniquesCopy = techniquesCopy.filter(t => {
+                if ((cellNames.includes(t.attackID) || cellNames.includes(t.name)) && isFirstElement) {
+                  this.styleCells(cell, t, this.viewModel.getTechniqueVM(t, tactic));
+                  return true;
                 }
-            });
+                return false;
+              });
+            }
+          }
+        });
+      }
+
+      // style tactic headers
+      worksheet.columns.forEach(column => {
+        if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+          column.width = column.header.length < 15 ? 15 : column.header.length;
+        } else {
+          column.width = column.header.length < 30 ? 30 : column.header.length;
+        }
+      });
 
             worksheet.getRow(1).alignment = {horizontal: 'center'};
             worksheet.getRow(1).border = {bottom: {style: 'thin'}};
