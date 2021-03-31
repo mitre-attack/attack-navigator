@@ -126,19 +126,27 @@ export class DataTableComponent implements AfterViewInit {
                     worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
                     subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
-                    // style subtechnique cells
-                    subtechniqueCol.eachCell(cell => {
-                        if(cell.row > 1) {
-                            if(cell.value && cell.value !== undefined) {
-                                let subtechnique = subtechniqueList.find(s => { 
-                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() || s.attackID === cell.value });
-                                let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
-                                this.styleCells(cell, subtechnique, svm);
-                            }
-                        }
-                    });
-                }
-                tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
+          // style subtechnique cells
+          let subtechniqueListCopy = subtechniqueList;
+          subtechniqueCol.eachCell(cell => {
+            if (cell.row > 1) {
+              if (cell.value) {
+                const cellNames = cell.value.split(': ');
+                let isFirstElement = true;
+                subtechniqueListCopy = subtechniqueListCopy.filter(s => {
+                  if ((cellNames.includes(s.attackID) || cellNames.includes(s.name)) && isFirstElement) {
+                    this.styleCells(cell, s, this.viewModel.getTechniqueVM(s, tactic));
+                    isFirstElement = false;
+                    return false;
+                  }
+                  return true;
+                });
+
+              }
+            }
+          });
+        }
+        tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
                 // style technique cells
                 tacticCol.eachCell(cell => {
