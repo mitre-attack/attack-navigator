@@ -126,55 +126,55 @@ export class DataTableComponent implements AfterViewInit {
                     worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
                     subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
-          // style subtechnique cells
-          let subtechniqueListCopy = subtechniqueList;
-          subtechniqueCol.eachCell(cell => {
-            if (cell.row > 1) {
-              if (cell.value) {
-                const cellNames = cell.value.split(': ');
-                let isFirstElement = true;
-                subtechniqueListCopy = subtechniqueListCopy.filter(s => {
-                  if ((cellNames.includes(s.attackID) || cellNames.includes(s.name)) && isFirstElement) {
-                    this.styleCells(cell, s, this.viewModel.getTechniqueVM(s, tactic));
-                    isFirstElement = false;
-                    return false;
-                  }
-                  return true;
-                });
+                    // style subtechnique cells
+                    let subtechniqueListCopy = subtechniqueList;
+                    subtechniqueCol.eachCell(cell => {
+                        if (cell.row > 1) {
+                            if (cell.value) {
+                                const cellNames = cell.value.split(': ');
+                                let isFirstElement = true;
+                                subtechniqueListCopy = subtechniqueListCopy.filter(s => {
+                                    if ((cellNames.includes(s.attackID) || cellNames.includes(s.name)) && isFirstElement) {
+                                        this.styleCells(cell, s, this.viewModel.getTechniqueVM(s, tactic));
+                                        isFirstElement = false;
+                                        return false;
+                                    }
+                                    return true;
+                                });
 
-              }
-            }
-          });
-        }
-        tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
-
-        // style technique cells
-        let techniquesCopy = techniques;
-        tacticCol.eachCell(cell => {
-          if (cell.row > 1) {
-            if (cell.value) {
-              const cellNames = cell.value.split(': ');
-              let isFirstElement = true;
-              techniquesCopy = techniquesCopy.filter(t => {
-                if ((cellNames.includes(t.attackID) || cellNames.includes(t.name)) && isFirstElement) {
-                  this.styleCells(cell, t, this.viewModel.getTechniqueVM(t, tactic));
-                  return true;
+                            }
+                        }
+                    });
                 }
-                return false;
-              });
-            }
-          }
-        });
-      }
+                tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
-      // style tactic headers
-      worksheet.columns.forEach(column => {
-        if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
-          column.width = column.header.length < 15 ? 15 : column.header.length;
-        } else {
-          column.width = column.header.length < 30 ? 30 : column.header.length;
-        }
-      });
+                // style technique cells
+                let techniquesCopy = techniques;
+                tacticCol.eachCell(cell => {
+                    if (cell.row > 1) {
+                        if (cell.value) {
+                            const cellNames = cell.value.split(': ');
+                            let isFirstElement = true;
+                            techniquesCopy = techniquesCopy.filter(t => {
+                                if ((cellNames.includes(t.attackID) || cellNames.includes(t.name)) && isFirstElement) {
+                                    this.styleCells(cell, t, this.viewModel.getTechniqueVM(t, tactic));
+                                    return true;
+                                }
+                                return false;
+                            });
+                        }
+                    }
+                });
+            }
+
+            // style tactic headers
+            worksheet.columns.forEach(column => {
+                if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                    column.width = column.header.length < 15 ? 15 : column.header.length;
+                } else {
+                    column.width = column.header.length < 30 ? 30 : column.header.length;
+                }
+            });
 
             worksheet.getRow(1).alignment = {horizontal: 'center'};
             worksheet.getRow(1).border = {bottom: {style: 'thin'}};
