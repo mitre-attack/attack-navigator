@@ -158,6 +158,7 @@ export class DataTableComponent implements AfterViewInit {
                             techniquesCopy = techniquesCopy.filter(t => {
                                 if ((cellNames.includes(t.attackID) || cellNames.includes(t.name)) && isFirstElement) {
                                     this.styleCells(cell, t, this.viewModel.getTechniqueVM(t, tactic));
+                                    isFirstElement = false;
                                     return true;
                                 }
                                 return false;
