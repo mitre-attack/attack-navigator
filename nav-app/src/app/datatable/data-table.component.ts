@@ -159,6 +159,8 @@ export class DataTableComponent implements AfterViewInit {
             worksheet.columns.forEach(column => {
                 if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
                     column.width = column.header.length < 15 ? 15 : column.header.length;
+                } else if (!this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                    column.width = 10;
                 } else {
                     column.width = column.header.length < 30 ? 30 : column.header.length;
                 }
@@ -189,8 +191,10 @@ export class DataTableComponent implements AfterViewInit {
             return technique.attackID + ': ' + technique.name;
         } else if (this.viewModel.layout.showID) {
             return technique.attackID;
-        } else {
+        } else if (this.viewModel.layout.showName) {
             return technique.name;
+        } else {
+            return '';
         }
     }
 
