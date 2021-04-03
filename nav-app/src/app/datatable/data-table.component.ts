@@ -143,20 +143,13 @@ export class DataTableComponent implements AfterViewInit {
                 tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
                 // style technique cells
-                let techniquesCopy = techniques;
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
-                        if (cell.value) {
-                            const cellNames = cell.value.split(': ');
-                            let isFirstElement = true;
-                            techniquesCopy = techniquesCopy.filter(t => {
-                                if ((cellNames.includes(t.attackID) || cellNames.includes(t.name)) && isFirstElement) {
-                                    this.styleCells(cell, t, this.viewModel.getTechniqueVM(t, tactic));
-                                    isFirstElement = false;
-                                    return true;
-                                }
-                                return false;
-                            });
+                        if(cell.value && cell.value !== undefined) {
+                            let technique = techniques.find( t => {
+                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
+                            let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                            this.styleCells(cell, technique, tvm);
                         }
                     }
                 });
