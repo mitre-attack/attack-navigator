@@ -127,21 +127,15 @@ export class DataTableComponent implements AfterViewInit {
                     subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
                     // style subtechnique cells
-                    let subtechniqueListCopy = subtechniqueList;
+                    const seen = [];
                     subtechniqueCol.eachCell(cell => {
-                        if (cell.row > 1) {
-                            if (cell.value) {
-                                const cellNames = cell.value.split(': ');
-                                let isFirstElement = true;
-                                subtechniqueListCopy = subtechniqueListCopy.filter(s => {
-                                    if ((cellNames.includes(s.attackID) || cellNames.includes(s.name)) && isFirstElement) {
-                                        this.styleCells(cell, s, this.viewModel.getTechniqueVM(s, tactic));
-                                        isFirstElement = false;
-                                        return false;
-                                    }
-                                    return true;
-                                });
-
+                        if(cell.row > 1) {
+                            if(cell.value && cell.value !== undefined) {
+                                let subtechnique = subtechniqueList.find(s => {
+                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
+                                seen.push(subtechnique.attackID);
+                                let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
+                                this.styleCells(cell, subtechnique, svm);
                             }
                         }
                     });
