@@ -1568,17 +1568,19 @@ export class Filter {
 
                     "windows": "Windows",
                     "linux": "Linux",
-                    "mac": "macOS"
+                    "mac": "macOS",
+
+                    "AWS": "IaaS",
+                    "GCP": "IaaS",
+                    "Azure": "IaaS"
                 }
-                this.platforms.selection = rep.platforms.map(function(platform) {
-                    if (platform in backwards_compatibility_mappings) {
-                        return backwards_compatibility_mappings[platform];
-                    } else {
-                        return platform;
-                    }
+                const selection = new Set<string>();
+                rep.platforms.forEach(function (platform) {
+                    if (platform in backwards_compatibility_mappings) selection.add(backwards_compatibility_mappings[platform]);
+                    else selection.add(platform);
                 });
-            }
-            else console.error("TypeError: filter platforms field is not a string[]");
+                this.platforms.selection = Array.from(selection);
+            } else console.error("TypeError: filter platforms field is not a string[]");
         }
     }
 }
