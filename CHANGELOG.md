@@ -3,6 +3,7 @@
 - Added aggregate score that displays the combined score of the technique and all of its sub-techniques. See issue [#269](https://github.com/mitre-attack/attack-navigator/issues/269).
 - Added support for displaying notes in tooltips. Notes on a technique are indicated in the same style as a comment.
 - Fixed a bug in exporting matrix to Excel sheet, where the style of all sub-techniques with the same name in a column were incorrectly over-ridden by the style of the first sub-technique in its name. See issue [#270](https://github.com/mitre-attack/attack-navigator/issues/270).
+- Consolidated AWS, GCP, and Azure platforms into IaaS platform to integrate upcoming release of ATT&CK. See issue [#252](https://github.com/mitre-attack/attack-navigator/issues/252). 
 
 # v4.2 - 3 February 2021
 
