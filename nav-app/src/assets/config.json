@@ -83,6 +83,7 @@
     "comment_color": "yellow",
 
     "features": [
+        {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
