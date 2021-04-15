@@ -60,7 +60,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     if(!this.activeTab) { this.selectTab(this.layerTabs[0]); }
                 });
                 this.customizedConfig = this.configService.getFeatureList()
-                this.bannerContent = this.customizedConfig.find((obj) => obj.name === "banner")?.content;
+                this.bannerContent = this.configService.banner;
             },
             complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
@@ -624,7 +624,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     layerLinkURLs: string[] = [];
     customizedConfig = [];
-    bannerContent = '';
+    bannerContent = "";
 
     /**
      * Helper function to track which layerLinkURLs have been added or removed
