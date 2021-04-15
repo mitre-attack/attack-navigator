@@ -192,12 +192,14 @@ input[type=file]{
     .banner {
         background-color: color(primary);
         margin: 7px;
-        padding: 5px;
+        padding: 5px 7px 5px 7px;
         border-radius: 5px;
-        text-align: center;
+        text-align: left;
         color: on-color(primary);
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        font-size: 14px;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
     }
 }
 
