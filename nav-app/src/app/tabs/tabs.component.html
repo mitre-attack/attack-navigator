@@ -1,5 +1,12 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500" rel="stylesheet">
 
+<!-- Banner -->
+<div *ngIf="hasFeature('banner') && bannerContent" class="header">
+    <div class="banner">
+        <span role="alert">{{ bannerContent }}</span>
+    </div>
+</div>
+
 <!-- Header/Help -->
 <div *ngIf="hasFeature('header')" [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="header" >
     <div class="logo">

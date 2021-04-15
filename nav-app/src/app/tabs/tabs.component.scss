@@ -188,6 +188,17 @@ input[type=file]{
         height: 2ex;
         padding: 5px;
     }
+
+    .banner {
+        background-color: color(primary);
+        margin: 7px;
+        padding: 5px;
+        border-radius: 5px;
+        text-align: center;
+        color: on-color(primary);
+        display: flex;
+        justify-content: space-between;
+    }
 }
 
 .btn-group {
