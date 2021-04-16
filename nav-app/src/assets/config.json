@@ -83,6 +83,7 @@
     "comment_color": "yellow",
 
     "features": [
+        {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
@@ -92,23 +93,23 @@
             {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
             {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
         ]},
-        {"name": "layer_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+        {"name": "layer_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
             {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
-            {"name": "export_render", "enabled": true, "description": "Disable to the remove the button to render the current layer."},
-            {"name": "export_excel", "enabled": true, "description": "Disable to the remove the button to export the current layer to MS Excel (.xlsx) format."},
-            {"name": "filters", "enabled": true, "description": "Disable to the remove the filters panel from interface."},
-            {"name": "sorting", "enabled": true, "description": "Disable to the remove the sorting button from the interface."},
-            {"name": "color_setup", "enabled": true, "description": "Disable to the remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
-            {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to the remove the hide disabled techniques button from the interface."},
-            {"name": "layout_controls", "enabled": true, "description": "Disable to the remove the ability to change the current matrix layout."},
-            {"name": "legend", "enabled": true, "description": "Disable to the remove the legend panel from the interface."}
+            {"name": "export_render", "enabled": true, "description": "Disable to remove the button to render the current layer."},
+            {"name": "export_excel", "enabled": true, "description": "Disable to remove the button to export the current layer to MS Excel (.xlsx) format."},
+            {"name": "filters", "enabled": true, "description": "Disable to remove the filters panel from interface."},
+            {"name": "sorting", "enabled": true, "description": "Disable to remove the sorting button from the interface."},
+            {"name": "color_setup", "enabled": true, "description": "Disable to remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
+            {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to remove the hide disabled techniques button from the interface."},
+            {"name": "layout_controls", "enabled": true, "description": "Disable to remove the ability to change the current matrix layout."},
+            {"name": "legend", "enabled": true, "description": "Disable to remove the legend panel from the interface."}
         ]},
-        {"name": "technique_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to the remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to the remove the ability to assign manual colors to techniques."},
-            {"name": "scoring", "enabled": true, "description": "Disable to the remove the ability to score techniques."},
-            {"name": "comments", "enabled": true, "description": "Disable to the remove the ability to add comments to techniques."},
+        {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
+            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
+            {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
+            {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]}
     ]

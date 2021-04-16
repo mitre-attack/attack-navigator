@@ -185,12 +185,14 @@ If you want to embed the Navigator in a webpage, use an iframe:
 ```HTML
 <iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/" width="1000" height="500"></iframe>
 ```
-If you want to imbed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+If you want to embed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. We highly recommend disabling the "leave site dialog" via this means when embedding the Navigator since otherwise you will be warned whenever you try to leave the embedding page. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 The following is an example iframe which embeds our [*Bear APTs](layers/data/samples/Bear_APT.json) layer with tabs and the ability to add annotations removed:
 ```HTML
 <iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
 ```
+
+
 
 ## Related MITRE Work
 #### CTI
