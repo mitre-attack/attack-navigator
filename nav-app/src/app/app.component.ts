@@ -1,5 +1,6 @@
 import { Component, ViewChild, DoCheck, HostListener } from '@angular/core';
-import {TabsComponent} from './tabs/tabs.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { ConfigService } from './config.service';
 import * as globals from "./globals";
 
 @Component({
@@ -14,12 +15,13 @@ export class AppComponent {
 
     @HostListener('window:beforeunload', ['$event'])
     promptNavAway($event) {
+        if (!this.configService.getFeature('leave_site_dialog')) return;
         //this text only shows in the data, not visible to user as far as I can tell
         //however, if it's not included the window doesn't open.
         $event.returnValue='Are you sure you want to navigate away? Your data may be lost!';
     }
 
-    constructor() {
+    constructor(public configService: ConfigService) {
         Array.prototype.includes = function(value): boolean {
             // console.log("checking include")
             for (let i = 0; i < this.length; i++) {
