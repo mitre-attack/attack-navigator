@@ -337,6 +337,16 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
              </div>
 
+            <!-- expand only annotated sub-techniques -->
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="expandSubtechniques(true)"
+                     matTooltipPosition="below"
+                     matTooltip="expand annotated sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_alt_black_24px.svg'" alt="expand annotated sub-techniques"/>
+                 </div>
+             </div>
+
             <!-- collapse all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
