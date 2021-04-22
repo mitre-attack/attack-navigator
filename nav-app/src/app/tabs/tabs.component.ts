@@ -534,7 +534,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
                 this.versionUpgradeDialog(viewModel).then( (versions) => {
-                    //TODO: don't automatically transfer over the annotations
                     this.openTab("new layer", viewModel, true, true, true, true);
                     if (versions) { // user upgraded to latest version
                         let loads: any = {};
@@ -544,7 +543,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         // load layer version & latest ATT&CK version
                         let dataSubscription = forkJoin(loads).subscribe({
                             next: (res) => {
-                                // TODO: diff_stix stuff
                                 this.dataService.compareVersions(versions.previous, versions.latest);
                                 viewModel.deSerialize(string);
                                 viewModel.loadVMData();

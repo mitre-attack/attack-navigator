@@ -41,7 +41,7 @@ export class DataService {
      * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
-    parseBundle(domain: Domain, stixBundles: any[]): void {
+    parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
         let platforms = new Set<String>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
@@ -49,8 +49,9 @@ export class DataService {
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle
-                if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
+                // ignore deprecated and revoked objects in the bundle?
+                if (!includeAll && (sdo.x_mitre_deprecated || sdo.revoked)) continue;
+
                 // parse according to type
                 switch(sdo.type) {
                     case "intrusion-set":
@@ -141,8 +142,10 @@ export class DataService {
             
             // parse platforms
             for (let technique of domain.techniques) {
-                for (let platform of technique.platforms) {
-                    platforms.add(platform)
+                if (technique.platforms) {
+                    for (let platform of technique.platforms) {
+                        platforms.add(platform)
+                    }
                 }
             }
             for (let subtechnique of domain.subtechniques) {
@@ -252,13 +255,13 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
+    loadDomainData(domainID: string, includeAll: boolean = false, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data);
+                        this.parseBundle(domain, data, includeAll);
                         resolve(null);
                     },
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
@@ -300,6 +303,37 @@ export class DataService {
     isSupported(version: string) {
         return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
     }
+
+    /**
+     * Compare two ATT&CK versions and return a set of object changes
+     * @param previous imported layer version to upgrade from
+     * @param latest latest ATT&CK version to upgrade to
+     */
+    public compareVersions(previous: string, latest: string): VersionChangelog<Technique> {
+        console.log("generating version changelog");
+        let changelog = new VersionChangelog<Technique>(previous, latest);
+        let previousTechniques = this.getDomain(previous).techniques;
+        let latestTechniques = this.getDomain(latest).techniques;
+        // console.log("previous techniques: ", previousTechniques);
+        // console.log("latest techniques: ", latestTechniques);
+
+        for (let latestTechnique of latestTechniques) {
+            if (!latestTechnique) continue;
+
+            let prevTechnique = previousTechniques.find(p => p.id == latestTechnique.id);
+            if (!prevTechnique) {
+                 // object doesn't exist in previous version - added
+                changelog.additions.push(latestTechnique);
+            }
+            else if (latestTechnique.modified == prevTechnique.modified) {
+                // no changes made to the object
+                changelog.unchanged.push(latestTechnique);
+            } else {
+                // changes were made to the object
+            }
+        }
+        return changelog;
+    }
 }
 
 /** 
@@ -311,6 +345,10 @@ export abstract class BaseStix {
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
+    public readonly created: string;     // date object was created
+    public readonly modified: string;    // date object was last modified
+    public readonly revoked: boolean;    // is the object revoked?
+    public readonly deprecated: boolean; // is the object deprecated?
     protected readonly dataService: DataService;
     constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
@@ -318,6 +356,10 @@ export abstract class BaseStix {
         this.description = stixSDO.description;
         this.attackID = stixSDO.external_references[0].external_id;
         this.url = stixSDO.external_references[0].url;
+        this.created = stixSDO.created;
+        this.modified = stixSDO.modified;
+        this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
+        this.deprecated = stixSDO.x_mitre_deprecated ? stixSDO.x_mitre_deprecated : false;
         this.dataService = dataService;
     }
 }
@@ -353,7 +395,10 @@ export class Tactic extends BaseStix {
     constructor(stixSDO: any, techniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.shortname = stixSDO.x_mitre_shortname;
-        this.techniques = techniques.filter((technique: Technique) => technique.tactics.includes(this.shortname));
+        this.techniques = techniques.filter((technique: Technique) => {
+            if (!technique.revoked && !technique.deprecated)
+                return technique.tactics.includes(this.shortname)
+        });
     }
 }
 /**
@@ -376,9 +421,11 @@ export class Technique extends BaseStix {
         this.platforms = stixSDO.x_mitre_platforms;
       	if (stixSDO.x_mitre_data_sources !== undefined)
 		      this.datasources = stixSDO.x_mitre_data_sources.toString();
-	      else
+	    else
 		      this.datasources = "";
-        this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
+
+        if (!this.revoked && !this.deprecated)
+            this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
 
         this.subtechniques = subtechniques;
         for (let subtechnique of this.subtechniques) {
@@ -403,7 +450,24 @@ export class Technique extends BaseStix {
      * Basically the same as calling get_technique_tactic_id with all valid tactic values
      */
     public get_all_technique_tactic_ids(): string[] {
+        if (this.revoked || this.deprecated) return [];
         return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
+    }
+}
+
+export class VersionChangelog<T> {
+    public previousVersion: string; // TODO keep this?
+    public latestVersion: string; // TODO keep this?
+    public additions: T[] = []; // new objects added to newest version
+    public changes: T[] = []; // object changes between versions
+    public minor_changes: T[] = []; // changes to objects without version increments
+    public deprecations: T[] = []; // objects deprecated since older version
+    public revocations: T[] = []; // objects revoked since older version
+    public unchanged: T[] = []; // objects which have not changed between versions
+
+    constructor(prev: string, latest: string) {
+        this.previousVersion = prev;
+        this.latestVersion = latest;
     }
 }
 
@@ -533,6 +597,8 @@ export class Domain {
         // ID of mitigation to [] of technique IDs
         mitigates: new Map<string, string[]>()
     }
+
+    //TODO: add VersionChangelog class variable?
 
     constructor(id: string, name: string, version: string) {
         this.id = id;
