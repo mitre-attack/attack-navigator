@@ -541,14 +541,19 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         if (!this.dataService.getDomain(versions.latest).dataLoaded) loads.latest = this.dataService.loadDomainData(versions.latest, true, true);
 
                         // load layer version & latest ATT&CK version
-                        let dataSubscription = forkJoin(loads).subscribe({
-                            next: (res) => {
-                                this.dataService.compareVersions(versions.previous, versions.latest);
-                                viewModel.deSerialize(string);
-                                viewModel.loadVMData();
-                            },
-                            complete: () => { dataSubscription.unsubscribe(); }
-                        });
+                        if (Object.keys(loads).length) {
+                            let dataSubscription = forkJoin(loads).subscribe({
+                                next: (res) => {
+                                    this.dataService.compareVersions(versions.previous, versions.latest);
+                                    viewModel.deSerialize(string);
+                                    viewModel.loadVMData();
+                                },
+                                complete: () => { dataSubscription.unsubscribe(); }
+                            });
+                        } else {
+                            viewModel.deSerialize(string);
+                            viewModel.loadVMData();
+                        }
                     }
                     else if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {

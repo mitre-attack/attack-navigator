@@ -310,19 +310,16 @@ export class DataService {
      * @param latest latest ATT&CK version to upgrade to
      */
     public compareVersions(previous: string, latest: string): VersionChangelog<Technique> {
-        console.log("generating version changelog");
         let changelog = new VersionChangelog<Technique>(previous, latest);
         let previousTechniques = this.getDomain(previous).techniques;
         let latestTechniques = this.getDomain(latest).techniques;
-        // console.log("previous techniques: ", previousTechniques);
-        // console.log("latest techniques: ", latestTechniques);
 
         for (let latestTechnique of latestTechniques) {
             if (!latestTechnique) continue;
 
             let prevTechnique = previousTechniques.find(p => p.id == latestTechnique.id);
             if (!prevTechnique) {
-                 // object doesn't exist in previous version - added
+                 // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique);
             }
             else if (latestTechnique.modified == prevTechnique.modified) {
@@ -330,6 +327,18 @@ export class DataService {
                 changelog.unchanged.push(latestTechnique);
             } else {
                 // changes were made to the object
+                if (latestTechnique.revoked && !prevTechnique.revoked) {
+                    // object was revoked since the previous version
+                    changelog.revocations.push(latestTechnique);
+                } else if (latestTechnique.deprecated && !prevTechnique.deprecated) {
+                    // object was deprecated since the previous version
+                    changelog.deprecations.push(latestTechnique);
+                } else if (latestTechnique.compareVersion(prevTechnique.version) != 0) {
+                    // version number changed
+                    changelog.changes.push(latestTechnique);
+                } else { // minor change
+                    changelog.minor_changes.push(latestTechnique);
+                }
             }
         }
         return changelog;
@@ -349,6 +358,7 @@ export abstract class BaseStix {
     public readonly modified: string;    // date object was last modified
     public readonly revoked: boolean;    // is the object revoked?
     public readonly deprecated: boolean; // is the object deprecated?
+    public readonly version: string;     // object version
     protected readonly dataService: DataService;
     constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
@@ -360,7 +370,23 @@ export abstract class BaseStix {
         this.modified = stixSDO.modified;
         this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
         this.deprecated = stixSDO.x_mitre_deprecated ? stixSDO.x_mitre_deprecated : false;
+        this.version = stixSDO.x_mitre_version ? stixSDO.x_mitre_version : '';
         this.dataService = dataService;
+    }
+
+    public compareVersion(v: string): number {
+        if (!this.version || !v) return 0; // one or both of the objects have no version
+
+        let thisVersion = this.version.split('.');
+        let prevVersion = v.split('.');
+        for (let i = 0; i < Math.max(thisVersion.length, prevVersion.length); i++) {
+            if (thisVersion.length == prevVersion.length && thisVersion.length < i) return 0;
+            if (thisVersion.length < i) return -1;
+            if (prevVersion.length < i) return 1;
+            if (+thisVersion[i] == +prevVersion[i]) continue;
+            return +thisVersion[i] - +prevVersion[i];
+        }
+        return 0
     }
 }
 
@@ -431,7 +457,6 @@ export class Technique extends BaseStix {
         for (let subtechnique of this.subtechniques) {
             subtechnique.parent = this;
         }
-
     }
 
     /**
@@ -456,8 +481,8 @@ export class Technique extends BaseStix {
 }
 
 export class VersionChangelog<T> {
-    public previousVersion: string; // TODO keep this?
-    public latestVersion: string; // TODO keep this?
+    public previousVersion: string;
+    public latestVersion: string;
     public additions: T[] = []; // new objects added to newest version
     public changes: T[] = []; // object changes between versions
     public minor_changes: T[] = []; // changes to objects without version increments
@@ -597,8 +622,6 @@ export class Domain {
         // ID of mitigation to [] of technique IDs
         mitigates: new Map<string, string[]>()
     }
-
-    //TODO: add VersionChangelog class variable?
 
     constructor(id: string, name: string, version: string) {
         this.id = id;
