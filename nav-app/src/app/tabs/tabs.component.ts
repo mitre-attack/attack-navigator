@@ -551,6 +551,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                                 complete: () => { dataSubscription.unsubscribe(); }
                             });
                         } else {
+                            this.dataService.compareVersions(versions.previous, versions.latest);
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
                         }

@@ -311,9 +311,11 @@ export class DataService {
      */
     public compareVersions(previous: string, latest: string): VersionChangelog<Technique> {
         let changelog = new VersionChangelog<Technique>(previous, latest);
-        let previousTechniques = this.getDomain(previous).techniques;
-        let latestTechniques = this.getDomain(latest).techniques;
+        let previousDomain = this.getDomain(previous);
+        let latestDomain = this.getDomain(latest);
 
+        let previousTechniques = previousDomain.techniques.concat(previousDomain.subtechniques);
+        let latestTechniques = latestDomain.techniques.concat(latestDomain.subtechniques);
         for (let latestTechnique of latestTechniques) {
             if (!latestTechnique) continue;
 
