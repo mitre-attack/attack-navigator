@@ -294,15 +294,11 @@ export class DataTableComponent implements AfterViewInit {
                     if (!showAnnotatedOnly) {
                         tvm.showSubtechniques = true;
                     } else {
-                        let foundAnnotated = false;
                         for (let subtechnique of technique.subtechniques) {
-                            for (let sid of subtechnique.get_all_technique_tactic_ids()) {
+                            tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
                                 let svm = this.viewModel.getTechniqueVM_id(sid);
-                                if (svm.annotated() && !foundAnnotated) {
-                                    foundAnnotated = true; // set boolean after it finds the first annotated subtechnique
-                                }
-                                tvm.showSubtechniques = foundAnnotated;  // otherwise, keep going and collapse if no annotations found
-                            }
+                                return svm.annotated();
+                            })
                         }
                     }
                 }
