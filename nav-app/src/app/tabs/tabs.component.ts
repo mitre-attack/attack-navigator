@@ -1,5 +1,5 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
@@ -18,8 +18,8 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService]
-
+    providers: [ViewModelsService],
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements AfterContentInit, AfterViewInit {
 
