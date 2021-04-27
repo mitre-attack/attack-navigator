@@ -3,7 +3,7 @@
 <!-- Banner -->
 <div *ngIf="hasFeature('header') && bannerContent" class="header">
     <div class="banner">
-        <span role="alert">{{ bannerContent }}</span>
+        <span role="alert" [innerHTML]="bannerContent"></span>
     </div>
 </div>
 
