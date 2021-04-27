@@ -210,18 +210,19 @@ input[type=file]{
             align-items: center;
             border-left: 2px solid #ffffffad;
             padding-left: 15px;
+            cursor: initial;
         }
         .helpIcon {
             height: 18px;
             padding-left: 15px;
         }
-        ::ng-deep a, a, ::ng-deep * {
+        a {
             display: inline;
             color: on-color(primary);
             text-decoration-line: none;
             text-decoration-color: on-color(primary);
         }
-        ::ng-deep a:hover, a:hover, .helpIcon:hover {
+        a:hover, .helpIcon:hover {
             color: $panel-dark;
             opacity: 0.8;
         }
