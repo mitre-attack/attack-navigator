@@ -6,7 +6,7 @@ import { DataService, Technique, Tactic } from './data.service'; //import the Da
 })
 export class ConfigService {
     public comment_color = "yellow";
-    public banner = "";
+    public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];

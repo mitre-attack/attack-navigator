@@ -624,7 +624,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     layerLinkURLs: string[] = [];
     customizedConfig = [];
-    bannerContent = "";
+    bannerContent: string;
 
     /**
      * Helper function to track which layerLinkURLs have been added or removed
