@@ -35,6 +35,7 @@ import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contex
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
 
 
 @NgModule({
@@ -55,6 +56,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     TacticCellComponent,
     VersionUpgradeComponent,
     SidebarComponent,
+    LayerUpgradeComponent,
   ],
   imports: [
     BrowserModule,

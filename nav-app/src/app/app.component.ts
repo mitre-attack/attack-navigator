@@ -2,6 +2,7 @@ import { Component, ViewChild, DoCheck, HostListener } from '@angular/core';
 import { TabsComponent } from './tabs/tabs.component';
 import { ConfigService } from './config.service';
 import * as globals from "./globals";
+import { DataService } from './data.service';
 
 @Component({
     selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
     @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
-    public sidebarOpened: boolean = true;
+    public get sidebarOpened() { return this.dataService.sidebarOpened; }
 
     @HostListener('window:beforeunload', ['$event'])
     promptNavAway($event) {
@@ -22,7 +23,7 @@ export class AppComponent {
         $event.returnValue='Are you sure you want to navigate away? Your data may be lost!';
     }
 
-    constructor(public configService: ConfigService) {
+    constructor(public configService: ConfigService, public dataService: DataService) {
         Array.prototype.includes = function(value): boolean {
             // console.log("checking include")
             for (let i = 0; i < this.length; i++) {

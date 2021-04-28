@@ -1,1 +1,5 @@
-<p>sidebar works!</p>
+<div class="sidebar">
+    <div *ngIf="dataService.versionChangelog">
+        <layer-upgrade [changelog]="dataService.versionChangelog"></layer-upgrade>
+    </div>
+</div>

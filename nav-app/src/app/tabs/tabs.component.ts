@@ -543,8 +543,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         // load layer version & latest ATT&CK version
                         if (Object.keys(loads).length) {
                             let dataSubscription = forkJoin(loads).subscribe({
-                                next: (res) => {
+                                next: () => {
                                     this.dataService.compareVersions(versions.previous, versions.latest);
+                                    this.dataService.sidebarOpened = true;
                                     viewModel.deSerialize(string);
                                     viewModel.loadVMData();
                                 },
