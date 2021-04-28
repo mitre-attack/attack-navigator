@@ -82,6 +82,8 @@
 
     "comment_color": "yellow",
 
+    "banner": "",
+
     "features": [
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},

@@ -5,6 +5,8 @@
 - Fixed a bug in exporting matrix to Excel sheet, where the style of all sub-techniques with the same name in a column were incorrectly over-ridden by the style of the first sub-technique in its name. See issue [#270](https://github.com/mitre-attack/attack-navigator/issues/270).
 - Consolidated AWS, GCP, and Azure platforms into IaaS platform to integrate upcoming release of ATT&CK. See issue [#252](https://github.com/mitre-attack/attack-navigator/issues/252).
 - Added feature to disable leave site dialog. See issue [#267](https://github.com/mitre-attack/attack-navigator/issues/267).
+- Consolidated AWS, GCP, and Azure platforms into IaaS platform to integrate upcoming release of ATT&CK. See issue [#252](https://github.com/mitre-attack/attack-navigator/issues/252). 
+- Added configurable banner to announce new updates. See issue [#205](https://github.com/mitre-attack/attack-navigator/issues/205). 
 
 # v4.2 - 3 February 2021
 
