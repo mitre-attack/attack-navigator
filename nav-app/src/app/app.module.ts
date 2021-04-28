@@ -14,6 +14,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
+
 import { ColorPickerModule } from 'ngx-color-picker';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -32,6 +34,7 @@ import { TechniquesSearchComponent } from './techniques-search/techniques-search
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -51,6 +54,7 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
+    SidebarComponent,
   ],
   imports: [
     BrowserModule,
@@ -68,6 +72,7 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     MatExpansionModule,
     MatDialogModule,
     ColorPickerModule,
+    MatSidenavModule
   ],
   exports: [
       MatSelectModule,
