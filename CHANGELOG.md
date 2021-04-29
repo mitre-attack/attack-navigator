@@ -1,3 +1,24 @@
+# v4.3 - 29 April 2021
+## New Features
+- Added aggregate scores. Aggregate scores are computed using the score of the technique and all sub-techniques using an "aggregate function" -- min, max, average, or sum. The aggregate score is used to determine the color of the technique in place of the technique's score. Aggregate scores are an optional feature and can be enabled in the "matrix configuration" dropdown. See issue [#269](https://github.com/mitre-attack/attack-navigator/issues/269).
+- The user can now suppress the "leave site?" warning dialog in the config file or via the "create a customized navigator" interface. See issue [#267](https://github.com/mitre-attack/attack-navigator/issues/267).
+- Added an (optional) configurable banner. The new "banner" field of the config file can be used to customize the banner content with full HTML support. See issue [#205](https://github.com/mitre-attack/attack-navigator/issues/205). 
+- Added button to toolbar to only expand all sub-techniques that are annotated. See issue [#256](https://github.com/mitre-attack/attack-navigator/issues/256).
+- Added support for displaying STIX 2.1 notes in tooltips. Notes attached to techniques in the STIX data are indicated in the same style as a comment. As of version 4.3 the ATT&CK Navigator supports STIX 2.1, but cannot load data from a TAXII 2.1 server.
+
+## Improvements
+- Consolidated AWS, GCP, and Azure platforms into IaaS platform to integrate upcoming release of ATT&CK. See issue [#252](https://github.com/mitre-attack/attack-navigator/issues/252).
+
+## Fixes
+- Fixed a bug in exporting matrix to Excel sheet, where the style of all sub-techniques with the same name in a column were incorrectly over-ridden by the style of the first sub-technique in its name. See issue [#270](https://github.com/mitre-attack/attack-navigator/issues/270).
+## Layer File Format Changes
+Layer file format updated to version 4.2. This update is fully backwards compatible with the layer format v4.1 since the added fields are optional. See [layers/LAYERFORMATv4_2.md](layers/LAYERFORMATv4_2.md) for the full specification.
+
+This update adds settings for aggregate scores to the layout object of the layer:
+- `showAggregateScores`, which turns on the feature
+- `countUnscored` which counts unscored techniques as if their score was `0` when the aggregate function is "average".
+- `aggregateFunction`: the desired aggregation function: "average", "min", "max" or "sum".
+
 # v4.2 - 3 February 2021
 
 With version 4.2 of the Navigator we are retiring support for the Safari browser. A bug introduced in the sub-techniques release (version 3.0) causes safari to freeze when changing between layer tabs (see issue [#251](https://github.com/mitre-attack/attack-navigator/issues/251)). We have been unable to determine the cause of the freeze and thus are retiring official support for that browser. Safari users can continue to use the application, but will be warned of possible freezes via a dialog window when they first load the app.

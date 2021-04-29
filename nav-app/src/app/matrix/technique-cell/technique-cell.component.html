@@ -10,7 +10,7 @@
             <ng-container *ngIf="viewModel.layout.showID">{{technique.attackID}}</ng-container><div class="id-name-break" *ngIf="viewModel.layout.showID && viewModel.layout.showName"></div><ng-container *ngIf="viewModel.layout.showName">{{technique.name}}</ng-container>
         </span>
         <ng-container *ngIf="technique.subtechniques.length > 0">
-            <sub *ngIf="viewModel.layout.showId || viewModel.layout.showName" class="sub">&nbsp;({{annotatedSubtechniques()}}/{{applyControls(technique.subtechniques, tactic).length}})</sub></ng-container>
+            <sub *ngIf="viewModel.layout.showID || viewModel.layout.showName" class="sub">&nbsp;({{annotatedSubtechniques()}}/{{applyControls(technique.subtechniques, tactic).length}})</sub></ng-container>
     </div>
     <app-tooltip *ngIf="showTooltip"  [technique]="technique" [tactic]="tactic" [viewModel]="viewModel"></app-tooltip>
     <app-contextmenu *ngIf="showContextmenu" [technique]="technique" [tactic]="tactic" [viewModel]="viewModel" (close)="showContextmenu = false; onMouseLeave()"></app-contextmenu>

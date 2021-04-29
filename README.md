@@ -111,7 +111,7 @@ Example custom context menu objects:
 ```
 
 ## Loading content from a TAXII server
-*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work).*
+*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work). Note: TAXII 2.1/STIX 2.1 bundles are **not** supported when loading content from a TAXII server.*
 
 1. Edit the `config.json` file in the **nav-app/src/assets** directory.
 2. Define the `taxii_url` property in place of the `data` property and set the value to your server's URL.
@@ -129,7 +129,7 @@ Example loading content from a TAXII server:
 ```
 
 ## Loading content from local files
-*It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file.*
+*It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file. STIX 2.0 and STIX 2.1 bundles are supported.*
 1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
 2. Edit the `config.json` file in the **nav-app/src/assets** directory.
 3. Change the URL specified in the `data` array to the path to the STIX bundle (e.g `assets/enterprise-attack.json`). Multiple paths may be added to the `data` array to display multiple STIX bundles in a single instance.
@@ -169,6 +169,9 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
 
 Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
+## Enabling Banner in Navigator
+The `banner` setting in `nav-app/src/assets/config.json` by default is an empty string `"""` (and not visible), and can be set to whatever content you wish to display inside a banner at the top of the Navigator webpage. The banner supports HTML and hyperlinks in the content.
+
 ## Disabling Navigator Features
 The `features` array in `nav-app/src/assets/config.json` lists Navigator features you may want to disable. Setting the `enabled` field on a feature in the configuration file will hide all control
 elements related to that feature.
@@ -185,12 +188,14 @@ If you want to embed the Navigator in a webpage, use an iframe:
 ```HTML
 <iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/" width="1000" height="500"></iframe>
 ```
-If you want to imbed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
+If you want to embed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. We highly recommend disabling the "leave site dialog" via this means when embedding the Navigator since otherwise you will be warned whenever you try to leave the embedding page. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 The following is an example iframe which embeds our [*Bear APTs](layers/data/samples/Bear_APT.json) layer with tabs and the ability to add annotations removed:
 ```HTML
 <iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
 ```
+
+
 
 ## Related MITRE Work
 #### CTI

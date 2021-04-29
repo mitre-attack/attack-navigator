@@ -127,11 +127,13 @@ export class DataTableComponent implements AfterViewInit {
                     subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
                     // style subtechnique cells
+                    const seen = [];
                     subtechniqueCol.eachCell(cell => {
                         if(cell.row > 1) {
                             if(cell.value && cell.value !== undefined) {
-                                let subtechnique = subtechniqueList.find(s => { 
-                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() || s.attackID === cell.value });
+                                let subtechnique = subtechniqueList.find(s => {
+                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
+                                seen.push(subtechnique.attackID);
                                 let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
                                 this.styleCells(cell, subtechnique, svm);
                             }
@@ -144,7 +146,7 @@ export class DataTableComponent implements AfterViewInit {
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
                         if(cell.value && cell.value !== undefined) {
-                            let technique = techniques.find( t => { 
+                            let technique = techniques.find( t => {
                                 return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
                             let tvm = this.viewModel.getTechniqueVM(technique, tactic);
                             this.styleCells(cell, technique, tvm);
@@ -152,11 +154,13 @@ export class DataTableComponent implements AfterViewInit {
                     }
                 });
             }
-            
+
             // style tactic headers
             worksheet.columns.forEach(column => {
                 if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
                     column.width = column.header.length < 15 ? 15 : column.header.length;
+                } else if (!this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                    column.width = 10;
                 } else {
                     column.width = column.header.length < 30 ? 30 : column.header.length;
                 }
@@ -187,8 +191,10 @@ export class DataTableComponent implements AfterViewInit {
             return technique.attackID + ': ' + technique.name;
         } else if (this.viewModel.layout.showID) {
             return technique.attackID;
-        } else {
+        } else if (this.viewModel.layout.showName) {
             return technique.name;
+        } else {
+            return '';
         }
     }
 
@@ -204,6 +210,10 @@ export class DataTableComponent implements AfterViewInit {
             if (tvm.color) { //manually assigned
                 cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}};
+            }
+            else if (this.viewModel.layout._showAggregateScores && tvm.aggregateScoreColor) {
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.aggregateScoreColor.toHex()}};
+                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]).toHex()}};
             }
             else if (tvm.score) { //score assigned
                 cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
@@ -275,13 +285,22 @@ export class DataTableComponent implements AfterViewInit {
     /**
      * Show all sub-techniques in layout view
      */
-    expandSubtechniques(): void {
+    expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
         for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
-                    tvm.showSubtechniques = true;
+                    if (!showAnnotatedOnly) {
+                        tvm.showSubtechniques = true;
+                    } else {
+                        for (let subtechnique of technique.subtechniques) {
+                            tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
+                                let svm = this.viewModel.getTechniqueVM_id(sid);
+                                return svm.annotated();
+                            })
+                        }
+                    }
                 }
             }
         }

@@ -188,6 +188,44 @@ input[type=file]{
         height: 2ex;
         padding: 5px;
     }
+
+    .banner {
+        background-color: color(primary);
+        margin: 7px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 15px;
+        border-radius: 5px;
+        text-align: left;
+        color: on-color(primary);
+        font-size: 14px;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        cursor: initial;
+        .bannerContent {
+            padding-right: 15px;
+        }
+        .bannerLinks {
+            display: flex;
+            align-items: center;
+            border-left: 2px solid #ffffffad;
+            padding-left: 15px;
+            cursor: initial;
+        }
+        .helpIcon {
+            height: 18px;
+            padding-left: 15px;
+        }
+        a {
+            display: inline;
+            color: on-color(primary);
+            text-decoration-color: on-color(primary);
+        }
+        a:hover, .helpIcon:hover {
+            color: $panel-dark;
+            opacity: 0.8;
+        }
+    }
 }
 
 .btn-group {

@@ -70,9 +70,9 @@ export class ViewModelsService {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
             let score_min = Infinity;
             let score_max = -Infinity;
-            
+
             //get list of all technique IDs used in the VMs
-            let techniqueIDs = new Set<string>(); 
+            let techniqueIDs = new Set<string>();
             scoreVariables.forEach(function(vm, key) {
                 vm.techniqueVMs.forEach(function(techniqueVM, techniqueID) {
                     techniqueIDs.add(techniqueID);
@@ -120,7 +120,7 @@ export class ViewModelsService {
                     });
                     //don't record a result if none of VMs had a score for this technique
                     //did at least one technique have a score for this technique?
-                    if (misses < scoreVariables.size) { 
+                    if (misses < scoreVariables.size) {
                         // console.log(scope);
                         let mathResult = math.eval(scoreExpression, scope);
                         if (is.boolean(mathResult)) {
@@ -178,7 +178,7 @@ export class ViewModelsService {
             result.gradient = new Gradient();
             result.gradient.deSerialize(gradient.gradient.serialize());
         }
-        
+
         result.name = layerName;
         // console.log(result)
         this.viewModels.push(result)
@@ -359,7 +359,7 @@ export class ViewModel {
      * 3: descending numerically
      */
     sorting: number = 0;
-    
+
     layout: LayoutOptions = new LayoutOptions();
 
 
@@ -397,7 +397,7 @@ export class ViewModel {
             this.dataService.onDataLoad(this.domainID, function() {
                 self.initTechniqueVMs()
                 self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
-            }); 
+            });
         } else {
             this.initTechniqueVMs();
             this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
@@ -505,9 +505,9 @@ export class ViewModel {
     }
 
     /**
-     * currently selected techniques in technique_tactic_id format 
+     * currently selected techniques in technique_tactic_id format
      */
-    private selectedTechniques: Set<string> = new Set<string>(); 
+    private selectedTechniques: Set<string> = new Set<string>();
 
     /**
      * Select the given technique. Depending on selectTechniquesAcrossTactics, either selects in all tactics or in given tactic
@@ -579,7 +579,7 @@ export class ViewModel {
             this.selectedTechniques.add(id);
         }
     }
-    
+
     /**
      * unselect the given technique in the given tactic
      * @param {Technique} technique to unselect
@@ -609,7 +609,7 @@ export class ViewModel {
             this.unselectTechnique(technique, tactic);
         }
     }
-    
+
     /**
      * unselect the given technique across all tactics in which it occurs
      * @param {Technique} technique to unselect
@@ -742,9 +742,9 @@ export class ViewModel {
             if (this.selectSubtechniquesWithParent) {
                 // match across tactics
                 // match subtechniques and parents
-                
+
                 // matches this part
-                // vvvvv     
+                // vvvvv
                 // T1001.001^TA1000
                 let ids = new Set();
                 this.selectedTechniques.forEach((unionID) => ids.add(unionID.split("^")[0].split(".")[0]));
@@ -830,6 +830,8 @@ export class ViewModel {
             this.getTechniqueVM_id(id).comment = "";
             this.getTechniqueVM_id(id).color = "";
             this.getTechniqueVM_id(id).enabled = true;
+            this.getTechniqueVM_id(id).aggregateScore = "";
+            this.getTechniqueVM_id(id).aggregateScoreColor = "";
         })
     }
 
@@ -865,19 +867,19 @@ export class ViewModel {
         this.metadata.splice(index, 1)
     }
 
-    
-    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8                           
-    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo    
-    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888  
-    //         888 888     888 888        888     o88       888         888   888  888  888          888         
-    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o        
-    //                                         o88                                                               
-    //    ooooo ooooo            o888                                                 
-    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
-    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
-    //     888   888 888          888  888    888 888          888                888 
-    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
-    //                                o888                                            
+
+    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8
+    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo
+    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888
+    //         888 888     888 888        888     o88       888         888   888  888  888          888
+    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o
+    //                                         o88
+    //    ooooo ooooo            o888
+    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8
+    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo
+    //     888   888 888          888  888    888 888          888                888
+    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88
+    //                                o888
 
     /**
      * filter tactics according to viewmodel state
@@ -919,24 +921,104 @@ export class ViewModel {
      */
     public sortTechniques(techniques: Technique[], tactic: Tactic): Technique[] {
         return techniques.sort((technique1: Technique, technique2: Technique) => {
-            let techniqueVM1 = this.getTechniqueVM(technique1, tactic);
-            let techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
             let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
             let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-            switch(this.sorting) {
+
+            this.sortSubTechniques(technique1, tactic);
+            this.sortSubTechniques(technique2, tactic);
+
+            // if show aggregate scores is enabled, factor that into sorting
+            if (this.layout.showAggregateScores) {
+                techniqueVM1.aggregateScore = this.calculateAggregateScore(technique1, tactic);
+                techniqueVM2.aggregateScore = this.calculateAggregateScore(technique2, tactic);
+                const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
+                if (totalScore < 0) {
+                    score2 -= totalScore;
+                } else if (totalScore > 0) {
+                    score1 += totalScore;
+                }
+            }
+
+            switch (this.sorting) {
                 default:
                 case 0:
                     return technique1.name.localeCompare(technique2.name);
                 case 1:
                     return technique2.name.localeCompare(technique1.name);
                 case 2:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score1 - score2;
+                    if (score1 === score2) {
+                        return technique1.name.localeCompare(technique2.name);
+                    } else {
+                        return score1 - score2;
+                    }
                 case 3:
-                    if (score1 === score2) return technique1.name.localeCompare(technique2.name);
-                    else return score2 - score1;
+                    if (score1 === score2) {
+                        return technique1.name.localeCompare(technique2.name);
+                    } else {
+                        return score2 - score1;
+                    }
             }
-        })
+        });
+    }
+
+    public sortSubTechniques(technique: Technique, tactic: Tactic) {
+        technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
+            const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
+            const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
+            const score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+            const score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            switch (this.sorting) {
+                case 2:
+                    return score1 - score2;
+                case 3:
+                    return score2 - score1;
+                default:
+                    return 0;
+            }
+        });
+    }
+
+    public calculateAggregateScore(technique: Technique, tactic: Tactic): any {
+        const tvm = this.getTechniqueVM(technique, tactic);
+        let score = 0, validSubTechniquesCount = 0;
+        let scores = [];
+        if (tvm.score.length > 0 && !isNaN(Number(tvm.score))) {
+            score = Number(tvm.score);
+            scores.push(score);
+            validSubTechniquesCount += 1;
+        }
+        technique.subtechniques.forEach((subtechnique) => {
+            const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
+            const scoreNum = Number(techniqueVM.score);
+            if (techniqueVM.score.length > 0 && !isNaN(scoreNum)) {
+                validSubTechniquesCount += 1;
+                score += scoreNum;
+                scores.push(scoreNum);
+            }
+        });
+        if (validSubTechniquesCount === 0) return;
+        let aggScore = 0;
+        switch (this.layout.aggregateFunction) {
+            default:
+            case "average":
+                // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
+                // Otherwise, divide by count of all scored only
+                aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
+                break;
+            case "min":
+                if (scores.length > 0) aggScore = Math.min(...scores);
+                break;
+            case "max":
+                if (scores.length > 0) aggScore = Math.max(...scores);
+                break;
+            case "sum":
+                aggScore = score;
+                break;
+        }
+        tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
+        return aggScore;
     }
 
     /**
@@ -951,7 +1033,7 @@ export class ViewModel {
         return this.sortTechniques(this.filterTechniques(techniques, tactic, matrix), tactic);
     }
 
-    
+
 
 
 
@@ -1024,7 +1106,7 @@ export class ViewModel {
                 + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
-        // patch for old domain name convention 
+        // patch for old domain name convention
         if(obj.domain in this.dataService.domain_backwards_compatibility) {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
@@ -1037,7 +1119,7 @@ export class ViewModel {
      */
     deSerialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        
+
         if ("description" in obj) {
             if (typeof(obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
@@ -1144,7 +1226,7 @@ export class ViewModel {
                                 }
                             }
                         }
-                        
+
                     }
                 }
             }
@@ -1184,7 +1266,7 @@ export class ViewModel {
             }
             else console.error("TypeError: viewMode field is not a number")
         }
-        
+
         this.updateGradient();
     }
 
@@ -1302,7 +1384,9 @@ export class TechniqueVM {
     comment: string = ""
     metadata: Metadata[] = [];
 
-    showSubtechniques: boolean = false;
+    showSubtechniques = false;
+    aggregateScore: any; // number rather than string as this is not based on an input from user
+    aggregateScoreColor: any;
 
     //print this object to the console
     print(): void {
@@ -1377,7 +1461,7 @@ export class TechniqueVM {
             if (typeof(obj.showSubtechniques) === "boolean") this.showSubtechniques = obj.showSubtechniques;
             else console.error("TypeError: technique showSubtechnique field is not a boolean:", obj.showSubtechniques, "(", typeof(obj.showSubtechniques), ")");
         }
-        if(this.tactic !== undefined && this.techniqueID !== undefined){
+        if (this.tactic !== undefined && this.techniqueID !== undefined) {
             this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;
         } else {
             console.log("ERROR: Tactic and TechniqueID field needed.")
@@ -1484,17 +1568,19 @@ export class Filter {
 
                     "windows": "Windows",
                     "linux": "Linux",
-                    "mac": "macOS"
+                    "mac": "macOS",
+
+                    "AWS": "IaaS",
+                    "GCP": "IaaS",
+                    "Azure": "IaaS"
                 }
-                this.platforms.selection = rep.platforms.map(function(platform) {
-                    if (platform in backwards_compatibility_mappings) {
-                        return backwards_compatibility_mappings[platform];
-                    } else {
-                        return platform;
-                    }
+                const selection = new Set<string>();
+                rep.platforms.forEach(function (platform) {
+                    if (platform in backwards_compatibility_mappings) selection.add(backwards_compatibility_mappings[platform]);
+                    else selection.add(platform);
                 });
-            }
-            else console.error("TypeError: filter platforms field is not a string[]");
+                this.platforms.selection = Array.from(selection);
+            } else console.error("TypeError: filter platforms field is not a string[]");
         }
     }
 }
@@ -1514,9 +1600,9 @@ export class Metadata {
             if (rep.value) {
                 if (typeof(rep.value) === "string") this.value = rep.value;
                 else console.error("TypeError: Metadata field 'value' is not a string")
-            } 
+            }
             else console.error("Error: Metadata required field 'value' not present");
-        } 
+        }
         else if ("divider" in rep) { // divider object
             if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
             else  console.error("TypeError: Metadata field 'divider' is not a boolean");
@@ -1546,44 +1632,81 @@ export class LayoutOptions {
         }
     }
     public get layout(): string { return this._layout; }
-    
+
+    public readonly aggregateFunctionOptions: string[] = ["average", "min", "max", "sum"];
+    private _aggregateFunction = this.aggregateFunctionOptions[0];
+    public set aggregateFunction(newAggregateFunction) {
+        if (!this.aggregateFunctionOptions.includes(newAggregateFunction)) {
+            console.warn("invalid aggregate fx option", newAggregateFunction);
+            return;
+        }
+        this._aggregateFunction = newAggregateFunction;
+    }
+
+    public get aggregateFunction(): string { return this._aggregateFunction; }
+
     //show technique/tactic IDs in the view?
-    public _showID: boolean = false; 
+    public _showID: boolean = false;
     public set showID(newval: boolean) {
         this._showID = newval;
         if (newval == true && this._layout == "mini") this._layout = "side";
     }
     public get showID(): boolean { return this._showID; }
-    
+
     //show technique/tactic names in the view?
-    public _showName: boolean = true; 
+    public _showName: boolean = true;
     public set showName(newval: boolean) {
         this._showName = newval;
         if (newval == true && this._layout == "mini") this._layout = "side";
     }
     public get showName(): boolean { return this._showName; }
 
+    public _showAggregateScores: boolean = false;
+    public set showAggregateScores(newval: boolean) { this._showAggregateScores = newval; }
+    public get showAggregateScores(): boolean { return this._showAggregateScores; }
+
+    public _countUnscored: boolean = false;
+    public set countUnscored(newval: boolean) { this._countUnscored = newval; }
+    public get countUnscored(): boolean { return (this.aggregateFunction === "average") ? this._countUnscored : false; }
+
     public serialize(): object {
         return {
             "layout": this.layout,
+            "aggregateFunction": this.aggregateFunction,
             "showID": this.showID,
-            "showName": this.showName
-        }
+            "showName": this.showName,
+            "showAggregateScores": this.showAggregateScores,
+            "countUnscored": this.countUnscored
+        };
     }
+
     public deserialize(rep: any) {
         if (rep.showID) {
-            if (typeof(rep.showID) === "boolean") this.showID = rep.showID;
-            else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof(rep.showID), ")");
+            if (typeof (rep.showID) === "boolean") this.showID = rep.showID;
+            else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof (rep.showID), ")");
         }
-        if (rep.showName) {
-            if (typeof(rep.showName) === "boolean") this.showName = rep.showName;
-            else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof(rep.showName), ")");
-        }
-        //make sure this one goes last so that it can override name and ID if layout == 'mini'
-        if (rep.layout) {
-            if (typeof(rep.layout) === "string") this.layout = rep.layout;
-            else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof(rep.layout), ")");
-        }
-    }
+      if (rep.showName) {
+          if (typeof (rep.showName) === "boolean") this.showName = rep.showName;
+          else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof (rep.showName), ")");
+      }
+      //make sure this one goes last so that it can override name and ID if layout == 'mini'
+      if (rep.layout) {
+          if (typeof (rep.layout) === "string") this.layout = rep.layout;
+          else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof (rep.layout), ")");
+      }
+      if (rep.aggregateFunction) {
+          if (typeof (rep.aggregateFunction) === "string") this.aggregateFunction = rep.aggregateFunction;
+          else console.error("TypeError: layout field 'aggregateFunction' is not a boolean:", rep.aggregateFunction, "(", typeof (rep.aggregateFunction), ")");
+      }
+      if (rep.showAggregateScores) {
+          if (typeof (rep.showAggregateScores) === "boolean") this.showAggregateScores = rep.showAggregateScores;
+          else console.error("TypeError: layout field 'showAggregateScores' is not a boolean:", rep.showAggregateScores, "(", typeof (rep.showAggregateScores), ")");
+      }
+      if (rep.countUnscored) {
+          if (typeof (rep.countUnscored) === "boolean") this.countUnscored = rep.countUnscored;
+          else console.error("TypeError: layout field 'countUnscored' is not a boolean:", rep.countUnscored, "(", typeof (rep.countUnscored), ")");
+      }
+  }
 }
+
 

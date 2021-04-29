@@ -28,7 +28,7 @@ $cellSize: 15px;
         justify-content: center;
         align-items: center;
         height: 50vh;
-        
+
         mat-progress-spinner circle {
             stroke: on-color-deemphasis(body);
         }
@@ -427,7 +427,7 @@ $panel-light: lighten($panel-dark, 8%);
     }
     .metadata_input {
         padding-left: 10px;
-        // padding-bottom: 5px; 
+        // padding-bottom: 5px;
         margin-bottom: 2px; //fix funky scroll overflow
         max-height: 50vh;
         overflow-y: auto;
@@ -456,11 +456,19 @@ $panel-light: lighten($panel-dark, 8%);
     select {
         width: 100%;
     }
-    
+
     .section {
         padding: 10px;
         &+.section {
             border-top: 1px solid $panel-light;
+        }
+    }
+
+    .subsection {
+        padding-left: 5px;
+
+        .inner-dropdown-container {
+            margin: 5px;
         }
     }
 }

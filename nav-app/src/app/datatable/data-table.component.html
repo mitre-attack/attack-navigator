@@ -1,9 +1,9 @@
 <!--
-  oooooooo8   ooooooo  oooo   oooo ooooooooooo oooooooooo    ooooooo  ooooo        oooooooo8  
-o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888        888         
-888         888     888 88 888o88      888      888oooo88  888     888 888         888oooooo  
-888o     oo 888o   o888 88   8888      888      888  88o   888o   o888 888      o         888 
- 888oooo88    88ooo88  o88o    88     o888o    o888o  88o8   88ooo88  o888ooooo88 o88oooo888  
+  oooooooo8   ooooooo  oooo   oooo ooooooooooo oooooooooo    ooooooo  ooooo        oooooooo8
+o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888        888
+888         888     888 88 888o88      888      888oooo88  888     888 888         888oooooo
+888o     oo 888o   o888 88   8888      888      888  88o   888o   o888 888      o         888
+ 888oooo88    88ooo88  o88o    88     o888o    o888o  88o8   88ooo88  o888ooooo88 o88oooo888
                                                                                               -->
 
 <div class="controlsContainer">
@@ -36,7 +36,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
             </div>
 
-            
+
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
@@ -107,7 +107,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                         placeholder="name"
                                         [(ngModel)]="viewModel.name" />
                             </mat-form-field>
-        
+
                             <!-- layer description field -->
                             <mat-form-field>
                                 <textarea matInput
@@ -153,7 +153,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                                 [(ngModel)]="metadata.value" />
                                         </mat-form-field>
                                         <button class="button" (click)="viewModel.removeMetadata($i)">remove this metadata</button>
-                                </td>                                
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan=2 class="addmore">
@@ -188,7 +188,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
             </div>
 
-         
+
             <!-- render layer to SVG -->
             <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                 <div class="control-row-button noselect"
@@ -215,7 +215,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options" >
                                 <!-- <label class="noselect"><input type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption); filterTechniques()" [checked]="viewModel.filters.inFilter(filter, filterOption)">{{filterOption}}</label> -->
                                 <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption);" [checked]="viewModel.filters.inFilter(filter, filterOption)">
-                                <label for="{{filterOption}}" class="checkbox-custom-label noselect">{{filterOption}}</label>
+                                <label [for]="filterOption" class="checkbox-custom-label noselect">{{filterOption}}</label>
                             </div>
                         </div>
                         <div *ngIf="viewModel.filters[filter].options.length == 0">
@@ -337,6 +337,16 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
              </div>
 
+            <!-- expand only annotated sub-techniques -->
+            <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="expandSubtechniques(true)"
+                     matTooltipPosition="below"
+                     matTooltip="expand annotated sub-techniques">
+                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_alt_gray_24px.svg' : 'assets/icons/unfold_more_alt_black_24px.svg'" alt="expand annotated sub-techniques"/>
+                 </div>
+             </div>
+
             <!-- collapse all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
@@ -352,7 +362,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  <div class="control-row-button dropdown noselect"
                       (click)="currentDropdown = currentDropdown !== 'layout' ? 'layout' : null;"
                       matTooltipPosition="below"
-                      matTooltip="matrix layout">
+                      matTooltip="matrix configuration">
                       <img src="assets/icons/ic_view_large_black_24px.svg"/>
                  </div>
                  <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown [class.left]="checkalign(dropdown)">
@@ -362,6 +372,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                          </select>
                      </div>
                      <div class="section">
+                        <b class="filter-label">labels</b>
                         <div>
                              <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showID">
                              <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option" class="checkbox-custom-label noselect">show IDs</label>
@@ -371,10 +382,36 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             <input [disabled]="viewModel.layout.layout == 'mini'" id="showName-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showName">
                             <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option" class="checkbox-custom-label noselect">show names</label>
                         </div>
-
-                     </div>
-                 </div>
-             </div>
+                    </div>
+                    <div class="section">
+                        <b class="filter-label">aggregate scores</b>
+                        <div>
+                            <input id="showAggregateScores-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showAggregateScores">
+                            <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
+                        </div>
+                        <div>
+                            <input [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                                id="countUnscored-option" class="checkbox-custom" type="checkbox"
+                                [(ngModel)]="viewModel.layout.countUnscored">
+                            <label [class.disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                                for="countUnscored-option"
+                                class="checkbox-custom-label noselect">count unscored techniques as 0</label>
+                        </div>
+                        <div class="subsection">
+                            <label for="aggregateFunctionDropdown">aggregate function: </label>
+                            <div class="inner-dropdown-container">
+                                <select
+                                    [disabled]="!viewModel.layout.showAggregateScores"
+                                    id="aggregateFunctionDropdown"
+                                    [(ngModel)]="viewModel.layout.aggregateFunction" placeholder="function">
+                                    <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions"
+                                            [value]="option">{{option}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </li>
@@ -492,11 +529,11 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 </div>
 
 <!--
-oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo 
- 8888o   888      888  88  888  88  888    888  888    888  88   
- 88 888o8 88     8  88     888      888oooo88   888      888     
- 88  888  88    8oooo88    888      888  88o    888     88 888   
-o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o 
+oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
+ 8888o   888      888  88  888  88  888    888  888    888  88
+ 88 888o8 88     8  88     888      888oooo88   888      888
+ 88  888  88    8oooo88    888      888  88o    888     88 888
+o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
 
 <div class="matrices" oncontextmenu="return false">
@@ -521,11 +558,11 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
 
 
 <!--
-ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo   
- 888         888    88 o888    88  888    88   8888o  88   888    88o 
- 888         888ooo8   888    oooo 888ooo8     88 888o88   888    888 
- 888      o  888    oo 888o    88  888    oo   88   8888   888    888 
-o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88   
+ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo
+ 888         888    88 o888    88  888    88   8888o  88   888    88o
+ 888         888ooo8   888    oooo 888ooo8     88 888o88   888    888
+ 888      o  888    oo 888o    88  888    oo   88   8888   888    888
+o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
                                                                       -->
 
 <div class="legendBar" (click)="showingLegend = !showingLegend" *ngIf="!showingLegend && configService.getFeature('legend')">
