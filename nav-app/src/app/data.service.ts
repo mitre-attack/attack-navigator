@@ -499,6 +499,11 @@ export class VersionChangelog<T> {
         this.previousVersion = prev;
         this.latestVersion = latest;
     }
+
+    public length(): number {
+        return this.additions.length + this.changes.length + this.minor_changes.length +
+               this.deprecations.length + this.revocations.length;
+    }
 }
 
 /**
