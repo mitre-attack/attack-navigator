@@ -530,6 +530,9 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
         <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
         </div>
+        <mat-drawer mode="push" position="end" #sidebar [opened]="sidebarOpened">
+            <sidebar></sidebar>
+        </mat-drawer>
         <div class="matrices-columns">
             <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
                 <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
