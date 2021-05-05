@@ -473,3 +473,8 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
+.mat-drawer {
+    top: initial;
+    bottom: initial;
+}
+
