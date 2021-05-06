@@ -525,33 +525,34 @@ oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
  88  888  88    8oooo88    888      888  88o    888     88 888
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
-<mat-drawer-container autosize>
-    <mat-drawer-content>
-        <div class="matrices" oncontextmenu="return false">
-            <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
-                <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-            </div>
-            <div class="matrices-columns">
-                <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
-                    <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
-                    <div *ngIf="viewModel.layout.layout == 'side'">
-                        <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
-                    </div>
-                    <div *ngIf="viewModel.layout.layout == 'flat'">
-                        <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
-                    </div>
-                    <div *ngIf="viewModel.layout.layout == 'mini'">
-                        <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+<div class="matrices">
+    <mat-drawer-container autosize>
+        <mat-drawer-content>
+            <div oncontextmenu="return false">
+                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
+                    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                </div>
+                <div class="matrices-columns">
+                    <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
+                        <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                        <div *ngIf="viewModel.layout.layout == 'side'">
+                            <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+                        </div>
+                        <div *ngIf="viewModel.layout.layout == 'flat'">
+                            <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
+                        </div>
+                        <div *ngIf="viewModel.layout.layout == 'mini'">
+                            <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </mat-drawer-content>
-    <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
-        <sidebar></sidebar>
-    </mat-drawer>
-</mat-drawer-container>
-
+        </mat-drawer-content>
+        <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
+            <sidebar></sidebar>
+        </mat-drawer>
+    </mat-drawer-container>
+</div>
 
 
 <!--
