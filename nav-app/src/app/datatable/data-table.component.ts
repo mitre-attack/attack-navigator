@@ -37,7 +37,7 @@ export class DataTableComponent implements AfterViewInit {
 
     currentDropdown: string = ""; //current dropdown menu
 
-    public get sidebarOpened() { return this.dataService.sidebarOpened; }
+    sidebarOpened = this.dataService.sidebarOpened;
 
 
     //////////////////////////////////////////////////////////
