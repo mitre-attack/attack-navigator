@@ -13,7 +13,6 @@ export class AppComponent {
     @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
-    public get sidebarOpened() { return this.dataService.sidebarOpened; }
 
     @HostListener('window:beforeunload', ['$event'])
     promptNavAway($event) {
