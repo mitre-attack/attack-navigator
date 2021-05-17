@@ -30,9 +30,9 @@ export class DataService {
     public subtechniquesEnabled: boolean = true;
     public versionChangelog?: VersionChangelog<Technique>;
 
-    private _sidebarOpened = true;
-    public get sidebarOpened(): boolean { return this._sidebarOpened };
-    public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal };
+    private _sidebarOpened: boolean;
+    public get sidebarOpened(): boolean { return this._sidebarOpened; };
+    public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
 
     /**
      * Callback functions passed to this function will be called after data is loaded
