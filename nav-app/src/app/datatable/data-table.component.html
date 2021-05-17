@@ -41,7 +41,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
+                     (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
                     matTooltipPosition="below"
                     matTooltip="search">
                     <img src="assets/icons/ic_search_black_24px.svg"/>
@@ -548,7 +548,7 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                 </div>
             </div>
         </mat-drawer-content>
-        <mat-drawer mode="side" position="end" #sidebar [opened]="sidebarOpened">
+        <mat-drawer mode="side" position="end" #sidebar [opened]="dataService.sidebarOpened">
             <sidebar></sidebar>
         </mat-drawer>
     </mat-drawer-container>

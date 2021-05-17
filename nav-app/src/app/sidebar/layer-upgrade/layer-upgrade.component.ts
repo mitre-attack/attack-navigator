@@ -31,7 +31,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public upgradeLayer(): void {
         // close sidebar
-        this.dataService.sidebarOpened = false;
+        this.dataService.sidebarOpened = !this.dataService.sidebarOpened;
     }
 
     public getIDs(object: Technique) {

@@ -37,9 +37,6 @@ export class DataTableComponent implements AfterViewInit {
 
     currentDropdown: string = ""; //current dropdown menu
 
-    public get sidebarOpened() { return this.dataService.sidebarOpened; }
-
-
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
