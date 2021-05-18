@@ -9,7 +9,7 @@ import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
 import { ViewModelsService, ViewModel } from "../viewmodels.service";
 
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 
@@ -470,16 +470,16 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
                 resolve(null);
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
-                const dialogConfig = new MatDialogConfig();
-                dialogConfig.disableClose = true;
-                dialogConfig.width = '25%';
-                dialogConfig.data = {
-                    layerName: viewModel.name,
-                    vmVersion: viewModel.version,
-                    currVersion: currVersion
-                }
-                const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
-                let subscription = dialogRef.afterClosed().subscribe({
+                let dialog = this.dialog.open(VersionUpgradeComponent, {
+                    data: {
+                        layerName: viewModel.name,
+                        vmVersion: viewModel.version,
+                        currVersion: currVersion
+                    },
+                    disableClose: true,
+                    width: "25%"
+                });
+                let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
                             reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
