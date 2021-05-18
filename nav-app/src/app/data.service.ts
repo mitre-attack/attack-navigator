@@ -263,6 +263,7 @@ export class DataService {
     loadDomainData(domainID: string, includeAll: boolean = false, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
+            if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
