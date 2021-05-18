@@ -549,7 +549,7 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
             </div>
         </mat-drawer-content>
         <mat-drawer mode="side" position="end" #sidebar [opened]="dataService.sidebarOpened">
-            <sidebar></sidebar>
+            <sidebar [viewModel]="viewModel"></sidebar>
         </mat-drawer>
     </mat-drawer-container>
 </div>
