@@ -546,6 +546,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                                 next: () => {
                                     this.dataService.compareVersions(versions.previous, versions.latest);
                                     this.dataService.sidebarOpened = true;
+                                    this.dataService.sidebarContentType = 'layerUpgrade';
                                     viewModel.deSerialize(string);
                                     viewModel.loadVMData();
                                 },

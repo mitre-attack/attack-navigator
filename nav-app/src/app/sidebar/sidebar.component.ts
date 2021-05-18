@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
+import { ViewModel } from "../viewmodels.service";
 
 @Component({
   selector: 'sidebar',
@@ -7,6 +8,8 @@ import { DataService } from '../data.service';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  // The ViewModel being used by this data-table
+  @Input() viewModel?: ViewModel;
 
   constructor(public dataService: DataService) { }
 
