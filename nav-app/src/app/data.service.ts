@@ -30,14 +30,6 @@ export class DataService {
     public subtechniquesEnabled: boolean = true;
     public versionChangelog?: VersionChangelog<Technique>;å
 
-    public readonly sidebarContentTypes = ['layerUpgrade', 'search'];
-    private _sidebarContentType: string;
-    public get sidebarContentType(): string { return this._sidebarContentType; };
-    public set sidebarContentType(newVal: string) {
-        if (this.sidebarContentTypes.includes(newVal)) this._sidebarContentType = newVal;
-        else this._sidebarContentType = '';
-    };
-
     /**
      * Callback functions passed to this function will be called after data is loaded
      * @param {*} callback callback function to call when data is done loading

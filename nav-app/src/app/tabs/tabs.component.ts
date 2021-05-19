@@ -545,8 +545,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             let dataSubscription = forkJoin(loads).subscribe({
                                 next: () => {
                                     this.dataService.compareVersions(versions.previous, versions.latest);
-                                    this.dataService.sidebarOpened = true;
-                                    this.dataService.sidebarContentType = 'layerUpgrade';
+                                    viewModel.sidebarOpened = true;
+                                    viewModel.sidebarContentType = 'layerUpgrade';
                                     viewModel.deSerialize(string);
                                     viewModel.loadVMData();
                                 },
@@ -554,6 +554,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             });
                         } else {
                             this.dataService.compareVersions(versions.previous, versions.latest);
+                            viewModel.sidebarContentType = 'layerUpgrade';
                             viewModel.sidebarOpened = true;
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();

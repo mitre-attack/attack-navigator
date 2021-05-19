@@ -1,9 +1,9 @@
 <div class="sidebar">
-    <div *ngIf="dataService.versionChangelog">
-        <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
-    </div>
     <div *ngIf="viewModel">
-        <div *ngIf="dataService.sidebarContentType === 'search'">
+        <div *ngIf="dataService.versionChangelog && viewModel.sidebarContentType === 'layerUpgrade'">
+            <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
+        </div>
+        <div *ngIf="viewModel.sidebarContentType === 'search'">
             <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
             <app-multiselect [viewModel]="viewModel"></app-multiselect>
         </div>

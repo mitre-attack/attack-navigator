@@ -386,6 +386,14 @@ export class ViewModel {
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
 
+    public readonly sidebarContentTypes = ['layerUpgrade', 'search'];
+    private _sidebarContentType: string;
+    public get sidebarContentType(): string { return this._sidebarContentType; };
+    public set sidebarContentType(newVal: string) {
+        if (this.sidebarContentTypes.includes(newVal)) this._sidebarContentType = newVal;
+        else this._sidebarContentType = '';
+    };
+
     constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");
