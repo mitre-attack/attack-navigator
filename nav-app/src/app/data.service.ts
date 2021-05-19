@@ -28,11 +28,7 @@ export class DataService {
     public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
-    public versionChangelog?: VersionChangelog<Technique>;
-
-    private _sidebarOpened: boolean;
-    public get sidebarOpened(): boolean { return this._sidebarOpened; };
-    public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
+    public versionChangelog?: VersionChangelog<Technique>;å
 
     /**
      * Callback functions passed to this function will be called after data is loaded

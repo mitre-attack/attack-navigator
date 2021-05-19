@@ -545,7 +545,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             let dataSubscription = forkJoin(loads).subscribe({
                                 next: () => {
                                     this.dataService.compareVersions(versions.previous, versions.latest);
-                                    this.dataService.sidebarOpened = true;
+                                    viewModel.sidebarOpened = true;
                                     viewModel.deSerialize(string);
                                     viewModel.loadVMData();
                                 },
@@ -553,6 +553,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             });
                         } else {
                             this.dataService.compareVersions(versions.previous, versions.latest);
+                            viewModel.sidebarOpened = true;
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
                         }

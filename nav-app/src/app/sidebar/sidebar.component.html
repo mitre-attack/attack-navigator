@@ -1,5 +1,5 @@
 <div class="sidebar">
     <div *ngIf="dataService.versionChangelog">
-        <layer-upgrade [changelog]="dataService.versionChangelog"></layer-upgrade>
+        <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
     </div>
 </div>

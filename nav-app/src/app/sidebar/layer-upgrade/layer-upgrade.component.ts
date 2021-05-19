@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ViewModel } from '../../viewmodels.service';
 import { BaseStix, DataService, Technique, VersionChangelog } from '../../data.service';
 
 @Component({
@@ -8,6 +9,7 @@ import { BaseStix, DataService, Technique, VersionChangelog } from '../../data.s
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() changelog: VersionChangelog<BaseStix>;
+    @Input() viewModel: ViewModel;
     public showUnannotated: boolean = false;
     public sections: string[] = [
         "additions", "changes", "minor_changes",
@@ -31,7 +33,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public upgradeLayer(): void {
         // close sidebar
-        this.dataService.sidebarOpened = !this.dataService.sidebarOpened;
+        this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
     }
 
     public getIDs(object: Technique) {
