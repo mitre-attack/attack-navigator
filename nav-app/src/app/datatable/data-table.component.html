@@ -526,12 +526,12 @@ oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
 <div class="matrices">
-    <mat-drawer-container autosize>
-        <mat-drawer-content>
-            <div oncontextmenu="return false">
-                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
-                    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-                </div>
+    <div oncontextmenu="return false">
+        <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
+            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <mat-drawer-container autosize>
+            <mat-drawer-content>
                 <div class="matrices-columns">
                     <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
                         <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
@@ -546,12 +546,12 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                         </div>
                     </div>
                 </div>
-            </div>
-        </mat-drawer-content>
-        <mat-drawer mode="side" position="end" #sidebar [opened]="dataService.sidebarOpened">
-            <sidebar></sidebar>
-        </mat-drawer>
-    </mat-drawer-container>
+            </mat-drawer-content>
+            <mat-drawer mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
+                <sidebar [viewModel]="viewModel"></sidebar>
+            </mat-drawer>
+        </mat-drawer-container>
+    </div>
 </div>
 
 
