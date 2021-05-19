@@ -8,7 +8,7 @@ import { ViewModel } from '../viewmodels.service';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-    @Input() viewModel?: ViewModel;
+    @Input() viewModel: ViewModel;
 
     constructor(public dataService: DataService) { }
 

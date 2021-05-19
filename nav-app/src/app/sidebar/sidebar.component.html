@@ -2,4 +2,10 @@
     <div *ngIf="dataService.versionChangelog">
         <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
     </div>
+    <div *ngIf="viewModel">
+        <div *ngIf="dataService.sidebarContentType === 'search'">
+            <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
+            <app-multiselect [viewModel]="viewModel"></app-multiselect>
+        </div>
+    </div>
 </div>

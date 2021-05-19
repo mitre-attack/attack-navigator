@@ -41,31 +41,12 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
+                    (click)="(dataService.sidebarOpened = (dataService.sidebarContentType !== 'search') ? true : !dataService.sidebarOpened) && (dataService.sidebarContentType = 'search')"
                     matTooltipPosition="below"
                     matTooltip="search">
                     <img src="assets/icons/ic_search_black_24px.svg"/>
                 </div>
-
-                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
-                </div>
             </div>
-
-
-            <!-- Multi-select -->
-            <div *ngIf="configService.getFeature('multiselect')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
-                    matTooltipPosition="below"
-                    matTooltip="multi-select">
-                    <img src="assets/icons/ic_playlist_add_black_24px.svg"/>
-                </div>
-                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-multiselect [viewModel]="viewModel"></app-multiselect>
-                </div>
-            </div>
-
 
             <!-- deselect all -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
