@@ -382,6 +382,10 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
+    private _sidebarOpened: boolean;
+    public get sidebarOpened(): boolean { return this._sidebarOpened; };
+    public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
+
     constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
         this.domainID = domainID;
         console.log("initializing ViewModel '" + name + "'");

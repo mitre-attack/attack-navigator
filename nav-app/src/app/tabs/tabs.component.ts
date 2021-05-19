@@ -554,6 +554,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             });
                         } else {
                             this.dataService.compareVersions(versions.previous, versions.latest);
+                            viewModel.sidebarOpened = true;
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
                         }
