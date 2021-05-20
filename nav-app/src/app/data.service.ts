@@ -256,7 +256,7 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainID: string, includeAll: boolean = false, refresh: boolean = false): Promise<any> {
+    loadDomainData(domainID: string, refresh: boolean = false, includeAll: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain.dataLoaded && !refresh) resolve(null);
@@ -311,10 +311,10 @@ export class DataService {
      * @param previous imported layer version to upgrade from
      * @param latest latest ATT&CK version to upgrade to
      */
-    public compareVersions(previous: string, latest: string): VersionChangelog<Technique> {
-        let changelog = new VersionChangelog<Technique>(previous, latest);
-        let previousDomain = this.getDomain(previous);
-        let latestDomain = this.getDomain(latest);
+    public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog<Technique> {
+        let changelog = new VersionChangelog<Technique>(prevDomainID, latestDomainID);
+        let previousDomain = this.getDomain(prevDomainID);
+        let latestDomain = this.getDomain(latestDomainID);
 
         let previousTechniques = previousDomain.techniques.concat(previousDomain.subtechniques);
         let latestTechniques = latestDomain.techniques.concat(latestDomain.subtechniques);
