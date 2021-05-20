@@ -99,7 +99,7 @@
 
     "comment_color": "yellow",
 
-    "banner": "ATT&CK version 9 has been released! Check out the <a target='_blank' href='https://attack.mitre.org/resources/updates/updates-april-2021'>release notes</a> or read the <a target='_blank' href='https://medium.com/mitre-attack/attack-april-2021-release-39accaf23c81'>blog post</a>.",
+    "banner": "",
 
     "features": [
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
