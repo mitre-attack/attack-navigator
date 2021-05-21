@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix, Domain } from "./data.service";
+import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -382,6 +382,8 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
+    compareTo?: ViewModel;
+    versionChangelog?: VersionChangelog<Technique>;
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };

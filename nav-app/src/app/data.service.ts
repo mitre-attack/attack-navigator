@@ -28,7 +28,6 @@ export class DataService {
     public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
-    public versionChangelog?: VersionChangelog<Technique>;
 
     /**
      * Callback functions passed to this function will be called after data is loaded
@@ -345,7 +344,6 @@ export class DataService {
                 }
             }
         }
-        this.versionChangelog = changelog;
         return changelog;
     }
 }

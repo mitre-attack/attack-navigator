@@ -8,8 +8,9 @@ import { BaseStix, DataService, Technique, VersionChangelog } from '../../data.s
     styleUrls: ['./layer-upgrade.component.scss']
 })
 export class LayerUpgradeComponent implements OnInit {
-    @Input() changelog: VersionChangelog<BaseStix>;
     @Input() viewModel: ViewModel;
+    public changelog: VersionChangelog<BaseStix>;
+    public compareTo: ViewModel;
     public showUnannotated: boolean = false;
     public sections: string[] = [
         "additions", "changes", "minor_changes",
@@ -21,6 +22,8 @@ export class LayerUpgradeComponent implements OnInit {
     constructor(public dataService: DataService) { }
 
     ngOnInit(): void {
+        this.changelog = this.viewModel.versionChangelog;
+        this.compareTo = this.viewModel.compareTo;
     }
 
     public sectionHeader(section: string): string {
@@ -39,6 +42,5 @@ export class LayerUpgradeComponent implements OnInit {
     public getIDs(object: Technique) {
         let ids = object.get_all_technique_tactic_ids()
         return ids
-        // getTechniqueVM_id
     }
 }

@@ -511,6 +511,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 newViewModel.domainID = versions.latest; // update domainID to latest
                 newViewModel.version = this.dataService.getCurrentVersion(); // update version to latest
                 newViewModel.loadVMData();
+                newViewModel.compareTo = prevViewModel;
                 this.openTab("new layer", newViewModel, true, true, true, true);
                 newViewModel.sidebarOpened = true;
 
@@ -521,7 +522,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 if (Object.keys(loads).length) {
                     let dataSubscription = forkJoin(loads).subscribe({
                         next: () => {
-                            this.dataService.compareVersions(versions.previous, versions.latest);
+                            newViewModel.versionChangelog = this.dataService.compareVersions(versions.previous, versions.latest);
+                            console.log("changelog: ", newViewModel.versionChangelog)
                             // load vm for uploaded layer
                             prevViewModel.deSerialize(string);
                             prevViewModel.loadVMData();
@@ -529,7 +531,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         complete: () => { dataSubscription.unsubscribe(); }
                     });
                 } else {
-                    this.dataService.compareVersions(versions.previous, versions.latest);
+                    newViewModel.versionChangelog = this.dataService.compareVersions(versions.previous, versions.latest);
                     // load vm for uploaded layer
                     prevViewModel.deSerialize(string);
                     prevViewModel.loadVMData();

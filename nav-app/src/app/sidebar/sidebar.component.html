@@ -1,5 +1,5 @@
 <div class="sidebar">
-    <div *ngIf="dataService.versionChangelog">
-        <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
+    <div *ngIf="viewModel.versionChangelog && viewModel.compareTo">
+        <layer-upgrade [viewModel]="viewModel"></layer-upgrade>
     </div>
 </div>
