@@ -1,59 +1,31 @@
 <div class="layer-upgrade">
-    <span><h3>Layer Upgrade</h3> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
+    <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
     <div>
         <input id="show_unannotated" class="checkbox-custom" type="checkbox" [(ngModel)]="showUnannotated">
         <label for="show_unannotated" class="checkbox-custom-label noselect">show unannotated</label>
     </div>
-    <mat-accordion class="headers-align">
-        <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                Techniques
-                </mat-panel-title>
-                <mat-panel-description>
-                ({{changelog.length()}} techniques)
-                </mat-panel-description>
-            </mat-expansion-panel-header>
+    <div>
+        <span><h3>Techniques</h3> ({{changelog.length()}} techniques)</span>
 
-            <mat-accordion class="headers-align">
-                <mat-expansion-panel *ngFor="let section of sections" [disabled]="!changelog[section].length">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            {{sectionHeader(section)}}
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            ({{changelog[section].length}} techniques)
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-
-                    <table>
-                        <ng-container *ngFor="let object of changelog[section]">
-                            <tr *ngFor="let id of getIDs(object)">
-                                <td>
-                                    <input id="object_updated" class="checkbox-custom" type="checkbox" [(ngModel)]="object_updated">
-                                    <label for="object_updated" class="checkbox-custom-label noselect"></label>
-                                </td>
-                                <td>
-                                    <!-- <technique-cell
-                                        [tactic]="tactic"
-                                        [technique]="technique" 
-                                        [viewModel]="viewModel"
-                                        [matrix]="matrix"
-                                        (leftclick)="onTechniqueLeftClick($event, technique, tactic)"
-                                        (rightclick)="onTechniqueRightClick($event, technique)"
-                                        (highlight)="onTechniqueHighlight($event, technique, tactic)"
-                                        (unhighlight)="onTechniqueUnhighlight($event)">
-                                    </technique-cell> -->
-                                </td>
-                            </tr>
-                                <!-- {{id}} -->
-                        </ng-container>
-                        <!-- </tr> -->
-                    </table>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </mat-expansion-panel>
-    </mat-accordion>
+        <mat-accordion class="headers-align">
+            <mat-expansion-panel *ngFor="let section of sections" [disabled]="!changelog[section].length">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{sectionHeader(section)}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        ({{changelog[section].length}} techniques)
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <table>
+                    <ng-container *ngFor="let object of changelog[section]">
+                        <tr *ngFor="let id of getIDs(object)">
+                        </tr>
+                    </ng-container>
+                </table>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 
     <div class="button-container">
         <span>Updated {{updated.length}}/{{changelog.length()}} objects</span>

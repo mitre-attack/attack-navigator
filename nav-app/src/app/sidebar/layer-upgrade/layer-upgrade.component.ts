@@ -17,7 +17,7 @@ export class LayerUpgradeComponent implements OnInit {
         "deprecations", "revocations"
     ];
     public updated: BaseStix[] = [];
-    public object_updated: boolean = false;
+    // public object_updated: boolean = false;
 
     constructor(public dataService: DataService) { }
 
