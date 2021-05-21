@@ -1,5 +1,5 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit } from '@angular/core';
+import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
@@ -19,8 +19,8 @@ declare var math: any; //use mathjs
     selector: 'tabs',
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
-    providers: [ViewModelsService]
-
+    providers: [ViewModelsService],
+    encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements AfterContentInit, AfterViewInit {
 
@@ -61,6 +61,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     if(!this.activeTab) { this.selectTab(this.layerTabs[0]); }
                 });
                 this.customizedConfig = this.configService.getFeatureList()
+                this.bannerContent = this.configService.banner;
             },
             complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
@@ -631,6 +632,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     // layerLinkURL = ""; //the user inputted layer link which will get parsed into a param
     layerLinkURLs: string[] = [];
     customizedConfig = [];
+    bannerContent: string;
 
     /**
      * Helper function to track which layerLinkURLs have been added or removed

@@ -1,6 +1,23 @@
 {
     "versions": [
         {
+            "name": "ATT&CK v9", 
+            "domains": [
+                {   
+                    "name": "Enterprise", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
             "name": "ATT&CK v8", 
             "domains": [
                 {   
@@ -81,6 +98,8 @@
     },
 
     "comment_color": "yellow",
+
+    "banner": "",
 
     "features": [
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
