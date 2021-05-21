@@ -467,9 +467,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let currVersion = this.dataService.getCurrentVersion();
             if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
-                viewModel.version = currVersion;
-                viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                resolve(null);
+                let newDomainID = this.dataService.getDomainID(viewModel.domain, currVersion);
+                resolve({previous: viewModel.domainID, latest: newDomainID});
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
                     data: {
@@ -489,10 +488,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             this.alwaysUpgradeVersion = result.upgrade;
                         }
                         if (result.upgrade) {
-                            let prevDomainID = viewModel.domainID;
-                            viewModel.version = currVersion
-                            viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                            resolve({previous: prevDomainID, latest: viewModel.domainID});
+                            let newDomainID = this.dataService.getDomainID(viewModel.domain, currVersion);
+                            resolve({previous: viewModel.domainID, latest: newDomainID});
                         }
                         resolve(null);
                     },
@@ -505,35 +502,43 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return dataPromise;
     }
 
-    layerUpgrade(viewModel, string): void {
-        this.versionUpgradeDialog(viewModel).then( (versions) => {
-            this.openTab("new layer", viewModel, true, true, true, true);
+    layerUpgrade(prevViewModel, string): void {
+        this.versionUpgradeDialog(prevViewModel).then( (versions) => {
             if (versions) { // user upgraded to latest version
+                // create and open the latest version
+                let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                newViewModel.deSerializeDomainID(string); // update new view model with old domain info
+                newViewModel.domainID = versions.latest; // update domainID to latest
+                newViewModel.version = this.dataService.getCurrentVersion(); // update version to latest
+                newViewModel.loadVMData();
+                this.openTab("new layer", newViewModel, true, true, true, true);
+                newViewModel.sidebarOpened = true;
+
+                // load layer version & latest ATT&CK version
                 let loads: any = {};
                 if (!this.dataService.getDomain(versions.previous).dataLoaded) loads.previous = this.dataService.loadDomainData(versions.previous, true, true);
                 if (!this.dataService.getDomain(versions.latest).dataLoaded) loads.latest = this.dataService.loadDomainData(versions.latest, true, true);
-
-                // load layer version & latest ATT&CK version
                 if (Object.keys(loads).length) {
                     let dataSubscription = forkJoin(loads).subscribe({
                         next: () => {
                             this.dataService.compareVersions(versions.previous, versions.latest);
-                            viewModel.sidebarOpened = true;
-                            viewModel.deSerialize(string);
-                            viewModel.loadVMData();
+                            // load vm for uploaded layer
+                            prevViewModel.deSerialize(string);
+                            prevViewModel.loadVMData();
                         },
                         complete: () => { dataSubscription.unsubscribe(); }
                     });
                 } else {
                     this.dataService.compareVersions(versions.previous, versions.latest);
-                    viewModel.sidebarOpened = true;
-                    viewModel.deSerialize(string);
-                    viewModel.loadVMData();
+                    // load vm for uploaded layer
+                    prevViewModel.deSerialize(string);
+                    prevViewModel.loadVMData();
                 }
             } else {
-                this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                    viewModel.deSerialize(string);
-                    viewModel.loadVMData();
+                this.openTab("new layer", prevViewModel, true, true, true, true);
+                this.dataService.loadDomainData(prevViewModel.domainID, true).then( () => {
+                    prevViewModel.deSerialize(string);
+                    prevViewModel.loadVMData();
                 });
             }
         })
