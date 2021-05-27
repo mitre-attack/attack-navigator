@@ -103,11 +103,9 @@ export class DataService {
                         break;
                     case "attack-pattern":
                         idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique) {
-                            if (this.subtechniquesEnabled) {
-                                domain.subtechniques.push(new Technique(sdo, [], this));
-                            }
-                        } else techniqueSDOs.push(sdo);
+                        if (!sdo.x_mitre_is_subtechnique) {
+                            techniqueSDOs.push(sdo);
+                        }
                         break;
                     case "x-mitre-tactic":
                         idToTacticSDO.set(sdo.id, sdo);
@@ -127,7 +125,11 @@ export class DataService {
                 if (this.subtechniquesEnabled) {
                     if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
                         domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                            if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                            if (idToTechniqueSDO.has(sub_id)) {
+                                let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
+                                subtechniques.push(subtechnique);
+                                domain.subtechniques.push(subtechnique);
+                            }
                             // else the target was revoked or deprecated and we can skip honoring the relationship
                         })
                     }
