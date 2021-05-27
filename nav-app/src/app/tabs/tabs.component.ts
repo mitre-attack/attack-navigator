@@ -523,7 +523,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     let dataSubscription = forkJoin(loads).subscribe({
                         next: () => {
                             newViewModel.versionChangelog = this.dataService.compareVersions(versions.previous, versions.latest);
-                            console.log("changelog: ", newViewModel.versionChangelog)
                             // load vm for uploaded layer
                             prevViewModel.deSerialize(string);
                             prevViewModel.loadVMData();
