@@ -1,8 +1,20 @@
 @import "../../colors.scss";
 .techniques-search {
-    
-    .query {
-        padding: 0 10px;
+    ::ng-deep .mat-form-field-appearance-outline {
+        width: 100%;
+    }
+    ::ng-deep .mat-form-field-outline-start {
+        width: 30px !important;
+    }
+    ::ng-deep .mat-form-field-outline-start, ::ng-deep .mat-form-field-outline-gap, ::ng-deep .mat-form-field-outline-end {
+        background-color: white;
+    }
+    .button-settings {
+        border: none;
+    }
+    .button-settings:hover {
+        cursor: pointer;
+        opacity: 0.8;
     }
     .fields {
         padding: 0 10px;

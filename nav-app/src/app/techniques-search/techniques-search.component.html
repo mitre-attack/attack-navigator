@@ -1,7 +1,10 @@
 <div class="techniques-search">
-    <div class="query">
-        <mat-form-field style="width:100%; margin-top: 10px; box-sizing: content-box;">
+    <div>
+        <mat-form-field appearance="outline">
+            <mat-label>Search Techniques</mat-label>
+            <span matPrefix><img src="assets/icons/ic_search_black_24px.svg"></span>
             <input matInput [(ngModel)]="query" placeholder="Search Techniques">
+            <button matSuffix class="button-settings"><img src="assets/icons/ic_settings_black_24dp.svg"/></button>
         </mat-form-field>
     </div>
     <h1>properties searched</h1>
