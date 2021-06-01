@@ -1,14 +1,27 @@
 @import "../../matrix/technique-cell/technique-cell.component.scss";
 
-.spacer { flex: 1 1 auto; }
+.spacer {
+    flex: 1 1 auto;
+}
 .button-container {
     padding: 12px 0;
     float: right;
-
     .mat-stroked-button { margin-left: 12px; }
 }
-h2, h3 { display: inline-block; }
+h2, h3 {
+    display: inline-block;
+}
 .expansion-content {
     max-height: 50vh;
     overflow: auto;
+}
+.close-dialog {
+    text-align: center;
+    h3 {
+        color: red;
+        margin-bottom: 0;
+    }
+    .dialog-buttons button {
+        margin: 4px;
+    }
 }

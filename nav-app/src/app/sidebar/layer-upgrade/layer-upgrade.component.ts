@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ViewModel } from '../../viewmodels.service';
 import { BaseStix, DataService, Tactic, Technique, VersionChangelog } from '../../data.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'layer-upgrade',
@@ -9,6 +10,9 @@ import { BaseStix, DataService, Tactic, Technique, VersionChangelog } from '../.
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // latest version viewmodel
+    @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
+    public closeDialogRef;
+
     public changelog: VersionChangelog<BaseStix>;
     public compareTo: ViewModel; // view model of previous version
     public showUnannotated: boolean = true;
@@ -18,7 +22,7 @@ export class LayerUpgradeComponent implements OnInit {
     ];
     public reviewed: string[] = [];
 
-    constructor(public dataService: DataService) { }
+    constructor(public dataService: DataService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
@@ -37,9 +41,18 @@ export class LayerUpgradeComponent implements OnInit {
         return version.match(/v[0-9]/g)[0].toLowerCase();
     }
 
-    public upgradeLayer(): void {
-        // close sidebar
-        this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
+    public openDialog(): void {
+        this.closeDialogRef = this.dialog.open(this.closeDialog, {
+            width: '350px',
+            disableClose: true
+        });
+        let subscription = this.closeDialogRef.afterClosed().subscribe({
+            next: (result) => {
+                // close sidebar
+                if (result) this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
+        });
     }
 
     public isReviewed(id: string): boolean {

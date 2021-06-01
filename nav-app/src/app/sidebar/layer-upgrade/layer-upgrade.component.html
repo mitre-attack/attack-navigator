@@ -45,14 +45,14 @@
                                 </td>
                                 <!-- Technique from previous version -->
                                 <td>
-                                    <technique-cell
+                                    <!-- <technique-cell
                                         [tactic]="getTactic(id, compareTo)"
                                         [technique]="getTechnique(id, compareTo)" 
                                         [viewModel]="compareTo"
                                         [matrix]="getMatrix(id, compareTo)"
                                         (highlight)="onTechniqueHighlight($event, getTechnique(id, compareTo), getTactic(id, compareTo))"
                                         (unhighlight)="onTechniqueUnhighlight($event)">
-                                    </technique-cell>
+                                    </technique-cell> -->
                                 </td>
                                 <!-- copy/undo button -->
                                 <td>
@@ -80,6 +80,22 @@
 
     <div class="button-container">
         <span>Updated {{reviewed.length}}/{{changelog.length()}} objects</span>
-        <button mat-stroked-button (click)="upgradeLayer()">done</button>
+        <button mat-stroked-button (click)="openDialog()">done</button>
     </div>
 </div>
+
+<ng-template #closeDialog>
+    <div class="close-dialog">
+        <h3>WARNING</h3>
+        <p>
+            {{reviewed.length}}/{{changelog.length()}} objects have been reviewed.
+        </p>
+        <p>
+            You will not be able to return to the layer upgrade window. Do you want to continue?
+        </p>
+        <div class="dialog-buttons">
+            <button mat-button (click)="closeDialogRef.close(true)">Continue</button>
+            <button mat-stroked-button mat-dialog-close>Cancel</button> 
+        </div>
+    </div>
+</ng-template>
