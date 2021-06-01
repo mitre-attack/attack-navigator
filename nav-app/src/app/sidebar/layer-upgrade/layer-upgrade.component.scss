@@ -8,3 +8,7 @@
     .mat-stroked-button { margin-left: 12px; }
 }
 h2, h3 { display: inline-block; }
+.expansion-content {
+    max-height: 50vh;
+    overflow: auto;
+}

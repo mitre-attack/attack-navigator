@@ -1,7 +1,7 @@
 <div class="layer-upgrade">
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
     <div>
-        <input id="show_unannotated" class="checkbox-custom" type="checkbox" [(ngModel)]="showUnannotated">
+        <input id="show_unannotated" class="checkbox-custom" type="checkbox" [(ngModel)]="showUnannotated" (click)="filterObjects()">
         <label for="show_unannotated" class="checkbox-custom-label noselect">show unannotated</label>
     </div>
     <div>
@@ -17,18 +17,69 @@
                         ({{changelog[section].length}} techniques)
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table>
+                <div class="expansion-content">
+                <table *ngIf="section == 'additions' || section == 'deprecations'">
                     <ng-container *ngFor="let object of changelog[section]">
                         <tr *ngFor="let id of getIDs(object)">
+                            <td>
+                                <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
+                            </td>
+                            <td>
+                                <technique-cell
+                                    [tactic]="getTactic(id, viewModel)"
+                                    [technique]="getTechnique(id, viewModel)" 
+                                    [viewModel]="viewModel"
+                                    [matrix]="getMatrix(id, viewModel)"
+                                    (highlight)="onTechniqueHighlight($event, getTechnique(id, viewModel), getTactic(id, viewModel))"
+                                    (unhighlight)="onTechniqueUnhighlight($event)">
+                                </technique-cell>
+                            </td>
                         </tr>
                     </ng-container>
                 </table>
+                <table *ngIf="section == 'changes' || section == 'minor_changes'">
+                    <ng-container *ngFor="let object of changelog[section]">
+                        <tr *ngFor="let id of getIDs(object)">
+                            <td>
+                                <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
+                            </td>
+                            <!-- Technique from previous version -->
+                            <td>
+                                <technique-cell
+                                    [tactic]="getTactic(id, compareTo)"
+                                    [technique]="getTechnique(id, compareTo)" 
+                                    [viewModel]="compareTo"
+                                    [matrix]="getMatrix(id, compareTo)"
+                                    (highlight)="onTechniqueHighlight($event, getTechnique(id, compareTo), getTactic(id, compareTo))"
+                                    (unhighlight)="onTechniqueUnhighlight($event)">
+                                </technique-cell>
+                            </td>
+                            <!-- copy/undo button -->
+                            <td>
+                                <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button>
+                                <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button>
+                            </td>
+                            <!-- Technique from new layer -->
+                            <td>
+                                <technique-cell
+                                    [tactic]="getTactic(id, viewModel)"
+                                    [technique]="getTechnique(id, viewModel)" 
+                                    [viewModel]="viewModel"
+                                    [matrix]="getMatrix(id, viewModel)"
+                                    (highlight)="onTechniqueHighlight($event, getTechnique(id, viewModel), getTactic(id, viewModel))"
+                                    (unhighlight)="onTechniqueUnhighlight($event)">
+                                </technique-cell>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </table>
+                </div>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
 
     <div class="button-container">
-        <span>Updated {{updated.length}}/{{changelog.length()}} objects</span>
+        <span>Updated {{reviewed.length}}/{{changelog.length()}} objects</span>
         <button mat-stroked-button (click)="upgradeLayer()">done</button>
     </div>
 </div>
