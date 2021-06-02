@@ -61,4 +61,7 @@
             text-align: center;
         }
     }
+    ::ng-deep mat-panel-description {
+        align-items: center;
+    }
 }
