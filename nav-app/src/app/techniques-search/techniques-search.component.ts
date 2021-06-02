@@ -44,11 +44,13 @@ export class TechniquesSearchComponent implements OnInit {
     public set query(newQuery: string) {
         this._query = newQuery;
         this.getStixResults(this._query);
-        this.getTechniqueResults(this._query)
+        this.getTechniqueResults(this._query);
     }
+
     public get queryLength(): number {
         return this._query.length;
     }
+
     public techniqueResults: Technique[] = [];
 
     constructor(private dataService: DataService) {
@@ -56,10 +58,10 @@ export class TechniquesSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getStixData()
+        this.getStixData();
     }
 
-    getTechniqueResults(query= "") {
+    getTechniqueResults(query = "") {
         let self = this;
         if (query.trim() != "") {
             //get master list of techniques and sub-techniques
@@ -68,7 +70,7 @@ export class TechniquesSearchComponent implements OnInit {
                 allTechniques = allTechniques.concat(technique.subtechniques);
             }
 
-            let techniqueResults = allTechniques.filter(function(technique: Technique) {
+            let techniqueResults = allTechniques.filter(function (technique: Technique) {
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
@@ -79,7 +81,7 @@ export class TechniquesSearchComponent implements OnInit {
             });
             // deconflict IDs for cross-tactic techniques
             let seenIDs = new Set();
-            techniqueResults = techniqueResults.filter(function(technique: Technique) {
+            techniqueResults = techniqueResults.filter(function (technique: Technique) {
                 if (seenIDs.has(technique.id)) return false;
                 else {
                     seenIDs.add(technique.id);
@@ -114,7 +116,7 @@ export class TechniquesSearchComponent implements OnInit {
         }]
     }
 
-    getStixResults(query= "") {
+    getStixResults(query = "") {
         if (query.trim() != "") {
             this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
@@ -122,12 +124,12 @@ export class TechniquesSearchComponent implements OnInit {
         }
     }
 
-    public filterAndSort(items: any[], query= "") {
+    public filterAndSort(items: any[], query = "") {
         let results = items;
         if (query.trim() != "") {
             results = results.filter(item => item.name.toLowerCase().includes(query.trim().toLowerCase()))
         }
-        return results.sort((a,b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+        return results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
     }
 
     public toggleFieldEnabled(field: string) {
