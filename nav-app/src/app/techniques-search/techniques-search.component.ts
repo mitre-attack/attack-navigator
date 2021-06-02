@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ViewModel } from '../viewmodels.service';
-import { MatDialog } from '@angular/material/dialog';
 import {BaseStix, DataService, Group, Mitigation, Software, Technique} from '../data.service';
 
 @Component({
@@ -40,6 +39,7 @@ export class TechniquesSearchComponent implements OnInit {
         }
     ]
 
+    private previousQuery: string = "";
     private _query: string = "";
     public set query(newQuery: string) {
         this._query = newQuery;
@@ -117,19 +117,24 @@ export class TechniquesSearchComponent implements OnInit {
     }
 
     getStixResults(query = "") {
-        if (query.trim() != "") {
+        // Checks if query is 1) valid, and
+        // 2) part of last query, otherwise call getStixData() to search all objects again
+        if (query.trim() != "" && query.includes(this.previousQuery)) {
             this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
             this.getStixData();
         }
+        this.previousQuery = query;
     }
 
     public filterAndSort(items: any[], query = "") {
         let results = items;
-        if (query.trim() != "") {
+        if (query.trim() === "") {
+            results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+        } else {
             results = results.filter(item => item.name.toLowerCase().includes(query.trim().toLowerCase()))
         }
-        return results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+        return results;
     }
 
     public toggleFieldEnabled(field: string) {
