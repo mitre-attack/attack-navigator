@@ -8,43 +8,56 @@
         <span><h3>Techniques</h3> ({{changelog.length()}} techniques)</span>
 
         <mat-accordion class="headers-align">
-            <mat-expansion-panel *ngFor="let section of sections" [disabled]="!changelog[section].length">
+            <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!changelog[section].length">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{sectionHeader(section)}}
+                        {{getHeader(section)}}
                     </mat-panel-title>
                     <mat-panel-description>
                         ({{changelog[section].length}} techniques)
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <div class="expansion-content">
+                <div class="section-checkbox">
+                    <input id="select_all" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
+                    <label for="select_all" class="checkbox-custom-label noselect">select all</label>
+                </div>
+
+                <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{getHeader(tactic)}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
                     <table *ngIf="section == 'additions' || section == 'deprecations'">
-                        <ng-container *ngFor="let object of changelog[section]">
-                            <tr *ngFor="let id of getIDs(object)">
+                        <ng-container *ngFor="let id of getTacticObjects(section, tactic)">
+                            <tr>
                                 <td>
                                     <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                 </td>
                                 <td>
-                                    <technique-cell
+                                    {{id}}
+                                    <!-- <technique-cell
                                         [tactic]="getTactic(id, viewModel)"
                                         [technique]="getTechnique(id, viewModel)" 
                                         [viewModel]="viewModel"
                                         [matrix]="getMatrix(id, viewModel)"
                                         (highlight)="onTechniqueHighlight($event, getTechnique(id, viewModel), getTactic(id, viewModel))"
                                         (unhighlight)="onTechniqueUnhighlight($event)">
-                                    </technique-cell>
+                                    </technique-cell> -->
                                 </td>
                             </tr>
                         </ng-container>
                     </table>
-                    <table *ngIf="section == 'changes' || section == 'minor_changes'">
-                        <ng-container *ngFor="let object of changelog[section]">
-                            <tr *ngFor="let id of getIDs(object)">
-                                <td>
-                                    <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
-                                </td>
+                    <!-- <table *ngIf="section == 'changes' || section == 'minor_changes'"> -->
+                        <!-- <ng-container *ngFor="let object of changelog[section]"> -->
+                            <!-- <tr *ngFor="let id of getIDs(object)"> -->
+                                <!-- <td> -->
+                                    <!-- <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox> -->
+                                <!-- </td> -->
                                 <!-- Technique from previous version -->
-                                <td>
+                                <!-- <td> -->
+                                    <!-- {{id}} -->
                                     <!-- <technique-cell
                                         [tactic]="getTactic(id, compareTo)"
                                         [technique]="getTechnique(id, compareTo)" 
@@ -53,33 +66,34 @@
                                         (highlight)="onTechniqueHighlight($event, getTechnique(id, compareTo), getTactic(id, compareTo))"
                                         (unhighlight)="onTechniqueUnhighlight($event)">
                                     </technique-cell> -->
-                                </td>
+                                <!-- </td> -->
                                 <!-- copy/undo button -->
-                                <td>
-                                    <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button>
-                                    <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button>
-                                </td>
+                                <!-- <td> -->
+                                    <!-- <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button> -->
+                                    <!-- <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button> -->
+                                <!-- </td> -->
                                 <!-- Technique from new layer -->
-                                <td>
-                                    <technique-cell
+                                <!-- <td> -->
+                                    <!-- {{id}} -->
+                                    <!-- <technique-cell
                                         [tactic]="getTactic(id, viewModel)"
                                         [technique]="getTechnique(id, viewModel)" 
                                         [viewModel]="viewModel"
                                         [matrix]="getMatrix(id, viewModel)"
                                         (highlight)="onTechniqueHighlight($event, getTechnique(id, viewModel), getTactic(id, viewModel))"
                                         (unhighlight)="onTechniqueUnhighlight($event)">
-                                    </technique-cell>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </table>
-                </div>
+                                    </technique-cell> -->
+                                <!-- </td> -->
+                            <!-- </tr> -->
+                        <!-- </ng-container> -->
+                    <!-- </table> -->
+                </mat-expansion-panel>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
 
     <div class="button-container">
-        <span>Updated {{reviewed.length}}/{{changelog.length()}} objects</span>
+        <span>Updated {{reviewed.size}}/{{changelog.length()}} objects</span>
         <button mat-stroked-button (click)="openDialog()">done</button>
     </div>
 </div>
@@ -88,7 +102,7 @@
     <div class="close-dialog">
         <h3>WARNING</h3>
         <p>
-            {{reviewed.length}}/{{changelog.length()}} objects have been reviewed.
+            {{reviewed.size}}/{{changelog.length()}} objects have been reviewed.
         </p>
         <p>
             You will not be able to return to the layer upgrade window. Do you want to continue?

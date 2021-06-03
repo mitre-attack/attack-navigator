@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../../viewmodels.service';
 import { BaseStix, DataService, Tactic, Technique, VersionChangelog } from '../../data.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -6,7 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'layer-upgrade',
     templateUrl: './layer-upgrade.component.html',
-    styleUrls: ['./layer-upgrade.component.scss']
+    styleUrls: ['./layer-upgrade.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // latest version viewmodel
@@ -20,7 +21,7 @@ export class LayerUpgradeComponent implements OnInit {
         "additions", "changes", "minor_changes",
         "deprecations", "revocations"
     ];
-    public reviewed: string[] = [];
+    public reviewed = new Set();
 
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -33,8 +34,8 @@ export class LayerUpgradeComponent implements OnInit {
     public filterObjects() {
     }
 
-    public sectionHeader(section: string): string {
-        return section.split('_').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+    public getHeader(header: string): string {
+        return header.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
     }
 
     public version(version: string): string {
@@ -56,15 +57,14 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     public isReviewed(id: string): boolean {
-        return this.reviewed.includes(id);
+        return this.reviewed.has(id);
     }
 
-    public reviewedChanged(id: string) {
-        if (this.isReviewed(id)) {
-            let i = this.reviewed.indexOf(id);
-            if (i >= 0) this.reviewed.splice(i, 1);
+    public reviewedChanged(id: string, unselect?: boolean) {
+        if (this.isReviewed(id) || unselect) {
+            this.reviewed.delete(id);
         } else {
-            this.reviewed.push(id);
+            this.reviewed.add(id);
         }
     }
 
@@ -78,6 +78,49 @@ export class LayerUpgradeComponent implements OnInit {
     public getIDs(object: Technique) {
         let ids = object.get_all_technique_tactic_ids()
         return ids
+    }
+
+    public getSectionTactics(section: string) {
+        let tactics = new Set();
+        let objects: Technique[] = this.changelog[section];
+        for(let object of objects) {
+            if (object.tactics) object.tactics.forEach(tactics.add, tactics);
+        }
+        return tactics;
+    }
+
+    public getTacticObjects(section: string, tactic: string) {
+        let objectIDs = [];
+        let sectionObjects = this.changelog[section];
+        for (let object of sectionObjects) {
+            let ids = this.getIDs(object);
+            for (let id of ids) {
+                if (id.includes(tactic)) objectIDs.push(id);
+            }
+        }
+        return objectIDs;
+    }
+
+    public allSelected(section: string) {
+        let objectIDs = [];
+        for (let object of this.changelog[section]) {
+            this.getIDs(object).forEach(id => objectIDs.push(id));
+        }
+        return objectIDs.every(id => this.reviewed.has(id));
+    }
+
+    public selectAllChanged(section: string) {
+        if (this.allSelected(section)) {
+            // unselect all
+            for (let object of this.changelog[section]) {
+                this.getIDs(object).forEach(id => { this.reviewedChanged(id, true); })
+            }
+        } else {
+            // select all
+            for (let object of this.changelog[section]) {
+                this.getIDs(object).forEach(id => {this.reviewed.add(id)});
+            }
+        }
     }
 
     public getTactic(id: string, vm: ViewModel) {

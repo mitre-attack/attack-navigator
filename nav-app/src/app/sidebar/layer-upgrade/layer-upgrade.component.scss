@@ -11,9 +11,14 @@
 h2, h3 {
     display: inline-block;
 }
-.expansion-content {
-    max-height: 50vh;
-    overflow: auto;
+.section-checkbox {
+    padding-bottom: 6px;
+}
+.changelog-sections {
+    >.mat-expansion-panel-content {
+        max-height: 60vh;
+        overflow: auto;
+    }
 }
 .close-dialog {
     text-align: center;
