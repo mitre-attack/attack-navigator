@@ -89,14 +89,14 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
-                     matTooltipPosition="below"
-                     matTooltip="layer information">
-                     <img src="assets/icons/ic_description_black_24px.svg" alt="layer information" />
-                 </div>
+                  (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
+                  matTooltipPosition="below"
+                  matTooltip="layer information">
+                  <img src="assets/icons/ic_description_black_24px.svg" alt="layer information" />
+                </div>
 
-                 <!-- description input (invisible, absolute) -->
-                 <div class="dropdown-container inputfield layer_info"  #dropdown [class.left]="checkalign(dropdown)"
+                <!-- description input (invisible, absolute) -->
+                <div class="dropdown-container inputfield layer_info"  #dropdown [class.left]="checkalign(dropdown)"
                       *ngIf="currentDropdown === 'description'">
 
                     <!-- layer name field -->
@@ -163,8 +163,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         </table>
 
                     </div>
-                 </div>
-             </div>
+                </div>
+            </div>
 
 
 
@@ -320,62 +320,62 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- show or hide disabled techniques -->
             <div *ngIf="configService.getFeature('toggle_hide_disabled')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="viewModel.hideDisabled = !viewModel.hideDisabled;"
-                     matTooltipPosition="below"
-                     matTooltip="show/hide disabled">
-                     <img [src]="viewModel.hideDisabled ? 'assets/icons/ic_visibility_off_black_24px.svg' : 'assets/icons/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
-                 </div>
-             </div>
+                    (click)="viewModel.hideDisabled = !viewModel.hideDisabled;"
+                    matTooltipPosition="below"
+                    matTooltip="show/hide disabled">
+                    <img [src]="viewModel.hideDisabled ? 'assets/icons/ic_visibility_off_black_24px.svg' : 'assets/icons/ic_visibility_black_24px.svg'" [alt]="viewModel.hideDisabled ? 'show disabled' : 'hide disabled'"/>
+                </div>
+            </div>
 
             <!-- expand all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="expandSubtechniques()"
-                     matTooltipPosition="below"
-                     matTooltip="expand sub-techniques">
-                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_black_24px.svg'" alt="expand sub-techniques"/>
-                 </div>
-             </div>
+                    (click)="expandSubtechniques()"
+                    matTooltipPosition="below"
+                    matTooltip="expand sub-techniques">
+                    <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_gray_24px.svg' : 'assets/icons/unfold_more_black_24px.svg'" alt="expand sub-techniques"/>
+                </div>
+            </div>
 
             <!-- expand only annotated sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="expandSubtechniques(true)"
-                     matTooltipPosition="below"
-                     matTooltip="expand annotated sub-techniques">
-                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_alt_gray_24px.svg' : 'assets/icons/unfold_more_alt_black_24px.svg'" alt="expand annotated sub-techniques"/>
-                 </div>
-             </div>
+                    (click)="expandSubtechniques(true)"
+                    matTooltipPosition="below"
+                    matTooltip="expand annotated sub-techniques">
+                    <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_more_alt_gray_24px.svg' : 'assets/icons/unfold_more_alt_black_24px.svg'" alt="expand annotated sub-techniques"/>
+                </div>
+            </div>
 
             <!-- collapse all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="collapseSubtechniques()"
-                     matTooltipPosition="below"
-                     matTooltip="collapse sub-techniques">
-                     <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_less_gray_24px.svg' : 'assets/icons/unfold_less_black_24px.svg'" alt="collapse sub-techniques"/>
-                 </div>
-             </div>
+                    (click)="collapseSubtechniques()"
+                    matTooltipPosition="below"
+                    matTooltip="collapse sub-techniques">
+                    <img [src]="viewModel.layout.layout == 'mini' ? 'assets/icons/unfold_less_gray_24px.svg' : 'assets/icons/unfold_less_black_24px.svg'" alt="collapse sub-techniques"/>
+                </div>
+            </div>
 
-             <!-- layout -->
-             <div *ngIf="configService.getFeature('layout_controls')" class="control-row-item">
-                 <div class="control-row-button dropdown noselect"
+            <!-- layout -->
+            <div *ngIf="configService.getFeature('layout_controls')" class="control-row-item">
+                <div class="control-row-button dropdown noselect"
                       (click)="currentDropdown = currentDropdown !== 'layout' ? 'layout' : null;"
                       matTooltipPosition="below"
                       matTooltip="matrix configuration">
                       <img src="assets/icons/ic_view_large_black_24px.svg"/>
-                 </div>
-                 <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown [class.left]="checkalign(dropdown)">
-                     <div class="section">
-                         <select [(ngModel)]="viewModel.layout.layout" placeholder="layout">
+                </div>
+                <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown [class.left]="checkalign(dropdown)">
+                    <div class="section">
+                        <select [(ngModel)]="viewModel.layout.layout" placeholder="layout">
                              <option *ngFor="let option of viewModel.layout.layoutOptions" [value]="option">{{option}} layout</option>
-                         </select>
-                     </div>
-                     <div class="section">
+                        </select>
+                    </div>
+                    <div class="section">
                         <b class="filter-label">labels</b>
                         <div>
-                             <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showID">
-                             <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option" class="checkbox-custom-label noselect">show IDs</label>
+                            <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showID">
+                            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option" class="checkbox-custom-label noselect">show IDs</label>
 
                         </div>
                         <div>
@@ -423,25 +423,25 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- enable/disable technique -->
             <div *ngIf="configService.getFeature('disable_techniques')" class="control-row-item">
                 <div class="control-row-button noselect"
-                     (click)="setSelectedState()"
-                     matTooltipPosition="below"
-                     matTooltip="toggle state"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_texture_black_24px.svg' : 'assets/icons/ic_texture_gray_24px.svg'" alt="toggle state"/>
-                 </div>
-             </div>
+                    (click)="setSelectedState()"
+                    matTooltipPosition="below"
+                    matTooltip="toggle state"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                    <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_texture_black_24px.svg' : 'assets/icons/ic_texture_gray_24px.svg'" alt="toggle state"/>
+                </div>
+            </div>
 
             <!-- background color -->
             <div *ngIf="configService.getFeature('manual_color')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null : continue"
-                     matTooltipPosition="below"
-                     matTooltip="background color"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
-                     [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
+                    (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null : continue"
+                    matTooltipPosition="below"
+                    matTooltip="background color"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                    [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
 
-                    <svg border="#dddddd" [attr.fill]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <svg border="#dddddd" [attr.fill]="viewModel.isCurrentlyEditing() ? '#777' : '#2c2c2c'" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 0h24v24H0z" fill="none"/>
                         <path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/>
                         <path [attr.class]="viewModel.isCurrentlyEditing() ? viewModel.getEditingCommonValue('color') : none" d="M0 20h24v4H0z"/>
@@ -452,13 +452,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      *ngIf="currentDropdown === 'colorpicker'">
 
                     <div class="color-block wide noselect dropdown"
-                         (click)="viewModel.editSelectedTechniques('color', '')">
+                        (click)="viewModel.editSelectedTechniques('color', '')">
                         no color
                     </div>
                     <div class="color-block square"
-                         *ngFor="let color of viewModel.backgroundPresets"
-                         [style.background]="color"
-                         (click)="viewModel.editSelectedTechniques('color', color)"></div>
+                        *ngFor="let color of viewModel.backgroundPresets"
+                        [style.background]="color"
+                        (click)="viewModel.editSelectedTechniques('color', color)"></div>
                 </div>
             </div>
 
@@ -466,25 +466,25 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- score -->
             <div *ngIf="configService.getFeature('scoring')" class="control-row-item" >
                 <div class="control-row-button dropdown noselect"
-                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
-                     matTooltipPosition="below"
-                     matTooltip="scoring"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
-                     [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
-                     <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_insert_chart_black_24px.svg' : 'assets/icons/ic_insert_chart_gray_24px.svg'" alt="score"/>
+                    (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
+                    matTooltipPosition="below"
+                    matTooltip="scoring"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                    [style.color]="viewModel.isCurrentlyEditing() ? '#000000' : '#aaaaaa'">
+                    <img [src]="viewModel.isCurrentlyEditing() ? 'assets/icons/ic_insert_chart_black_24px.svg' : 'assets/icons/ic_insert_chart_gray_24px.svg'" alt="score"/>
                 </div>
                 <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
                      *ngIf="currentDropdown === 'score'">
-                     <mat-form-field>
-                         <!-- update data whenever it is typed in -->
-                         <input matInput
+                    <mat-form-field>
+                        <!-- update data whenever it is typed in -->
+                        <input matInput
                                 type="text"
                                 onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 45"
                                 [(ngModel)]="scoreEditField"
                                 placeholder="score"
                                 (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value));">
                          <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
-                     </mat-form-field>
+                    </mat-form-field>
                 </div>
             </div>
 

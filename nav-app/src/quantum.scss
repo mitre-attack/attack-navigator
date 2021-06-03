@@ -1,0 +1,442 @@
+$font-family-monospace: 'Menlo', 'Monaco', 'Consolas', 'Lucida Console', 'Courier New', monospace;
+
+body {
+  background: #161616;
+}
+
+.pace {
+  pointer-events: none;
+  user-select: none;
+
+  .pace-progress {
+    background: #00da55;
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    right: 100%;
+    width: 100%;
+    height: 3px;
+  }
+}
+
+.pace-inactive {
+  display: none;
+}
+
+.main-nav {
+  background: #000;
+  width: 100vw;
+  height: 48px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .logo {
+    display: block;
+    background: transparent url('https://www.quantum.security/assets/img/quantum-logo.svg') no-repeat;
+    border: none;
+    outline: none;
+    text-indent: -100vw;
+    height: 1.25rem;
+    width: 8rem;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+  }
+
+  .tagline {
+    position: absolute;
+    right: 24px;
+    top: 16px;
+
+    a, a > strong{
+      color: #fff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.header {
+  height: 64px;
+
+  & > .logo {
+    display: none;
+  }
+}
+
+.version {
+  display: block;
+  font-size: 12px;
+  font-family: $font-family-monospace;
+  color: #555;
+  padding-left: 16px;
+  margin-top: 18px;
+}
+
+.tabs > li {
+  input, .tab-title {
+    outline: none;
+    color: #fff !important;
+    border-radius: 0 !important;
+
+    &:focus {
+      background-color: #1c1c1c !important;
+      border-bottom: solid 1px #ccc;
+    }
+  }
+
+  &:hover {
+    background-color: #222 !important;
+    border-color: #222 !important;
+  }
+
+  &.active {
+    background-color: #1c1c1c !important;
+
+    &:hover {
+      border-color: #1c1c1c !important;
+    }
+  }
+}
+
+.controlsContainer {
+  .control-sections {
+    background-color: #1c1c1c !important;
+
+    & > li {
+      border-left: solid 1px #111 !important;
+
+      .control-row-item {
+        .control-row-button {
+          &:hover {
+            background-color: #333 !important;
+          }
+
+          &.dropdown::after {
+            color: #777;
+          }
+
+          &.dropdown[ng-reflect-disabled="true"]::after {
+            color: #2c2c2c;
+          }
+        }
+      }
+    }
+  }
+
+  .deselectNumber {
+    color: #fff !important;
+    font-size: 10px;
+  }
+
+  .section-label {
+    background-color: transparent !important;
+    border: 0 !important;
+    color: #777 !important;
+  }
+}
+
+.dropdown-container {
+  background-color: #333 !important;
+}
+
+.matrix-column {
+  padding: 0 !important;
+}
+
+matrix-side > table {
+  width: 100%;
+}
+
+thead > tr.tactic > td {
+  padding: 16px 8px 8px !important;
+}
+
+thead > tr:not(.tactic) > td {
+  padding: 0 8px 16px !important;
+}
+
+tbody {
+  background-color: #1c1c1c !important;
+}
+
+tbody > tr > td.tactic {
+  padding: 8px !important;
+
+  &:nth-child(even) {
+    background-color: #1f1f1f;
+  }
+
+  &:first-child {
+    padding-left: 16px !important;
+  }
+
+  &:last-child {
+    padding-right: 16px !important;
+  }
+}
+
+td.tactic, .technique-row > td:nth-child(odd) {
+  &::before {
+    content: ' ';
+    display: block;
+    width: 250px;
+    height: 1px;
+  }
+}
+
+.technique-row > td:nth-child(3) {
+  &::before {
+    display: none;
+  }
+}
+
+.technique-row > .sidebar.expanded + td:nth-child(3) {
+  &::before {
+    display: block;
+  }
+}
+
+.technique-row > .sidebar {
+  background-color: #444 !important;
+
+  .angle {
+    background-color: #1c1c1c !important;
+
+    & > svg > path {
+      fill: #444 !important;
+    }
+  }
+}
+
+.subtechniques {
+  border-left: solid 1px #111 !important;
+}
+
+.matrices {
+  background: #222;
+  border: solid 1px #111 !important;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.2);
+  color: #ccc;
+}
+
+.tactic.count {
+  color: #999 !important;
+}
+
+.technique-cell {
+  box-shadow: none !important;
+  background: #333;
+
+  & > div {
+    padding-left: 8px !important;
+
+    & > span {
+      color: #999 !important;
+    }
+    
+    & > sub {
+      color: #555 !important;
+      bottom: 0 !important;
+    }
+  }
+
+  &.highlight {
+    background: #00da55 !important;
+    color: #000;
+
+    & > div > span {
+      color: #000 !important;
+    }
+  }
+
+  &.editing {
+    background: #555;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    border: solid 1px #111;
+
+    & > div > span {
+      color: #fff !important;
+    }
+  }
+
+  &.colored {
+    color: #000;
+
+    & > div > span {
+      color: #000 !important;
+    }
+  }
+}
+
+.contextmenu .menu {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  padding: 0 !important;
+  min-width: 210px !important;
+  font-size: 12px !important;
+  text-transform: capitalize !important;
+
+  &::before {
+    color: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+.contextMenu-section {
+  &:not(:first-child) {
+    border-top: solid 1px #444 !important;
+  }
+
+  & > div {
+    padding: 8px 12px !important;
+    color: #ccc;
+  }
+
+  & > .contextMenu-header {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  & > .contextMenu-button {
+    &:hover {
+      background-color: #00da55 !important;
+      color: #000;
+    }
+  }
+}
+
+.tooltip {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+
+  &::before {
+    color: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+
+.legend {
+  background: #222 !important;
+  border-left: none !important;
+
+  .itemArea .item {
+    padding-left: 18px !important;
+
+    &.even {
+      background-color: #2a2a2a;
+    }
+  }
+
+  .mat-input-element {
+    color: #ccc;
+    caret-color: #fff;
+  }
+
+  [ng-reflect-color-picker] {
+    border: none !important;
+    font-family: $font-family-monospace;
+  }
+}
+
+.legendBar {
+  background: #333 !important;
+  color: #999 !important;
+}
+
+.newTab {
+  border: none !important;
+  background-color: #1c1c1c !important;
+}
+
+.mat-expansion-panel {
+  background-color: #2c2c2c !important;
+}
+
+.mat-expansion-panel-header-title {
+  color: #ccc !important;
+}
+
+.mat-expansion-panel-header-description {
+  color: #555 !important;
+}
+
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+  color: #777 !important;
+}
+
+.helpButtonContainer {
+  display: block;
+  color: #777;
+  font-size: 14px;
+  margin-top: 40px !important;
+
+  a, a:hover {
+    color: #00da55 !important;
+  }
+}
+
+.layer-browser, .layer-browser li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+$icon-size: 100px;
+
+.layer-browser li {
+  height: $icon-size;
+  margin-bottom: 16px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.18);
+  background-color: #333;
+  transition: all 0.1s ease-in;
+
+  &:hover {
+    background-color: #444;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.22);
+
+    .icon {
+      background-color: #2c2c2c;
+    }
+  }
+
+  .icon {
+    height: $icon-size;
+    width: $icon-size;
+    text-align: center;
+    background-color: #222;
+    transition: all 0.1s ease-in;
+
+    & > img {
+      margin-top: 12px;
+      width: 80%;
+    }
+  }
+
+  .summary {
+    padding-left: 20px;
+
+    h3 {
+      color: #fff;
+      margin-top: 24px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      color: #999;
+      margin: 0;
+    }
+  }
+
+  a {
+    display: flex;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

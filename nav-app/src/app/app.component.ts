@@ -12,14 +12,15 @@ export class AppComponent {
     @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
+    quantumCustomizationVersion: string = globals.QUANTUM_CUSTOMIZATION_VERSION;
 
-    @HostListener('window:beforeunload', ['$event'])
-    promptNavAway($event) {
-        if (!this.configService.getFeature('leave_site_dialog')) return;
-        //this text only shows in the data, not visible to user as far as I can tell
-        //however, if it's not included the window doesn't open.
-        $event.returnValue='Are you sure you want to navigate away? Your data may be lost!';
-    }
+    // @HostListener('window:beforeunload', ['$event'])
+    // promptNavAway($event) {
+    //     if (!this.configService.getFeature('leave_site_dialog')) return;
+    //     //this text only shows in the data, not visible to user as far as I can tell
+    //     //however, if it's not included the window doesn't open.
+    //     $event.returnValue='Are you sure you want to navigate away? Your data may be lost!';
+    // }
 
     constructor(public configService: ConfigService) {
         Array.prototype.includes = function(value): boolean {

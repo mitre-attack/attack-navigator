@@ -20,7 +20,7 @@
             "preserveSymlinks": true,
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.svg"
             ],
             "styles": [
               "src/styles.scss"

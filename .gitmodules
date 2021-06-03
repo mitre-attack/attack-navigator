@@ -1,0 +1,3 @@
+[submodule ".submodules/attack-navigator-layers"]
+	path = .submodules/attack-navigator-layers
+	url = git@github.com:quantum-sec/attack-navigator-layers
