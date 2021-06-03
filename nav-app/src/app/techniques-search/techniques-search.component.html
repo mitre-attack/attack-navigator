@@ -29,7 +29,7 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <h4>Techniques</h4>
+                    <h4>Techniques ({{techniqueResults.length}})</h4>
                 </mat-panel-title>
                 <mat-panel-description>
                     //
@@ -69,7 +69,7 @@
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <h4>
-                        {{stixType.label | titlecase }}
+                        {{stixType.label | titlecase }} ({{stixType.objects.length}})
                     </h4>
                 </mat-panel-title>
                 <mat-panel-description>
