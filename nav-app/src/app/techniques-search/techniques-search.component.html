@@ -4,7 +4,6 @@
             <mat-label>Search Techniques</mat-label>
             <span matPrefix><img src="assets/icons/ic_search_black_24px.svg"></span>
             <input matInput [(ngModel)]="query" placeholder="Search Techniques">
-            <button matSuffix class="button-settings"><img src="assets/icons/ic_settings_black_24dp.svg"/></button>
         </mat-form-field>
     </div>
 
@@ -12,7 +11,7 @@
         <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <h4>Settings</h4>
+                    <h4>Search Settings</h4>
                 </mat-panel-title>
                 <mat-panel-description>
                     <div class="fields">
@@ -32,12 +31,11 @@
                     <h4>Techniques ({{techniqueResults.length}})</h4>
                 </mat-panel-title>
                 <mat-panel-description>
-                    //
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
             <!--    NEED TO COMMUNICATE BACK FROM DIALOG RATHER THAN OTHER WAY AROUND!!-->
-            <div *ngIf="queryLength > 0 else noResults">
+            <div>
                 <div class="allresults-buttons">
                     <button class="button" (click)="selectAll()">select all</button>
                     <button class="button" (click)="deselectAll()">deselect all</button>
@@ -60,9 +58,6 @@
                     <div class="no-results" *ngIf="techniqueResults.length == 0"> no results</div>
                 </div>
             </div>
-            <ng-template #noResults>
-                No results
-            </ng-template>
         </mat-expansion-panel>
 
         <mat-expansion-panel *ngFor="let stixType of stixTypes" class="stixType">
@@ -73,7 +68,6 @@
                     </h4>
                 </mat-panel-title>
                 <mat-panel-description>
-                    //
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div *ngIf="stixType.objects.length !== 0" class="objects">

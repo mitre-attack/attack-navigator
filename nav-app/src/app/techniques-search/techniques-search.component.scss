@@ -9,14 +9,6 @@
     ::ng-deep .mat-form-field-outline-start, ::ng-deep .mat-form-field-outline-gap, ::ng-deep .mat-form-field-outline-end {
         background-color: white;
     }
-    .button-settings {
-        border: none;
-        background-color: initial;
-    }
-    .button-settings:hover {
-        cursor: pointer;
-        opacity: 0.8;
-    }
     .fields {
         padding: 0 10px;
         text-align: left;

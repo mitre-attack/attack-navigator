@@ -42,6 +42,7 @@ export class TechniquesSearchComponent implements OnInit {
     private previousQuery: string = "";
     private _query: string = "";
     public set query(newQuery: string) {
+        this.previousQuery = this._query;
         this._query = newQuery;
         this.getStixResults(this._query);
         this.getTechniqueResults(this._query);
@@ -59,45 +60,61 @@ export class TechniquesSearchComponent implements OnInit {
 
     ngOnInit() {
         this.getStixData();
+        this.getTechniques();
     }
 
-    getTechniqueResults(query = "") {
+    // filterAndSort() takes an array of items and does the following:
+    // 1) if the query is empty, then it sorts the array
+    // 2) if the query is not empty, then it filters the already sorted array until nothing is left, or,
+    // the query is cleared out and empty again
+    filterAndSort(items: any[], query = "", sortAllTechniques = false) {
         let self = this;
-        if (query.trim() != "") {
-            //get master list of techniques and sub-techniques
-            let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
-            for (let technique of allTechniques) {
-                allTechniques = allTechniques.concat(technique.subtechniques);
+        let results = items;
+        if (query.trim() === "") {
+            if (sortAllTechniques) {
+                results.sort((tA: Technique, tB: Technique) => {
+                    let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
+                    let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;
+                    return c1.localeCompare(c2)
+                });
+                // console.log(seenIDs, techniqueResults)
+            } else {
+                results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
             }
-
-            let techniqueResults = allTechniques.filter(function (technique: Technique) {
+        } else {
+            // deconflict IDs for cross-tactic techniques
+            let seenIDs = new Set();
+            results = results.filter(function (technique: Technique) {
+                if (seenIDs.has(technique.id)) return false;
                 for (let field of self.fields) {
                     if (field.enabled) {
                         // query in this field
-                        if (technique[field.field]?.toLowerCase().includes(self._query.trim().toLowerCase())) return true;
+                        if (technique[field.field]?.toLowerCase().includes(query.trim().toLowerCase())) {
+                            seenIDs.add(technique.id);
+                            return true;
+                        }
                     }
                 }
                 return false;
             });
-            // deconflict IDs for cross-tactic techniques
-            let seenIDs = new Set();
-            techniqueResults = techniqueResults.filter(function (technique: Technique) {
-                if (seenIDs.has(technique.id)) return false;
-                else {
-                    seenIDs.add(technique.id);
-                    return true;
-                }
-            })
+        }
+        return results;
+    }
 
-            techniqueResults = techniqueResults.sort((tA: Technique, tB: Technique) => {
-                let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
-                let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;
-                return c1.localeCompare(c2)
-            });
-            // console.log(seenIDs, techniqueResults)
-            this.techniqueResults = techniqueResults;
+    getTechniques() {
+        //get master list of techniques and sub-techniques
+        let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
+        for (let technique of allTechniques) {
+            allTechniques = allTechniques.concat(technique.subtechniques);
+        }
+        this.techniqueResults = this.filterAndSort(allTechniques);
+    }
+
+    getTechniqueResults(query = "") {
+        if (query.trim() != "" && query.includes(this.previousQuery)) {
+            this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
         } else {
-            this.techniqueResults = [];
+            this.getTechniques();
         }
     }
 
@@ -106,7 +123,7 @@ export class TechniquesSearchComponent implements OnInit {
 
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.filterAndSort(domain.groups.filter((group, i, arr) => arr.findIndex(t => t.id === group.id) === i))
+            "objects": this.filterAndSort(domain.groups)
         }, {
             "label": "software",
             "objects": this.filterAndSort(domain.software)
@@ -116,34 +133,30 @@ export class TechniquesSearchComponent implements OnInit {
         }]
     }
 
+    // getStixResults() checks if query is:
+    // 1) valid, and
+    // 2) part of last query, otherwise call getStixData() to search all objects again
     getStixResults(query = "") {
-        // Checks if query is 1) valid, and
-        // 2) part of last query, otherwise call getStixData() to search all objects again
         if (query.trim() != "" && query.includes(this.previousQuery)) {
             this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
             this.getStixData();
         }
-        this.previousQuery = query;
-    }
-
-    public filterAndSort(items: any[], query = "") {
-        let results = items;
-        if (query.trim() === "") {
-            results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
-        } else {
-            results = results.filter(item => item.name.toLowerCase().includes(query.trim().toLowerCase()))
-        }
-        return results;
     }
 
     public toggleFieldEnabled(field: string) {
+        let temp = this._query;
         for (let thefield of this.fields) {
             if (thefield.field == field) {
                 thefield.enabled = !thefield.enabled;
+                // this is to trigger getTechniques() and getStixData() in the case that:
+                // a field was toggled, and
+                // the query did not change
+                this.query = "";
                 break;
             }
         }
+        this._query = temp;
         this.query = this._query;
     }
 
@@ -161,6 +174,18 @@ export class TechniquesSearchComponent implements OnInit {
 
     public deselectAll(): void {
         for (let result of this.techniqueResults) this.deselect(result);
+    }
+
+    public deselectStix(stixObject: BaseStix): void {
+        for (let technique of this.getRelated(stixObject)) {
+            this.viewModel.unselectTechniqueAcrossTactics(technique);
+        }
+    }
+
+    public selectStix(stixObject: BaseStix): void {
+        for (let technique of this.getRelated(stixObject)) {
+            this.viewModel.selectTechniqueAcrossTactics(technique);
+        }
     }
 
     public getRelated(stixObject: BaseStix): Technique[] {
