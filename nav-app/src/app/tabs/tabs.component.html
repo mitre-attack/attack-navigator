@@ -73,25 +73,14 @@
               </mat-expansion-panel-header>
 
               <ul class="layer-browser">
-                <li>
-                  <a href="javascript:void(0);" (click)="loadLayerFromURL('/assets/layers/siem/azure-sentinel-baseline.json', true)">
+                <li *ngFor="let layer of prebuiltLayers">
+                  <a href="javascript:void(0);" (click)="loadLayerFromURL('/assets/layers/' + layer.href, true)">
                     <div class="icon">
-                      <img src="https://play-lh.googleusercontent.com/TckA-A_COVAujJtzvpgGhwVkkYCBEDbZe-GLaA9kVbZra1Vcoy7oPXCUG3y0GP2AZg" alt="Azure" />
+                      <img src="{{ layer.icon }}" alt="" />
                     </div>
                     <div class="summary">
-                      <h3>Azure Sentinel Baseline (Detection)</h3>
-                      <p>Layer showing coverage of out-of-the-box Azure Sentinel detection rule library.</p>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="javascript:void(0);" (click)="loadLayerFromURL('/assets/layers/siem/azure-sentinel-baseline.json', true)">
-                    <div class="icon">
-                      <img src="https://play-lh.googleusercontent.com/TckA-A_COVAujJtzvpgGhwVkkYCBEDbZe-GLaA9kVbZra1Vcoy7oPXCUG3y0GP2AZg" alt="Azure" />
-                    </div>
-                    <div class="summary">
-                      <h3>Azure Sentinel Baseline (Threat Hunting)</h3>
-                      <p>Layer showing coverage of out-of-the-box Azure Sentinel threat hunting rule library.</p>
+                      <h3>{{ layer.name }}</h3>
+                      <p>{{ layer.description }}</p>
                     </div>
                   </a>
                 </li>
