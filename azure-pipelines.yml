@@ -2,9 +2,8 @@ trigger:
   batch: true
   branches:
     include:
-      - master
-      - feature/*
-      - fix/*
+      - quantum
+
 pr: none
 
 resources:
@@ -24,7 +23,7 @@ jobs:
           parameters:
             name: DeployToS3Prod
             displayName: Deploy Files to S3 (prod)
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/quantum'))
             awsAccountNumber: '438611529373'
             bucketName: attack-navigator-app.prod.platform.quantum.security
             sourcePath: ./nav-app/dist/
@@ -32,7 +31,7 @@ jobs:
           parameters:
             name: InvalidateCloudfrontCacheProd
             displayName: Invalidate Cloudfront Cache (prod)
-            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/quantum'))
             awsAccountNumber: '438611529373'
             distributionId: E21JGAAVJAUJTV
             paths: /*
