@@ -18,6 +18,10 @@ jobs:
     parameters:
       runUnitTests: false
       runFunctionalTests: false
+      setupSteps:
+        - bash: npm install --prefix nav-app
+          name: InstallNestedDependencies
+          displayName: Install Nested NPM Dependencies
       deploySteps:
         - template: templates/steps/deployment/deploy-files-to-s3.yml@pipeline-library
           parameters:
