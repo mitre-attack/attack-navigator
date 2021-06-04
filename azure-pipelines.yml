@@ -29,7 +29,7 @@ jobs:
             displayName: Deploy Files to S3 (prod)
             condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/quantum'))
             awsAccountNumber: '438611529373'
-            bucketName: attack-navigator-app.prod.platform.quantum.security
+            bucketName: attack-navigator.prod.platform.quantum.security
             sourcePath: ./nav-app/dist/
         - template: templates/steps/deployment/invalidate-cloudfront-cache.yml@pipeline-library
           parameters:
