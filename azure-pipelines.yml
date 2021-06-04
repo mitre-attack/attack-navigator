@@ -27,8 +27,7 @@ jobs:
             condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
             awsAccountNumber: '438611529373'
             bucketName: attack-navigator-app.prod.platform.quantum.security
-            srcPath: ./nav-app/dist/
-            destPath: /
+            sourcePath: ./nav-app/dist/
         - template: templates/steps/deployment/invalidate-cloudfront-cache.yml@pipeline-library
           parameters:
             name: InvalidateCloudfrontCacheProd
