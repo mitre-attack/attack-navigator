@@ -1,0 +1,39 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - master
+      - feature/*
+      - fix/*
+pr: none
+
+resources:
+  repositories:
+    - repository: pipeline-library
+      type: github
+      endpoint: quantum-sec-github
+      name: quantum-sec/pipeline-library
+
+jobs:
+  - template: templates/jobs/typescript.yml@pipeline-library
+    parameters:
+      runUnitTests: false
+      runFunctionalTests: false
+      deploySteps:
+        - template: templates/steps/deployment/deploy-files-to-s3.yml@pipeline-library
+          parameters:
+            name: DeployToS3Prod
+            displayName: Deploy Files to S3 (prod)
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            awsAccountNumber: '438611529373'
+            bucketName: attack-navigator-app.prod.platform.quantum.security
+            srcPath: ./nav-app/dist/
+            destPath: /
+        - template: templates/steps/deployment/invalidate-cloudfront-cache.yml@pipeline-library
+          parameters:
+            name: InvalidateCloudfrontCacheProd
+            displayName: Invalidate Cloudfront Cache (prod)
+            condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+            awsAccountNumber: '438611529373'
+            distributionId: E21JGAAVJAUJTV
+            paths: /*

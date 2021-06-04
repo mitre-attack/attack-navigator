@@ -49,7 +49,7 @@ body {
     right: 24px;
     top: 16px;
 
-    a, a > strong{
+    a, a > strong {
       color: #fff;
       text-decoration: none;
 
@@ -148,6 +148,7 @@ body {
   padding: 0 !important;
 }
 
+/* stylelint-disable-next-line selector-type-no-unknown */
 matrix-side > table {
   width: 100%;
 }
@@ -238,7 +239,7 @@ td.tactic, .technique-row > td:nth-child(odd) {
     & > span {
       color: #999 !important;
     }
-    
+
     & > sub {
       color: #555 !important;
       bottom: 0 !important;
@@ -316,7 +317,6 @@ td.tactic, .technique-row > td:nth-child(odd) {
     color: rgba(0, 0, 0, 0.7) !important;
   }
 }
-
 
 .legend {
   background: #222 !important;

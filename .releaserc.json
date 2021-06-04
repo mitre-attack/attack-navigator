@@ -1,0 +1,3 @@
+{
+  "extends": "@quantum-sec/semantic-release-config/base"
+}

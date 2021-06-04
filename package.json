@@ -1,0 +1,23 @@
+{
+  "name": "@quantum-sec/attack-navigator",
+  "version": "0.0.0-development",
+  "description": "Custom distro of the MITRE ATT&CK Navigator app with dark mode and Quantum's prebuilt layers.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:quantum-sec/attack-navigator.git"
+  },
+  "scripts": {
+    "lint": "stylelint \"nav-app/src/quantum.scss\"",
+    "start": "npm run start --prefix nav-app",
+    "build": "npm run build --prefix nav-app"
+  },
+  "devDependencies": {
+    "@quantum-sec/stylelint-config": "^1.0.2",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "stylelint": "^13.2.0",
+    "stylelint-config-standard": "^19.0.0"
+  },
+  "author": "Quantum Security Pte. Ltd.",
+  "license": "SEE LICENSE IN LICENSE"
+}
