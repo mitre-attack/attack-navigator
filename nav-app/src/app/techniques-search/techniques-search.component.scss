@@ -9,8 +9,17 @@
     ::ng-deep .mat-form-field-outline-start, ::ng-deep .mat-form-field-outline-gap, ::ng-deep .mat-form-field-outline-end {
         background-color: white;
     }
+    .sidebar-content {
+        margin: 1rem 0;
+    }
+    mat-card-content {
+        margin-bottom: 0;
+    }
+    .settings .title {
+        font-size: 14px;
+        margin: 0;
+    }
     .fields {
-        padding: 0 10px;
         text-align: left;
         .field {
             display: inline-block;

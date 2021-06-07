@@ -36,6 +36,8 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
+import { MatCardModule } from "@angular/material/card";
+import { MatDividerModule } from "@angular/material/divider";
 
 
 @NgModule({
@@ -74,7 +76,9 @@ import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.com
     MatExpansionModule,
     MatDialogModule,
     ColorPickerModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatCardModule,
+    MatDividerModule
   ],
   exports: [
       MatSelectModule,

@@ -1,19 +1,17 @@
 <div class="techniques-search">
-    <div>
-        <mat-form-field appearance="outline">
-            <mat-label>Search Techniques</mat-label>
-            <span matPrefix><img src="assets/icons/ic_search_black_24px.svg"></span>
-            <input matInput [(ngModel)]="query" placeholder="Search Techniques">
-        </mat-form-field>
-    </div>
+    <mat-form-field appearance="outline">
+        <mat-label>Search Techniques</mat-label>
+        <span matPrefix><img src="assets/icons/ic_search_black_24px.svg"></span>
+        <input matInput [(ngModel)]="query" placeholder="Search Techniques">
+    </mat-form-field>
 
-    <mat-accordion>
-        <mat-expansion-panel hideToggle>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <h4>Search Settings</h4>
-                </mat-panel-title>
-                <mat-panel-description>
+    <mat-divider></mat-divider>
+
+    <div class="sidebar-content">
+        <mat-card>
+            <div class="settings">
+                <mat-card-title><h4 class="title">Search Settings</h4></mat-card-title>
+                <mat-card-content>
                     <div class="fields">
                         <div class="field" *ngFor="let field of fields">
                             <input [id]="field.field" class="checkbox-custom" type="checkbox"
@@ -21,10 +19,15 @@
                             <label [for]="field.field" class="checkbox-custom-label noselect">{{field.label}}</label>
                         </div>
                     </div>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-        </mat-expansion-panel>
+                </mat-card-content>
+            </div>
+        </mat-card>
+    </div>
 
+    <mat-divider></mat-divider>
+
+    <div class="sidebar-content">
+        <mat-accordion multi>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -92,4 +95,5 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    </div>
 </div>
