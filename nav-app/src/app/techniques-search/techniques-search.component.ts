@@ -107,7 +107,7 @@ export class TechniquesSearchComponent implements OnInit {
         for (let technique of allTechniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
-        this.techniqueResults = this.filterAndSort(allTechniques);
+        this.techniqueResults = this.filterAndSort(allTechniques, "", true);
     }
 
     getTechniqueResults(query = "") {
@@ -168,12 +168,18 @@ export class TechniquesSearchComponent implements OnInit {
         this.viewModel.unselectTechniqueAcrossTactics(technique);
     }
 
-    public selectAll(): void {
-        for (let result of this.techniqueResults) this.select(result);
+    public selectAll(items: any[]): void {
+        for (let result of items) this.select(result);
     }
 
-    public deselectAll(): void {
-        for (let result of this.techniqueResults) this.deselect(result);
+    public deselectAll(items: any[]): void {
+        for (let result of items) this.deselect(result);
+    }
+
+    public selectStix(stixObject: BaseStix): void {
+        for (let technique of this.getRelated(stixObject)) {
+            this.viewModel.selectTechniqueAcrossTactics(technique);
+        }
     }
 
     public deselectStix(stixObject: BaseStix): void {
@@ -182,9 +188,15 @@ export class TechniquesSearchComponent implements OnInit {
         }
     }
 
-    public selectStix(stixObject: BaseStix): void {
-        for (let technique of this.getRelated(stixObject)) {
-            this.viewModel.selectTechniqueAcrossTactics(technique);
+    public selectAllStix(items: BaseStix[]): void {
+        for (let stixObject of items) {
+            this.selectStix(stixObject);
+        }
+    }
+
+    public deselectAllSitx(items: BaseStix[]): void {
+        for (let stixObject of items) {
+            this.deselectStix(stixObject);
         }
     }
 
@@ -200,18 +212,6 @@ export class TechniquesSearchComponent implements OnInit {
             return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
             return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainID).includes(technique.id));
-        }
-    }
-
-    public deselectStix(stixObject: BaseStix): void {
-        for (let technique of this.getRelated(stixObject)) {
-            this.viewModel.unselectTechniqueAcrossTactics(technique);
-        }
-    }
-
-    public selectStix(stixObject: BaseStix): void {
-        for (let technique of this.getRelated(stixObject)) {
-            this.viewModel.selectTechniqueAcrossTactics(technique);
         }
     }
 }

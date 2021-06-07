@@ -34,11 +34,10 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
-            <!--    NEED TO COMMUNICATE BACK FROM DIALOG RATHER THAN OTHER WAY AROUND!!-->
             <div>
                 <div class="allresults-buttons">
-                    <button class="button" (click)="selectAll()">select all</button>
-                    <button class="button" (click)="deselectAll()">deselect all</button>
+                    <button class="button" (click)="selectAll(techniqueResults)">select all</button>
+                    <button class="button" (click)="deselectAll(techniqueResults)">deselect all</button>
                 </div>
                 <div class="results">
                     <table class="results" *ngIf="techniqueResults.length > 0">
@@ -70,7 +69,11 @@
                 <mat-panel-description>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <div *ngIf="stixType.objects.length !== 0" class="objects">
+            <div class="allresults-buttons">
+                <button class="button" (click)="selectAllStix(stixType.objects)">select all</button>
+                <button class="button" (click)="deselectAllSitx(stixType.objects)">deselect all</button>
+            </div>
+            <div class="results objects" *ngIf="stixType.objects.length !== 0">
                 <table>
                     <tr *ngFor="let stixObject of stixType.objects">
                         <td>{{stixObject.name}}</td>
