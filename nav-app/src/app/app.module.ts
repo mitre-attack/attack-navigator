@@ -29,7 +29,6 @@ import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component'
 import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
 import { MatrixMiniComponent } from './matrix//matrix-mini/matrix-mini.component';
 import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
-import { MultiselectComponent } from './multiselect/multiselect.component';
 import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
@@ -52,7 +51,6 @@ import { MatDividerModule } from "@angular/material/divider";
     MatrixFlatComponent,
     MatrixMiniComponent,
     TooltipComponent,
-    MultiselectComponent,
     TechniquesSearchComponent,
     ContextmenuComponent,
     TacticCellComponent,
