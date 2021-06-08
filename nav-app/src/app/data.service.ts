@@ -502,7 +502,7 @@ export class VersionChangelog<T> {
 
     public length(): number {
         return this.additions.length + this.changes.length + this.minor_changes.length +
-               this.deprecations.length + this.revocations.length;
+               this.deprecations.length + this.revocations.length + this.unchanged.length;
     }
 }
 
