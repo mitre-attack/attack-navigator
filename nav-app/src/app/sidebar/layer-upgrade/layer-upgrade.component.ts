@@ -116,7 +116,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public getTacticObjects(section: string, tactic: string) {
         let objectIDs = [];
-        let sectionObjects = this.changelog[section];
+        let sectionObjects = this.applyFilter()[section];
         for (let object of sectionObjects) {
             let ids = this.getIDs(object);
             for (let id of ids) {

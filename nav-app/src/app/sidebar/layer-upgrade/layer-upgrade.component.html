@@ -19,8 +19,8 @@
                 </mat-expansion-panel-header>
 
                 <div class="section-checkbox">
-                    <input id="select_all" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
-                    <label for="select_all" class="checkbox-custom-label noselect">select all</label>
+                    <input id="select_all_{{section}}" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
+                    <label for="select_all_{{section}}" class="checkbox-custom-label noselect">select all</label>
                 </div>
 
                 <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)">
@@ -30,7 +30,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <table *ngIf="['additions', 'deprecations', 'revocations'].includes(section)">
+                    <table *ngIf="['additions', 'deprecations'].includes(section)">
                         <ng-container *ngFor="let id of getTacticObjects(section, tactic)">
                             <tr>
                                 <td>
@@ -50,15 +50,15 @@
                             </tr>
                         </ng-container>
                     </table>
-                    <!-- <table *ngIf="section == 'changes' || section == 'minor_changes'"> -->
-                        <!-- <ng-container *ngFor="let object of changelog[section]"> -->
-                            <!-- <tr *ngFor="let id of getIDs(object)"> -->
-                                <!-- <td> -->
-                                    <!-- <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox> -->
-                                <!-- </td> -->
+                    <table *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">
+                        <ng-container *ngFor="let id of getTacticObjects(section, tactic)">
+                            <tr>
+                                <td>
+                                    <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
+                                </td>
                                 <!-- Technique from previous version -->
-                                <!-- <td> -->
-                                    <!-- {{id}} -->
+                                <td>
+                                    {{id}}
                                     <!-- <technique-cell
                                         [tactic]="getTactic(id, compareTo)"
                                         [technique]="getTechnique(id, compareTo)" 
@@ -67,7 +67,7 @@
                                         (highlight)="onTechniqueHighlight($event, getTechnique(id, compareTo), getTactic(id, compareTo))"
                                         (unhighlight)="onTechniqueUnhighlight($event)">
                                     </technique-cell> -->
-                                <!-- </td> -->
+                                </td>
                                 <!-- copy/undo button -->
                                 <!-- <td> -->
                                     <!-- <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button> -->
@@ -85,9 +85,9 @@
                                         (unhighlight)="onTechniqueUnhighlight($event)">
                                     </technique-cell> -->
                                 <!-- </td> -->
-                            <!-- </tr> -->
-                        <!-- </ng-container> -->
-                    <!-- </table> -->
+                            </tr>
+                        </ng-container>
+                    </table>
                 </mat-expansion-panel>
             </mat-expansion-panel>
         </mat-accordion>
