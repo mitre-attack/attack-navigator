@@ -107,7 +107,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public getSectionTactics(section: string) {
         let tactics = new Set();
-        let objects: Technique[] = this.changelog[section];
+        let objects: Technique[] = this.applyFilter()[section];
         for(let object of objects) {
             if (object.tactics) object.tactics.forEach(tactics.add, tactics);
         }

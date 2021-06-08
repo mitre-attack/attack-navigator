@@ -30,7 +30,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <table *ngIf="section == 'additions' || section == 'deprecations'">
+                    <table *ngIf="['additions', 'deprecations', 'revocations'].includes(section)">
                         <ng-container *ngFor="let id of getTacticObjects(section, tactic)">
                             <tr>
                                 <td>
