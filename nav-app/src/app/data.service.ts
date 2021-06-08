@@ -501,8 +501,20 @@ export class VersionChangelog<T> {
     }
 
     public length(): number {
-        return this.additions.length + this.changes.length + this.minor_changes.length +
-               this.deprecations.length + this.revocations.length + this.unchanged.length;
+        return this.id_length('additions')
+            + this.id_length('changes')
+            + this.id_length('minor_changes')
+            + this.id_length('deprecations')
+            + this.id_length('revocations')
+            + this.id_length('unchanged');
+    }
+
+    public id_length(section: string): number {
+        let count = 0;
+        for (let object of this[section]) {
+            count += object.get_all_technique_tactic_ids().length;
+        }
+        return count;
     }
 }
 
