@@ -1,22 +1,23 @@
 <div class="layer-upgrade">
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
     <div>
-        <input id="show_unannotated" class="checkbox-custom" type="checkbox" [(ngModel)]="showUnannotated" (click)="filterObjects()">
-        <label for="show_unannotated" class="checkbox-custom-label noselect">show unannotated</label>
+        <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
+        <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated only</label>
     </div>
     <div>
-        <span><h3>Techniques</h3> ({{changelog.length()}} techniques)</span>
+        <span><h3>Techniques</h3> ({{applyFilter().length()}}/{{changelog.length()}} techniques)</span>
 
         <mat-accordion class="headers-align">
-            <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!changelog[section].length">
+            <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         {{getHeader(section)}}
                     </mat-panel-title>
                     <mat-panel-description>
-                        ({{changelog[section].length}} techniques)
+                        ({{applyFilter()[section].length}}/{{changelog[section].length}} techniques)
                     </mat-panel-description>
                 </mat-expansion-panel-header>
+
                 <div class="section-checkbox">
                     <input id="select_all" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
                     <label for="select_all" class="checkbox-custom-label noselect">select all</label>

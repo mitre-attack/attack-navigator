@@ -15,11 +15,12 @@ export class LayerUpgradeComponent implements OnInit {
     public closeDialogRef;
 
     public changelog: VersionChangelog<BaseStix>;
+    // public changelog_filter: VersionChangelog<BaseStix>;
     public compareTo: ViewModel; // view model of previous version
-    public showUnannotated: boolean = true;
+    public showAnnotatedOnly: boolean = false;
     public sections: string[] = [
         "additions", "changes", "minor_changes",
-        "deprecations", "revocations"
+        "deprecations", "revocations", "unchanged"
     ];
     public reviewed = new Set();
 
@@ -27,12 +28,63 @@ export class LayerUpgradeComponent implements OnInit {
 
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
+        // this.changelog_filter = this.changelog;
         this.compareTo = this.viewModel.compareTo;
-        this.filterObjects();
+        // this.changelog_filter = new VersionChangelog<BaseStix>(this.compareTo.version, this.viewModel.version) // deep copy
     }
 
-    public filterObjects() {
+    public isAnnotated(id: string): boolean {
+        let tvm = this.compareTo.getTechniqueVM_id(id);
+        if (tvm && tvm.annotated()) return true;
+        return false;
     }
+
+    public applyFilter(): VersionChangelog<BaseStix> {
+        if (this.showAnnotatedOnly) {
+            // find annotated techniques
+            let annotatedIDs = [];
+            for (let [id, tvm] of this.compareTo.techniqueVMs) {
+                if (tvm.annotated()) annotatedIDs.push(id);
+            }
+
+            // filter changelog sections
+            let changelog_filter = new VersionChangelog<BaseStix>(this.compareTo.version, this.viewModel.version);
+            for (let section of this.sections) {
+                let filtered = this.changelog[section].filter(object => {
+                    if (this.getIDs(object).some(id => annotatedIDs.includes(id))) return true;
+                    else return false;
+                })
+                changelog_filter[section] = filtered;
+            }
+            return changelog_filter;
+        } else {
+            return this.changelog;
+        }
+    }
+
+    // public onShowAnnotatedOnly(): void {
+    //     this.showAnnotatedOnly = !this.showAnnotatedOnly;
+    //     if (this.showAnnotatedOnly) {
+    //         // find annotated techniques
+    //         let annotatedIDs = [];
+    //         for (let [id, tvm] of this.compareTo.techniqueVMs) {
+    //             if (tvm.annotated()) annotatedIDs.push(id);
+    //         }
+
+    //         // filter changelog sections
+    //         for (let section of this.sections) {
+    //             let filtered = this.changelog[section].filter(object => {
+    //                 if (this.getIDs(object).some(id => annotatedIDs.includes(id))) return true;
+    //                 else return false;
+    //             })
+    //             this.changelog_filter[section] = filtered;
+    //         }
+    //         // TODO: ensure the numbers shown on the tactic panels matches the number of objects (may need to include the getIDs() length)
+    //     } else {
+    //         this.changelog_filter = this.changelog; // reset filters
+    //         // this.changelog_filter = new VersionChangelog<BaseStix>(this.compareTo.version, this.viewModel.version)
+    //     }
+    // }
 
     public getHeader(header: string): string {
         return header.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
