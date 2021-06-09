@@ -38,7 +38,6 @@ export class TechniqueCellComponent implements OnInit {
                 return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
             }
         }
-        // TODO: when hovering over resulting techniques in the techniques search component, should it also highlight the parent, or is this sufficient?
         if (this.viewModel.highlightedTechniques.has(this.technique.id)) { // for highlighting techniques from the techniques search component, where highlightedTactic is null
             return true;
         }

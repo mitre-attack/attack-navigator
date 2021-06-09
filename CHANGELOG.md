@@ -1,5 +1,4 @@
-# v4.4 - 9 June 2021
-## New Features
+# v4.4 - changes staged on develop
 - Added combined techniques search and multiselect feature in sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 
 # v4.3 - 29 April 2021
