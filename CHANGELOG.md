@@ -1,3 +1,6 @@
+# v4.4 - 9 June 2021
+- Added combined techniques search and multiselect feature in sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+
 # v4.3 - 26 February 2021
 
 - Added aggregate score that displays the combined score of the technique and all of its sub-techniques. See issue [#269](https://github.com/mitre-attack/attack-navigator/issues/269).

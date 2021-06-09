@@ -63,8 +63,7 @@
                 <ul>
                     <li (click)="scrollTo('help_Selecting_with_the_Mouse')">Selecting with the Mouse</li>
                     <li (click)="scrollTo('help_Selection_Behavior')">Selection Behavior</li>
-                    <li (click)="scrollTo('help_Search_Interface')">Search Interface</li>
-                    <li (click)="scrollTo('help_Multiselct_Interface')">Multiselect Interface</li>
+                    <li (click)="scrollTo('help_Search_Interface')">Search & Multiselect Interface</li>
                 </ul>
             </li>
             <li>
@@ -697,27 +696,12 @@
 
             <h2 id="help_Search_Interface">
                 <img src="assets/icons/ic_search_black_24px.svg">
-                Search Interface
+                Search & Multiselect Interface
             </h2>
             <p>
                 The search interface provides a text input to search through techniques in the matrix.
                 Toggles in the interface allow for searching of specific technique fields (name, ID, and description).
             </p>
-            <p>
-                The interface provides
-                buttons to select and deselect techniques. These buttons modify the currently selected techniques rather
-                than replacing then, allowing for the selection of the multiple techniques by selecting them in sequence.
-                There are 'view' links that lead to more info on each technique.
-            </p>
-            <p>
-                Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
-                area.
-            </p>
-
-            <h2 id="help_Multiselct_Interface">
-                <img src="assets/icons/ic_playlist_add_black_24px.svg">
-                Multiselect Interface
-            </h2>
             <p>
                 The multiselect interface provides a way to quickly select and deselect
                 groups of techniques. The interface provides two types of groupings, threat
@@ -727,15 +711,19 @@
             </p>
             <p>
                 The interface provides
-                buttons to select and deselect techniques associated with each software or
-                threat group. These buttons modify the currently selected techniques rather
-                than replacing then, allowing for the selection of the techniques of multiple
+                buttons to select and deselect techniques. These buttons modify the currently selected techniques rather
+                than replacing then, allowing for the selection of the multiple techniques or the techniques of multiple
                 threat groups or software by selecting them in sequence.
+                There are 'view' links that lead to more info on each technique.
             </p>
             <p>
                 Threat groups and software in the list are given a gray background when all
                 of their techniques are selected, even if the selection was not made using
                 the multiselect interface.
+            </p>
+            <p>
+                Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
+                area.
             </p>
 
             <h1 id="help_Customizing_The_Navigator">Customizing The Navigator</h1>
