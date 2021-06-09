@@ -22,34 +22,25 @@ export class TechniqueCellComponent implements OnInit {
 
     public get showTooltip(): boolean {
         if (this.showContextmenu) return false;
-        if (!this.viewModel.highlightedTechnique) return false;
+        if (this.viewModel.highlightedTechniques.size === 0) return false;
 
-        return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
     public get isHighlighted(): boolean {
-        if (this.viewModel.highlightedTactic) {
-            if (this.viewModel.selectTechniquesAcrossTactics) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
-            } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
+        if (this.viewModel.selectTechniquesAcrossTactics) {
+            if (this.viewModel.selectSubtechniquesWithParent) {
+                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
             }
+        }
+        else if (this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
+            if (this.viewModel.selectSubtechniquesWithParent) {
+                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
+            }
+        }
+        // TODO: when hovering over resulting techniques in the techniques search component, should it also highlight the parent, or is this sufficient?
+        if (this.viewModel.highlightedTechniques.has(this.technique.id)) { // for highlighting techniques from the techniques search component, where highlightedTactic is null
+            return true;
         }
 
         return this.showContextmenu;

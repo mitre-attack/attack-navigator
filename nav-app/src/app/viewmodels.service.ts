@@ -497,15 +497,16 @@ export class ViewModel {
 
 
     public highlightedTactic: Tactic = null;
-    public highlightedTechnique: Technique = null;
+    public highlightedTechniques: Set<string> = new Set<string>();
 
     /**
      * Highlight the given technique under the given tactic
      * @param {Technique} technique to highlight
      * @param {Tactic} tactic wherein the technique occurs
      */
-    public highlightTechnique(technique: Technique, tactic: Tactic) {
-        this.highlightedTechnique = technique;
+    public highlightTechnique(technique: Technique, tactic?: Tactic | null) {
+        if (this.selectSubtechniquesWithParent && technique.isSubtechnique) this.highlightedTechniques.add(technique.parent.id);
+        this.highlightedTechniques.add(technique.id);
         this.highlightedTactic = tactic;
     }
     /**
@@ -513,7 +514,7 @@ export class ViewModel {
      */
     public clearHighlight() {
         this.highlightedTactic = null;
-        this.highlightedTechnique = null;
+        this.highlightedTechniques = new Set<string>();
     }
 
     /**
@@ -575,20 +576,26 @@ export class ViewModel {
      * select the given technique across all tactics in which it occurs
      * @param {Technique} technique to select
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
+     * @param highlightTechniques, if true, highlight techniques rather than add to selected techniques group
      */
-    public selectTechniqueAcrossTactics(technique: Technique, walkChildren=true): void {
+    public selectTechniqueAcrossTactics(technique: Technique, walkChildren= true, highlightTechniques = false): void {
         if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
             if (technique.isSubtechnique) { //select from parent
-                this.selectTechniqueAcrossTactics(technique.parent, true);
+                this.selectTechniqueAcrossTactics(technique.parent, true, highlightTechniques);
                 return;
             } else { //select subtechniques
                 for (let subtechnique of technique.subtechniques) {
-                    this.selectTechniqueAcrossTactics(subtechnique, false);
+                    this.selectTechniqueAcrossTactics(subtechnique, false, highlightTechniques);
                 }
             }
         }
-        for (let id of technique.get_all_technique_tactic_ids()) {
-            this.selectedTechniques.add(id);
+        if (highlightTechniques) {
+            this.highlightTechnique(technique);
+        }
+        else {
+            for (let id of technique.get_all_technique_tactic_ids()) {
+                this.selectedTechniques.add(id);
+            }
         }
     }
 

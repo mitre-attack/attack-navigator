@@ -45,7 +45,7 @@
                 <div class="results">
                     <table class="results" *ngIf="techniqueResults.length > 0">
                         <tr *ngFor="let result of techniqueResults">
-                            <td>
+                            <td (mouseenter)="mouseEnter(result)" (mouseleave)="mouseLeave()">
                                 <span *ngIf="result.isSubtechnique">{{result.parent.name}}: </span>{{result.name}}
                             </td>
                             <td><a href="{{result.url}}" target="_blank">view</a></td>
@@ -79,7 +79,10 @@
             <div class="results objects" *ngIf="stixType.objects.length !== 0">
                 <table>
                     <tr *ngFor="let stixObject of stixType.objects">
-                        <td>{{stixObject.name}}</td>
+                        <td (mouseenter)="mouseEnter(stixObject, true)"
+                            (mouseleave)="mouseLeave()">
+                            {{stixObject.name}}
+                        </td>
                         <td><a href="{{stixObject.url}}" target="_blank">view</a></td>
                         <td>
                             <button class="button" (click)="selectStix(stixObject)">select</button>

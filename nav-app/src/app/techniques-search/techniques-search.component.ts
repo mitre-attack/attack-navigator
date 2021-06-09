@@ -160,6 +160,19 @@ export class TechniquesSearchComponent implements OnInit {
         this.query = this._query;
     }
 
+    public mouseEnter(technique: Technique, isStix?: boolean): void {
+        if (isStix) {
+            for (let t of this.getRelated(technique)) {
+                this.viewModel.selectTechniqueAcrossTactics(t, true, true);
+            }
+        } else {
+            this.viewModel.highlightTechnique(technique);
+        }
+    }
+    public mouseLeave(): void {
+        this.viewModel.clearHighlight();
+    }
+
     public select(technique: Technique): void {
         this.viewModel.selectTechniqueAcrossTactics(technique);
     }
