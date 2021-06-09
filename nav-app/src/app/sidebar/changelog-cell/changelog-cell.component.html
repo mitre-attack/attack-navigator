@@ -1,0 +1,9 @@
+<div class="technique-cell" [ngStyle]="getTechniqueBackground()" [ngClass]="getClass()">
+    <div (click)="onLeftClick($event)" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+        <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">
+            {{technique.attackID}}
+            <div class="id-name-break"></div>
+            {{technique.name}}
+        </span>
+    </div>
+</div>

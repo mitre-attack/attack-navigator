@@ -114,7 +114,7 @@ export class LayerUpgradeComponent implements OnInit {
         return tactics;
     }
 
-    public getTacticObjects(section: string, tactic: string) {
+    public getTacticObjectIDs(section: string, tactic: string) {
         let objectIDs = [];
         let sectionObjects = this.applyFilter()[section];
         for (let object of sectionObjects) {
@@ -148,7 +148,10 @@ export class LayerUpgradeComponent implements OnInit {
         }
     }
 
-    public getTactic(id: string, vm: ViewModel) {
+    public getTactic(id: string, isCurrent: boolean = true) {
+        let vm = this.viewModel;
+        if (!isCurrent) vm = this.compareTo;
+
         let shortname = vm.getTechniqueVM_id(id).tactic;
         let domain = this.dataService.getDomain(vm.domainID);
         let tactics = [];
@@ -158,22 +161,25 @@ export class LayerUpgradeComponent implements OnInit {
         return tactics.find(t => t.shortname == shortname);
     }
 
-    public getTechnique(id: string, vm: ViewModel) {
+    public getTechnique(id: string, isCurrent: boolean = true) {
+        let vm = this.viewModel;
+        if (!isCurrent) vm = this.compareTo;
+
         let technique_id = vm.getTechniqueVM_id(id).techniqueID;
         let domain = this.dataService.getDomain(vm.domainID);
         let techniques = domain.techniques.concat(domain.subtechniques);
         return techniques.find(t => t.attackID == technique_id);
     }
 
-    public getMatrix(id: string, vm: ViewModel) {
-        let domain = this.dataService.getDomain(vm.domainID);
-        for (let matrix of domain.matrices) {
-            for (let tactic of matrix.tactics) {
-                if (tactic.techniques.includes(this.getTechnique(id, vm))) return matrix;
-            }
-        }
-        return;
-    }
+    // public getMatrix(id: string, vm: ViewModel) {
+    //     let domain = this.dataService.getDomain(vm.domainID);
+    //     for (let matrix of domain.matrices) {
+    //         for (let tactic of matrix.tactics) {
+    //             if (tactic.techniques.includes(this.getTechnique(id, vm))) return matrix;
+    //         }
+    //     }
+    //     return;
+    // }
 
     public onTechniqueHighlight(event: any, technique: Technique, tactic: Tactic) {
         this.viewModel.highlightTechnique(technique, tactic);

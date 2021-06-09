@@ -36,6 +36,7 @@ import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component'
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
+import { ChangelogCellComponent } from './sidebar/changelog-cell/changelog-cell.component';
 
 
 @NgModule({
@@ -57,6 +58,7 @@ import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.com
     VersionUpgradeComponent,
     SidebarComponent,
     LayerUpgradeComponent,
+    ChangelogCellComponent,
   ],
   imports: [
     BrowserModule,
