@@ -44,6 +44,7 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
         let platforms = new Set<String>();
+        let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
             let matrixSDOs = [];
@@ -52,6 +53,10 @@ export class DataService {
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // ignore deprecated and revoked objects in the bundle?
                 if (!includeAll && (sdo.x_mitre_deprecated || sdo.revoked)) continue;
+
+                // filter out duplicates
+                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
+                else break;
 
                 // parse according to type
                 switch(sdo.type) {
@@ -135,12 +140,12 @@ export class DataService {
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-            
+
             //create matrices, which also creates tactics and filters techniques
             for (let matrixSDO of matrixSDOs) {
                 domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
             }
-            
+
             // parse platforms
             for (let technique of domain.techniques) {
                 if (technique.platforms) {
@@ -349,9 +354,9 @@ export class DataService {
     }
 }
 
-/** 
+/**
  * Common attributes for STIX objects
- */ 
+ */
 export abstract class BaseStix {
     public readonly id: string;          // STIX ID
     public readonly attackID: string;    // ATT&CK ID
@@ -570,7 +575,7 @@ export class Mitigation extends BaseStix {
         let rels = this.dataService.getDomain(domainID).relationships.mitigates;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } 
+        }
         else return [];
     }
     /**
@@ -620,10 +625,10 @@ export class Domain {
     public relationships: any = {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
-        subtechniques_of: new Map<string, string[]>(), 
+        subtechniques_of: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
-        group_uses: new Map<string, string[]>(), 
+        group_uses: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         software_uses: new Map<string, string[]>(),
