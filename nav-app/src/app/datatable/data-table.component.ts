@@ -284,13 +284,22 @@ export class DataTableComponent implements AfterViewInit {
     /**
      * Show all sub-techniques in layout view
      */
-    expandSubtechniques(): void {
+    expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
         for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
-                    tvm.showSubtechniques = true;
+                    if (!showAnnotatedOnly) {
+                        tvm.showSubtechniques = true;
+                    } else {
+                        for (let subtechnique of technique.subtechniques) {
+                            tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
+                                let svm = this.viewModel.getTechniqueVM_id(sid);
+                                return svm.annotated();
+                            })
+                        }
+                    }
                 }
             }
         }
