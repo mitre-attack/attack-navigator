@@ -1187,6 +1187,7 @@ export class ViewModel {
             else console.error("TypeError: selectTechniquesAcrossTactics field is not a boolean")
         }
         if ("selectSubtechniquesWithParent" in obj) {
+            obj.selectSubtechniquesWithParent = JSON.parse(obj.selectSubtechniquesWithParent);
             if (typeof(obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
             else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
         }
