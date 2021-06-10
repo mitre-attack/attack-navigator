@@ -114,16 +114,20 @@ export class LayerUpgradeComponent implements OnInit {
         return tactics;
     }
 
-    public getTacticObjectIDs(section: string, tactic: string) {
-        let objectIDs = [];
-        let sectionObjects = this.applyFilter()[section];
+    public getTacticObjects(section: string, tactic: string) {
+        // let objectIDs = [];
+        let objects = [];
+        let sectionObjects: Technique[] = this.applyFilter()[section];
         for (let object of sectionObjects) {
-            let ids = this.getIDs(object);
-            for (let id of ids) {
-                if (id.includes(tactic)) objectIDs.push(id);
-            }
+            if (object.tactics && object.tactics.includes(tactic)) objects.push(object);
+            // if (object.attackID == "T1556") console.log(object.tactics)
+            // let ids = this.getIDs(object);
+            // for (let id of ids) {
+            //     if (id.includes(tactic)) objectIDs.push(id);
+            // }
         }
-        return objectIDs;
+        // return objectIDs;
+        return objects;
     }
 
     public allSelected(section: string) {

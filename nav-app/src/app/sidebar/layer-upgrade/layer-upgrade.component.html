@@ -31,8 +31,8 @@
                     </mat-expansion-panel-header>
 
                     <table *ngIf="['additions', 'deprecations'].includes(section)">
-                        <ng-container *ngFor="let id of getTacticObjectIDs(section, tactic)">
-                            <tr>
+                        <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
+                            <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
                                 <td>
                                     <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                 </td>
@@ -49,8 +49,8 @@
                         </ng-container>
                     </table>
                     <table *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">
-                        <ng-container *ngFor="let id of getTacticObjectIDs(section, tactic)">
-                            <tr>
+                        <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
+                            <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
                                 <td>
                                     <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                 </td>
