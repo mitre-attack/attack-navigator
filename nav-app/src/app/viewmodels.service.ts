@@ -923,22 +923,18 @@ export class ViewModel {
         return techniques.sort((technique1: Technique, technique2: Technique) => {
             const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
             const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            let score1 = 0, score2 = 0;
 
             this.sortSubTechniques(technique1, tactic);
             this.sortSubTechniques(technique2, tactic);
 
-            // if show aggregate scores is enabled, factor that into sorting
-            if (this.layout.showAggregateScores) {
-                techniqueVM1.aggregateScore = this.calculateAggregateScore(technique1, tactic);
-                techniqueVM2.aggregateScore = this.calculateAggregateScore(technique2, tactic);
-                const totalScore = techniqueVM1.aggregateScore - techniqueVM2.aggregateScore;
-                if (totalScore < 0) {
-                    score2 -= totalScore;
-                } else if (totalScore > 0) {
-                    score1 += totalScore;
-                }
+            if (!this.layout.showAggregateScores) {
+                score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
+                score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
+            }
+            else { // if show aggregate scores is enabled, factor that into sorting
+                techniqueVM1.aggregateScore = score1 = this.calculateAggregateScore(technique1, tactic);
+                techniqueVM2.aggregateScore = score2 = this.calculateAggregateScore(technique2, tactic);
             }
 
             switch (this.sorting) {
@@ -983,7 +979,7 @@ export class ViewModel {
     public calculateAggregateScore(technique: Technique, tactic: Tactic): any {
         const tvm = this.getTechniqueVM(technique, tactic);
         let score = 0, validSubTechniquesCount = 0;
-        let scores = [];
+        let scores = [0];
         if (tvm.score.length > 0 && !isNaN(Number(tvm.score))) {
             score = Number(tvm.score);
             scores.push(score);
@@ -991,14 +987,14 @@ export class ViewModel {
         }
         technique.subtechniques.forEach((subtechnique) => {
             const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
-            const scoreNum = Number(techniqueVM.score);
-            if (techniqueVM.score.length > 0 && !isNaN(scoreNum)) {
+            const scoreNum = techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
+            if (scoreNum) {
                 validSubTechniquesCount += 1;
                 score += scoreNum;
                 scores.push(scoreNum);
             }
         });
-        if (validSubTechniquesCount === 0) return;
+        if (validSubTechniquesCount === 0) return score;
         let aggScore = 0;
         switch (this.layout.aggregateFunction) {
             default:
