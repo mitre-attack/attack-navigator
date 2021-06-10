@@ -200,11 +200,32 @@ export class LayerUpgradeComponent implements OnInit {
         this.viewModel.clearHighlight();
     }
 
-    public copyAnnotations(id: string) {
+    public copyAnnotations(id: string, compareId: string) {
+        let tvm = this.viewModel.getTechniqueVM_id(id);
+        let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
+
+        // copy annotations from previous technique
+        let rep = toCopyTvm.serialize();
+        tvm.deSerialize(rep, id.split("^")[0], id.split("^")[1])
+
+        // disable previous technique
+        toCopyTvm.enabled = false;
+
+        // mark as reviewed
         this.reviewedChanged(id);
     }
 
-    public undoCopy(id: string) {
+    public revertCopy(id: string, compareId: string) {
+        let tvm = this.viewModel.getTechniqueVM_id(id);
+        let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
+
+        // reset current technique's annotations
+        tvm.resetAnnotations();
+
+        // re-enable previous technique
+        toCopyTvm.enabled = true;
+
+        // mark as not yet reviewed
         this.reviewedChanged(id);
     }
 }

@@ -47,10 +47,10 @@
                                             (unhighlight)="onTechniqueUnhighlight($event)">
                                         </changelog-cell>
                                     </td>
-                                    <!-- copy/undo button -->
+                                    <!-- copy/revert button -->
                                     <td>
-                                        <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button>
-                                        <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button>
+                                        <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
+                                        <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
                                     </td>
                                 </ng-container>
                                 <!-- Technique from new layer -->
