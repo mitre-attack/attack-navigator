@@ -514,6 +514,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 newViewModel.compareTo = prevViewModel;
                 this.openTab("new layer", newViewModel, true, true, true, true);
                 newViewModel.sidebarOpened = true;
+                newViewModel.selectTechniquesAcrossTactics = false;
 
                 // load layer version & latest ATT&CK version
                 let loads: any = {};
