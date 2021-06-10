@@ -30,43 +30,29 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <table *ngIf="['additions', 'deprecations'].includes(section)">
-                        <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
-                            <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
-                                <td>
-                                    <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
-                                </td>
-                                <td>
-                                    <changelog-cell
-                                        [tactic]="getTactic(id)"
-                                        [technique]="getTechnique(id)" 
-                                        [viewModel]="viewModel"
-                                        (highlight)="onTechniqueHighlight($event, getTechnique(id), getTactic(id))"
-                                        (unhighlight)="onTechniqueUnhighlight($event)">
-                                    </changelog-cell>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </table>
-                    <table *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">
+                    <table>
                         <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
                             <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
                                 <td>
                                     <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                 </td>
                                 <!-- Technique from previous version -->
-                                <td>
-                                    <!-- <changelog-cell
-                                        [tactic]="getTactic(id, false)"
-                                        [technique]="getTechnique(id, false)" 
-                                        [viewModel]="compareTo">
-                                    </changelog-cell> -->
-                                </td>
-                                <!-- copy/undo button -->
-                                <!-- <td> -->
-                                    <!-- <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button> -->
-                                    <!-- <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button> -->
-                                <!-- </td> -->
+                                <ng-container *ngIf="getRelatedObjectID(object, section, tactic) as compareId">
+                                    <td>
+                                        <changelog-cell
+                                            [tactic]="getTactic(compareId, false)"
+                                            [technique]="getTechnique(compareId, false)" 
+                                            [viewModel]="compareTo"
+                                            (highlight)="onTechniqueHighlight($event, getTechnique(id), getTactic(id))"
+                                            (unhighlight)="onTechniqueUnhighlight($event)">
+                                        </changelog-cell>
+                                    </td>
+                                    <!-- copy/undo button -->
+                                    <td>
+                                        <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id)">&gt;</button>
+                                        <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="undo copy" (click)="undoCopy(id)">&lt;</button>
+                                    </td>
+                                </ng-container>
                                 <!-- Technique from new layer -->
                                 <td>
                                     <changelog-cell

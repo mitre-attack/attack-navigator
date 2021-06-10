@@ -115,19 +115,27 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     public getTacticObjects(section: string, tactic: string) {
-        // let objectIDs = [];
         let objects = [];
         let sectionObjects: Technique[] = this.applyFilter()[section];
         for (let object of sectionObjects) {
             if (object.tactics && object.tactics.includes(tactic)) objects.push(object);
-            // if (object.attackID == "T1556") console.log(object.tactics)
-            // let ids = this.getIDs(object);
-            // for (let id of ids) {
-            //     if (id.includes(tactic)) objectIDs.push(id);
-            // }
         }
-        // return objectIDs;
         return objects;
+    }
+
+    public getRelatedObjectID(object: Technique, section: string, tactic: string) {
+        // check if object has no related object in the previous version
+        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return false;
+
+        // find related object
+        let prevTechniques: Technique[];
+        let domain = this.dataService.getDomain(this.compareTo.domainID);
+        if (object.isSubtechnique) prevTechniques = domain.subtechniques;
+        else prevTechniques = domain.techniques;
+        let prevObject = prevTechniques.find(t => t.attackID === object.attackID);
+        if (prevObject.tactics.includes(tactic)) return prevObject.get_technique_tactic_id(tactic);
+        else return false;
+        // TODO if tactic changed?
     }
 
     public allSelected(section: string) {
