@@ -939,17 +939,17 @@ export class ViewModel {
 
             switch (this.sorting) {
                 default:
-                case 0:
+                case 0: // A-Z
                     return technique1.name.localeCompare(technique2.name);
-                case 1:
+                case 1: // Z-A
                     return technique2.name.localeCompare(technique1.name);
-                case 2:
+                case 2: // ascending
                     if (score1 === score2) {
                         return technique1.name.localeCompare(technique2.name);
                     } else {
                         return score1 - score2;
                     }
-                case 3:
+                case 3: // descending
                     if (score1 === score2) {
                         return technique1.name.localeCompare(technique2.name);
                     } else {
@@ -978,30 +978,30 @@ export class ViewModel {
 
     public calculateAggregateScore(technique: Technique, tactic: Tactic): any {
         const tvm = this.getTechniqueVM(technique, tactic);
-        let score = 0, validSubTechniquesCount = 0;
-        let scores = [0];
-        if (tvm.score.length > 0 && !isNaN(Number(tvm.score))) {
-            score = Number(tvm.score);
-            scores.push(score);
-            validSubTechniquesCount += 1;
-        }
+        let score = tvm.score.length > 0 ? Number(tvm.score) : 0;
+        let validTechniquesCount = tvm.score.length > 0 ? 1 : 0;
+        let scores = [score];
+
         technique.subtechniques.forEach((subtechnique) => {
-            const techniqueVM = this.getTechniqueVM(subtechnique, tactic);
-            const scoreNum = techniqueVM.score.length > 0 ? Number(techniqueVM.score) : 0;
-            if (scoreNum) {
-                validSubTechniquesCount += 1;
-                score += scoreNum;
+            const svm = this.getTechniqueVM(subtechnique, tactic);
+            const scoreNum = svm.score.length > 0 ? Number(svm.score) : 0;
+            if (svm.score.length > 0) {
+                validTechniquesCount += 1;
                 scores.push(scoreNum);
             }
         });
-        if (validSubTechniquesCount === 0) return score;
+
+        if (validTechniquesCount === 0) return score;
+
         let aggScore = 0;
+
         switch (this.layout.aggregateFunction) {
             default:
             case "average":
                 // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
                 // Otherwise, divide by count of all scored only
-                aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validSubTechniquesCount)).toFixed(2);
+                score = scores.reduce((a, b) => a + b)
+                aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validTechniquesCount)).toFixed(2);
                 break;
             case "min":
                 if (scores.length > 0) aggScore = Math.min(...scores);
@@ -1010,7 +1010,7 @@ export class ViewModel {
                 if (scores.length > 0) aggScore = Math.max(...scores);
                 break;
             case "sum":
-                aggScore = score;
+                aggScore = scores.reduce((a, b) => a + b);
                 break;
         }
         tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
