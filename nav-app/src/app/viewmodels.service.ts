@@ -923,7 +923,7 @@ export class ViewModel {
         return techniques.sort((technique1: Technique, technique2: Technique) => {
             const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
             const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-            let score1 = 0, score2 = 0;
+            let score1, score2;
 
             this.sortSubTechniques(technique1, tactic);
             this.sortSubTechniques(technique2, tactic);
@@ -932,9 +932,11 @@ export class ViewModel {
                 score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
                 score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
             }
-            else { // if show aggregate scores is enabled, factor that into sorting
-                techniqueVM1.aggregateScore = score1 = this.calculateAggregateScore(technique1, tactic);
-                techniqueVM2.aggregateScore = score2 = this.calculateAggregateScore(technique2, tactic);
+            else { // if show aggregate scores is enabled, factor that into sorting, and prefer techniques scored 0 over unscored
+                score1 = this.calculateAggregateScore(technique1, tactic);
+                techniqueVM1.aggregateScore = Number.isFinite(score1) ? score1.toString() : "";
+                score2 = this.calculateAggregateScore(technique2, tactic);
+                techniqueVM2.aggregateScore = Number.isFinite(score2) ? score2.toString() : "";
             }
 
             switch (this.sorting) {
@@ -991,7 +993,7 @@ export class ViewModel {
             }
         });
 
-        if (validTechniquesCount === 0) return score;
+        if (validTechniquesCount === 0) return tvm.score.length > 0 ? score : Number.NEGATIVE_INFINITY;
 
         let aggScore: any = 0;
 
