@@ -993,15 +993,15 @@ export class ViewModel {
 
         if (validTechniquesCount === 0) return score;
 
-        let aggScore = 0;
+        let aggScore: any = 0;
 
         switch (this.layout.aggregateFunction) {
             default:
             case "average":
                 // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
                 // Otherwise, divide by count of all scored only
-                score = scores.reduce((a, b) => a + b)
-                aggScore = +(score / ((this.layout.countUnscored) ? technique.subtechniques.length + 1 : validTechniquesCount)).toFixed(2);
+                score = scores.reduce((a, b) => a + b);
+                aggScore = score / (this.layout.countUnscored ? (technique.subtechniques.length + 1) : validTechniquesCount);
                 break;
             case "min":
                 if (scores.length > 0) aggScore = Math.min(...scores);
@@ -1013,8 +1013,10 @@ export class ViewModel {
                 aggScore = scores.reduce((a, b) => a + b);
                 break;
         }
+
+        aggScore = aggScore.toFixed(2);
         tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
-        return aggScore;
+        return +aggScore;
     }
 
     /**
