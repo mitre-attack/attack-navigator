@@ -70,4 +70,8 @@
     ::ng-deep mat-panel-description {
         align-items: center;
     }
+    .button-container {
+        display: flex;
+        justify-content: flex-end;
+    }
 }
