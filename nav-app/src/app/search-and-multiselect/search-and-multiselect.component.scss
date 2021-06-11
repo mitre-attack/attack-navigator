@@ -1,5 +1,8 @@
 @import "../../colors.scss";
 .search-and-multiselect {
+    mat-label {
+        padding-left: 5px;
+    }
     .mat-form-field-appearance-outline {
         width: 100%;
     }
