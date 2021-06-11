@@ -109,6 +109,17 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
+    // getTechniqueResults() checks if query is:
+    // 1) valid, and
+    // 2) part of last query, otherwise call getTechniques() to search all objects again
+    getTechniqueResults(query = "") {
+        if (query.trim() != "" && query.includes(this.previousQuery)) {
+            this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
+        } else {
+            this.getTechniques();
+        }
+    }
+
     getTechniques() {
         //get master list of techniques and sub-techniques
         let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
@@ -118,11 +129,14 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.techniqueResults = this.filterAndSort(allTechniques, "", true);
     }
 
-    getTechniqueResults(query = "") {
+    // getStixResults() checks if query is:
+    // 1) valid, and
+    // 2) part of last query, otherwise call getStixData() to search all objects again
+    getStixResults(query = "") {
         if (query.trim() != "" && query.includes(this.previousQuery)) {
-            this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
+            this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
-            this.getTechniques();
+            this.getStixData();
         }
     }
 
@@ -139,17 +153,6 @@ export class SearchAndMultiselectComponent implements OnInit {
             "label": "mitigations",
             "objects": this.filterAndSort(domain.mitigations)
         }]
-    }
-
-    // getStixResults() checks if query is:
-    // 1) valid, and
-    // 2) part of last query, otherwise call getStixData() to search all objects again
-    getStixResults(query = "") {
-        if (query.trim() != "" && query.includes(this.previousQuery)) {
-            this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
-        } else {
-            this.getStixData();
-        }
     }
 
     public toggleFieldEnabled(field: string) {
