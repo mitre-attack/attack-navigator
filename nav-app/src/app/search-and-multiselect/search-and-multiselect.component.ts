@@ -175,20 +175,44 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.viewModel.clearHighlight();
     }
 
-    public select(technique: Technique): void {
-        this.viewModel.selectTechniqueAcrossTactics(technique);
+    public select(stixObject: any, isTechnique= true): void {
+        if (isTechnique) {
+            this.viewModel.selectTechniqueAcrossTactics(stixObject);
+        }
+        else if (!isTechnique) {
+            for (let technique of this.getRelated(stixObject)) {
+                this.viewModel.selectTechniqueAcrossTactics(technique);
+            }
+        }
     }
 
-    public deselect(technique: Technique): void {
-        this.viewModel.unselectTechniqueAcrossTactics(technique);
+    public deselect(stixObject: any, isTechnique = true): void {
+        if (isTechnique) {
+            this.viewModel.unselectTechniqueAcrossTactics(stixObject);
+        }
+        else if (!isTechnique) {
+            for (let technique of this.getRelated(stixObject)) {
+                this.viewModel.unselectTechniqueAcrossTactics(technique);
+            }
+        }
     }
 
-    public selectAll(items: any[]): void {
-        for (let result of items) this.select(result);
+    public selectAll(items: any[], isTechniqueArray = true): void {
+        if (isTechniqueArray) {
+            for (let result of items) this.select(result, isTechniqueArray);
+        }
+        else if (!isTechniqueArray) {
+            for (let stixObject of items) this.select(stixObject, isTechniqueArray);
+        }
     }
 
-    public deselectAll(items: any[]): void {
-        for (let result of items) this.deselect(result);
+    public deselectAll(items: any[], isTechniqueArray = true): void {
+        if (isTechniqueArray) {
+            for (let result of items) this.deselect(result, isTechniqueArray);
+        }
+        else if (!isTechniqueArray) {
+            for (let stixObject of items) this.deselect(stixObject, isTechniqueArray);
+        }
     }
 
     public selectStix(stixObject: BaseStix): void {

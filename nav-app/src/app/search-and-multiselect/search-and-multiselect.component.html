@@ -73,8 +73,8 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <div class="allresults-buttons">
-                <button class="button" (click)="selectAllStix(stixType.objects)">select all</button>
-                <button class="button" (click)="deselectAllStix(stixType.objects)">deselect all</button>
+                <button class="button" (click)="selectAll(stixType.objects, false)">select all</button>
+                <button class="button" (click)="deselectAll(stixType.objects, false)">deselect all</button>
             </div>
             <div class="results objects">
                 <table *ngIf="stixType.objects.length > 0; else noResults">
@@ -85,10 +85,10 @@
                         </td>
                         <td><a href="{{stixObject.url}}" target="_blank">view</a></td>
                         <td>
-                            <button class="button" (click)="selectStix(stixObject)">select</button>
+                            <button class="button" (click)="select(stixObject, false)">select</button>
                         </td>
                         <td>
-                            <button class="button" (click)="deselectStix(stixObject)">deselect</button>
+                            <button class="button" (click)="deselect(stixObject, false)">deselect</button>
                         </td>
                     </tr>
                 </table>
