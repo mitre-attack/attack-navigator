@@ -65,21 +65,27 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.getTechniques();
     }
 
-    // filterAndSort() takes an array of items and does the following:
-    // 1) if the query is empty, then it sorts the array
-    // 2) if the query is not empty, then it filters the already sorted array until nothing is left, or,
-    // the query is cleared out and empty again
-    filterAndSort(items: any[], query = "", sortAllTechniques = false) {
+    /**
+     * filterAndSort() takes an array of items and does the following:
+     *       1) if the query is empty, then it sorts the array
+     *       2) if the query is not empty, then it filters the already sorted array until nothing is left, or until
+     *          the query is cleared out and empty again
+     * @param items BaseStix[] or Technique[] objects to be filtered and sorted
+     * @param query user-input query in search bar
+     * @param sortTechniquesAndSubtechniques will be true if called from getTechniqueResults(),
+     *                                       to sort techniques and all its subtechniques,
+     *                                       otherwise just sort BaseStix items by name
+     */
+    filterAndSort(items: BaseStix[], query = "", sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
         let results = items;
         if (query.trim() === "") {
-            if (sortAllTechniques) {
+            if (sortTechniquesAndSubtechniques) {
                 results.sort((tA: Technique, tB: Technique) => {
                     let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
                     let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;
                     return c1.localeCompare(c2)
                 });
-                // console.log(seenIDs, techniqueResults)
             } else {
                 results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
             }
