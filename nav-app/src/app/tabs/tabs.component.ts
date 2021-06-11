@@ -3,7 +3,6 @@ import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, Vie
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
-import { forkJoin } from 'rxjs';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
@@ -489,10 +488,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             this.alwaysUpgradeVersion = result.upgrade;
                         }
                         if (result.upgrade) {
-                            let prevDomainID = viewModel.domainID;
                             viewModel.version = currVersion
                             viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                            resolve({previous: prevDomainID, latest: viewModel.domainID});
                         }
                         resolve(null);
                     },
@@ -534,34 +531,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 if (!this.dataService.getDomain(viewModel.domainID)) {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
-                this.versionUpgradeDialog(viewModel).then( (versions) => {
+                this.versionUpgradeDialog(viewModel).then( () => {
                     this.openTab("new layer", viewModel, true, true, true, true);
-                    if (versions) { // user upgraded to latest version
-                        let loads: any = {};
-                        if (!this.dataService.getDomain(versions.previous).dataLoaded) loads.previous = this.dataService.loadDomainData(versions.previous, true, true);
-                        if (!this.dataService.getDomain(versions.latest).dataLoaded) loads.latest = this.dataService.loadDomainData(versions.latest, true, true);
-
-                        // load layer version & latest ATT&CK version
-                        if (Object.keys(loads).length) {
-                            let dataSubscription = forkJoin(loads).subscribe({
-                                next: () => {
-                                    this.dataService.compareVersions(versions.previous, versions.latest);
-                                    viewModel.sidebarOpened = true;
-                                    viewModel.sidebarContentType = 'layerUpgrade';
-                                    viewModel.deSerialize(string);
-                                    viewModel.loadVMData();
-                                },
-                                complete: () => { dataSubscription.unsubscribe(); }
-                            });
-                        } else {
-                            this.dataService.compareVersions(versions.previous, versions.latest);
-                            viewModel.sidebarContentType = 'layerUpgrade';
-                            viewModel.sidebarOpened = true;
-                            viewModel.deSerialize(string);
-                            viewModel.loadVMData();
-                        }
-                    }
-                    else if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
+                    if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
                             viewModel.loadVMData();
