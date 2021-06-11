@@ -22,7 +22,7 @@ export class AppComponent {
         $event.returnValue='Are you sure you want to navigate away? Your data may be lost!';
     }
 
-    constructor(public configService: ConfigService, public dataService: DataService) {
+    constructor(public configService: ConfigService) {
         Array.prototype.includes = function(value): boolean {
             // console.log("checking include")
             for (let i = 0; i < this.length; i++) {
@@ -31,6 +31,4 @@ export class AppComponent {
             return false;
         }
     }
-
-
 }
