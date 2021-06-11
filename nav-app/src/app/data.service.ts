@@ -28,7 +28,6 @@ export class DataService {
     public versions: any[] = [];
 
     public subtechniquesEnabled: boolean = true;
-    public versionChangelog?: VersionChangelog<Technique>;å
 
     /**
      * Callback functions passed to this function will be called after data is loaded
@@ -42,7 +41,7 @@ export class DataService {
      * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
-    parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
+    parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
         let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
@@ -52,7 +51,7 @@ export class DataService {
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // ignore deprecated and revoked objects in the bundle?
-                if (!includeAll && (sdo.x_mitre_deprecated || sdo.revoked)) continue;
+                if (sdo.x_mitre_deprecated || sdo.revoked) continue;
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
@@ -261,13 +260,13 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainID: string, includeAll: boolean = false, refresh: boolean = false): Promise<any> {
+    loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data, includeAll);
+                        this.parseBundle(domain, data);
                         resolve(null);
                     },
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
@@ -309,49 +308,6 @@ export class DataService {
     isSupported(version: string) {
         return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
     }
-
-    /**
-     * Compare two ATT&CK versions and return a set of object changes
-     * @param previous imported layer version to upgrade from
-     * @param latest latest ATT&CK version to upgrade to
-     */
-    public compareVersions(previous: string, latest: string): VersionChangelog<Technique> {
-        let changelog = new VersionChangelog<Technique>(previous, latest);
-        let previousDomain = this.getDomain(previous);
-        let latestDomain = this.getDomain(latest);
-
-        let previousTechniques = previousDomain.techniques.concat(previousDomain.subtechniques);
-        let latestTechniques = latestDomain.techniques.concat(latestDomain.subtechniques);
-        for (let latestTechnique of latestTechniques) {
-            if (!latestTechnique) continue;
-
-            let prevTechnique = previousTechniques.find(p => p.id == latestTechnique.id);
-            if (!prevTechnique) {
-                 // object doesn't exist in previous version, added to latest version
-                changelog.additions.push(latestTechnique);
-            }
-            else if (latestTechnique.modified == prevTechnique.modified) {
-                // no changes made to the object
-                changelog.unchanged.push(latestTechnique);
-            } else {
-                // changes were made to the object
-                if (latestTechnique.revoked && !prevTechnique.revoked) {
-                    // object was revoked since the previous version
-                    changelog.revocations.push(latestTechnique);
-                } else if (latestTechnique.deprecated && !prevTechnique.deprecated) {
-                    // object was deprecated since the previous version
-                    changelog.deprecations.push(latestTechnique);
-                } else if (latestTechnique.compareVersion(prevTechnique.version) != 0) {
-                    // version number changed
-                    changelog.changes.push(latestTechnique);
-                } else { // minor change
-                    changelog.minor_changes.push(latestTechnique);
-                }
-            }
-        }
-        this.versionChangelog = changelog;
-        return changelog;
-    }
 }
 
 /**
@@ -363,11 +319,6 @@ export abstract class BaseStix {
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
-    public readonly created: string;     // date object was created
-    public readonly modified: string;    // date object was last modified
-    public readonly revoked: boolean;    // is the object revoked?
-    public readonly deprecated: boolean; // is the object deprecated?
-    public readonly version: string;     // object version
     protected readonly dataService: DataService;
     constructor(stixSDO: any, dataService: DataService) {
         this.id = stixSDO.id;
@@ -375,27 +326,7 @@ export abstract class BaseStix {
         this.description = stixSDO.description;
         this.attackID = stixSDO.external_references[0].external_id;
         this.url = stixSDO.external_references[0].url;
-        this.created = stixSDO.created;
-        this.modified = stixSDO.modified;
-        this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
-        this.deprecated = stixSDO.x_mitre_deprecated ? stixSDO.x_mitre_deprecated : false;
-        this.version = stixSDO.x_mitre_version ? stixSDO.x_mitre_version : '';
         this.dataService = dataService;
-    }
-
-    public compareVersion(v: string): number {
-        if (!this.version || !v) return 0; // one or both of the objects have no version
-
-        let thisVersion = this.version.split('.');
-        let prevVersion = v.split('.');
-        for (let i = 0; i < Math.max(thisVersion.length, prevVersion.length); i++) {
-            if (thisVersion.length == prevVersion.length && thisVersion.length < i) return 0;
-            if (thisVersion.length < i) return -1;
-            if (prevVersion.length < i) return 1;
-            if (+thisVersion[i] == +prevVersion[i]) continue;
-            return +thisVersion[i] - +prevVersion[i];
-        }
-        return 0
     }
 }
 
@@ -430,10 +361,7 @@ export class Tactic extends BaseStix {
     constructor(stixSDO: any, techniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.shortname = stixSDO.x_mitre_shortname;
-        this.techniques = techniques.filter((technique: Technique) => {
-            if (!technique.revoked && !technique.deprecated)
-                return technique.tactics.includes(this.shortname)
-        });
+        this.techniques = techniques.filter((technique: Technique) => technique.tactics.includes(this.shortname));
     }
 }
 /**
@@ -458,9 +386,7 @@ export class Technique extends BaseStix {
 		      this.datasources = stixSDO.x_mitre_data_sources.toString();
 	    else
 		      this.datasources = "";
-
-        if (!this.revoked && !this.deprecated)
-            this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
+        this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
 
         this.subtechniques = subtechniques;
         for (let subtechnique of this.subtechniques) {
@@ -484,29 +410,7 @@ export class Technique extends BaseStix {
      * Basically the same as calling get_technique_tactic_id with all valid tactic values
      */
     public get_all_technique_tactic_ids(): string[] {
-        if (this.revoked || this.deprecated) return [];
         return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
-    }
-}
-
-export class VersionChangelog<T> {
-    public previousVersion: string;
-    public latestVersion: string;
-    public additions: T[] = []; // new objects added to newest version
-    public changes: T[] = []; // object changes between versions
-    public minor_changes: T[] = []; // changes to objects without version increments
-    public deprecations: T[] = []; // objects deprecated since older version
-    public revocations: T[] = []; // objects revoked since older version
-    public unchanged: T[] = []; // objects which have not changed between versions
-
-    constructor(prev: string, latest: string) {
-        this.previousVersion = prev;
-        this.latestVersion = latest;
-    }
-
-    public length(): number {
-        return this.additions.length + this.changes.length + this.minor_changes.length +
-               this.deprecations.length + this.revocations.length;
     }
 }
 
