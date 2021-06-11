@@ -1,12 +1,12 @@
 @import "../../colors.scss";
 .search-and-multiselect {
-    ::ng-deep .mat-form-field-appearance-outline {
+    .mat-form-field-appearance-outline {
         width: 100%;
     }
-    ::ng-deep .mat-form-field-outline-start {
+    .mat-form-field-outline-start {
         width: 30px !important;
     }
-    ::ng-deep .mat-form-field-outline-start, ::ng-deep .mat-form-field-outline-gap, ::ng-deep .mat-form-field-outline-end {
+    .mat-form-field-outline-start, .mat-form-field-outline-gap, .mat-form-field-outline-end {
         background-color: white;
     }
     .sidebar-content {
@@ -67,7 +67,7 @@
             text-align: center;
         }
     }
-    ::ng-deep mat-panel-description {
+    mat-panel-description {
         align-items: center;
     }
     .button-container {

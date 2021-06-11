@@ -1,12 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../viewmodels.service';
 import {BaseStix, DataService, Group, Mitigation, Software, Technique} from '../data.service';
 
 @Component({
   selector: 'app-search-and-multiselect',
   templateUrl: './search-and-multiselect.component.html',
-  styleUrls: ['./search-and-multiselect.component.scss']
+  styleUrls: ['./search-and-multiselect.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
+
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
     public stixTypes: any[];

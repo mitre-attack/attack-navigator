@@ -43,7 +43,7 @@
                     <button class="button" (click)="deselectAll(techniqueResults)">deselect all</button>
                 </div>
                 <div class="results">
-                    <table class="results" *ngIf="techniqueResults.length > 0">
+                    <table class="results" *ngIf="techniqueResults.length > 0; else noTechniquesResults">
                         <tr *ngFor="let result of techniqueResults">
                             <td (mouseenter)="mouseEnter(result)" (mouseleave)="mouseLeave()">
                                 <span *ngIf="result.isSubtechnique">{{result.parent.name}}: </span>{{result.name}}
@@ -57,7 +57,7 @@
                             </td>
                         </tr>
                     </table>
-                    <div class="no-results" *ngIf="techniqueResults.length == 0"> no results</div>
+                    <ng-template #noTechniquesResults><div class="no-results">no results for techniques</div></ng-template>
                 </div>
             </div>
         </mat-expansion-panel>
@@ -76,8 +76,8 @@
                 <button class="button" (click)="selectAllStix(stixType.objects)">select all</button>
                 <button class="button" (click)="deselectAllStix(stixType.objects)">deselect all</button>
             </div>
-            <div class="results objects" *ngIf="stixType.objects.length !== 0">
-                <table>
+            <div class="results objects">
+                <table *ngIf="stixType.objects.length > 0; else noResults">
                     <tr *ngFor="let stixObject of stixType.objects">
                         <td (mouseenter)="mouseEnter(stixObject, true)"
                             (mouseleave)="mouseLeave()">
@@ -92,9 +92,7 @@
                         </td>
                     </tr>
                 </table>
-            </div>
-            <div *ngIf="stixType.objects.length == 0">
-                Data does not include {{stixType.label}}
+                <ng-template #noResults><div class="no-results">no results for {{stixType.label}}</div></ng-template>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
