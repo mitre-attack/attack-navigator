@@ -34,7 +34,6 @@ import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contex
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
@@ -55,8 +54,7 @@ import { MatDividerModule } from "@angular/material/divider";
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
-    SidebarComponent,
-    LayerUpgradeComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
