@@ -207,7 +207,7 @@ export class TechniquesSearchComponent implements OnInit {
         }
     }
 
-    public deselectAllSitx(items: BaseStix[]): void {
+    public deselectAllStix(items: BaseStix[]): void {
         for (let stixObject of items) {
             this.deselectStix(stixObject);
         }
