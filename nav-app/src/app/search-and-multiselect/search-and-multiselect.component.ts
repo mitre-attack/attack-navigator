@@ -215,30 +215,6 @@ export class SearchAndMultiselectComponent implements OnInit {
         }
     }
 
-    public selectStix(stixObject: BaseStix): void {
-        for (let technique of this.getRelated(stixObject)) {
-            this.viewModel.selectTechniqueAcrossTactics(technique);
-        }
-    }
-
-    public deselectStix(stixObject: BaseStix): void {
-        for (let technique of this.getRelated(stixObject)) {
-            this.viewModel.unselectTechniqueAcrossTactics(technique);
-        }
-    }
-
-    public selectAllStix(items: BaseStix[]): void {
-        for (let stixObject of items) {
-            this.selectStix(stixObject);
-        }
-    }
-
-    public deselectAllStix(items: BaseStix[]): void {
-        for (let stixObject of items) {
-            this.deselectStix(stixObject);
-        }
-    }
-
     public getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
         let techniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
