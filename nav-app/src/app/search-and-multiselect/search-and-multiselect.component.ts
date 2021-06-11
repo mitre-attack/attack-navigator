@@ -3,11 +3,11 @@ import { ViewModel } from '../viewmodels.service';
 import {BaseStix, DataService, Group, Mitigation, Software, Technique} from '../data.service';
 
 @Component({
-  selector: 'app-techniques-search',
-  templateUrl: './techniques-search.component.html',
-  styleUrls: ['./techniques-search.component.scss']
+  selector: 'app-search-and-multiselect',
+  templateUrl: './search-and-multiselect.component.html',
+  styleUrls: ['./search-and-multiselect.component.scss']
 })
-export class TechniquesSearchComponent implements OnInit {
+export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
     public stixTypes: any[];
 
