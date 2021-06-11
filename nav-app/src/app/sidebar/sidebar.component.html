@@ -1,8 +1,5 @@
 <div class="sidebar">
     <div *ngIf="viewModel">
-        <div *ngIf="dataService.versionChangelog && viewModel.sidebarContentType === 'layerUpgrade'">
-            <layer-upgrade [viewModel]="viewModel" [changelog]="dataService.versionChangelog"></layer-upgrade>
-        </div>
         <div *ngIf="viewModel.sidebarContentType === 'search'">
             <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
         </div>
