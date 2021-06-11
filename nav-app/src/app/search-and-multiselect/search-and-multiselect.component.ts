@@ -171,8 +171,8 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.query = this._query;
     }
 
-    public mouseEnter(technique: Technique, isStix?: boolean): void {
-        if (isStix) {
+    public mouseEnter(technique: Technique, isTechnique = true): void {
+        if (!isTechnique) {
             for (let t of this.getRelated(technique)) {
                 this.viewModel.selectTechniqueAcrossTactics(t, true, true);
             }

@@ -79,7 +79,7 @@
             <div class="results objects">
                 <table *ngIf="stixType.objects.length > 0; else noResults">
                     <tr *ngFor="let stixObject of stixType.objects">
-                        <td (mouseenter)="mouseEnter(stixObject, true)"
+                        <td (mouseenter)="mouseEnter(stixObject, false)"
                             (mouseleave)="mouseLeave()">
                             {{stixObject.name}}
                         </td>
