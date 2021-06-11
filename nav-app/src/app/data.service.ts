@@ -55,7 +55,7 @@ export class DataService {
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
-                else break;
+                else continue;
 
                 // parse according to type
                 switch(sdo.type) {
