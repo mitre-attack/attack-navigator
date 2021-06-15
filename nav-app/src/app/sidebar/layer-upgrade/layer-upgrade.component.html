@@ -3,6 +3,7 @@
     <div>
         <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
         <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
+        <button class="button" (click)="copyAll()">copy all annotations</button>
     </div>
     <div>
         <mat-accordion class="headers-align">

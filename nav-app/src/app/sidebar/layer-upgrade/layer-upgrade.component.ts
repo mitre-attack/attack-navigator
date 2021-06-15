@@ -79,6 +79,7 @@ export class LayerUpgradeComponent implements OnInit {
         return this.reviewed.has(id);
     }
 
+    // TODO: update to review() and unreview()
     public reviewedChanged(id: string, unselect?: boolean) {
         if (this.isReviewed(id) || unselect) {
             this.reviewed.delete(id);
@@ -104,7 +105,7 @@ export class LayerUpgradeComponent implements OnInit {
         return tactics;
     }
 
-    public getTacticObjects(section: string, tactic: string) {
+    public getTacticObjects(section: string, tactic: string): Technique[] {
         let objects = [];
         let sectionObjects: Technique[] = this.applyFilter()[section];
         for (let object of sectionObjects) {
@@ -113,9 +114,9 @@ export class LayerUpgradeComponent implements OnInit {
         return objects;
     }
 
-    public getRelatedObjectID(object: Technique, section: string, tactic: string) {
+    public getRelatedObjectID(object: Technique, section: string, tactic: string): string {
         // check if object has no related object in the previous version
-        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return false;
+        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return undefined;
 
         // find related object
         let prevTechniques: Technique[];
@@ -124,11 +125,11 @@ export class LayerUpgradeComponent implements OnInit {
         else prevTechniques = domain.techniques;
         let prevObject = prevTechniques.find(t => t.attackID === object.attackID);
         if (prevObject.tactics.includes(tactic)) return prevObject.get_technique_tactic_id(tactic);
-        else return false;
+        else return undefined;
         // TODO if tactic changed?
     }
 
-    public allSelected(section: string) {
+    public allSelected(section: string): boolean {
         let objectIDs = [];
         for (let object of this.changelog[section]) {
             this.getIDs(object).forEach(id => objectIDs.push(id));
@@ -136,7 +137,7 @@ export class LayerUpgradeComponent implements OnInit {
         return objectIDs.every(id => this.reviewed.has(id));
     }
 
-    public selectAllChanged(section: string) {
+    public selectAllChanged(section: string): void {
         if (this.allSelected(section)) {
             // unselect all
             for (let object of this.changelog[section]) {
@@ -150,7 +151,7 @@ export class LayerUpgradeComponent implements OnInit {
         }
     }
 
-    public getTactic(id: string, isCurrent: boolean = true) {
+    public getTactic(id: string, isCurrent: boolean = true): Tactic {
         let vm = this.viewModel;
         if (!isCurrent) vm = this.compareTo;
 
@@ -163,7 +164,7 @@ export class LayerUpgradeComponent implements OnInit {
         return tactics.find(t => t.shortname == shortname);
     }
 
-    public getTechnique(id: string, isCurrent: boolean = true) {
+    public getTechnique(id: string, isCurrent: boolean = true): Technique {
         let vm = this.viewModel;
         if (!isCurrent) vm = this.compareTo;
 
@@ -173,7 +174,19 @@ export class LayerUpgradeComponent implements OnInit {
         return techniques.find(t => t.attackID == technique_id);
     }
 
-    public copyAnnotations(id: string, compareId: string) {
+    public copyAll(): void {
+        for (let section of this.sections) {
+            for (let tactic of this.getSectionTactics(section)) {
+                for (let object of this.getTacticObjects(section, tactic)) {
+                    let id = object.get_technique_tactic_id(tactic);
+                    let compareId = this.getRelatedObjectID(object, section, tactic);
+                    this.copyAnnotations(id, compareId);
+                }
+            }
+        }
+    }
+
+    public copyAnnotations(id: string, compareId: string): void {
         let tvm = this.viewModel.getTechniqueVM_id(id);
         let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
 
@@ -188,7 +201,7 @@ export class LayerUpgradeComponent implements OnInit {
         this.reviewedChanged(id);
     }
 
-    public revertCopy(id: string, compareId: string) {
+    public revertCopy(id: string, compareId: string): void {
         let tvm = this.viewModel.getTechniqueVM_id(id);
         let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
 
