@@ -168,7 +168,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/alice-color/attack-navigator/master/nav-app/src/DB/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
 
     /**

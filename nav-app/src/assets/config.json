@@ -5,7 +5,7 @@
             "domains": [
                 {   
                     "name": "Enterprise", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/alice-color/attack-navigator/master/nav-app/src/DB/enterprise-attack.json"]
                 },
                 {   
                     "name": "Mobile", 
