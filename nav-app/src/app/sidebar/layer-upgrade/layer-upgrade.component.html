@@ -47,6 +47,7 @@
                                             [tactic]="getTactic(compareId, false)"
                                             [technique]="getTechnique(compareId, false)" 
                                             [viewModel]="compareTo"
+                                            [isCurrentVersion]="false"
                                             (highlight)="onTechniqueHighlight($event, getTechnique(id), getTactic(id))"
                                             (unhighlight)="onTechniqueUnhighlight($event)">
                                         </changelog-cell>
@@ -83,7 +84,7 @@
 
 <ng-template #closeDialog>
     <div class="close-dialog">
-        <h3>WARNING</h3>
+        <b>Warning:</b>
         <p>
             {{reviewed.size}}/{{changelog.length()}} objects have been reviewed.
         </p>
