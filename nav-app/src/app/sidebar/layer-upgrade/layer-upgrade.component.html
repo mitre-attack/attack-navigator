@@ -47,14 +47,12 @@
                                             [tactic]="getTactic(compareId, false)"
                                             [technique]="getTechnique(compareId, false)" 
                                             [viewModel]="compareTo"
-                                            [isCurrentVersion]="false"
-                                            (highlight)="onTechniqueHighlight($event, getTechnique(id), getTactic(id))"
-                                            (unhighlight)="onTechniqueUnhighlight($event)">
+                                            [isCurrentVersion]="false">
                                         </changelog-cell>
                                     </td>
                                     <!-- copy/revert button -->
                                     <td>
-                                        <button *ngIf="!isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
+                                        <button *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
                                         <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
                                     </td>
                                 </ng-container>
@@ -63,9 +61,7 @@
                                     <changelog-cell
                                         [tactic]="getTactic(id)"
                                         [technique]="getTechnique(id)" 
-                                        [viewModel]="viewModel"
-                                        (highlight)="onTechniqueHighlight($event, getTechnique(id), getTactic(id))"
-                                        (unhighlight)="onTechniqueUnhighlight($event)">
+                                        [viewModel]="viewModel">
                                     </changelog-cell>
                                 </td>
                             </tr>

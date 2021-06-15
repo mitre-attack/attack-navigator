@@ -30,12 +30,6 @@ export class LayerUpgradeComponent implements OnInit {
         this.compareTo = this.viewModel.compareTo;
     }
 
-    public isAnnotated(id: string): boolean {
-        let tvm = this.compareTo.getTechniqueVM_id(id);
-        if (tvm && tvm.annotated()) return true;
-        return false;
-    }
-
     public applyFilter(): VersionChangelog<BaseStix> {
         if (this.showAnnotatedOnly) {
             // find annotated techniques
@@ -91,13 +85,6 @@ export class LayerUpgradeComponent implements OnInit {
         } else {
             this.reviewed.add(id);
         }
-    }
-
-    public getClass() {
-        let style = 'link noselect cell';
-        if (this.viewModel.layout.showID) style += " showID";
-        if (this.viewModel.layout.showName) style += " showName"
-        return style;
     }
 
     public getIDs(object: Technique) {
@@ -186,13 +173,6 @@ export class LayerUpgradeComponent implements OnInit {
         return techniques.find(t => t.attackID == technique_id);
     }
 
-    public onTechniqueHighlight(event: any, technique: Technique, tactic: Tactic) {
-        this.viewModel.highlightTechnique(technique, tactic);
-    }
-    public onTechniqueUnhighlight(event: any) {
-        this.viewModel.clearHighlight();
-    }
-
     public copyAnnotations(id: string, compareId: string) {
         let tvm = this.viewModel.getTechniqueVM_id(id);
         let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
@@ -220,5 +200,10 @@ export class LayerUpgradeComponent implements OnInit {
 
         // mark as not yet reviewed
         this.reviewedChanged(id);
+    }
+
+    public disableCopy(id: string): boolean {
+        if (!this.compareTo.getTechniqueVM_id(id).annotated()) return true;
+        return false;
     }
 }
