@@ -2,11 +2,9 @@
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
     <div>
         <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
-        <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated only</label>
+        <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
     </div>
     <div>
-        <span><h3>Techniques</h3> ({{applyFilter().length()}}/{{changelog.length()}} techniques)</span>
-
         <mat-accordion class="headers-align">
             <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
                 <mat-expansion-panel-header>
@@ -14,7 +12,7 @@
                         {{getHeader(section)}}
                     </mat-panel-title>
                     <mat-panel-description>
-                        ({{applyFilter().id_length(section)}}/{{changelog.id_length(section)}} techniques)
+                        {{applyFilter()[section].length}}/{{changelog.id_length(section)}} techniques
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
@@ -23,7 +21,7 @@
                     <label for="select_all_{{section}}" class="checkbox-custom-label noselect">select all</label>
                 </div>
 
-                <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)">
+                <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)" [disabled]="!getTacticObjects(section, tactic).length">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{getHeader(tactic)}}
@@ -31,9 +29,15 @@
                     </mat-expansion-panel-header>
 
                     <table>
+                        <!-- <tr>
+                            <td></td>
+                            <td>{{version(changelog.previousVersion)}}</td>
+                            <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">&#8594;</td>
+                            <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">{{version(changelog.latestVersion)}}</td>
+                        </tr> -->
                         <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
                             <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
-                                <td>
+                                <td class="checklist">
                                     <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                 </td>
                                 <!-- Technique from previous version -->
@@ -72,7 +76,7 @@
     </div>
 
     <div class="button-container">
-        <span>Updated {{reviewed.size}}/{{changelog.length()}} objects</span>
+        <span>Updated {{reviewed.size}}/{{changelog.length()}} techniques</span>
         <button mat-stroked-button (click)="openDialog()">done</button>
     </div>
 </div>

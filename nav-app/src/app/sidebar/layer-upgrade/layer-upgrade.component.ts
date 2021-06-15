@@ -16,7 +16,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public changelog: VersionChangelog<BaseStix>;
     public compareTo: ViewModel; // view model of previous version
-    public showAnnotatedOnly: boolean = false;
+    public showAnnotatedOnly: boolean = true;
     public sections: string[] = [
         "additions", "changes", "minor_changes",
         "deprecations", "revocations", "unchanged"
@@ -106,11 +106,14 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     public getSectionTactics(section: string) {
-        let tactics = new Set();
-        let objects: Technique[] = this.applyFilter()[section];
-        for(let object of objects) {
-            if (object.tactics) object.tactics.forEach(tactics.add, tactics);
+        let tactics = [];
+        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        for (let matrix of domain.matrices) {
+            tactics = tactics.concat(matrix.tactics);
         }
+        tactics = tactics.map(t => t.shortname);
+        tactics = tactics.filter(t => this.getTacticObjects(section, t).length);
+
         return tactics;
     }
 
@@ -182,16 +185,6 @@ export class LayerUpgradeComponent implements OnInit {
         let techniques = domain.techniques.concat(domain.subtechniques);
         return techniques.find(t => t.attackID == technique_id);
     }
-
-    // public getMatrix(id: string, vm: ViewModel) {
-    //     let domain = this.dataService.getDomain(vm.domainID);
-    //     for (let matrix of domain.matrices) {
-    //         for (let tactic of matrix.tactics) {
-    //             if (tactic.techniques.includes(this.getTechnique(id, vm))) return matrix;
-    //         }
-    //     }
-    //     return;
-    // }
 
     public onTechniqueHighlight(event: any, technique: Technique, tactic: Tactic) {
         this.viewModel.highlightTechnique(technique, tactic);

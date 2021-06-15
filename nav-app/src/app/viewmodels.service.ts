@@ -832,8 +832,7 @@ export class ViewModel {
      */
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
-            let tvm = this.getTechniqueVM_id(id);
-            tvm.resetAnnotations();
+            this.getTechniqueVM_id(id).resetAnnotations();
         })
     }
 
