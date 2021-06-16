@@ -41,12 +41,18 @@ export class SearchAndMultiselectComponent implements OnInit {
         }
     ]
 
+    private debounceFunction;
     private previousQuery: string = "";
     private _query: string = "";
     public set query(newQuery: string) {
-        this.previousQuery = this._query;
         this._query = newQuery;
-        this.getResults(this._query);
+        if (!this.debounceFunction) {
+            this.debounceFunction = setTimeout(() => {
+                this.getResults(this._query);
+                this.debounceFunction = null;
+                this.previousQuery = this._query;
+                }, 300);
+        }
     }
 
     public get queryLength(): number {
@@ -60,8 +66,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getStixData();
-        this.getTechniques();
+        this.getResults();
     }
 
     /**
@@ -108,11 +113,11 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    // getResults() checks if query is:
+    // getResults() checks if this._query is:
     // 1) valid, and
     // 2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
-    getResults(query = "") {
-        if (query.trim() != "" && query.includes(this.previousQuery)) {
+    getResults(query = "", fieldToggled = false) {
+        if (query.trim() != "" && query.includes(this.previousQuery) && !fieldToggled) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
             this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
@@ -127,7 +132,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         for (let technique of allTechniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
-        this.techniqueResults = this.filterAndSort(allTechniques, "", true);
+        this.techniqueResults = this.filterAndSort(allTechniques, this._query, true);
     }
 
     getStixData() {
@@ -135,30 +140,27 @@ export class SearchAndMultiselectComponent implements OnInit {
 
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.filterAndSort(domain.groups)
+            "objects": this.filterAndSort(domain.groups, this._query)
         }, {
             "label": "software",
-            "objects": this.filterAndSort(domain.software)
+            "objects": this.filterAndSort(domain.software, this._query)
         }, {
             "label": "mitigations",
-            "objects": this.filterAndSort(domain.mitigations)
+            "objects": this.filterAndSort(domain.mitigations, this._query)
         }]
     }
 
     public toggleFieldEnabled(field: string) {
-        let temp = this._query;
         for (let thefield of this.fields) {
             if (thefield.field == field) {
                 thefield.enabled = !thefield.enabled;
-                // set query to empty string to trigger getTechniques() and getStixData() in the case that:
+                // set query to empty string to trigger getResults() in the case that:
                 // 1) a field was toggled, and
                 // 2) the query did not change
-                this.query = "";
+                this.getResults("", true);
                 break;
             }
         }
-        this._query = temp;
-        this.query = this._query;
     }
 
     public mouseEnter(technique: Technique, isTechnique = true): void {
@@ -170,6 +172,7 @@ export class SearchAndMultiselectComponent implements OnInit {
             this.viewModel.highlightTechnique(technique);
         }
     }
+
     public mouseLeave(): void {
         this.viewModel.clearHighlight();
     }
