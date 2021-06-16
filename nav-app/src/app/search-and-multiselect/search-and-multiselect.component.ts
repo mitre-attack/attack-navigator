@@ -46,8 +46,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     public set query(newQuery: string) {
         this.previousQuery = this._query;
         this._query = newQuery;
-        this.getStixResults(this._query);
-        this.getTechniqueResults(this._query);
+        this.getResults(this._query);
     }
 
     public get queryLength(): number {
@@ -109,14 +108,16 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    // getTechniqueResults() checks if query is:
+    // getResults() checks if query is:
     // 1) valid, and
-    // 2) part of last query, otherwise call getTechniques() to search all objects again
-    getTechniqueResults(query = "") {
+    // 2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
+    getResults(query = "") {
         if (query.trim() != "" && query.includes(this.previousQuery)) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
+            this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
         } else {
             this.getTechniques();
+            this.getStixData();
         }
     }
 
@@ -127,17 +128,6 @@ export class SearchAndMultiselectComponent implements OnInit {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
         this.techniqueResults = this.filterAndSort(allTechniques, "", true);
-    }
-
-    // getStixResults() checks if query is:
-    // 1) valid, and
-    // 2) part of last query, otherwise call getStixData() to search all objects again
-    getStixResults(query = "") {
-        if (query.trim() != "" && query.includes(this.previousQuery)) {
-            this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
-        } else {
-            this.getStixData();
-        }
     }
 
     getStixData() {
@@ -160,9 +150,9 @@ export class SearchAndMultiselectComponent implements OnInit {
         for (let thefield of this.fields) {
             if (thefield.field == field) {
                 thefield.enabled = !thefield.enabled;
-                // this is to trigger getTechniques() and getStixData() in the case that:
-                // a field was toggled, and
-                // the query did not change
+                // set query to empty string to trigger getTechniques() and getStixData() in the case that:
+                // 1) a field was toggled, and
+                // 2) the query did not change
                 this.query = "";
                 break;
             }
