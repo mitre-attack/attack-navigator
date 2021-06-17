@@ -51,6 +51,7 @@ export class DataService {
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // ignore deprecated and revoked objects in the bundle
                 if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
+                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; //object not included in this domain
                 // parse according to type
                 switch(sdo.type) {
                     case "intrusion-set":
@@ -501,6 +502,11 @@ export class Note {
 
 export class Domain {
     public readonly id: string; // domain ID
+    public get domain_identifier(): string { //domain ID without the version suffix
+        let parts = this.id.split("-");
+        parts.pop();
+        return parts.join("-");
+    }
     public readonly name: string; // domain display name
     public readonly version: string; // ATT&CK version number
 
