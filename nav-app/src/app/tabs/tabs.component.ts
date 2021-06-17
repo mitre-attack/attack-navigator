@@ -162,6 +162,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         this.activeTab = tab;
         // activate the tab the user has clicked on.
         // tab.active = true;
+        this.viewModelsService.viewModels.forEach(viewModel => {
+            viewModel.sidebarOpened = false;
+            viewModel.sidebarContentType = "";
+        });
     }
 
     /**
