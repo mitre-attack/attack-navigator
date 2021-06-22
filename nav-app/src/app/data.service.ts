@@ -99,6 +99,9 @@ export class DataService {
                             } else {
                                 domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
                             }
+                        } else if (sdo.relationship_type == 'revoked-by') {
+                            // record stix object: stix object relationship
+                            domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
                         }
                         break;
                     case "attack-pattern":
@@ -312,6 +315,7 @@ export class DataService {
      * @param previous imported layer version to upgrade from
      * @param latest latest ATT&CK version to upgrade to
      */
+    public changelogLoaded: boolean = false;
     public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog<Technique> {
         let changelog = new VersionChangelog<Technique>(prevDomainID, latestDomainID);
         let previousDomain = this.getDomain(prevDomainID);
@@ -346,6 +350,7 @@ export class DataService {
                 }
             }
         }
+        this.changelogLoaded = true;
         return changelog;
     }
 }
@@ -392,6 +397,16 @@ export abstract class BaseStix {
             return +thisVersion[i] - +prevVersion[i];
         }
         return 0
+    }
+
+    /**
+     * get the stix object that this object is revoked by
+     * @returns {string} object ID this object is revoked by
+     */
+     public revoked_by(domainID): string {
+        let rels = this.dataService.getDomain(domainID).relationships.revoked_by;
+        if (rels.has(this.id)) return rels.get(this.id);
+        else return undefined;
     }
 }
 
@@ -510,6 +525,10 @@ export class VersionChangelog<T> {
     }
 
     public id_length(section: string): number {
+        if (['deprecations', 'revocations'].includes(section)) {
+            return this[section].length;
+        }
+
         let count = 0;
         for (let object of this[section]) {
             count += object.get_all_technique_tactic_ids().length;
@@ -642,7 +661,10 @@ export class Domain {
         software_uses: new Map<string, string[]>(),
         // mitigation mitigates technique
         // ID of mitigation to [] of technique IDs
-        mitigates: new Map<string, string[]>()
+        mitigates: new Map<string, string[]>(),
+        // object is revoked-by object
+        // ID of object to ID of revoking object
+        revoked_by: new Map<string, string>()
     }
 
     constructor(id: string, name: string, version: string) {
