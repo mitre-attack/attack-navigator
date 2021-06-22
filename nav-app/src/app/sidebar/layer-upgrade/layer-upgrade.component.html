@@ -29,7 +29,7 @@
                 </div>
 
                 <!-- additions, minor changes, changes, and unchanged objects -->
-                <ng-container *ngIf="!['deprecations', 'revocations'].includes(section)">
+                <ng-container *ngIf="section !== 'deprecations'">
                     <!-- tactic sections -->
                     <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)" [disabled]="!getTacticObjects(section, tactic).length">
                         <mat-expansion-panel-header>
@@ -61,16 +61,24 @@
                                             </changelog-cell>
                                         </td>
                                         <!-- copy annotations/revert copy -->
-                                        <td>
+                                        <td *ngIf="section !== 'revocations'">
                                             <button *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
                                             <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
                                         </td>
+                                        <td *ngIf="section == 'revocations'">
+                                            <button [disabled]="true" class="button">revoked by</button>
+                                        </td>
                                     </ng-container>
-                                    <!-- object from current version -->
                                     <td *ngIf="getRelatedObjectID(object, section, tactic) || section=='additions'">
-                                        <changelog-cell
+                                        <!-- object from current version -->
+                                        <changelog-cell *ngIf="section !== 'revocations'"
                                             [tactic]="getTactic(id)"
                                             [technique]="getTechnique(id)" 
+                                            [viewModel]="viewModel">
+                                        </changelog-cell>
+                                        <!-- revoking object from current version -->
+                                        <changelog-cell *ngIf="section == 'revocations'"
+                                            [technique]="revokedBy(object)" 
                                             [viewModel]="viewModel">
                                         </changelog-cell>
                                     </td>
@@ -78,47 +86,6 @@
                             </ng-container>
                         </table>
                     </mat-expansion-panel>
-                </ng-container>
-
-                <!-- revocations -->
-                <ng-container *ngIf="section == 'revocations'">
-                    <table>
-                        <ng-container *ngFor="let revokedObject of applyFilter()[section]">
-                            <tr *ngIf="getRevokedTechnique(revokedObject) as prevObject">
-                            <!-- <tr>
-                                <td></td>
-                                <td>{{version(changelog.previousVersion)}}</td>
-                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">&#8594;</td>
-                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">{{version(changelog.latestVersion)}}</td>
-                            </tr> -->
-                                <td class="checklist">
-                                    <mat-checkbox [checked]="isReviewed(revokedObject.id)" (change)="reviewedChanged(revokedObject.id)"></mat-checkbox>
-                                </td>
-                                <td>
-                                    <!-- revoked object (from previous version) -->
-                                    <changelog-cell
-                                        [tactic]="annotatedTactic(prevObject)"
-                                        [technique]="prevObject" 
-                                        [viewModel]="compareTo"
-                                        [isCurrentVersion]="false">
-                                    </changelog-cell>
-                                </td>
-                                <!-- copy/revert button -->
-                                <!-- TODO can we copy the annotations from the revoked object? Copy to all technique-tactic-ids? -->
-                                <!-- <td>
-                                    <button *ngIf="!isReviewed(revokedObject.id)" [disabled]="disableCopy(prevObject.id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
-                                    <button *ngIf="isReviewed(revokedObject.id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
-                                </td> -->
-                                <td>
-                                    <!-- revoking object (from current version) -->
-                                    <changelog-cell
-                                        [technique]="revokedBy(revokedObject)" 
-                                        [viewModel]="viewModel">
-                                    </changelog-cell>
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </table>
                 </ng-container>
                 <!-- TODO deprecations -->
             </mat-expansion-panel>

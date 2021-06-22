@@ -108,8 +108,11 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     public getSectionTactics(section: string) {
+        let vm = this.viewModel;
+        if (section == 'revocations') vm = this.compareTo;
+
         let tactics = [];
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(vm.domainID);
         for (let matrix of domain.matrices) {
             tactics = tactics.concat(matrix.tactics);
         }
@@ -122,8 +125,14 @@ export class LayerUpgradeComponent implements OnInit {
     public getTacticObjects(section: string, tactic: string): Technique[] {
         let objects = [];
         let sectionObjects: Technique[] = this.applyFilter()[section];
+
         for (let object of sectionObjects) {
-            if (object.tactics && object.tactics.includes(tactic)) objects.push(object);
+            if (section == 'revocations') {
+                let revokedObject = this.getRevokedTechnique(object);
+                if (revokedObject.tactics && revokedObject.tactics.includes(tactic)) objects.push(revokedObject);
+            } else {
+                if (object.tactics && object.tactics.includes(tactic)) objects.push(object);
+            }
         }
         return objects;
     }
@@ -251,17 +260,5 @@ export class LayerUpgradeComponent implements OnInit {
         let domain = this.dataService.getDomain(this.compareTo.domainID);
         let revokedObject = domain.subtechniques.find(t => t.attackID == object.attackID) || domain.techniques.find(t => t.attackID == object.attackID);
         return revokedObject;
-    }
-
-    // BUG this will only return one technique-tactic-id that has been annotated
-    public annotatedTactic(revokedObject: Technique): Tactic {
-        for (let shortname of revokedObject.tactics) {
-            let ttid = revokedObject.get_technique_tactic_id(shortname);
-            let tvm = this.compareTo.getTechniqueVM_id(ttid);
-            if (tvm.annotated()) {
-                return this.getTactic(ttid, false);
-            }
-        }
-        return;
     }
 }
