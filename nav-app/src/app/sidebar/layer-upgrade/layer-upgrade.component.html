@@ -3,16 +3,16 @@
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
 
     <!-- filter/copy all annotations -->
-    <div>
+    <div class="checkbox-container">
         <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
         <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
-        <button class="button" (click)="copyAll()">copy all annotations</button>
+        <button class="button right" (click)="copyAll()">copy all</button>
     </div>
 
     <!-- changelog sections -->
     <div>
         <mat-accordion class="headers-align">
-            <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
+            <mat-expansion-panel class="section-panel" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         {{getHeader(section)}}
@@ -23,7 +23,7 @@
                 </mat-expansion-panel-header>
 
                 <!-- select all checkbox -->
-                <div class="section-checkbox">
+                <div class="checkbox-container">
                     <input id="select_all_{{section}}" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
                     <label for="select_all_{{section}}" class="checkbox-custom-label noselect">select all</label>
                 </div>
@@ -38,7 +38,7 @@
                             </mat-panel-title>
                         </mat-expansion-panel-header>
 
-                        <table>
+                        <table class="changelog-table">
                             <!-- <tr>
                                 <td></td>
                                 <td>{{version(changelog.previousVersion)}}</td>
@@ -47,7 +47,7 @@
                             </tr> -->
                             <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
                                 <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
-                                    <td *ngIf="getRelatedObjectID(object, section, tactic) || section=='additions'" class="checklist">
+                                    <td class="narrow" *ngIf="getRelatedObjectID(object, section, tactic) || section=='additions'">
                                         <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
                                     </td>
                                     <!-- object from previous version, if applicable -->
@@ -61,9 +61,9 @@
                                             </changelog-cell>
                                         </td>
                                         <!-- copy annotations/revert copy -->
-                                        <td *ngIf="section !== 'revocations'">
-                                            <button *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
-                                            <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
+                                        <td class="narrow" *ngIf="section !== 'revocations'">
+                                            <button class="button" *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
+                                            <button class="button" *ngIf="isReviewed(id)" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
                                         </td>
                                         <td *ngIf="section == 'revocations'">
                                             <button [disabled]="true" class="button">revoked by</button>
@@ -93,7 +93,7 @@
     </div>
 
     <!-- done button -->
-    <div class="button-container">
+    <div class="done-button right">
         <span>Updated {{reviewed.size}}/{{changelog.length()}} techniques</span>
         <button mat-stroked-button (click)="openDialog()">done</button>
     </div>
