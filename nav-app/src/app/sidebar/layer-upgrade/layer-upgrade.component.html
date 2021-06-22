@@ -1,10 +1,15 @@
-<div class="layer-upgrade">
+<div *ngIf="dataService.changelogLoaded" class="layer-upgrade">
+    <!-- title -->
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
+
+    <!-- filter/copy all annotations -->
     <div>
         <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
         <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
         <button class="button" (click)="copyAll()">copy all annotations</button>
     </div>
+
+    <!-- changelog sections -->
     <div>
         <mat-accordion class="headers-align">
             <mat-expansion-panel class="changelog-sections" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
@@ -17,68 +22,117 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
+                <!-- select all checkbox -->
                 <div class="section-checkbox">
                     <input id="select_all_{{section}}" class="checkbox-custom" type="checkbox" [checked]="allSelected(section)" (click)="selectAllChanged(section)">
                     <label for="select_all_{{section}}" class="checkbox-custom-label noselect">select all</label>
                 </div>
 
-                <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)" [disabled]="!getTacticObjects(section, tactic).length">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            {{getHeader(tactic)}}
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
+                <!-- additions, minor changes, changes, and unchanged objects -->
+                <ng-container *ngIf="!['deprecations', 'revocations'].includes(section)">
+                    <!-- tactic sections -->
+                    <mat-expansion-panel *ngFor="let tactic of getSectionTactics(section)" [disabled]="!getTacticObjects(section, tactic).length">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{getHeader(tactic)}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
 
-                    <table>
-                        <!-- <tr>
-                            <td></td>
-                            <td>{{version(changelog.previousVersion)}}</td>
-                            <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">&#8594;</td>
-                            <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">{{version(changelog.latestVersion)}}</td>
-                        </tr> -->
-                        <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
-                            <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
-                                <td class="checklist">
-                                    <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
-                                </td>
-                                <!-- Technique from previous version -->
-                                <ng-container *ngIf="getRelatedObjectID(object, section, tactic) as compareId">
-                                    <td>
+                        <table>
+                            <!-- <tr>
+                                <td></td>
+                                <td>{{version(changelog.previousVersion)}}</td>
+                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">&#8594;</td>
+                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">{{version(changelog.latestVersion)}}</td>
+                            </tr> -->
+                            <ng-container *ngFor="let object of getTacticObjects(section, tactic)">
+                                <tr *ngIf="object.get_technique_tactic_id(tactic) as id">
+                                    <td *ngIf="getRelatedObjectID(object, section, tactic) || section=='additions'" class="checklist">
+                                        <mat-checkbox [checked]="isReviewed(id)" (change)="reviewedChanged(id)"></mat-checkbox>
+                                    </td>
+                                    <!-- object from previous version, if applicable -->
+                                    <ng-container *ngIf="getRelatedObjectID(object, section, tactic) as compareId">
+                                        <td>
+                                            <changelog-cell
+                                                [tactic]="getTactic(compareId, false)"
+                                                [technique]="getTechnique(compareId, false)" 
+                                                [viewModel]="compareTo"
+                                                [isCurrentVersion]="false">
+                                            </changelog-cell>
+                                        </td>
+                                        <!-- copy annotations/revert copy -->
+                                        <td>
+                                            <button *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
+                                            <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
+                                        </td>
+                                    </ng-container>
+                                    <!-- object from current version -->
+                                    <td *ngIf="getRelatedObjectID(object, section, tactic) || section=='additions'">
                                         <changelog-cell
-                                            [tactic]="getTactic(compareId, false)"
-                                            [technique]="getTechnique(compareId, false)" 
-                                            [viewModel]="compareTo"
-                                            [isCurrentVersion]="false">
+                                            [tactic]="getTactic(id)"
+                                            [technique]="getTechnique(id)" 
+                                            [viewModel]="viewModel">
                                         </changelog-cell>
                                     </td>
-                                    <!-- copy/revert button -->
-                                    <td>
-                                        <button *ngIf="!isReviewed(id)" [disabled]="disableCopy(compareId)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
-                                        <button *ngIf="isReviewed(id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
-                                    </td>
-                                </ng-container>
-                                <!-- Technique from new layer -->
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </mat-expansion-panel>
+                </ng-container>
+
+                <!-- revocations -->
+                <ng-container *ngIf="section == 'revocations'">
+                    <table>
+                        <ng-container *ngFor="let revokedObject of applyFilter()[section]">
+                            <tr *ngIf="getRevokedTechnique(revokedObject) as prevObject">
+                            <!-- <tr>
+                                <td></td>
+                                <td>{{version(changelog.previousVersion)}}</td>
+                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">&#8594;</td>
+                                <td *ngIf="['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)">{{version(changelog.latestVersion)}}</td>
+                            </tr> -->
+                                <td class="checklist">
+                                    <mat-checkbox [checked]="isReviewed(revokedObject.id)" (change)="reviewedChanged(revokedObject.id)"></mat-checkbox>
+                                </td>
                                 <td>
+                                    <!-- revoked object (from previous version) -->
                                     <changelog-cell
-                                        [tactic]="getTactic(id)"
-                                        [technique]="getTechnique(id)" 
+                                        [tactic]="annotatedTactic(prevObject)"
+                                        [technique]="prevObject" 
+                                        [viewModel]="compareTo"
+                                        [isCurrentVersion]="false">
+                                    </changelog-cell>
+                                </td>
+                                <!-- copy/revert button -->
+                                <!-- TODO can we copy the annotations from the revoked object? Copy to all technique-tactic-ids? -->
+                                <!-- <td>
+                                    <button *ngIf="!isReviewed(revokedObject.id)" [disabled]="disableCopy(prevObject.id)" class="button" matTooltipPosition="above" matTooltip="copy annotations" (click)="copyAnnotations(id, compareId)">&gt;</button>
+                                    <button *ngIf="isReviewed(revokedObject.id)" class="button" matTooltipPosition="above" matTooltip="revert copy" (click)="revertCopy(id, compareId)">&lt;</button>
+                                </td> -->
+                                <td>
+                                    <!-- revoking object (from current version) -->
+                                    <changelog-cell
+                                        [technique]="revokedBy(revokedObject)" 
                                         [viewModel]="viewModel">
                                     </changelog-cell>
                                 </td>
                             </tr>
                         </ng-container>
                     </table>
-                </mat-expansion-panel>
+                </ng-container>
+                <!-- TODO deprecations -->
             </mat-expansion-panel>
         </mat-accordion>
     </div>
 
+    <!-- done button -->
     <div class="button-container">
         <span>Updated {{reviewed.size}}/{{changelog.length()}} techniques</span>
         <button mat-stroked-button (click)="openDialog()">done</button>
     </div>
 </div>
 
+<!-- warning dialog template -->
 <ng-template #closeDialog>
     <div class="close-dialog">
         <b>Warning:</b>

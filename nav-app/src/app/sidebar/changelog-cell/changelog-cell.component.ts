@@ -12,7 +12,7 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() isCurrentVersion?: boolean = true;
 
     public get showTooltip(): boolean {
-        if (!this.viewModel.highlightedTechnique) return false;
+        if (!this.viewModel.highlightedTechnique || !this.tactic) return false;
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
         if (!tvm.score && !tvm.aggregateScore && !tvm.comment) return false;
         return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
@@ -25,15 +25,15 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     ngOnInit(): void { }
 
     public highlight(): void {
-        this.viewModel.highlightTechnique(this.technique, this.tactic);
+        if (this.tactic) this.viewModel.highlightTechnique(this.technique, this.tactic);
     }
 
     public unhighlight(): void {
-        this.viewModel.clearHighlight();
+        if (this.tactic) this.viewModel.clearHighlight();
     }
 
     public onClick(): void {
-        if (this.isCurrentVersion) {
+        if (this.isCurrentVersion && this.tactic) {
             // unselect technique
             if (this.viewModel.isTechniqueSelected(this.technique, this.tactic)) {
                 this.viewModel.unselectTechnique(this.technique, this.tactic);

@@ -42,8 +42,15 @@ export class LayerUpgradeComponent implements OnInit {
             let changelog_filter = new VersionChangelog<BaseStix>(this.compareTo.version, this.viewModel.version);
             for (let section of this.sections) {
                 let filtered = this.changelog[section].filter(object => {
-                    if (this.getIDs(object).some(id => annotatedIDs.includes(id))) return true;
-                    else return false;
+                    // let relatedObject = this.getRelatedObjectID(object, section, )
+                    if (section !== 'revocations') {
+                        if (this.getIDs(object).some(id => annotatedIDs.includes(id))) return true;
+                        else return false;
+                    } else {
+                        let revokedObject = this.getRevokedTechnique(object);
+                        if (this.getIDs(revokedObject).some(id => annotatedIDs.includes(id))) return true;
+                        else return false;
+                    }
                 })
                 changelog_filter[section] = filtered;
             }
@@ -79,12 +86,19 @@ export class LayerUpgradeComponent implements OnInit {
         return this.reviewed.has(id);
     }
 
-    // TODO: update to review() and unreview()
-    public reviewedChanged(id: string, unselect?: boolean) {
-        if (this.isReviewed(id) || unselect) {
-            this.reviewed.delete(id);
+    public markAsReviewed(id: string) {
+        this.reviewed.add(id);
+    }
+
+    public unmarkAsReviewed(id: string) {
+        this.reviewed.delete(id);
+    }
+
+    public reviewedChanged(id: string) {
+        if (this.isReviewed(id)) {
+            this.unmarkAsReviewed(id);
         } else {
-            this.reviewed.add(id);
+            this.markAsReviewed(id);
         }
     }
 
@@ -115,24 +129,25 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     public getRelatedObjectID(object: Technique, section: string, tactic: string): string {
-        // check if object has no related object in the previous version
-        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return undefined;
+        // check if object has no related object
+        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return;
 
-        // find related object
         let prevTechniques: Technique[];
         let domain = this.dataService.getDomain(this.compareTo.domainID);
         if (object.isSubtechnique) prevTechniques = domain.subtechniques;
         else prevTechniques = domain.techniques;
+
+        // find related object
         let prevObject = prevTechniques.find(t => t.attackID === object.attackID);
         if (prevObject.tactics.includes(tactic)) return prevObject.get_technique_tactic_id(tactic);
-        else return undefined;
-        // TODO if tactic changed?
+        return;
     }
 
     public allSelected(section: string): boolean {
         let objectIDs = [];
         for (let object of this.changelog[section]) {
-            this.getIDs(object).forEach(id => objectIDs.push(id));
+            if (['deprecations', 'revocations'].includes(section)) objectIDs.push(object.id);
+            else this.getIDs(object).forEach(id => objectIDs.push(id));
         }
         return objectIDs.every(id => this.reviewed.has(id));
     }
@@ -141,12 +156,14 @@ export class LayerUpgradeComponent implements OnInit {
         if (this.allSelected(section)) {
             // unselect all
             for (let object of this.changelog[section]) {
-                this.getIDs(object).forEach(id => { this.reviewedChanged(id, true); })
+                if (['deprecations', 'revocations'].includes(section)) this.unmarkAsReviewed(object.id)
+                else this.getIDs(object).forEach(id => { this.unmarkAsReviewed(id); })
             }
         } else {
             // select all
             for (let object of this.changelog[section]) {
-                this.getIDs(object).forEach(id => {this.reviewed.add(id)});
+                if (['deprecations', 'revocations'].includes(section)) this.markAsReviewed(object.id);
+                this.getIDs(object).forEach(id => {this.markAsReviewed(id)});
             }
         }
     }
@@ -188,6 +205,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     public copyAnnotations(id: string, compareId: string): void {
         let tvm = this.viewModel.getTechniqueVM_id(id);
+        if (tvm.annotated()) return;
         let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
 
         // copy annotations from previous technique
@@ -198,7 +216,7 @@ export class LayerUpgradeComponent implements OnInit {
         toCopyTvm.enabled = false;
 
         // mark as reviewed
-        this.reviewedChanged(id);
+        this.markAsReviewed(id);
     }
 
     public revertCopy(id: string, compareId: string): void {
@@ -212,11 +230,38 @@ export class LayerUpgradeComponent implements OnInit {
         toCopyTvm.enabled = true;
 
         // mark as not yet reviewed
-        this.reviewedChanged(id);
+        this.unmarkAsReviewed(id);
     }
 
     public disableCopy(id: string): boolean {
         if (!this.compareTo.getTechniqueVM_id(id).annotated()) return true;
         return false;
+    }
+
+    // get the object from the current version that the object is revoked by
+    public revokedBy(object: Technique): Technique {
+        let revokedByID = object.revoked_by(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let revokingObject = domain.subtechniques.find(t => t.id == revokedByID) || domain.techniques.find(t => t.id == revokedByID);
+        return revokingObject;
+    }
+
+    // get the object from the past version that has been revoked
+    public getRevokedTechnique(object: Technique): Technique {
+        let domain = this.dataService.getDomain(this.compareTo.domainID);
+        let revokedObject = domain.subtechniques.find(t => t.attackID == object.attackID) || domain.techniques.find(t => t.attackID == object.attackID);
+        return revokedObject;
+    }
+
+    // BUG this will only return one technique-tactic-id that has been annotated
+    public annotatedTactic(revokedObject: Technique): Tactic {
+        for (let shortname of revokedObject.tactics) {
+            let ttid = revokedObject.get_technique_tactic_id(shortname);
+            let tvm = this.compareTo.getTechniqueVM_id(ttid);
+            if (tvm.annotated()) {
+                return this.getTactic(ttid, false);
+            }
+        }
+        return;
     }
 }

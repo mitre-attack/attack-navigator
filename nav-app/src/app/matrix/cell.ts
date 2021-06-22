@@ -8,7 +8,7 @@ declare var tinycolor: any; //use tinycolor2
 export abstract class Cell {
     @Input() viewModel: ViewModel;
     @Input() technique: Technique;
-    @Input() tactic: Tactic;
+    @Input() tactic?: Tactic;
 
     public showContextmenu: boolean = false;
 
@@ -28,7 +28,7 @@ export abstract class Cell {
                 } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
                     return true;
                 }
-            } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
+            } else if (this.tactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
                 if (this.viewModel.selectSubtechniquesWithParent) {
                     let compareTo = this.viewModel.highlightedTechnique;
                     if (compareTo.isSubtechnique) compareTo = compareTo.parent;
@@ -50,9 +50,9 @@ export abstract class Cell {
      * @param  {boolean}   mini is it the minitable?
      * @return {string}               the classes the technique should currently have
      */
-     public getClass(): string {
+    public getClass(): string {
         let theclass = 'link noselect cell'
-        if (this.viewModel.isTechniqueSelected(this.technique, this.tactic))
+        if (this.tactic && this.viewModel.isTechniqueSelected(this.technique, this.tactic))
             theclass += " editing"
         if (this.isHighlighted) { //open context menu always keeps highlight even if the mouse has moved elsewhere
             theclass += " highlight";
@@ -66,11 +66,11 @@ export abstract class Cell {
         theclass += " " + this.viewModel.layout.layout;
 
         // classes according to annotations
-        if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0 || this.hasNotes())
+        if (this.tactic && this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0 || this.hasNotes())
             theclass += " commented"
         if (this.getTechniqueBackground())
             theclass += " colored"
-        if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
+        if (this.tactic && !this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
             theclass += " disabled"
 
         return theclass
@@ -82,7 +82,8 @@ export abstract class Cell {
      * @param  antihighlight boolean, true if the column is not selected.
      * @return               black, white, or gray, depending on technique and column state
      */
-     public getTechniqueTextColor() {
+    public getTechniqueTextColor() {
+        if (!this.tactic) return "black";
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         if (!tvm.enabled) return "#aaaaaa";
         // don't display if disabled or highlighted
@@ -97,7 +98,7 @@ export abstract class Cell {
      * Check if technique has notes
      * @return      true if technique has notes, false otherwise
      */
-     public hasNotes() {
+    public hasNotes() {
         let domain = this.dataService.getDomain(this.viewModel.domainID);
         let notes = domain.notes.filter(note => {
             return note.object_refs.includes(this.technique.id);
@@ -110,13 +111,14 @@ export abstract class Cell {
      * @param  technique technique
      * @return           background object
      */
-     public getTechniqueBackground(): any {
+    public getTechniqueBackground(): any {
+        if (!this.tactic) return null;
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || this.isHighlighted) return null
-        if (tvm.color) return {"background": tvm.color}
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return {"background": tvm.aggregateScoreColor}
-        if (tvm.score) return {"background": tvm.scoreColor}
+        if (!tvm.enabled || this.isHighlighted) return null;
+        if (tvm.color) return { "background": tvm.color }
+        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return { "background": tvm.aggregateScoreColor }
+        if (tvm.score) return { "background": tvm.scoreColor }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 }
