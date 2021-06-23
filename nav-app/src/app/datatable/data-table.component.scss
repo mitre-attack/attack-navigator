@@ -405,6 +405,7 @@ $panel-light: lighten($panel-dark, 8%);
 }
 
 .legendBar {
+    z-index: 999;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -472,4 +473,3 @@ $panel-light: lighten($panel-dark, 8%);
         }
     }
 }
-

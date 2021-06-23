@@ -43,15 +43,23 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
+        let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
             let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle
-                if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
-                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; //object not included in this domain
+                // ignore deprecated and revoked objects in the bundle?
+                if (sdo.x_mitre_deprecated || sdo.revoked) continue;
+                
+                // Filter out object not included in this domain if domains field is available
+                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; 
+                
+                // filter out duplicates
+                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
+                else continue;
+
                 // parse according to type
                 switch(sdo.type) {
                     case "intrusion-set":
@@ -134,16 +142,18 @@ export class DataService {
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-            
+
             //create matrices, which also creates tactics and filters techniques
             for (let matrixSDO of matrixSDOs) {
                 domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
             }
-            
+
             // parse platforms
             for (let technique of domain.techniques) {
-                for (let platform of technique.platforms) {
-                    platforms.add(platform)
+                if (technique.platforms) {
+                    for (let platform of technique.platforms) {
+                        platforms.add(platform)
+                    }
                 }
             }
             for (let subtechnique of domain.subtechniques) {
@@ -303,9 +313,9 @@ export class DataService {
     }
 }
 
-/** 
+/**
  * Common attributes for STIX objects
- */ 
+ */
 export abstract class BaseStix {
     public readonly id: string;          // STIX ID
     public readonly attackID: string;    // ATT&CK ID
@@ -377,7 +387,7 @@ export class Technique extends BaseStix {
         this.platforms = stixSDO.x_mitre_platforms;
       	if (stixSDO.x_mitre_data_sources !== undefined)
 		      this.datasources = stixSDO.x_mitre_data_sources.toString();
-	      else
+	    else
 		      this.datasources = "";
         this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
 
@@ -385,7 +395,6 @@ export class Technique extends BaseStix {
         for (let subtechnique of this.subtechniques) {
             subtechnique.parent = this;
         }
-
     }
 
     /**
@@ -473,7 +482,7 @@ export class Mitigation extends BaseStix {
         let rels = this.dataService.getDomain(domainID).relationships.mitigates;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } 
+        }
         else return [];
     }
     /**
@@ -528,10 +537,10 @@ export class Domain {
     public relationships: any = {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
-        subtechniques_of: new Map<string, string[]>(), 
+        subtechniques_of: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
-        group_uses: new Map<string, string[]>(), 
+        group_uses: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         software_uses: new Map<string, string[]>(),

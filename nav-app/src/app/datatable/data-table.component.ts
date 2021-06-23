@@ -16,7 +16,7 @@ declare var tinycolor: any; //use tinycolor2
 
 import * as FileSaver from 'file-saver';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { TechniquesSearchComponent } from '../techniques-search/techniques-search.component';
+import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
 import { TmplAstVariable } from '@angular/compiler';
 
 @Component({
@@ -37,7 +37,6 @@ export class DataTableComponent implements AfterViewInit {
 
     currentDropdown: string = ""; //current dropdown menu
 
-
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -50,7 +49,7 @@ export class DataTableComponent implements AfterViewInit {
         let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
         // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
         this.saveBlob(blob, filename);
-        
+
     }
 
     saveBlob(blob, filename){
@@ -75,8 +74,8 @@ export class DataTableComponent implements AfterViewInit {
         var workbook = new Excel.Workbook();
         let domain = this.dataService.getDomain(this.viewModel.domainID);
         for (let matrix of domain.matrices) {
-            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");  
-                      
+            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
+
             // create tactic columns
             let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
             worksheet.columns = columns;
@@ -234,10 +233,10 @@ export class DataTableComponent implements AfterViewInit {
         }
     }
 
-    constructor(public dataService: DataService, 
-                private tabs: TabsComponent, 
-                private sanitizer: DomSanitizer, 
-                private viewModelsService: ViewModelsService, 
+    constructor(public dataService: DataService,
+                private tabs: TabsComponent,
+                private sanitizer: DomSanitizer,
+                private viewModelsService: ViewModelsService,
                 public configService: ConfigService) { }
 
     /**
@@ -273,7 +272,7 @@ export class DataTableComponent implements AfterViewInit {
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
     onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-        
+
         if (!this.viewModel.isCurrentlyEditing()) {
             if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
