@@ -1172,7 +1172,6 @@ export class ViewModel {
         }
 
         if ("showTacticRowBackground" in obj) {
-            obj.showTacticRowBackground = JSON.parse(obj.showTacticRowBackground);
             if (typeof(obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
             else console.error("TypeError: showTacticRowBackground field is not a boolean")
         }
@@ -1181,12 +1180,10 @@ export class ViewModel {
             else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
         }
         if ("selectTechniquesAcrossTactics" in obj) {
-            obj.selectTechniquesAcrossTactics = JSON.parse(obj.selectTechniquesAcrossTactics);
             if (typeof(obj.selectTechniquesAcrossTactics) === "boolean") this.selectTechniquesAcrossTactics = obj.selectTechniquesAcrossTactics
             else console.error("TypeError: selectTechniquesAcrossTactics field is not a boolean")
         }
         if ("selectSubtechniquesWithParent" in obj) {
-            obj.selectSubtechniquesWithParent = JSON.parse(obj.selectSubtechniquesWithParent);
             if (typeof(obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
             else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
         }
