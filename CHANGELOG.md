@@ -1,5 +1,6 @@
 # v4.4 - changes staged on develop
-- Added combined techniques search and multiselect feature in sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+## Improvements
+- Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 
 # v4.3 - 29 April 2021
 ## New Features
