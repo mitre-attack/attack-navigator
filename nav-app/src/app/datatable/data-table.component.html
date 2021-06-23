@@ -40,32 +40,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
-                <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
+                <div class="control-row-button noselect"
+                    (click)="(viewModel.sidebarOpened = (viewModel.sidebarContentType !== 'search') ? true : !viewModel.sidebarOpened) && (viewModel.sidebarContentType = 'search')"
                     matTooltipPosition="below"
-                    matTooltip="search">
+                    matTooltip="search & multiselect">
                     <img src="assets/icons/ic_search_black_24px.svg"/>
                 </div>
-
-                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
-                </div>
             </div>
-
-
-            <!-- Multi-select -->
-            <div *ngIf="configService.getFeature('multiselect')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
-                    matTooltipPosition="below"
-                    matTooltip="multi-select">
-                    <img src="assets/icons/ic_playlist_add_black_24px.svg"/>
-                </div>
-                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-multiselect [viewModel]="viewModel"></app-multiselect>
-                </div>
-            </div>
-
 
             <!-- deselect all -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
@@ -535,26 +516,34 @@ oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
  88  888  88    8oooo88    888      888  88o    888     88 888
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
-
-<div class="matrices" oncontextmenu="return false">
+<div class="matrices">
+    <div oncontextmenu="return false">
         <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
         </div>
-        <div class="matrices-columns">
-            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
-                <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
-                <div *ngIf="viewModel.layout.layout == 'side'">
-                    <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+        <mat-drawer-container autosize>
+            <mat-drawer-content>
+                <div class="matrices-columns">
+                    <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
+                        <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                        <div *ngIf="viewModel.layout.layout == 'side'">
+                            <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+                        </div>
+                        <div *ngIf="viewModel.layout.layout == 'flat'">
+                            <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
+                        </div>
+                        <div *ngIf="viewModel.layout.layout == 'mini'">
+                            <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+                        </div>
+                    </div>
                 </div>
-                <div *ngIf="viewModel.layout.layout == 'flat'">
-                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
-                </div>
-                <div *ngIf="viewModel.layout.layout == 'mini'">
-                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
-                </div>
-            </div>
-        </div>
+            </mat-drawer-content>
+            <mat-drawer mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
+                <sidebar [viewModel]="viewModel"></sidebar>
+            </mat-drawer>
+        </mat-drawer-container>
     </div>
+</div>
 
 
 <!--

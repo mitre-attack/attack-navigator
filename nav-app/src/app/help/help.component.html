@@ -63,8 +63,7 @@
                 <ul>
                     <li (click)="scrollTo('help_Selecting_with_the_Mouse')">Selecting with the Mouse</li>
                     <li (click)="scrollTo('help_Selection_Behavior')">Selection Behavior</li>
-                    <li (click)="scrollTo('help_Search_Interface')">Search Interface</li>
-                    <li (click)="scrollTo('help_Multiselct_Interface')">Multiselect Interface</li>
+                    <li (click)="scrollTo('help_Search_Interface')">Search & Multiselect Interface</li>
                 </ul>
             </li>
             <li>
@@ -701,45 +700,42 @@
 
             <h2 id="help_Search_Interface">
                 <img src="assets/icons/ic_search_black_24px.svg">
-                Search Interface
+                Search & Multiselect Interface
             </h2>
             <p>
-                The search interface provides a text input to search through techniques in the matrix.
-                Toggles in the interface allow for searching of specific technique fields (name, ID, and description).
+                The search & multiselect interface provides the means to select or deselect techniques in the matrix 
+                that match a text query or that are mapped to groups, software, or mitigations. The text input
+                can be used to filter the lists of techniques, groups, software, and mitigations according to their data. 
+                You can select what fields of the objects are searched under "search settings:" <i>name</i>, 
+                <i>ATT&CK ID</i>, <i>description</i>, and (for techniques) <i>data sources</i> can all be searched.
             </p>
             <p>
-                The interface provides
-                buttons to select and deselect techniques. These buttons modify the currently selected techniques rather
-                than replacing then, allowing for the selection of the multiple techniques by selecting them in sequence.
-                There are 'view' links that lead to more info on each technique.
+                The lists of objects below the search can be used to select data in the matrix. 
+            </p>
+            <ul>
+                <li><b>Techniques:</b> this list can be used to find a technique alphabetically or one that matches the search query.</li>
+                <li>
+                    <b>Threat Groups:</b> threat groups constitute related intrusion activity tracked under a common name. Selecting a group 
+                    under this section will select all techniques that are mapped to (used by) that group.
+                </li>
+                <li>
+                    <b>Software:</b> software constitutes malware (custom closed source or open source software intended for malicious purposes) 
+                    or tools (open-source, built-in, or publicly available software that could be used by a defender or an adversary). Selecting a software under this 
+                    section will select all techniques that are mapped to (used by) that software.
+                </li>
+                <li>
+                    <b>Mitigations:</b> Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or 
+                    sub-technique from being successfully executed. Selecting a mitigation under this section will select all techniques that are mapped to (mitigated by) that mitigation.
+                </li>
+            </ul>
+            <p>
+                The interface provides buttons to select and deselect each object. These buttons modify the currently selected techniques rather
+                than replacing then, allowing for the selection of the multiple techniques or the techniques of multiple
+                threat groups, software, or mitigations by selecting them in sequence. The 'view' links for each entry link to additional information about the object in question.
             </p>
             <p>
                 Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
-                area.
-            </p>
-
-            <h2 id="help_Multiselct_Interface">
-                <img src="assets/icons/ic_playlist_add_black_24px.svg">
-                Multiselect Interface
-            </h2>
-            <p>
-                The multiselect interface provides a way to quickly select and deselect
-                groups of techniques. The interface provides two types of groupings, threat
-                groups and software. Threat groups constitute related intrusion activity
-                tracked by a common name. Software constitutes software, malware
-                or utilities that use known techniques for intrusion.
-            </p>
-            <p>
-                The interface provides
-                buttons to select and deselect techniques associated with each software or
-                threat group. These buttons modify the currently selected techniques rather
-                than replacing then, allowing for the selection of the techniques of multiple
-                threat groups or software by selecting them in sequence.
-            </p>
-            <p>
-                Threat groups and software in the list are given a gray background when all
-                of their techniques are selected, even if the selection was not made using
-                the multiselect interface.
+                area. You can use this in conjunction with the search input to select all results which match the given query.
             </p>
 
             <h1 id="help_Customizing_The_Navigator">Customizing The Navigator</h1>
