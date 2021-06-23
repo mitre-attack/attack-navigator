@@ -29,14 +29,15 @@ import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component'
 import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
 import { MatrixMiniComponent } from './matrix//matrix-mini/matrix-mini.component';
 import { TooltipComponent } from './matrix/technique-cell/tooltip/tooltip.component';
-import { MultiselectComponent } from './multiselect/multiselect.component';
-import { TechniquesSearchComponent } from './techniques-search/techniques-search.component';
+import { SearchAndMultiselectComponent } from './search-and-multiselect/search-and-multiselect.component';
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
 import { ChangelogCellComponent } from './sidebar/changelog-cell/changelog-cell.component';
+import { MatCardModule } from "@angular/material/card";
+import { MatDividerModule } from "@angular/material/divider";
 
 
 @NgModule({
@@ -51,14 +52,13 @@ import { ChangelogCellComponent } from './sidebar/changelog-cell/changelog-cell.
     MatrixFlatComponent,
     MatrixMiniComponent,
     TooltipComponent,
-    MultiselectComponent,
-    TechniquesSearchComponent,
+    SearchAndMultiselectComponent,
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
     SidebarComponent,
     LayerUpgradeComponent,
-    ChangelogCellComponent,
+    ChangelogCellComponent
   ],
   imports: [
     BrowserModule,
@@ -76,7 +76,9 @@ import { ChangelogCellComponent } from './sidebar/changelog-cell/changelog-cell.
     MatExpansionModule,
     MatDialogModule,
     ColorPickerModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatCardModule,
+    MatDividerModule
   ],
   exports: [
       MatSelectModule,

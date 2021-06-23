@@ -30,6 +30,4 @@ export class AppComponent {
             return false;
         }
     }
-
-
 }

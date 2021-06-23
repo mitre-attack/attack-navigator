@@ -17,28 +17,18 @@ export abstract class Cell {
     }
 
     public get isHighlighted(): boolean {
-        if (this.viewModel.highlightedTactic) {
-            if (this.viewModel.selectTechniquesAcrossTactics) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
-            } else if (this.tactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
+        if (this.viewModel.selectTechniquesAcrossTactics) {
+            if (this.viewModel.selectSubtechniquesWithParent) {
+                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
             }
+        }
+        else if (this.viewModel.highlightedTactic && this.tactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
+            if (this.viewModel.selectSubtechniquesWithParent) {
+                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
+            }
+        }
+        if (this.viewModel.highlightedTechniques.has(this.technique.id)) { // for highlighting techniques from the techniques search component, where highlightedTactic is null
+            return true;
         }
 
         return this.showContextmenu;

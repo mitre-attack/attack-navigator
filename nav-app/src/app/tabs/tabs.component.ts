@@ -163,6 +163,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         this.activeTab = tab;
         // activate the tab the user has clicked on.
         // tab.active = true;
+        this.viewModelsService.viewModels.forEach(viewModel => {
+            if (viewModel.sidebarContentType === 'select') {
+                viewModel.sidebarOpened = false;
+                viewModel.sidebarContentType = "";
+            }
+        });
     }
 
     /**
@@ -514,6 +520,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 newViewModel.compareTo = prevViewModel;
                 this.openTab("new layer", newViewModel, true, true, true, true);
                 newViewModel.sidebarOpened = true;
+                newViewModel.sidebarContentType = 'layerUpgrade'
                 newViewModel.selectTechniquesAcrossTactics = false;
 
                 // load layer version & latest ATT&CK version

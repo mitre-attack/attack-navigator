@@ -16,9 +16,9 @@ export class TechniqueCellComponent extends Cell implements OnInit {
 
     public get showTooltip(): boolean {
         if (this.showContextmenu) return false;
-        if (!this.viewModel.highlightedTechnique) return false;
+        if (this.viewModel.highlightedTechniques.size === 0) return false;
 
-        return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
     constructor(public configService: ConfigService, public dataService: DataService) {

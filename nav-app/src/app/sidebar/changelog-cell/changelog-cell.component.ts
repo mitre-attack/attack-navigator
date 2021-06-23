@@ -12,10 +12,10 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() isCurrentVersion?: boolean = true;
 
     public get showTooltip(): boolean {
-        if (!this.viewModel.highlightedTechnique || !this.tactic) return false;
+        if (this.viewModel.highlightedTechniques.size === 0 || !this.tactic) return false;
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
         if (!tvm.score && !tvm.aggregateScore && !tvm.comment) return false;
-        return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
     constructor(public configService: ConfigService, public dataService: DataService) {

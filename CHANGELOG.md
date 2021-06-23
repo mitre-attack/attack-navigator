@@ -1,3 +1,11 @@
+# v4.4 - Changes staged on Develop
+## Improvements
+- Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+- Improved favicon for standardization with other ATT&CK tools.
+
+## Fixes
+- Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
+
 # v4.3 - 29 April 2021
 ## New Features
 - Added aggregate scores. Aggregate scores are computed using the score of the technique and all sub-techniques using an "aggregate function" -- min, max, average, or sum. The aggregate score is used to determine the color of the technique in place of the technique's score. Aggregate scores are an optional feature and can be enabled in the "matrix configuration" dropdown. See issue [#269](https://github.com/mitre-attack/attack-navigator/issues/269).

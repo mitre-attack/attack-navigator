@@ -76,7 +76,10 @@ export class LayerUpgradeComponent implements OnInit {
         let subscription = this.closeDialogRef.afterClosed().subscribe({
             next: (result) => {
                 // close sidebar
-                if (result) this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
+                if (result) {
+                    this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
+                    this.viewModel.sidebarContentType = '';
+                }
             },
             complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
