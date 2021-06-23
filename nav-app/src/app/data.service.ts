@@ -323,7 +323,6 @@ export class DataService {
      * @param previous imported layer version to upgrade from
      * @param latest latest ATT&CK version to upgrade to
      */
-    public changelogLoaded: boolean = false;
     public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog<Technique> {
         let changelog = new VersionChangelog<Technique>(prevDomainID, latestDomainID);
         let previousDomain = this.getDomain(prevDomainID);
@@ -358,7 +357,6 @@ export class DataService {
                 }
             }
         }
-        this.changelogLoaded = true;
         return changelog;
     }
 }

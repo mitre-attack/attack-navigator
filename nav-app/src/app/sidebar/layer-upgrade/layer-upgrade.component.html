@@ -1,24 +1,31 @@
-<div *ngIf="dataService.changelogLoaded" class="layer-upgrade">
-    <!-- title -->
+<div class="layer-upgrade">
     <span><h2>Layer Upgrade</h2> ({{version(changelog.previousVersion)}} &#8594; {{version(changelog.latestVersion)}})</span>
 
-    <!-- filter/copy all annotations -->
-    <div class="checkbox-container">
-        <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
-        <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
-        <button class="button right" (click)="copyAll()">copy all</button>
-    </div>
+    <mat-divider></mat-divider>
+
+    <mat-card>
+        <mat-card-content>
+            <mat-card-title><h4 class="title">Filter</h4></mat-card-title>
+            <!-- filter/copy all annotations -->
+            <div class="checkbox-container">
+                <input id="show_annotated_only" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
+                <label for="show_annotated_only" class="checkbox-custom-label noselect">show annotated techniques only</label>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-divider></mat-divider>
 
     <!-- changelog sections -->
-    <div>
+    <div class="changelog">
         <mat-accordion class="headers-align">
             <mat-expansion-panel class="section-panel" *ngFor="let section of sections" [disabled]="!applyFilter()[section].length">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{getHeader(section)}}
+                        <h4>{{getHeader(section)}}</h4>
                     </mat-panel-title>
                     <mat-panel-description>
-                        {{applyFilter().id_length(section)}}/{{changelog.id_length(section)}} techniques
+                        <h4>({{applyFilter().id_length(section)}}/{{changelog.id_length(section)}} techniques)</h4>
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
@@ -92,10 +99,12 @@
         </mat-accordion>
     </div>
 
+    <mat-divider></mat-divider>
+
     <!-- done button -->
     <div class="done-button right">
         <span>Updated {{reviewed.size}}/{{changelog.length()}} techniques</span>
-        <button mat-stroked-button (click)="openDialog()">done</button>
+        <button mat-raised-button (click)="openDialog()">Done</button>
     </div>
 </div>
 

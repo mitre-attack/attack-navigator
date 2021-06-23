@@ -203,18 +203,6 @@ export class LayerUpgradeComponent implements OnInit {
         return techniques.find(t => t.attackID == technique_id);
     }
 
-    public copyAll(): void {
-        for (let section of this.sections) {
-            for (let tactic of this.getSectionTactics(section)) {
-                for (let object of this.getTacticObjects(section, tactic)) {
-                    let id = object.get_technique_tactic_id(tactic);
-                    let compareId = this.getRelatedObjectID(object, section, tactic);
-                    this.copyAnnotations(id, compareId);
-                }
-            }
-        }
-    }
-
     public copyAnnotations(id: string, compareId: string): void {
         let tvm = this.viewModel.getTechniqueVM_id(id);
         if (tvm.annotated()) return;

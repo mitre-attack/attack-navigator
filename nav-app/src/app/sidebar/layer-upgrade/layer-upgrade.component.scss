@@ -1,6 +1,16 @@
 h2, h3 {
     display: inline-block;
 }
+.mat-card-title h4 {
+    font-size: 14px;
+    margin: 0;
+}
+.mat-card {
+    margin: 1rem 0;
+}
+.changelog {
+    margin: 1rem 0;
+}
 .right {
     float: right;
 }
@@ -30,8 +40,8 @@ h2, h3 {
     }
 }
 .done-button {
-    padding: 12px 0;
-    .mat-stroked-button { margin-left: 12px; }
+    margin: 1rem 0;
+    .mat-raised-button { margin-left: 12px; }
 }
 .close-dialog {
     text-align: center;
