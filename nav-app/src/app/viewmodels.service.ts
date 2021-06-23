@@ -921,7 +921,7 @@ export class ViewModel {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
             // filter by enabled
-            if (this.hideDisabled && !techniqueVM.enabled) return false;
+            if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) return false;
             if (matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
             // filter by platform
             let platforms = new Set(technique.platforms)
@@ -930,6 +930,14 @@ export class ViewModel {
             }
             return false; //no platform match
         })
+    }
+
+    public isSubtechniqueEnabled(technique, techniqueVM, tactic): boolean {
+        if (techniqueVM.enabled) return true;
+        else if (technique.subtechniques.length > 0) {
+            return technique.subtechniques.some(subtechnique => this.getTechniqueVM(subtechnique, tactic).enabled);
+        }
+        else return false;
     }
 
     /**
