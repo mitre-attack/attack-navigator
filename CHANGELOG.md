@@ -2,6 +2,7 @@
 ## Improvements
 - Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 - Improved favicon for standardization with other ATT&CK tools.
+- Added link to changelog on GitHub, if the Navigator version text at the bottom of the page is clicked. See issue [#120](https://github.com/mitre-attack/attack-navigator/issues/120). 
 
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
