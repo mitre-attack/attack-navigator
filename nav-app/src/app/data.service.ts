@@ -320,11 +320,11 @@ export class DataService {
 
     /**
      * Compare two ATT&CK versions and return a set of object changes
-     * @param previous imported layer version to upgrade from
-     * @param latest latest ATT&CK version to upgrade to
+     * @param prevDomainID imported layer version to upgrade from
+     * @param latestDomainID latest ATT&CK version to upgrade to
      */
-    public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog<Technique> {
-        let changelog = new VersionChangelog<Technique>(prevDomainID, latestDomainID);
+    public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog {
+        let changelog = new VersionChangelog(prevDomainID, latestDomainID);
         let previousDomain = this.getDomain(prevDomainID);
         let latestDomain = this.getDomain(latestDomainID);
 
@@ -336,24 +336,27 @@ export class DataService {
             let prevTechnique = previousTechniques.find(p => p.id == latestTechnique.id);
             if (!prevTechnique) {
                  // object doesn't exist in previous version, added to latest version
-                changelog.additions.push(latestTechnique);
+                changelog.additions.push(latestTechnique.attackID);
             }
             else if (latestTechnique.modified == prevTechnique.modified) {
                 // no changes made to the object
-                changelog.unchanged.push(latestTechnique);
+                changelog.unchanged.push(latestTechnique.attackID);
             } else {
                 // changes were made to the object
                 if (latestTechnique.revoked && !prevTechnique.revoked) {
                     // object was revoked since the previous version
-                    changelog.revocations.push(latestTechnique);
+                    changelog.revocations.push(latestTechnique.attackID);
+                } else if (latestTechnique.revoked && prevTechnique.revoked) {
+                    // both objects are deprecated, ignore
+                    continue;
                 } else if (latestTechnique.deprecated && !prevTechnique.deprecated) {
                     // object was deprecated since the previous version
-                    changelog.deprecations.push(latestTechnique);
+                    changelog.deprecations.push(latestTechnique.attackID);
                 } else if (latestTechnique.compareVersion(prevTechnique.version) != 0) {
                     // version number changed
-                    changelog.changes.push(latestTechnique);
+                    changelog.changes.push(latestTechnique.attackID);
                 } else { // minor change
-                    changelog.minor_changes.push(latestTechnique);
+                    changelog.minor_changes.push(latestTechnique.attackID);
                 }
             }
         }
@@ -507,40 +510,28 @@ export class Technique extends BaseStix {
     }
 }
 
-export class VersionChangelog<T> {
-    public previousVersion: string;
-    public latestVersion: string;
-    public additions: T[] = []; // new objects added to newest version
-    public changes: T[] = []; // object changes between versions
-    public minor_changes: T[] = []; // changes to objects without version increments
-    public deprecations: T[] = []; // objects deprecated since older version
-    public revocations: T[] = []; // objects revoked since older version
-    public unchanged: T[] = []; // objects which have not changed between versions
+export class VersionChangelog {
+    public previousDomainID: string;
+    public latestDomainID: string;
+    public additions: string[] = []; // new objects added to newest version
+    public changes: string[] = []; // object changes between versions
+    public minor_changes: string[] = []; // changes to objects without version increments
+    public deprecations: string[] = []; // objects deprecated since older version
+    public revocations: string[] = []; // objects revoked since older version
+    public unchanged: string[] = []; // objects which have not changed between versions
 
     constructor(prev: string, latest: string) {
-        this.previousVersion = prev;
-        this.latestVersion = latest;
+        this.previousDomainID = prev;
+        this.latestDomainID = latest;
     }
 
     public length(): number {
-        return this.id_length('additions')
-            + this.id_length('changes')
-            + this.id_length('minor_changes')
-            + this.id_length('deprecations')
-            + this.id_length('revocations')
-            + this.id_length('unchanged');
-    }
-
-    public id_length(section: string): number {
-        if (['deprecations', 'revocations'].includes(section)) {
-            return this[section].length;
-        }
-
-        let count = 0;
-        for (let object of this[section]) {
-            count += object.get_all_technique_tactic_ids().length;
-        }
-        return count;
+        return this.additions.length
+             + this.changes.length
+             + this.minor_changes.length
+             + this.deprecations.length
+             + this.revocations.length
+             + this.unchanged.length;
     }
 }
 
@@ -653,7 +644,14 @@ export class Domain {
     public dataLoadedCallbacks: any[] = [];
 
     public matrices: Matrix[] = [];
-    public tactics: Tactic[] = [];
+
+    public get tactics(): Tactic[] {
+        let tactics = [];
+        for (let matrix of this.matrices) {
+            tactics = tactics.concat(matrix.tactics);
+        }
+        return tactics;
+    }
     public techniques: Technique[] = [];
     public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];

@@ -10,18 +10,19 @@ import { MatDialog } from '@angular/material/dialog';
     encapsulation: ViewEncapsulation.None
 })
 export class LayerUpgradeComponent implements OnInit {
-    @Input() viewModel: ViewModel; // latest version viewmodel
+    @Input() viewModel: ViewModel; // view model of latest version
     @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
     public closeDialogRef;
 
-    public changelog: VersionChangelog<BaseStix>;
+    public changelog: VersionChangelog;
     public compareTo: ViewModel; // view model of previous version
-    public showAnnotatedOnly: boolean = true;
+    public showAnnotatedOnly: boolean = true; // filter
     public sections: string[] = [
         "additions", "changes", "minor_changes",
         "deprecations", "revocations", "unchanged"
     ];
     public reviewed = new Set();
+    public copied = new Set();
 
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -30,45 +31,223 @@ export class LayerUpgradeComponent implements OnInit {
         this.compareTo = this.viewModel.compareTo;
     }
 
-    public applyFilter(): VersionChangelog<BaseStix> {
-        if (this.showAnnotatedOnly) {
-            // find annotated techniques
-            let annotatedIDs = [];
-            for (let [id, tvm] of this.compareTo.techniqueVMs) {
-                if (tvm.annotated()) annotatedIDs.push(id);
-            }
+    /**
+     * Get a readable version for the name of the changelog section
+     * @param section name of the changelog section
+     * @returns {string} readable section header text
+     */
+    public getHeader(section: string): string {
+        return section.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+    }
 
-            // filter changelog sections
-            let changelog_filter = new VersionChangelog<BaseStix>(this.compareTo.version, this.viewModel.version);
-            for (let section of this.sections) {
-                let filtered = this.changelog[section].filter(object => {
-                    // let relatedObject = this.getRelatedObjectID(object, section, )
-                    if (section !== 'revocations') {
-                        if (this.getIDs(object).some(id => annotatedIDs.includes(id))) return true;
-                        else return false;
-                    } else {
-                        let revokedObject = this.getRevokedTechnique(object);
-                        if (this.getIDs(revokedObject).some(id => annotatedIDs.includes(id))) return true;
-                        else return false;
-                    }
-                })
-                changelog_filter[section] = filtered;
-            }
-            return changelog_filter;
+    /**
+     * Get the version number from the domain ID
+     * @param domainID the domain ID
+     * @returns {string} the version number
+     */    
+    public version(domainID: string): string {
+        return domainID.match(/v[0-9]/g)[0].toLowerCase();
+    }
+
+    /**
+     * Counts the number of objects in the filtered changelog section
+     * @param section name of the changelog section
+     * @returns {number} number of objects shown in the given section
+     */
+    public sectionLength(section: string): number {
+        if (this.showAnnotatedOnly) {
+            return this.changelog[section].filter(attackID => this.isAnnotated(attackID)).length;
         } else {
-            return this.changelog;
+            return this.changelog[section].length;
         }
     }
 
-    public getHeader(header: string): string {
-        return header.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+    /**
+     * Get the technique object in the domain of the given view model
+     * @param attackID the ATT&CK ID of the technique
+     * @param vm the view model
+     * @param section name of the changelog section
+     * @returns {Technique} the technique object
+     */
+    public getTechnique(attackID: string, vm: ViewModel, section?: string): Technique {
+        let domain = this.dataService.getDomain(vm.domainID);
+        let all_techniques = domain.techniques.concat(domain.subtechniques);
+        let technique = all_techniques.find(t => t.attackID == attackID);
+
+        if (section == 'revocations') {
+            // get revoking object
+            let revokedByID = technique.revoked_by(vm.domainID);
+            let revokingObject = all_techniques.find(t => t.id == revokedByID);
+            return revokingObject;
+
+        } else return technique;
     }
 
-    public version(version: string): string {
-        return version.match(/v[0-9]/g)[0].toLowerCase();
+    /**
+     * Get the list of tactic objects the given technique is found under 
+     * @param object technique
+     * @param vm the view model used to identify the domain
+     * @param section name of the changelog section
+     * @returns {Tactic[]} list of tactic objects the object is found under
+     */
+    public getTactics(object: Technique, vm: ViewModel, section?: string): Tactic[] {
+        if (section == 'additions') vm = this.viewModel;
+        let domain = this.dataService.getDomain(vm.domainID);
+        return object.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
     }
 
-    public openDialog(): void {
+    /**
+     * Determine if the lists of tactics between the technique in the latest version and
+     * previous version are the same
+     * @param attackID the ATT&CK ID of the objects
+     * @param section name of the changelog section
+     * @returns {boolean} true if the list of tactics are not identical
+     */
+    public tacticsChanged(attackID: string, section: string): boolean {
+        if (section == 'deprecations' || section == 'additions') return false;
+        
+        let oldTechnique = this.getTechnique(attackID, this.compareTo);
+        let newTechnique = this.getTechnique(attackID, this.viewModel, section);
+
+        if (!oldTechnique.tactics && !newTechnique.tactics) return false;
+        if (oldTechnique.tactics.length !== newTechnique.tactics.length) return true;
+        if (oldTechnique.tactics.every((value, i) => value === newTechnique.tactics[i])) return false;
+        return true;
+    }
+
+    /**
+     * Determine if the technique is marked as reviewed
+     * @param attackID the ATT&CK ID of the technique
+     * @returns {boolean} true if the technique has been marked as reviewed
+     */
+    public isReviewed(attackID: string): boolean {
+        return this.reviewed.has(attackID);
+    }
+
+    /**
+     * Marks or unmarks a single given technique as reviewed
+     * @param attackID the ATT&CK ID of the technique
+     */
+    public reviewedChanged(attackID: string): void {
+        if (this.isReviewed(attackID)) {
+            this.reviewed.delete(attackID);
+        } else {
+            this.reviewed.add(attackID);
+        }
+    }
+
+    /**
+     * Determine if all objects in the changelog section have been marked as reviewed
+     * @param section the name of the changelog section
+     * @returns {boolean} true if all objects are marked as reviewed
+     */
+    public allReviewed(section: string): boolean {
+        return this.changelog[section].every(attackID => this.reviewed.has(attackID));
+    }
+
+    /**
+     * Marks or unmarks all objects in the changelog section as reviewed
+     * @param section the name of the changelog section
+     */
+    public reviewAllChanged(section: string): void {
+        if (this.allReviewed(section)) {
+            this.changelog[section].forEach(attackID => this.reviewed.delete(attackID));
+        } else {
+            this.changelog[section].forEach(attackID => this.reviewed.add(attackID));
+        }
+    }
+
+    /**
+     * Determine if the technique in the previous version has annotations
+     * @param attackID the ATT&CK ID of the technique
+     * @returns {boolean} true if any TechniqueVM for this technique is annotated
+     */
+     public isAnnotated(attackID: string): boolean {
+        let prevTechnique = this.getTechnique(attackID, this.compareTo);
+        if (prevTechnique) {
+            let technique_tactic_ids = prevTechnique.get_all_technique_tactic_ids();
+
+            for (let id of technique_tactic_ids) {
+                if (this.compareTo.getTechniqueVM_id(id).annotated()) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determine if the annotations of the technique under the given tactic
+     * in the previous version have been copied to the latest version
+     * @param object the the technique in the previous version
+     * @param tactic the tactic the technique can be found under
+     * @returns {boolean} true if the annotations have been copied to the
+     * object in the latest version
+     */
+    public isCopied(object: Technique, tactic: Tactic): boolean {
+        if (this.copied.has(object.get_technique_tactic_id(tactic))) return true;
+        else return false;
+    }
+
+    /**
+     * Copy the annotations from the TechniqueVM in the previous version
+     * to the TechniqueVM in the latest version
+     * @param attackID the ATT&CK ID of the technique
+     * @param tactic the tactic the technique can be found under
+     */
+    public copyAnnotations(attackID: string, tactic: Tactic): void {
+        // TODO: keep this?
+        // mark as not reviewed during changes
+        this.reviewed.delete(attackID);
+
+        // retrieve relevant technique VMs
+        let oldTechnique = this.getTechnique(attackID, this.compareTo);
+        let newTechnique = this.getTechnique(attackID, this.viewModel);
+        let oldTvm = this.compareTo.getTechniqueVM(oldTechnique, tactic);
+        let newTvm = this.viewModel.getTechniqueVM(newTechnique, tactic);
+
+        // copy annotations
+        let rep = oldTvm.serialize();
+        newTvm.deSerialize(rep, attackID, tactic.shortname);
+        oldTvm.enabled = false;
+
+        // mark as copied
+        this.copied.add(oldTechnique.get_technique_tactic_id(tactic));
+
+        // mark as reviewed if all are copied
+        if (oldTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.add(attackID);
+    }
+
+    /**
+     * Re-enable the annotations from the TechniqueVM in the previous version and
+     * reset the annotations from the latest version
+     * @param attackID the ATT&CK ID of the technique
+     * @param tactic the tactic the technique can be found under
+     */
+    public revertCopy(attackID: string, tactic: Tactic): void {
+        // TODO: keep this?
+        // mark as not reviewed during changes
+        this.reviewed.delete(attackID)
+
+        // retrieve relevant technique VMs
+        let oldTechnique = this.getTechnique(attackID, this.compareTo);
+        let newTechnique = this.getTechnique(attackID, this.viewModel);
+        let oldTvm = this.compareTo.getTechniqueVM(oldTechnique, tactic);
+        let newTvm = this.viewModel.getTechniqueVM(newTechnique, tactic);
+
+        // reset new technique's annotations
+        newTvm.resetAnnotations();
+        oldTvm.enabled = true;
+
+        // unmark as copied
+        this.copied.delete(oldTechnique.get_technique_tactic_id(tactic));
+
+        // mark as not reviewed if not all are copied
+        if (!oldTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.delete(attackID);
+    }
+
+    /**
+     * Open the close dialog template
+     */
+     public openDialog(): void {
         this.closeDialogRef = this.dialog.open(this.closeDialog, {
             width: '350px',
             disableClose: true
@@ -83,173 +262,5 @@ export class LayerUpgradeComponent implements OnInit {
             },
             complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
         });
-    }
-
-    public isReviewed(id: string): boolean {
-        return this.reviewed.has(id);
-    }
-
-    public markAsReviewed(id: string) {
-        this.reviewed.add(id);
-    }
-
-    public unmarkAsReviewed(id: string) {
-        this.reviewed.delete(id);
-    }
-
-    public reviewedChanged(id: string) {
-        if (this.isReviewed(id)) {
-            this.unmarkAsReviewed(id);
-        } else {
-            this.markAsReviewed(id);
-        }
-    }
-
-    public getIDs(object: Technique) {
-        let ids = object.get_all_technique_tactic_ids()
-        return ids
-    }
-
-    public getSectionTactics(section: string) {
-        let vm = this.viewModel;
-        if (section == 'revocations') vm = this.compareTo;
-
-        let tactics = [];
-        let domain = this.dataService.getDomain(vm.domainID);
-        for (let matrix of domain.matrices) {
-            tactics = tactics.concat(matrix.tactics);
-        }
-        tactics = tactics.map(t => t.shortname);
-        tactics = tactics.filter(t => this.getTacticObjects(section, t).length);
-
-        return tactics;
-    }
-
-    public getTacticObjects(section: string, tactic: string): Technique[] {
-        let objects = [];
-        let sectionObjects: Technique[] = this.applyFilter()[section];
-
-        for (let object of sectionObjects) {
-            if (section == 'revocations') {
-                let revokedObject = this.getRevokedTechnique(object);
-                if (revokedObject.tactics && revokedObject.tactics.includes(tactic)) objects.push(revokedObject);
-            } else {
-                if (object.tactics && object.tactics.includes(tactic)) objects.push(object);
-            }
-        }
-        return objects;
-    }
-
-    public getRelatedObjectID(object: Technique, section: string, tactic: string): string {
-        // check if object has no related object
-        if (!['changes', 'minor_changes', 'revocations', 'unchanged'].includes(section)) return;
-
-        let prevTechniques: Technique[];
-        let domain = this.dataService.getDomain(this.compareTo.domainID);
-        if (object.isSubtechnique) prevTechniques = domain.subtechniques;
-        else prevTechniques = domain.techniques;
-
-        // find related object
-        let prevObject = prevTechniques.find(t => t.attackID === object.attackID);
-        if (prevObject.tactics.includes(tactic)) return prevObject.get_technique_tactic_id(tactic);
-        return;
-    }
-
-    public allSelected(section: string): boolean {
-        let objectIDs = [];
-        for (let object of this.changelog[section]) {
-            if (['deprecations', 'revocations'].includes(section)) objectIDs.push(object.id);
-            else this.getIDs(object).forEach(id => objectIDs.push(id));
-        }
-        return objectIDs.every(id => this.reviewed.has(id));
-    }
-
-    public selectAllChanged(section: string): void {
-        if (this.allSelected(section)) {
-            // unselect all
-            for (let object of this.changelog[section]) {
-                if (['deprecations', 'revocations'].includes(section)) this.unmarkAsReviewed(object.id)
-                else this.getIDs(object).forEach(id => { this.unmarkAsReviewed(id); })
-            }
-        } else {
-            // select all
-            for (let object of this.changelog[section]) {
-                if (['deprecations', 'revocations'].includes(section)) this.markAsReviewed(object.id);
-                this.getIDs(object).forEach(id => {this.markAsReviewed(id)});
-            }
-        }
-    }
-
-    public getTactic(id: string, isCurrent: boolean = true): Tactic {
-        let vm = this.viewModel;
-        if (!isCurrent) vm = this.compareTo;
-
-        let shortname = vm.getTechniqueVM_id(id).tactic;
-        let domain = this.dataService.getDomain(vm.domainID);
-        let tactics = [];
-        for (let matrix of domain.matrices) {
-            tactics = tactics.concat(matrix.tactics);
-        }
-        return tactics.find(t => t.shortname == shortname);
-    }
-
-    public getTechnique(id: string, isCurrent: boolean = true): Technique {
-        let vm = this.viewModel;
-        if (!isCurrent) vm = this.compareTo;
-
-        let technique_id = vm.getTechniqueVM_id(id).techniqueID;
-        let domain = this.dataService.getDomain(vm.domainID);
-        let techniques = domain.techniques.concat(domain.subtechniques);
-        return techniques.find(t => t.attackID == technique_id);
-    }
-
-    public copyAnnotations(id: string, compareId: string): void {
-        let tvm = this.viewModel.getTechniqueVM_id(id);
-        if (tvm.annotated()) return;
-        let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
-
-        // copy annotations from previous technique
-        let rep = toCopyTvm.serialize();
-        tvm.deSerialize(rep, id.split("^")[0], id.split("^")[1])
-
-        // disable previous technique
-        toCopyTvm.enabled = false;
-
-        // mark as reviewed
-        this.markAsReviewed(id);
-    }
-
-    public revertCopy(id: string, compareId: string): void {
-        let tvm = this.viewModel.getTechniqueVM_id(id);
-        let toCopyTvm = this.compareTo.getTechniqueVM_id(compareId);
-
-        // reset current technique's annotations
-        tvm.resetAnnotations();
-
-        // re-enable previous technique
-        toCopyTvm.enabled = true;
-
-        // mark as not yet reviewed
-        this.unmarkAsReviewed(id);
-    }
-
-    public disableCopy(id: string): boolean {
-        if (!this.compareTo.getTechniqueVM_id(id).annotated()) return true;
-        return false;
-    }
-
-    // get the object from the current version that the object is revoked by
-    public revokedBy(object: Technique): Technique {
-        let revokedByID = object.revoked_by(this.viewModel.domainID);
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
-        let revokingObject = domain.subtechniques.find(t => t.id == revokedByID) || domain.techniques.find(t => t.id == revokedByID);
-        return revokingObject;
-    }
-
-    // get the object from the past version that has been revoked
-    public getRevokedTechnique(object: Technique): Technique {
-        let domain = this.dataService.getDomain(this.compareTo.domainID);
-        let revokedObject = domain.subtechniques.find(t => t.attackID == object.attackID) || domain.techniques.find(t => t.attackID == object.attackID);
-        return revokedObject;
     }
 }

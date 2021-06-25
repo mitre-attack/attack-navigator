@@ -383,7 +383,7 @@ export class ViewModel {
     techUIDtoIDMap: Object = {};
 
     compareTo?: ViewModel;
-    versionChangelog?: VersionChangelog<Technique>;
+    versionChangelog?: VersionChangelog;
     
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };

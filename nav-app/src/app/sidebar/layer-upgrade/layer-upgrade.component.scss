@@ -1,9 +1,6 @@
-h2, h3 {
+.title h2 {
     display: inline-block;
-}
-.mat-card-title h4 {
-    font-size: 14px;
-    margin: 0;
+    margin: 0 0 12px;
 }
 .mat-card {
     margin: 1rem 0;
@@ -11,35 +8,37 @@ h2, h3 {
 .changelog {
     margin: 1rem 0;
 }
-.right {
-    float: right;
+.changelog-cells {
+    padding: 6px;
 }
-.checkbox-container {
-    padding-bottom: 6px;
+.mat-expansion-panel-content {
+    max-height: 60vh;
+    overflow: auto;
 }
-.section-panel {
-    >.mat-expansion-panel-content {
-        max-height: 60vh;
-        overflow: auto;
+td.narrow {
+    width: 20px;
+}
+.cols {
+    display: flex;
+    .float {
+        float: left;
+        padding: 6px;
+        &:first-child { margin-right: 24px; }
     }
-    .changelog-table {
-        width: 100%;
-
-        td {
-            height: 100%;
-            padding: 2px 0px;
-        }
-        td.narrow { width: 20px; }
-        .narrow .mat-button {
-            border: 1px solid black;
-        }
-        .button { margin: 0px; }
-        tr {
-            padding-bottom: 4px;
-        }
-    }
+}
+.wide {
+    width: 100%;
+}
+.mat-expansion-panel-header {
+    height: auto;
+    min-height: 48px;
+}
+.checkbox {
+    padding: 6px;
+    &.right { float: right; }
 }
 .done-button {
+    float: right;
     margin: 1rem 0;
     .mat-raised-button { margin-left: 12px; }
 }
