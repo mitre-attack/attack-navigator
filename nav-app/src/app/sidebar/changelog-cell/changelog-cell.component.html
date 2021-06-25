@@ -1,7 +1,7 @@
 <div class="technique-cell" [ngStyle]="getTechniqueBackground()" [ngClass]="getClass()">
     <div (click)="onClick()" (mouseenter)="highlight()" (mouseleave)="unhighlight()">
         <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">
-            <b>{{tactic.shortname}}</b>
+            <b>{{tactic.name}}</b>
             <div class="id-name-break"></div>
             {{technique.attackID}}
             <div class="id-name-break"></div>

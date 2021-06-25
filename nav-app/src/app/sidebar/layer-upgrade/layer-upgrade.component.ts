@@ -85,13 +85,14 @@ export class LayerUpgradeComponent implements OnInit {
 
     /**
      * Get the list of tactic objects the given technique is found under 
-     * @param object technique
+     * @param attackID the ATT&CK ID of the object
      * @param vm the view model used to identify the domain
      * @param section name of the changelog section
      * @returns {Tactic[]} list of tactic objects the object is found under
      */
-    public getTactics(object: Technique, vm: ViewModel, section?: string): Tactic[] {
+    public getTactics(attackID: string, vm: ViewModel, section?: string): Tactic[] {
         if (section == 'additions') vm = this.viewModel;
+        let object = this.getTechnique(attackID, vm, section);
         let domain = this.dataService.getDomain(vm.domainID);
         return object.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
     }
@@ -99,7 +100,7 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Determine if the lists of tactics between the technique in the latest version and
      * previous version are the same
-     * @param attackID the ATT&CK ID of the objects
+     * @param attackID the ATT&CK ID of the object
      * @param section name of the changelog section
      * @returns {boolean} true if the list of tactics are not identical
      */
@@ -109,6 +110,7 @@ export class LayerUpgradeComponent implements OnInit {
         let oldTechnique = this.getTechnique(attackID, this.compareTo);
         let newTechnique = this.getTechnique(attackID, this.viewModel, section);
 
+        // TODO: order tactic lists
         if (!oldTechnique.tactics && !newTechnique.tactics) return false;
         if (oldTechnique.tactics.length !== newTechnique.tactics.length) return true;
         if (oldTechnique.tactics.every((value, i) => value === newTechnique.tactics[i])) return false;
@@ -194,7 +196,6 @@ export class LayerUpgradeComponent implements OnInit {
      * @param tactic the tactic the technique can be found under
      */
     public copyAnnotations(attackID: string, tactic: Tactic): void {
-        // TODO: keep this?
         // mark as not reviewed during changes
         this.reviewed.delete(attackID);
 
@@ -223,7 +224,6 @@ export class LayerUpgradeComponent implements OnInit {
      * @param tactic the tactic the technique can be found under
      */
     public revertCopy(attackID: string, tactic: Tactic): void {
-        // TODO: keep this?
         // mark as not reviewed during changes
         this.reviewed.delete(attackID)
 

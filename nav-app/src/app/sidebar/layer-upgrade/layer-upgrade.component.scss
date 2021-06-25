@@ -2,11 +2,8 @@
     display: inline-block;
     margin: 0 0 12px;
 }
-.mat-card {
-    margin: 1rem 0;
-}
-.changelog {
-    margin: 1rem 0;
+.mat-divider {
+    margin: 1rem 0!important;
 }
 .changelog-cells {
     padding: 6px;
@@ -15,16 +12,24 @@
     max-height: 60vh;
     overflow: auto;
 }
-td.narrow {
-    width: 20px;
+tr:not(.version-header) td {
+    padding-bottom: 1rem;
 }
+.narrow { width: 20px; }
 .cols {
     display: flex;
     .float {
         float: left;
         padding: 6px;
-        &:first-child { margin-right: 24px; }
     }
+}
+.version {
+    text-align: center;
+    margin-bottom: -1rem;
+}
+.arrow {
+    text-align: center;
+    vertical-align: top;
 }
 .wide {
     width: 100%;
@@ -47,4 +52,7 @@ td.narrow {
     .dialog-buttons button {
         margin: 4px;
     }
+}
+.reviewed {
+    color: #4BB543;
 }

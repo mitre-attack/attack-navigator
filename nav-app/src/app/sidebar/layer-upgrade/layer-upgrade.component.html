@@ -44,7 +44,7 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="cols">
-                                <div class="float"><span *ngIf="isReviewed(attackID)">&#10003;</span>&nbsp;<b>{{attackID}}</b></div>
+                                <div class="float"><span *ngIf="isReviewed(attackID)" class="reviewed">&#10003;</span>&nbsp;<b>{{attackID}}</b></div>
                                 <div class="float">{{getTechnique(attackID, viewModel).name}}</div>
                             </div>
                         </mat-panel-title>
@@ -55,9 +55,11 @@
                     <div class="cols" *ngIf="tacticsChanged(attackID, section)">
                         <!-- technique from previous version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
-                            <!-- TODO: format the version header -->
-                            <div>{{version(changelog.previousDomainID)}}</div>
-                            <div class="changelog-cells" *ngFor="let tactic of getTactics(oldTechnique, compareTo)">
+                            <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
+
+                            <mat-divider></mat-divider>
+
+                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="oldTechnique" 
@@ -66,11 +68,16 @@
                                 </changelog-cell>
                             </div>
                         </div>
+
+                        <div class="float"><span class="arrow">&#8594;</span></div>
+
                         <!-- technique from latest version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
-                            <!-- TODO: format the version header -->
-                            <div>{{version(changelog.latestDomainID)}}</div>
-                            <div class="changelog-cells" *ngFor="let tactic of getTactics(newTechnique, viewModel)">
+                            <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
+
+                            <mat-divider></mat-divider>
+
+                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="newTechnique" 
@@ -81,10 +88,20 @@
                         </div>
                     </div>
 
-                    <!-- BUG additions -->
                     <div *ngIf="!tacticsChanged(attackID, section)">
                         <table class="wide">
-                            <tr *ngFor="let tactic of getTactics(getTechnique(attackID, compareTo), compareTo, section)">
+                            <tr class="version-header">
+                                <td *ngIf="section !== 'additions'">
+                                    <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
+                                    <mat-divider></mat-divider>
+                                </td>
+                                <td class="arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">&#8594;</td>
+                                <td *ngIf="section !== 'deprecations'">
+                                    <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
+                                    <mat-divider></mat-divider>
+                                </td>
+                            </tr>
+                            <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
                                 <td *ngIf="section !== 'additions'">
                                     <!-- technique from prevous version -->
                                     <changelog-cell
@@ -97,7 +114,7 @@
                                 <td class="narrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
                                     <!-- copy annotations/revert copy -->
                                     <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
-                                        [disabled]="isCopied(getTechnique(attackID, compareTo), tactic)"
+                                        [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !isAnnotated(attackID)"
                                         (click)="copyAnnotations(attackID, tactic)">&gt;</button>
                                     <button class="button" matTooltipPosition="above" matTooltip="revert copy"
                                         [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
