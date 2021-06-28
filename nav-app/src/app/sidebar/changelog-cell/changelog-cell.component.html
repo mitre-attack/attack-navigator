@@ -2,9 +2,9 @@
     <div (click)="onClick()" (mouseenter)="highlight()" (mouseleave)="unhighlight()">
         <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">
             <b>{{tactic.name}}</b>
-            <div class="id-name-break"></div>
+            <div class="break"></div>
             {{technique.attackID}}
-            <div class="id-name-break"></div>
+            <div class="break"></div>
             {{technique.name}}
         </span>
     </div>

@@ -1,10 +1,12 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 <div class="layer-upgrade">
     <mat-card>
         <mat-card-content>
             <!-- title -->
             <span class="title">
                 <h2>Layer Upgrade</h2>
-                ({{version(changelog.previousDomainID)}} &#8594; {{version(changelog.latestDomainID)}})
+                ({{version(changelog.previousDomainID)}} <mat-icon inline="true">east</mat-icon> {{version(changelog.latestDomainID)}})
             </span>
             <!-- filter -->
             <div>
@@ -44,7 +46,11 @@
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="cols">
-                                <div class="float"><span *ngIf="isReviewed(attackID)" class="reviewed">&#10003;</span>&nbsp;<b>{{attackID}}</b></div>
+                                <div class="float">
+                                    <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
+                                    <mat-icon *ngIf="!isReviewed(attackID)">radio_button_unchecked</mat-icon>
+                                </div>
+                                <div class="float"><b>{{attackID}}</b></div>
                                 <div class="float">{{getTechnique(attackID, viewModel).name}}</div>
                             </div>
                         </mat-panel-title>
@@ -69,7 +75,7 @@
                             </div>
                         </div>
 
-                        <div class="float"><span class="arrow">&#8594;</span></div>
+                        <div class="float arrow"><mat-icon inline="true">east</mat-icon></div>
 
                         <!-- technique from latest version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
@@ -95,7 +101,9 @@
                                     <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
                                     <mat-divider></mat-divider>
                                 </td>
-                                <td class="arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">&#8594;</td>
+                                <td class="arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
+                                    <mat-icon inline="true">east</mat-icon>
+                                </td>
                                 <td *ngIf="section !== 'deprecations'">
                                     <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
                                     <mat-divider></mat-divider>
@@ -111,14 +119,14 @@
                                         [isCurrentVersion]="false">
                                     </changelog-cell>
                                 </td>
-                                <td class="narrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
+                                <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
                                     <!-- copy annotations/revert copy -->
                                     <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
                                         [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !isAnnotated(attackID)"
-                                        (click)="copyAnnotations(attackID, tactic)">&gt;</button>
+                                        (click)="copyAnnotations(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
                                     <button class="button" matTooltipPosition="above" matTooltip="revert copy"
                                         [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
-                                        (click)="revertCopy(attackID, tactic)">&lt;</button>
+                                        (click)="revertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
                                 </td>
                                 <td *ngIf="section !== 'deprecations'">
                                     <!-- technique from latest version-->
