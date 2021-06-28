@@ -110,10 +110,18 @@ export class LayerUpgradeComponent implements OnInit {
         let oldTechnique = this.getTechnique(attackID, this.compareTo);
         let newTechnique = this.getTechnique(attackID, this.viewModel, section);
 
-        // TODO: order tactic lists
         if (!oldTechnique.tactics && !newTechnique.tactics) return false;
         if (oldTechnique.tactics.length !== newTechnique.tactics.length) return true;
-        if (oldTechnique.tactics.every((value, i) => value === newTechnique.tactics[i])) return false;
+
+        // order lists and compare
+        let sortArray = function (a, b) {
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
+        };
+        let oldTactics = oldTechnique.tactics.sort(sortArray);
+        let newTactics = newTechnique.tactics.sort(sortArray);
+        if (oldTactics.every((value, i) => value === newTactics[i])) return false;
         return true;
     }
 
