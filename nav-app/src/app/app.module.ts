@@ -37,6 +37,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { MarkdownModule } from "ngx-markdown";
+
 
 @NgModule({
   declarations: [
@@ -74,7 +76,8 @@ import { MatDividerModule } from "@angular/material/divider";
     ColorPickerModule,
     MatSidenavModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MarkdownModule.forRoot()
   ],
   exports: [
       MatSelectModule,
