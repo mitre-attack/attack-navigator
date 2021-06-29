@@ -48,6 +48,7 @@ import { AppRoutingModule } from './app-routing.module';
     DataTableComponent,
     TabsComponent,
     HelpComponent,
+    HelpPageComponent,
     ExporterComponent,
     TechniqueCellComponent,
     MatrixSideComponent,
