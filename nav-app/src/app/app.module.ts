@@ -23,6 +23,7 @@ import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { HelpComponent } from './help/help.component';
+import { HelpPageComponent } from './help-page/help-page.component';
 import { ExporterComponent } from './exporter/exporter.component';
 import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.component';
 import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component';
@@ -38,6 +39,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { MarkdownModule } from "ngx-markdown";
+import { AppRoutingModule } from './app-routing.module';
 
 
 @NgModule({
@@ -77,7 +79,8 @@ import { MarkdownModule } from "ngx-markdown";
     MatSidenavModule,
     MatCardModule,
     MatDividerModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    AppRoutingModule
   ],
   exports: [
       MatSelectModule,
