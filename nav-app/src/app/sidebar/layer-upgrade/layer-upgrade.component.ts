@@ -74,12 +74,11 @@ export class LayerUpgradeComponent implements OnInit {
         let all_techniques = domain.techniques.concat(domain.subtechniques);
         let technique = all_techniques.find(t => t.attackID == attackID);
 
-        if (section == 'revocations') {
+        if (section == 'revocations' && this.viewModel.version == vm.version) {
             // get revoking object
             let revokedByID = technique.revoked_by(vm.domainID);
             let revokingObject = all_techniques.find(t => t.id == revokedByID);
             return revokingObject;
-
         } else return technique;
     }
 
