@@ -1,0 +1,32 @@
+@import "../../colors.scss";
+
+.content {
+  padding: 25px;
+  h1 {
+    text-align: center;
+    border-bottom: 1px solid black;
+  }
+
+  p, ul {
+    margin: 0;
+  }
+
+  .section-link {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  li {
+    list-style: none;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  code {
+    color: black;
+    border: 1px solid $panel-dark;
+    padding: 1px 2px;
+  }
+}
