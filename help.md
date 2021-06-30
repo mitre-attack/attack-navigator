@@ -56,7 +56,7 @@
 [Notice](#notice)  
 
 
-#  MITRE ATT&CK® Navigator Version {{nav_version}}
+#  MITRE ATT&CK® Navigator Version 4.4
 <p>
     The ATT&CK Navigator is designed to provide basic navigation and
     annotation of ATT&CK matrices, something that people are already doing
