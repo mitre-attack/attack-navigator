@@ -26,7 +26,7 @@
     - [Counting Unscored Techniques](#help_Count_Unscored)  
     - [Choosing an Aggregate Function](#help_Choose_Aggregate)
 
-  - [Legend](#help_Legend)  
+- [Legend](#help_Legend)  
 
 [Technique Controls](#help_Technique_Controls)  
 - [Disabling Techniques](#help_Disabling_Techniques)  
@@ -44,7 +44,7 @@
 - [Default Layers](#help_Default_Layers)  
 - [Disabling Features](#help_Disable_Features)  
 
-- [Rendering Layers as SVG](#help_Rendering_Layers_As_SVG)  
+[Rendering Layers as SVG](#help_Rendering_Layers_As_SVG)  
 - [Measurement Units](#help_exporting_units)  
 - [Configuring Image Size](#help_exporting_image_size)  
 - [Configuring Text](#help_exporting_text)  
