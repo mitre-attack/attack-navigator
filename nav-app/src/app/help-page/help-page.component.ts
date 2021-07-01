@@ -27,10 +27,15 @@ export class HelpPageComponent implements OnInit {
     this.scrollTo(elementName);
   }
 
-
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (location.hash) {
+      setTimeout(() => {
+        this.scrollTo(location.hash.split('#')[1].toString());
+      }, 200);
+    }
+  }
 
   scrollTo(sectionID: string): void {
     let element = document.getElementsByClassName(sectionID)[0];
