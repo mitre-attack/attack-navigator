@@ -1,4 +1,7 @@
 # v4.4 - Changes staged on Develop
+## New Features
+- Added help.md as an external page. See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
+
 ## Improvements
 - Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 - Improved favicon for standardization with other ATT&CK tools.
