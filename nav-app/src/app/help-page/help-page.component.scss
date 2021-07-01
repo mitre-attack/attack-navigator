@@ -11,13 +11,11 @@
     margin: 0;
   }
 
-  .section-link {
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
+  .style-none {
+    list-style: none;
   }
 
-  li {
+  .toc li, .anchor-link, .section-link {
     list-style: none;
     cursor: pointer;
     color: blue;

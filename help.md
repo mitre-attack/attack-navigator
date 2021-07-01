@@ -1,62 +1,57 @@
 # Table of Contents
-<a name="#"></a>
-[About](#about)  
-[Layers](#help_Layers)
-- [Creating New Layers](#help_Creating_New_Layers)
-- [Saving and Loading Layers](#help_Saving_and_Loading_Layers)  
-- [Creating Layers from Other Layers](#help_Creating_Layers_from_Other_Layers)  
+<div class="toc">
 
+- About  
+- Layers  
+  - Creating New Layers
+  - Saving and Loading Layers
+  - Creating Layers from Other Layers
+- Layer Controls
+  - Layer Information
+  - Sorting
+  - Filtering
+    - Platform Filter
+  - Color Setup
+    - Tactic Row Background
+    - Scoring Gradient
+  - Hiding Disabled Techniques
+  - Showing or Hiding Sub-techniques
+  - Configuring the Layout
+    - Side Layout
+    - Flat Layout
+    - Mini Layout
+    - Showing IDs and Names
+    - Aggregate Scores
+      - Showing or Hiding Aggregate Scores
+      - Counting Unscored Techniques
+      - Choosing an Aggregate Function
+  - Legend
+- Technique Controls
+  - Disabling Techniques
+  - Assigning Manual Colors
+  - Scoring Techniques
+  - Adding Comments to Techniques
+  - Clearing Annotations on Techniques
+- Selecting Techniques
+  - Selecting with the Mouse
+  - Selection Behavior
+  - Search & Multiselect Interface
+- Customizing the Navigator
+  - Default Layers
+  - Disabling Features
+- Rendering Layers as SVG
+  - Measurement Units
+  - Configuring Image Size
+  - Configuring Text
+  - Customizing the Legend
+  - Display Settings
+- Exporting Layers to MS Excel
+- Notice
 
-[Layer Controls](#help_Layer_Controls)
-- [Layer Information](#help_Layer_Information)  
-- [Sorting](#help_Sorting)  
-- [Filtering](#help_Filtering)  
-- [Color Setup](#help_Color_Setup)  
-   - [Tactic Row Background](#help_Tactic_Row_Background)  
-   - [Scoring Gradient](#help_Scoring_Gradient)  
+</div>
 
-- [Hiding Disabled Techniques](#help_Hiding_Disabled_Techniques)  
-- [Showing or Hiding Sub-techniques](#help_Show_Hide_Subtechniques)  
-- [Configuring the Matrix](#help_Changing_Layout)  
-  - [Side Layout](#help_Side_Layout)  
-  - [Flat Layout](#help_Flat_Layout)  
-  - [Mini Layout](#help_Mini_Layout)  
-  - [Showing IDs and Names](#help_IDs_Names)  
-  - [Aggregate Scores](#help_Aggregate_Scores)  
-    - [Showing or Hiding Aggregate Scores](#help_Show_Hide_Aggregate)  
-    - [Counting Unscored Techniques](#help_Count_Unscored)  
-    - [Choosing an Aggregate Function](#help_Choose_Aggregate)
-
-- [Legend](#help_Legend)  
-
-[Technique Controls](#help_Technique_Controls)  
-- [Disabling Techniques](#help_Disabling_Techniques)  
-- [Assigning Manual Colors](#help_Assigning_Manual_Colors)  
-- [Scoring Techniques](#help_Scoring_Techniques)  
-- [Adding Comments to Techniques](#help_Adding_Comments_to_Techniques)  
-- [Clearing Annotations on Techniques](#help_Clearing_Selected_Techniques_Annotations)  
-
-[Selecting Techniques](#help_Selecting_Techniques)  
-- [Selecting with the Mouse](#help_Selecting_with_the_Mouse)  
-- [Selection Behavior](#help_Selection_Behavior)  
-- [Search & Multiselect Interface](#help_Search_Interface)  
-
-[Customizing The Navigator](#help_Customizing_The_Navigator)  
-- [Default Layers](#help_Default_Layers)  
-- [Disabling Features](#help_Disable_Features)  
-
-[Rendering Layers as SVG](#help_Rendering_Layers_As_SVG)  
-- [Measurement Units](#help_exporting_units)  
-- [Configuring Image Size](#help_exporting_image_size)  
-- [Configuring Text](#help_exporting_text)  
-- [Customizing the Legend](#help_exporting_legend_config)  
-- [Display Settings](#help_exporting_display_settings)  
-
-[Exporting Layers to MS Excel](#help_Rendering_Layers_As_XLSX)  
-[Notice](#notice)  
-
-
-#  MITRE ATT&CK® Navigator Version 4.4
+<span class="about"></span>
+# MITRE ATT&CK® Navigator Version 4.4
 <p>
     The ATT&CK Navigator is designed to provide basic navigation and
     annotation of ATT&CK matrices, something that people are already doing
@@ -68,7 +63,7 @@
     assigning a numerical value, etc.). We thought having a simple tool that
     everyone could use to visualize the matrix would help make it easy to
     use ATT&CK.
-</p>
+</p><br>
 <p>
     The principal feature of the Navigator is the ability for users to
     define layers - custom views of the ATT&CK knowledge base - e.g. showing
@@ -76,7 +71,7 @@
     techniques a specific adversary has been known to use. Layers can be
     created interactively within the Navigator or generated programmatically
     and then visualized via the Navigator.
-</p>
+</p><br>
 <p>
     Bug reports and feature requests can be submitted to our <a href="https://github.com/mitre-attack/attack-navigator/issues">GitHub Issue Tracker</a>.
     The source code for the ATT&CK Navigator can be retrieved from our
@@ -85,6 +80,7 @@
 
 
 <!-- sections -->
+<span class="layers"></span>
 # Layers
 <p>
     A layer constitutes a view of the tactics and techniques matrix for a
@@ -93,33 +89,33 @@
     ATT&CK technology domain knowledge bases. Within a technology domain, the
     Navigator allows you to filter your view of the matrix in a variety of
     ways, displaying the tactics and techniques that are important to you.
-</p>
+</p><br>
 <p>
     You can view the definition of any technique in the visible matrix by
     right-clicking on the technique and selecting "view technique" in the
     pop-up menu. A new browser tab will be opened displaying the definition of
     the technique. In this way the Navigator allows you to explore a given
     ATT&CK matrix and access the definitions of the techniques.
-</p>
+</p><br>
 <p>
     Beyond the filters, layers also provide a means to customize your view of
     the matrix. To that end you can
-    [color]("help_Assigning_Manual_Colors"),
-    [hide]("help_Hiding_Disabled_Techniques"),
-    [comment]("help_Adding_Comments_to_Techniques"),
-    and assign [numeric scores]("help_Scoring_Techniques")
+    <span class="section-link linkName-assigning_manual_colors">color</span>,
+    <span class="section-link linkName-hiding_disabled_techniques">hide</span>,
+    <span class="section-link linkName-adding_comments_to_techniques">comment</span>,
+    and assign <span class="section-link linkName-Scoring_Techniques">numeric scores</span>
     to techniques to aid in analysis of threats and your defenses
     against those threats. As stated earlier, the Navigator is designed to be
     simple, allowing you to assign whatever meaning you want to the
     color-codings, scores, and comments. This way the Navigator can support
     whatever you want to do without requiring changes to the Navigator code
     itself.
-</p>
+</p><br>
 <p>
     Each layer created is independent of other layers. However, layers can be
-    [combined]("help_Creating_Layers_from_Other_Layers")
+    <span class="section-link linkName-Creating_Layers_from_Other_Layers">combined</span>
     in ways to support analysis, or
-    [saved locally]("help_Saving_and_Loading_Layers"). Layer files are
+    <span class="section-link linkName-Saving_and_Loading_Layers">saved locally</span>. Layer files are
     saved in easy to parse and easy to generate JSON file so that ATT&CK data
     can be used in other applications, analyzed beyond the capability of the
     ATT&CK Navigator, and generated by tools for import into the Navigator.
@@ -127,6 +123,7 @@
 </p>
 
 
+<span class="creating_new_layers"></span>
 ## Creating New Layers
 
 <p>
@@ -139,16 +136,17 @@
 </p>
 
 
+<span class="saving_and_loading_layers"></span>
 ## Saving and Loading Layers
 
 <p>
-    Layers can be saved by clicking the "save layer" button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">). This will open a dialog
+    Layers can be saved by clicking the "save layer" button (<img src="assets/icons/ic_file_download_black_24px.svg">). This will open a dialog
     to save a layer configuration file to your local computer. This contains
     the configuration for the techniques that have been customized
     (commented, colored, assigned a score, or disabled) as well as the
     scoring gradient setup, filter selection, layer name, layer description,
     view configuration.
-</p>
+</p><br>
 <p>
     Saved layer configuration files can be opened in the ATT&CK Navigator to
     restore a layer you've worked on previously. To do so, open a new tab
@@ -159,6 +157,7 @@
 </p>
 
 
+<span class="creating_layers_from_other_layers"></span>
 ## Creating Layers from Other Layers
 
 <p>
@@ -175,7 +174,7 @@
     <li>
         <p>
             <b>Score Expression:</b> Technique
-            [scores]("help_Scoring_Techniques") in the created layer are
+            <span class="section-link linkName-Scoring_Techniques">scores</span> in the created layer are
             initialized to the result of this expression. This field should take
             the form of an equation or constant, using variables for layers.
             Layer variables are shown in yellow on tabs when the "create layer
@@ -216,28 +215,28 @@
         </ul>
     </li>
     <li>
-        <b>Gradient:</b> choose which layer to inherit [scoring gradient]("help_Scoring_Gradient") from.
+        <b>Gradient:</b> choose which layer to inherit <span class="section-link linkName-Scoring_Gradient">scoring gradient</span> from.
     </li>
     <li>
-        <b>Coloring:</b> choose which layer to inherit [manually assigned technique colors]("help_Assigning_Manual_Colors") from.
+        <b>Coloring:</b> choose which layer to inherit <span class="section-link linkName-assigning_manual_colors">manually assigned technique colors</span>
     </li>
     <li>
-        <b>Comments:</b> choose which layer to inherit [technique comments]("help_Adding_Comments_to_Techniques") from.
+        <b>Comments:</b> choose which layer to inherit <span class="section-link linkName-adding_comments_to_techniques">technique comments</span> from.
     </li>
     <li>
-        <b>States:</b> choose which layer to inherit technique [enabled/disabled states]("help_Disabling_Techniques") from.
+        <b>States:</b> choose which layer to inherit technique <span class="section-link linkName-Disabling_Techniques">enabled/disabled states</span> from.
     </li>
     <li>
-        <b>Filters:</b> choose which layer to inherit [layer filter configuration]("help_Filtering") from.
+        <b>Filters:</b> choose which layer to inherit <span class="section-link linkName-Filtering">layer filter configuration</span> from.
     </li>
     <li>
-        <b>Legend:</b> choose which layer to inherit [legend items]("help_Legend") from.
+        <b>Legend:</b> choose which layer to inherit <span class="section-link linkName-Legend">legend items</span> from.
     </li>
 </ul>
 <p>
     Tactic-spanning Techniques are evaluated individually: if a technique is annotated differently
     in two tactics, the output layers' techniques will honor this difference.
-</p>
+</p><br>
 <p>
     <b>Tip:</b> Score expressions don't need to use variables! You can use
     this to create a new layer with a constant score for each technique. For
@@ -245,21 +244,22 @@
     could simply type 50 into the score expression input.
 </p>
 
+<span class="layer_controls"></span>
 # Layer Controls
-## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg) Layer Information
+<span class="layer_information"></span>
+## ![Layer Information](assets/icons/ic_description_black_24px.svg) Layer Information
 
 <p>
     The layer name and description can be edited in the layer information dropdown. The layer name can also be edited where it appears in the tab title.
     Additionally, the layer information panel allows the user to add metadata to the layer. Metadata can be useful for supporting other applications that use the layer format,
     or for attaching additional descriptive fields to the layer.
-</p>
+</p><br>
 <p>
-
-    <b>Note:</b> techniques can also have metadata, however metadata on techniques is not editable in the Navigator. Metadata on techniques is shown
-    in tooltips.
+<b>Note:</b> techniques can also have metadata, however metadata on techniques is not editable in the Navigator. Metadata on techniques is shown in tooltips.
 </p>
 
 
+<span class="sorting"></span>
 ## Sorting
 
 <p>
@@ -268,27 +268,28 @@
 
 <ul>
     <li>
-        <img src="nav-app/src/assets/icons/ic_sort_alphabetically_ascending_black_24px.svg"/>
+        <img src="assets/icons/ic_sort_alphabetically_ascending_black_24px.svg"/>
         The table will sort techniques alphabetically by name in ascending order.
     </li>
     <li>
-        <img src="nav-app/src/assets/icons/ic_sort_alphabetically_descending_black_24px.svg"/>
+        <img src="assets/icons/ic_sort_alphabetically_descending_black_24px.svg"/>
         The table will sort techniques alphabetically by name in descending order.
     </li>
     <li>
-        <img src="nav-app/src/assets/icons/ic_sort_numerically_ascending_black_24px.svg"/>
+        <img src="assets/icons/ic_sort_numerically_ascending_black_24px.svg"/>
         The table will sort techniques by their score in ascending order. Techniques with no score are treated as if their score is 0.
     </li>
     <li>
-        <img src="nav-app/src/assets/icons/ic_sort_numerically_descending_black_24px.svg"/>
+        <img src="assets/icons/ic_sort_numerically_descending_black_24px.svg"/>
         The table will sort techniques by their score in descending order. Techniques with no score are treated as if their score is 0.
     </li>
 </ul>
 
 
-##
-    <img src="nav-app/src/assets/icons/ic_filter_list_black_24px.svg"/>
-    Filtering
+
+
+<span class="filtering"></span>
+## ![Filtering](assets/icons/ic_filter_list_black_24px.svg) Filtering
 
 <p>
     The list of techniques and tactics can be filtered in the filtering menu.
@@ -297,6 +298,7 @@
 </p>
 
 
+<span class="platform_filter"></span>
 ### Platform Filter
 
 <p>
@@ -307,7 +309,7 @@
     the Enterprise technology domain, the defined platforms are:
     PRE, Windows, Linux, macOS, Network, AWS, GCP, Azure, Azure AD, Office 365, and SaaS.  For the Mobile technology domain, the
     defined platforms are: Android and iOS. For the ICS technology domain, the defined platforms are Windows, Control Server, Data Historian, "Engineering Workstation", Field Controller/RTU/PLC/IED, Human-Machine Interface, Input/Output Server, Safety Instrumented System/Protection Relay.
-</p>
+</p><br>
 <p>
     Each technique in an ATT&CK matrix is tied to one or more platforms.
     In the Navigator, if you wanted to see only those techniques in
@@ -319,25 +321,29 @@
 </p>
 
 <p>
-    <b>Tip:</b> Techniques can also be hidden from your view by using the [hide disabled techniques]("help_Hiding_Disabled_Techniques")
-    button. Couple this with the [multiselect interface]("help_Multiselct_Interface")
+    <b>Tip:</b> Techniques can also be hidden from your view by using the <span class="section-link linkName-hiding_disabled_techniques">hide disabled techniques</span>
+    button. Couple this with the <span class="section-link linkName-Multiselct_Interface">multiselect interface</span>
     to hide techniques which are contained in specific threat or software groupings.
 </p>
 
-## ![Color Setup](nav-app/src/assets/icons/ic_palette_black_24px.svg) Color Setup
+<span class="color_setup"></span>
+## ![Color Setup](assets/icons/ic_palette_black_24px.svg) Color Setup
 
 
 
+<span class="tactic_row_background"></span>
 ### Tactic Row Background
 
 <p>
     The background color of the tactic row can be set in the tactic row background section of the color setup menu. The color
     will only be displayed if the "show" checkbox is selected. The tactic row background will not be shown when in the
-    [mini view]("help_Mini_Layout").
+    <span class="section-link linkName-Mini_Layout">mini view</span>.
 </p>
 
 
-<h3 id="help_Scoring_Gradient">Scoring Gradient</h3>
+<span class="scoring_gradient"></span>
+### Scoring Gradient
+
 <p>
     Techniques which are assigned a score will be colored according to a
     gradient defined in the scoring gradient section in the color setup menu. Technique scores are
@@ -347,32 +353,34 @@
     halfway between red and green. Scores below the low value are colored as if
     they have the low value, and scores above the high value are colored as if
     they have the high value.
-</p>
+</p><br>
 <p>
     Several preset gradients are present within the preset dropdown. If no preset
     matches your desired gradient, you can create your own by adding and removing
     colors using the interface.
-</p>
+</p><br>
 <p>
     <b>Tip:</b> If your scores are binary (0 or 1), consider setting the low
     value of 0 to white and the high of 1 to some other
     color to only color the techniques which have the value of 1.
 </p>
 
-## ![Hiding Disabled Techniques](nav-app/src/assets/icons/ic_visibility_off_black_24px.svg) Hiding Disabled Techniques
+<span class="hiding_disabled_techniques"></span>
+## ![Hiding Disabled Techniques](assets/icons/ic_visibility_off_black_24px.svg) Hiding Disabled Techniques
 
 <p>
-    Techniques that are [disabled]("help_Disabling_Techniques") can be hidden by toggling the "hide disabled techniques" button.
+    Techniques that are <span class="section-link linkName-Disabling_Techniques">disabled</span> can be hidden by toggling the "hide disabled techniques" button.
     Hidden techniques are still present in the data when saved and can still be annotated, but won't be visible in the view.
-</p>
+</p><br>
 <p>
     <b>Tip:</b> This button has powerful synergy with the
-    [multiselect interface]("help_Multiselct_Interface"). Use the
+    <span class="section-link linkName-Multiselct_Interface">multiselect interface</span>. Use the
     multiselect interface to select techniques which match your criteria,
     disable them, and then turn on hiding disabled techniques to remove entire
     groups of techniques from your view.
 </p>
 
+<span class="showing_or_hiding_sub-techniques"></span>
 ## Showing or Hiding Sub-techniques
 
 <p>
@@ -380,32 +388,34 @@
 </p>
 <ul>
     <li>
-        <img alt="expand icon" src="nav-app/src/assets/icons/unfold_more_black_24px.svg">
+        <img alt="expand icon" src="assets/icons/unfold_more_black_24px.svg">
         All sub-techniques can be shown by clicking the "expand sub-techniques" button.
     </li>
     <li>
-        <img alt="expand annotated icon" src="nav-app/src/assets/icons/unfold_more_alt_black_24px.svg">
+        <img alt="expand annotated icon" src="assets/icons/unfold_more_alt_black_24px.svg">
         All annotated sub-techniques can be shown by clicking the "expand annotated sub-techniques" button.
     </li>
     <li>
-        <img alt="collapse icon" src="nav-app/src/assets/icons/unfold_less_black_24px.svg">
+        <img alt="collapse icon" src="assets/icons/unfold_less_black_24px.svg">
         All sub-techniques can be hidden by clicking the "collapse sub-techniques" button.
     </li>
 </ul>
 <p>
     <b>Tip:</b> Sub-techniques can also be shown or hidden on each individual
-    technique when in the [side layout]("help_Side_Layout") or
-    [flat layout]("help_Flat_Layout") by clicking the gray sidebar on the
+    technique when in the <span class="section-link linkName-Side_Layout">side layout</span> or
+    <span class="section-link linkName-Flat_Layout">flat layout</span> by clicking the gray sidebar on the
     technique cell.
 </p>
 
-## ![Configuring the layout](nav-app/src/assets/icons/ic_view_large_black_24px.svg) Configuring the layout
+<span class="configuring_the_layout"></span>
+## ![Configuring the Layout](assets/icons/ic_view_large_black_24px.svg) Configuring the Layout
 
 <p>
     The ATT&CK Navigator has controls for how the ATT&CK Matrices are displayed. Access controls to change layout via the "Matrix Configuration" dropdown menu.
 </p>
 
 
+<span class="side_layout"></span>
 ### Side Layout
 
 <p>
@@ -413,6 +423,7 @@
 </p>
 
 
+<span class="flat_layout"></span>
 ### Flat Layout
 
 <p>
@@ -421,36 +432,35 @@
 
 
 
+<span class="mini_layout"></span>
 ### Mini Layout
 
 <p>
     The mini layout is designed to fit more techniques on the screen
     simultaneously by reducing their size. To do so all text is removed
     and techniques are visualized as squares under the tactic. Selecting this layout disables
-    [the "show IDs" and "show Names" controls]("help_IDs_Names").
-
+    <span class="section-link linkName-showing_ids_and_names">the "show IDs" and "show Names" controls</span>.  
     Tactic headers are visualized as black cells above the columns. Technique
     and tactic names are displayed as tooltips when you hover over a
     technique or tactic-header cell.
-
-    Techniques and their sub-techniques are grouped inside of an outlined box. The technique is the dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques.
-
-    Techniques without sub-techniques are displayed without a grouping box, and may appear inline with other sub-techniques-less techniques.
-
+    Techniques and their sub-techniques are grouped inside of an outlined box. The technique is the dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques.  
+    Techniques without sub-techniques are displayed without a grouping box, and may appear inline with other sub-techniques-less techniques.  
     Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
 </p>
 
 
+<span class="showing_ids_and_names"></span>
 ### Showing IDs and Names
 
 <p>
-    In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default) will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.
-
-    These controls can be toggled independently and turned off entirely to remove cell labels entirely. The mini
+    In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default) will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.  
+    These controls can be toggled independently and turned off entirely to remove cell labels entirely. The mini 
     layout forces both of these controls to be disabled.
 </p>
-##
-    Aggregate Scores
+
+
+<span class="aggregate_scores"></span>
+## Aggregate Scores
 
 <p>
     Aggregate scores will combine the scores of a technique and all of its sub-techniques, and can be calculated
@@ -460,6 +470,7 @@
 </p>
 
 
+<span class="showing_or_hiding_aggregate_scores"></span>
 ### Showing or Hiding Aggregate Scores
 
 <p>
@@ -469,6 +480,7 @@
 </p>
 
 
+<span class="counting_unscored_techniques"></span>
 ### Counting Unscored Techniques
 
 <p>
@@ -478,6 +490,7 @@
 </p>
 
 
+<span class="choosing_an_aggregate_function"></span>
 ### Choosing an Aggregate Function
 
 <p>
@@ -512,8 +525,10 @@
         </ul>
     </li>
 </ul>
-##
-    Legend
+
+
+<span class="legend"></span>
+## Legend
 
 <p>
     The legend helps associate meanings with colors displayed by customized techniques in the ATT&CK Navigator.
@@ -524,33 +539,36 @@
     An item's color can be changed by either clicking in the color field and typing a hex color value, or by
     clicking in the field and choosing a color from the color picker. Click and type in the
     text field to change the item's label. To remove an item, click on the (<img
-        src="nav-app/src/assets/icons/ic_clear_gray_24px.svg"/>) button on the right side. Legend items are saved to the layer
+        src="assets/icons/ic_clear_gray_24px.svg"/>) button on the right side. Legend items are saved to the layer
     file and will be
     loaded when a layer with saved legend items is loaded.
 </p>
 
+<span class="technique_controls"></span>
 # Technique Controls
 <p>
     Techniques in the layer can be annotated. The technique controls on the menubar
-    are only enabled when one or more techniques are [selected]("help_Selecting_Techniques").
+    are only enabled when one or more techniques are <span class="section-link linkName-Selecting_Techniques">selected</span>.
     If multiple techniques are selected, they will all be annotated simultaneously.
 </p>
 
 
-## ![Disabling Techniques](nav-app/src/assets/icons/ic_texture_black_24px.svg) Disabling Techniques
+<span class="disabling_techniques"></span>
+## ![Disabling Techniques](assets/icons/ic_texture_black_24px.svg) Disabling Techniques
 
 <p>
     Clicking the "toggle state" button toggles selected techniques between an
     enabled and disabled state. In the disabled state, the technique text is greyed
-    out and no colors [assigned manually](("help_Assigning_Manual_Colors") or via
-    [score]("help_Scoring_Techniques")) will be displayed.
-</p>
+    out and no colors (<span class="section-link linkName-assigning_manual_colors">assigned manually</span> or via
+    <span class="section-link linkName-Scoring_Techniques">score</span>) will be displayed.
+</p><br>
 <p>
-    The [hide disabled techniques]("help_Hiding_Disabled_Techniques")
+    The <span class="section-link linkName-hiding_disabled_techniques">hide disabled techniques</span>
     button can be used to hide disabled techniques from the view.
 </p>
 
-## ![Assigning Manual Colors](nav-app/src/assets/icons/ic_format_color_fill_black_24px.svg) Assigning Manual Colors
+<span class="assigning_manual_colors"></span>
+## ![Assigning Manual Colors](assets/icons/ic_format_color_fill_black_24px.svg) Assigning Manual Colors
 
 <p>
     Techniques can be assigned colors manually. Manually assigned colors supersede
@@ -558,14 +576,15 @@
     box at the top of the interface.
 </p>
 
-## ![Scoring Techniques](nav-app/src/assets/icons/ic_insert_chart_black_24px.svg) Scoring Techniques
+<span class="scoring_techniques"></span>
+## ![Scoring Techniques](assets/icons/ic_insert_chart_black_24px.svg) Scoring Techniques
 
 <p>
     A score is a numeric value assigned to a technique. The meaning or
     interpretation of scores is completely up to the user user - the
     Navigator simply visualizes the matrix based on any scores you have
     assigned. Some possible uses of scores include:
-</p>
+</p><br>
 <ul>
     <li>
         Assigning a score to techniques based on whether or not a given
@@ -580,7 +599,7 @@
         Assigning a score to those techniques that a red-team has
         successfully employed during an exercise.
     </li>
-</ul>
+</ul><br>
 <p>
     By default, techniques are "unscored" meaning that no score has been
     assigned to the technique.  Note that "unscored" and a score of zero
@@ -589,43 +608,50 @@
     been assigned. To change a technique with a numeric score to
     unscored, select the technique and delete the score value in the score
     control. The technique will revert to unscored.
-</p>
+</p><br>
 <p>
     Techniques are automatically assigned a color according to its
-    score. This color is determined according to the [scoring gradient setup interface]("help_Scoring_Gradient"). Colors
-    assigned [manually]("help_Assigning_Manual_Colors")
+    score. This color is determined according to the <span class="section-link linkName-scoring_gradient">scoring gradient setup interface</span>. Colors
+    assigned <span class="section-link linkName-assigning_manual_colors">manually</span>
     supersede the score-generated color. It is a good idea to assign
     techniques scores inside of a predetermined range, such as 0-1 or 0-100. Set
-    the "high value" and "low value" inputs in the [scoring gradient setup interface]("help_Scoring_Gradient") to this
+    the "high value" and "low value" inputs in the <span class="section-link linkName-Scoring_Gradient">scoring gradient setup interface</span> to this
     range to make sure that the color for the score is properly mapped
     to the gradient. Techniques that are unscored are not assigned a
     color based on the gradient - they are displayed with a white
     background in the matrix.
 </p>
 
-## ![Adding Comments to Techniques](nav-app/src/assets/icons/ic_insert_comment_black_24px.svg) Adding Comments to Techniques
+<span class="adding_comments_to_techniques"></span>
+## ![Adding Comments to Techniques](assets/icons/ic_insert_comment_black_24px.svg) Adding Comments to Techniques
 
 <p>
     A text comment can be added to techniques. This comment will show up in the technique tooltip if a comment has been added.
     Techniques with a comment will be given a yellow underline.
-</p>
+</p><br>
 <p>
     <b>Note:</b> A yellow underline is also shown if the technique has attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> in the source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
 </p>
-## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg) Clearing Annotations on Techniques
+
+<span class="clearing_annotations_on_techniques"></span>
+## ![Clearing Annotations on Techniques](assets/icons/ic_clear_black_24px.svg) Clearing Annotations on Techniques
 
 <p>
     Clicking the "clear annotations on selected" button removes comments,
     colors, scores, and enabled/disabled state from all selected techniques.
 </p>
 
+<span class="selecting_techniques"></span>
 # Selecting Techniques
 
 <p>
     In order to be annotated, techniques must first be selected. There are multiple ways
     to select techniques.
 </p>
-##Selecting with the Mouse
+
+<span class="selecting_with_the_mouse"></span>
+## Selecting with the Mouse
+
 <p>
     Techniques can be selected using the mouse. Left click a technique to select
     it. Pressing control (windows) command (mac) or shift (both) while left-clicking a technique will add it to or remove it from the selection. Right
@@ -637,12 +663,12 @@
     <li><b>remove from selection:</b> Remove this technique from the selection.</li>
     <li><b>invert selection:</b> Select all techniques that are not currently selected and unselect all techniques that are currently selected.</li>
     <li><b>select all:</b> Select all techniques.</li>
-    <li><b>deselect all:</b> Deselect all techniques. This action can also be completed by the "deselect" (<img src="nav-app/src/assets/icons/ic_clear_black_24px.svg"/>) button.</li>
+    <li><b>deselect all:</b> Deselect all techniques. This action can also be completed by the "deselect" (<img src="assets/icons/ic_clear_black_24px.svg"/>) button.</li>
     <li><b>select annotated:</b> Select all techniques and sub-techniques which have annotations or remove unnanotated techniques from an existing selection.</li>
     <li><b>select unannotated:</b> Select all techniques and sub-techniques which do not have annotations or remove annotated techniques from an existing selection.</li>
-    <li><b>select all techniques in tactic:</b> Select all techniques in this tactic. This action can also be completed by clicking on the tactic header and follows the behavior preference under [selection behavior]("help_Selection_Behavior") in the selection controls.
+    <li><b>select all techniques in tactic:</b> Select all techniques in this tactic. This action can also be completed by clicking on the tactic header and follows the behavior preference under <span class="anchor-link">selection behavior</span> in the selection controls.
         If the “select techniques across tactics” control is enabled, the selection will include instances of techniques that are in other tactics. Disable this control to select only the instances of techniques that are within this tactic. Sub-techniques within the tactic can be selected along with their parent technique by enabling the “select sub-techniques with parent” control. </li>
-    <li><b>deselect all techniques in tactic:</b> Deselect all techniques in this tactic. This action follows the behavior preference under [selection behavior]("help_Selection_Behavior") in the selection controls.
+    <li><b>deselect all techniques in tactic:</b> Deselect all techniques in this tactic. This action follows the behavior preference under <span class="anchor-link">selection behavior</span> in the selection controls.
         If the “select techniques across tactics” control is enabled, instances of techniques across all tactics will be deselected. Disable this control to remove only the instances of techniques within this tactic from the selection. Sub-techniques in this tactic will be deselected with their parent technique if the “select sub-techniques with parent” control is enabled. Note that currently selected sub-techniques will remain selected if the control is disabled when using this option.</li>
     <li><b>view technique:</b> For more information / details on the technique.</li>
     <li><b>view tactic:</b> For more information / details on the tactic.</li>
@@ -651,7 +677,8 @@
     to create a layer where only annotated techniques are visible.
 </p>
 
-## ![Selection Behavior](nav-app/src/assets/icons/ic_lock_black_24px.svg) Selection Behavior
+<span class="selection_behavior"></span>
+## ![Selection Behavior](assets/icons/ic_lock_black_24px.svg) Selection Behavior
 
 <p>
     The selection behavior controls affect how sub-techniques are selected with regards to tactics and sub-techniques.
@@ -661,7 +688,8 @@
     <li><b>Select sub-techniques with parent</b> toggles whether sub-techniques are selected alongside their parents, and vice versa. When enabled, clicking on a technique will also select all of the sub-techniques of that technique. In addition,clicking a sub-technique will also select the parent as well as all sibling sub-techniques. When disabled, sub-techniques are selected independantly of parents and siblings.</li>
 </ul>
 
-## ![Search & Multiselect Interface](nav-app/src/assets/icons/ic_search_black_24px.svg) Search & Multiselect Interface
+<span class="search & multiselect_interface"></span>
+## ![Search & Multiselect Interface](assets/icons/ic_search_black_24px.svg) Search & Multiselect Interface
 
 <p>
     The search & multiselect interface provides the means to select or deselect techniques in the matrix
@@ -669,7 +697,7 @@
     can be used to filter the lists of techniques, groups, software, and mitigations according to their data.
     You can select what fields of the objects are searched under "search settings:" <i>name</i>,
     <i>ATT&CK ID</i>, <i>description</i>, and (for techniques) <i>data sources</i> can all be searched.
-</p>
+</p><br>
 <p>
     The lists of objects below the search can be used to select data in the matrix.
 </p>
@@ -693,13 +721,14 @@
     The interface provides buttons to select and deselect each object. These buttons modify the currently selected techniques rather
     than replacing then, allowing for the selection of the multiple techniques or the techniques of multiple
     threat groups, software, or mitigations by selecting them in sequence. The 'view' links for each entry link to additional information about the object in question.
-</p>
+</p><br>
 <p>
     Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
     area. You can use this in conjunction with the search input to select all results which match the given query.
 </p>
 
-# Customizing The Navigator
+<span class="customizing_the_navigator"></span>
+# Customizing the Navigator
 <p>
     The ATT&CK Navigator can be customized by modifying the fragment (e.g <code>example.com<b>#fragment</b></code>) of the URL.
     A panel on the new tab page exists to build a properly formatted ATT&CK Navigator URL
@@ -708,93 +737,103 @@
 </p>
 
 
-##Default Layers
+<span class="default_layers"></span>
+## Default Layers
 <p>
     Click the "add a layer link" button, then enter a default layer URL pointing to a layer hosted on the web.
     This will cause the customized ATT&CK Navigator to initialize with this layer open by default.
     This is especially useful for embedding or sharing specific layers.
-</p>
+</p><br>
 <p>
     You can click the "add another layer link" button to specify additional default layers, or click the "x" button next to a layer link you've already added to remove it.
-</p>
+</p><br>
 <p>
     The following is an example ATT&CK Navigator URL with the default layer specified to be the *Bear APTs layer from <a href="https://github.com/mitre-attack/attack-navigator">our github repo</a>: <br /><code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
 </p>
 
 
-##Disabling Features
+<span class="disabling_features"></span>
+## Disabling Features
 <p>
     Individual ATT&CK Navigator features can be disabled with the checkboxes. Removing
     a feature only removes the interface elements of the feature -- opened
     layers utilizing those features will still have them present. For example,
     even if comments are disabled layers with comments present will still display
     them visually and in tooltips.
-</p>
+</p><br>
 <p>
     If you are hosting your own navigator instance, you can also disable
     features by editing the configuration file <code>assets/config.json</code>.
-</p>
+</p><br>
 <p>
     The following is an example ATT&CK Navigator URL with the ability to download the layer and add comments disabled: <br /><code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#download_layer=false&comments=false</b></code>
 </p>
 
-# [Rendering Layers as SVG] (nav-app/src/assets/icons/ic_camera_alt_black_24px.svg) Rendering Layers as SVG
+<span class="rendering_layers_as_svg"></span>
+# ![Rendering Layers as SVG](assets/icons/ic_camera_alt_black_24px.svg) Rendering Layers as SVG
 <p>
     Clicking the "render layer to SVG" button will open a pop-up window allowing the current layer
-    to be rendered to an SVG image. Clicking the <i>download svg</i> button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">)
+    to be rendered to an SVG image. Clicking the <i>download svg</i> button (<img src="assets/icons/ic_file_download_black_24px.svg">)
     will download the image, as displayed, in SVG format.
-</p>
+</p><br>
 <p>
     <b>Note:</b> this feature has minor compatibility warnings
     with the Internet Explorer browser. For best results, please use Firefox, Chrome or Edge.
-</p>
+</p><br>
 <p>
     The Microsoft Edge browser has a bug where the downloaded SVG
     will have the <code>.txt</code> extension. Renaming the extension to <code>.svg</code> will
     restore it as a valid svg file.
 </p>
 
-##Measurement Units
+<span class="measurement_units"></span>
+## Measurement Units
 <p>
     Clicking the "toggle measurement unit" button will toggle between
     measuring in inches (in), centimeters (cm), and pixels (px). This unit
     applies to controls for image size and legend position.
 </p>
 
-## ![Configuring Image Size](nav-app/src/assets/icons/ic_photo_size_select_large_black_24px.svg) Configuring Image Size
+<span class="configuring_image_size"></span>
+## ![Configuring Image Size](assets/icons/ic_photo_size_select_large_black_24px.svg) Configuring Image Size
 
 <p>
     The image size controls allow you to specify the width and height of
     the image, as well as the height of the header if one is present.
-    The measurements are in units specified by the [measurement units]("help_exporting_units") control.
-</p>
+    The measurements are in units specified by the <span class="section-link linkName-exporting_units">measurement units</span> control.
+</p><br>
 <p>
     The header height contributes to the total image height: if you have specified
     the image height to be 8.5 inches and the header height to be 1 inch,
     the technique table will be 7.5 inches and the header 1 inch for a total height of 8.5 inches.
     If the header is disabled this control will not be editable.
 </p>
-## ![Configuring Text](nav-app/src/assets/icons/ic_format_size_black_24px.svg) Configuring Text
+
+<span class="configuring_text"></span>
+## ![Configuring Text](assets/icons/ic_format_size_black_24px.svg) Configuring Text
 
 <p>
     The text configuration dropdown allows for the configuration of the font
     (serif, sans-serif, and monospace) of the exported render.
-</p>
+</p><br>
 <p>
     Unlike in previous versions of the Navigator, in ATT&CK Navigator Version {{nav_version}} text size is automatically
     calculated to optimize readability.
 </p>
-## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg) Customizing the Legend
+
+<span class="customizing_the_legend"></span>
+## ![Customizing the Legend](assets/icons/ic_view_list_black_24px.svg) Customizing the Legend
 
 <p>
-    This menu can only be opened if a [legend]("help_Legend") is present on the layer or if techniques have been assigned scores.
+    This menu can only be opened if a <span class="section-link linkName-Legend">legend</span> is present on the layer or if techniques have been assigned scores.
     The checkbox allows you to undock the legend from the SVG header.
     Once undocked, the X and Y position controls can be used to position
     the legend in the image. The width and height inputs control
-    the size of the legend when it is undocked. The measurements are in units specified by the [measurement units]("help_exporting_units") control.
+    the size of the legend when it is undocked. The measurements are in units specified by the <span class="section-link linkName-exporting_units">measurement units</span> control.
 </p>
 
-## ![Display Settings](nav-app/src/assets/icons/ic_visibility_black_24px.svg) Display Settings
+<span class="display_settings"></span>
+## ![Display Settings](assets/icons/ic_visibility_black_24px.svg) Display Settings
 
 <p>
     The header itself, or specific parts of the header, can be hidden
@@ -831,32 +870,32 @@
     </li>
 </ul>
 
-# [Exporting layers to MS Excel] (nav-app/src/assets/icons/baseline-grid_on-24px.svg) Exporting layers to MS Excel
+<span class="exporting_layers_to_ms_excel"></span>
+# ![Exporting Layers to MS Excel](assets/icons/baseline-grid_on-24px.svg) Exporting Layers to MS Excel
 <p>
     Layers can be exported to MS excel (.xlsx) format. Clicking on the "export to excel" button in the toolbar will download an .xlsx
     file which contains the current layer. This layer contains the annotations from the view --
     color (via score or manually assigned) and disabled states. The exporter also honors tactic header background, sorting, filtering and hidden techniques.
 </p>
 
+<span class="notice"></span>
 # Notice
-<p>Copyright 2020 The MITRE Corporation</p>
-<p>Approved for Public Release; Distribution Unlimited. Case Number 18-0128.</p>
+<p>Copyright 2020 The MITRE Corporation</p><br>
+<p>Approved for Public Release; Distribution Unlimited. Case Number 18-0128.</p><br>
 <p>
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy
     of the License at
 </p>
-<ul style="list-style: none">
+<ul class="style-none"><br>
     <li>http://www.apache.org/licenses/LICENSE-2.0</li>
-</ul>
-
+</ul><br>
 <p>
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
     WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
     License for the specific language governing permissions and limitations
     under the License.
-</p>
-
-<p>This project makes use of ATT&CK&reg;</p>
+</p><br>
+<p>This project makes use of ATT&CK&reg;</p><br>
 <a href="https://attack.mitre.org/resources/terms-of-use/">ATT&CK&reg; Terms of Use</a>

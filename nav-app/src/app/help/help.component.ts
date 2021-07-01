@@ -14,10 +14,5 @@ export class HelpComponent implements OnInit {
     constructor(private dialogRef: MatDialogRef<HelpComponent>,
                 @Inject(MAT_DIALOG_DATA) public data) { }
 
-    ngOnInit() { }
-
-    scrollTo(sectionID: string): void {
-        let element = document.getElementById(sectionID);
-        element.scrollIntoView();
-    }
+    ngOnInit() {}
 }
