@@ -58,13 +58,22 @@
 
                     <ng-template matExpansionPanelContent> <!-- technique lazy render -->
 
+                    <!-- version header -->
+                    <div class="cols">
+                        <div class="float wide">
+                            <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
+                            <mat-divider></mat-divider>
+                        </div>
+                        <div class="float arrow"><mat-icon inline="true">east</mat-icon></div>
+                        <div class="float wide">
+                            <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
+                            <mat-divider></mat-divider>
+                        </div>
+                    </div>
+
                     <div class="cols" *ngIf="tacticsChanged(attackID, section)">
                         <!-- technique from previous version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
-                            <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
-
-                            <mat-divider></mat-divider>
-
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
                                 <changelog-cell
                                     [tactic]="tactic"
@@ -75,14 +84,8 @@
                             </div>
                         </div>
 
-                        <div class="float arrow"><mat-icon inline="true">east</mat-icon></div>
-
                         <!-- technique from latest version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
-                            <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
-
-                            <mat-divider></mat-divider>
-
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)">
                                 <changelog-cell
                                     [tactic]="tactic"
@@ -96,19 +99,6 @@
 
                     <div *ngIf="!tacticsChanged(attackID, section)">
                         <table class="wide">
-                            <tr class="version-header">
-                                <td *ngIf="section !== 'additions'">
-                                    <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
-                                    <mat-divider></mat-divider>
-                                </td>
-                                <td class="arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
-                                    <mat-icon inline="true">east</mat-icon>
-                                </td>
-                                <td *ngIf="section !== 'deprecations'">
-                                    <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
-                                    <mat-divider></mat-divider>
-                                </td>
-                            </tr>
                             <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
                                 <td *ngIf="section !== 'additions'">
                                     <!-- technique from prevous version -->
