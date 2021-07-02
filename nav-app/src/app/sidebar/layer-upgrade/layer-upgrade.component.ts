@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../../viewmodels.service';
-import { BaseStix, DataService, Tactic, Technique, VersionChangelog } from '../../data.service';
+import { DataService, Tactic, Technique, VersionChangelog } from '../../data.service';
 import { MatDialog } from '@angular/material/dialog';
+import { DndDropEvent } from 'ngx-drag-drop';
 
 @Component({
     selector: 'layer-upgrade',
@@ -202,26 +203,26 @@ export class LayerUpgradeComponent implements OnInit {
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique can be found under
      */
-    public copyAnnotations(attackID: string, tactic: Tactic): void {
+    public onCopy(attackID: string, tactic: Tactic): void {
         // mark as not reviewed during changes
         this.reviewed.delete(attackID);
 
         // retrieve relevant technique VMs
-        let oldTechnique = this.getTechnique(attackID, this.compareTo);
-        let newTechnique = this.getTechnique(attackID, this.viewModel);
-        let oldTvm = this.compareTo.getTechniqueVM(oldTechnique, tactic);
-        let newTvm = this.viewModel.getTechniqueVM(newTechnique, tactic);
+        let fromTechnique = this.getTechnique(attackID, this.compareTo);
+        let toTechnique = this.getTechnique(attackID, this.viewModel);
+        let fromTvm = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toTvm = this.viewModel.getTechniqueVM(toTechnique, tactic);
 
         // copy annotations
-        let rep = oldTvm.serialize();
-        newTvm.deSerialize(rep, attackID, tactic.shortname);
-        oldTvm.enabled = false;
+        let rep = fromTvm.serialize();
+        toTvm.deSerialize(rep, attackID, tactic.shortname);
+        fromTvm.enabled = false;
 
         // mark as copied
-        this.copied.add(oldTechnique.get_technique_tactic_id(tactic));
+        this.copied.add(fromTechnique.get_technique_tactic_id(tactic));
 
         // mark as reviewed if all are copied
-        if (oldTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.add(attackID);
+        if (fromTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.add(attackID);
     }
 
     /**
@@ -230,25 +231,47 @@ export class LayerUpgradeComponent implements OnInit {
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique can be found under
      */
-    public revertCopy(attackID: string, tactic: Tactic): void {
+    public onRevertCopy(attackID: string, tactic: Tactic): void {
         // mark as not reviewed during changes
         this.reviewed.delete(attackID)
 
         // retrieve relevant technique VMs
-        let oldTechnique = this.getTechnique(attackID, this.compareTo);
-        let newTechnique = this.getTechnique(attackID, this.viewModel);
-        let oldTvm = this.compareTo.getTechniqueVM(oldTechnique, tactic);
-        let newTvm = this.viewModel.getTechniqueVM(newTechnique, tactic);
+        let fromTechnique = this.getTechnique(attackID, this.compareTo);
+        let toTechnique = this.getTechnique(attackID, this.viewModel);
+        let fromTvm = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toTvm = this.viewModel.getTechniqueVM(toTechnique, tactic);
 
         // reset new technique's annotations
-        newTvm.resetAnnotations();
-        oldTvm.enabled = true;
+        toTvm.resetAnnotations();
+        fromTvm.enabled = true;
 
         // unmark as copied
-        this.copied.delete(oldTechnique.get_technique_tactic_id(tactic));
+        this.copied.delete(fromTechnique.get_technique_tactic_id(tactic));
 
         // mark as not reviewed if not all are copied
-        if (!oldTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.delete(attackID);
+        if (!fromTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.delete(attackID);
+    }
+
+    /**
+     * Copy the annotations from the TechniqueVM in the previous version
+     * to the TechniqueVM that the element was dropped over
+     * @param event the ngx drop event
+     * @param attackID the ATT&CK ID of the technique
+     * @param toTechnique the technique object to copy annotations to
+     * @param toTactic the tactic object to copy annotations to
+     */
+    onDrop(event: DndDropEvent, attackID: string, toTechnique: Technique, toTactic: Tactic) {
+        // retrieve relevant technique VMs
+        let fromDomain = this.dataService.getDomain(this.compareTo.domainID);
+        let fromTactic = fromDomain.tactics.find(t => t.shortname == event.data);
+        let fromTechnique = this.getTechnique(attackID, this.compareTo);
+        let fromTvm = this.compareTo.getTechniqueVM(fromTechnique, fromTactic);
+        let toTvm = this.viewModel.getTechniqueVM(toTechnique, toTactic);
+
+        // copy annotations
+        let rep = fromTvm.serialize();
+        toTvm.resetAnnotations();
+        toTvm.deSerialize(rep, attackID, toTactic.shortname);
     }
 
     /**

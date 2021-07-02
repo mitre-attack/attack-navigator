@@ -18,6 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { ColorPickerModule } from 'ngx-color-picker';
+import { DndModule } from 'ngx-drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -78,6 +79,7 @@ import { MatDividerModule } from "@angular/material/divider";
     MatExpansionModule,
     MatDialogModule,
     ColorPickerModule,
+    DndModule,
     MatSidenavModule,
     MatCardModule,
     MatDividerModule

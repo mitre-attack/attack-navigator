@@ -74,7 +74,7 @@
                     <div class="cols" *ngIf="tacticsChanged(attackID, section)">
                         <!-- technique from previous version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
-                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
+                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)" [dndDraggable]="tactic.shortname">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="oldTechnique" 
@@ -86,7 +86,8 @@
 
                         <!-- technique from latest version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
-                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)">
+                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
+                                dndDropzone (dndDrop)="onDrop($event, attackID, newTechnique, tactic)" [dndDragoverClass]="drop-highlight">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="newTechnique" 
@@ -113,10 +114,10 @@
                                     <!-- copy annotations/revert copy -->
                                     <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
                                         [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !isAnnotated(attackID)"
-                                        (click)="copyAnnotations(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
+                                        (click)="onCopy(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
                                     <button class="button" matTooltipPosition="above" matTooltip="revert copy"
                                         [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
-                                        (click)="revertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
+                                        (click)="onRevertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
                                 </td>
                                 <td *ngIf="section !== 'deprecations'">
                                     <!-- technique from latest version-->
