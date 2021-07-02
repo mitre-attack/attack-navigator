@@ -25,7 +25,7 @@
       - Showing or Hiding Aggregate Scores
       - Counting Unscored Techniques
       - Choosing an Aggregate Function
-  - Legend
+  - Legend Bar
 - Technique Controls
   - Disabling Techniques
   - Assigning Manual Colors
@@ -527,12 +527,12 @@
 </ul>
 
 
-<span class="legend"></span>
-## Legend
+<span class="legend_bar"></span>
+## Legend Bar
 
 <p>
     The legend helps associate meanings with colors displayed by customized techniques in the ATT&CK Navigator.
-    To open the legend, click on the bar labled "legend" in the bottom-right corner of the screen. Click on the
+    To open the legend, click on the bar labeled "legend" in the bottom-right corner of the screen. Click on the
     same bar to close the legend. To add an item to the legend, click the "Add Item"
     button. To clear all items in the legend, click "Clear".
     <br/><br/>
