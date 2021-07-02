@@ -30,15 +30,14 @@ export class HelpPageComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    if (location.hash) {
-      setTimeout(() => {
-        this.scrollTo(location.hash.split('#')[1].toString());
-      }, 200);
-    }
+    setTimeout(() => {
+      if (location.hash) this.scrollTo(location.hash.split('#')[1].toString());
+      else this.scrollTo('content');
+    }, 175);
   }
 
-  scrollTo(sectionID: string): void {
-    let element = document.getElementsByClassName(sectionID)[0];
+  scrollTo(className: string): void {
+    let element = document.getElementsByClassName(className)[0];
     if (element) element.scrollIntoView();
   }
 
