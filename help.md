@@ -84,7 +84,7 @@
 # Layers
 <p>
     A layer constitutes a view of the tactics and techniques matrix for a
-    specific technology domain. Version {{nav_version}} of the Navigator can manipulate
+    specific technology domain. Version 4.4 of the Navigator can manipulate
     either the Enterprise, Mobile, or ICS
     ATT&CK technology domain knowledge bases. Within a technology domain, the
     Navigator allows you to filter your view of the matrix in a variety of
@@ -817,7 +817,7 @@
     (serif, sans-serif, and monospace) of the exported render.
 </p><br>
 <p>
-    Unlike in previous versions of the Navigator, in ATT&CK Navigator Version {{nav_version}} text size is automatically
+    Unlike in previous versions of the Navigator, in ATT&CK Navigator Version 4.4 text size is automatically
     calculated to optimize readability.
 </p>
 
