@@ -164,7 +164,7 @@ macOS" as well and those techniques would be added to the visible layer.
 
 <b>Tip:</b> Techniques can also be hidden from your view by using
 the <a href="#hiding-disabled-techniques">hide disabled techniques</a> button. Couple this
-with the <a href="#multiselect-interface">multiselect interface</a> to hide techniques which
+with the <a href="#search-amp-multiselect-interface">multiselect interface</a> to hide techniques which
 are contained in specific threat or software groupings.
 
 ## ![Color Setup](assets/icons/ic_palette_black_24px.svg) Color Setup
@@ -197,7 +197,7 @@ the "hide disabled techniques" button. Hidden techniques are still present in th
 annotated, but won't be visible in the view.
 
 <b>Tip:</b> This button has powerful synergy with the
-<a href="#multiselect-interface">multiselect interface</a>. Use the multiselect interface to
+<a href="#search-amp-multiselect-interface">multiselect interface</a>. Use the multiselect interface to
 select techniques which match your criteria,disable them, and then turn on hiding disabled techniques to remove entire
 groups of techniques from your view.
 
