@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ViewChild, Renderer2 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as globals from "../globals";
+import { MarkdownComponent, MarkdownService } from "ngx-markdown";
 
 @Component({
     selector: 'help',
@@ -9,10 +10,72 @@ import * as globals from "../globals";
     encapsulation: ViewEncapsulation.None
 })
 export class HelpComponent implements OnInit {
+    private listenObj: any;
     nav_version: string = globals.nav_version;
+    @ViewChild('markdownElement', {static: false}) private markdownElement: MarkdownComponent;
+    public headingAnchors: MarkdownHeadingAnchor[] = [];
 
-    constructor(private dialogRef: MatDialogRef<HelpComponent>,
-                @Inject(MAT_DIALOG_DATA) public data) { }
 
-    ngOnInit() {}
+    constructor(private markdownService: MarkdownService,
+                private renderer: Renderer2,
+                private dialogRef: MatDialogRef<HelpComponent>,
+                @Inject(MAT_DIALOG_DATA) public data) {}
+
+    ngOnInit(): void {
+        setTimeout(() => {
+           this.scrollTo('toc');
+        }, 175);
+
+        let self = this;
+        this.markdownService.renderer.heading = (text: string, level: number) => {
+            let img = text.match(/(<img src(.*?)> )/g);
+            if (!img) img = [''];
+            text = text.replace(/(<img src(.*?)> )/g, '');
+            const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
+            self.headingAnchors.push({
+                level: level,
+                anchor: escapedText,
+                label: text.replace("&amp;", "&")
+            });
+            return '<h' + level + ' class="' + escapedText + '">' + img[0] +
+              text +
+              '</h' + level + '>';
+        }
+    }
+
+    // from https://github.com/jfcere/ngx-markdown/issues/125#issuecomment-518025821
+    public onMarkdownLoad(e) {
+        // hijack clicks on links to use router navigation
+        if (this.markdownElement) {
+            this.listenObj = this.renderer.listen(this.markdownElement.element.nativeElement, 'click', (e: Event) => {
+                if (e.target && (e.target as any).tagName === 'A') {
+                    const el = (e.target as HTMLElement);
+                    const linkURL = el.getAttribute && el.getAttribute('href');
+                    if (linkURL) {
+                        e.preventDefault();
+                        this.scrollTo(el.getAttribute('href').replace('#', ''));
+                    }
+                }
+            })
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.listenObj) {
+            this.listenObj();
+        }
+    }
+
+    public scrollTo(anchor) {
+        let element = document.querySelector("." + anchor);
+        console.log('scrolling to', anchor);
+        if (element) element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+    }
+}
+
+
+interface MarkdownHeadingAnchor {
+    level: number,
+    anchor: string,
+    label: string
 }

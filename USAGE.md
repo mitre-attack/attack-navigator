@@ -78,7 +78,8 @@ layers to inherit properties from:
 - <b>Score Expression:</b> Technique <a href="#scoring-techniques">scores</a> in the created
   layer are initialized to the result of this expression. This field should take the form of an equation or constant,
   using variables for layers.Layer variables are shown in yellow on tabs when the "create layer from other layers" panel
-  is opened: <img src="assets/image_scoreVariableExample.png" height="100px">
+  is opened:  
+  <img src="assets/image_scoreVariableExample.png" height="100px">
 
   Each technique's score is created independently using the score expression. For example, with a score expression
   of <code>a+b</code>, some technique <i>t</i> in the output layer would be the sum of <i>t<sub>a</sub></i> and <i>
@@ -144,7 +145,7 @@ There are four modes of sorting. Clicking the sorting button will toggle between
 ## ![Filtering](assets/icons/ic_filter_list_black_24px.svg) Filtering
 
 The list of techniques and tactics can be filtered in the filtering menu. Filters are additive - the displayed set of
-techniques is the logical <i>or</i>of the techniques of the filters selected.
+techniques is the logical <i>or</i> of the techniques of the filters selected.
 
 ### Platform Filter
 
@@ -163,7 +164,7 @@ macOS" as well and those techniques would be added to the visible layer.
 
 <b>Tip:</b> Techniques can also be hidden from your view by using
 the <a href="#hiding-disabled-techniques">hide disabled techniques</a> button. Couple this
-with the <a href="#multiselect-interface">multiselect interface</a>to hide techniques which
+with the <a href="#multiselect-interface">multiselect interface</a> to hide techniques which
 are contained in specific threat or software groupings.
 
 ## ![Color Setup](assets/icons/ic_palette_black_24px.svg) Color Setup
@@ -310,7 +311,7 @@ Clicking the "toggle state" button toggles selected techniques between an enable
 state, the technique text is greyed out and no colors(<a href="#assigning-manual-colors">assigned manually</a> or via
 <a href="#scoring-techniques">score</a>) will be displayed.
 
-The <a href="#hiding-disabled-techniques">hide disabled techniques</a>button can be used to
+The <a href="#hiding-disabled-techniques">hide disabled techniques</a> button can be used to
 hide disabled techniques from the view.
 
 ## ![Assigning Manual Colors](assets/icons/ic_format_color_fill_black_24px.svg) Assigning Manual Colors
@@ -336,7 +337,7 @@ technique and delete the score value in the score control. The technique will re
 
 Techniques are automatically assigned a color according to its score. This color is determined according to
 the <a href="#scoring-gradient">scoring gradient setup interface</a>. Colors
-assigned <a href="#assigning-manual-colors">manually</a>supersede the score-generated color.
+assigned <a href="#assigning-manual-colors">manually</a> supersede the score-generated color.
 It is a good idea to assign techniques scores inside of a predetermined range, such as 0-1 or 0-100. Set the "high
 value" and "low value" inputs in the <a href="#scoring-gradient">scoring gradient setup
 interface</a> to this range to make sure that the color for the score is properly mapped to the gradient. Techniques
@@ -547,7 +548,7 @@ Copyright 2020 The MITRE Corporation
 Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
-License. You may obtain a copy of the License at
+License. You may obtain a copy of the License at  
 
    http://www.apache.org/licenses/LICENSE-2.0  
 

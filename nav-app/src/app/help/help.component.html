@@ -1,5 +1,15 @@
 <div class="help-dialog">
-    <help-page></help-page>
+    <div class="content">
+        <div class="col toc narrow">
+            <h1>Table of Contents</h1>
+            <ul class="table-of-contents" *ngIf="headingAnchors.length > 0">
+                <li *ngFor="let heading of headingAnchors" class="toc-heading level-{{heading.level}}">
+                    <a (click)="scrollTo(heading.anchor)">{{heading.label}}</a>
+                </li>
+            </ul>
+        </div>
+        <markdown #markdownElement [src]="'../USAGE.md'" (load)="onMarkdownLoad($event)"></markdown>
+    </div>
     <div class="close-button">
         <button mat-button mat-dialog-close>close</button>
     </div>
