@@ -1,4 +1,4 @@
-# MITRE ATT&CK® Navigator Version 4.4
+# MITRE ATT&CK® Navigator
 
 The ATT&CK Navigator is designed to provide basic navigation and annotation of ATT&CK matrices, something that people
 are already doing today in tools like Excel. We've designed it to be simple and generic - you can use the Navigator to
@@ -21,10 +21,10 @@ repository</a>.
 
 # Layers
 
-A layer constitutes a view of the tactics and techniques matrix for a specific technology domain. Version 4.4 of the
-Navigator can manipulate either the Enterprise, Mobile, or ICS ATT&CK technology domain knowledge bases. Within a
-technology domain, the Navigator allows you to filter your view of the matrix in a variety of ways, displaying the
-tactics and techniques that are important to you.
+A layer constitutes a view of the tactics and techniques matrix for a specific technology domain. In more recent 
+versions, the Navigator can manipulate either the Enterprise, Mobile, or ICS ATT&CK technology domain knowledge bases.
+Within a technology domain, the Navigator allows you to filter your view of the matrix in a variety of ways, displaying
+the tactics and techniques that are important to you.
 
 You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting "
 view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
@@ -502,8 +502,8 @@ inches. If the header is disabled this control will not be editable.
 The text configuration dropdown allows for the configuration of the font
 (serif, sans-serif, and monospace) of the exported render.
 
-Unlike in previous versions of the Navigator, in ATT&CK Navigator Version 4.4 text size is automatically calculated to
-optimize readability.
+Unlike in previous versions of the Navigator, in more recent versions of the ATT&CK Navigator text size is automatically
+calculated to optimize readability.
 
 ## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg)Customizing the Legend
 
