@@ -75,7 +75,6 @@ export class HelpComponent implements OnInit {
 
     public scrollTo(anchor) {
         let element = document.querySelector("." + anchor);
-        console.log('scrolling to', anchor);
         if (element) element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
     }
 }
