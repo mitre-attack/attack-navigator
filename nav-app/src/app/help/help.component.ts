@@ -28,8 +28,7 @@ export class HelpComponent implements OnInit {
 
         let self = this;
         this.markdownService.renderer.heading = (text: string, level: number) => {
-            let img = text.match(/(<img src(.*?)> )/g);
-            if (!img) img = [''];
+            let img = text.match(/(<img src(.*?)> )/g) ? text.match(/(<img src(.*?)> )/g)[0].replace(/(nav-app\/src\/)/g, '') : '';
             text = text.replace(/(<img src(.*?)> )/g, '');
             const escapedText = text.toLowerCase().replace(/[^\w]+/g, '-');
             self.headingAnchors.push({
@@ -37,7 +36,7 @@ export class HelpComponent implements OnInit {
                 anchor: escapedText,
                 label: text.replace("&amp;", "&")
             });
-            return '<h' + level + ' class="' + escapedText + '">' + img[0] +
+            return '<h' + level + ' class="' + escapedText + '">' + img +
               text +
               '</h' + level + '>';
         }
