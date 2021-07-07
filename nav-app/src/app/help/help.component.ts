@@ -53,7 +53,8 @@ export class HelpComponent implements OnInit {
                     const linkURL = el.getAttribute && el.getAttribute('href');
                     if (linkURL) {
                         e.preventDefault();
-                        this.scrollTo(el.getAttribute('href').replace('#', ''));
+                        if (linkURL.charAt(0) === '#') this.scrollTo(linkURL.replace('#', ''));
+                        else window.open(linkURL);
                     }
                 }
             })
