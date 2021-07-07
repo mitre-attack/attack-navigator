@@ -40,6 +40,12 @@ export class HelpComponent implements OnInit {
               text +
               '</h' + level + '>';
         }
+
+        this.markdownService.renderer.html = (html: string) => {
+            if (!html.match(/(nav-app\/src\/)/g))
+                return html;
+            return html.replace(/(nav-app\/src\/)/g, '');
+        }
     }
 
     // from https://github.com/jfcere/ngx-markdown/issues/125#issuecomment-518025821
@@ -53,6 +59,7 @@ export class HelpComponent implements OnInit {
                     if (linkURL) {
                         e.preventDefault();
                         if (linkURL.charAt(0) === '#') this.scrollTo(linkURL.replace('#', ''));
+                        else if (linkURL.match((/(nav-app\/src\/)/g))) window.open(linkURL.replace(/(nav-app\/src\/)/g, ''))
                         else window.open(linkURL);
                     }
                 }
