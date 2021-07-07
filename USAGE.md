@@ -108,7 +108,7 @@ layers to inherit properties from:
   enabled/disabled states</a> from.
 - <b>Filters:</b> choose which layer to inherit <a href="#filtering">layer filter
   configuration</a> from.
-- <b>Legend:</b> choose which layer to inherit <a href="#legend">legend items</a> from.
+- <b>Legend:</b> choose which layer to inherit <a href="#legend-bar">legend items</a> from.
 
 Tactic-spanning Techniques are evaluated individually: if a technique is annotated differently in two tactics, the
 output layers' techniques will honor this difference.
@@ -507,7 +507,7 @@ optimize readability.
 
 ## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg)Customizing the Legend
 
-This menu can only be opened if a <a href="#legend">legend</a> is present on the layer or if
+This menu can only be opened if a <a href="#legend-bar">legend</a> is present on the layer or if
 techniques have been assigned scores. The checkbox allows you to undock the legend from the SVG header. Once undocked,
 the X and Y position controls can be used to position the legend in the image. The width and height inputs control the
 size of the legend when it is undocked. The measurements are in units specified by
