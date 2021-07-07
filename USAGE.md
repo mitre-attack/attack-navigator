@@ -119,7 +119,7 @@ into the score expression input.
 
 # Layer Controls
 
-## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg) Layer Information
+## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg)Layer Information
 
 The layer name and description can be edited in the layer information dropdown. The layer name can also be edited where
 it appears in the tab title. Additionally, the layer information panel allows the user to add metadata to the layer.
@@ -142,7 +142,7 @@ There are four modes of sorting. Clicking the sorting button will toggle between
 - <img src="nav-app/src/assets/icons/ic_sort_numerically_descending_black_24px.svg"/>The table will sort techniques by their score
   in descending order. Techniques with no score are treated as if their score is 0.
 
-## ![Filtering](nav-app/src/assets/icons/ic_filter_list_black_24px.svg) Filtering
+## ![Filtering](nav-app/src/assets/icons/ic_filter_list_black_24px.svg)Filtering
 
 The list of techniques and tactics can be filtered in the filtering menu. Filters are additive - the displayed set of
 techniques is the logical <i>or</i> of the techniques of the filters selected.
@@ -167,7 +167,7 @@ the <a href="#hiding-disabled-techniques">hide disabled techniques</a> button. C
 with the <a href="#search-amp-multiselect-interface">multiselect interface</a> to hide techniques which
 are contained in specific threat or software groupings.
 
-## ![Color Setup](nav-app/src/assets/icons/ic_palette_black_24px.svg) Color Setup
+## ![Color Setup](nav-app/src/assets/icons/ic_palette_black_24px.svg)Color Setup
 
 ### Tactic Row Background
 
@@ -190,7 +190,7 @@ create your own by adding and removing colors using the interface.
 <b>Tip:</b> If your scores are binary (0 or 1), consider setting the low value of 0 to white and the high of 1 to some
 other color to only color the techniques which have the value of 1.
 
-## ![Hiding Disabled Techniques](nav-app/src/assets/icons/ic_visibility_off_black_24px.svg) Hiding Disabled Techniques
+## ![Hiding Disabled Techniques](nav-app/src/assets/icons/ic_visibility_off_black_24px.svg)Hiding Disabled Techniques
 
 Techniques that are <a href="#disabling-techniques">disabled</a> can be hidden by toggling
 the "hide disabled techniques" button. Hidden techniques are still present in the data when saved and can still be
@@ -216,7 +216,7 @@ Sub-techniques in the view are nested under their parent technique and are hidde
   the <a href="#side-layout">side layout</a> or
   <a href="#flat-layout">flat layout</a> by clicking the gray sidebar on the technique cell.
 
-## ![Configuring the Layout](nav-app/src/assets/icons/ic_view_large_black_24px.svg) Configuring the Layout
+## ![Configuring the Layout](nav-app/src/assets/icons/ic_view_large_black_24px.svg)Configuring the Layout
 
 The ATT&CK Navigator has controls for how the ATT&CK Matrices are displayed. Access controls to change layout via the "
 Matrix Configuration" dropdown menu.
@@ -305,7 +305,7 @@ Techniques in the layer can be annotated. The technique controls on the menubar 
 techniques are <a href="#selecting-techniques">selected</a>. If multiple techniques are
 selected, they will all be annotated simultaneously.
 
-## ![Disabling Techniques](nav-app/src/assets/icons/ic_texture_black_24px.svg) Disabling Techniques
+## ![Disabling Techniques](nav-app/src/assets/icons/ic_texture_black_24px.svg)Disabling Techniques
 
 Clicking the "toggle state" button toggles selected techniques between an enabled and disabled state. In the disabled
 state, the technique text is greyed out and no colors (<a href="#assigning-manual-colors">assigned manually</a> or via
@@ -314,12 +314,12 @@ state, the technique text is greyed out and no colors (<a href="#assigning-manua
 The <a href="#hiding-disabled-techniques">hide disabled techniques</a> button can be used to
 hide disabled techniques from the view.
 
-## ![Assigning Manual Colors](nav-app/src/assets/icons/ic_format_color_fill_black_24px.svg) Assigning Manual Colors
+## ![Assigning Manual Colors](nav-app/src/assets/icons/ic_format_color_fill_black_24px.svg)Assigning Manual Colors
 
 Techniques can be assigned colors manually. Manually assigned colors supersede colors created by score. To remove a
 manually assigned color, select the "no color"box at the top of the interface.
 
-## ![Scoring Techniques](nav-app/src/assets/icons/ic_insert_chart_black_24px.svg) Scoring Techniques
+## ![Scoring Techniques](nav-app/src/assets/icons/ic_insert_chart_black_24px.svg)Scoring Techniques
 
 A score is a numeric value assigned to a technique. The meaning or interpretation of scores is completely up to the user
 user - the Navigator simply visualizes the matrix based on any scores you have assigned. Some possible uses of scores
@@ -344,7 +344,7 @@ interface</a> to this range to make sure that the color for the score is properl
 that are unscored are not assigned a color based on the gradient - they are displayed with a white background in the
 matrix.
 
-## ![Adding Comments to Techniques](nav-app/src/assets/icons/ic_insert_comment_black_24px.svg) Adding Comments to Techniques
+## ![Adding Comments to Techniques](nav-app/src/assets/icons/ic_insert_comment_black_24px.svg)Adding Comments to Techniques
 
 A text comment can be added to techniques. This comment will show up in the technique tooltip if a comment has been
 added. Techniques with a comment will be given a yellow underline.
@@ -353,7 +353,7 @@ added. Techniques with a comment will be given a yellow underline.
 attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> in the
 source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
 
-## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg) Clearing Annotations on Techniques
+## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg)Clearing Annotations on Techniques
 
 Clicking the "clear annotations on selected" button removes comments, colors, scores, and enabled/disabled state from
 all selected techniques.
@@ -398,7 +398,7 @@ technique will bring up a context menu with more options:
 <b>Tip:</b> You can use "select unannotated" followed by disabling those techniques, and then hiding disabled
 techniques,to create a layer where only annotated techniques are visible.
 
-## ![Selection Behavior](nav-app/src/assets/icons/ic_lock_black_24px.svg) Selection Behavior
+## ![Selection Behavior](nav-app/src/assets/icons/ic_lock_black_24px.svg)Selection Behavior
 
 The selection behavior controls affect how sub-techniques are selected with regards to tactics and sub-techniques.
 
@@ -409,7 +409,7 @@ The selection behavior controls affect how sub-techniques are selected with rega
   addition,clicking a sub-technique will also select the parent as well as all sibling sub-techniques. When disabled,
   sub-techniques are selected independently of parents and siblings.
 
-## ![Search & Multiselect Interface](nav-app/src/assets/icons/ic_search_black_24px.svg) Search & Multiselect Interface
+## ![Search & Multiselect Interface](nav-app/src/assets/icons/ic_search_black_24px.svg)Search & Multiselect Interface
 
 The search & multiselect interface provides the means to select or deselect techniques in the matrix that match a text
 query or that are mapped to groups, software, or mitigations. The text input can be used to filter the lists of
@@ -470,7 +470,7 @@ assets/config.json</code>.
 The following is an example ATT&CK Navigator URL with the ability to download the layer and add comments
 disabled: <br/><code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#download_layer=false&comments=false</b></code>
 
-# ![Rendering Layers as SVG](nav-app/src/assets/icons/ic_camera_alt_black_24px.svg) Rendering Layers as SVG
+# ![Rendering Layers as SVG](nav-app/src/assets/icons/ic_camera_alt_black_24px.svg)Rendering Layers as SVG
 
 Clicking the "render layer to SVG" button will open a pop-up window allowing the current layer to be rendered to an SVG
 image. Clicking the <i>download svg</i> button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">)will download
@@ -487,7 +487,7 @@ extension to <code>.svg</code> will restore it as a valid svg file.
 Clicking the "toggle measurement unit" button will toggle between measuring in inches (in), centimeters (cm), and
 pixels (px). This unit applies to controls for image size and legend position.
 
-## ![Configuring Image Size](nav-app/src/assets/icons/ic_photo_size_select_large_black_24px.svg) Configuring Image Size
+## ![Configuring Image Size](nav-app/src/assets/icons/ic_photo_size_select_large_black_24px.svg)Configuring Image Size
 
 The image size controls allow you to specify the width and height of the image, as well as the height of the header if
 one is present. The measurements are in units specified by the <a href="#measurement-units">
@@ -497,7 +497,7 @@ The header height contributes to the total image height: if you have specified t
 header height to be 1 inch, the technique table will be 7.5 inches and the header 1 inch for a total height of 8.5
 inches. If the header is disabled this control will not be editable.
 
-## ![Configuring Text](nav-app/src/assets/icons/ic_format_size_black_24px.svg) Configuring Text
+## ![Configuring Text](nav-app/src/assets/icons/ic_format_size_black_24px.svg)Configuring Text
 
 The text configuration dropdown allows for the configuration of the font
 (serif, sans-serif, and monospace) of the exported render.
@@ -505,7 +505,7 @@ The text configuration dropdown allows for the configuration of the font
 Unlike in previous versions of the Navigator, in ATT&CK Navigator Version 4.4 text size is automatically calculated to
 optimize readability.
 
-## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg) Customizing the Legend
+## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg)Customizing the Legend
 
 This menu can only be opened if a <a href="#legend">legend</a> is present on the layer or if
 techniques have been assigned scores. The checkbox allows you to undock the legend from the SVG header. Once undocked,
@@ -513,7 +513,7 @@ the X and Y position controls can be used to position the legend in the image. T
 size of the legend when it is undocked. The measurements are in units specified by
 the <a href="#measurement-units">measurement units</a> control.
 
-## ![Display Settings](nav-app/src/assets/icons/ic_visibility_black_24px.svg) Display Settings
+## ![Display Settings](nav-app/src/assets/icons/ic_visibility_black_24px.svg)Display Settings
 
 The header itself, or specific parts of the header, can be hidden using the controls in this dropdown. The color of
 table cell borders can also be edited.
@@ -534,7 +534,7 @@ table cell borders can also be edited.
 - <b>Cell border</b> controls the border of cells in the body of the table. The borders in the header are not modified
   by this control. Note that you must click "apply" in the color picker for your change to take effect.
 
-# ![Exporting Layers to MS Excel](nav-app/src/assets/icons/baseline-grid_on-24px.svg) Exporting Layers to MS Excel
+# ![Exporting Layers to MS Excel](nav-app/src/assets/icons/baseline-grid_on-24px.svg)Exporting Layers to MS Excel
 
 Layers can be exported to MS excel (.xlsx) format. Clicking on the "export to excel" button in the toolbar will download
 an .xlsx file which contains the current layer. This layer contains the annotations from the view -- color (via score or
