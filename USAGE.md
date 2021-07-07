@@ -308,7 +308,7 @@ selected, they will all be annotated simultaneously.
 ## ![Disabling Techniques](nav-app/src/assets/icons/ic_texture_black_24px.svg) Disabling Techniques
 
 Clicking the "toggle state" button toggles selected techniques between an enabled and disabled state. In the disabled
-state, the technique text is greyed out and no colors(<a href="#assigning-manual-colors">assigned manually</a> or via
+state, the technique text is greyed out and no colors (<a href="#assigning-manual-colors">assigned manually</a> or via
 <a href="#scoring-techniques">score</a>) will be displayed.
 
 The <a href="#hiding-disabled-techniques">hide disabled techniques</a> button can be used to
