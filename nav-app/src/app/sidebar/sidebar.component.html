@@ -3,7 +3,7 @@
         <div *ngIf="viewModel.sidebarContentType === 'search'">
             <app-search-and-multiselect [viewModel]="viewModel"></app-search-and-multiselect>
         </div>
-        <div *ngIf="viewModel.sidebarContentType === 'layerUpgrade'">
+        <div *ngIf="viewModel.sidebarContentType === 'layerUpgrade' && reloadToggle">
             <div *ngIf="viewModel.versionChangelog && viewModel.compareTo">
                 <layer-upgrade [viewModel]="viewModel"></layer-upgrade>
             </div>
