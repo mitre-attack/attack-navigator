@@ -6,7 +6,7 @@
             <!-- title -->
             <span class="title">
                 <h2>Layer Upgrade</h2>
-                ({{version(changelog.previousDomainID)}} <mat-icon inline="true">east</mat-icon> {{version(changelog.latestDomainID)}})
+                ({{compareTo.version}} <mat-icon inline="true">east</mat-icon> {{viewModel.version}})
             </span>
             <!-- filter -->
             <div>
@@ -61,12 +61,12 @@
                     <!-- version header -->
                     <div class="cols">
                         <div class="float wide">
-                            <div class="version">ATT&CK {{version(changelog.previousDomainID)}}</div>
+                            <div class="version">ATT&CK {{compareTo.version}}</div>
                             <mat-divider></mat-divider>
                         </div>
                         <div class="float arrow"><mat-icon inline="true">east</mat-icon></div>
                         <div class="float wide">
-                            <div class="version">ATT&CK {{version(changelog.latestDomainID)}}</div>
+                            <div class="version">ATT&CK {{viewModel.version}}</div>
                             <mat-divider></mat-divider>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                         <!-- drag&drop tooltip info -->
                         <div class="float arrow">
                             <mat-icon class="info" matTooltipPosition="above" 
-                                matTooltip='To copy annotations, drag a cell with annotations from ATT&CK {{version(changelog.previousDomainID)}} to a cell in ATT&CK {{version(changelog.latestDomainID)}}.'>
+                                matTooltip='To copy annotations, drag a cell with annotations from ATT&CK {{compareTo.version}} to a cell in ATT&CK {{viewModel.version}}.'>
                                 info_outline
                             </mat-icon>
                         </div>

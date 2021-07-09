@@ -36,8 +36,8 @@ import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contex
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { LayerUpgradeComponent } from './sidebar/layer-upgrade/layer-upgrade.component';
-import { ChangelogCellComponent } from './sidebar/changelog-cell/changelog-cell.component';
+import { LayerUpgradeComponent } from './layer-upgrade/layer-upgrade.component';
+import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog-cell.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 

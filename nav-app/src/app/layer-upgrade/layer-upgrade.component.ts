@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ViewModel } from '../../viewmodels.service';
-import { DataService, Tactic, Technique, VersionChangelog } from '../../data.service';
+import { ViewModel } from '../viewmodels.service';
+import { DataService, Tactic, Technique, VersionChangelog } from '../data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DndDropEvent } from 'ngx-drag-drop';
 
@@ -39,15 +39,6 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public getHeader(section: string): string {
         return section.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-    }
-
-    /**
-     * Get the version number from the domain ID
-     * @param domainID the domain ID
-     * @returns {string} the version number
-     */    
-    public version(domainID: string): string {
-        return domainID.match(/v[0-9]/g)[0].toLowerCase();
     }
 
     /**
