@@ -22,8 +22,6 @@ export class LayerUpgradeComponent implements OnInit {
         "additions", "changes", "minor_changes",
         "deprecations", "revocations", "unchanged"
     ];
-    public reviewed = new Set();
-    public copied = new Set();
 
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -122,7 +120,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns {boolean} true if the technique has been marked as reviewed
      */
     public isReviewed(attackID: string): boolean {
-        return this.reviewed.has(attackID);
+        return this.changelog.reviewed.has(attackID);
     }
 
     /**
@@ -131,9 +129,9 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewedChanged(attackID: string): void {
         if (this.isReviewed(attackID)) {
-            this.reviewed.delete(attackID);
+            this.changelog.reviewed.delete(attackID);
         } else {
-            this.reviewed.add(attackID);
+            this.changelog.reviewed.add(attackID);
         }
     }
 
@@ -143,7 +141,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns {boolean} true if all objects are marked as reviewed
      */
     public allReviewed(section: string): boolean {
-        return this.changelog[section].every(attackID => this.reviewed.has(attackID));
+        return this.changelog[section].every(attackID => this.changelog.reviewed.has(attackID));
     }
 
     /**
@@ -152,9 +150,9 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewAllChanged(section: string): void {
         if (this.allReviewed(section)) {
-            this.changelog[section].forEach(attackID => this.reviewed.delete(attackID));
+            this.changelog[section].forEach(attackID => this.changelog.reviewed.delete(attackID));
         } else {
-            this.changelog[section].forEach(attackID => this.reviewed.add(attackID));
+            this.changelog[section].forEach(attackID => this.changelog.reviewed.add(attackID));
         }
     }
 
@@ -196,7 +194,7 @@ export class LayerUpgradeComponent implements OnInit {
      * object in the latest version
      */
     public isCopied(object: Technique, tactic: Tactic): boolean {
-        if (this.copied.has(object.get_technique_tactic_id(tactic))) return true;
+        if (this.changelog.copied.has(object.get_technique_tactic_id(tactic))) return true;
         else return false;
     }
 
@@ -208,7 +206,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public onCopy(attackID: string, tactic: Tactic): void {
         // mark as not reviewed during changes
-        this.reviewed.delete(attackID);
+        this.changelog.reviewed.delete(attackID);
 
         // retrieve relevant technique VMs
         let fromTechnique = this.getTechnique(attackID, this.compareTo);
@@ -222,10 +220,10 @@ export class LayerUpgradeComponent implements OnInit {
         fromTvm.enabled = false;
 
         // mark as copied
-        this.copied.add(fromTechnique.get_technique_tactic_id(tactic));
+        this.changelog.copied.add(fromTechnique.get_technique_tactic_id(tactic));
 
         // mark as reviewed if all are copied
-        if (fromTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.add(attackID);
+        if (fromTechnique.get_all_technique_tactic_ids().every(id => this.changelog.copied.has(id))) this.changelog.reviewed.add(attackID);
     }
 
     /**
@@ -236,7 +234,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public onRevertCopy(attackID: string, tactic: Tactic): void {
         // mark as not reviewed during changes
-        this.reviewed.delete(attackID)
+        this.changelog.reviewed.delete(attackID)
 
         // retrieve relevant technique VMs
         let fromTechnique = this.getTechnique(attackID, this.compareTo);
@@ -249,10 +247,10 @@ export class LayerUpgradeComponent implements OnInit {
         fromTvm.enabled = true;
 
         // unmark as copied
-        this.copied.delete(fromTechnique.get_technique_tactic_id(tactic));
+        this.changelog.copied.delete(fromTechnique.get_technique_tactic_id(tactic));
 
         // mark as not reviewed if not all are copied
-        if (!fromTechnique.get_all_technique_tactic_ids().every(id => this.copied.has(id))) this.reviewed.delete(attackID);
+        if (!fromTechnique.get_all_technique_tactic_ids().every(id => this.changelog.copied.has(id))) this.changelog.reviewed.delete(attackID);
     }
 
     /**

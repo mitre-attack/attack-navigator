@@ -520,6 +520,9 @@ export class VersionChangelog {
     public revocations: string[] = []; // objects revoked since older version
     public unchanged: string[] = []; // objects which have not changed between versions
 
+    public reviewed = new Set();
+    public copied = new Set();
+
     constructor(prev: string, latest: string) {
         this.previousDomainID = prev;
         this.latestDomainID = latest;

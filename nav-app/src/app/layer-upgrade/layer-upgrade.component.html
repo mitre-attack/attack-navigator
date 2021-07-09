@@ -168,7 +168,7 @@
 
     <!-- done button -->
     <div class="done-button">
-        <span>Updated {{reviewed.size}}/{{changelog.length()}} techniques</span>
+        <span>Updated {{changelog.reviewed.size}}/{{changelog.length()}} techniques</span>
         <button mat-raised-button (click)="openDialog()">Done</button>
     </div>
 </div>
@@ -178,7 +178,7 @@
     <div class="close-dialog">
         <b>Warning:</b>
         <p>
-            {{reviewed.size}}/{{changelog.length()}} objects have been reviewed.
+            {{changelog.reviewed.size}}/{{changelog.length()}} objects have been reviewed.
         </p>
         <p>
             You will not be able to return to the layer upgrade window. Do you want to continue?
