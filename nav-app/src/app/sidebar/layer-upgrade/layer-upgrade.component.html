@@ -42,7 +42,7 @@
 
             <!-- techniques -->
             <ng-container *ngFor="let attackID of changelog[section]">
-                <mat-expansion-panel *ngIf="(!showAnnotatedOnly || isAnnotated(attackID))">
+                <mat-expansion-panel *ngIf="!showAnnotatedOnly || anyAnnotated(attackID)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="cols">
@@ -74,26 +74,40 @@
                     <div class="cols" *ngIf="tacticsChanged(attackID, section)">
                         <!-- technique from previous version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
-                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)" [dndDraggable]="tactic.shortname">
-                                <changelog-cell
-                                    [tactic]="tactic"
-                                    [technique]="oldTechnique" 
-                                    [viewModel]="compareTo"
-                                    [isCurrentVersion]="false">
-                                </changelog-cell>
+                            <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
+                                <div [dndDraggable]="tactic.shortname">
+                                    <changelog-cell
+                                        [tactic]="tactic"
+                                        [technique]="oldTechnique" 
+                                        [viewModel]="compareTo"
+                                        [isCurrentVersion]="false">
+                                    </changelog-cell>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- drag&drop tooltip info -->
+                        <div class="float arrow">
+                            <mat-icon class="info" matTooltipPosition="above" 
+                                matTooltip='To copy annotations, drag a cell with annotations from ATT&CK {{version(changelog.previousDomainID)}} to a cell in ATT&CK {{version(changelog.latestDomainID)}}.'>
+                                info_outline
+                            </mat-icon>
                         </div>
 
                         <!-- technique from latest version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
-                                dndDropzone (dndDrop)="onDrop($event, attackID, newTechnique, tactic)" [dndDragoverClass]="drop-highlight">
+                                dndDropzone (dndDrop)="onDrop($event, attackID, newTechnique, tactic)">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="newTechnique" 
                                     [viewModel]="viewModel"
                                     [isCurrentVersion]="true">
                                 </changelog-cell>
+
+                                <span class="clear" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
+                                    matTooltipPosition="above" matTooltip="clear annotations"
+                                    (click)="clearAnnotations(newTechnique, tactic)">x</span>
                             </div>
                         </div>
                     </div>
@@ -113,7 +127,7 @@
                                 <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
                                     <!-- copy annotations/revert copy -->
                                     <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
-                                        [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !isAnnotated(attackID)"
+                                        [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !anyAnnotated(attackID)"
                                         (click)="onCopy(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
                                     <button class="button" matTooltipPosition="above" matTooltip="revert copy"
                                         [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"

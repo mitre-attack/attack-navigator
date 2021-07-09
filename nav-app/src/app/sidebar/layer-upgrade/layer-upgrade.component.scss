@@ -1,3 +1,5 @@
+@import "../../matrix/matrix-common.scss";
+
 .title {
     h2 {
         display: inline-block;
@@ -9,7 +11,20 @@
     margin: 1rem 0!important;
 }
 .changelog-cells {
-    padding: 6px;
+    padding-bottom: 1rem;
+    position: relative;
+}
+.clear {
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    padding: 6px 6px;
+    background: $panel-dark;
+    border-radius: 10px;
+    line-height: 10px;
+    cursor: pointer;
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
+    &:hover { background-color: darken($panel-dark, 5%); }
 }
 .mat-expansion-panel-content {
     max-height: 60vh;
@@ -40,6 +55,15 @@ tr:not(.version-header) td {
     text-align: center;
     vertical-align: top;
 }
+.info {
+    margin-top: 1.5rem;
+    height: 100%;
+    display: flex;
+
+    .mat-icon {
+        height: 100%;
+    }
+}
 .wide {
     width: 100%;
 }
@@ -65,6 +89,6 @@ tr:not(.version-header) td {
 .reviewed {
     color: #4BB543;
 }
-.drop-highlight {
-
+.dndDragover .technique-cell {
+    box-shadow: 0 0 0 1px $cell-highlight-color inset !important;
 }
