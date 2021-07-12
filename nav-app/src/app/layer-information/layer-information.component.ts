@@ -10,11 +10,12 @@ import { MarkdownComponent, MarkdownService } from "ngx-markdown";
 })
 export class LayerInformationComponent implements OnInit {
   nav_version: string = globals.nav_version;
+  layerFormatLink: string = '../layers/LAYERFORMATv4_2.md';
 
   constructor() { }
 
   ngOnInit(): void {
-    console.log('NAV VER', this.nav_version);
+    if (this.nav_version) this.layerFormatLink = `../layers/LAYERFORMATv${this.nav_version.replace('.', '_')}.md`;
   }
 
 }
