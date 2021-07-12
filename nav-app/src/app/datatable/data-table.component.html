@@ -41,10 +41,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
                 <div class="control-row-button noselect"
-                    (click)="(viewModel.sidebarOpened = (viewModel.sidebarContentType !== 'search') ? true : !viewModel.sidebarOpened) && (viewModel.sidebarContentType = 'search')"
+                    (click)="openSearch()"
                     matTooltipPosition="below"
                     matTooltip="search & multiselect">
-                    <img src="assets/icons/ic_search_black_24px.svg"/>
+                    <img [src]="viewModel.sidebarContentType !== 'layerUpgrade' ? 'assets/icons/ic_search_black_24px.svg' : 'assets/icons/ic_search_gray_24px.svg'"/>
                 </div>
             </div>
 

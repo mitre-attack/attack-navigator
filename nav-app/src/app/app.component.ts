@@ -2,7 +2,6 @@ import { Component, ViewChild, DoCheck, HostListener } from '@angular/core';
 import { TabsComponent } from './tabs/tabs.component';
 import { ConfigService } from './config.service';
 import * as globals from "./globals";
-import { DataService } from './data.service';
 
 @Component({
     selector: 'app-root',

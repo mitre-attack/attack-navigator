@@ -3,12 +3,13 @@ import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, Vie
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
+import { forkJoin } from 'rxjs';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
 import { ViewModelsService, ViewModel } from "../viewmodels.service";
 
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 
@@ -156,8 +157,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // activate the tab the user has clicked on.
         // tab.active = true;
         this.viewModelsService.viewModels.forEach(viewModel => {
-            viewModel.sidebarOpened = false;
-            viewModel.sidebarContentType = "";
+            if (viewModel.sidebarContentType === 'search') {
+                viewModel.sidebarOpened = false;
+                viewModel.sidebarContentType = "";
+            }
         });
     }
 
@@ -463,20 +466,19 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let currVersion = this.dataService.getCurrentVersion();
             if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
-                viewModel.version = currVersion;
-                viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
-                resolve(null);
+                let newDomainID = this.dataService.getDomainID(viewModel.domain, currVersion);
+                resolve({previous: viewModel.domainID, latest: newDomainID});
             } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
-                const dialogConfig = new MatDialogConfig();
-                dialogConfig.disableClose = true;
-                dialogConfig.width = '25%';
-                dialogConfig.data = {
-                    layerName: viewModel.name,
-                    vmVersion: viewModel.version,
-                    currVersion: currVersion
-                }
-                const dialogRef = this.dialog.open(VersionUpgradeComponent, dialogConfig);
-                let subscription = dialogRef.afterClosed().subscribe({
+                let dialog = this.dialog.open(VersionUpgradeComponent, {
+                    data: {
+                        layerName: viewModel.name,
+                        vmVersion: viewModel.version,
+                        currVersion: currVersion
+                    },
+                    disableClose: true,
+                    width: "25%"
+                });
+                let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
                             reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
@@ -485,8 +487,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             this.alwaysUpgradeVersion = result.upgrade;
                         }
                         if (result.upgrade) {
-                            viewModel.version = currVersion
-                            viewModel.domainID = this.dataService.getDomainID(viewModel.domain, viewModel.version);
+                            let newDomainID = this.dataService.getDomainID(viewModel.domain, currVersion);
+                            resolve({previous: viewModel.domainID, latest: newDomainID});
                         }
                         resolve(null);
                     },
@@ -497,6 +499,55 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             }
         });
         return dataPromise;
+    }
+
+    layerUpgrade(prevViewModel, string): void {
+        this.versionUpgradeDialog(prevViewModel).then( (versions) => {
+            if (versions) { // user upgraded to latest version
+                // create and open the latest version
+                let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                newViewModel.deSerializeDomainID(string); // update new view model with old domain info
+                newViewModel.domainID = versions.latest; // update domainID to latest
+                newViewModel.version = this.dataService.getCurrentVersion(); // update version to latest
+                newViewModel.loadVMData();
+                newViewModel.compareTo = prevViewModel;
+                this.openTab("new layer", newViewModel, true, true, true, true);
+                newViewModel.sidebarOpened = true;
+                newViewModel.sidebarContentType = 'layerUpgrade'
+                newViewModel.selectTechniquesAcrossTactics = false;
+
+                // load layer version & latest ATT&CK version
+                let loads: any = {};
+                if (!this.dataService.getDomain(versions.previous).dataLoaded) loads.previous = this.dataService.loadDomainData(versions.previous, true, true);
+                if (!this.dataService.getDomain(versions.latest).dataLoaded) loads.latest = this.dataService.loadDomainData(versions.latest, true, true);
+                if (Object.keys(loads).length) {
+                    let dataSubscription = forkJoin(loads).subscribe({
+                        next: () => {
+                            newViewModel.versionChangelog = this.dataService.compareVersions(versions.previous, versions.latest);
+                            // load vm for uploaded layer
+                            prevViewModel.deSerialize(string);
+                            prevViewModel.loadVMData();
+                        },
+                        complete: () => { dataSubscription.unsubscribe(); }
+                    });
+                } else {
+                    newViewModel.versionChangelog = this.dataService.compareVersions(versions.previous, versions.latest);
+                    // load vm for uploaded layer
+                    prevViewModel.deSerialize(string);
+                    prevViewModel.loadVMData();
+                }
+            } else {
+                this.openTab("new layer", prevViewModel, true, true, true, true);
+                this.dataService.loadDomainData(prevViewModel.domainID, true).then( () => {
+                    prevViewModel.deSerialize(string);
+                    prevViewModel.loadVMData();
+                });
+            }
+        })
+        .catch( (err) => {
+            console.error(err.message);
+            alert("ERROR parsing file, check the javascript console for more information.");
+        });
     }
 
     /**
@@ -528,22 +579,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 if (!this.dataService.getDomain(viewModel.domainID)) {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
-                this.versionUpgradeDialog(viewModel).then( () => {
-                    this.openTab("new layer", viewModel, true, true, true, true);
-                    if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                        this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                            viewModel.deSerialize(string);
-                            viewModel.loadVMData();
-                        });
-                    } else {
-                        viewModel.deSerialize(string);
-                        viewModel.loadVMData();
-                    }
-                })
-                .catch( (err) => {
-                    console.error(err.message);
-                    alert("ERROR parsing file, check the javascript console for more information.");
-                });
+                this.layerUpgrade(viewModel, string);
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
@@ -569,25 +605,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         if (!this.dataService.getDomain(viewModel.domainID)) {
                             throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                         }
-                        this.versionUpgradeDialog(viewModel).then( () => {
-                            this.openTab("new layer", viewModel, true, replace, true, true);
-                            if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
-                                this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
-                                    viewModel.deSerialize(res);
-                                    viewModel.loadVMData();
-                                    resolve(null);
-                                });
-                            } else {
-                                viewModel.deSerialize(res);
-                                viewModel.loadVMData();
-                                resolve(null);
-                            }
-                        })
-                        .catch( (err) => {
-                            console.error(err.message);
-                            alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.");
-                            resolve(null);
-                        });
+                        this.layerUpgrade(viewModel, res);
                         console.log("loaded layer from", loadURL);
                     } catch(err) {
                         console.error(err)

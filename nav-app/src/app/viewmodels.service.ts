@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix, Domain } from "./data.service";
+import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -382,6 +382,9 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
+    compareTo?: ViewModel;
+    versionChangelog?: VersionChangelog;
+    
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
@@ -845,12 +848,7 @@ export class ViewModel {
      */
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
-            this.getTechniqueVM_id(id).score = "";
-            this.getTechniqueVM_id(id).comment = "";
-            this.getTechniqueVM_id(id).color = "";
-            this.getTechniqueVM_id(id).enabled = true;
-            this.getTechniqueVM_id(id).aggregateScore = "";
-            this.getTechniqueVM_id(id).aggregateScoreColor = "";
+            this.getTechniqueVM_id(id).resetAnnotations();
         })
     }
 
@@ -1435,6 +1433,18 @@ export class TechniqueVM {
      */
     annotated(): boolean {
         return (this.score != "" || this.color != "" || !this.enabled || this.comment != "");
+    }
+
+    /**
+     * Reset this TechniqueVM's annotations to their default values
+     */
+    resetAnnotations(): void {
+        this.score = "";
+        this.comment = "";
+        this.color = "";
+        this.enabled = true;
+        this.aggregateScore = "";
+        this.aggregateScoreColor = "";
     }
 
     /**

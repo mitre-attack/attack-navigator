@@ -363,4 +363,14 @@ export class DataTableComponent implements AfterViewInit {
     exportRender(): void {
         this.tabs.openSVGDialog(this.viewModel);
     }
+
+    /**
+     * open search & multiselect sidebar
+     */
+    openSearch(): void {
+        if (this.viewModel.sidebarContentType !== 'layerUpgrade') {
+            this.viewModel.sidebarOpened = (this.viewModel.sidebarContentType !== 'search') ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'search';
+        }
+    }
 }
