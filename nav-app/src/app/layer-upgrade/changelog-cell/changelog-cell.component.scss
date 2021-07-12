@@ -1,6 +1,4 @@
 @import "../../matrix/technique-cell/technique-cell.component.scss";
 
-.break {
-    margin: 4px 0;
-    border-bottom: 1px solid rgba(border-color(body), 0.5);
-}
+.section { margin: 4px 0; }
+.section + .section { border-top: 1px solid rgba(border-color(body), 0.5); } 

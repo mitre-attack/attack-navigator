@@ -39,6 +39,10 @@ tr:not(.version-header) td {
     align-items: center;
     margin: 4px;
     .mat-icon { font-size: 16px; }
+    &:disabled {
+        cursor: unset;
+        background-color: lighten($panel-dark, 5%);
+    }
 }
 .cols {
     display: flex;
@@ -77,7 +81,6 @@ tr:not(.version-header) td {
 }
 .done-button {
     float: right;
-    margin: 1rem 0;
     .mat-raised-button { margin-left: 12px; }
 }
 .close-dialog {
@@ -88,6 +91,9 @@ tr:not(.version-header) td {
 }
 .reviewed {
     color: #4BB543;
+}
+.disabled {
+    color: gray;
 }
 .dndDragover .technique-cell {
     box-shadow: 0 0 0 1px $cell-highlight-color inset !important;

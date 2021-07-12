@@ -319,7 +319,7 @@ export class DataService {
     }
 
     /**
-     * Compare two ATT&CK versions and return a set of object changes
+     * Compares techniques between two ATT&CK versions and returns a set of object changes
      * @param prevDomainID imported layer version to upgrade from
      * @param latestDomainID latest ATT&CK version to upgrade to
      */
@@ -347,12 +347,15 @@ export class DataService {
                     // object was revoked since the previous version
                     changelog.revocations.push(latestTechnique.attackID);
                 } else if (latestTechnique.revoked && prevTechnique.revoked) {
-                    // both objects are deprecated, ignore
+                    // both objects are revoked, ignore
                     continue;
                 } else if (latestTechnique.deprecated && !prevTechnique.deprecated) {
                     // object was deprecated since the previous version
                     changelog.deprecations.push(latestTechnique.attackID);
-                } else if (latestTechnique.compareVersion(prevTechnique.version) != 0) {
+                } else if (latestTechnique.deprecated && prevTechnique.deprecated) {
+                    // both objects are deprecated, ignore
+                    continue;
+                } else if (latestTechnique.compareVersion(prevTechnique) != 0) {
                     // version number changed
                     changelog.changes.push(latestTechnique.attackID);
                 } else { // minor change
@@ -393,19 +396,27 @@ export abstract class BaseStix {
         this.dataService = dataService;
     }
 
-    public compareVersion(v: string): number {
-        if (!this.version || !v) return 0; // one or both of the objects have no version
+    /**
+     * Compare this object's version number to another object's version number
+     * @param that the object to compare to
+     * @returns 0 if the objects have the same version,
+     *          > 0 if this object's version is greater,
+     *          < 0 if that object's version is greater
+     */
+    public compareVersion(that: BaseStix): number {
+        if (!this.version || !that.version) return 0; // one or both of the objects have no version
 
         let thisVersion = this.version.split('.');
-        let prevVersion = v.split('.');
-        for (let i = 0; i < Math.max(thisVersion.length, prevVersion.length); i++) {
-            if (thisVersion.length == prevVersion.length && thisVersion.length < i) return 0;
+        let thatVersion = that.version.split('.');
+
+        for (let i = 0; i < Math.max(thisVersion.length, thatVersion.length); i++) {
+            if (thisVersion.length == thatVersion.length && thisVersion.length < i) return 0;
             if (thisVersion.length < i) return -1;
-            if (prevVersion.length < i) return 1;
-            if (+thisVersion[i] == +prevVersion[i]) continue;
-            return +thisVersion[i] - +prevVersion[i];
+            if (thatVersion.length < i) return 1;
+            if (+thisVersion[i] == +thatVersion[i]) continue;
+            return +thisVersion[i] - +thatVersion[i];
         }
-        return 0
+        return 0;
     }
 
     /**

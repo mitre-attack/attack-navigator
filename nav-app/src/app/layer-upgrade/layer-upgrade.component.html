@@ -48,7 +48,7 @@
                             <div class="cols">
                                 <div class="float">
                                     <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
-                                    <mat-icon *ngIf="!isReviewed(attackID)">radio_button_unchecked</mat-icon>
+                                    <mat-icon *ngIf="!isReviewed(attackID)" class="disabled">radio_button_unchecked</mat-icon>
                                 </div>
                                 <div class="float"><b>{{attackID}}</b></div>
                                 <div class="float">{{getTechnique(attackID, viewModel).name}}</div>
@@ -89,7 +89,7 @@
                         <!-- drag&drop tooltip info -->
                         <div class="float arrow">
                             <mat-icon class="info" matTooltipPosition="above" 
-                                matTooltip='To copy annotations, drag a cell with annotations from ATT&CK {{compareTo.version}} to a cell in ATT&CK {{viewModel.version}}.'>
+                                matTooltip='Drag and drop to copy annotations to the desired tactics in ATT&CK {{viewModel.version}}.'>
                                 info_outline
                             </mat-icon>
                         </div>
@@ -176,16 +176,14 @@
 <!-- close dialog template -->
 <ng-template #closeDialog>
     <div class="close-dialog">
-        <b>Warning:</b>
+        <b>Close layer upgrade workflow?</b>
         <p>
             {{changelog.reviewed.size}}/{{changelog.length()}} objects have been reviewed.
-        </p>
-        <p>
-            You will not be able to return to the layer upgrade window. Do you want to continue?
+            You will not be able to return to the layer upgrade window.
         </p>
         <div class="dialog-buttons">
-            <button mat-button (click)="closeDialogRef.close(true)">Continue</button>
-            <button mat-stroked-button mat-dialog-close>Cancel</button> 
+            <button mat-button mat-dialog-close>Cancel</button>
+            <button mat-button (click)="closeDialogRef.close(true)">Close</button>
         </div>
     </div>
 </ng-template>
