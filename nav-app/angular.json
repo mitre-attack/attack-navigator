@@ -20,6 +20,7 @@
             "preserveSymlinks": true,
             "assets": [
               { "glob": "*.md", "input": "../", "output": "/" },
+              { "glob": "*.md", "input": "../layers", "output": "/layers" },
               "src/assets",
               "src/favicon.ico"
             ],

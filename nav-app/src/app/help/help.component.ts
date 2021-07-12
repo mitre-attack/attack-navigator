@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ViewChild, Renderer2 } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as globals from "../globals";
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MarkdownComponent, MarkdownService } from "ngx-markdown";
+import { LayerInformationComponent } from "../layer-information/layer-information.component";
 
 @Component({
     selector: 'help',
@@ -11,14 +11,13 @@ import { MarkdownComponent, MarkdownService } from "ngx-markdown";
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;
-    nav_version: string = globals.nav_version;
     @ViewChild('markdownElement', {static: false}) private markdownElement: MarkdownComponent;
     public headingAnchors: MarkdownHeadingAnchor[] = [];
 
 
-    constructor(private markdownService: MarkdownService,
+    constructor(private dialog: MatDialog,
+                private markdownService: MarkdownService,
                 private renderer: Renderer2,
-                private dialogRef: MatDialogRef<HelpComponent>,
                 @Inject(MAT_DIALOG_DATA) public data) {}
 
     ngOnInit(): void {
@@ -50,7 +49,7 @@ export class HelpComponent implements OnInit {
 
     // from https://github.com/jfcere/ngx-markdown/issues/125#issuecomment-518025821
     public onMarkdownLoad(e) {
-        // hijack clicks on links to use router navigation
+        // hijack clicks on links
         if (this.markdownElement) {
             this.listenObj = this.renderer.listen(this.markdownElement.element.nativeElement, 'click', (e: Event) => {
                 if (e.target && (e.target as any).tagName === 'A') {
@@ -59,6 +58,7 @@ export class HelpComponent implements OnInit {
                     if (linkURL) {
                         e.preventDefault();
                         if (linkURL.charAt(0) === '#') this.scrollTo(linkURL.replace('#', ''));
+                        else if (linkURL === 'layer-information-dialog') this.openLayerDialog();
                         else if (linkURL.match((/(nav-app\/src\/)/g))) window.open(linkURL.replace(/(nav-app\/src\/)/g, ''))
                         else window.open(linkURL);
                     }
@@ -76,6 +76,15 @@ export class HelpComponent implements OnInit {
     public scrollTo(anchor) {
         let element = document.querySelector("." + anchor);
         if (element) element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+    }
+
+    /**
+     * open the layer information dialog
+     */
+    openLayerDialog() {
+        this.dialog.open(LayerInformationComponent, {
+            maxWidth: "90ch"
+        });
     }
 }
 

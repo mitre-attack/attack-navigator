@@ -38,6 +38,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { MarkdownModule } from "ngx-markdown";
+import { LayerInformationComponent } from './layer-information/layer-information.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { MarkdownModule } from "ngx-markdown";
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
-    SidebarComponent
+    SidebarComponent,
+    LayerInformationComponent
   ],
   imports: [
     BrowserModule,
