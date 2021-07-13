@@ -3,6 +3,7 @@ import { ViewModel } from '../viewmodels.service';
 import { DataService, Tactic, Technique, VersionChangelog } from '../data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DndDropEvent } from 'ngx-drag-drop';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
     selector: 'layer-upgrade',
@@ -126,12 +127,14 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Marks or unmarks a single given technique as reviewed
      * @param attackID the ATT&CK ID of the technique
+     * @param panel the object's expansion panel
      */
-    public reviewedChanged(attackID: string): void {
+    public reviewedChanged(attackID: string, panel: MatExpansionPanel): void {
         if (this.isReviewed(attackID)) {
             this.changelog.reviewed.delete(attackID);
         } else {
             this.changelog.reviewed.add(attackID);
+            panel.expanded = false; // close on review
         }
     }
 

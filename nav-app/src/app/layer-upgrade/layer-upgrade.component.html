@@ -42,7 +42,7 @@
 
             <!-- techniques -->
             <ng-container *ngFor="let attackID of changelog[section]">
-                <mat-expansion-panel *ngIf="!showAnnotatedOnly || anyAnnotated(attackID)">
+                <mat-expansion-panel *ngIf="!showAnnotatedOnly || anyAnnotated(attackID)" #panel="matExpansionPanel">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="cols">
@@ -156,7 +156,7 @@
                     <!-- reviewed -->
                     <div class="checkbox right">
                         <input id="review_{{attackID}}" class="checkbox-custom" type="checkbox"
-                            [checked]="isReviewed(attackID)" (click)="reviewedChanged(attackID)">
+                            [checked]="isReviewed(attackID)" (click)="reviewedChanged(attackID, panel)">
                         <label for="review_{{attackID}}" class="checkbox-custom-label noselect">reviewed</label>
                     </div>
 
