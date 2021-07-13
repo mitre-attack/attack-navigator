@@ -128,7 +128,7 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     getTechniques() {
         //get master list of techniques and sub-techniques
-        let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
+        let allTechniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
         for (let technique of allTechniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
@@ -136,7 +136,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     getStixData() {
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
 
         this.stixTypes = [{
             "label": "threat groups",
@@ -219,16 +219,16 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     public getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
-        let techniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
-        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainID).subtechniques);
-        let domainID = this.viewModel.domainID;
+        let techniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
+        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainVersionID).subtechniques);
+        let domainVersionID = this.viewModel.domainVersionID;
 
         if (stixObject instanceof Group) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Software) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
         }
     }
 }

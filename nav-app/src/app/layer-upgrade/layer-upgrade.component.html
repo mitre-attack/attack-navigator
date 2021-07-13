@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="cols" *ngIf="tacticsChanged(attackID, section)">
-                        <!-- technique from previous version -->
+                        <!-- technique from old version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
                                 <div [dndDraggable]="tactic.shortname">
@@ -98,7 +98,7 @@
                             </mat-icon>
                         </div>
 
-                        <!-- technique from latest version-->
+                        <!-- technique from new version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
                                 dndDropzone (dndDrop)="onDrop($event, attackID, newTechnique, tactic)">
@@ -121,7 +121,7 @@
                         <table class="wide">
                             <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
                                 <td *ngIf="section !== 'additions'">
-                                    <!-- technique from prevous version -->
+                                    <!-- technique from old version -->
                                     <changelog-cell
                                         [tactic]="tactic"
                                         [technique]="getTechnique(attackID, compareTo)" 
@@ -140,7 +140,7 @@
                                         (click)="onRevertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
                                 </td>
                                 <td *ngIf="section !== 'deprecations'">
-                                    <!-- technique from latest version-->
+                                    <!-- technique from new version-->
                                     <changelog-cell
                                         [tactic]="tactic"
                                         [technique]="getTechnique(attackID, viewModel, section)" 

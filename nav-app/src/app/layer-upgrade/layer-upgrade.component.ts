@@ -11,12 +11,12 @@ import { DndDropEvent } from 'ngx-drag-drop';
     encapsulation: ViewEncapsulation.None
 })
 export class LayerUpgradeComponent implements OnInit {
-    @Input() viewModel: ViewModel; // view model of latest version
+    @Input() viewModel: ViewModel; // view model of new version
     @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
     public closeDialogRef;
 
     public changelog: VersionChangelog;
-    public compareTo: ViewModel; // view model of previous version
+    public compareTo: ViewModel; // view model of old version
     public showAnnotatedOnly: boolean = true; // filter
     public sections: string[] = [
         "additions", "changes", "minor_changes",
@@ -60,13 +60,13 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns {Technique} the technique object
      */
     public getTechnique(attackID: string, vm: ViewModel, section?: string): Technique {
-        let domain = this.dataService.getDomain(vm.domainID);
+        let domain = this.dataService.getDomain(vm.domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
         let technique = all_techniques.find(t => t.attackID == attackID);
 
         if (section == 'revocations' && this.viewModel.version == vm.version) {
             // get revoking object
-            let revokedByID = technique.revoked_by(vm.domainID);
+            let revokedByID = technique.revoked_by(vm.domainVersionID);
             let revokingObject = all_techniques.find(t => t.id == revokedByID);
             return revokingObject;
         } else return technique;
@@ -82,13 +82,13 @@ export class LayerUpgradeComponent implements OnInit {
     public getTactics(attackID: string, vm: ViewModel, section?: string): Tactic[] {
         if (section == 'additions') vm = this.viewModel;
         let object = this.getTechnique(attackID, vm, section);
-        let domain = this.dataService.getDomain(vm.domainID);
+        let domain = this.dataService.getDomain(vm.domainVersionID);
         return object.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
     }
 
     /**
-     * Determine if the lists of tactics between the technique in the latest version and
-     * previous version are the same
+     * Determine if the lists of tactics between the technique in the new version and
+     * old version are the same
      * @param attackID the ATT&CK ID of the object
      * @param section name of the changelog section
      * @returns {boolean} true if the list of tactics are not identical
@@ -157,15 +157,15 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Determine if any techniqueVM in the previous version with the given
+     * Determine if any techniqueVM in the old version with the given
      * ATT&CK ID has annotations
      * @param attackID the ATT&CK ID of the technique
      * @returns {boolean} true if any TechniqueVM for this technique is annotated
      */
      public anyAnnotated(attackID: string): boolean {
-        let prevTechnique = this.getTechnique(attackID, this.compareTo);
-        if (prevTechnique) {
-            let technique_tactic_ids = prevTechnique.get_all_technique_tactic_ids();
+        let oldTechnique = this.getTechnique(attackID, this.compareTo);
+        if (oldTechnique) {
+            let technique_tactic_ids = oldTechnique.get_all_technique_tactic_ids();
 
             for (let id of technique_tactic_ids) {
                 if (this.compareTo.getTechniqueVM_id(id).annotated()) return true;
@@ -176,7 +176,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     /**
      * Is the TechniqueVM for this technique-tactic annotated?
-     * @param object the technique in the previous version
+     * @param object the technique in the old version
      * @param tactic the tactic the technique is found under
      * @param vm the view model
      * @returns true if the TechniqueVM is annotated
@@ -187,11 +187,11 @@ export class LayerUpgradeComponent implements OnInit {
 
     /**
      * Determine if the annotations of the technique under the given tactic
-     * in the previous version have been copied to the latest version
-     * @param object the technique in the previous version
+     * in the old version have been copied to the new version
+     * @param object the technique in the old version
      * @param tactic the tactic the technique is found under
      * @returns {boolean} true if the annotations have been copied to the
-     * object in the latest version
+     * object in the new version
      */
     public isCopied(object: Technique, tactic: Tactic): boolean {
         if (this.changelog.copied.has(object.get_technique_tactic_id(tactic))) return true;
@@ -199,8 +199,8 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Copy the annotations from the TechniqueVM in the previous version
-     * to the TechniqueVM in the latest version
+     * Copy the annotations from the TechniqueVM in the old version
+     * to the TechniqueVM in the new version
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique is found under
      */
@@ -227,8 +227,8 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Re-enable the annotations from the TechniqueVM in the previous version and
-     * reset the annotations from the latest version
+     * Re-enable the annotations from the TechniqueVM in the old version and
+     * reset the annotations from the new version
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique is found under
      */
@@ -254,7 +254,7 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Copy the annotations from the TechniqueVM in the previous version
+     * Copy the annotations from the TechniqueVM in the old version
      * to the TechniqueVM that the element was dropped over
      * @param event the ngx drop event
      * @param attackID the ATT&CK ID of the technique
@@ -263,7 +263,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public onDrop(event: DndDropEvent, attackID: string, toTechnique: Technique, toTactic: Tactic): void {
         // retrieve relevant technique VMs
-        let fromDomain = this.dataService.getDomain(this.compareTo.domainID);
+        let fromDomain = this.dataService.getDomain(this.compareTo.domainVersionID);
         let fromTactic = fromDomain.tactics.find(t => t.shortname == event.data);
         let fromTechnique = this.getTechnique(attackID, this.compareTo);
         let fromTvm = this.compareTo.getTechniqueVM(fromTechnique, fromTactic);

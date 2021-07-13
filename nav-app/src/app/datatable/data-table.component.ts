@@ -72,7 +72,7 @@ export class DataTableComponent implements AfterViewInit {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
         for (let matrix of domain.matrices) {
             var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
 
@@ -286,7 +286,7 @@ export class DataTableComponent implements AfterViewInit {
      */
     expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);

@@ -89,7 +89,7 @@ export abstract class Cell {
      * @return      true if technique has notes, false otherwise
      */
     public hasNotes() {
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
         let notes = domain.notes.filter(note => {
             return note.object_refs.includes(this.technique.id);
         });

@@ -31,10 +31,11 @@ export class DataService {
 
     /**
      * Callback functions passed to this function will be called after data is loaded
+     * @param {string} domainVersionID the ID of the domain and version to load
      * @param {*} callback callback function to call when data is done loading
      */
-    public onDataLoad(domainID, callback) {
-        this.getDomain(domainID).dataLoadedCallbacks.push(callback);
+    public onDataLoad(domainVersionID, callback) {
+        this.getDomain(domainVersionID).dataLoadedCallbacks.push(callback);
     }
 
     /**
@@ -197,9 +198,9 @@ export class DataService {
             let v: string = version["name"];
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let id = this.getDomainID(domain["name"], v);
+                let domainVersionID = this.getDomainVersionID(domain["name"], v);
                 let name = domain["name"];
-                let domainObject = new Domain(id, name, v)
+                let domainObject = new Domain(domainVersionID, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -213,9 +214,9 @@ export class DataService {
 
         if (this.domains.length == 0) { // issue loading config
             let currVersion = "ATT&CK v7";
-            let enterpriseDomain = new Domain(this.getDomainID("Enterprise", currVersion), "Enterprise", currVersion);
+            let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain(this.getDomainID("Mobile", currVersion), "Mobile", currVersion);
+            let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
 
             this.versions.push(currVersion);
@@ -268,9 +269,9 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainID: string, refresh: boolean = false, includeAll: boolean = false): Promise<any> {
+    loadDomainData(domainVersionID: string, refresh: boolean = false, includeAll: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
-            let domain = this.getDomain(domainID);
+            let domain = this.getDomain(domainVersionID);
             if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
@@ -281,7 +282,7 @@ export class DataService {
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
             } else if (!domain) { // domain not defined in config
-                reject("'" + domainID + "' is not a valid domain.")
+                reject("'" + domainVersionID + "' is not a valid domain & version.")
             }
         });
         return dataPromise;
@@ -290,14 +291,14 @@ export class DataService {
     /**
      * Get domain object by domain ID
      */
-    getDomain(domainID: string): Domain {
-        return this.domains.find((d) => d.id === domainID);
+    getDomain(domainVersionID: string): Domain {
+        return this.domains.find((d) => d.id === domainVersionID);
     }
 
     /**
-     * Get domain ID from domain name & version
+     * Get the ID from domain name & version
      */
-    getDomainID(domain: string, version: string): string {
+    getDomainVersionID(domain: string, version: string): string {
         if (!version) { // layer with no specified version defaults to current version
             version = this.versions[0];
         }
@@ -320,16 +321,16 @@ export class DataService {
 
     /**
      * Compares techniques between two ATT&CK versions and returns a set of object changes
-     * @param prevDomainID imported layer version to upgrade from
-     * @param latestDomainID latest ATT&CK version to upgrade to
+     * @param oldDomainVersionID imported layer domain & version to upgrade from
+     * @param newDomainVersionID latest ATT&CK domain & version to upgrade to
      */
-    public compareVersions(prevDomainID: string, latestDomainID: string): VersionChangelog {
-        let changelog = new VersionChangelog(prevDomainID, latestDomainID);
-        let previousDomain = this.getDomain(prevDomainID);
-        let latestDomain = this.getDomain(latestDomainID);
+    public compareVersions(oldDomainVersionID: string, newDomainVersionID: string): VersionChangelog {
+        let changelog = new VersionChangelog(oldDomainVersionID, newDomainVersionID);
+        let oldDomain = this.getDomain(oldDomainVersionID);
+        let newDomain = this.getDomain(newDomainVersionID);
 
-        let previousTechniques = previousDomain.techniques.concat(previousDomain.subtechniques);
-        let latestTechniques = latestDomain.techniques.concat(latestDomain.subtechniques);
+        let previousTechniques = oldDomain.techniques.concat(oldDomain.subtechniques);
+        let latestTechniques = newDomain.techniques.concat(newDomain.subtechniques);
         for (let latestTechnique of latestTechniques) {
             if (!latestTechnique) continue;
 
@@ -421,10 +422,11 @@ export abstract class BaseStix {
 
     /**
      * get the stix object that this object is revoked by
+     * @param {string} domainVersionID the ID of the domain & version this object is found in
      * @returns {string} object ID this object is revoked by
      */
-     public revoked_by(domainID): string {
-        let rels = this.dataService.getDomain(domainID).relationships.revoked_by;
+     public revoked_by(domainVersionID): string {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.revoked_by;
         if (rels.has(this.id)) return rels.get(this.id);
         else return undefined;
     }
@@ -522,8 +524,8 @@ export class Technique extends BaseStix {
 }
 
 export class VersionChangelog {
-    public previousDomainID: string;
-    public latestDomainID: string;
+    public oldDomainVersionID: string;
+    public newDomainVersionID: string;
     public additions: string[] = []; // new objects added to newest version
     public changes: string[] = []; // object changes between versions
     public minor_changes: string[] = []; // changes to objects without version increments
@@ -534,9 +536,9 @@ export class VersionChangelog {
     public reviewed = new Set();
     public copied = new Set();
 
-    constructor(prev: string, latest: string) {
-        this.previousDomainID = prev;
-        this.latestDomainID = latest;
+    constructor(oldDomainVersionID: string, newDomainVersionID: string) {
+        this.oldDomainVersionID = oldDomainVersionID;
+        this.newDomainVersionID = newDomainVersionID;
     }
 
     public length(): number {
@@ -569,16 +571,16 @@ export class Software extends BaseStix {
      * get techniques used by this software
      * @returns {string[]} technique IDs used by this software
      */
-    public used(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.software_uses;
+    public used(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.software_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.used(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.used(domainVersionID);
     }
 }
 /**
@@ -589,16 +591,16 @@ export class Group extends BaseStix {
      * get techniques used by this group
      * @returns {string[]} technique IDs used by this group
      */
-    public used(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.group_uses;
+    public used(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.used(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.used(domainVersionID);
     }
 }
 
@@ -610,8 +612,8 @@ export class Mitigation extends BaseStix {
      * get techniques mitigated by this mitigation
      * @returns {string[]} list of technique IDs
      */
-    public mitigated(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.mitigates;
+    public mitigated(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.mitigates;
         if (rels.has(this.id)) {
             return rels.get(this.id);
         }
@@ -620,8 +622,8 @@ export class Mitigation extends BaseStix {
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.mitigated(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.mitigated(domainVersionID);
     }
 }
 

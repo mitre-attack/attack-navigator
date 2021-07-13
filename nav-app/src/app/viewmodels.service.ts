@@ -19,10 +19,11 @@ export class ViewModelsService {
     /**
      * Create and return a new viewModel
      * @param {string} name the viewmodel name
+     * @param {string} domainVersionID the ID of the domain & version
      * @return {ViewModel} the created ViewModel
      */
-    newViewModel(name: string, domainID: string) {
-        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainID, this.dataService);
+    newViewModel(name: string, domainVersionID: string) {
+        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainVersionID, this.dataService);
         this.viewModels.push(vm);
         return vm;
     }
@@ -54,17 +55,18 @@ export class ViewModelsService {
 
     /**
      * layer combination operation
-     * @param  scoreExpression math expression of score expression
-     * @param  scoreVariables  variables in math expression, mapping to viewmodel they correspond to
-     * @param  comments           what viewmodel to inherit comments from
-     * @param  coloring           what viewmodel to inherit manual colors from
-     * @param  enabledness        what viewmodel to inherit state from
-     * @param  layerName          new layer name
-     * @param  filters            viewmodel to inherit filters from
-     * @return                    new viewmodel inheriting above properties
+     * @param  domainVersionID  domain & version ID
+     * @param  scoreExpression  math expression of score expression
+     * @param  scoreVariables   variables in math expression, mapping to viewmodel they correspond to
+     * @param  comments         what viewmodel to inherit comments from
+     * @param  coloring         what viewmodel to inherit manual colors from
+     * @param  enabledness      what viewmodel to inherit state from
+     * @param  layerName        new layer name
+     * @param  filters          viewmodel to inherit filters from
+     * @return                  new viewmodel inheriting above properties
      */
-    layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainID, this.dataService);
+    layerLayerOperation(domainVersionID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainVersionID, this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -343,7 +345,7 @@ export class ViewModel {
     name: string; // layer name
     domain: string = ""; // attack domain
     version: string = ""; // attack version
-    domainID: string; // layer domain & version
+    domainVersionID: string; // layer domain & version
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
@@ -397,8 +399,8 @@ export class ViewModel {
         else this._sidebarContentType = '';
     };
 
-    constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
-        this.domainID = domainID;
+    constructor(name: string, uid: string, domainVersionID: string, private dataService: DataService) {
+        this.domainVersionID = domainVersionID;
         console.log("initializing ViewModel '" + name + "'");
         this.filters = new Filter();
         this.name = name;
@@ -406,22 +408,22 @@ export class ViewModel {
     }
 
     loadVMData() {
-        if (!this.domainID || !this.dataService.getDomain(this.domainID).dataLoaded) {
+        if (!this.domainVersionID || !this.dataService.getDomain(this.domainVersionID).dataLoaded) {
             console.log("subscribing to data loaded callback")
             let self = this;
-            this.dataService.onDataLoad(this.domainID, function() {
+            this.dataService.onDataLoad(this.domainVersionID, function() {
                 self.initTechniqueVMs()
-                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
+                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainVersionID));
             });
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
+            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainVersionID));
         }
     }
 
     initTechniqueVMs() {
         console.log(this.name, "initializing technique VMs");
-        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
@@ -1073,12 +1075,12 @@ export class ViewModel {
         rep.name = this.name;
 
         rep.versions = {
-            "attack": this.dataService.getDomain(this.domainID).getVersion(),
+            "attack": this.dataService.getDomain(this.domainVersionID).getVersion(),
             "navigator": globals.nav_version,
             "layer": globals.layer_version
         }
 
-        rep.domain = this.domainID.substr(0, this.domainID.search(/-v[0-9]/g));
+        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1101,7 +1103,7 @@ export class ViewModel {
      * restore the domain and version from a string
      * @param rep string to restore from
      */
-    deSerializeDomainID(rep: any): void {
+    deSerializeDomainVersionID(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
         this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
@@ -1127,7 +1129,7 @@ export class ViewModel {
         if(obj.domain in this.dataService.domain_backwards_compatibility) {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
-        this.domainID = this.dataService.getDomainID(this.domain, this.version);
+        this.domainVersionID = this.dataService.getDomainVersionID(this.domain, this.version);
     }
 
     /**
@@ -1217,7 +1219,7 @@ export class ViewModel {
                     } else {
                         // occurs in multiple tactics
                         // match to Technique by attackID
-                        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
+                        for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
                                 for (let tactic of technique.tactics) {
