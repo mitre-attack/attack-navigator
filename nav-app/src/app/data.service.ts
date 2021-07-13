@@ -331,10 +331,16 @@ export class DataService {
 
         let previousTechniques = oldDomain.techniques.concat(oldDomain.subtechniques);
         let latestTechniques = newDomain.techniques.concat(newDomain.subtechniques);
+
+        // object lookup to increase efficiency
+        let objectLookup = new Map<string, Technique>(
+            latestTechniques.map(technique => [technique.id, previousTechniques.find(p => p.id == technique.id)])
+        );
+
         for (let latestTechnique of latestTechniques) {
             if (!latestTechnique) continue;
 
-            let prevTechnique = previousTechniques.find(p => p.id == latestTechnique.id);
+            let prevTechnique = objectLookup.get(latestTechnique.id);
             if (!prevTechnique) {
                  // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique.attackID);
