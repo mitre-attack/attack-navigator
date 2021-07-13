@@ -10,13 +10,8 @@ import { Cell } from '../../matrix/cell';
 })
 export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() isCurrentVersion?: boolean = true;
-
-    public get showTooltip(): boolean {
-        if (this.viewModel.highlightedTechniques.size === 0 || !this.tactic) return false;
-        let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
-        if (!tvm.score && !tvm.aggregateScore && !tvm.comment) return false;
-        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
-    }
+    @Input() isDraggable?: boolean = false;
+    @Input() section: string;
 
     constructor(public configService: ConfigService, public dataService: DataService) {
         super(dataService);
@@ -25,11 +20,11 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     ngOnInit(): void { }
 
     public highlight(): void {
-        if (this.tactic) this.viewModel.highlightTechnique(this.technique, this.tactic);
+        if (this.isCurrentVersion && this.tactic) this.viewModel.highlightTechnique(this.technique, this.tactic);
     }
 
     public unhighlight(): void {
-        if (this.tactic) this.viewModel.clearHighlight();
+        if (this.isCurrentVersion && this.tactic) this.viewModel.clearHighlight();
     }
 
     public onClick(): void {
@@ -43,5 +38,16 @@ export class ChangelogCellComponent extends Cell implements OnInit {
                 this.viewModel.selectTechnique(this.technique, this.tactic);
             }
         }
+    }
+
+    public getClass(): string {
+        let theclass = super.getClass();
+        if (!this.isCurrentVersion && !this.isDraggable) {
+            theclass += " nopointer";
+        }
+        if (this.section == 'additions' || this.section == 'deprecations') {
+            theclass += " setwidth";
+        }
+        return theclass;
     }
 }

@@ -60,12 +60,14 @@
 
                     <!-- version header -->
                     <div class="cols">
-                        <div class="float wide">
+                        <div class="float wide" *ngIf="section !== 'additions'">
                             <div class="version">ATT&CK {{compareTo.version}}</div>
                             <mat-divider></mat-divider>
                         </div>
-                        <div class="float arrow"><mat-icon inline="true">east</mat-icon></div>
-                        <div class="float wide">
+                        <div class="float arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
+                            <mat-icon inline="true">east</mat-icon>
+                        </div>
+                        <div class="float wide" *ngIf="section !== 'deprecations'">
                             <div class="version">ATT&CK {{viewModel.version}}</div>
                             <mat-divider></mat-divider>
                         </div>
@@ -80,7 +82,9 @@
                                         [tactic]="tactic"
                                         [technique]="oldTechnique" 
                                         [viewModel]="compareTo"
-                                        [isCurrentVersion]="false">
+                                        [isCurrentVersion]="false"
+                                        [isDraggable]="true"
+                                        [section]="section">
                                     </changelog-cell>
                                 </div>
                             </div>
@@ -102,7 +106,8 @@
                                     [tactic]="tactic"
                                     [technique]="newTechnique" 
                                     [viewModel]="viewModel"
-                                    [isCurrentVersion]="true">
+                                    [isCurrentVersion]="true"
+                                    [section]="section">
                                 </changelog-cell>
 
                                 <span class="clear" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
@@ -121,7 +126,8 @@
                                         [tactic]="tactic"
                                         [technique]="getTechnique(attackID, compareTo)" 
                                         [viewModel]="compareTo"
-                                        [isCurrentVersion]="false">
+                                        [isCurrentVersion]="false"
+                                        [section]="section">
                                     </changelog-cell>
                                 </td>
                                 <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
@@ -139,7 +145,8 @@
                                         [tactic]="tactic"
                                         [technique]="getTechnique(attackID, viewModel, section)" 
                                         [viewModel]="viewModel"
-                                        [isCurrentVersion]="true">
+                                        [isCurrentVersion]="true"
+                                        [section]="section">
                                     </changelog-cell>
                                 </td>
                             </tr>
