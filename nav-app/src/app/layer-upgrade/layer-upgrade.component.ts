@@ -125,6 +125,22 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
+     * Marks all objects in the section as reviewed
+     * @param section the name of the changelog section
+     */
+    public reviewAll(section: string): void {
+        this.changelog[section].forEach(attackID => this.changelog.reviewed.add(attackID));
+    }
+
+    /**
+     * Marks all objects in the section as not yet reviewed
+     * @param section the name of the changelog section
+     */
+    public unreviewAll(section: string): void {
+        this.changelog[section].forEach(attackID => this.changelog.reviewed.delete(attackID));
+    }
+
+    /**
      * Marks or unmarks a single given technique as reviewed
      * @param attackID the ATT&CK ID of the technique
      * @param panel the object's expansion panel
@@ -139,7 +155,7 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Determine if all objects in the changelog section have been marked as reviewed
+     * Are all objects in the changelog section marked as reviewed?
      * @param section the name of the changelog section
      * @returns {boolean} true if all objects are marked as reviewed
      */
@@ -148,15 +164,12 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Marks or unmarks all objects in the changelog section as reviewed
+     * Are any of the objects in the changelog section marked as reviewed?
      * @param section the name of the changelog section
+     * @returns {boolean} true if at least one object is marked as reviewed
      */
-    public reviewAllChanged(section: string): void {
-        if (this.allReviewed(section)) {
-            this.changelog[section].forEach(attackID => this.changelog.reviewed.delete(attackID));
-        } else {
-            this.changelog[section].forEach(attackID => this.changelog.reviewed.add(attackID));
-        }
+    public anyReviewed(section: string): boolean {
+        return this.changelog[section].some(attackID => this.changelog.reviewed.has(attackID));
     }
 
     /**

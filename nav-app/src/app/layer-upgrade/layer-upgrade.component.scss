@@ -92,6 +92,13 @@ tr:not(.version-header) td {
 .reviewed {
     color: #4BB543;
 }
+.review-buttons {
+    display: flex;
+    justify-content: space-between;
+    .mat-stroked-button {
+        margin: 0px 6px;
+    }
+}
 .disabled {
     color: gray;
 }

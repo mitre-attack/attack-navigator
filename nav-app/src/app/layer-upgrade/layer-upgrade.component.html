@@ -33,12 +33,13 @@
 
             <ng-template matExpansionPanelContent> <!-- changelog lazy render -->
         
-            <!-- select all objects in section -->
-            <div class="checkbox">
-                <input id="select_{{section}}" class="checkbox-custom" type="checkbox"
-                    [checked]="allReviewed(section)" (click)="reviewAllChanged(section)">
-                <label for="select_{{section}}" class="checkbox-custom-label noselect">select all</label>
+            <!-- review/un-review all objects in section -->
+            <div class="review-buttons">
+                <button mat-stroked-button (click)="reviewAll(section)" [disabled]="allReviewed(section)">Mark all as reviewed</button>
+                <button mat-stroked-button (click)="unreviewAll(section)" [disabled]="!anyReviewed(section)">Mark all as un-reviewed</button>
             </div>
+
+            <mat-divider></mat-divider>
 
             <!-- techniques -->
             <ng-container *ngFor="let attackID of changelog[section]">
