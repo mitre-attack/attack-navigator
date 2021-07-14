@@ -58,7 +58,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         href: 'siem/azure-quantum-rules.json',
         icon: 'https://www.quantum.security/assets/img/home/xdr-heading-alternate.svg',
         name: 'Azure + Quantum Rule Library',
-        description: 'Layer showing coverage of the Azure + Quantum detction rules.',
+        description: 'Layer showing coverage of the Azure + Quantum detection rules.',
     }, {
       href: 'siem/quantum-vapt-cspm.json',
       icon: 'https://www.quantum.security/assets/img/home/vapt-heading-alternate.svg',
