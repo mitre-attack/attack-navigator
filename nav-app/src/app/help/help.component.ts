@@ -58,7 +58,7 @@ export class HelpComponent implements OnInit {
                     if (linkURL) {
                         e.preventDefault();
                         if (linkURL.charAt(0) === '#') this.scrollTo(linkURL.replace('#', ''));
-                        else if (linkURL === 'layer-information-dialog') this.openLayerDialog();
+                        else if (linkURL.includes('layers/')) this.openLayerDialog();
                         else if (linkURL.match((/(nav-app\/src\/)/g))) window.open(linkURL.replace(/(nav-app\/src\/)/g, ''))
                         else window.open(linkURL);
                     }
