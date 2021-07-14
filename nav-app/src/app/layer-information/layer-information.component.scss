@@ -20,12 +20,12 @@
     }
 
     table {
+      border-collapse: collapse;
+
+      th, td { padding: 5px;}
+
       td {
         border-top: 1px solid $panel-dark;
-      }
-
-      td:not(td:last-child) {
-        border-right: 1px solid $panel-dark;
       }
     }
   }
