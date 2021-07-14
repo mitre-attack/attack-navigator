@@ -80,34 +80,27 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * Open initial tabs on application load
      */
-    loadTabs(defaultLayers): Promise<any> {
-        let loadPromise: Promise<any> = new Promise( (resolve, reject) => {
+     async loadTabs(defaultLayers) {
             let fragment_value = this.getNamedFragmentValue("layerURL");
+
             if (fragment_value && fragment_value.length > 0) {
                 let first = true;
                 let self = this;
-                (async function() {
+
                     for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
                         var url = urls_1[_i];
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve(null);
-                })();
             } else if (defaultLayers["enabled"]) {
                 let first = true;
                 let self = this;
-                (async function() {
+
                     for (let url of defaultLayers["urls"]) {
                         await self.loadLayerFromURL(url, first);
                         first = false;
                     }
-                    resolve(null);
-                })();
             }
-            resolve(null);
-        });
-        return loadPromise;
     }
 
     /**
