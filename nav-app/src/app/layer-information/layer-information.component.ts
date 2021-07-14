@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import * as globals from "../globals";
-import { MarkdownComponent, MarkdownService } from "ngx-markdown";
 
 @Component({
   selector: 'app-layer-information',
@@ -8,14 +7,10 @@ import { MarkdownComponent, MarkdownService } from "ngx-markdown";
   styleUrls: ['./layer-information.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LayerInformationComponent implements OnInit {
-  nav_version: string = globals.nav_version;
-  layerFormatLink: string = '../layers/LAYERFORMATv4_2.md';
+export class LayerInformationComponent {
+  layer_version: string = globals.layer_version;
+  layerFormatLink: string = `../layers/LAYERFORMATv${this.layer_version.replace('.', '_')}.md`;
 
   constructor() { }
-
-  ngOnInit(): void {
-    if (this.nav_version) this.layerFormatLink = `../layers/LAYERFORMATv${this.nav_version.replace('.', '_')}.md`;
-  }
 
 }
