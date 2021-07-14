@@ -8,9 +8,7 @@ import * as globals from "../globals";
   encapsulation: ViewEncapsulation.None
 })
 export class LayerInformationComponent {
-  layer_version: string = globals.layer_version;
-  layerFormatLink: string = `../layers/LAYERFORMATv${this.layer_version.replace('.', '_')}.md`;
-
-  constructor() { }
-
+  public get layerFormatLink(): string {
+    return `../layers/LAYERFORMATv${ globals.layer_version.replace(".", "_") }.md`
+  }
 }
