@@ -8,6 +8,8 @@
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
 - Fixed issue with sorting when show aggregate score is enabled, where each technique's aggregate score was not correctly calculated into the sorting. See issue [#295](https://github.com/mitre-attack/attack-navigator/issues/295). 
 - The Navigator should now use the proper fonts when operating without an internet connection. See issue [#278](https://github.com/mitre-attack/attack-navigator/issues/278)
+- Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
+
 
 # v4.3 - 29 April 2021
 ## New Features
@@ -16,7 +18,6 @@
 - Added an (optional) configurable banner. The new "banner" field of the config file can be used to customize the banner content with full HTML support. See issue [#205](https://github.com/mitre-attack/attack-navigator/issues/205). 
 - Added button to toolbar to only expand all sub-techniques that are annotated. See issue [#256](https://github.com/mitre-attack/attack-navigator/issues/256).
 - Added support for displaying STIX 2.1 notes in tooltips. Notes attached to techniques in the STIX data are indicated in the same style as a comment. As of version 4.3 the ATT&CK Navigator supports STIX 2.1, but cannot load data from a TAXII 2.1 server.
-- Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
 
 ## Improvements
 - Consolidated AWS, GCP, and Azure platforms into IaaS platform to integrate upcoming release of ATT&CK. See issue [#252](https://github.com/mitre-attack/attack-navigator/issues/252).
