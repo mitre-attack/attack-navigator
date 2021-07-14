@@ -1,0 +1,36 @@
+@import "../../colors.scss";
+
+.layer-dialog {
+  font-size: 10pt;
+  padding: 25px;
+
+  .content {
+    overflow-y: scroll;
+    max-height: 75vh;
+
+    p, ul {
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+    }
+
+    code {
+      color: black;
+      padding: 1px 2px;
+      word-break: break-word;
+    }
+
+    table {
+      td {
+        border-top: 1px solid $panel-dark;
+      }
+
+      td:not(td:last-child) {
+        border-right: 1px solid $panel-dark;
+      }
+    }
+  }
+
+  .close-button {
+    text-align: center;
+  }
+}
