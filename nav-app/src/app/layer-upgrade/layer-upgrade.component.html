@@ -78,7 +78,7 @@
                         <!-- technique from old version -->
                         <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
-                                <div [dndDraggable]="tactic.shortname">
+                                <div [dndDraggable]="oldTechnique.get_technique_tactic_id(tactic)">
                                     <changelog-cell
                                         [tactic]="tactic"
                                         [technique]="oldTechnique" 
@@ -102,7 +102,7 @@
                         <!-- technique from new version-->
                         <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
                             <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
-                                dndDropzone (dndDrop)="onDrop($event, attackID, newTechnique, tactic)">
+                                dndDropzone (dndDrop)="onDrop($event, newTechnique, tactic, section)">
                                 <changelog-cell
                                     [tactic]="tactic"
                                     [technique]="newTechnique" 

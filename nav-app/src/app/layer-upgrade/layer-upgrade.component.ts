@@ -203,7 +203,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param object the technique in the old version
      * @param tactic the tactic the technique is found under
      * @param vm the view model
-     * @returns true if the TechniqueVM is annotated
+     * @returns {boolean} true if the TechniqueVM is annotated, false otherwise
      */
     public isAnnotated(object: Technique, tactic: Tactic, vm: ViewModel): boolean {
         return vm.getTechniqueVM(object, tactic).annotated();
@@ -281,22 +281,24 @@ export class LayerUpgradeComponent implements OnInit {
      * Copy the annotations from the TechniqueVM in the old version
      * to the TechniqueVM that the element was dropped over
      * @param event the ngx drop event
-     * @param attackID the ATT&CK ID of the technique
      * @param toTechnique the technique object to copy annotations to
      * @param toTactic the tactic object to copy annotations to
+     * @param section the name of the changelog section
      */
-    public onDrop(event: DndDropEvent, attackID: string, toTechnique: Technique, toTactic: Tactic): void {
-        // retrieve relevant technique VMs
-        let fromDomain = this.dataService.getDomain(this.compareTo.domainVersionID);
-        let fromTactic = fromDomain.tactics.find(t => t.shortname == event.data);
-        let fromTechnique = this.getTechnique(attackID, this.compareTo);
-        let fromTvm = this.compareTo.getTechniqueVM(fromTechnique, fromTactic);
-        let toTvm = this.viewModel.getTechniqueVM(toTechnique, toTactic);
+    public onDrop(event: DndDropEvent, toTechnique: Technique, toTactic: Tactic, section: string): void {
+        let attackID = event.data.split("^")[0];
+        let validTechnique = this.getTechnique(attackID, this.viewModel, section);
 
-        // copy annotations
-        let rep = fromTvm.serialize();
-        toTvm.resetAnnotations();
-        toTvm.deSerialize(rep, attackID, toTactic.shortname);
+        if (validTechnique.id === toTechnique.id) { // copying annotations to a valid target?
+            // retrieve relevant technique VMs
+            let fromTvm = this.compareTo.getTechniqueVM_id(event.data);
+            let toTvm = this.viewModel.getTechniqueVM(toTechnique, toTactic);
+
+            // copy annotations
+            let rep = fromTvm.serialize();
+            toTvm.resetAnnotations();
+            toTvm.deSerialize(rep, toTechnique.attackID, toTactic.shortname);
+        } else {} // invalid target
     }
 
     /**
@@ -311,7 +313,7 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Retrieve the total count of the techniques currently shown in
      * the layer upgrade UI
-     * @returns the number of techniques currently shown
+     * @returns {number} the number of techniques currently shown
      */
     public totalCount(): number {
         if (!this.showAnnotatedOnly) return this.changelog.length();
@@ -328,7 +330,7 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Retrieve the number of techniques currently shown in
      * the layer upgrade UI that have been marked as reviewed
-     * @returns the number of reviewed techniques currently shown
+     * @returns {number} the number of reviewed techniques currently shown
      */
     public updatedCount(): number {
         if (!this.showAnnotatedOnly) return this.changelog.reviewed.size;
