@@ -186,6 +186,7 @@ body {
     .close-button {
         text-align: center;
     }
+
 }
 
 .mat-dialog-container .content {
@@ -202,16 +203,6 @@ body {
         color: black;
         padding: 1px 2px;
         word-break: break-word;
-    }
-
-    table {
-        border-collapse: collapse;
-
-        th, td { padding: 5px;}
-
-        td {
-            border-top: 1px solid $panel-dark;
-        }
     }
 }
 
