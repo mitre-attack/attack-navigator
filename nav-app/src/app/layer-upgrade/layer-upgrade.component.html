@@ -62,14 +62,18 @@
                     <!-- version header -->
                     <div class="cols">
                         <div class="float wide" *ngIf="section !== 'additions'">
-                            <div class="version">ATT&CK {{compareTo.version}}</div>
+                            <div class="version">
+                                <a href="{{getPreservedURL(attackID)}}" target="_blank">ATT&CK {{compareTo.version}}</a>
+                            </div>
                             <mat-divider></mat-divider>
                         </div>
                         <div class="float arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
                             <mat-icon inline="true">east</mat-icon>
                         </div>
                         <div class="float wide" *ngIf="section !== 'deprecations'">
-                            <div class="version">ATT&CK {{viewModel.version}}</div>
+                            <div class="version">
+                                <a href="{{getTechnique(attackID, viewModel, section).url}}" target="_blank">ATT&CK {{viewModel.version}}</a>
+                            </div>
                             <mat-divider></mat-divider>
                         </div>
                     </div>

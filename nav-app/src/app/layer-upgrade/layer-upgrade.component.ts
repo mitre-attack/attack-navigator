@@ -41,6 +41,17 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
+     * Retrieve the URL for a given technique in the previous ATT&CK version
+     * @param attackID the ATT&CK ID of the technique
+     * @returns {string} the URL
+     */
+    public getPreservedURL(attackID: string): string {
+        let url = this.getTechnique(attackID, this.compareTo).url;
+        let i = url.search('/techniques');
+        return url.substring(0, i) + '/versions/' + this.compareTo.version + url.substring(i);
+    }
+
+    /**
      * Counts the number of objects in the filtered changelog section
      * @param section name of the changelog section
      * @returns {number} number of objects shown in the given section
