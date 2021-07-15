@@ -94,7 +94,7 @@ tr:not(.version-header) td {
 }
 .review-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     .mat-stroked-button {
         margin: 0px 6px;
     }

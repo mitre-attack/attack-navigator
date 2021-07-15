@@ -129,7 +129,11 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public reviewAll(section: string): void {
-        this.changelog[section].forEach(attackID => this.changelog.reviewed.add(attackID));
+        this.changelog[section].forEach(attackID => {
+            if (!this.showAnnotatedOnly || this.anyAnnotated(attackID)) {
+                this.changelog.reviewed.add(attackID);
+            }
+        });
     }
 
     /**
@@ -137,7 +141,11 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public unreviewAll(section: string): void {
-        this.changelog[section].forEach(attackID => this.changelog.reviewed.delete(attackID));
+        this.changelog[section].forEach(attackID => {
+            if (!this.showAnnotatedOnly || this.anyAnnotated(attackID)) {
+                this.changelog.reviewed.delete(attackID);
+            }
+        });
     }
 
     /**
@@ -307,7 +315,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public totalCount(): number {
         if (!this.showAnnotatedOnly) return this.changelog.length();
-        
+
         let annotated = [];
         for (let s of this.sections) {
             for (let id of this.changelog[s]) {
