@@ -176,7 +176,7 @@
 
     <!-- done button -->
     <div class="done-button">
-        <span>Updated {{changelog.reviewed.size}}/{{changelog.length()}} techniques</span>
+        <span>Updated {{updatedCount()}}/{{totalCount()}} {{showAnnotatedOnly ? 'annotated' : ''}} techniques</span>
         <button mat-raised-button (click)="openDialog()">Done</button>
     </div>
 </div>

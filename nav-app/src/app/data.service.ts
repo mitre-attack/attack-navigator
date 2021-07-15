@@ -539,8 +539,8 @@ export class VersionChangelog {
     public revocations: string[] = []; // objects revoked since older version
     public unchanged: string[] = []; // objects which have not changed between versions
 
-    public reviewed = new Set();
-    public copied = new Set();
+    public reviewed = new Set<string>();
+    public copied = new Set<string>();
 
     constructor(oldDomainVersionID: string, newDomainVersionID: string) {
         this.oldDomainVersionID = oldDomainVersionID;

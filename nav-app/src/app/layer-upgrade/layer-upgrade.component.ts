@@ -300,6 +300,37 @@ export class LayerUpgradeComponent implements OnInit {
         this.viewModel.getTechniqueVM(object, tactic).resetAnnotations();
     }
 
+    /**
+     * Retrieve the total count of the techniques currently shown in
+     * the layer upgrade UI
+     * @returns the number of techniques currently shown
+     */
+    public totalCount(): number {
+        if (!this.showAnnotatedOnly) return this.changelog.length();
+        
+        let annotated = [];
+        for (let s of this.sections) {
+            for (let id of this.changelog[s]) {
+                if (this.anyAnnotated(id)) annotated.push(id);
+            }
+        }
+        return annotated.length;
+    }
+
+    /**
+     * Retrieve the number of techniques currently shown in
+     * the layer upgrade UI that have been marked as reviewed
+     * @returns the number of reviewed techniques currently shown
+     */
+    public updatedCount(): number {
+        if (!this.showAnnotatedOnly) return this.changelog.reviewed.size;
+
+        let annotated = [];
+        for (let id of this.changelog.reviewed) {
+            if (this.anyAnnotated(id)) annotated.push(id);
+        }
+        return annotated.length;
+    }
 
     /**
      * Open the close dialog template
