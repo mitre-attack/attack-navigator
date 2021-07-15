@@ -1,9 +1,6 @@
 @import "../../colors.scss";
 
 .help-dialog {
-  font-size: 11pt;
-  padding: 25px;
-
   .table-of-contents {
     list-style: none;
     margin: 0;
@@ -28,27 +25,8 @@
   }
 
   .content {
-    overflow-y: scroll;
-    max-height: 60vh;
-
-    p, ul {
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-    }
-
     code {
-      color: black;
       border: 1px solid $panel-dark;
-      padding: 1px 2px;
-      word-break: break-word;
     }
-  }
-
-  .top-button {
-    margin-top: 25px;
-    text-align: right;
-  }
-  .close-button {
-    text-align: center;
   }
 }
