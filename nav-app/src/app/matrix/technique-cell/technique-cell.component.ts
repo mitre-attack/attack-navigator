@@ -27,22 +27,33 @@ export class TechniqueCellComponent implements OnInit {
         return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
     }
 
+    // isHighlighted() checks for three cases:
+    //     1) if selectTechniquesAcrossTactics is enabled,
+    //     2) if selectSubtechniquesWithParent is enabled,
+    //     3) if highlightedTactic exists
+    // If 1) is enabled, it searches through the highlightedTechniques array for the current technique's id
+    // And if 2) is enabled, it searches through the highlightedTechniques array for the current technique's parent's id
+    // If 3) is null, then the highlight is coming from the techniques search component, otherwise it is from the mouseover event in the matrix.
     public get isHighlighted(): boolean {
+        let isHighlighted = this.showContextmenu;
+
         if (this.viewModel.selectTechniquesAcrossTactics) {
-            if (this.viewModel.selectSubtechniquesWithParent) {
-                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
+            isHighlighted = this.viewModel.highlightedTechniques.has(this.technique.id);
+        } else if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTactic) isHighlighted = (this.viewModel.highlightedTactic === this.tactic && this.viewModel.highlightedTechniques.has(this.technique.id));
+        if (this.viewModel.selectSubtechniquesWithParent) {
+            if (!this.viewModel.selectTechniquesAcrossTactics && this.viewModel.highlightedTactic) {
+                if (this.technique.isSubtechnique) isHighlighted = this.viewModel.highlightedTactic === this.tactic && this.viewModel.highlightedTechniques.has(this.technique.parent.id)
+                else isHighlighted = this.viewModel.highlightedTactic === this.tactic && this.viewModel.highlightedTechniques.has(this.technique.id);
+            } else {
+                if (this.technique.isSubtechnique) isHighlighted = this.viewModel.highlightedTechniques.has(this.technique.parent.id)
+                else isHighlighted = this.viewModel.highlightedTechniques.has(this.technique.id);
             }
         }
-        else if (this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
-            if (this.viewModel.selectSubtechniquesWithParent) {
-                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
-            }
-        }
-        if (this.viewModel.highlightedTechniques.has(this.technique.id)) { // for highlighting techniques from the techniques search component, where highlightedTactic is null
-            return true;
+        if (!this.viewModel.selectTechniquesAcrossTactics && !this.viewModel.selectSubtechniquesWithParent && !this.viewModel.highlightedTactic) {
+            isHighlighted = this.viewModel.highlightedTechniques.has(this.technique.id);
         }
 
-        return this.showContextmenu;
+        return isHighlighted;
     }
 
     constructor(public configService: ConfigService, public dataService: DataService) { }
