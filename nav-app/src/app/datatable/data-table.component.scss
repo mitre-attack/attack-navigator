@@ -368,6 +368,7 @@ $panel-light: lighten($panel-dark, 8%);
 }
 
 .legend {
+    z-index: 999;
     position: fixed;
     bottom: 0;
     right: 0;

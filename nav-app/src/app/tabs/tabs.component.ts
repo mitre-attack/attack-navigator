@@ -256,7 +256,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * open the help dialog
      */
     openHelpDialog() {
-        this.dialog.open(HelpComponent);
+        this.dialog.open(HelpComponent, {
+            maxWidth: "75ch"
+        });
     }
 
     /**

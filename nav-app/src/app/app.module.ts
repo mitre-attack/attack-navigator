@@ -37,6 +37,9 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { MarkdownModule } from "ngx-markdown";
+import { LayerInformationComponent } from './layer-information/layer-information.component';
+
 
 @NgModule({
   declarations: [
@@ -54,7 +57,8 @@ import { MatDividerModule } from "@angular/material/divider";
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
-    SidebarComponent
+    SidebarComponent,
+    LayerInformationComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +78,8 @@ import { MatDividerModule } from "@angular/material/divider";
     ColorPickerModule,
     MatSidenavModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MarkdownModule.forRoot()
   ],
   exports: [
       MatSelectModule,
