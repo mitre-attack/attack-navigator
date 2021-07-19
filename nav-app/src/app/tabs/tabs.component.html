@@ -19,8 +19,12 @@
     <div class="logo">
         <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
     </div>
-    <div *ngIf="hasFeature('tabs')" class="helpButton" matTooltip="help" (click)="openDialog('help')">
+    <div *ngIf="hasFeature('tabs')" class="helpButton" [ngClass]="{'no-bottom-border' : showHelpDropDown}" matTooltip="help" (click)="showHelpDropDown = !showHelpDropDown">
         ?
+    </div>
+    <div class="dropdown-container" *ngIf="showHelpDropDown">
+        <button (click)="openDialog('help')">Help</button>
+        <button (click)="openDialog('changelog')">Changelog</button>
     </div>
 </div>
 

@@ -253,6 +253,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         this.openTab('new tab', null, true, replace, true, false)
     }
 
+    showHelpDropDown: boolean = false;
+
     /**
      * open the help dialog
      */

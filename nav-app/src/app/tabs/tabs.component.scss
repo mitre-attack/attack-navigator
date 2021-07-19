@@ -178,15 +178,51 @@ input[type=file]{
         top: 0;
         right: 0;
         background: white;
-        &:hover { background: $panel-light; }
         border-style: solid;
         border-color: $panel-dark;
         border-width: 0 0 1px 1px;
         border-radius: 0 0 0 50%;
         text-align: center;
-        width: 2ex;
-        height: 2ex;
+        width: 4ex;
+        height: 3ex;
         padding: 5px;
+        z-index: 1;
+        &:hover { background: $panel-light; }
+        &::after{
+            font-size: 5pt;
+            content: "▼";
+        }
+    }
+
+    .no-bottom-border {
+        border-radius: 0;
+        border-bottom: solid 1px white;
+    }
+
+    .dropdown-container {
+        position: fixed;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        flex-flow: column;
+        background: white;
+        border-style: solid;
+        border-color: #ddd;
+        border-width: 1px 0 1px 1px;
+        border-radius: 0 0 0 5px;
+        padding: 10px;
+        top: 29px;
+        z-index: 0;
+        button {
+            border: none;
+            background-color: transparent;
+            text-align: right;
+            padding-bottom: 5px;
+            &:hover {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
     }
 
     .banner {
