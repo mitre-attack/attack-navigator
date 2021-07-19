@@ -11,6 +11,7 @@ import { ViewModelsService, ViewModel } from "../viewmodels.service";
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
+import { ChangelogComponent } from "../changelog/changelog.component";
 
 declare var math: any; //use mathjs
 
@@ -255,10 +256,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * open the help dialog
      */
-    openHelpDialog() {
-        this.dialog.open(HelpComponent, {
-            maxWidth: "75ch"
-        });
+    openDialog(dialogName: string) {
+        const settings = { maxWidth: "75ch" };
+        if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
+        else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
     }
 
     /**
@@ -266,7 +267,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param {ViewModel} vm    the viewModel to render
      */
     openSVGDialog(vm: ViewModel) {
-        this.dialog.open(ExporterComponent, 
+        this.dialog.open(ExporterComponent,
             { data: {vm: vm},
               panelClass: 'dialog-custom'
             });
@@ -597,7 +598,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         alert("ERROR parsing layer from " + loadURL + ", check the javascript console for more information.")
                         resolve(null); //continue
                     }
-                }, 
+                },
                 error: (err) => {
                     console.error(err)
                     if (err.status == 0) {

@@ -76,7 +76,7 @@
                 </mat-expansion-panel-header>
 
                 <!-- Domain buttons for latest version -->
-                <table class="btn-group" role="group">                        
+                <table class="btn-group" role="group">
                     <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
                         <td><button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button></td>
                     </ng-template>
@@ -384,8 +384,9 @@
         </mat-accordion>
 
         <!-- Help dialog -->
-        <div class="helpButtonContainer">
-            <button mat-button (click)="openHelpDialog()">help</button>
+        <div class="helpButtonsContainer">
+            <button mat-button (click)="openDialog('help')">help</button>
+            <button mat-button (click)="openDialog('changelog')">changelog</button>
         </div>
 
     </div>
