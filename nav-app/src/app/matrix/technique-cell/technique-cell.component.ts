@@ -24,25 +24,25 @@ export class TechniqueCellComponent implements OnInit {
         if (this.showContextmenu) return false;
         if (this.viewModel.highlightedTechniques.size === 0) return false;
 
-        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechnique === this.technique && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id === this.tactic.id);
     }
 
+
     public get isHighlighted(): boolean {
-        if (this.viewModel.selectTechniquesAcrossTactics) {
-            if (this.viewModel.selectSubtechniquesWithParent) {
-                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
+        let isHighlighted = this.showContextmenu;
+        let idToMatch = this.technique.id;
+        if (this.viewModel.selectSubtechniquesWithParent && this.technique.isSubtechnique) idToMatch = this.technique.parent.id;
+
+        if (this.viewModel.highlightedTechniques.has(idToMatch)) {
+            if (!this.viewModel.highlightedTactic) { // highlight is called from search component
+                return true;
+            } else {
+                const isTacticMatching = this.viewModel.highlightedTactic === this.tactic;
+                return (this.viewModel.selectTechniquesAcrossTactics || isTacticMatching);
             }
-        }
-        else if (this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id) {
-            if (this.viewModel.selectSubtechniquesWithParent) {
-                return this.technique.isSubtechnique && this.viewModel.highlightedTechniques.has(this.technique.parent.id);
-            }
-        }
-        if (this.viewModel.highlightedTechniques.has(this.technique.id)) { // for highlighting techniques from the techniques search component, where highlightedTactic is null
-            return true;
         }
 
-        return this.showContextmenu;
+        return isHighlighted;
     }
 
     constructor(public configService: ConfigService, public dataService: DataService) { }
