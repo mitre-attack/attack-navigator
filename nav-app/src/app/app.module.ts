@@ -39,6 +39,7 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
+import { ChangelogComponent } from './changelog/changelog.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { LayerInformationComponent } from './layer-information/layer-information
     TacticCellComponent,
     VersionUpgradeComponent,
     SidebarComponent,
-    LayerInformationComponent
+    LayerInformationComponent,
+    ChangelogComponent
   ],
   imports: [
     BrowserModule,
