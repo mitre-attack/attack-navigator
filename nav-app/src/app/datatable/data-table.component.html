@@ -538,7 +538,7 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                     </div>
                 </div>
             </mat-drawer-content>
-            <mat-drawer mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
+            <mat-drawer [disableClose]="true" mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
                 <sidebar [viewModel]="viewModel"></sidebar>
             </mat-drawer>
         </mat-drawer-container>
