@@ -36,7 +36,7 @@ export class TechniqueCellComponent implements OnInit {
         if (this.viewModel.highlightedTechniques.has(idToMatch)) {
             if (!this.viewModel.highlightedTactic) { // highlight is called from search component
                 return true;
-            } else if (this.viewModel.highlightedTactic) {
+            } else {
                 const isTacticMatching = this.viewModel.highlightedTactic === this.tactic;
                 return (this.viewModel.selectTechniquesAcrossTactics || isTacticMatching);
             }
