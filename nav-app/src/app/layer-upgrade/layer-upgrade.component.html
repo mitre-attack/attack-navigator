@@ -8,10 +8,21 @@
                 <h2>Layer Upgrade</h2>
                 ({{compareTo.version}} <mat-icon inline="true">east</mat-icon> {{viewModel.version}})
             </span>
-            <!-- filter -->
+
+            <!-- filters -->
+            <h4>Filters</h4>
             <div>
-                <input id="filter" class="checkbox-custom" type="checkbox" [(ngModel)]="showAnnotatedOnly">
-                <label for="filter" class="checkbox-custom-label noselect">show annotated techniques only</label>
+                <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.annotated" [disabled]="disableFilter('annotated')">
+                <label for="annotated" class="checkbox-custom-label noselect" [ngClass]="disableFilter('annotated') ? 'disabled': ''">show annotated techniques</label>
+
+                <input id="new" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.new" [disabled]="disableFilter('new')">
+                <label for="new" class="checkbox-custom-label noselect" [ngClass]="disableFilter('new') ? 'disabled': ''">show new techniques</label>
+
+                <input id="changes" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.changes" [disabled]="disableFilter('changes')">
+                <label for="changes" class="checkbox-custom-label noselect" [ngClass]="disableFilter('changes') ? 'disabled': ''">show technique changes</label>
+
+                <input id="unchanged" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.unchanged" [disabled]="disableFilter('unchanged')">
+                <label for="unchanged" class="checkbox-custom-label noselect" [ngClass]="disableFilter('unchanged') ? 'disabled': ''">show unchanged techniques</label>
             </div>
         </mat-card-content>
     </mat-card>
@@ -21,13 +32,13 @@
     <!-- changelog -->
     <div class="changelog">
         <mat-accordion class="headers-align">
-        <mat-expansion-panel *ngFor="let section of sections" [disabled]="!sectionLength(section)">
+        <mat-expansion-panel *ngFor="let section of sections" [disabled]="!applyFilters()[section].length">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <h4>{{getHeader(section)}}</h4>
                 </mat-panel-title>
                 <mat-panel-description>
-                    ({{sectionLength(section)}}/{{changelog[section].length}} techniques)
+                    (showing {{applyFilters()[section].length}}/{{changelog[section].length}} techniques)
                 </mat-panel-description>
             </mat-expansion-panel-header>
 
@@ -42,8 +53,8 @@
             <mat-divider></mat-divider>
 
             <!-- techniques -->
-            <ng-container *ngFor="let attackID of changelog[section]">
-                <mat-expansion-panel *ngIf="!showAnnotatedOnly || anyAnnotated(attackID)" #panel="matExpansionPanel">
+            <ng-container *ngFor="let attackID of applyFilters()[section]">
+                <mat-expansion-panel *ngIf="!filters.annotated || anyAnnotated(attackID)" #panel="matExpansionPanel">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <div class="cols">
@@ -180,7 +191,7 @@
 
     <!-- done button -->
     <div class="done-button">
-        <span>Updated {{updatedCount()}}/{{totalCount()}} {{showAnnotatedOnly ? 'annotated' : ''}} techniques</span>
+        <span>Updated {{changelog.reviewed.size}}/{{changelog.length()}} techniques</span>
         <button mat-raised-button (click)="openDialog()">Done</button>
     </div>
 </div>

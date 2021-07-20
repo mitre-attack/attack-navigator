@@ -3,10 +3,11 @@
 .title {
     h2 {
         display: inline-block;
-        margin: 0 0 12px;
+        margin: 12px 0;
     }
     .mat-icon { vertical-align: middle; }
 }
+h4 { margin: 12px 0; }
 .mat-divider {
     margin: 1rem 0!important;
 }
@@ -79,6 +80,9 @@ tr:not(.version-header) td {
 .checkbox {
     padding: 6px;
     &.right { float: right; }
+}
+.checkbox-custom-label {
+    display: block;
 }
 .done-button {
     float: right;

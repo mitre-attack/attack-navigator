@@ -18,11 +18,18 @@ export class LayerUpgradeComponent implements OnInit {
 
     public changelog: VersionChangelog;
     public compareTo: ViewModel; // view model of old version
-    public showAnnotatedOnly: boolean = true; // filter
     public sections: string[] = [
         "additions", "changes", "minor_changes",
         "deprecations", "revocations", "unchanged"
     ];
+    
+    public filtered_changelog: VersionChangelog;
+    public filters: any = {
+        annotated: true,
+        new: false,
+        changes: false,
+        unchanged: false
+    }
 
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -52,16 +59,50 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Counts the number of objects in the filtered changelog section
-     * @param section name of the changelog section
-     * @returns {number} number of objects shown in the given section
+     * Disable the given filter option?
+     * @param filter the name of the filter option
+     * @returns true if no techniques exist under the filter option, false otherwise
      */
-    public sectionLength(section: string): number {
-        if (this.showAnnotatedOnly) {
-            return this.changelog[section].filter(attackID => this.anyAnnotated(attackID)).length;
-        } else {
-            return this.changelog[section].length;
+    public disableFilter(filter: string) {
+        if (filter == 'new') return !this.changelog['additions'].length;
+        if (filter == 'unchanged') return !this.changelog['unchanged'].length;
+        if (filter == 'changes') {
+            return !this.changelog['changes'].length && !this.changelog['minor_changes'].length && !this.changelog['revocations'].length && !this.changelog['deprecations'].length;
         }
+        if (filter == 'annotations') {
+            for (let section of this.sections) {
+                if (this.changelog[section].filter(id => this.anyAnnotated(id)).length) return false;
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Apply filters to the changelog
+     * @returns the filtered changelog
+     */
+    public applyFilters(): VersionChangelog {
+        if (Object.values(this.filters).some(f => f)) {
+            let filtered_changelog = new VersionChangelog(this.compareTo.version, this.viewModel.version);
+            if (this.filters.annotated) {
+                for (let section of this.sections) {
+                    let filter = this.changelog[section].filter(id => this.anyAnnotated(id));
+                    filtered_changelog[section] = filter;
+                }
+            }
+            if (this.filters.new) {
+                filtered_changelog["additions"] = this.changelog["additions"];
+            }
+            if (this.filters.changes) {
+                for (let section of this.sections) {
+                    if (section !== "additions" && section !== "unchanged") filtered_changelog[section] = this.changelog[section];
+                }
+            }
+            if (this.filters.unchanged) {
+                filtered_changelog["unchanged"] = this.changelog["unchanged"];
+            }
+            return filtered_changelog;
+        } else return this.changelog; // no filters
     }
 
     /**
@@ -141,7 +182,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewAll(section: string): void {
         this.changelog[section].forEach(attackID => {
-            if (!this.showAnnotatedOnly || this.anyAnnotated(attackID)) {
+            if (!this.filters.annotated || this.anyAnnotated(attackID)) {
                 this.changelog.reviewed.add(attackID);
             }
         });
@@ -153,7 +194,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public unreviewAll(section: string): void {
         this.changelog[section].forEach(attackID => {
-            if (!this.showAnnotatedOnly || this.anyAnnotated(attackID)) {
+            if (!this.filters.annotated || this.anyAnnotated(attackID)) {
                 this.changelog.reviewed.delete(attackID);
             }
         });
@@ -319,38 +360,6 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public clearAnnotations(object: Technique, tactic: Tactic): void {
         this.viewModel.getTechniqueVM(object, tactic).resetAnnotations();
-    }
-
-    /**
-     * Retrieve the total count of the techniques currently shown in
-     * the layer upgrade UI
-     * @returns {number} the number of techniques currently shown
-     */
-    public totalCount(): number {
-        if (!this.showAnnotatedOnly) return this.changelog.length();
-
-        let annotated = [];
-        for (let s of this.sections) {
-            for (let id of this.changelog[s]) {
-                if (this.anyAnnotated(id)) annotated.push(id);
-            }
-        }
-        return annotated.length;
-    }
-
-    /**
-     * Retrieve the number of techniques currently shown in
-     * the layer upgrade UI that have been marked as reviewed
-     * @returns {number} the number of reviewed techniques currently shown
-     */
-    public updatedCount(): number {
-        if (!this.showAnnotatedOnly) return this.changelog.reviewed.size;
-
-        let annotated = [];
-        for (let id of this.changelog.reviewed) {
-            if (this.anyAnnotated(id)) annotated.push(id);
-        }
-        return annotated.length;
     }
 
     /**
