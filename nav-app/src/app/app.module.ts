@@ -41,6 +41,10 @@ import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 
+import { MarkdownModule } from "ngx-markdown";
+import { LayerInformationComponent } from './layer-information/layer-information.component';
+import { ChangelogComponent } from './changelog/changelog.component';
+
 
 @NgModule({
   declarations: [
@@ -60,7 +64,9 @@ import { MatDividerModule } from "@angular/material/divider";
     VersionUpgradeComponent,
     SidebarComponent,
     LayerUpgradeComponent,
-    ChangelogCellComponent
+    ChangelogCellComponent,
+    LayerInformationComponent,
+    ChangelogComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +88,8 @@ import { MatDividerModule } from "@angular/material/divider";
     DndModule,
     MatSidenavModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MarkdownModule.forRoot()
   ],
   exports: [
       MatSelectModule,

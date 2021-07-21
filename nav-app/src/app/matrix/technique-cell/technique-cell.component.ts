@@ -18,12 +18,29 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         if (this.showContextmenu) return false;
         if (this.viewModel.highlightedTechniques.size === 0) return false;
 
-        return (this.viewModel.highlightedTechniques.has(this.technique.id) && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechnique === this.technique && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id === this.tactic.id);
     }
 
     constructor(public configService: ConfigService, public dataService: DataService) {
         super(dataService);
     }
+
+    // public get isHighlighted(): boolean {
+    //     let isHighlighted = this.showContextmenu;
+    //     let idToMatch = this.technique.id;
+    //     if (this.viewModel.selectSubtechniquesWithParent && this.technique.isSubtechnique) idToMatch = this.technique.parent.id;
+
+    //     if (this.viewModel.highlightedTechniques.has(idToMatch)) {
+    //         if (!this.viewModel.highlightedTactic) { // highlight is called from search component
+    //             return true;
+    //         } else {
+    //             const isTacticMatching = this.viewModel.highlightedTactic === this.tactic;
+    //             return (this.viewModel.selectTechniquesAcrossTactics || isTacticMatching);
+    //         }
+    //     }
+
+    //     return isHighlighted;
+    // }
 
     ngOnInit() {
     }

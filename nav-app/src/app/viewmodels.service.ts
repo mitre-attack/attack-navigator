@@ -503,6 +503,7 @@ export class ViewModel {
 
     public highlightedTactic: Tactic = null;
     public highlightedTechniques: Set<string> = new Set<string>();
+    public highlightedTechnique: Technique = null; // the Technique that was actually moused over
 
     /**
      * Highlight the given technique under the given tactic
@@ -511,6 +512,7 @@ export class ViewModel {
      */
     public highlightTechnique(technique: Technique, tactic?: Tactic | null) {
         if (this.selectSubtechniquesWithParent && technique.isSubtechnique) this.highlightedTechniques.add(technique.parent.id);
+        this.highlightedTechnique = technique;
         this.highlightedTechniques.add(technique.id);
         this.highlightedTactic = tactic;
     }
@@ -519,6 +521,7 @@ export class ViewModel {
      */
     public clearHighlight() {
         this.highlightedTactic = null;
+        this.highlightedTechnique = null;
         this.highlightedTechniques = new Set<string>();
     }
 

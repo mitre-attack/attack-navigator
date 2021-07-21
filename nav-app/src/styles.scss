@@ -169,7 +169,7 @@ body {
 /// Dialog Styling ///
 //////////////////////
 .dialog-custom .mat-dialog-container {
-    padding: 0px !important;
+    padding: 0 !important;
 }
 
 .mat-button-focus-overlay {
@@ -178,4 +178,36 @@ body {
 
 .mat-drawer-inner-container {
     background-color: $panel-light;
+}
+
+.mat-dialog-container {
+    .top-button {
+        margin-top: 25px;
+        text-align: right;
+    }
+    .close-button {
+        text-align: center;
+    }
+
+}
+
+.mat-dialog-container .content {
+    overflow-y: scroll;
+    max-height: 60vh;
+    font-size: 11pt;
+
+    p, ul {
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+    }
+
+    code {
+        color: black;
+        padding: 1px 2px;
+        word-break: break-word;
+    }
+}
+
+.mat-dialog-container .markdown {
+    padding: 25px;
 }
