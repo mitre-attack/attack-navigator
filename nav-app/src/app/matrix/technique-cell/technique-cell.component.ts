@@ -25,23 +25,6 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         super(dataService);
     }
 
-    // public get isHighlighted(): boolean {
-    //     let isHighlighted = this.showContextmenu;
-    //     let idToMatch = this.technique.id;
-    //     if (this.viewModel.selectSubtechniquesWithParent && this.technique.isSubtechnique) idToMatch = this.technique.parent.id;
-
-    //     if (this.viewModel.highlightedTechniques.has(idToMatch)) {
-    //         if (!this.viewModel.highlightedTactic) { // highlight is called from search component
-    //             return true;
-    //         } else {
-    //             const isTacticMatching = this.viewModel.highlightedTactic === this.tactic;
-    //             return (this.viewModel.selectTechniquesAcrossTactics || isTacticMatching);
-    //         }
-    //     }
-
-    //     return isHighlighted;
-    // }
-
     ngOnInit() {
     }
 

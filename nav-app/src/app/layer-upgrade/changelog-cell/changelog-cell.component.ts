@@ -19,16 +19,27 @@ export class ChangelogCellComponent extends Cell implements OnInit {
 
     ngOnInit(): void { }
 
+    /**
+     * Highlight the moused over technique
+     */
     public highlight(): void {
-        if (this.isCurrentVersion && this.tactic) this.viewModel.highlightTechnique(this.technique, this.tactic);
+        if (this.isCurrentVersion) {
+            this.viewModel.highlightTechnique(this.technique, this.tactic)
+        }
     }
 
+    /**
+     * Clear the technique highlight
+     */
     public unhighlight(): void {
-        if (this.isCurrentVersion && this.tactic) this.viewModel.clearHighlight();
+        if (this.isCurrentVersion) this.viewModel.clearHighlight();
     }
 
+    /**
+     * Select or unselect this technique
+     */
     public onClick(): void {
-        if (this.isCurrentVersion && this.tactic) {
+        if (this.isCurrentVersion) {
             // unselect technique
             if (this.viewModel.isTechniqueSelected(this.technique, this.tactic)) {
                 this.viewModel.unselectTechnique(this.technique, this.tactic);
@@ -40,6 +51,9 @@ export class ChangelogCellComponent extends Cell implements OnInit {
         }
     }
 
+    /**
+     * Retrieve css classes for this technique
+     */
     public getClass(): string {
         let theclass = super.getClass();
         if (!this.isCurrentVersion && !this.isDraggable) {

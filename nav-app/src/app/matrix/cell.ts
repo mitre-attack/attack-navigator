@@ -8,7 +8,7 @@ declare var tinycolor: any; //use tinycolor2
 export abstract class Cell {
     @Input() viewModel: ViewModel;
     @Input() technique: Technique;
-    @Input() tactic?: Tactic;
+    @Input() tactic: Tactic;
 
     public showContextmenu: boolean = false;
 
@@ -25,7 +25,7 @@ export abstract class Cell {
             if (!this.viewModel.highlightedTactic) { // highlight is called from search component
                 return true;
             } else {
-                const isTacticMatching = this.viewModel.highlightedTactic === this.tactic;
+                const isTacticMatching = this.viewModel.highlightedTactic.id === this.tactic.id;
                 return (this.viewModel.selectTechniquesAcrossTactics || isTacticMatching);
             }
         }
