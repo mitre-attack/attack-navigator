@@ -56,14 +56,9 @@
             <mat-expansion-panel *ngFor="let attackID of applyFilters()[section]" #panel="matExpansionPanel">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <div class="cols">
-                            <div class="float">
-                                <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
-                                <mat-icon *ngIf="!isReviewed(attackID)" class="disabled">radio_button_unchecked</mat-icon>
-                            </div>
-                            <div class="float"><b>{{attackID}}</b></div>
-                            <div class="float">{{getTechnique(attackID, viewModel).name}}</div>
-                        </div>
+                            <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
+                            <mat-icon *ngIf="!isReviewed(attackID)" class="disabled">radio_button_unchecked</mat-icon>
+                            <span>{{attackID}}: {{getTechnique(attackID, viewModel).name}}</span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 

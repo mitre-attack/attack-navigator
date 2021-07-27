@@ -31,6 +31,11 @@ h4 { margin: 12px 0; }
     max-height: 60vh;
     overflow: auto;
 }
+.mat-expansion-panel-header-title span {
+    padding-left: 1rem;
+    display: inline-flex;
+    align-items: center;
+}
 tr:not(.version-header) td {
     padding-bottom: 1rem;
 }
@@ -72,10 +77,6 @@ tr:not(.version-header) td {
 }
 .wide {
     width: 100%;
-}
-.mat-expansion-panel-header {
-    height: auto;
-    min-height: 48px;
 }
 .checkbox {
     padding: 6px;
