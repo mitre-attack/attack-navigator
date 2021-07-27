@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { ViewModel } from '../viewmodels.service';
+import { ViewModel, ViewModelsService } from '../viewmodels.service';
 import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '../data.service';
 
 @Component({
@@ -61,7 +61,7 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     public techniqueResults: Technique[] = [];
 
-    constructor(private dataService: DataService) {
+    constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
         this.stixTypes = [];
     }
 
@@ -186,6 +186,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                 this.viewModel.selectTechniqueAcrossTactics(technique);
             }
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public deselect(stixObject: any, isTechnique = true): void {
@@ -197,6 +198,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                 this.viewModel.unselectTechniqueAcrossTactics(technique);
             }
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public selectAll(items: any[], isTechniqueArray = true): void {
@@ -206,6 +208,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         else if (!isTechniqueArray) {
             for (let stixObject of items) this.select(stixObject, isTechniqueArray);
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public deselectAll(items: any[], isTechniqueArray = true): void {
@@ -215,6 +218,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         else if (!isTechniqueArray) {
             for (let stixObject of items) this.deselect(stixObject, isTechniqueArray);
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public getRelated(stixObject: BaseStix): Technique[] {

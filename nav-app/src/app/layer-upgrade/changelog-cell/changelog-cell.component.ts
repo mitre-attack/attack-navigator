@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ViewModelsService } from '../../viewmodels.service';
 import { ConfigService } from '../../config.service';
 import { DataService } from '../../data.service';
 import { Cell } from '../../matrix/cell';
@@ -13,7 +14,7 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() isDraggable?: boolean = false;
     @Input() section: string;
 
-    constructor(public configService: ConfigService, public dataService: DataService) {
+    constructor(public configService: ConfigService, public dataService: DataService, public viewModelsService: ViewModelsService) {
         super(dataService);
     }
 
@@ -48,6 +49,7 @@ export class ChangelogCellComponent extends Cell implements OnInit {
             else {
                 this.viewModel.selectTechnique(this.technique, this.tactic);
             }
+            this.viewModelsService.selectionChanged(); // emit selection change
         }
     }
 

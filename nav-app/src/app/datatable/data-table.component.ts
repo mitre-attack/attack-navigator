@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
@@ -18,6 +18,7 @@ import * as FileSaver from 'file-saver';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
 import { TmplAstVariable } from '@angular/compiler';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'DataTable',
@@ -25,7 +26,7 @@ import { TmplAstVariable } from '@angular/compiler';
     styleUrls: ['./data-table.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class DataTableComponent implements AfterViewInit {
+export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     //items for custom context menu
     customContextMenuItems = [];
@@ -233,17 +234,27 @@ export class DataTableComponent implements AfterViewInit {
         }
     }
 
+    private selectionChangeSubscription: Subscription;
     constructor(public dataService: DataService,
                 private tabs: TabsComponent,
                 private sanitizer: DomSanitizer,
                 private viewModelsService: ViewModelsService,
-                public configService: ConfigService) { }
+                public configService: ConfigService) {
+
+        this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
+            this.onTechniqueSelect();
+        })
+    }
 
     /**
      * Angular lifecycle hook
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
+    }
+
+    ngOnDestroy(): void {
+        this.selectionChangeSubscription.unsubscribe();
     }
 
     // open custom url in a new tab
@@ -268,11 +279,8 @@ export class DataTableComponent implements AfterViewInit {
     scoreEditField: string = "";
     /**
      * triggered on left click of technique
-     * @param  technique      technique which was left clicked
-     * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
-    onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-
+    onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
             if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;

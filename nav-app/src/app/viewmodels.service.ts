@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
@@ -11,10 +11,18 @@ import * as is from 'is_js';
 
 @Injectable()
 export class ViewModelsService {
+    @Output() onSelectionChange = new EventEmitter<any>();
 
     constructor(private dataService: DataService) { }
 
     viewModels: ViewModel[] = [];
+
+    /**
+     * Emit event when technique selection changes
+     */
+    selectionChanged() {
+        this.onSelectionChange.emit();
+    }
 
     /**
      * Create and return a new viewModel

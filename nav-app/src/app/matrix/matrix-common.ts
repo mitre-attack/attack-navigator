@@ -1,6 +1,6 @@
 import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../data.service';
-import { ViewModel } from '../viewmodels.service';
+import { ViewModel, ViewModelsService } from '../viewmodels.service';
 import { ConfigService } from '../config.service';
 declare var tinycolor: any; //use tinycolor2
 
@@ -8,9 +8,8 @@ declare var tinycolor: any; //use tinycolor2
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
     @Input() viewModel: ViewModel;
-    @Output() selectionChanged = new EventEmitter<any>();
 
-    constructor(private configService: ConfigService) {
+    constructor(private configService: ConfigService, private viewModelsService: ViewModelsService) {
         this.configService = configService;
     }
 
@@ -77,7 +76,7 @@ export abstract class MatrixCommon {
                 this.viewModel.selectTechnique(technique, tactic);
             }
         }
-        this.selectionChanged.emit();
+        this.viewModelsService.onSelectionChange.emit();
     }
 
     public onToggleSubtechniquesVisible(technique: Technique, tactic: Tactic) {
