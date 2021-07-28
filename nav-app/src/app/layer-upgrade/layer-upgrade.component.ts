@@ -181,10 +181,8 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public reviewAll(section: string): void {
-        this.changelog[section].forEach(attackID => {
-            if (!this.filters.annotated || this.anyAnnotated(attackID)) {
-                this.changelog.reviewed.add(attackID);
-            }
+        this.applyFilters()[section].forEach(attackID => {
+            this.changelog.reviewed.add(attackID);
         });
     }
 
@@ -193,10 +191,8 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public unreviewAll(section: string): void {
-        this.changelog[section].forEach(attackID => {
-            if (!this.filters.annotated || this.anyAnnotated(attackID)) {
-                this.changelog.reviewed.delete(attackID);
-            }
+        this.applyFilters()[section].forEach(attackID => {
+            this.changelog.reviewed.delete(attackID);
         });
     }
 

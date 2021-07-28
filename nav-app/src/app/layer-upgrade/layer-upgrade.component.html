@@ -13,7 +13,7 @@
             <h4>Filters</h4>
             <div>
                 <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.annotated" [disabled]="disableFilter('annotated')">
-                <label for="annotated" class="checkbox-custom-label noselect" [ngClass]="disableFilter('annotated') ? 'disabled': ''">show annotated techniques</label>
+                <label for="annotated" class="checkbox-custom-label noselect" [ngClass]="disableFilter('annotated') ? 'disabled': ''">show annotated techniques only</label>
 
                 <input id="new" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.new" [disabled]="disableFilter('new')">
                 <label for="new" class="checkbox-custom-label noselect" [ngClass]="disableFilter('new') ? 'disabled': ''">show new techniques</label>
