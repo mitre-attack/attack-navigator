@@ -506,7 +506,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return dataPromise;
     }
 
-    layerUpgrade(oldViewModel, string): void {
+    layerUpgrade(oldViewModel: ViewModel, string): void {
         this.versionUpgradeDialog(oldViewModel).then( (versions) => {
             if (versions) { // user upgraded to latest version
                 // create and open the latest version
@@ -543,10 +543,15 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 }
             } else {
                 this.openTab("new layer", oldViewModel, true, true, true, true);
-                this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
+                    this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                        oldViewModel.deSerialize(string);
+                        oldViewModel.loadVMData();
+                    });
+                } else {
                     oldViewModel.deSerialize(string);
                     oldViewModel.loadVMData();
-                });
+                }
             }
         })
         .catch( (err) => {
