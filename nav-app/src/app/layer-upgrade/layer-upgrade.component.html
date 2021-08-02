@@ -8,183 +8,167 @@
                 <h2>Layer Upgrade</h2>
                 ({{compareTo.version}} <mat-icon inline="true">east</mat-icon> {{viewModel.version}})
             </span>
-
-            <!-- filters -->
-            <h4>Filters</h4>
-            <div>
-                <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.annotated" [disabled]="disableFilter('annotated')">
-                <label for="annotated" class="checkbox-custom-label noselect" [ngClass]="disableFilter('annotated') ? 'disabled': ''">show annotated techniques only</label>
-
-                <input id="new" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.new" [disabled]="disableFilter('new')">
-                <label for="new" class="checkbox-custom-label noselect" [ngClass]="disableFilter('new') ? 'disabled': ''">show new techniques</label>
-
-                <input id="changes" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.changes" [disabled]="disableFilter('changes')">
-                <label for="changes" class="checkbox-custom-label noselect" [ngClass]="disableFilter('changes') ? 'disabled': ''">show technique changes</label>
-
-                <input id="unchanged" class="checkbox-custom" type="checkbox" [(ngModel)]="filters.unchanged" [disabled]="disableFilter('unchanged')">
-                <label for="unchanged" class="checkbox-custom-label noselect" [ngClass]="disableFilter('unchanged') ? 'disabled': ''">show unchanged techniques</label>
-            </div>
         </mat-card-content>
     </mat-card>
 
     <mat-divider></mat-divider>
 
-    <!-- changelog -->
-    <div class="changelog">
-        <mat-accordion class="headers-align">
-        <mat-expansion-panel *ngFor="let section of sections" [disabled]="!applyFilters()[section].length">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <h4>{{getHeader(section)}}</h4>
-                </mat-panel-title>
-                <mat-panel-description>
-                    (showing {{applyFilters()[section].length}}/{{changelog[section].length}} techniques)
-                </mat-panel-description>
-            </mat-expansion-panel-header>
+    <mat-vertical-stepper linear>
+        <mat-step *ngFor="let section of sections">
+            <ng-template matStepLabel>Review {{getHeader(section)}}</ng-template>
 
-            <ng-template matExpansionPanelContent> <!-- changelog lazy render -->
-        
-            <!-- review/un-review all objects in section -->
-            <div class="review-buttons">
-                <button mat-stroked-button (click)="reviewAll(section)" [disabled]="allReviewed(section)">Mark all as reviewed</button>
-                <button mat-stroked-button (click)="unreviewAll(section)" [disabled]="!anyReviewed(section)">Mark all as un-reviewed</button>
+            <div *ngIf="changelog[section].length > 0; else noObjects">
+                <div *ngIf="section !== 'additions'">
+                    <h4>Filters</h4>
+                    <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filter[section]">
+                    <label for="annotated" class="checkbox-custom-label noselect">show annotated techniques only</label>
+
+                    <mat-divider></mat-divider>
+                </div>
+
+                <div class="review-buttons">
+                    <button mat-stroked-button (click)="reviewAll(section)" [disabled]="allReviewed(section)">Mark all as reviewed</button>
+                    <button mat-stroked-button (click)="unreviewAll(section)" [disabled]="!anyReviewed(section)">Mark all as un-reviewed</button>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="stepper-content">
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let attackID of applyFilters(section)" #panel="matExpansionPanel">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
+                                    <mat-icon *ngIf="!isReviewed(attackID)" class="disabled">radio_button_unchecked</mat-icon>
+                                    <span>{{attackID}}: {{getTechnique(attackID, viewModel).name}}</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <ng-template matExpansionPanelContent>
+
+                                <div class="cols">
+                                    <div class="float wide" *ngIf="section !== 'additions'">
+                                        <div class="version">
+                                            <a href="{{getPreservedURL(attackID)}}" target="_blank">ATT&CK {{compareTo.version}}</a>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </div>
+                                    <div class="float arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
+                                        <mat-icon inline="true">east</mat-icon>
+                                    </div>
+                                    <div class="float wide" *ngIf="section !== 'deprecations'">
+                                        <div class="version">
+                                            <a href="{{getTechnique(attackID, viewModel, section).url}}" target="_blank">ATT&CK {{viewModel.version}}</a>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </div>
+                                </div>
+                
+                                <div class="cols" *ngIf="tacticsChanged(attackID, section)">
+                                    <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
+                                        <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
+                                            <div [dndDraggable]="oldTechnique.get_technique_tactic_id(tactic)">
+                                                <changelog-cell
+                                                    [tactic]="tactic"
+                                                    [technique]="oldTechnique" 
+                                                    [viewModel]="compareTo"
+                                                    [isCurrentVersion]="false"
+                                                    [isDraggable]="true"
+                                                    [section]="section">
+                                                </changelog-cell>
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                    <div class="float arrow">
+                                        <mat-icon class="info" matTooltipPosition="above" 
+                                            matTooltip='Drag and drop to copy annotations to the desired tactics in ATT&CK {{viewModel.version}}.'>
+                                            info_outline
+                                        </mat-icon>
+                                    </div>
+                
+                                    <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
+                                        <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
+                                            dndDropzone (dndDrop)="onDrop($event, newTechnique, tactic, section)">
+                                            <changelog-cell
+                                                [tactic]="tactic"
+                                                [technique]="newTechnique" 
+                                                [viewModel]="viewModel"
+                                                [isCurrentVersion]="true"
+                                                [section]="section">
+                                            </changelog-cell>
+                
+                                            <span class="clear" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
+                                                matTooltipPosition="above" matTooltip="clear annotations"
+                                                (click)="clearAnnotations(newTechnique, tactic)">x</span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <div *ngIf="!tacticsChanged(attackID, section)">
+                                    <table class="wide">
+                                        <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
+                                            <td *ngIf="section !== 'additions'">
+                                                <changelog-cell
+                                                    [tactic]="tactic"
+                                                    [technique]="getTechnique(attackID, compareTo)" 
+                                                    [viewModel]="compareTo"
+                                                    [isCurrentVersion]="false"
+                                                    [section]="section">
+                                                </changelog-cell>
+                                            </td>
+                                            <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
+                                                <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
+                                                    [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !anyAnnotated(attackID)"
+                                                    (click)="onCopy(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
+                                                <button class="button" matTooltipPosition="above" matTooltip="revert copy"
+                                                    [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
+                                                    (click)="onRevertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
+                                            </td>
+                                            <td *ngIf="section !== 'deprecations'">
+                                                <changelog-cell
+                                                    [tactic]="tactic"
+                                                    [technique]="getTechnique(attackID, viewModel, section)" 
+                                                    [viewModel]="viewModel"
+                                                    [isCurrentVersion]="true"
+                                                    [section]="section">
+                                                </changelog-cell>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                
+                
+                                <div class="checkbox right">
+                                    <input id="review_{{attackID}}" class="checkbox-custom" type="checkbox"
+                                        [checked]="isReviewed(attackID)" (click)="reviewedChanged(attackID, panel)">
+                                    <label for="review_{{attackID}}" class="checkbox-custom-label noselect">reviewed</label>
+                                </div>
+
+                            </ng-template>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
             </div>
+
+            <ng-template #noObjects>
+                No objects
+            </ng-template>
 
             <mat-divider></mat-divider>
 
-            <!-- techniques -->
-            <mat-expansion-panel *ngFor="let attackID of applyFilters()[section]" #panel="matExpansionPanel">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                            <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
-                            <mat-icon *ngIf="!isReviewed(attackID)" class="disabled">radio_button_unchecked</mat-icon>
-                            <span>{{attackID}}: {{getTechnique(attackID, viewModel).name}}</span>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <ng-template matExpansionPanelContent> <!-- technique lazy render -->
-
-                <!-- version header -->
-                <div class="cols">
-                    <div class="float wide" *ngIf="section !== 'additions'">
-                        <div class="version">
-                            <a href="{{getPreservedURL(attackID)}}" target="_blank">ATT&CK {{compareTo.version}}</a>
-                        </div>
-                        <mat-divider></mat-divider>
-                    </div>
-                    <div class="float arrow" *ngIf="section !== 'additions' && section !== 'deprecations'">
-                        <mat-icon inline="true">east</mat-icon>
-                    </div>
-                    <div class="float wide" *ngIf="section !== 'deprecations'">
-                        <div class="version">
-                            <a href="{{getTechnique(attackID, viewModel, section).url}}" target="_blank">ATT&CK {{viewModel.version}}</a>
-                        </div>
-                        <mat-divider></mat-divider>
-                    </div>
-                </div>
-
-                <div class="cols" *ngIf="tacticsChanged(attackID, section)">
-                    <!-- technique from old version -->
-                    <div class="float wide" *ngIf="getTechnique(attackID, compareTo) as oldTechnique">
-                        <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, compareTo)">
-                            <div [dndDraggable]="oldTechnique.get_technique_tactic_id(tactic)">
-                                <changelog-cell
-                                    [tactic]="tactic"
-                                    [technique]="oldTechnique" 
-                                    [viewModel]="compareTo"
-                                    [isCurrentVersion]="false"
-                                    [isDraggable]="true"
-                                    [section]="section">
-                                </changelog-cell>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- drag&drop tooltip info -->
-                    <div class="float arrow">
-                        <mat-icon class="info" matTooltipPosition="above" 
-                            matTooltip='Drag and drop to copy annotations to the desired tactics in ATT&CK {{viewModel.version}}.'>
-                            info_outline
-                        </mat-icon>
-                    </div>
-
-                    <!-- technique from new version-->
-                    <div class="float wide" *ngIf="getTechnique(attackID, viewModel, section) as newTechnique">
-                        <div class="changelog-cells" *ngFor="let tactic of getTactics(attackID, viewModel, section)"
-                            dndDropzone (dndDrop)="onDrop($event, newTechnique, tactic, section)">
-                            <changelog-cell
-                                [tactic]="tactic"
-                                [technique]="newTechnique" 
-                                [viewModel]="viewModel"
-                                [isCurrentVersion]="true"
-                                [section]="section">
-                            </changelog-cell>
-
-                            <span class="clear" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
-                                matTooltipPosition="above" matTooltip="clear annotations"
-                                (click)="clearAnnotations(newTechnique, tactic)">x</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="!tacticsChanged(attackID, section)">
-                    <table class="wide">
-                        <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
-                            <td *ngIf="section !== 'additions'">
-                                <!-- technique from old version -->
-                                <changelog-cell
-                                    [tactic]="tactic"
-                                    [technique]="getTechnique(attackID, compareTo)" 
-                                    [viewModel]="compareTo"
-                                    [isCurrentVersion]="false"
-                                    [section]="section">
-                                </changelog-cell>
-                            </td>
-                            <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
-                                <!-- copy annotations/revert copy -->
-                                <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
-                                    [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !anyAnnotated(attackID)"
-                                    (click)="onCopy(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
-                                <button class="button" matTooltipPosition="above" matTooltip="revert copy"
-                                    [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
-                                    (click)="onRevertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
-                            </td>
-                            <td *ngIf="section !== 'deprecations'">
-                                <!-- technique from new version-->
-                                <changelog-cell
-                                    [tactic]="tactic"
-                                    [technique]="getTechnique(attackID, viewModel, section)" 
-                                    [viewModel]="viewModel"
-                                    [isCurrentVersion]="true"
-                                    [section]="section">
-                                </changelog-cell>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- reviewed -->
-                <div class="checkbox right">
-                    <input id="review_{{attackID}}" class="checkbox-custom" type="checkbox"
-                        [checked]="isReviewed(attackID)" (click)="reviewedChanged(attackID, panel)">
-                    <label for="review_{{attackID}}" class="checkbox-custom-label noselect">reviewed</label>
-                </div>
-
-                </ng-template> <!-- end technique lazy render -->
-
-            </mat-expansion-panel>
-
-            </ng-template> <!-- end changelog lazy render -->
-
-        </mat-expansion-panel>
-        </mat-accordion>
-    </div>
+            <div class="stepper-button">
+                <span>Reviewed {{changelog.reviewed.size}}/{{applyFilters(section).length}} techniques</span>
+                <button mat-stroked-button matStepperNext>Continue</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
 
     <mat-divider></mat-divider>
 
     <!-- done button -->
-    <div class="done-button">
-        <span>Updated {{changelog.reviewed.size}}/{{changelog.length()}} techniques</span>
+    <div class="stepper-button">
         <button mat-raised-button (click)="openDialog()">Done</button>
     </div>
 </div>

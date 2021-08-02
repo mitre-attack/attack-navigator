@@ -27,9 +27,12 @@ h4 { margin: 12px 0; }
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
     &:hover { background-color: darken($panel-dark, 5%); }
 }
-.mat-expansion-panel-content {
-    max-height: 60vh;
+.mat-expansion-panel-content, .stepper-content {
+    max-height: 40vh;
     overflow: auto;
+}
+.stepper-content {
+    padding: 6px;
 }
 .mat-expansion-panel-header-title span {
     padding-left: 1rem;
@@ -85,9 +88,10 @@ tr:not(.version-header) td {
 .checkbox-custom-label {
     display: block;
 }
-.done-button {
+.stepper-button {
     float: right;
-    .mat-raised-button { margin-left: 12px; }
+    padding-bottom: 24px;
+    .mat-stroked-button { margin-left: 12px; }
 }
 .close-dialog {
     text-align: center;

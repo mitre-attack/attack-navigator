@@ -22,14 +22,15 @@ export class LayerUpgradeComponent implements OnInit {
         "additions", "changes", "minor_changes",
         "deprecations", "revocations", "unchanged"
     ];
+    public filter: any = {
+        "changes": false,
+        "minor_changes": false,
+        "deprecations": false,
+        "revocations": false,
+        "unchanged": false
+    }
     
     public filtered_changelog: VersionChangelog;
-    public filters: any = {
-        annotated: true,
-        new: false,
-        changes: false,
-        unchanged: false
-    }
 
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -78,31 +79,15 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Apply filters to the changelog
-     * @returns the filtered changelog
+     * Apply filters to the changelog section
+     * @returns the list of filtered ATT&CK IDs in the changelog section
      */
-    public applyFilters(): VersionChangelog {
-        if (Object.values(this.filters).some(f => f)) {
-            let filtered_changelog = new VersionChangelog(this.compareTo.version, this.viewModel.version);
-            if (this.filters.annotated) {
-                for (let section of this.sections) {
-                    let filter = this.changelog[section].filter(id => this.anyAnnotated(id));
-                    filtered_changelog[section] = filter;
-                }
-            }
-            if (this.filters.new) {
-                filtered_changelog["additions"] = this.changelog["additions"];
-            }
-            if (this.filters.changes) {
-                for (let section of this.sections) {
-                    if (section !== "additions" && section !== "unchanged") filtered_changelog[section] = this.changelog[section];
-                }
-            }
-            if (this.filters.unchanged) {
-                filtered_changelog["unchanged"] = this.changelog["unchanged"];
-            }
-            return filtered_changelog;
-        } else return this.changelog; // no filters
+    public applyFilters(section: string): string[] {
+        let sectionIDs = this.changelog[section];
+        if (this.filter[section]) {
+            sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
+        }
+        return sectionIDs;
     }
 
     /**
@@ -181,7 +166,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public reviewAll(section: string): void {
-        this.applyFilters()[section].forEach(attackID => {
+        this.applyFilters(section).forEach(attackID => {
             this.changelog.reviewed.add(attackID);
         });
     }
@@ -191,7 +176,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public unreviewAll(section: string): void {
-        this.applyFilters()[section].forEach(attackID => {
+        this.applyFilters(section).forEach(attackID => {
             this.changelog.reviewed.delete(attackID);
         });
     }

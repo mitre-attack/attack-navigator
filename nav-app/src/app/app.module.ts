@@ -40,6 +40,7 @@ import { LayerUpgradeComponent } from './layer-upgrade/layer-upgrade.component';
 import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog-cell.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
@@ -89,6 +90,7 @@ import { ChangelogComponent } from './changelog/changelog.component';
     MatSidenavModule,
     MatCardModule,
     MatDividerModule,
+    MatStepperModule,
     MarkdownModule.forRoot()
   ],
   exports: [
