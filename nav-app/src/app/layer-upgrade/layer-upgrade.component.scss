@@ -115,3 +115,6 @@ tr:not(.version-header) td {
 .dndDragover .technique-cell {
     box-shadow: 0 0 0 1px $cell-highlight-color inset !important;
 }
+.mat-vertical-stepper-header {
+    pointer-events: none;
+}
