@@ -214,6 +214,32 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
+     * Get the number of techniques marked as reviewed in the given section
+     * @param section the name of the changelog section
+     * @returns number of reviewed techniques
+     */
+    public countReviewed(section: string): boolean {
+        return this.changelog[section].filter(attackID => this.changelog.reviewed.has(attackID)).length;
+    }
+
+    // changelog section descriptions
+    private descriptions: any = {
+        "additions": "These are techniques which have been added since the uploaded layer's version.\
+                      Review the techniques to identify which may require new annotations. Annotations \
+                      may be added using the layer 'technique controls' in the toolbar through this \
+                      interface or the layer itself.",
+    }
+
+    /**
+     * Get the changelog section description
+     * @param section the name of the changelog section
+     * @returns the section description
+     */
+    public getDescription(section: string): string {
+        return this.descriptions[section];
+    }
+
+    /**
      * Determine if any techniqueVM in the old version with the given
      * ATT&CK ID has annotations
      * @param attackID the ATT&CK ID of the technique

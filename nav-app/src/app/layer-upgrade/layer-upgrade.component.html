@@ -18,6 +18,12 @@
             <ng-template matStepLabel>Review {{getHeader(section)}}</ng-template>
 
             <div *ngIf="changelog[section].length > 0; else noObjects">
+                <div *ngIf="getDescription(section) as desc" class="description">
+                    <span>{{desc}}</span>
+                </div>
+
+                <mat-divider></mat-divider>
+
                 <div *ngIf="section !== 'additions'">
                     <h4>Filters</h4>
                     <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filter[section]">
@@ -159,18 +165,14 @@
             <mat-divider></mat-divider>
 
             <div class="stepper-button">
-                <span>Reviewed {{changelog.reviewed.size}}/{{applyFilters(section).length}} techniques</span>
-                <button mat-stroked-button matStepperNext>Continue</button>
+                <span>Reviewed {{countReviewed(section)}}/{{applyFilters(section).length}} techniques</span>
+
+                <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious>Back</button>
+                <button *ngIf="section !== 'unchanged'" mat-stroked-button matStepperNext>{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
+                <button *ngIf="section == 'unchanged'" mat-stroked-button (click)="openDialog()">Done</button>
             </div>
         </mat-step>
     </mat-vertical-stepper>
-
-    <mat-divider></mat-divider>
-
-    <!-- done button -->
-    <div class="stepper-button">
-        <button mat-raised-button (click)="openDialog()">Done</button>
-    </div>
 </div>
 
 <!-- close dialog template -->

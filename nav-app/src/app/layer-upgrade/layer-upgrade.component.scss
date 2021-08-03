@@ -118,3 +118,10 @@ tr:not(.version-header) td {
 .mat-vertical-stepper-header {
     pointer-events: none;
 }
+.description {
+    padding: 6px;
+    text-align: justify;
+    span {
+        font-size: 14px;
+    }
+}
