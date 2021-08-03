@@ -32,13 +32,6 @@
                     <mat-divider></mat-divider>
                 </div>
 
-                <div class="review-buttons">
-                    <button mat-stroked-button (click)="reviewAll(section)" [disabled]="allReviewed(section)">Mark all as reviewed</button>
-                    <button mat-stroked-button (click)="unreviewAll(section)" [disabled]="!anyReviewed(section)">Mark all as un-reviewed</button>
-                </div>
-
-                <mat-divider></mat-divider>
-
                 <div class="stepper-content">
                     <mat-accordion>
                         <mat-expansion-panel *ngFor="let attackID of applyFilters(section)" #panel="matExpansionPanel">

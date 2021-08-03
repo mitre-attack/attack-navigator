@@ -162,26 +162,6 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Marks all objects in the section as reviewed
-     * @param section the name of the changelog section
-     */
-    public reviewAll(section: string): void {
-        this.applyFilters(section).forEach(attackID => {
-            this.changelog.reviewed.add(attackID);
-        });
-    }
-
-    /**
-     * Marks all objects in the section as not yet reviewed
-     * @param section the name of the changelog section
-     */
-    public unreviewAll(section: string): void {
-        this.applyFilters(section).forEach(attackID => {
-            this.changelog.reviewed.delete(attackID);
-        });
-    }
-
-    /**
      * Marks or unmarks a single given technique as reviewed
      * @param attackID the ATT&CK ID of the technique
      * @param panel the object's expansion panel
@@ -193,24 +173,6 @@ export class LayerUpgradeComponent implements OnInit {
             this.changelog.reviewed.add(attackID);
             panel.expanded = false; // close on review
         }
-    }
-
-    /**
-     * Are all objects in the changelog section marked as reviewed?
-     * @param section the name of the changelog section
-     * @returns {boolean} true if all objects are marked as reviewed
-     */
-    public allReviewed(section: string): boolean {
-        return this.changelog[section].every(attackID => this.changelog.reviewed.has(attackID));
-    }
-
-    /**
-     * Are any of the objects in the changelog section marked as reviewed?
-     * @param section the name of the changelog section
-     * @returns {boolean} true if at least one object is marked as reviewed
-     */
-    public anyReviewed(section: string): boolean {
-        return this.changelog[section].some(attackID => this.changelog.reviewed.has(attackID));
     }
 
     /**
