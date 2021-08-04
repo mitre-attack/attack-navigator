@@ -26,8 +26,15 @@
 
                 <div *ngIf="section !== 'additions'">
                     <h4>Filters</h4>
-                    <input id="filter_{{section}}" class="checkbox-custom" type="checkbox" [(ngModel)]="filter[section]" (change)="applyFilters(section)" >
-                    <label for="filter_{{section}}" class="checkbox-custom-label noselect">show annotated techniques only</label>
+                    <input id="filter_{{section}}" 
+                           class="checkbox-custom" type="checkbox" 
+                           [disabled]="disableFilter(section)"
+                           [(ngModel)]="filter[section]"
+                           (change)="applyFilters(section)">
+                    <label for="filter_{{section}}"  class="checkbox-custom-label noselect" [class.disabled]="disableFilter(section)"
+                           matTooltipPosition="above" [matTooltip]="tooltip(section)">
+                           show annotated techniques only
+                    </label>
 
                     <mat-divider></mat-divider>
                 </div>

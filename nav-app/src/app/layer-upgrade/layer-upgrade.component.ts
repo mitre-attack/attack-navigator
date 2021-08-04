@@ -66,22 +66,22 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Disable the given filter option?
-     * @param filter the name of the filter option
-     * @returns true if no techniques exist under the filter option, false otherwise
+     * Disable the annotated techniques filter?
+     * @param section the name of the changelog section
+     * @returns true if there are no annotated techniques in the given section, false otherwise
      */
-    public disableFilter(filter: string) {
-        if (filter == 'new') return !this.changelog['additions'].length;
-        if (filter == 'unchanged') return !this.changelog['unchanged'].length;
-        if (filter == 'changes') {
-            return !this.changelog['changes'].length && !this.changelog['minor_changes'].length && !this.changelog['revocations'].length && !this.changelog['deprecations'].length;
-        }
-        if (filter == 'annotations') {
-            for (let section of this.sections) {
-                if (this.changelog[section].filter(id => this.anyAnnotated(id)).length) return false;
-            }
-            return true;
-        }
+    public disableFilter(section: string): boolean {
+        return !this.changelog[section].filter(id => this.anyAnnotated(id)).length
+    }
+
+    /**
+     * Get the filter tooltip
+     * @param section the name of the changelog section
+     * @returns the tooltip text if the filter is disabled
+     */
+    public tooltip(section: string): string {
+        if (this.disableFilter(section)) return 'no annotated techniques';
+        return '';
     }
 
     /**
