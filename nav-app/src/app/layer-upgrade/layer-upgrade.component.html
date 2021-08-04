@@ -26,15 +26,15 @@
 
                 <div *ngIf="section !== 'additions'">
                     <h4>Filters</h4>
-                    <input id="annotated" class="checkbox-custom" type="checkbox" [(ngModel)]="filter[section]">
-                    <label for="annotated" class="checkbox-custom-label noselect">show annotated techniques only</label>
+                    <input id="filter_{{section}}" class="checkbox-custom" type="checkbox" [(ngModel)]="filter[section]" (change)="applyFilters(section)" >
+                    <label for="filter_{{section}}" class="checkbox-custom-label noselect">show annotated techniques only</label>
 
                     <mat-divider></mat-divider>
                 </div>
 
                 <div class="stepper-content">
                     <mat-accordion>
-                        <mat-expansion-panel *ngFor="let attackID of applyFilters(section)" #panel="matExpansionPanel">
+                        <mat-expansion-panel *ngFor="let attackID of filteredIDs" #panel="matExpansionPanel">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <mat-icon *ngIf="isReviewed(attackID)" class="reviewed">check_circle_outline</mat-icon>
@@ -149,6 +149,7 @@
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>
+                <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionCount"></mat-paginator>
             </div>
 
             <ng-template #noObjects>
@@ -158,10 +159,10 @@
             <mat-divider></mat-divider>
 
             <div class="stepper-button">
-                <span>Reviewed {{countReviewed(section)}}/{{applyFilters(section).length}} techniques</span>
+                <span>Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
 
-                <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious>Back</button>
-                <button *ngIf="section !== 'unchanged'" mat-stroked-button matStepperNext>{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
+                <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
+                <button *ngIf="section !== 'unchanged'" mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
                 <button *ngIf="section == 'unchanged'" mat-stroked-button (click)="openDialog()">Done</button>
             </div>
         </mat-step>

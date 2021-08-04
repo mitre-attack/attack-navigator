@@ -41,6 +41,8 @@ import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog
 import { MatCardModule } from "@angular/material/card";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
@@ -91,6 +93,7 @@ import { ChangelogComponent } from './changelog/changelog.component';
     MatCardModule,
     MatDividerModule,
     MatStepperModule,
+    MatPaginatorModule,
     MarkdownModule.forRoot()
   ],
   exports: [

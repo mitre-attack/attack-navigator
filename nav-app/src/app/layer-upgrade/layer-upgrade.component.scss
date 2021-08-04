@@ -27,9 +27,8 @@ h4 { margin: 12px 0; }
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
     &:hover { background-color: darken($panel-dark, 5%); }
 }
-.mat-expansion-panel-content, .stepper-content {
-    max-height: 40vh;
-    overflow: auto;
+.mat-paginator-container {
+    min-height: unset;
 }
 .stepper-content {
     padding: 6px;

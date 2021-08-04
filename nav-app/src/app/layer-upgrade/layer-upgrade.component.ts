@@ -4,6 +4,7 @@ import { DataService, Tactic, Technique, VersionChangelog } from '../data.servic
 import { MatDialog } from '@angular/material/dialog';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'layer-upgrade',
@@ -13,6 +14,10 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    public sectionCount: number = 0;
+    public filteredIDs: string[] = [];
+
     @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
     public closeDialogRef;
 
@@ -37,6 +42,7 @@ export class LayerUpgradeComponent implements OnInit {
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
         this.compareTo = this.viewModel.compareTo;
+        this.applyFilters(this.sections[0]);
     }
 
     /**
@@ -82,12 +88,23 @@ export class LayerUpgradeComponent implements OnInit {
      * Apply filters to the changelog section
      * @returns the list of filtered ATT&CK IDs in the changelog section
      */
-    public applyFilters(section: string): string[] {
+    public applyFilters(section: string): void {
         let sectionIDs = this.changelog[section];
-        if (this.filter[section]) {
-            sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
-        }
-        return sectionIDs;
+        if (this.filter[section]) sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
+        this.sectionCount = sectionIDs.length;
+        let start = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0;
+        let end = this.paginator? start + this.paginator.pageSize : 10;
+        this.filteredIDs = sectionIDs.slice(start, end);
+    }
+
+    /**
+     * Update the list of IDs to render on step change
+     * @param section the name of the changelog section
+     * @param offset -1 if moving to the previous step, 1 if moving to the next step
+     */
+    public onStepChange(section: string, offset: number): void {
+        let i = this.sections.findIndex(s => s === section);
+        this.applyFilters(this.sections[i + offset]);
     }
 
     /**
