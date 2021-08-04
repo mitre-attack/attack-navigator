@@ -162,8 +162,31 @@
                 <span>Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
 
                 <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
-                <button *ngIf="section !== 'unchanged'" mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
-                <button *ngIf="section == 'unchanged'" mat-stroked-button (click)="openDialog()">Done</button>
+                <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
+            </div>
+        </mat-step>
+
+        <mat-step>
+            <ng-template matStepLabel>Finish</ng-template>
+
+            <div class="description">
+                <span>{{getDescription('finish')}}</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <h4>Overview</h4>
+            <div class="summary" *ngFor="let section of sections">
+                <span>{{getHeader(section)}}:&nbsp;</span>
+                <span *ngIf="countReviewed(section) > 0; else skipped">Reviewed {{countReviewed(section)}}/{{changelog[section].length}} techniques</span>
+                <ng-template #skipped>Skipped</ng-template>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="stepper-button">
+                <button mat-stroked-button matStepperPrevious>Back</button>
+                <button mat-stroked-button (click)="openDialog()">Done</button>
             </div>
         </mat-step>
     </mat-vertical-stepper>

@@ -104,7 +104,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public onStepChange(section: string, offset: number): void {
         let i = this.sections.findIndex(s => s === section);
-        this.applyFilters(this.sections[i + offset]);
+        if (i + offset < this.sections.length) this.applyFilters(this.sections[i + offset]);
     }
 
     /**
@@ -207,6 +207,8 @@ export class LayerUpgradeComponent implements OnInit {
                       Review the techniques to identify which may require new annotations. Annotations \
                       may be added using the layer 'technique controls' in the toolbar through this \
                       interface or the layer itself.",
+        "finish": "Copied annotations have already been added to the new layer. Verify your changes and click \
+                   'Done' to complete the layer upgrade workflow."
     }
 
     /**
