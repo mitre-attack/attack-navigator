@@ -186,7 +186,7 @@ input[type=file]{
         width: 4ex;
         height: 3ex;
         padding: 5px;
-        z-index: 5;
+        z-index: 1000;
         &:hover { background: $panel-light; }
         &::after{
             font-size: 5pt;
@@ -212,7 +212,7 @@ input[type=file]{
         border-radius: 0 0 0 5px;
         padding: 10px;
         top: 29px;
-        z-index: 1;
+        z-index: 999;
         button {
             border: none;
             background-color: transparent;
