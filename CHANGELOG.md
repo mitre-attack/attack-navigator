@@ -12,6 +12,7 @@
 - Fixed issue with sorting when show aggregate score is enabled, where each technique's aggregate score was not correctly calculated into the sorting. See issue [#295](https://github.com/mitre-attack/attack-navigator/issues/295). 
 - The Navigator should now use the proper fonts when operating without an internet connection. See issue [#278](https://github.com/mitre-attack/attack-navigator/issues/278)
 - Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
+- Fixed an issue with help dropdown appearing above the matrix. See issue [#330](https://github.com/mitre-attack/attack-navigator/issues/330).
 
 
 # v4.3 - 29 April 2021
