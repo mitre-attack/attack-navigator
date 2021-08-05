@@ -23,8 +23,8 @@
                 </div>
 
                 <mat-divider></mat-divider>
-            
-                <div *ngIf="changelog[section].length > 0; else noObjects">
+
+                <div *ngIf="changelog[section].length > 0">
                     <div *ngIf="section !== 'additions'">
                         <h4>Filters</h4>
                         <input id="filter_{{section}}" 
@@ -33,14 +33,18 @@
                             [(ngModel)]="filter[section]"
                             (change)="applyFilters(section)">
                         <label for="filter_{{section}}"  class="checkbox-custom-label noselect" [class.disabled]="disableFilter(section)"
-                            matTooltipPosition="above" [matTooltip]="tooltip(section)">
+                            matTooltipPosition="above" [matTooltip]="disableFilter(section) ? 'no annotated techniques' : ''">
                             show annotated techniques only
                         </label>
 
                         <mat-divider></mat-divider>
                     </div>
 
-                    <div class="stepper-content">
+                    <div class="spinner" *ngIf="loading">
+                        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                    </div>
+
+                    <div class="stepper-content" *ngIf="!loading">
                         <mat-accordion>
                             <mat-expansion-panel *ngFor="let attackID of filteredIDs" #panel="matExpansionPanel">
                                 <mat-expansion-panel-header>
@@ -160,11 +164,11 @@
                     <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionCount"></mat-paginator>
                 </div>
 
-                <ng-template #noObjects>
+                <div *ngIf="changelog[section].length == 0 && !loading">
                     <div class="description center">
                         No objects to show
                     </div>
-                </ng-template>
+                </div>
 
                 <mat-divider></mat-divider>
 

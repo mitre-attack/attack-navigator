@@ -36,6 +36,7 @@ export class LayerUpgradeComponent implements OnInit {
         "revocations": false,
         "unchanged": false
     }
+    public loading: boolean = false;
     
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
@@ -43,6 +44,12 @@ export class LayerUpgradeComponent implements OnInit {
         this.changelog = this.viewModel.versionChangelog;
         this.compareTo = this.viewModel.compareTo;
         this.applyFilters(this.sections[0]);
+        this.wait();
+    }
+
+    wait(): void {
+        this.loading = true;
+        setTimeout(() => this.loading = false, 1000);
     }
 
     /**
@@ -75,16 +82,6 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Get the filter tooltip
-     * @param section the name of the changelog section
-     * @returns the tooltip text if the filter is disabled
-     */
-    public tooltip(section: string): string {
-        if (this.disableFilter(section)) return 'no annotated techniques';
-        return '';
-    }
-
-    /**
      * Apply filters to the changelog section
      * @returns the list of filtered ATT&CK IDs in the changelog section
      */
@@ -110,7 +107,11 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public onStepChange(section: string, offset: number): void {
         let i = this.sections.findIndex(s => s === section);
-        if (i + offset < this.sections.length) this.applyFilters(this.sections[i + offset]);
+        if (i + offset < this.sections.length) {
+            let nextSection = this.sections[i + offset];
+            this.applyFilters(nextSection);
+            if (this.changelog[nextSection].length > 0) this.wait();
+        }
     }
 
     /**
@@ -265,7 +266,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public isCopied(object: Technique, tactic: Tactic): boolean {
         if (this.changelog.copied.has(object.get_technique_tactic_id(tactic))) return true;
-        else return false;
+        return false;
     }
 
     /**
