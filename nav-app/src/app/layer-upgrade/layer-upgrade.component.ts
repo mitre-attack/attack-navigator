@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../viewmodels.service';
 import { DataService, Tactic, Technique, VersionChangelog } from '../data.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
     public sectionCount: number = 0;
     public filteredIDs: string[] = [];
 
@@ -92,8 +92,14 @@ export class LayerUpgradeComponent implements OnInit {
         let sectionIDs = this.changelog[section];
         if (this.filter[section]) sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
         this.sectionCount = sectionIDs.length;
-        let start = this.paginator? this.paginator.pageIndex * this.paginator.pageSize : 0;
-        let end = this.paginator? start + this.paginator.pageSize : 10;
+
+        let i = this.sections.findIndex(s => s === section);
+        let paginator = this.paginators.toArray()[i];
+        if (paginator && (paginator.pageIndex * paginator.pageSize > this.sectionCount)) {
+            paginator.pageIndex = 0;
+        }
+        let start = paginator? paginator.pageIndex * paginator.pageSize : 0;
+        let end = paginator? start + paginator.pageSize : 10;
         this.filteredIDs = sectionIDs.slice(start, end);
     }
 
