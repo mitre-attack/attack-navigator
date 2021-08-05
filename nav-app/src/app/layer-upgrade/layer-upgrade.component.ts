@@ -35,8 +35,6 @@ export class LayerUpgradeComponent implements OnInit {
         "unchanged": false
     }
     
-    public filtered_changelog: VersionChangelog;
-
     constructor(public dataService: DataService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
@@ -287,6 +285,7 @@ export class LayerUpgradeComponent implements OnInit {
         // copy annotations
         let rep = fromTvm.serialize();
         toTvm.deSerialize(rep, attackID, tactic.shortname);
+        this.viewModel.setScoreColor(toTvm);
         fromTvm.enabled = false;
 
         // mark as copied

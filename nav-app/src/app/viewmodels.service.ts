@@ -1338,6 +1338,14 @@ export class ViewModel {
         this.updateLegendColorPresets();
     }
 
+    /**
+     * Set score color of given technique VM
+     * @param tvm technique VM to update
+     */
+    setScoreColor(tvm: TechniqueVM): void {
+        tvm.scoreColor = this.gradient.getColor(tvm.score);
+    }
+
     legendItems = [
 
     ];

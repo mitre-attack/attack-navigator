@@ -346,8 +346,13 @@ export class DataService {
                 changelog.additions.push(latestTechnique.attackID);
             }
             else if (latestTechnique.modified == prevTechnique.modified) {
-                // no changes made to the object
-                changelog.unchanged.push(latestTechnique.attackID);
+                if (prevTechnique.revoked || prevTechnique.deprecated) {
+                    // object is revoked or deprecated, ignore
+                    continue;
+                } else {
+                    // no changes made to the object
+                    changelog.unchanged.push(latestTechnique.attackID);
+                }
             } else {
                 // changes were made to the object
                 if (latestTechnique.revoked && !prevTechnique.revoked) {
