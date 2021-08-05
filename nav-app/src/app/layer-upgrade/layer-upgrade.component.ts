@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
     selector: 'layer-upgrade',
@@ -18,6 +19,7 @@ export class LayerUpgradeComponent implements OnInit {
     public sectionCount: number = 0;
     public filteredIDs: string[] = [];
 
+    @ViewChild('stepper') stepper: MatStepper;
     @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
     public closeDialogRef;
 
