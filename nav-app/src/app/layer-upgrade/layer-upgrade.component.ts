@@ -213,7 +213,7 @@ export class LayerUpgradeComponent implements OnInit {
                       Review the techniques to identify which may require new annotations. Annotations \
                       may be added using the layer 'technique controls' in the toolbar through this \
                       interface or the layer itself.",
-        "finish": "Copied annotations have already been added to the new layer. Verify your changes and click \
+        "finish": "Copied annotations have been added to the new layer. Verify your changes and click \
                    'Done' to complete the layer upgrade workflow."
     }
 

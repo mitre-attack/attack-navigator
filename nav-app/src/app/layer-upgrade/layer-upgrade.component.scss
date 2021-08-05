@@ -72,10 +72,7 @@ tr:not(.version-header) td {
     margin-top: 1.5rem;
     height: 100%;
     display: flex;
-
-    .mat-icon {
-        height: 100%;
-    }
+    .mat-icon { height: 100%; }
 }
 .wide {
     width: 100%;
@@ -116,7 +113,6 @@ tr:not(.version-header) td {
 .description {
     padding: 6px;
     text-align: justify;
-    span {
-        font-size: 14px;
-    }
+    span { font-size: 14px; }
+    &.center { text-align: center; }
 }

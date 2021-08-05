@@ -18,13 +18,13 @@
             <ng-template matStepLabel>Review {{getHeader(section)}}</ng-template>
 
             <ng-container *ngIf="stepper ? section == sections[stepper.selectedIndex] : section == sections[0]">
+                <div *ngIf="getDescription(section) as desc" class="description">
+                    <span>{{desc}}</span>
+                </div>
+
+                <mat-divider></mat-divider>
+            
                 <div *ngIf="changelog[section].length > 0; else noObjects">
-                    <div *ngIf="getDescription(section) as desc" class="description">
-                        <span>{{desc}}</span>
-                    </div>
-
-                    <mat-divider></mat-divider>
-
                     <div *ngIf="section !== 'additions'">
                         <h4>Filters</h4>
                         <input id="filter_{{section}}" 
@@ -161,13 +161,15 @@
                 </div>
 
                 <ng-template #noObjects>
-                    No objects
+                    <div class="description center">
+                        No objects to show
+                    </div>
                 </ng-template>
 
                 <mat-divider></mat-divider>
 
                 <div class="stepper-button">
-                    <span>Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
+                    <span *ngIf="changelog[section].length > 0">Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
 
                     <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
                     <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
