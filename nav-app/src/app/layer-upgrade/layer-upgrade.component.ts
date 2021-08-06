@@ -16,6 +16,7 @@ import { MatStepper } from '@angular/material/stepper';
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
     @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
+    public paginator_map: Map<string, number> = new Map(); // section name mapped to index of paginator
     public sectionCount: number = 0;
     public filteredIDs: string[] = [];
 
@@ -43,6 +44,11 @@ export class LayerUpgradeComponent implements OnInit {
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
         this.compareTo = this.viewModel.compareTo;
+        // map sections with techniques to paginator index
+        let i = 0;
+        for (let s of this.sections) {
+            if (this.changelog[s].length) this.paginator_map.set(s, i++);
+        }
         this.applyFilters(this.sections[0]);
         this.wait();
     }
@@ -90,7 +96,7 @@ export class LayerUpgradeComponent implements OnInit {
         if (this.filter[section]) sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
         this.sectionCount = sectionIDs.length;
 
-        let i = this.sections.findIndex(s => s === section);
+        let i = this.paginator_map.get(section);
         let paginator = this.paginators.toArray()[i];
         if (paginator && (paginator.pageIndex * paginator.pageSize > this.sectionCount)) {
             paginator.pageIndex = 0;

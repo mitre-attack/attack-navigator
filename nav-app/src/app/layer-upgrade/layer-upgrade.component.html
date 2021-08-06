@@ -17,33 +17,33 @@
         <mat-step *ngFor="let section of sections">
             <ng-template matStepLabel>Review {{getHeader(section)}}</ng-template>
 
-            <ng-container *ngIf="stepper ? section == sections[stepper.selectedIndex] : section == sections[0]">
-                <div *ngIf="getDescription(section) as desc" class="description">
-                    <span>{{desc}}</span>
+            <div *ngIf="getDescription(section) as desc" class="description">
+                <span>{{desc}}</span>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div *ngIf="changelog[section].length > 0">
+                <div *ngIf="section !== 'additions'">
+                    <h4>Filters</h4>
+                    <input id="filter_{{section}}" 
+                        class="checkbox-custom" type="checkbox" 
+                        [disabled]="disableFilter(section)"
+                        [(ngModel)]="filter[section]"
+                        (change)="applyFilters(section)">
+                    <label for="filter_{{section}}"  class="checkbox-custom-label noselect" [class.disabled]="disableFilter(section)"
+                        matTooltipPosition="above" [matTooltip]="disableFilter(section) ? 'no annotated techniques' : ''">
+                        show annotated techniques only
+                    </label>
+
+                    <mat-divider></mat-divider>
                 </div>
 
-                <mat-divider></mat-divider>
+                <div class="spinner" *ngIf="loading">
+                    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                </div>
 
-                <div *ngIf="changelog[section].length > 0">
-                    <div *ngIf="section !== 'additions'">
-                        <h4>Filters</h4>
-                        <input id="filter_{{section}}" 
-                            class="checkbox-custom" type="checkbox" 
-                            [disabled]="disableFilter(section)"
-                            [(ngModel)]="filter[section]"
-                            (change)="applyFilters(section)">
-                        <label for="filter_{{section}}"  class="checkbox-custom-label noselect" [class.disabled]="disableFilter(section)"
-                            matTooltipPosition="above" [matTooltip]="disableFilter(section) ? 'no annotated techniques' : ''">
-                            show annotated techniques only
-                        </label>
-
-                        <mat-divider></mat-divider>
-                    </div>
-
-                    <div class="spinner" *ngIf="loading">
-                        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-                    </div>
-
+                <ng-container *ngIf="stepper ? section == sections[stepper.selectedIndex] : section == sections[0]">
                     <div class="stepper-content" *ngIf="!loading">
                         <mat-accordion>
                             <mat-expansion-panel *ngFor="let attackID of filteredIDs" #panel="matExpansionPanel">
@@ -161,24 +161,24 @@
                             </mat-expansion-panel>
                         </mat-accordion>
                     </div>
-                    <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionCount"></mat-paginator>
+                </ng-container>
+                <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionCount"></mat-paginator>
+            </div>
+
+            <div *ngIf="changelog[section].length == 0 && !loading">
+                <div class="description center">
+                    No objects to show
                 </div>
+            </div>
 
-                <div *ngIf="changelog[section].length == 0 && !loading">
-                    <div class="description center">
-                        No objects to show
-                    </div>
-                </div>
+            <mat-divider></mat-divider>
 
-                <mat-divider></mat-divider>
+            <div class="stepper-button">
+                <span *ngIf="changelog[section].length > 0">Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
 
-                <div class="stepper-button">
-                    <span *ngIf="changelog[section].length > 0">Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
-
-                    <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
-                    <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
-                </div>
-            </ng-container>
+                <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
+                <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
+            </div>
         </mat-step>
 
         <mat-step>
