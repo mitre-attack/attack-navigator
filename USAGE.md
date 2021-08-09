@@ -68,38 +68,48 @@ URL" input allowing you to open a layer json from a remote source.
 
 ## Upgrading a Layer to the Current Version
 
-A layer uploaded with an outdated version of ATT&CK will prompt you to upgrade to the current version. Choosing "yes" will
-initiate the layer upgrade workflow in the Navigator sidebar. A new, blank layer in the current ATT&CK version and the layer's
-domain will be loaded in a new tab; previous technique annotations can be found in the interface and mapped to techniques in
-the current version, as described below.
+The layer upgrade interface allows users to upgrade an ATT&CK Navigator layer created on a previous version of ATT&CK to the 
+current version of the dataset. With this interface, users can step through each change in the set of techniques in the dataset:
+- The user can view techniques which have been added to the dataset since the layer was created and annotate them as necessary.
+- The user can see whether the techniques they had previously annotated have changed and adjust the annotations accordingly.
+- The user can determine if any annotated techniques have been removed or replaced by new techniques and in the latter case copy 
+annotations to the replacing technique(s).
+- The user can also verify what techniques haven't changed since the layer was created.
 
-The layer upgrade interface displays the technique changes that occurred between the two versions. These are grouped by the
-following change types:
-- <b>Additions:</b> new techniques that have been added since the previous version
-- <b>Changes:</b> changes to techniques
-- <b>Minor Changes:</b> changes to techniques without version increments
-- <b>Deprecations:</b> techniques which have been deprecated
-- <b>Revocations:</b> techniques which have been revoked by a new technique
-- <b>Unchanged:</b> techniques with no changes between the two versions
+### Change Types
 
-By default, only techniques which were previously annotated are shown in the interface. The filters at the top of the interface
-can be used to individually adjust which change types are shown.
+The workflow steps through the changes to the dataset that occurred between the two versions, grouped by the following change types:
+- <b>Additions:</b> New techniques that have been added to the knowledge base.
+- <b>Changes:</b> Techniques with major updates such as changes to scope, new reporting, and so forth.
+- <b>Minor Changes:</b> Techniques with minor updates such as typo corrections.
+- <b>Revocations:</b> Techniques which have been replaced by other techniques.
+- <b>Deprecations:</b> Techniques which have been removed from the dataset.
+- <b>Unchanged:</b> Techniques which have not changed between the two versions.
 
 ### Mapping Annotations
 
-Each technique section contains cells for each tactic it is found under in the previous version (with any annotations that
-were previously placed on that object) and in the current version. There are two approaches to copying annotations from the
-previous layer:
+For annotated techniques which have changed since the layer was created, you may want to update the set of annotations to account 
+for changes to scope or content. Each technique in the interface lists its previous and current state, with links to 
+<a href="https://attack.mitre.org/">ATT&CK&reg;</a> for both versions of the technique to enable easy review. In sections which have 
+previously annotated techniques, you can enable the "show annotated techniques only" filter to view only techniques which have annotations. 
+
+You can copy annotations from the previous version of the technique to the current one, making adjustments if necessary. There are 
+two approaches to copying annotations from the previous version:
 - For techniques with tactics that map one-to-one between the two versions, annotations can be copied by clicking the ">"
 button next to the tactic. This will copy any existing annotations on the tactic to the technique under the same tactic in
 the current version.
 - For techniques with tactics that have changed between the two versions, annotations can be copied by dragging & dropping the
-tactic cell from the previous version to the tactic(s) in the current version.
+annotated tactic from the previous version to the tactic(s) in the current version.
 
-Techniques can be marked as reviewed under their respective expansion panels to visually indicate that you have reviewed that
-object. Additionally, the "mark all as reviewed" button will mark all of the technique objects currently shown under the change
-type section as reviewed. Once the annotations have been remapped to the current version, you can click the done button to close
-the sidebar; you will not be able to return to the layer upgrade interface.
+Techniques can be marked as reviewed under their respective panels to visually indicate that they have been reviewed. The "reviewed 
+X/Y techniques" displayed underneath the techniques list can be used to determine if you missed any techniques. The numerator reflects 
+the number of techniques you have marked as "reviewed" and the denominator denotes the total number of techniques shown according
+to your configuration (for example, if you have enabled the "show annotated techniques only" filter, only the number of techniques
+which are annotated are counted in this total).
+
+You can view and verify the status of the layer upgrade at the end of the workflow to ensure you have created or adjusted all annotations 
+as desired. Once you have finished upgrading the layer, you can click the "done" button to close the sidebar. <b>Note:</b> you will not be able to 
+return to the layer upgrade interface.
 
 ## Creating Layers from Other Layers
 
