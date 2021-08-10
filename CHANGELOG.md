@@ -1,5 +1,7 @@
 # v4.4 - Changes staged on Develop
 
+Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
+
 ## Improvements
 - Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 - Improved favicon for standardization with other ATT&CK tools.
@@ -13,6 +15,7 @@
 - The Navigator should now use the proper fonts when operating without an internet connection. See issue [#278](https://github.com/mitre-attack/attack-navigator/issues/278)
 - Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
 - Fixed an issue with help dropdown appearing above the matrix. See issue [#330](https://github.com/mitre-attack/attack-navigator/issues/330).
+- Updated Safari browser warning to show only for versions 13 and below. See issue [#306](https://github.com/mitre-attack/attack-navigator/issues/306).
 
 
 # v4.3 - 29 April 2021

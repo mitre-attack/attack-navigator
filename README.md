@@ -37,8 +37,11 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 * Internet Explorer 11<sup>[1]</sup>
 * Edge
 * Opera
+* Safari <sup>[2]</sup>
 
 **[1]** There is a recorded issue with the SVG export feature on Internet Explorer. Because of a [missing functionality on SVGElements](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children) in that browser, text will not be properly vertically centered in SVGs exported in that browser. We recommend switching to a more modern browser for optimal results.
+
+**[2]** ATT&CK Navigator only supports Safari versions 14 and above because older versions of the browser can exhibit an unfixable freeze when selecting a layer tab. Users on unsupported versions of the browser will be warned of this possibility when opening the application.
 
 ## Install and Run
 #### First time
