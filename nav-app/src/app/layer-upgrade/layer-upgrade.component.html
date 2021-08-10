@@ -8,6 +8,11 @@
                 <h2>Layer Upgrade</h2>
                 ({{compareTo.version}} <mat-icon inline="true">east</mat-icon> {{viewModel.version}})
             </span>
+            <div>
+                View techniques which have been added, changed, replaced, or removed
+                from the knowledge base since ATT&CK {{compareTo.version}} and create 
+                or map annotations to the current version of ATT&CK.
+            </div>
         </mat-card-content>
     </mat-card>
 
@@ -35,8 +40,6 @@
                         matTooltipPosition="above" [matTooltip]="disableFilter(section) ? 'no annotated techniques' : ''">
                         show annotated techniques only
                     </label>
-
-                    <mat-divider></mat-divider>
                 </div>
 
                 <div class="spinner" *ngIf="loading">
@@ -162,7 +165,7 @@
                         </mat-accordion>
                     </div>
                 </ng-container>
-                <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionCount"></mat-paginator>
+                <mat-paginator [hidePageSize]="true" pageSize="10" (page)="applyFilters(section)" [length]="sectionLength(section)"></mat-paginator>
             </div>
 
             <div *ngIf="changelog[section].length == 0 && !loading">
@@ -174,7 +177,7 @@
             <mat-divider></mat-divider>
 
             <div class="stepper-button">
-                <span *ngIf="changelog[section].length > 0">Reviewed {{countReviewed(section)}}/{{sectionCount}} techniques</span>
+                <span *ngIf="changelog[section].length > 0">Reviewed {{countReviewed(section)}}/{{sectionLength(section)}} techniques</span>
 
                 <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
                 <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">{{countReviewed(section) > 0 ? 'Next' : 'Skip'}}</button>
@@ -193,10 +196,9 @@
             <h4>Overview</h4>
             <div class="summary" *ngFor="let section of sections">
                 <span>{{getHeader(section)}}:&nbsp;</span>
-                <span *ngIf="countReviewed(section) > 0">Reviewed {{countReviewed(section)}}/{{changelog[section].length}} techniques</span>
+                <span *ngIf="countReviewed(section) > 0">Reviewed {{countReviewed(section)}}/{{sectionLength(section)}} {{filter[section] ? 'annotated': ''}} techniques</span>
                 <span *ngIf="!changelog[section].length">No objects to review</span>
                 <span *ngIf="changelog[section].length && countReviewed(section) == 0">Skipped</span>
-                <!-- <ng-template #skipped>Skipped</ng-template> -->
             </div>
 
             <mat-divider></mat-divider>
@@ -212,10 +214,9 @@
 <!-- close dialog template -->
 <ng-template #closeDialog>
     <div class="close-dialog">
-        <b>Close layer upgrade workflow?</b>
+        <b>Close the layer upgrade sidebar?</b>
         <p>
-            {{changelog.reviewed.size}}/{{changelog.length()}} objects have been reviewed.
-            You will not be able to return to the layer upgrade window.
+            You will not be able to return to this workflow.
         </p>
         <div class="dialog-buttons">
             <button mat-button mat-dialog-close>Cancel</button>

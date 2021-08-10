@@ -17,7 +17,6 @@ export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
     @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
     public paginator_map: Map<string, number> = new Map(); // section name mapped to index of paginator
-    public sectionCount: number = 0;
     public filteredIDs: string[] = [];
 
     @ViewChild('stepper') stepper: MatStepper;
@@ -28,13 +27,13 @@ export class LayerUpgradeComponent implements OnInit {
     public compareTo: ViewModel; // view model of old version
     public sections: string[] = [
         "additions", "changes", "minor_changes",
-        "deprecations", "revocations", "unchanged"
+        "revocations", "deprecations", "unchanged"
     ];
     public filter: any = {
         "changes": false,
         "minor_changes": false,
-        "deprecations": false,
         "revocations": false,
+        "deprecations": false,
         "unchanged": false
     }
     public loading: boolean = false;
@@ -94,11 +93,10 @@ export class LayerUpgradeComponent implements OnInit {
     public applyFilters(section: string): void {
         let sectionIDs = this.changelog[section];
         if (this.filter[section]) sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
-        this.sectionCount = sectionIDs.length;
 
         let i = this.paginator_map.get(section);
         let paginator = this.paginators.toArray()[i];
-        if (paginator && (paginator.pageIndex * paginator.pageSize > this.sectionCount)) {
+        if (paginator && (paginator.pageIndex * paginator.pageSize > sectionIDs.length)) {
             paginator.pageIndex = 0;
         }
         let start = paginator? paginator.pageIndex * paginator.pageSize : 0;
@@ -210,18 +208,19 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      * @returns number of reviewed techniques
      */
-    public countReviewed(section: string): boolean {
+    public countReviewed(section: string): number {
         return this.changelog[section].filter(attackID => this.changelog.reviewed.has(attackID)).length;
     }
 
     // changelog section descriptions
     private descriptions: any = {
-        "additions": "These are techniques which have been added since the uploaded layer's version.\
-                      Review the techniques to identify which may require new annotations. Annotations \
-                      may be added using the layer 'technique controls' in the toolbar through this \
-                      interface or the layer itself.",
-        "finish": "Copied annotations have been added to the new layer. Verify your changes and click \
-                   'Done' to complete the layer upgrade workflow."
+        "additions": "These are techniques which have been added since the uploaded layer's ATT&CK version. You can review the techniques below to identify which may require new annotations. Annotations may be added using the 'technique controls' in the toolbar.",
+        "changes": "These are techniques which have had major updates such as changes to scope, new reporting, etc. You can view the annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
+        "minor_changes": "These are techniques which have had minor updates such as typo corrections. You can view the annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
+        "revocations": "These are techniques which have been replaced by other techniques. You can view the techniques that the previous techniques have been replaced with and adjust any existing annotations as necessary.",
+        "deprecations": "These are techniques which have been removed from the dataset. You can view any annotations you have previously added to the techniques.",
+        "unchanged": "These are techniques which have not changed since the uploaded layer's ATT&CK version. You can view annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
+        "finish": "The overview below indicates either the number of techniques you have reviewed in a section, if you have skipped a section, or if there are no techniques to review in that section. Annotations mapped to the current version have been saved to the new layer.  Verify your changes and click 'Done' to complete the layer upgrade workflow."
     }
 
     /**
@@ -260,6 +259,17 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public isAnnotated(object: Technique, tactic: Tactic, vm: ViewModel): boolean {
         return vm.getTechniqueVM(object, tactic).annotated();
+    }
+
+    /**
+     * Get the total number of techniques currently displayed in a given section
+     * @param section the name of the changelog section
+     * @returns the total number of annotated techniques in the section if the filter is enabled,
+     * otherwise the total number of techniques in the seciton
+     */
+    public sectionLength(section: string): number {
+        if (this.filter[section]) return this.changelog[section].filter(attackID => this.anyAnnotated(attackID)).length;
+        else return this.changelog[section].length;
     }
 
     /**
