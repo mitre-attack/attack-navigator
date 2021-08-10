@@ -1,5 +1,7 @@
 # v4.4 - Changes staged on Develop
 
+Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
+
 ## Improvements
 - Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 - Improved favicon for standardization with other ATT&CK tools.
