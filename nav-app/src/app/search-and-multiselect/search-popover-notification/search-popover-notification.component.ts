@@ -1,6 +1,12 @@
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { PopoverContentComponent, PopoverDirective } from 'ngx-smart-popover';
+import { PopoverDirective } from 'ngx-smart-popover';
+
+import * as moment from 'moment';
+import { setCookie, getCookie, hasCookie } from '../../cookies';
+
+// TODO make sure this is actually the release date!
+const MONTH_AFTER_RELEASE = moment('2021-08-11', 'YYYY-MM-DD').add(1, 'months');
 
 @Component({
     selector: 'search-popover-notification',
@@ -67,7 +73,12 @@ export class SearchPopoverNotificationComponent implements AfterViewInit {
     constructor() { }
 
     ngAfterViewInit(): void {
-        setTimeout(() => this.openPopover(), 2000); //show popover after two seconds
+        let is_before_expiration = moment().isBefore(MONTH_AFTER_RELEASE)
+        let has_seen_before = hasCookie("seenSearchUpdateNotification") && getCookie("seenSearchUpdateNotification") == "true";
+        //show only if we are within one month of release and we haven't dismissed the popup before
+        if (is_before_expiration && !has_seen_before)  {
+            setTimeout(() => this.openPopover(), 2000); //show popover after two seconds to allow page to load
+        }
     }
 
     private openPopover(): void {
@@ -78,6 +89,9 @@ export class SearchPopoverNotificationComponent implements AfterViewInit {
 
     public closePopover(): void {
         this.popoverTrigger.hide();
+        // make sure the popover doesn't show on subsequent loads
+        // save cookie for one month plus one day so that first-day users won't see it on the last day
+        setCookie("seenSearchUpdateNotification", "true", 33); 
     }
 
     onAnimationEnd(event) {
