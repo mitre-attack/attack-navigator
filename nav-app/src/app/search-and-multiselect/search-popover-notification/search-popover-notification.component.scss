@@ -1,0 +1,16 @@
+@import "../../../colors.scss";
+.search-notification-popover .popover {
+    transform: translate(40px, 16px);
+    background-color: color(body);
+    .arrow::before, .arrow::after {
+        border-bottom-color: color(body) !important;
+    }
+
+    .popover-body { 
+        color: on-color(body) !important; 
+        text-align: left;
+        .animated-icon + .animated-icon {
+            margin-left: 6px;
+        }
+    };
+}

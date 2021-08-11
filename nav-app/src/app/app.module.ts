@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import 'rxjs/add/operator/map'
 
@@ -15,8 +16,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
 import { ColorPickerModule } from 'ngx-color-picker';
+import { PopoverModule } from 'ngx-smart-popover';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -40,6 +41,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
+import { SearchPopoverNotificationComponent } from './search-and-multiselect/search-popover-notification/search-popover-notification.component';
 
 
 @NgModule({
@@ -60,10 +62,12 @@ import { ChangelogComponent } from './changelog/changelog.component';
     VersionUpgradeComponent,
     SidebarComponent,
     LayerInformationComponent,
-    ChangelogComponent
+    ChangelogComponent,
+    SearchPopoverNotificationComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatSelectModule,
@@ -81,7 +85,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
     MatSidenavModule,
     MatCardModule,
     MatDividerModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    PopoverModule
   ],
   exports: [
       MatSelectModule,
