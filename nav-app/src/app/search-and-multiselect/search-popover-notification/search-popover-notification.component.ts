@@ -8,25 +8,50 @@ import { PopoverContentComponent, PopoverDirective } from 'ngx-smart-popover';
     styleUrls: ['./search-popover-notification.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: [
-        trigger('mergeIcon', [
-            transition("unmerged => merged", [ animate("4s", keyframes([
+        trigger('mergeIconLeft', [
+            transition("unmerged => merged", [ animate("3s ease-out", keyframes([
                 style({
-                    transform: "translateX(0px)",
+                    transform: "translate(0px, 0px)",
+                    offset: 0
+                }),
+                style({
+                    transform: "translate(0px, 0px)",
+                    offset: 0.3
+                }),
+                style({
+                    transform: "translate(14px, -7px)",
+                    offset: 0.7
+                }),
+                style({
+                    transform: "translate(14px, -10px)",
+                    offset: 1
+                })
+            ]))])
+        ]),
+        trigger('mergeIconRight', [
+            transition("unmerged => merged", [ animate("3s ease-out", keyframes([
+                style({
+                    transform: "translate(0px, 0px)",
                     opacity: 1,
                     offset: 0
                 }),
                 style({
-                    transform: "translateX(0px)",
+                    transform: "translate(0px, 0px)",
                     opacity: 1,
                     offset: 0.3
                 }),
                 style({
-                    transform: "translateX(-28px)",
-                    opacity: 0.1,
+                    transform: "translate(-14px, -7px)",
+                    opacity: 0.2,
                     offset: 0.7
                 }),
                 style({
-                    transform: "translateX(-28px)",
+                    transform: "translate(-14px, -7px)",
+                    opacity: 0.0,
+                    offset: 0.8
+                }),
+                style({
+                    transform: "translate(-14px, -10px)",
                     opacity: 0,
                     offset: 1
                 })
@@ -36,7 +61,6 @@ import { PopoverContentComponent, PopoverDirective } from 'ngx-smart-popover';
 })
 export class SearchPopoverNotificationComponent implements AfterViewInit {
 
-    @ViewChild("updateNotification", {static: false}) public popover: PopoverContentComponent;
     @ViewChild("popoverTrigger") popoverTrigger: PopoverDirective;
     public animationState: string = "unmerged";
 
@@ -52,8 +76,12 @@ export class SearchPopoverNotificationComponent implements AfterViewInit {
         setTimeout(() => { this.animationState = "merged"; }, 0)
     }
 
+    public closePopover(): void {
+        this.popoverTrigger.hide();
+    }
+
     onAnimationEnd(event) {
-        console.log("animation ended");
+        //restart the animation
         this.animationState = 'unmerged';
         if (event.toState === "unmerged") {
             setTimeout(() => { this.animationState = "merged"; });

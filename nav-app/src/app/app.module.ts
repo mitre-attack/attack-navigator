@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import 'rxjs/add/operator/map'
 
 // material
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -67,7 +66,6 @@ import { SearchPopoverNotificationComponent } from './search-and-multiselect/sea
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MatSelectModule,
