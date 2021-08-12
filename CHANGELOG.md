@@ -16,6 +16,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 - Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
 - Fixed an issue with help dropdown appearing above the matrix. See issue [#330](https://github.com/mitre-attack/attack-navigator/issues/330).
 - Updated Safari browser warning to show only for versions 13 and below. See issue [#306](https://github.com/mitre-attack/attack-navigator/issues/306).
+- Added alert to notify user of error in importing a data layer that is missing an ID field. See issue [#339](https://github.com/mitre-attack/attack-navigator/pull/339).
 
 
 # v4.3 - 29 April 2021
