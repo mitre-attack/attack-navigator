@@ -7,7 +7,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 - Improved favicon for standardization with other ATT&CK tools.
 - Show technique even if it's disabled, as long as any of its sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
 - Converted help menu to USAGE.md that can be accessed as a raw markdown outside of app. See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
-- Added dialog for CHANGELOG.md so that changes can be viewed without leaving the app. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
+- Application now alerts the user when input STIX data contains an object missing an ATT&CK ID instead of failing silently. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
 
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
