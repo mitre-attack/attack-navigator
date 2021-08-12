@@ -329,7 +329,7 @@ export abstract class BaseStix {
         this.description = stixSDO.description;
         if (stixSDO.external_references && stixSDO.external_references[0]) this.attackID = stixSDO.external_references[0].external_id; else {
           alert('Error: external_id in external_references not found in imported BaseStix object id (' + stixSDO.id + ')');
-          throw console.error('Error: external_id in external_references not found in imported BaseStix object', stixSDO);
+          throw console.error('Error: external_id in external_references not found in imported BaseStix object', stixSDO, ' Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
         }
         this.url = stixSDO.external_references[0].url;
         this.dataService = dataService;
