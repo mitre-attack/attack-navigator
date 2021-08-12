@@ -327,7 +327,10 @@ export abstract class BaseStix {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        this.attackID = stixSDO.external_references[0].external_id;
+        if (stixSDO.external_references && stixSDO.external_references[0]) this.attackID = stixSDO.external_references[0].external_id; else {
+          alert('Error: external_id in external_references not found in imported BaseStix object id (' + stixSDO.id + ')');
+          throw console.error('Error: external_id in external_references not found in imported BaseStix object', stixSDO);
+        }
         this.url = stixSDO.external_references[0].url;
         this.dataService = dataService;
     }
