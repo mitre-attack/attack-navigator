@@ -8,7 +8,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 - Show technique even if it's disabled, as long as any of its sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
 - Converted help menu to USAGE.md that can be accessed as a raw markdown outside of app. See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
 - Added dialog for CHANGELOG.md so that changes can be viewed without leaving the app. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
-- Users can disable the comment underline effect on techniques by editing the `show_comment_underline` field in `src/assets/config.json`. See issue [#268](https://github.com/mitre-attack/attack-navigator/issues/268).
+- Users can disable the comment underline effect on techniques by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#268](https://github.com/mitre-attack/attack-navigator/issues/268).
 
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
