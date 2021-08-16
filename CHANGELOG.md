@@ -1,13 +1,16 @@
 # v4.4 - Changes staged on Develop
+<!-- TODO BEFORE RELEASE: update MONTH_AFTER_RELEASE in search-popover-notification.component.ts to the actual release date of v4.4 -->
 
 Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
 
-## Improvements
+## New Features
 - Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+
+## Improvements
 - Improved favicon for standardization with other ATT&CK tools.
-- Show technique even if it's disabled, as long as any of its sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
-- Converted help menu to USAGE.md that can be accessed as a raw markdown outside of app. See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
-- Added dialog for CHANGELOG.md so that changes can be viewed without leaving the app. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
+- Techniques are now shown when disabled (and hide-disabled is enabled) as long as any of any of their sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
+- The application usage/help page can now be viewed outside of the application (on GitHub). See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
+- The application changelog can now be viewed within the application. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
 
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
