@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../viewmodels.service';
 import { DataService, Tactic, Technique, VersionChangelog } from '../data.service';
-import { MatDialog } from '@angular/material/dialog';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,8 +19,6 @@ export class LayerUpgradeComponent implements OnInit {
     public filteredIDs: string[] = [];
 
     @ViewChild('stepper') stepper: MatStepper;
-    @ViewChild('closeDialog') closeDialog : TemplateRef<any>;
-    public closeDialogRef;
 
     public changelog: VersionChangelog;
     public compareTo: ViewModel; // view model of old version
@@ -38,7 +35,7 @@ export class LayerUpgradeComponent implements OnInit {
     }
     public loading: boolean = false;
     
-    constructor(public dataService: DataService, private dialog: MatDialog) { }
+    constructor(public dataService: DataService) { }
 
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
@@ -375,22 +372,10 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
-     * Open the close dialog template
+     * Close the layer upgrade sidebar
      */
-     public openDialog(): void {
-        this.closeDialogRef = this.dialog.open(this.closeDialog, {
-            width: '350px',
-            disableClose: true
-        });
-        let subscription = this.closeDialogRef.afterClosed().subscribe({
-            next: (result) => {
-                // close sidebar
-                if (result) {
-                    this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
-                    this.viewModel.sidebarContentType = '';
-                }
-            },
-            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
-        });
+    public closeSidebar(): void {
+        this.viewModel.sidebarOpened = !this.viewModel.sidebarOpened;
+        this.viewModel.sidebarContentType = '';
     }
 }

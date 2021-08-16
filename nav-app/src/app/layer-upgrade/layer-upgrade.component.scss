@@ -15,7 +15,7 @@ h4 { margin: 12px 0; }
     padding-bottom: 1rem;
     position: relative;
 }
-.clear {
+.clear-annotations {
     position: absolute;
     top: -10px;
     right: -5px;
@@ -38,7 +38,7 @@ h4 { margin: 12px 0; }
     display: inline-flex;
     align-items: center;
 }
-tr:not(.version-header) td {
+tr td {
     padding-bottom: 1rem;
 }
 .narrow { width: 20px; }
@@ -91,12 +91,6 @@ tr:not(.version-header) td {
     float: right;
     padding-bottom: 24px;
     .mat-stroked-button { margin-left: 12px; }
-}
-.close-dialog {
-    text-align: center;
-    .dialog-buttons button {
-        margin: 4px;
-    }
 }
 .reviewed {
     color: #4BB543;

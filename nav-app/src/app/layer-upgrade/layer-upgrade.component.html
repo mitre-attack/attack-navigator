@@ -112,7 +112,7 @@
                                                     [section]="section">
                                                 </changelog-cell>
                     
-                                                <span class="clear" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
+                                                <span class="clear-annotations" *ngIf="isAnnotated(newTechnique, tactic, viewModel)"
                                                     matTooltipPosition="above" matTooltip="clear annotations"
                                                     (click)="clearAnnotations(newTechnique, tactic)">x</span>
                                             </div>
@@ -205,22 +205,8 @@
 
             <div class="stepper-button">
                 <button mat-stroked-button matStepperPrevious>Back</button>
-                <button mat-stroked-button (click)="openDialog()">Done</button>
+                <button mat-stroked-button (click)="closeSidebar()">Done</button>
             </div>
         </mat-step>
     </mat-vertical-stepper>
 </div>
-
-<!-- close dialog template -->
-<ng-template #closeDialog>
-    <div class="close-dialog">
-        <b>Close the layer upgrade sidebar?</b>
-        <p>
-            You will not be able to return to this workflow.
-        </p>
-        <div class="dialog-buttons">
-            <button mat-button mat-dialog-close>Cancel</button>
-            <button mat-button (click)="closeDialogRef.close(true)">Close</button>
-        </div>
-    </div>
-</ng-template>
