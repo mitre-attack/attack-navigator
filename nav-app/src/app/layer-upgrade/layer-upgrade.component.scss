@@ -111,6 +111,7 @@ tr:not(.version-header) td {
     pointer-events: none;
 }
 .description {
+    white-space: pre-line;
     padding: 6px;
     text-align: justify;
     span { font-size: 14px; }

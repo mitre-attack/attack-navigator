@@ -76,21 +76,11 @@ current version of the dataset. With this interface, users can step through each
 annotations to the replacing technique(s).
 - The user can also verify what techniques haven't changed since the layer was created.
 
-### Change Types
-
-The workflow steps through the changes to the dataset that occurred between the two versions, grouped by the following change types:
-- <b>Additions:</b> New techniques that have been added to the knowledge base.
-- <b>Changes:</b> Techniques with major updates such as changes to scope, new reporting, and so forth.
-- <b>Minor Changes:</b> Techniques with minor updates such as typo corrections.
-- <b>Revocations:</b> Techniques which have been replaced by other techniques.
-- <b>Deprecations:</b> Techniques which have been removed from the dataset.
-- <b>Unchanged:</b> Techniques which have not changed between the two versions.
-
 ### Mapping Annotations
 
 For annotated techniques which have changed since the layer was created, you may want to update the set of annotations to account 
 for changes to scope or content. Each technique in the interface lists its previous and current state, with links to 
-<a href="https://attack.mitre.org/">ATT&CK&reg;</a> for both versions of the technique to enable easy review. In steps with techniques you 
+<a href="https://attack.mitre.org/">the ATT&CK Website</a> for both versions of the technique to enable easy review. In steps with techniques you 
 have previously annotated, you can enable the "show annotated techniques only" filter to view only those techniques which have annotations. 
 
 You can copy annotations from the previous version of the technique to the current one, making adjustments if necessary. There are 

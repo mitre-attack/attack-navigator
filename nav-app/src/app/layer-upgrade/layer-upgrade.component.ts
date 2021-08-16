@@ -214,13 +214,13 @@ export class LayerUpgradeComponent implements OnInit {
 
     // changelog section descriptions
     private descriptions: any = {
-        "additions": "These are techniques which have been added since the uploaded layer's ATT&CK version. You can review the techniques below to identify which may require new annotations. Annotations may be added using the 'technique controls' in the toolbar.",
-        "changes": "These are techniques which have had major updates such as changes to scope, new reporting, etc. You can view the annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
-        "minor_changes": "These are techniques which have had minor updates such as typo corrections. You can view the annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
-        "revocations": "These are techniques which have been replaced by other techniques. You can view the techniques that the previous techniques have been replaced with and adjust any existing annotations as necessary.",
-        "deprecations": "These are techniques which have been removed from the dataset. You can view any annotations you have previously added to the techniques.",
-        "unchanged": "These are techniques which have not changed since the uploaded layer's ATT&CK version. You can view annotations you have previously added, map them to the current ATT&CK version, and adjust them as needed.",
-        "finish": "The overview below indicates either the number of techniques you have reviewed in a section, if you have skipped a section, or if there are no techniques to review in that section. Annotations mapped to the current version have been saved to the new layer.  Verify your changes and click 'Done' to complete the layer upgrade workflow."
+        "additions": "The following techniques have been added to the dataset since the layer was created. You can review the techniques below to identify which may require annotations. Annotations may be added using the 'technique controls' in the toolbar.",
+        "changes": "The following techniques have undergone major changes since the layer was created such as changes to scope or new reporting. You can view the annotations you had previously added, map them to the current ATT&CK version, and adjust them as needed. You can also review the previous and current technique definitions by clicking the version numbers in each row.",
+        "minor_changes": "The following techniques have had minor revisions since the layer was created such as typo corrections. You can view the annotations you had previously added, map them to the current ATT&CK version, and adjust them as needed. You can also review the previous and current technique definitions by clicking the version numbers under the technique.",
+        "revocations": "These are techniques which have been replaced by other techniques since the layer was created. You can view the replacing techniques and transfer annotations from the replaced techniques, adjusting them as nessecary. You can also review the replaced and replacing technique definitions by clicking the version numbers under the technique.",
+        "deprecations": "These are techniques which have been removed from the dataset. You can view any annotations you had previously added to these techniques.",
+        "unchanged": "These are techniques which have not changed since the uploaded layer's ATT&CK version. The annotations have automatically been copied for these techniques, but you can review them if desired.",
+        "finish": "The overview below indicates either the number of techniques you have reviewed in a section, if you have skipped a section, or if there are no techniques to review in that section. Annotations mapped to the current version have been saved to the new layer.\n\nVerify your changes and click 'Done' to complete the layer upgrade workflow. Once completed you cannot return to this workflow."
     }
 
     /**
@@ -304,7 +304,7 @@ export class LayerUpgradeComponent implements OnInit {
         // copy annotations
         let rep = fromTvm.serialize();
         toTvm.deSerialize(rep, attackID, tactic.shortname);
-        this.viewModel.setScoreColor(toTvm);
+        this.viewModel.updateScoreColor(toTvm);
         fromTvm.enabled = false;
 
         // mark as copied

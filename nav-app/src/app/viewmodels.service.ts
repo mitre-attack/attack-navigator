@@ -1339,10 +1339,11 @@ export class ViewModel {
     }
 
     /**
-     * Set score color of given technique VM
+     * Update the score color of a single technique VM to match the current
+     * score and gradient
      * @param tvm technique VM to update
      */
-    setScoreColor(tvm: TechniqueVM): void {
+    updateScoreColor(tvm: TechniqueVM): void {
         tvm.scoreColor = this.gradient.getColor(tvm.score);
     }
 
