@@ -113,16 +113,23 @@
 .newTab {
     // text-align: center;
     padding: 5% 20%;
+    .description {
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+    }
+    .description div p {
+        max-width: 75ch;
+        font-size: 1.2em;
+    }
     .logo {
         text-align: center;
-        margin-bottom: 1em;
         a {
             text-decoration: none;
             color: rgb(176, 26, 26);
             font-weight:500;
         }
         height: 2ex;
-
     }
 }
 
@@ -164,8 +171,10 @@ input[type=file]{
 
 //button on new tab page
 .helpButtonsContainer {
-    text-align: center;
-    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1em;
+    width: 100%;
 }
 
 .header {

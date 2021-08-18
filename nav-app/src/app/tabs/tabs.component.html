@@ -74,9 +74,21 @@
 <!-- New tab template -->
 <ng-template [ngIf]="activeTab && !activeTab.isDataTable">
     <div class="newTab border">
-        <div>
+        <div class="description">
             <div class="logo">
                 <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
+            </div>
+            <div>
+                <p>
+                    The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be
+                    used to visualize defensive coverage, red/blue team planning, the frequency of detected techniques,
+                    and more.
+                </p>
+            </div>
+            <!-- Help dialog -->
+            <div class="helpButtonsContainer">
+                <button mat-button (click)="openDialog('help')">help</button>
+                <button mat-button (click)="openDialog('changelog')">changelog</button>
             </div>
         </div>
         <mat-accordion class="headers-align">
@@ -433,12 +445,6 @@
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
-
-        <!-- Help dialog -->
-        <div class="helpButtonsContainer">
-            <button mat-button (click)="openDialog('help')">help</button>
-            <button mat-button (click)="openDialog('changelog')">changelog</button>
-        </div>
 
     </div>
 </ng-template>
