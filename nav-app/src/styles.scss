@@ -4,8 +4,8 @@
 @import "~@fontsource/roboto-mono/index.css";
 @import "colors.scss";
 body {
-  padding: 0 15px 15px 15px;
-  margin-top: 0;
+  margin: 0;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -215,9 +215,9 @@ body {
 // patch popover style
 .popover {
     //positioning because we didn't import bootstrap
-    position: absolute; 
+    position: absolute;
     // add border radius
-    border-radius: 4px !important; 
+    border-radius: 4px !important;
     //don't force 20rem width, conform to content of popover
     width: unset !important;
 }
