@@ -113,6 +113,17 @@
 .newTab {
     // text-align: center;
     padding: 5% 20%;
+    .logo {
+        text-align: center;
+        margin-bottom: 1em;
+        a {
+            text-decoration: none;
+            color: rgb(176, 26, 26);
+            font-weight:500;
+        }
+        height: 2ex;
+
+    }
 }
 
 .border {
@@ -159,19 +170,9 @@ input[type=file]{
 
 .header {
     text-align: right;
+    position: fixed;
+    right: 0;
     div { display: inline-block; cursor: pointer; }
-    .logo {
-        text-align: right;
-        a {
-            text-decoration: none;
-            color: rgb(176, 26, 26);
-            font-weight:500;
-        }
-        margin-right: 40px;
-        padding: 5px;
-        height: 2ex;
-
-    }
 
     .helpButton {
         position: fixed;
