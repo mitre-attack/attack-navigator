@@ -306,6 +306,15 @@ export class DataService {
     }
 
     /**
+     * Retrieve the technique object with the given attackID in the given domain/version
+     */
+    getTechnique(attackID: string, domainVersionID: string) {
+        let domain = this.getDomain(domainVersionID);
+        let all_techniques = domain.techniques.concat(domain.subtechniques);
+        return all_techniques.find(t => t.attackID == attackID);
+    }
+
+    /**
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {

@@ -511,7 +511,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             if (versions) { // user upgraded to latest version
                 // create and open the latest version
                 let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                newViewModel.deSerializeDomainVersionID(string); // update new view model with old domain info
+                newViewModel.name = oldViewModel.name;
                 newViewModel.domainVersionID = versions.newID; // update domainVersionID to new ID
                 newViewModel.version = this.dataService.getCurrentVersion(); // update version to new ID
                 newViewModel.loadVMData();
@@ -532,6 +532,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             // load vm for uploaded layer
                             oldViewModel.deSerialize(string);
                             oldViewModel.loadVMData();
+                            // copy unchanged annotations
+                            newViewModel.copyUnchangedAnnotations();
                         },
                         complete: () => { dataSubscription.unsubscribe(); }
                     });
@@ -540,6 +542,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     // load vm for uploaded layer
                     oldViewModel.deSerialize(string);
                     oldViewModel.loadVMData();
+                    // copy unchanged annotations
+                    newViewModel.copyUnchangedAnnotations();
                 }
             } else {
                 this.openTab("new layer", oldViewModel, true, true, true, true);

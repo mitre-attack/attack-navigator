@@ -733,6 +733,71 @@ export class ViewModel {
     }
 
     /**
+     * Copies all annotations on unchanged techniques in the previous version
+     * of ATT&CK to the latest version of ATT&CK
+     */
+    public copyUnchangedAnnotations(): void {
+        if (this.versionChangelog) {
+            this.versionChangelog.unchanged.forEach(attackID => {
+                let fromTechnique = this.dataService.getTechnique(attackID, this.compareTo.domainVersionID);
+                let domain = this.dataService.getDomain(this.domainVersionID);
+                let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
+                tactics.forEach(tactic => {
+                    let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+                    if (fromVM.annotated()) {
+                        let toTechnique = this.dataService.getTechnique(attackID, this.domainVersionID);
+                        this.copyAnnotations(fromTechnique, toTechnique, tactic);
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Copy annotations from one technique to another under the given tactic. 
+     * The previous technique will be disabled
+     * @param fromTechnique the technique to copy annotations from
+     * @param toTechnique the technique to copy annotations to
+     * @param tactic the tactic the techniques are found under
+     */
+    public copyAnnotations(fromTechnique: Technique, toTechnique: Technique, tactic: Tactic): void {
+        let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toVM = this.getTechniqueVM(toTechnique, tactic);
+
+        this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+
+        toVM.deSerialize(fromVM.serialize(), fromTechnique.attackID, tactic.shortname);
+        this.updateScoreColor(toVM);
+        fromVM.enabled = false;
+
+        this.versionChangelog.copied.add(fromVM.technique_tactic_union_id);
+        if (fromTechnique.get_all_technique_tactic_ids().every(id => this.versionChangelog.copied.has(id))) {
+            this.versionChangelog.reviewed.add(fromTechnique.attackID);
+        }
+    }
+
+    /**
+     * Reset the techniqueVM that the annotations were previously copied to
+     * and re-enable the technique the annotations were copied from
+     * @param fromTechnique the technique that annotations were copied from
+     * @param toTechnique the technique that annotations were copied to
+     * @param tactic the tactic the techniques are found under
+     */
+    public revertCopy(fromTechnique: Technique, toTechnique: Technique, tactic: Tactic): void {
+        let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toVM = this.getTechniqueVM(toTechnique, tactic);
+        this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+
+        toVM.resetAnnotations();
+        fromVM.enabled = true;
+
+        this.versionChangelog.copied.delete(fromVM.technique_tactic_union_id);
+        if (!fromTechnique.get_all_technique_tactic_ids().every(id => this.versionChangelog.copied.has(id))) {
+            this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+        }
+    }
+
+    /**
      * Return true if the given technique is selected, false otherwise
      * @param  {Technique}  technique the technique to check
     * * @param  {Tactic}  tactic wherein the technique occurs
