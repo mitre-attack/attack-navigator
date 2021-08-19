@@ -1,0 +1,14 @@
+<div class="search-notification" #popoverTrigger="popover" [popover]="updateNotification"></div>
+
+<popover-content #updateNotification placement="bottom" class="search-notification-popover">
+    <div (click)="closePopover()">
+        <div class="animation-wrapper">
+            <img [@mergeIconLeft]="animationState" class="animated-icon search-icon" src="assets/icons/ic_search_black_24px.svg"/>
+            <img [@mergeIconRight]="animationState" (@mergeIconRight.done)="onAnimationEnd($event)" class="animated-icon multiselect-icon" src="assets/icons/ic_playlist_add_black_24px.svg"/>
+        </div>
+        <p>
+            Navigator v4.4 has merged the multiselect and search tools into a single interface.
+        </p>
+        <button mat-raised-button (click)="closePopover()">CHECK IT OUT</button>
+    </div>
+</popover-content>

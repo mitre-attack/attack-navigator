@@ -1,19 +1,27 @@
 # v4.4 - Changes staged on Develop
+<!-- TODO BEFORE RELEASE: update MONTH_AFTER_RELEASE in search-popover-notification.component.ts to the actual release date of v4.4 -->
+
+Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
+
 ## New Features
-- Added a Layer Upgrade UI to upgrade layers created in older versions of ATT&CK. When upgrading a layer, users can view what objects have changed between the two versions and copy annotations from the previous version.  See issue [#181](https://github.com/mitre-attack/attack-navigator/issues/181).
+- Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+- Added the Layer Upgrade UI to upgrade layers created in older versions of ATT&CK. When upgrading a layer, users can view what objects have changed between the two versions and copy annotations from the previous version.  See issue [#181](https://github.com/mitre-attack/attack-navigator/issues/181).
 
 ## Improvements
-- Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
 - Improved favicon for standardization with other ATT&CK tools.
-- Show technique even if it's disabled, as long as any of its sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
-- Converted help menu to USAGE.md that can be accessed as a raw markdown outside of app. See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
-- Added dialog for CHANGELOG.md so that changes can be viewed without leaving the app. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
-
+- Techniques are now shown when disabled (and hide-disabled is enabled) as long as any of any of their sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
+- The application usage/help page can now be viewed outside of the application (on GitHub). See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
+- The application changelog can now be viewed within the application. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
+- Users can disable the comment underline effect on techniques by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#268](https://github.com/mitre-attack/attack-navigator/issues/268).
+- Application now alerts the user when input STIX data contains an object missing an ATT&CK ID instead of failing silently. See issue [#339](https://github.com/mitre-attack/attack-navigator/pull/339).
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
 - Fixed issue with sorting when show aggregate score is enabled, where each technique's aggregate score was not correctly calculated into the sorting. See issue [#295](https://github.com/mitre-attack/attack-navigator/issues/295). 
 - The Navigator should now use the proper fonts when operating without an internet connection. See issue [#278](https://github.com/mitre-attack/attack-navigator/issues/278)
 - Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
+- Fixed an issue with help dropdown appearing above the matrix. See issue [#330](https://github.com/mitre-attack/attack-navigator/issues/330).
+- Updated Safari browser warning to show only for versions 13 and below. See issue [#306](https://github.com/mitre-attack/attack-navigator/issues/306).
+
 
 
 # v4.3 - 29 April 2021

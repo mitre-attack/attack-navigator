@@ -70,7 +70,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
     public safariDialogRef;
     ngAfterViewInit() {
-        if (is.safari()) {
+        if (is.safari('<=13')) {
             this.safariDialogRef = this.dialog.open(this.safariWarning, {
                 width: '350px',
                 disableClose: true

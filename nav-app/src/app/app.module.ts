@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import 'rxjs/add/operator/map'
 
 // material
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,9 +16,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
-
 import { ColorPickerModule } from 'ngx-color-picker';
 import { DndModule } from 'ngx-drag-drop';
+import { PopoverModule } from 'ngx-smart-popover';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -47,6 +47,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
+import { SearchPopoverNotificationComponent } from './search-and-multiselect/search-popover-notification/search-popover-notification.component';
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
     LayerUpgradeComponent,
     ChangelogCellComponent,
     LayerInformationComponent,
-    ChangelogComponent
+    ChangelogComponent,
+    SearchPopoverNotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +96,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
     MatDividerModule,
     MatStepperModule,
     MatPaginatorModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    PopoverModule
   ],
   exports: [
       MatSelectModule,

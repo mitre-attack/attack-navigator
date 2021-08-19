@@ -40,7 +40,8 @@ export class DataService {
 
     /**
      * Parse the given stix bundle into the relevant data holders
-     * @param {any[]} stixBundle: the STIX bundle to parse
+     * @param domain
+     * @param stixBundles
      */
     parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
         let platforms = new Set<String>();
@@ -407,7 +408,10 @@ export abstract class BaseStix {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        this.attackID = stixSDO.external_references[0].external_id;
+        if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+          alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+          throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+        }
         this.url = stixSDO.external_references[0].url;
         this.created = stixSDO.created;
         this.modified = stixSDO.modified;
