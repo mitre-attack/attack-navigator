@@ -323,6 +323,7 @@ export class LayerUpgradeComponent implements OnInit {
             let rep = fromTvm.serialize();
             toTvm.resetAnnotations();
             toTvm.deSerialize(rep, toTechnique.attackID, toTactic.shortname);
+            this.viewModel.updateScoreColor(toTvm);
         } else {} // invalid target
     }
 

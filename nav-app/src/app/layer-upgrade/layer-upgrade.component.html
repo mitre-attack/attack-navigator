@@ -120,7 +120,7 @@
                                     </div>
                     
                                     <div *ngIf="!tacticsChanged(attackID, section)">
-                                        <table class="wide">
+                                        <table class="changelog-table">
                                             <tr *ngFor="let tactic of getTactics(attackID, compareTo, section)">
                                                 <td *ngIf="section !== 'additions'">
                                                     <changelog-cell

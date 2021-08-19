@@ -41,7 +41,11 @@ h4 { margin: 12px 0; }
 tr td {
     padding-bottom: 1rem;
 }
-.narrow { width: 20px; }
+.changelog-table {
+    table-layout: fixed;
+    width: 100%;
+}
+.narrow { width: 44px; }
 .button-container .button {
     display: flex;
     align-items: center;
