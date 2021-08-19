@@ -134,10 +134,10 @@
                                                 <td class="narrow button-container" *ngIf="section !== 'additions' && section !== 'deprecations'">
                                                     <button class="button" matTooltipPosition="above" matTooltip="copy annotations"
                                                         [disabled]="isCopied(getTechnique(attackID, compareTo), tactic) || !anyAnnotated(attackID)"
-                                                        (click)="copyAnnotations(attackID, tactic)"><mat-icon inline="true">chevron_right</mat-icon></button>
+                                                        (click)="copyAnnotations(attackID, tactic, section)"><mat-icon inline="true">chevron_right</mat-icon></button>
                                                     <button class="button" matTooltipPosition="above" matTooltip="revert copy"
                                                         [disabled]="!isCopied(getTechnique(attackID, compareTo), tactic)"
-                                                        (click)="revertCopy(attackID, tactic)"><mat-icon inline="true">chevron_left</mat-icon></button>
+                                                        (click)="revertCopy(attackID, tactic, section)"><mat-icon inline="true">chevron_left</mat-icon></button>
                                                 </td>
                                                 <td *ngIf="section !== 'deprecations'">
                                                     <changelog-cell

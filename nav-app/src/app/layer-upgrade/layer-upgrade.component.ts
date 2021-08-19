@@ -123,11 +123,15 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns {Technique} the technique object
      */
     public getTechnique(attackID: string, vm: ViewModel, section?: string): Technique {
-        let technique = this.dataService.getTechnique(attackID, vm.domainVersionID);
+        let domain = this.dataService.getDomain(vm.domainVersionID);
+        let all_techniques = domain.techniques.concat(domain.subtechniques);
+        let technique = all_techniques.find(t => t.attackID == attackID);
+
         if (section == 'revocations' && this.viewModel.version == vm.version) {
             // get revoking object
             let revokedByID = technique.revoked_by(vm.domainVersionID);
-            return this.dataService.getTechnique(revokedByID, vm.domainVersionID);
+            let revokingObject = all_techniques.find(t => t.id == revokedByID);
+            return revokingObject;
         } else return technique;
     }
 
@@ -284,9 +288,9 @@ export class LayerUpgradeComponent implements OnInit {
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique is found under
      */
-    public copyAnnotations(attackID: string, tactic: Tactic): void {
+    public copyAnnotations(attackID: string, tactic: Tactic, section: string): void {
         let fromTechnique = this.getTechnique(attackID, this.compareTo);
-        let toTechnique = this.getTechnique(attackID, this.viewModel);
+        let toTechnique = this.getTechnique(attackID, this.viewModel, section);
         this.viewModel.copyAnnotations(fromTechnique, toTechnique, tactic);
     }
 
@@ -296,9 +300,9 @@ export class LayerUpgradeComponent implements OnInit {
      * @param attackID the ATT&CK ID of the technique
      * @param tactic the tactic the technique is found under
      */
-    public revertCopy(attackID: string, tactic: Tactic): void {
+    public revertCopy(attackID: string, tactic: Tactic, section: string): void {
         let fromTechnique = this.getTechnique(attackID, this.compareTo);
-        let toTechnique = this.getTechnique(attackID, this.viewModel);
+        let toTechnique = this.getTechnique(attackID, this.viewModel, section);
         this.viewModel.revertCopy(fromTechnique, toTechnique, tactic);
     }
 
