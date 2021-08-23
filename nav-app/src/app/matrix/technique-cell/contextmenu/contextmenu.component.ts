@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Technique, Tactic } from '../../../data.service';
-import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
+import { ViewModel, TechniqueVM, Link } from '../../../viewmodels.service';
 import { ConfigService, ContextMenuItem } from '../../../config.service';
 import { CellPopover } from '../cell-popover';
 
@@ -18,6 +18,10 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
 
     private get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
+    }
+
+    public get links(): Link[] {
+        return this.techniqueVM.links;
     }
 
     constructor(private element: ElementRef, public configService: ConfigService) {
@@ -95,6 +99,11 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
 
     public openCustomContextMenuItem(customItem: ContextMenuItem) {
         window.open(customItem.getReplacedURL(this.technique, this.tactic), "_blank");
+        this.closeContextmenu();
+    }
+
+    public openLink(link: Link) {
+        window.open(link.url);
         this.closeContextmenu();
     }
 }

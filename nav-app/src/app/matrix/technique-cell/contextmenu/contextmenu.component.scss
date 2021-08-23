@@ -22,7 +22,7 @@
                 margin-top: 2px;
                 padding-top: 2px;
             }
-            div {padding: 3px;}
+            div:not(.link-container) {padding: 3px;}
 
             .contextMenu-button {
                 
