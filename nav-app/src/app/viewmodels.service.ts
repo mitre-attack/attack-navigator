@@ -1413,6 +1413,7 @@ export class TechniqueVM {
     enabled: boolean = true;
     comment: string = ""
     metadata: Metadata[] = [];
+    links: Link[] = [];
 
     showSubtechniques = false;
     aggregateScore: any; // number rather than string as this is not based on an input from user
@@ -1453,6 +1454,7 @@ export class TechniqueVM {
         rep.comment = this.comment;
         rep.enabled = this.enabled;
         rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
+        rep.links = this.links.filter((l) => l.valid()).map((l) => l.serialize());
         rep.showSubtechniques = this.showSubtechniques;
         //rep.technique_tactic_union_id = this.technique_tactic_union_id;
         //console.log(rep);
@@ -1504,7 +1506,13 @@ export class TechniqueVM {
                 if (m.valid()) this.metadata.push(m)
             }
         }
-
+        if ("links" in obj) {
+            for (let linkObj of obj.links) {
+                let link = new Link();
+                link.deSerialize(linkObj);
+                if (link.valid()) this.links.push(link);
+            }
+        }
     }
 
     constructor(technique_tactic_union_id: string) {
@@ -1640,6 +1648,42 @@ export class Metadata {
         else console.error("Error: Metadata required field 'name' or 'divider' not present");
     }
     valid(): boolean { return (this.name && this.name.length > 0 && this.value && this.value.length > 0) || (this.divider !== undefined) }
+}
+
+// { label, url } with serialization
+export class Link {
+    public label: string = "";
+    public url: string = "";
+    public divider: boolean;
+
+    constructor() {};
+
+    serialize(): string { 
+        let rep = this.label && this.url ? {label: this.label, url: this.url} : {divider: this.divider};
+        return JSON.stringify(rep, null, "\t")
+    }
+
+    deSerialize(rep: any): void {
+        if (rep.url) { // link
+            if (typeof(rep.url) === "string") this.url = rep.url;
+            else console.error("TypeError: Link field 'url' is not a string");
+
+            if (rep.label) {
+                if (typeof(rep.label) === "string") this.label = rep.label;
+                else console.error("TypeError: Link field 'label' is not a string");
+            }
+            else console.error("Error: Link required field 'label' not present");
+        }
+        else if ("divider" in rep) { // divider
+            if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
+            else  console.error("TypeError: Link field 'divider' is not a boolean");
+        }
+        else console.error("Error: Link required field 'url' or 'divider' not present");
+    }
+
+    valid(): boolean {
+        return (this.label && this.label.length > 0 && this.url && this.url.length > 0) || (this.divider !== undefined)
+    }
 }
 
 export class LayoutOptions {
