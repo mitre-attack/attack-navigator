@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { ViewModel } from '../viewmodels.service';
+import { ViewModel, ViewModelsService } from '../viewmodels.service';
 import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '../data.service';
 
 @Component({
@@ -61,7 +61,7 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     public techniqueResults: Technique[] = [];
 
-    constructor(private dataService: DataService) {
+    constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
         this.stixTypes = [];
     }
 
@@ -128,7 +128,7 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     getTechniques() {
         //get master list of techniques and sub-techniques
-        let allTechniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
+        let allTechniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
         for (let technique of allTechniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
@@ -136,7 +136,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     getStixData() {
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
 
         this.stixTypes = [{
             "label": "threat groups",
@@ -186,6 +186,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                 this.viewModel.selectTechniqueAcrossTactics(technique);
             }
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public deselect(stixObject: any, isTechnique = true): void {
@@ -197,6 +198,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                 this.viewModel.unselectTechniqueAcrossTactics(technique);
             }
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public selectAll(items: any[], isTechniqueArray = true): void {
@@ -206,6 +208,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         else if (!isTechniqueArray) {
             for (let stixObject of items) this.select(stixObject, isTechniqueArray);
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public deselectAll(items: any[], isTechniqueArray = true): void {
@@ -215,20 +218,21 @@ export class SearchAndMultiselectComponent implements OnInit {
         else if (!isTechniqueArray) {
             for (let stixObject of items) this.deselect(stixObject, isTechniqueArray);
         }
+        this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
     public getRelated(stixObject: BaseStix): Technique[] {
         // master list of all techniques and sub-techniques
-        let techniques = this.dataService.getDomain(this.viewModel.domainID).techniques;
-        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainID).subtechniques);
-        let domainID = this.viewModel.domainID;
+        let techniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
+        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainVersionID).subtechniques);
+        let domainVersionID = this.viewModel.domainVersionID;
 
         if (stixObject instanceof Group) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Software) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
         }
     }
 }

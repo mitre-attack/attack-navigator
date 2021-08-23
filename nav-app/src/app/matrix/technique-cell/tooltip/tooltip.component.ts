@@ -25,7 +25,7 @@ export class TooltipComponent extends CellPopover implements OnInit {
 
     ngOnInit() {
         this.placement = this.getPosition();
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
         this.notes = domain.notes.filter(note => {
             return note.object_refs.includes(this.technique.id);
         });

@@ -1,5 +1,5 @@
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import { PopoverDirective } from 'ngx-smart-popover';
 
 import * as moment from 'moment';
@@ -66,7 +66,7 @@ const MONTH_AFTER_RELEASE = moment('2021-08-11', 'YYYY-MM-DD').add(1, 'months');
     ]
 })
 export class SearchPopoverNotificationComponent implements AfterViewInit {
-
+    @Input() upgradingLayer: boolean;
     @ViewChild("popoverTrigger") popoverTrigger: PopoverDirective;
     public animationState: string = "unmerged";
 
@@ -75,8 +75,8 @@ export class SearchPopoverNotificationComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         let is_before_expiration = moment().isBefore(MONTH_AFTER_RELEASE)
         let has_seen_before = hasCookie("seenSearchUpdateNotification") && getCookie("seenSearchUpdateNotification") == "true";
-        //show only if we are within one month of release and we haven't dismissed the popup before
-        if (is_before_expiration && !has_seen_before)  {
+        // show only if we are within one month of release, we haven't dismissed the popup before, and we aren't upgrading a layer
+        if (is_before_expiration && !has_seen_before && !this.upgradingLayer)  {
             setTimeout(() => this.openPopover(), 2000); //show popover after two seconds to allow page to load
         }
     }

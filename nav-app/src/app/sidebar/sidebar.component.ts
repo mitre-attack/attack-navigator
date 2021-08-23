@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { DataService } from '../data.service';
 import { ViewModel } from '../viewmodels.service';
 
@@ -7,12 +7,14 @@ import { ViewModel } from '../viewmodels.service';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnChanges {
     @Input() viewModel: ViewModel;
+    public reloadToggle: boolean = true;
 
     constructor(public dataService: DataService) { }
 
-    ngOnInit(): void {
+    ngOnChanges(): void {
+        this.reloadToggle = false;
+        setTimeout(() => this.reloadToggle = true);
     }
-
 }

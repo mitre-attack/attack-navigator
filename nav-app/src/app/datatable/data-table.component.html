@@ -41,11 +41,11 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
                 <div class="control-row-button noselect"
-                    (click)="(viewModel.sidebarOpened = (viewModel.sidebarContentType !== 'search') ? true : !viewModel.sidebarOpened) && (viewModel.sidebarContentType = 'search')"
+                    (click)="openSearch()"
                     matTooltipPosition="below"
                     matTooltip="search & multiselect">
-                    <search-popover-notification></search-popover-notification>
-                    <img src="assets/icons/ic_search_black_24px.svg"/>
+                    <img [src]="viewModel.sidebarContentType !== 'layerUpgrade' ? 'assets/icons/ic_search_black_24px.svg' : 'assets/icons/ic_search_gray_24px.svg'"/>
+                    <search-popover-notification [upgradingLayer]="viewModel.sidebarContentType == 'layerUpgrade'"></search-popover-notification>
                 </div>
             </div>
 
@@ -104,7 +104,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 <input matInput readonly disabled
                                     type="text"
                                     placeholder="domain"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).name" />
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
                             </mat-form-field>
 
                             <!-- layer version (uneditable) -->
@@ -112,7 +112,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 <input matInput readonly disabled
                                     type="text"
                                     placeholder="version"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).version" />
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version" />
                             </mat-form-field>
 
                     </div>
@@ -519,27 +519,27 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
 <div class="matrices">
     <div oncontextmenu="return false">
-        <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
+        <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainVersionID).dataLoaded">
             <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
         </div>
         <mat-drawer-container autosize>
             <mat-drawer-content>
                 <div class="matrices-columns">
-                    <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
-                        <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                    <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainVersionID).matrices">
+                        <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
                         <div *ngIf="viewModel.layout.layout == 'side'">
-                            <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+                            <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
                         </div>
                         <div *ngIf="viewModel.layout.layout == 'flat'">
-                            <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
+                            <matrix-flat [matrix]="matrix" [viewModel]="viewModel"></matrix-flat>
                         </div>
                         <div *ngIf="viewModel.layout.layout == 'mini'">
-                            <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
+                            <matrix-mini [matrix]="matrix" [viewModel]="viewModel"></matrix-mini>
                         </div>
                     </div>
                 </div>
             </mat-drawer-content>
-            <mat-drawer mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
+            <mat-drawer [disableClose]="true" mode="side" position="end" #sidebar [opened]="viewModel.sidebarOpened">
                 <sidebar [viewModel]="viewModel"></sidebar>
             </mat-drawer>
         </mat-drawer-container>
