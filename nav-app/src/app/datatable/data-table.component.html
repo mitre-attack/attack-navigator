@@ -495,6 +495,26 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     </mat-form-field>
                  </div>
              </div>
+
+            <!-- links -->
+            <div *ngIf="configService.getFeature('links')"  class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? currentDropdown = currentDropdown !== 'link' ? 'link' : null : continue"
+                     matTooltipPosition="below"
+                     [matTooltip]="viewModel.linksMatch ? 'link' : 'links of selected techniques do not match'"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                     [style.color]="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? '#000000' : '#aaaaaa'">
+                     <img [src]="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? 'assets/icons/ic_link_black_24px.svg' : 'assets/icons/ic_link_gray_24px.svg'" alt="link" />
+                 </div>
+                 <!-- link input -->
+                 <div class="dropdown-container inputfield left link-table" #dropdown [class.left]="checkalign(dropdown)"
+                    *ngIf="currentDropdown === 'link'">
+                    
+                 </div>
+             </div>
+
+
              <!-- remove all annotations -->
              <div *ngIf="configService.getFeature('clear_annotations')" class="control-row-item">
                  <div class="control-row-button noselect"
