@@ -35,17 +35,86 @@
     <a mat-tab-link
        class="tab-title"
        [class.active]="activeTab === tab"
+       [class.dropdownActive]="activeTab === tab && activeTab.showDropdown"
        *ngFor="let tab of layerTabs; let $i = index"
-       (click)="activeTab = tab"
+       (click)="(activeTab === tab) ? activeTab.showDropdown = $i : activeTab = tab"
        [active]="activeTab === tab">
-        {{tab.isDataTable ? tab.dataContext.name : tab.title}}
+        {{tab.dataContext ? tab.dataContext.name : tab.title}}
         <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
         <!-- tab enumerator (for layer operations) -->
-        <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+        <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.dataContext && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
     </a>
     <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">+</a>
 </nav>
 
+<!-- Dropdown to edit tab & layer name -->
+<div class="tabs-dropdown-container" [style.left]="activeTab.showDropdown * 160 + 'px'" *ngIf="activeTab?.dataContext !== null && activeTab?.showDropdown !== undefined">
+    <!-- layer name field -->
+<!--       TODO fix dynamic left positioning -->
+    <div class="name_desc">
+        <mat-form-field>
+            <input matInput
+                   type="text"
+                   placeholder="name"
+                   [(ngModel)]="activeTab.dataContext.description ? activeTab.dataContext.name : activeTab.title" />
+        </mat-form-field>
+
+        <!-- layer description field -->
+        <mat-form-field *ngIf="activeTab.dataContext.description">
+                <textarea matInput
+                          matTextareaAutosize
+                          placeholder="description"
+                          [(ngModel)]="activeTab.dataContext.description">
+                </textarea>
+        </mat-form-field>
+
+        <!-- layer domain (uneditable) -->
+        <mat-form-field *ngIf="activeTab.dataContext.domain">
+            <input matInput readonly disabled
+                   type="text"
+                   placeholder="domain"
+                   [(ngModel)]="activeTab.domain" />
+        </mat-form-field>
+
+        <!-- layer version (uneditable) -->
+        <mat-form-field *ngIf="activeTab.dataContext.version">
+            <input matInput readonly disabled
+                   type="text"
+                   placeholder="version"
+                   [(ngModel)]="activeTab.dataContext.version" />
+        </mat-form-field>
+
+    </div>
+    <div class="metadata_input" *ngIf="activeTab.dataContext.metadata">
+        <b class="metadata-label">Metadata</b>
+        <table>
+            <tr class="formfield-group" *ngFor="let metadata of activeTab.dataContext.metadata; let $i = index">
+                <td></td>
+                <td>
+                    <mat-form-field>
+                        <input matInput
+                               type="text"
+                               placeholder="name"
+                               [(ngModel)]="metadata.name" />
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput
+                               type="text"
+                               placeholder="value"
+                               [(ngModel)]="metadata.value" />
+                    </mat-form-field>
+                    <button class="button" (click)="activeTab.dataContext.removeMetadata($i)">remove this metadata</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2 class="addmore">
+                    <button class="button" (click)="activeTab.dataContext.addMetadata()">add more metadata</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
 
 <div *ngIf="layerTabs.length == 0" class="newTab">
     <!-- you shouldn't ever see this, but just in case -->
@@ -68,7 +137,7 @@
 </ng-template>
 
 <!-- New tab template -->
-<ng-template [ngIf]="activeTab && !activeTab.isDataTable">
+<ng-template [ngIf]="activeTab && !activeTab.dataContext">
     <div class="newTab border">
         <div class="description">
             <div class="logo">
@@ -445,6 +514,6 @@
     </div>
 </ng-template>
 
-<ng-template [ngIf]="activeTab && activeTab.isDataTable">
+<ng-template [ngIf]="activeTab && activeTab.dataContext">
     <DataTable [viewModel]="activeTab.dataContext"></DataTable>
 </ng-template>

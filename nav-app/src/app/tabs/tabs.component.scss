@@ -54,6 +54,10 @@
             cursor: default; //cursor behavior
             background-color: $panel-dark;
             border: 1px solid transparent; //override border highlighting on hover
+            &.dropdownActive {
+                border: 1px solid black;
+                z-index: 100;
+            }
         }
     }
 
@@ -70,6 +74,17 @@
         clear: both;
         content: " ";
     }
+}
+
+.tabs-dropdown-container {
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 10px 10px 5px rgb(0 0 0 / 50%);
+    position: absolute;
+    z-index: 100;
+    padding: 16px;
+    margin-top: -2px;
+    border-top: 1px solid darkgray;
 }
 
 // close tab button
