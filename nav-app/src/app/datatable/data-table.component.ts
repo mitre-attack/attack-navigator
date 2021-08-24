@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsula
 import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
+import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService, Link } from "../viewmodels.service";
 import {FormControl} from '@angular/forms';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {MatSelectModule} from '@angular/material/select';
@@ -266,15 +266,15 @@ export class DataTableComponent implements AfterViewInit {
     // edit field bindings
     commentEditField: string = "";
     scoreEditField: string = "";
+    linkEditFields: Link[] = [];
     /**
      * triggered on left click of technique
      * @param  technique      technique which was left clicked
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
     onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-
         if (!this.viewModel.isCurrentlyEditing()) {
-            if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            if (["comment", "score", "colorpicker", "link"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
         }
         //else populate editing controls
@@ -320,6 +320,7 @@ export class DataTableComponent implements AfterViewInit {
     populateEditFields(): void {
         this.commentEditField = this.viewModel.getEditingCommonValue("comment");
         this.scoreEditField = this.viewModel.getEditingCommonValue("score");
+        this.linkEditFields = this.viewModel.activeTvm.links;
     }
 
     /**
@@ -362,5 +363,23 @@ export class DataTableComponent implements AfterViewInit {
      */
     exportRender(): void {
         this.tabs.openSVGDialog(this.viewModel);
+    }
+
+    /** Add a new link */
+    addLink(): void {
+        this.linkEditFields.push(new Link());
+        console.log(this.viewModel.activeTvm)
+    }
+
+    /** Remove link */
+    removeLink(i): void {
+        this.linkEditFields.splice(i, 1);
+        this.viewModel.editSelectedTechniques('links', this.linkEditFields);
+    }
+
+    /** Update links on the selected techniques */
+    updateLinks(): void {
+        let value = this.linkEditFields.filter(link => link.valid());
+        this.viewModel.editSelectedTechniques('links', value);
     }
 }

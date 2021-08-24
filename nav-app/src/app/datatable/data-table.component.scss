@@ -474,3 +474,9 @@ $panel-light: lighten($panel-dark, 8%);
         }
     }
 }
+
+.link-table {
+    .link-container {
+        padding: 10px;
+    }
+}
