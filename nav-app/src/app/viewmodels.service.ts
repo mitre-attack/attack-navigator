@@ -562,7 +562,10 @@ export class ViewModel {
                 }
             }
         }
-        this.selectedTechniques.add(technique.get_technique_tactic_id(tactic));
+        let technique_tactic_id = technique.get_technique_tactic_id(tactic);
+        if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
+        this.selectedTechniques.add(technique_tactic_id);
+        this.checkLinks(true, technique_tactic_id);
     }
 
     /**
@@ -597,7 +600,9 @@ export class ViewModel {
         }
         else {
             for (let id of technique.get_all_technique_tactic_ids()) {
+                if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(id); // first selection
                 this.selectedTechniques.add(id);
+                this.checkLinks(true, id);
             }
         }
     }
@@ -619,7 +624,9 @@ export class ViewModel {
                 }
             }
         }
-        this.selectedTechniques.delete(technique.get_technique_tactic_id(tactic));
+        let technique_tactic_id = technique.get_technique_tactic_id(tactic);
+        this.selectedTechniques.delete(technique_tactic_id);
+        this.checkLinks(false, technique_tactic_id);
     }
 
     /**
@@ -650,6 +657,7 @@ export class ViewModel {
         }
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.delete(id);
+            this.checkLinks(false, id);
         }
     }
 
@@ -658,6 +666,8 @@ export class ViewModel {
      */
     public clearSelectedTechniques() {
         this.selectedTechniques.clear();
+        this.activeTvm = undefined;
+        this.linkMismatches = [];
     }
 
     /**
@@ -889,6 +899,37 @@ export class ViewModel {
         this.metadata.splice(index, 1)
     }
 
+    activeTvm: TechniqueVM; // first selected techniqueVM
+    linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
+    public get linksMatch(): boolean { return !this.linkMismatches.length; }
+
+    /**
+     * If a technique has been selected, checks whether the links of the selected technique match 
+     * the links of first selected technique. If a technique has been deselected, removes it from
+     * the list of mismatching techniques (if applicable) or re-evalutes the list of mismatching
+     * techniques in the case where the deselected technique was the first selected technique
+     * @param selected true if the technique was selected, false if it was deselected
+     * @param id the technique_tactic_union_id of the technique
+     */
+    public checkLinks(selected: boolean, id: string): void {
+        if (selected) { // selected technique(s)
+            let tvm = this.getTechniqueVM_id(id);
+            if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(id);
+        } else { // deselected technique(s)
+            if (this.linkMismatches.includes(id)) this.linkMismatches.splice(this.linkMismatches.indexOf(id), 1);
+            if (this.activeTvm.technique_tactic_union_id == id) { // edge case where deselection was the first selected technique
+                let first_id = this.selectedTechniques.values().next().value;
+                this.activeTvm = first_id ? this.getTechniqueVM_id(first_id): undefined;
+
+                // re-evaluate mismatched links
+                this.linkMismatches = [];
+                for (let technique_tactic_id of this.selectedTechniques) {
+                    let tvm = this.getTechniqueVM_id(technique_tactic_id);
+                    if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(technique_tactic_id);
+                }
+            }
+        }
+    }
 
     //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8
     // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo
@@ -1414,6 +1455,7 @@ export class TechniqueVM {
     comment: string = ""
     metadata: Metadata[] = [];
     links: Link[] = [];
+    public get linkStr(): string { return JSON.stringify(this.links); }
 
     showSubtechniques = false;
     aggregateScore: any; // number rather than string as this is not based on an input from user
