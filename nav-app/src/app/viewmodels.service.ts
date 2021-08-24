@@ -1706,18 +1706,19 @@ export class Link {
     }
 
     deSerialize(rep: any): void {
-        if (rep.url) { // link
-            if (typeof(rep.url) === "string") this.url = rep.url;
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        if ("url" in obj) { // link
+            if (typeof(obj.url) === "string") this.url = obj.url;
             else console.error("TypeError: Link field 'url' is not a string");
 
-            if (rep.label) {
-                if (typeof(rep.label) === "string") this.label = rep.label;
+            if ("label" in obj) {
+                if (typeof(obj.label) === "string") this.label = obj.label;
                 else console.error("TypeError: Link field 'label' is not a string");
             }
             else console.error("Error: Link required field 'label' not present");
         }
-        else if ("divider" in rep) { // divider
-            if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
+        else if ("divider" in obj) { // divider
+            if (typeof(obj.divider) === "boolean") this.divider = obj.divider;
             else  console.error("TypeError: Link field 'divider' is not a boolean");
         }
         else console.error("Error: Link required field 'url' or 'divider' not present");
