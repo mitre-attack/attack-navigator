@@ -41,6 +41,7 @@ import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
 import { SearchPopoverNotificationComponent } from './search-and-multiselect/search-popover-notification/search-popover-notification.component';
+import { MatTabsModule } from "@angular/material/tabs";
 
 
 @NgModule({
@@ -84,15 +85,17 @@ import { SearchPopoverNotificationComponent } from './search-and-multiselect/sea
     MatCardModule,
     MatDividerModule,
     MarkdownModule.forRoot(),
-    PopoverModule
+    PopoverModule,
+    MatTabsModule
   ],
   exports: [
-      MatSelectModule,
-      MatInputModule,
-      MatButtonModule,
-      MatTooltipModule,
-      MatMenuModule,
-      MatExpansionModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatExpansionModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

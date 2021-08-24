@@ -29,28 +29,24 @@
     </div>
 </div>
 
+
 <!-- Tabs display -->
-<div [style.margin-top]="hasFeature('header') ? '0px' : '15px'" *ngIf="layerTabs.length > 0 && hasFeature('tabs')">
-    <ul class="tabs">
-        <!-- dynamic tabs (can be opened and closed) -->
-        <li *ngFor="let tab of layerTabs; let $i = index" (click)="selectTab(tab)" [class.active]="tab == activeTab">
-            <span *ngIf="!tab == activeTab || !tab.isDataTable" class="tab-title"
-                  [style.cursor]="tab == activeTab ? 'default' : 'pointer'">{{tab.isDataTable ? tab.dataContext.name : tab.title}}</span>
-            <input *ngIf="!(!tab == activeTab || !tab.isDataTable)"
-                   [style.cursor]="tab == activeTab ? tab.isDataTable ? 'text' : 'default' : 'pointer'" type="text"
-                   [(ngModel)]="tab.dataContext.name"
-                   [style.width]="tab.isDataTable ? ((tab.dataContext.name.length) * 8.4) + 'px' : (tab.title.length * 8.4) + 'px' ">
-            <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
+<nav mat-tab-nav-bar class="tabs">
+    <a mat-tab-link
+       class="tab-title"
+       [class.active]="activeTab === tab"
+       *ngFor="let tab of layerTabs; let $i = index"
+       (click)="activeTab = tab"
+       [active]="activeTab === tab">
+        {{tab.isDataTable ? tab.dataContext.name : tab.title}}
+        <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
+        <!-- tab enumerator (for layer operations) -->
+        <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+    </a>
+    <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">+</a>
+</nav>
 
-            <!-- tab enumerator (for layer operations) -->
-            <span class="tabEnumerator"
-                  *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
-        </li>
 
-        <!-- open new tab button -->
-        <li *ngIf="layerTabs.length < 10" class="addTab" (click)="newBlankTab()">+</li>
-    </ul>
-</div>
 <div *ngIf="layerTabs.length == 0" class="newTab">
     <!-- you shouldn't ever see this, but just in case -->
     <button (click)="newBlankTab()">Start</button>
