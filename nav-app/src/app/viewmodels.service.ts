@@ -850,7 +850,22 @@ export class ViewModel {
     public editSelectedTechniques(field: string, value: any): void {
         this.selectedTechniques.forEach((id) => {
             this.getTechniqueVM_id(id)[field] = value;
-        })
+        });
+    }
+
+    /**
+     * Edit the selected techniques links attribute
+     * @param value the value to place in the field
+     */
+    public editSelectedTechniqueLinks(value: Link[]): void {
+        this.selectedTechniques.forEach(id => {
+            const links_clone = value.map(link => { // deep copy
+                let c = new Link();
+                c.deSerialize(link.serialize());
+                return c;
+            });
+            this.getTechniqueVM_id(id).links = links_clone;
+        });
     }
 
     /**

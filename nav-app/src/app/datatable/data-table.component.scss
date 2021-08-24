@@ -263,9 +263,6 @@ $panel-light: lighten($panel-dark, 8%);
         &:not(:first-child) {
             margin-top: 4px;
         }
-        .filter-label {
-
-        }
         .filter-option {
             &:hover {
                 background: $cell-highlight-color;

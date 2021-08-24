@@ -380,6 +380,6 @@ export class DataTableComponent implements AfterViewInit {
     /** Update links on the selected techniques */
     updateLinks(): void {
         let value = this.linkEditFields.filter(link => link.valid());
-        this.viewModel.editSelectedTechniques('links', value);
+        this.viewModel.editSelectedTechniqueLinks(value);
     }
 }
