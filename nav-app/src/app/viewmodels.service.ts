@@ -1789,32 +1789,42 @@ export class Metadata {
     public name: string;
     public value: string;
     public divider: boolean;
+
     constructor() {};
-    serialize(): object { return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider} }
-    deSerialize(rep: any) {
-        if (rep.name) { // name & value object
-            if (typeof(rep.name) === "string") this.name = rep.name;
+
+    serialize(): string {
+        let rep = this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
+        return JSON.stringify(rep, null, "\t");
+    }
+
+    deSerialize(rep: any): void {
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep;
+        if ("name" in obj) { // name & value object
+            if (typeof(obj.name) === "string") this.name = obj.name;
             else console.error("TypeError: Metadata field 'name' is not a string");
 
-            if (rep.value) {
-                if (typeof(rep.value) === "string") this.value = rep.value;
+            if ("value" in obj) {
+                if (typeof(obj.value) === "string") this.value = obj.value;
                 else console.error("TypeError: Metadata field 'value' is not a string")
             }
             else console.error("Error: Metadata required field 'value' not present");
         }
-        else if ("divider" in rep) { // divider object
-            if (typeof(rep.divider) === "boolean") this.divider = rep.divider;
+        else if ("divider" in obj) { // divider object
+            if (typeof(obj.divider) === "boolean") this.divider = obj.divider;
             else  console.error("TypeError: Metadata field 'divider' is not a boolean");
         }
         else console.error("Error: Metadata required field 'name' or 'divider' not present");
     }
-    valid(): boolean { return (this.name && this.name.length > 0 && this.value && this.value.length > 0) || (this.divider !== undefined) }
+
+    valid(): boolean {
+        return (this.name && this.name.length > 0 && this.value && this.value.length > 0) || (this.divider !== undefined)
+    }
 }
 
 // { label, url } with serialization
 export class Link {
-    public label: string = "";
-    public url: string = "";
+    public label: string;
+    public url: string;
     public divider: boolean;
 
     constructor() {};
@@ -1825,8 +1835,8 @@ export class Link {
     }
 
     deSerialize(rep: any): void {
-        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
-        if ("url" in obj) { // link
+        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep;
+        if ("url" in obj) { // label & url object
             if (typeof(obj.url) === "string") this.url = obj.url;
             else console.error("TypeError: Link field 'url' is not a string");
 
@@ -1836,7 +1846,7 @@ export class Link {
             }
             else console.error("Error: Link required field 'label' not present");
         }
-        else if ("divider" in obj) { // divider
+        else if ("divider" in obj) { // divider object
             if (typeof(obj.divider) === "boolean") this.divider = obj.divider;
             else  console.error("TypeError: Link field 'divider' is not a boolean");
         }
