@@ -85,6 +85,16 @@
     padding: 16px;
     margin-top: -2px;
     border-top: 1px solid darkgray;
+    .button-container {
+        text-align: right;
+        margin-top: 10px;
+    }
+    td {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        flex-flow: column;
+    }
 }
 
 // close tab button

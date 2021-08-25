@@ -110,7 +110,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param  {Boolean} [isCloseable=false] can this tab be closed?
      * @param  {Boolean} [replace=false]     replace the current tab with the new tab, TODO
      * @param  {Boolean} [forceNew=false]    force open a new tab even if a tab of that name already exists
-     * @param  {Boolean} [dataTable=false]   is this a data-table tab? if so tab text should be editable
 
      */
 

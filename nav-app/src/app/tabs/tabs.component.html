@@ -53,10 +53,16 @@
 <!--       TODO fix dynamic left positioning -->
     <div class="name_desc">
         <mat-form-field>
-            <input matInput
+            <input *ngIf="!activeTab.dataContext"
+                   matInput
                    type="text"
                    placeholder="name"
-                   [(ngModel)]="activeTab.dataContext.description ? activeTab.dataContext.name : activeTab.title" />
+                   [(ngModel)]="activeTab.title" />
+            <input *ngIf="activeTab.dataContext"
+                   matInput
+                   type="text"
+                   placeholder="name"
+                   [(ngModel)]="activeTab.dataContext.name" />
         </mat-form-field>
 
         <!-- layer description field -->
@@ -112,7 +118,9 @@
                 </td>
             </tr>
         </table>
-
+    </div>
+    <div class="button-container">
+        <button class="button" (click)="activeTab.showDropdown = undefined">Done</button>
     </div>
 </div>
 
