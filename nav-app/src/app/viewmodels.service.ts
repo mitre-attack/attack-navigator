@@ -578,7 +578,7 @@ export class ViewModel {
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
         if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
         this.selectedTechniques.add(technique_tactic_id);
-        this.checkLinks(true, technique_tactic_id);
+        this.checkValues(true, technique_tactic_id);
     }
 
     /**
@@ -615,7 +615,7 @@ export class ViewModel {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(id); // first selection
                 this.selectedTechniques.add(id);
-                this.checkLinks(true, id);
+                this.checkValues(true, id);
             }
         }
     }
@@ -639,7 +639,7 @@ export class ViewModel {
         }
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
         this.selectedTechniques.delete(technique_tactic_id);
-        this.checkLinks(false, technique_tactic_id);
+        this.checkValues(false, technique_tactic_id);
     }
 
     /**
@@ -670,7 +670,7 @@ export class ViewModel {
         }
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.delete(id);
-            this.checkLinks(false, id);
+            this.checkValues(false, id);
         }
     }
 
@@ -681,6 +681,7 @@ export class ViewModel {
         this.selectedTechniques.clear();
         this.activeTvm = undefined;
         this.linkMismatches = [];
+        this.metadataMismatches = [];
     }
 
     /**
@@ -932,17 +933,18 @@ export class ViewModel {
     }
 
     /**
-     * Edit the selected techniques links attribute
-     * @param value the value to place in the field
+     * Edit the selected techniques list attribute
+     * @param values the list of values to place in the field
      */
-    public editSelectedTechniqueLinks(value: Link[]): void {
+    public editSelectedTechniqueValues(values: Link[] | Metadata[], field: string): void {
+        let fieldToType: any = {"links": Link, "metadata": Metadata};
         this.selectedTechniques.forEach(id => {
-            const links_clone = value.map(link => { // deep copy
-                let c = new Link();
-                c.deSerialize(link.serialize());
-                return c;
+            const value_clone = values.map((value: Link | Metadata) => { // deep copy
+                let clone = new fieldToType[field]();
+                clone.deSerialize(value.serialize());
+                return clone;
             });
-            this.getTechniqueVM_id(id).links = links_clone;
+            this.getTechniqueVM_id(id)[field] = value_clone;
         });
     }
 
@@ -990,30 +992,37 @@ export class ViewModel {
     activeTvm: TechniqueVM; // first selected techniqueVM
     linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
     public get linksMatch(): boolean { return !this.linkMismatches.length; }
+    metadataMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching metadata
+    public get metadataMatch(): boolean { return !this.metadataMismatches.length; }
 
     /**
-     * If a technique has been selected, checks whether the links of the selected technique match 
-     * the links of first selected technique. If a technique has been deselected, removes it from
-     * the list of mismatching techniques (if applicable) or re-evalutes the list of mismatching
+     * If a technique has been selected, checks whether the link & metadata values of the selected technique match 
+     * the link & metadata values of the first selected technique. If a technique has been deselected, removes it from
+     * the lists of mismatching techniques (if applicable) or re-evalutes the lists of mismatching
      * techniques in the case where the deselected technique was the first selected technique
      * @param selected true if the technique was selected, false if it was deselected
      * @param id the technique_tactic_union_id of the technique
      */
-    public checkLinks(selected: boolean, id: string): void {
+    public checkValues(selected: boolean, id: string): void {
         if (selected) { // selected technique(s)
             let tvm = this.getTechniqueVM_id(id);
             if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(id);
+            if (this.activeTvm.metadataStr !== tvm.metadataStr) this.metadataMismatches.push(id);
         } else { // deselected technique(s)
             if (this.linkMismatches.includes(id)) this.linkMismatches.splice(this.linkMismatches.indexOf(id), 1);
+            if (this.metadataMismatches.includes(id)) this.metadataMismatches.splice(this.metadataMismatches.indexOf(id), 1);
+
             if (this.activeTvm.technique_tactic_union_id == id) { // edge case where deselection was the first selected technique
                 let first_id = this.selectedTechniques.values().next().value;
                 this.activeTvm = first_id ? this.getTechniqueVM_id(first_id): undefined;
 
-                // re-evaluate mismatched links
+                // re-evaluate mismatched values
                 this.linkMismatches = [];
+                this.metadataMismatches = [];
                 for (let technique_tactic_id of this.selectedTechniques) {
                     let tvm = this.getTechniqueVM_id(technique_tactic_id);
                     if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(technique_tactic_id);
+                    if (this.activeTvm.metadataStr !== tvm.metadataStr) this.metadataMismatches.push(technique_tactic_id);
                 }
             }
         }
@@ -1551,6 +1560,7 @@ export class TechniqueVM {
     enabled: boolean = true;
     comment: string = ""
     metadata: Metadata[] = [];
+    public get metadataStr(): string { return JSON.stringify(this.metadata); }
     links: Link[] = [];
     public get linkStr(): string { return JSON.stringify(this.links); }
 

@@ -398,7 +398,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     /** Update links on the selected techniques */
     updateLinks(): void {
         let value = this.linkEditFields.filter(link => link.valid());
-        this.viewModel.editSelectedTechniqueLinks(value);
+        this.viewModel.editSelectedTechniqueValues(value, "links");
     }
 
     /** 
