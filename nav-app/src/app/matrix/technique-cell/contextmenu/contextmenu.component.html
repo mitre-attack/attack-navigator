@@ -64,6 +64,7 @@
                 <div *ngIf="!link.divider" class="contextMenu-button" (click)="openLink(link)">
                     {{link.label}}
                 </div>
+                <div class="divider" *ngIf="link.divider"></div>
             </div>
         </div>
     </div>
