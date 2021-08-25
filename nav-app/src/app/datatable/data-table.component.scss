@@ -472,8 +472,47 @@ $panel-light: lighten($panel-dark, 8%);
     }
 }
 
-.link-table {
-    .link-container {
+.list-input {
+    width: 250px !important;
+    overflow-y: auto;
+    max-height: 50vh;
+    .list-container, .add-more { margin: 10px 0; }
+    .item-container {
         padding: 10px;
+        border: 1px solid $panel-dark;
+    }
+    .divider {
+        padding: 4px 0px;
+        cursor: pointer;
+        .mat-divider {
+            border-top-width: 2px;
+        }
+        .icon {
+            height: 16px;
+            width: 16px;
+            line-height: 16px;
+            border-radius: 3px;
+        }
+        .opt-divider, .set-divider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .mat-divider, .button { flex: 1; }
+        }
+        .opt-divider {
+            .icon { background-color: $panel-dark; }
+            &:hover {
+                .mat-divider { border-top-color: darken($panel-dark, 10%); }
+                .icon { background-color: darken($panel-dark, 10%); }
+            }
+        }
+        .set-divider {
+            .icon { background-color: darken($panel-dark, 40%); }
+            .mat-divider { border-top-color: darken($panel-dark, 40%); }
+            &:hover {
+                .mat-divider { border-top-color: darken($panel-dark, 50%); }
+                .icon { background-color: darken($panel-dark, 50%); }
+            }
+        }
     }
 }

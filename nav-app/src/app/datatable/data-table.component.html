@@ -508,31 +508,43 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      <img [src]="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? 'assets/icons/ic_link_black_24px.svg' : 'assets/icons/ic_link_gray_24px.svg'" alt="link" />
                  </div>
                  <!-- link input -->
-                 <div class="dropdown-container inputfield left link-table" #dropdown [class.left]="checkalign(dropdown)"
+                 <div class="dropdown-container inputfield left list-input" #dropdown [class.left]="checkalign(dropdown)"
                     *ngIf="currentDropdown === 'link'">
-                    <div *ngFor="let link of linkEditFields; let i = index">
-                        <div class="link-container" *ngIf="!link.divider">
-                            <mat-form-field>
-                                <textarea matInput
-                                        matTextareaAutosize
-                                        placeholder="label"
-                                        [(ngModel)]="linkEditFields[i].label"
-                                        (input)="updateLinks()">
-                                </textarea>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <textarea matInput
-                                        matTextareaAutosize
-                                        placeholder="url"
-                                        [(ngModel)]="linkEditFields[i].url"
-                                        (input)="updateLinks()">
-                                </textarea>
-                            </mat-form-field>
-                            <button class="button" (click)="removeLink(i)">remove link</button>
+                    <div class="list-container">
+                        <div *ngFor="let link of linkEditFields; let i = index">
+                            <div class="item-container" *ngIf="!link.divider">
+                                <mat-form-field>
+                                    <textarea matInput
+                                            matTextareaAutosize
+                                            placeholder="label"
+                                            [(ngModel)]="linkEditFields[i].label"
+                                            (input)="updateLinks()">
+                                    </textarea>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <textarea matInput
+                                            matTextareaAutosize
+                                            placeholder="url"
+                                            [(ngModel)]="linkEditFields[i].url"
+                                            (input)="updateLinks()">
+                                    </textarea>
+                                </mat-form-field>
+                                <button class="button" (click)="removeLink(i)">remove</button>
+                            </div>
+                            
+                            <div class="divider" (click)="onClickDivider(i, !link.divider)" *ngIf="canAddDivider(i) || link.divider">
+                                <div [ngClass]="{'opt-divider': canAddDivider(i), 'set-divider': link.divider}">
+                                    <mat-divider></mat-divider>
+                                    <button mat-icon-button class="icon">{{link.divider ? '-': '+'}}</button>
+                                    <mat-divider></mat-divider>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <button class="button" (click)="addLink()">add {{linkEditFields.length ? 'another' : 'a'}} link</button>
-                 </div>
+                    <div class="add-more">
+                        <button class="button" (click)="addLink()">add {{linkEditFields.length ? 'another' : 'a'}} link</button>
+                    </div>
+                </div>
              </div>
 
 

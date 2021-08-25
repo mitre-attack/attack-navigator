@@ -368,7 +368,6 @@ export class DataTableComponent implements AfterViewInit {
     /** Add a new link */
     addLink(): void {
         this.linkEditFields.push(new Link());
-        console.log(this.viewModel.activeTvm)
     }
 
     /** Remove link */
@@ -381,5 +380,31 @@ export class DataTableComponent implements AfterViewInit {
     updateLinks(): void {
         let value = this.linkEditFields.filter(link => link.valid());
         this.viewModel.editSelectedTechniqueLinks(value);
+    }
+
+    /** 
+     *  Checks if a divider can be added after the given link index:
+     *  A divider can only be added after a valid link where
+     *  the current and next indices are not dividers
+     */
+    canAddDivider(i): boolean {
+        let list = this.linkEditFields.filter(link => link.valid());
+        if (list[i] && !list[i].divider) {
+            if (i + 1 >= list.length) return true;
+            if (list[i+1] && !list[i+1].divider) return true;
+        }
+        return false;
+    }
+
+    /** Add or remove a divider */
+    onClickDivider(i, isDivider) {
+        if (isDivider) { // add divider
+            let divider = new Link();
+            divider.divider = true;
+            this.linkEditFields.splice(i+1, 0, divider);
+        } else { // remove divider
+            this.linkEditFields.splice(i, 1);
+        }
+        this.updateLinks();
     }
 }
