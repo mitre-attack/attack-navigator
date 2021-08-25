@@ -532,7 +532,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 <button class="button" (click)="removeLink(i)">remove</button>
                             </div>
                             
-                            <div class="divider" (click)="onClickDivider(i, !link.divider)" *ngIf="canAddDivider(i) || link.divider">
+                            <div class="divider" (click)="onClickDivider(i, !link.divider)" *ngIf="canAddDivider(i) || link.divider"
+                                matTooltipPosition="below" [matTooltip]="link.divider ? 'remove divider' : 'add a divider'">
                                 <div [ngClass]="{'opt-divider': canAddDivider(i), 'set-divider': link.divider}">
                                     <mat-divider></mat-divider>
                                     <button mat-icon-button class="icon">{{link.divider ? '-': '+'}}</button>
