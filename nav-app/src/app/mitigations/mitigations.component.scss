@@ -1,0 +1,114 @@
+@import "../../colors.scss";
+
+.mat-header-cell {
+  text-align: center;
+}
+
+.mitigation-table {
+  width: 96%;
+  margin: 8px auto auto auto;
+}
+
+.mitigation-component-container {
+  margin: 25px auto auto auto;
+  width: 100%;
+}
+
+tr.mitigation-table-row {
+  height: 1em;
+}
+
+.mitigation-table-header {
+  height: 2em;
+}
+
+tr.mitigation-table-row :hover {
+  background-color: black;
+}
+
+tr.mitigation-table-row.highlighted {
+  background-color: #60c5ff;
+}
+
+.mat-column-framework {
+  word-wrap: break-all !important;
+  white-space: unset !important;
+  width: 100px !important;
+  overflow-wrap: break-all;
+  word-wrap: break-all;
+
+  word-break: break-all;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mitigations-component {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+tr.mitigations-component-detail-row {
+  height: 0;
+}
+
+tr.mitigations-component-element-row:not(.mitigations-component-expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.mitigations-component-element-row:not(.mitigations-component-expanded-row):active {
+  background: #efefef;
+}
+
+.mitigations-component-element-row td {
+  border-bottom-width: 0;
+}
+
+.mitigations-component-element-detail {
+  padding-top: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mitigations-component-element-header {
+  padding-top: 2px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.mitigations-component-element-content {
+  font-weight: lighter;
+  font-size: 12px;
+}
+
+.mitigations-component-element-content a {
+  padding-right: 5px;
+}
+
+.mitigations-component-element-description-attribution {
+  opacity: 0.5;
+}
+
+.mitigations-component button {
+  font-size: 12px;
+  margin: 10px 10px 0px 0px;
+}
+
+.mitigations-component-list-item {
+  font-size: 12px;
+  height: 2em !important;
+}
+
+.mitigations-component-container {
+  height: 200px;
+  overflow: auto;
+}
+
+.mitigation-component-threat-textarea {
+  width: 98%;
+  height: 4em;
+}

@@ -9,13 +9,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { HttpClientModule } from '@angular/common/http';
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
@@ -32,6 +38,15 @@ import { TechniquesSearchComponent } from './techniques-search/techniques-search
 import { ContextmenuComponent } from './matrix/technique-cell/contextmenu/contextmenu.component';
 import { TacticCellComponent } from './matrix/tactic-cell/tactic-cell.component';
 import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.component';
+import { MitigationsComponent } from './mitigations/mitigations.component';
+import { ControlFrameworkImportComponent } from './control-framework/control-framework-import/control-framework-import.component';
+import { ExportDialogComponent, ExportDialogButtonComponent } from './mitigations/export-dialog/export-dialog.component';
+import { MappingsDialogComponent, MappingsDialogButtonComponent } from './mitigations/mappings-dialog/mappings-dialog.component';
+import { MatListModule } from '@angular/material/list';
+import { AsvsTableComponent } from './mitigations/mappings-dialog/mappings/asvs-table/asvs-table.component';
+import { CisTableComponent } from './mitigations/mappings-dialog/mappings/cis-table/cis-table.component';
+import { NistMappingsComponent } from './mitigations/mappings-dialog/mappings/nist-mappings/nist-mappings.component';
+import { TechniqueMappingsComponent } from './mitigations/technique-mappings/technique-mappings.component';
 
 
 @NgModule({
@@ -51,6 +66,16 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     ContextmenuComponent,
     TacticCellComponent,
     VersionUpgradeComponent,
+    MitigationsComponent,
+    ControlFrameworkImportComponent,
+    MappingsDialogComponent,
+    MappingsDialogButtonComponent,
+    ExportDialogComponent,
+    ExportDialogButtonComponent,
+    AsvsTableComponent,
+    CisTableComponent,
+    NistMappingsComponent,
+    TechniqueMappingsComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +83,7 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     BrowserAnimationsModule,
     MatSelectModule,
     FormsModule,
+    MatTableModule,
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
@@ -68,6 +94,14 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
     MatExpansionModule,
     MatDialogModule,
     ColorPickerModule,
+    MatSlideToggleModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatIconModule,
+    MatButtonToggleModule,
+    MatListModule,
+    MatCheckboxModule,
+    MatTabsModule
   ],
   exports: [
       MatSelectModule,

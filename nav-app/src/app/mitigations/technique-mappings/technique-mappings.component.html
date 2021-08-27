@@ -1,0 +1,62 @@
+<div *ngIf="techniquesSortBy('score').length > 0" class="technique-mappings-component-container">
+    <div class="technique-mappings-component-element-header">
+      Mappings
+    </div>
+    <table mat-table [dataSource]="techniquesSortBy('score')" multiTemplateDataRows
+      class="mat-elevation-z8 technique-mappings-table">
+      <caption>Techniques that have a score in the navigator are added here with a summary of mappings.</caption>
+
+      <mat-text-column name="attackID" headerText="Attack ID"></mat-text-column>
+      <mat-text-column name="name" headerText="Technique"></mat-text-column>
+      <mat-text-column name="techniqueToNist" headerText="NIST" [dataAccessor]='techniqueToNistCount'
+        class="mat-column-framework"></mat-text-column>
+      <mat-text-column name="techniqueToCis" headerText="CIS" [dataAccessor]='techniqueToCisCount'
+        class="mat-column-framework"></mat-text-column>
+      <mat-text-column name="techniqueToAsvs" headerText="ASVS" [dataAccessor]='techniqueToAsvsCount'
+        class="mat-column-framework"></mat-text-column>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let element" [attr.colspan]="techniqueDisplayedColumns.length">
+          <div class="technique-mappings-component-element-detail"
+            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <div>
+              <div class="technique-mappings-component-element-header">
+                Description
+              </div>
+              <div class="technique-mappings-component-element-content">
+                {{element.description}}
+              </div>
+              <div class="technique-mappings-component-element-header">
+                NIST
+              </div>
+              <div class="technique-mappings-component-element-content">
+                <a *ngFor="let nist of this.techniqueToNist(element)" target="_blank"
+                  [href]="'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#!/control?version=5.1&number=' + nist.slice(3, nist.length)">{{nist}}</a>
+              </div>
+              <div class="technique-mappings-component-element-header">
+                CIS
+              </div>
+              <div class="technique-mappings-component-element-content">
+                {{this.techniqueToCis(element).join(', ')}}
+              </div>
+              <div class="technique-mappings-component-element-header">
+                ASVS
+              </div>
+              <div class="technique-mappings-component-element-content">
+                {{this.techniqueToAsvs(element).join(', ')}}
+              </div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="techniqueDisplayedColumns" class="technique-mappings-table-header"></tr>
+      <tr mat-row *matRowDef="let element; columns: techniqueDisplayedColumns;"
+        class="technique-mappings-component-element-row technique-mappings-table-row"
+        [class.technique-mappings-component-expanded-row]="expandedElement === element"
+        (click)="expandedElement != element ? expandedElement = element : expandedElement = {}">
+      </tr>
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="technique-mappings-component-detail-row"></tr>
+    </table>
+  </div>

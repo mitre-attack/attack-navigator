@@ -1,0 +1,95 @@
+.mat-dialog-container {
+    padding: 0;
+    height: 99%;
+    width: 99%;
+    max-height: 200vh !important;
+    max-width: 500vh !important;
+  }
+  
+  .mappings-dialog {
+    max-width: 200vw !important;
+  }
+  
+  .mappings-dialog-content {
+    height: 92%;
+    max-height: 200vh !important;
+    max-width: 200vh !important;
+    width: 99%;
+    overflow: auto;
+  }
+  
+  .mappings-dialog-content-button {
+    margin: 5px;
+  }
+  
+  .mappings-dialog-content-mat-table td, th {
+    padding: 0px 10px 0px 10px;
+  }
+  
+  .mappings-dialog-content-mat-table tr:hover {
+    background: rgb(214, 208, 255) !important;
+  }
+  
+  .mappings-dialog-content-mat-table tr:hover td {
+    background: rgb(214, 208, 255) !important;
+  }
+  
+  .mappings-dialog-content-mat-table td:nth-child(even), th:nth-child(even) {
+    background: #EEE
+  }
+  
+  .mapping-dialog-nist-table {
+    width: 100%;
+  }
+  
+  .mapping-element-detail {
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+  }
+  
+  tr.mapping-detail-row {
+    height: 0;
+  }
+  
+  .mappings-dialog-mat-column-action {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 3% !important;
+    width: 3% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  
+    word-break: break-word;
+  
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+  
+  
+  .mappings-dialog-add-remove-button {
+    width: 15px;
+    margin: auto 0 auto 0;
+  }
+  
+  .mapping-dialog-mat-select {
+    width: 100%;
+    margin: auto 0 auto 0;
+  }
+  
+  .mappings-dialog-mat-tooltip {
+    font-size: 20px !important;
+  }
+  
+  .mappings-dialog-mapping-container {
+    max-height: 400px;
+    overflow: auto;
+    margin: 10px;
+  }
+  
+  .hide {
+    display: none;
+  }
+  

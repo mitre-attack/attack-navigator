@@ -1,0 +1,114 @@
+@import "../../../colors.scss";
+
+.mat-header-cell {
+  text-align: center;
+}
+
+.technique-mappings-table {
+  width: 96%;
+  margin: 8px auto auto auto;
+}
+
+.technique-mappings-component-container {
+  margin: 25px auto auto auto;
+  width: 100%;
+}
+
+tr.technique-mappings-table-row {
+  height: 1em;
+}
+
+.technique-mappings-table-header {
+  height: 2em;
+}
+
+tr.technique-mappings-table-row :hover {
+  background-color: black;
+}
+
+tr.technique-mappings-table-row.highlighted {
+  background-color: #60c5ff;
+}
+
+.mat-column-framework {
+  word-wrap: break-all !important;
+  white-space: unset !important;
+  width: 100px !important;
+  overflow-wrap: break-all;
+  word-wrap: break-all;
+
+  word-break: break-all;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.technique-mappings-component {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+}
+
+tr.technique-mappings-component-detail-row {
+  height: 0;
+}
+
+tr.technique-mappings-component-element-row:not(.technique-mappings-component-expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.technique-mappings-component-element-row:not(.technique-mappings-component-expanded-row):active {
+  background: #efefef;
+}
+
+.technique-mappings-component-element-row td {
+  border-bottom-width: 0;
+}
+
+.technique-mappings-component-element-detail {
+  padding-top: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.technique-mappings-component-element-header {
+  padding-top: 2px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.technique-mappings-component-element-content {
+  font-weight: lighter;
+  font-size: 12px;
+}
+
+.technique-mappings-component-element-content a {
+  padding-right: 5px;
+}
+
+.technique-mappings-component-element-description-attribution {
+  opacity: 0.5;
+}
+
+.technique-mappings-component button {
+  font-size: 12px;
+  margin: 10px 10px 0px 0px;
+}
+
+.technique-mappings-component-list-item {
+  font-size: 12px;
+  height: 2em !important;
+}
+
+.technique-mappings-component-container {
+  height: 100%;
+  overflow: auto;
+}
+
+.technique-mappings-component-threat-textarea {
+  width: 98%;
+  height: 4em;
+}

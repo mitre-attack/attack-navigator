@@ -1,0 +1,126 @@
+<h1 mat-dialog-title>Mappings
+  <mat-button-toggle-group name="mappingKey" aria-label="Mappings Key" [(ngModel)]="mappingKey">
+    <mat-button-toggle value="mitigations">Mitigations</mat-button-toggle>
+    <mat-button-toggle value="FNIST">Filtered NIST</mat-button-toggle>
+    <mat-button-toggle value="NIST">NIST</mat-button-toggle>
+  </mat-button-toggle-group>
+  <button class="mappings-dialog-content-button" mat-raised-button (click)='clickExportAll()'>Export All
+    Mappings</button>
+</h1>
+<div mat-dialog-content class="mappings-dialog-content">
+  <table mat-table [dataSource]="mitigations(mappingKey)" class="mappings-dialog-content-mat-table"
+    multiTemplateDataRows *ngIf='mappingKey === "mitigations"'>
+
+    <ng-container matColumnDef="name" [sticky]="true">
+      <th mat-header-cell *matHeaderCellDef> Mitigation </th>
+      <td mat-cell *matCellDef="let element"> {{nameAccessor(element)}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="score" [sticky]="true">
+      <th mat-header-cell *matHeaderCellDef> Score </th>
+      <td mat-cell *matCellDef="let element"> {{element.score}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="attackId" [sticky]="true">
+      <th mat-header-cell *matHeaderCellDef> Attack ID </th>
+      <td mat-cell *matCellDef="let element"> {{attackIdAccessor(element)}}
+      </td>
+    </ng-container>
+
+    <!-- 
+      NIST Mapping Column
+     -->
+    <ng-container matColumnDef="mappingMitigations" [sticky]="true">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length"
+        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+        <div class="mappings-dialog-mapping-container mat-elevation-z8">
+          <mat-table [dataSource]="getNistItems(element)" class='mapping-dialog-nist-table'>
+
+            <ng-container matColumnDef="action" [sticky]="true">
+              <mat-header-cell *matHeaderCellDef></mat-header-cell>
+              <mat-cell *matCellDef="let nist">
+                <button mat-mini-fab color="warn"
+                  (click)='removeMapping(nist.subcategory.id, attackIdAccessor(element))'>
+                  <mat-icon>remove</mat-icon>
+                </button>
+              </mat-cell>
+              <mat-footer-cell *matFooterCellDef class="mapping-dialog-mat-select">
+                <button mat-mini-fab (click)='addMapping(attackIdAccessor(element))' color="primary">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <mat-form-field appearance="fill" class="mapping-dialog-mat-select">
+                  <mat-label>NIST</mat-label>
+                  <mat-select [(value)]="selectedIdValue" class="mapping-dialog-mat-select">
+                    <mat-option *ngFor="let nistItem of nistItems" [value]="nistItem.mappingGroupingId()"
+                      class="mapping-dialog-mat-select">
+                      {{nistItem.subcategory.id}} - {{nistItem.subcategory.description}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </mat-footer-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="secFunction" [sticky]="true">
+              <mat-header-cell *matHeaderCellDef> Sec Function
+              </mat-header-cell>
+              <mat-cell *matCellDef="let nist">
+                {{nist.secFunction}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="category" [sticky]="true">
+              <mat-header-cell *matHeaderCellDef> Category
+              </mat-header-cell>
+              <mat-cell *matCellDef="let nist">
+                {{nist.category.id}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="subcategoryId" [sticky]="true">
+              <mat-header-cell class="mappings-dialog-content-mat-table-s1" *matHeaderCellDef> Id
+              </mat-header-cell>
+              <mat-cell *matCellDef="let nist" class="mappings-dialog-content-mat-table-s1">
+                {{nist.subcategory.id}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="subcategory" [sticky]="true">
+              <mat-header-cell class="mappings-dialog-content-mat-table-s3" *matHeaderCellDef> subcategory
+              </mat-header-cell>
+              <mat-cell *matCellDef="let nist" class="mappings-dialog-content-mat-table-s3">
+                {{nist.subcategory.description}}
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row
+              *matHeaderRowDef="['action', 'subcategoryId', 'secFunction', 'category', 'subcategory']; sticky: true">
+            </mat-header-row>
+            <mat-row
+              *matRowDef="let row; columns: ['action', 'subcategoryId', 'secFunction','category', 'subcategory'];">
+            </mat-row>
+            <mat-footer-row *matFooterRowDef="['action']"></mat-footer-row>
+          </mat-table>
+        </div>
+      </td>
+    </ng-container>
+    <!-- 
+      NIST Mapping Column
+     -->
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      class="mitigations-component-element-row mitigation-table-row"
+      [class.mitigations-component-expanded-row]="expandedElement === element"
+      (click)="expandedElement != element ? expandedElement = element : expandedElement = {}"></tr>
+
+    <tr mat-row *matRowDef="let row; columns: ['mappingMitigations']" class="mapping-detail-row"></tr>
+  </table>
+
+  <nist-mappings [data]="mappingKey ==='FNIST' ? nistFiltered() : allNist()"
+    *ngIf='mappingKey === "NIST" || mappingKey ==="FNIST"'> </nist-mappings>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>Close</button>
+</div>

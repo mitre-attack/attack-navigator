@@ -8,6 +8,8 @@ declare var tinycolor: any; //use tinycolor2
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
+import { ControlFramework } from './control-framework/control-framework';
+import { scoredMitigationVM } from './mitigations/scored-mitigation-vm';
 
 @Injectable()
 export class ViewModelsService {
@@ -346,6 +348,13 @@ export class ViewModel {
     domainID: string; // layer domain & version
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
+    scoredMitigations: scoredMitigationVM[] = [];
+    mitigationTechnique: Technique[] = [];
+    showScoredMitigations: boolean = false;
+
+    selectedComponents: string[] = [];
+
+    controlFramework: ControlFramework = new ControlFramework();
 
     filters: Filter;
 
@@ -816,6 +825,11 @@ export class ViewModel {
      * @param {any}    value the value to place in the field
      */
     public editSelectedTechniques(field: string, value: any): void {
+        
+        if (this.showScoredMitigations) {
+            this.calculateAndApplyMitigations();
+        }
+
         this.selectedTechniques.forEach((id) => {
             this.getTechniqueVM_id(id)[field] = value;
         })
@@ -881,6 +895,67 @@ export class ViewModel {
     //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88
     //                                o888
 
+    public calculateAndApplyMitigations() {
+        let scoredMitigationsByAttackId = new Map<string, scoredMitigationVM>();
+        let techniquesInScopeByAttackId = new Map<string, Technique>();
+
+        let matrices = this.dataService.getDomain(this.domainID).matrices;
+        for (let matrix of matrices) {
+
+            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
+                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
+
+                for (let technique of techniques) {
+                    let tvm = this.getTechniqueVM(technique, tactic);
+
+                    let score = 0;
+                    if ((score = parseInt(tvm.score)) > 0) {
+                        this.addToTopMitigations(technique, scoredMitigationsByAttackId, score);
+
+                        if (!techniquesInScopeByAttackId.has(technique.attackID)) {
+                            techniquesInScopeByAttackId.set(technique.attackID, technique);
+                        }
+                    }
+
+                    technique.subtechniques.forEach(x => {
+                        let tvm = this.getTechniqueVM(x, tactic);
+                        if ((score = parseInt(tvm.score)) > 0) {
+                            this.addToTopMitigations(x, scoredMitigationsByAttackId, score)
+
+                            if (!techniquesInScopeByAttackId.has(x.attackID)) {
+                                techniquesInScopeByAttackId.set(x.attackID, x);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        let scoredMitigations: scoredMitigationVM[] = [];
+        scoredMitigationsByAttackId.forEach(x => scoredMitigations.push(x));
+        this.scoredMitigations = scoredMitigations;
+
+        let techniquesInScope: Technique[] = [];
+        techniquesInScopeByAttackId.forEach(x => techniquesInScope.push(x));
+        this.mitigationTechnique = techniquesInScope;
+    }
+
+    private addToTopMitigations(technique: Technique, mitigationsByAttackId: Map<string, scoredMitigationVM>, score: number) {
+        let mitigationsForTechnique = technique.getAllMitigations(this.domainID);
+        if (mitigationsForTechnique && mitigationsForTechnique.length > 0) {
+            for (let currentMitigation of mitigationsForTechnique) {
+                if (mitigationsByAttackId.has(currentMitigation.attackID.toString())) {
+                    let mitigation = mitigationsByAttackId.get(currentMitigation.attackID.toString());
+                    mitigation.count++;
+                    mitigation.score += score;
+                }
+                else {
+                    mitigationsByAttackId.set(currentMitigation.attackID.toString(), new scoredMitigationVM(1, currentMitigation, score));
+                }
+            }
+        }
+    }
+    
     /**
      * filter tactics according to viewmodel state
      * @param {Tactic[]} tactics to filter
@@ -1071,6 +1146,7 @@ export class ViewModel {
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
         rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
+        rep.domainID = this.domainID;
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;

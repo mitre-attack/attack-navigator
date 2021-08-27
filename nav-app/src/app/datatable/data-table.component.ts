@@ -37,7 +37,17 @@ export class DataTableComponent implements AfterViewInit {
 
     currentDropdown: string = ""; //current dropdown menu
 
+    
+    showMitigations() {
+        if (!this.viewModel.showScoredMitigations) {
 
+            this.viewModel.showScoredMitigations = true;
+            this.viewModel.calculateAndApplyMitigations();
+        } else {
+            this.viewModel.showScoredMitigations = false;
+        }
+    }
+    
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -50,7 +60,42 @@ export class DataTableComponent implements AfterViewInit {
         let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
         // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
         this.saveBlob(blob, filename);
-        
+    }
+    
+    saveMitigationsLocally() {
+        let mitigations: { [k: string]: any } = { techniques: [] };
+
+        let matrices = this.dataService.getDomain(this.viewModel.domainID).matrices;
+        for (let matrix of matrices) {
+            // create cells
+            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
+                let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
+
+                for (let technique of techniques) {
+                    if (technique) {
+                        let mitigationsForTechique = technique.getAllMitigations(this.viewModel.domainID);
+                        let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+
+                        if (parseInt(tvm.score) > 0) {
+                            let temp: any = {
+                                techniqueId: technique.id,
+                                attackId: technique.attackID,
+                                name: technique.name,
+                                mitigation: mitigationsForTechique ? mitigationsForTechique.map(x => x.serialisable()) : null,
+                                score: tvm.score
+                            };
+                            mitigations.techniques.push(temp);
+                        }
+                    }
+                }
+            }
+        }
+
+        var json = JSON.stringify(mitigations);
+        var blob = new Blob([json], { type: "text/json" });
+        let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
+        this.saveBlob(blob, filename);
+
     }
 
     saveBlob(blob, filename){

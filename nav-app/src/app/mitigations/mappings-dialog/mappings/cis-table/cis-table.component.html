@@ -1,0 +1,58 @@
+<div class="table-wrapper">
+  <mat-table [dataSource]="data" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="cisControlId" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> cisControlId
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.cisControlId}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="cisSubControlId" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> cisSubControlId
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.cisSubControlId}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="assetType" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> assetType
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.assetType}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="securityFunction" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> securityFunction
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.securityFunction}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="title" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> title </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.title}}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="description" [sticky]="true">
+      <mat-header-cell class='mappings-dialog-content-mat-table-s4' *matHeaderCellDef> description
+      </mat-header-cell>
+      <mat-cell class='mappings-dialog-content-mat-table-s42' *matCellDef="let element">
+        {{element.description}}
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row
+      *matHeaderRowDef="['cisSubControlId', 'assetType', 'securityFunction', 'title', 'description']; sticky: true">
+    </mat-header-row>
+    <mat-row
+      *matRowDef="let row; columns: ['cisSubControlId', 'assetType', 'securityFunction', 'title', 'description'];">
+    </mat-row>
+
+  </mat-table>
+</div>

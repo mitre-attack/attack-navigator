@@ -1,0 +1,29 @@
+<div class="mitigations-component">
+
+  <div>
+    <button *ngIf="techniquesSortBy('score').length > 0" mat-raised-button (click)='clickExport()'>Export</button>
+    <mappings-dialog-button [viewModel]="viewModel">Mappings</mappings-dialog-button>
+  </div>
+
+  <div *ngIf="sortScoredMitigationsBy('score').length > 0" class="mitigation-component-container">
+    <div class="mitigations-component-element-header">
+      Mitigations By Score
+    </div>
+    <table mat-table [dataSource]="sortScoredMitigationsBy('score')" class="mat-elevation-z8 mitigation-table">
+      <caption>Mitigations ordered by the score. Score is derived by adding up the points assigned to techniques in the navigator.</caption>
+
+      <mat-text-column name="score" headerText="Score"></mat-text-column>
+      <mat-text-column name="count" headerText="Count"></mat-text-column>
+      <mat-text-column name="name" headerText="Mitigation" [dataAccessor]='nameAccessor'></mat-text-column>
+      <mat-text-column name="attackId" headerText="ID" [dataAccessor]='IdAccessor'></mat-text-column>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="mitigation-table-header"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="mitigation-table-row"
+        [ngClass]="{'highlighted' : selection.isSelected(row)}" (click)="selectMitigation(row)"></tr>
+    </table>
+  </div>
+
+  <div *ngIf='domainIsNotNist()'>
+    <technique-mappings [viewModel]="viewModel"></technique-mappings>
+  </div>
+</div>

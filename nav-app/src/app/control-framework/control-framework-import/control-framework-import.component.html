@@ -1,0 +1,16 @@
+<div>
+    <mat-form-field>
+        <mat-label>Framework</mat-label>
+        <mat-select [(value)]="selectedObject" appearance="fill">
+            <mat-option *ngFor="let f of frameworks" [value]="f">
+                {{f.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div>
+        <input placeholder="file" (change)="onFileSelect($event.target)" type="file" [disabled]="selectedObject == null">
+    </div>
+    <div>
+        {{message}}
+    </div>
+</div>

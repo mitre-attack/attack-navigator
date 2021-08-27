@@ -52,7 +52,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 this.newBlankTab();
                 this.loadTabs(config["default_layers"]).then( () => {
                     if (this.layerTabs.length == 0) {
-                        this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
+                        this.newLayer(this.ds.domains[0].id); // failed load from url, so create new blank layer
                     }
                     // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
 

@@ -1,0 +1,117 @@
+.mat-dialog-container {
+  padding: 0;
+  height: 99%;
+  width: 99%;
+  max-height: 200vh !important;
+  max-width: 500vh !important;
+}
+
+.export-dialog-content {
+  height: 92%;
+  max-height: 200vh !important;
+  width: 99%;
+  overflow: auto;
+}
+
+.export-dialog-content-button {
+  margin: 5px;
+}
+
+.export-dialog-content-mat-table {
+  height: 99%;
+}
+
+.mapping-dialog-nist-table {
+  width: 100%;
+}
+
+.export-dialog-content-mat-table-s1 {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 3% !important;
+  width: 3% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  text-align: left;
+  vertical-align: top;
+  text-align: left;
+  vertical-align: top;
+}
+
+.export-dialog-content-mat-table-s2 {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 8% !important;
+  width: 8% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  text-align: left;
+  vertical-align: top;
+}
+
+.export-dialog-content-mat-table-s3 {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 25% !important;
+  width: 25% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.export-dialog-mat-column-action {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 3% !important;
+  width: 3% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+
+.export-dialog-add-remove-button {
+  width: 15px;
+  margin: auto 0 auto 0;
+}
+
+.mapping-dialog-mat-select {
+  width: 100%;
+  margin: auto 0 auto 0;
+}
+
+.export-dialog-mat-tooltip {
+  font-size: 20px !important;
+}
+
+.export-dialog-mapping-container {
+  max-height: 400px;
+  overflow: auto;
+  margin:10px;
+}

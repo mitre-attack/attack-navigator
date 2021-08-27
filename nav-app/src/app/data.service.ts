@@ -98,6 +98,14 @@ export class DataService {
                             } else {
                                 domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
                             }
+
+                            // Add the inverse so that we can quickly grab all mitigations for a particular technique
+                            if (domain.relationships["mitigatedBy"].has(sdo.target_ref)) {
+                                let ids = domain.relationships["mitigatedBy"].get(sdo.target_ref);
+                                ids.push(sdo.source_ref);
+                            } else {
+                                domain.relationships["mitigatedBy"].set(sdo.target_ref, [sdo.source_ref])
+                            }
                         }
                         break;
                     case "attack-pattern":
@@ -170,6 +178,7 @@ export class DataService {
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    private nistEnterpriseAttackURL: string = "https://raw.githubusercontent.com/jonwrobson/attack-control-framework-mappings/master/frameworks/ATT%26CK-v9.0/nist800-53-r5/stix/nist800-53-r5-enterprise-attack.json";
 
     /**
      * Set up the URLs for data
@@ -201,10 +210,13 @@ export class DataService {
             enterpriseDomain.urls = [this.enterpriseAttackURL];
             let mobileDomain = new Domain(this.getDomainID("Mobile", currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
+            let nistDomain = new Domain(this.getDomainID("NIST", currVersion), "NIST", currVersion);
+            nistDomain.urls = [this.nistEnterpriseAttackURL];
 
             this.versions.push(currVersion);
             this.domains.push(enterpriseDomain);
             this.domains.push(mobileDomain);
+            this.domains.push(nistDomain);
             console.log(this.domains)
         }
     }
@@ -405,6 +417,15 @@ export class Technique extends BaseStix {
     public get_all_technique_tactic_ids(): string[] {
         return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
     }
+    
+    /**
+     * Gets all of the mitigations associated with this technique
+     * @param domain the domain ID of the search domain for mitigations
+     */
+     public getAllMitigations(domainID: string): Mitigation[] {
+        let mitigatedByIds = this.dataService.getDomain(domainID).relationships.mitigatedBy.get(this.id);
+        return mitigatedByIds ? this.dataService.getDomain(domainID).mitigations.filter(x => mitigatedByIds.includes(x.id)) : null;
+    }
 }
 
 /**
@@ -481,6 +502,10 @@ export class Mitigation extends BaseStix {
     public relatedTechniques(domainID): string[] {
         return this.mitigated(domainID);
     }
+
+    public serialisable() {
+        return { ...this, dataService: undefined }
+    }
 }
 
 export class Note {
@@ -531,7 +556,10 @@ export class Domain {
         software_uses: new Map<string, string[]>(),
         // mitigation mitigates technique
         // ID of mitigation to [] of technique IDs
-        mitigates: new Map<string, string[]>()
+        mitigates: new Map<string, string[]>(),
+        // mitigations grouped by technique
+        // ID of technique to [] of mitigation IDs
+        mitigatedBy: new Map<string, string[]>()
     }
 
     constructor(id: string, name: string, version: string) {

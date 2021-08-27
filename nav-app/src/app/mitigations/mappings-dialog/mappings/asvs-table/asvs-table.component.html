@@ -1,0 +1,59 @@
+<div class="table-wrapper">
+  <mat-table [dataSource]="data" class='mat-elevation-z8'>
+
+    <ng-container matColumnDef="section" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> section
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.section}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="itemId" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.itemId}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{element.name}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ASVS" [sticky]="true">
+      <mat-header-cell class='mappings-dialog-content-mat-table-s4' *matHeaderCellDef> Description
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element" class='mappings-dialog-content-mat-table-s4'>
+        {{element.description}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="L1" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef class="mat-column-small"> L1 </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="mat-column-small">
+        <span class="material-icons" *ngIf="element.l1">done</span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="L2" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef class="mat-column-small"> L2 </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="mat-column-small">
+        <span class="material-icons" *ngIf="element.l2">done</span>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="L3" [sticky]="true">
+      <mat-header-cell *matHeaderCellDef class="mat-column-small"> L3 </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="mat-column-small">
+        <span class="material-icons" *ngIf="element.l3">done</span>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['section', 'itemId', 'name', 'ASVS', 'L1', 'L2', 'L3']; sticky: true">
+    </mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['section', 'itemId', 'name', 'ASVS', 'L1', 'L2', 'L3'];">
+    </mat-row>
+
+  </mat-table>
+</div>

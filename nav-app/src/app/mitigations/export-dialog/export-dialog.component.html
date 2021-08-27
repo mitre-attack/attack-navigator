@@ -1,0 +1,18 @@
+<div mat-dialog-content class="export-dialog-content">
+  {{dataSource.data.length}}
+  <mat-table [dataSource]="dataSource">
+
+    <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+      <mat-header-cell *matHeaderCellDef> {{column}} </mat-header-cell>
+      <mat-cell *matCellDef="let element" #tooltip="matTooltip"
+      [matTooltip]="accessor(element, column, true)">{{accessor(element, column)}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns;"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>Close</button>
+</div>

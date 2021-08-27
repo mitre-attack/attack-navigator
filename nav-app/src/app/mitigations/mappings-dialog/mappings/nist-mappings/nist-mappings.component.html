@@ -1,0 +1,75 @@
+<!-- 
+    NIST Mappings to other controls
+   -->
+   <table mat-table [dataSource]="data" class="mappings-dialog-content-mat-table"
+   multiTemplateDataRows >
+
+   <ng-container matColumnDef="secFunction" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> Sec Function </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.nist.secFunction}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="category" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> Category </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.nist.category.id}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="ID" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> ID </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.nist.subcategory.id}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="subcategory" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> subcategory </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.nist.subcategory.description}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="asvsCount" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> ASVS </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.asvs.length}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="cisCount" [sticky]="true">
+     <th mat-header-cell *matHeaderCellDef> CIS </th>
+     <td mat-cell *matCellDef="let element">
+       {{element.cis.length}}
+     </td>
+   </ng-container>
+
+   <ng-container matColumnDef="mappings" [sticky]="true">
+     <td mat-cell *matCellDef="let element" [attr.colspan]="7">
+       <div class="mapping-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+         <mat-tab-group>
+           <mat-tab [label]="'ASVS (' + element.asvs.length + ')'">
+             <asvs-table [data]="element.asvs"></asvs-table>
+           </mat-tab>
+           <mat-tab [label]="'CIS (' + element.cis.length + ')'">
+             <cis-table [data]="element.cis"></cis-table>
+           </mat-tab>
+         </mat-tab-group>
+       </div>
+     </td>
+   </ng-container>
+
+   <tr mat-header-row
+     *matHeaderRowDef="['secFunction','category', 'ID', 'subcategory', 'asvsCount', 'cisCount']; sticky: true">
+   </tr>
+   <tr mat-row
+     *matRowDef="let element; columns: ['secFunction','category', 'ID', 'subcategory', 'asvsCount', 'cisCount'];"
+     [class.mitigations-component-expanded-row]="expandedElement === element"
+     (click)="expandedElement != element ? expandedElement = element : expandedElement = {}">
+   </tr>
+
+   <tr mat-row *matRowDef="let row; columns: ['mappings'];" class="mapping-detail-row"></tr>
+
+   </table>

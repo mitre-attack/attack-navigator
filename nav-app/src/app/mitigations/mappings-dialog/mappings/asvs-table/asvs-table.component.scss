@@ -1,0 +1,29 @@
+.table-wrapper{
+    margin:8px;
+}
+
+.mat-row {
+  height: auto;
+}
+
+.mat-cell,
+.mat-header-cell {
+  padding: 8px;
+  white-space: pre-wrap;
+}
+
+.mat-column-small {
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    flex: 0 0 10% !important;
+    width: 10% !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  
+    word-break: break-word;
+  
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
