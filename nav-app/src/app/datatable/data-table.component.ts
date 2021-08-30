@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
@@ -25,7 +25,8 @@ import { TmplAstVariable } from '@angular/compiler';
     styleUrls: ['./data-table.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class DataTableComponent implements AfterViewInit {
+export class DataTableComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('scrollRef') private scrollRef: ElementRef;
 
     //items for custom context menu
     customContextMenuItems = [];
@@ -34,9 +35,10 @@ export class DataTableComponent implements AfterViewInit {
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
+    @Output() onScroll = new EventEmitter<any>();
+    adjustedHeaderHeight = '';
 
     currentDropdown: string = ""; //current dropdown menu
-
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -244,6 +246,20 @@ export class DataTableComponent implements AfterViewInit {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
+        this.scrollRef.nativeElement.addEventListener('scroll', this.handleSidenavScroll);
+    }
+
+    ngOnDestroy() {
+        document.body.removeEventListener('scroll', this.handleSidenavScroll);
+    }
+
+    handleSidenavScroll = () => {
+        const tabHeight = 48;
+        const toolbarHeight = 34;
+        const footerHeight = 33;
+        const tabOffset = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), (tabHeight)));
+        this.onScroll.emit(`-${tabOffset}px`);
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${toolbarHeight + footerHeight + tabHeight - tabOffset}px)`;
     }
 
     // open custom url in a new tab

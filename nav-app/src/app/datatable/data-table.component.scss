@@ -16,10 +16,10 @@ $cellSize: 15px;
  // | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
  // |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
 
-
 // content of each tab
 .matrices {
     overflow-x: scroll;
+    height: calc(100vh - 115px);
     min-height: 50vh;
     border: 1px solid $panel-dark;
 

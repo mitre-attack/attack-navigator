@@ -1,5 +1,5 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
@@ -23,7 +23,7 @@ declare var math: any; //use mathjs
     encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements AfterContentInit, AfterViewInit {
-
+    adjustedHeaderHeight = '';
     //  _____ _   ___   ___ _____ _   _ ___ ___
     // |_   _/_\ | _ ) / __|_   _| | | | __| __|
     //   | |/ _ \| _ \ \__ \ | | | |_| | _|| _|
@@ -75,6 +75,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 disableClose: true
             });
         }
+    }
+
+    adjustHeader(newHeight) {
+        this.adjustedHeaderHeight = newHeight;
     }
 
     /**

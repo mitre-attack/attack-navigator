@@ -31,6 +31,7 @@
 
 
 <!-- Tabs display -->
+<div [style.margin-top]="adjustedHeaderHeight">
 <nav mat-tab-nav-bar class="tabs">
     <a mat-tab-link
        class="tab-title"
@@ -45,6 +46,7 @@
     </a>
     <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">+</a>
 </nav>
+</div>
 
 
 <div *ngIf="layerTabs.length == 0" class="newTab">
@@ -446,5 +448,5 @@
 </ng-template>
 
 <ng-template [ngIf]="activeTab && activeTab.isDataTable">
-    <DataTable [viewModel]="activeTab.dataContext"></DataTable>
+    <DataTable [viewModel]="activeTab.dataContext" (onScroll)="adjustHeader($event)"></DataTable>
 </ng-template>
