@@ -110,10 +110,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param  {Boolean} [isCloseable=false] can this tab be closed?
      * @param  {Boolean} [replace=false]     replace the current tab with the new tab, TODO
      * @param  {Boolean} [forceNew=false]    force open a new tab even if a tab of that name already exists
+     * @param  {Boolean} [dataTable=false]   is this a data-table tab? if so tab text should be editable
 
      */
-
-    openTab(title: string, data, isCloseable = false, replace = true, forceNew = false) {
+    openTab(title: string, data, isCloseable = false, replace = true, forceNew = false, dataTable = false) {
         // determine if tab is already open. If it is, just change to that tab
         if (!forceNew) {
             for (let i = 0; i < this.layerTabs.length; i++) {
@@ -126,7 +126,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
         // create a new tab
         let domain = data? data.domainID : "";
-        let tab = new Tab(title, isCloseable, false, domain);
+        let tab = new Tab(title, isCloseable, false, domain, dataTable);
         tab.dataContext = data;
 
         // select new tab
@@ -250,7 +250,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param  {[type]} replace=false replace the current tab with this blank tab?
      */
     newBlankTab(replace=false) {
-        this.openTab('new tab', null, true, replace, true)
+        this.openTab('new tab', null, true, replace, true, false)
     }
 
     showHelpDropDown: boolean = false;
@@ -323,7 +323,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainID);
         vm.loadVMData();
-        this.openTab(name, vm, true, true, true)
+        this.openTab(name, vm, true, true, true, true)
     }
 
     /**
@@ -394,12 +394,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 this.dataService.loadDomainData(this.domain, true).then( () => {
                     vm.loadVMData();
                     vm.updateGradient();
-                    this.openTab(layerName, vm, true, true, true)
+                    this.openTab(layerName, vm, true, true, true, true)
                 })
             } else {
                 vm.loadVMData();
                 vm.updateGradient();
-                this.openTab(layerName, vm, true, true, true)
+                this.openTab(layerName, vm, true, true, true, true)
             }
         } catch (err) {
             console.error(err)
@@ -534,7 +534,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
                 this.versionUpgradeDialog(viewModel).then( () => {
-                    this.openTab("new layer", viewModel, true, true, true);
+                    this.openTab("new layer", viewModel, true, true, true, true);
                     if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                         this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                             viewModel.deSerialize(string);
@@ -575,7 +575,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                         }
                         this.versionUpgradeDialog(viewModel).then( () => {
-                            this.openTab("new layer", viewModel, true, replace, true);
+                            this.openTab("new layer", viewModel, true, replace, true, true);
                             if (!this.dataService.getDomain(viewModel.domainID).dataLoaded) {
                                 this.dataService.loadDomainData(viewModel.domainID, true).then( () => {
                                     viewModel.deSerialize(res);
@@ -742,17 +742,18 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
 export class Tab {
     title: string;
-    dataContext: ViewModel = null;
+    dataContext;
     domain: string = "";
-    showDropdown: number = undefined;
+    isDataTable: boolean;
 
     isCloseable: boolean = false;
     showScoreVariables: boolean = false;
 
-    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string) {
+    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string, dataTable: boolean) {
         this.title = title;
         this.isCloseable = isCloseable;
         this.showScoreVariables = showScoreVariables;
         this.domain = domain;
+        this.isDataTable = dataTable;
     }
 }
