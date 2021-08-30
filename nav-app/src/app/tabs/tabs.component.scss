@@ -1,5 +1,9 @@
 @import "../../colors.scss";
 
+.tabs-container {
+    display: flex;
+}
+
 .tabs {
     .tab-title { //non-datatable tab names
         font-family: 'Roboto Mono', monospace;
@@ -141,7 +145,6 @@ input[type=file]{
     }
 }
 
-
 //button on new tab page
 .helpButtonsContainer {
     display: flex;
@@ -158,13 +161,11 @@ input[type=file]{
 
     .helpButton {
         position: fixed;
-        top: 0;
-        right: 0;
+        top: 10px;
+        right: 15px;
         background: white;
-        border-style: solid;
-        border-color: $panel-dark;
-        border-width: 0 0 1px 1px;
-        border-radius: 0 0 0 50%;
+        border: solid $panel-dark 1px;
+        border-radius: 50%;
         text-align: center;
         width: 4ex;
         height: 3ex;
@@ -177,8 +178,8 @@ input[type=file]{
         }
     }
 
-    .no-bottom-border {
-        border-radius: 0;
+    .help-dropdown-open {
+        border-radius: 50% 50% 0 0;
         border-bottom: solid 1px white;
     }
 
@@ -194,7 +195,7 @@ input[type=file]{
         border-width: 1px 0 1px 1px;
         border-radius: 0 0 0 5px;
         padding: 10px;
-        top: 29px;
+        top: 39px;
         z-index: 999;
         button {
             border: none;
