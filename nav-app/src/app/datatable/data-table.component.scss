@@ -480,9 +480,9 @@ $panel-light: lighten($panel-dark, 8%);
     .item-container {
         padding: 10px;
         border: 1px solid $panel-dark;
+        margin: 4px 0;
     }
     .divider {
-        padding: 4px 0px;
         cursor: pointer;
         .mat-divider {
             border-top-width: 2px;
