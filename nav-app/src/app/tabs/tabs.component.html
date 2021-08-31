@@ -1,5 +1,5 @@
 <!-- Banner -->
-<div *ngIf="hasFeature('header') && bannerContent" class="header">
+<div [style.margin-top]="'-'+(adjustedBannerHeight)+'px'" *ngIf="hasFeature('header') && bannerContent" class="header">
     <div class="banner">
         <span class="bannerContent" role="alert" [innerHTML]="bannerContent"></span>
         <div [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="bannerLinks">
