@@ -158,7 +158,6 @@ input[type=file]{
 
 .header {
     text-align: right;
-    position: fixed;
     right: 0;
     z-index: 10 !important;
     div { display: inline-block; cursor: pointer; }
@@ -216,12 +215,11 @@ input[type=file]{
 
     .banner {
         background-color: color(primary);
-        margin: 7px 0;
+        margin-bottom: 1em;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 5px 15px;
-        border-radius: 5px;
+        padding: 10px 15px;
         text-align: left;
         color: on-color(primary);
         font-size: 14px;
