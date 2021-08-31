@@ -512,13 +512,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  <div class="dropdown-container inputfield left list-input" #dropdown [class.left]="checkalign(dropdown)"
                     *ngIf="currentDropdown === 'link'">
                     <div class="list-container">
-                        <div *ngFor="let link of linkEditFields; let i = index">
+                        <div *ngFor="let link of linkEditField; let i = index">
                             <div class="item-container" *ngIf="!link.divider">
                                 <mat-form-field>
                                     <textarea matInput
                                             matTextareaAutosize
                                             placeholder="label"
-                                            [(ngModel)]="linkEditFields[i].label"
+                                            [(ngModel)]="linkEditField[i].label"
                                             (input)="updateLinks()">
                                     </textarea>
                                 </mat-form-field>
@@ -526,16 +526,16 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                     <textarea matInput
                                             matTextareaAutosize
                                             placeholder="url"
-                                            [(ngModel)]="linkEditFields[i].url"
+                                            [(ngModel)]="linkEditField[i].url"
                                             (input)="updateLinks()">
                                     </textarea>
                                 </mat-form-field>
                                 <button class="button" (click)="removeLink(i)">remove</button>
                             </div>
                             
-                            <div class="divider" (click)="onClickDivider(i, !link.divider)" *ngIf="canAddDivider(i) || link.divider"
+                            <div class="divider" (click)="onClickDivider(i, !link.divider, 'links')" *ngIf="canAddDivider(i, 'links') || link.divider"
                                 matTooltipPosition="below" [matTooltip]="link.divider ? 'remove divider' : 'add a divider'">
-                                <div [ngClass]="{'opt-divider': canAddDivider(i), 'set-divider': link.divider}">
+                                <div [ngClass]="{'opt-divider': canAddDivider(i, 'links'), 'set-divider': link.divider}">
                                     <mat-divider></mat-divider>
                                     <button mat-icon-button class="icon">{{link.divider ? '-': '+'}}</button>
                                     <mat-divider></mat-divider>
@@ -544,7 +544,60 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         </div>
                     </div>
                     <div class="add-more">
-                        <button class="button" (click)="addLink()">add {{linkEditFields.length ? 'another' : 'a'}} link</button>
+                        <button class="button" (click)="addLink()">add {{linkEditField.length ? 'another' : 'a'}} link</button>
+                    </div>
+                </div>
+             </div>
+
+
+            <!-- technique metadata -->
+            <div *ngIf="configService.getFeature('metadata')"  class="control-row-item">
+
+                <div class="control-row-button dropdown noselect"
+                     (click)="viewModel.isCurrentlyEditing() && viewModel.metadataMatch ? currentDropdown = currentDropdown !== 'metadata' ? 'metadata' : null : continue"
+                     matTooltipPosition="below"
+                     [matTooltip]="viewModel.metadataMatch ? 'metadata' : 'cannot edit metadata on selected techniques with differing metadata'"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()"
+                     [style.color]="viewModel.isCurrentlyEditing() && viewModel.metadataMatch ? '#000000' : '#aaaaaa'">
+                     <img [src]="viewModel.isCurrentlyEditing() && viewModel.metadataMatch ? 'assets/icons/ic_metadata_black_24px.svg' : 'assets/icons/ic_metadata_gray_24px.svg'" alt="metadata" />
+                 </div>
+                 <!-- link input -->
+                 <div class="dropdown-container inputfield left list-input" #dropdown [class.left]="checkalign(dropdown)"
+                    *ngIf="currentDropdown === 'metadata'">
+                    <div class="list-container">
+                        <div *ngFor="let metadata of metadataEditField; let i = index">
+                            <div class="item-container" *ngIf="!metadata.divider">
+                                <mat-form-field>
+                                    <textarea matInput
+                                            matTextareaAutosize
+                                            placeholder="name"
+                                            [(ngModel)]="metadataEditField[i].name"
+                                            (input)="updateMetadata()">
+                                    </textarea>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <textarea matInput
+                                            matTextareaAutosize
+                                            placeholder="value"
+                                            [(ngModel)]="metadataEditField[i].value"
+                                            (input)="updateMetadata()">
+                                    </textarea>
+                                </mat-form-field>
+                                <button class="button" (click)="removeMetadata(i)">remove</button>
+                            </div>
+                            
+                            <div class="divider" (click)="onClickDivider(i, !metadata.divider, 'metadata')" *ngIf="canAddDivider(i, 'metadata') || metadata.divider"
+                                matTooltipPosition="below" [matTooltip]="metadata.divider ? 'remove divider' : 'add a divider'">
+                                <div [ngClass]="{'opt-divider': canAddDivider(i, 'metadata'), 'set-divider': metadata.divider}">
+                                    <mat-divider></mat-divider>
+                                    <button mat-icon-button class="icon">{{metadata.divider ? '-': '+'}}</button>
+                                    <mat-divider></mat-divider>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-more">
+                        <button class="button" (click)="addMetadata()">add {{metadataEditField.length ? 'more' : ''}} metadata</button>
                     </div>
                 </div>
              </div>

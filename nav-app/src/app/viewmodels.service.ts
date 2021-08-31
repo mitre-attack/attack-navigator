@@ -936,10 +936,10 @@ export class ViewModel {
      * Edit the selected techniques list attribute
      * @param values the list of values to place in the field
      */
-    public editSelectedTechniqueValues(values: Link[] | Metadata[], field: string): void {
+    public editSelectedTechniqueValues(field: string, values: (Link | Metadata)[], ): void {
         let fieldToType: any = {"links": Link, "metadata": Metadata};
         this.selectedTechniques.forEach(id => {
-            const value_clone = values.map((value: Link | Metadata) => { // deep copy
+            const value_clone = values.map(value => { // deep copy
                 let clone = new fieldToType[field]();
                 clone.deSerialize(value.serialize());
                 return clone;

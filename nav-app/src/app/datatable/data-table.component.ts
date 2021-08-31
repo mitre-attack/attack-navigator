@@ -1,24 +1,15 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
-import {DataService, Technique, Matrix, Domain} from '../data.service';
-import {ConfigService} from '../config.service';
+import { Component, Input, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { DataService } from '../data.service';
+import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService, Link } from "../viewmodels.service";
-import {FormControl} from '@angular/forms';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatMenuTrigger} from '@angular/material/menu';
+import { ViewModel, ViewModelsService, Link, Metadata } from "../viewmodels.service";
+import { DomSanitizer } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
 
 declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
-
-import * as FileSaver from 'file-saver';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
-import { TmplAstVariable } from '@angular/compiler';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'DataTable',
@@ -277,13 +268,14 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     // edit field bindings
     commentEditField: string = "";
     scoreEditField: string = "";
-    linkEditFields: Link[] = [];
+    linkEditField: Link[] = [];
+    metadataEditField: Metadata[] = [];
     /**
      * triggered on left click of technique
      */
     onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
-            if (["comment", "score", "colorpicker", "link"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            if (["comment", "score", "colorpicker", "link", "metadata"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
         }
         //else populate editing controls
@@ -329,7 +321,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     populateEditFields(): void {
         this.commentEditField = this.viewModel.getEditingCommonValue("comment");
         this.scoreEditField = this.viewModel.getEditingCommonValue("score");
-        this.linkEditFields = this.viewModel.activeTvm.links;
+        this.linkEditField = this.viewModel.activeTvm.links;
+        this.metadataEditField = this.viewModel.activeTvm.metadata;
     }
 
     /**
@@ -384,30 +377,49 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private attrToField: any = {"links": "linkEditField", "metadata": "metadataEditField"}
+    
     /** Add a new link */
     addLink(): void {
-        this.linkEditFields.push(new Link());
+        this.linkEditField.push(new Link());
     }
 
     /** Remove link */
-    removeLink(i): void {
-        this.linkEditFields.splice(i, 1);
-        this.viewModel.editSelectedTechniques('links', this.linkEditFields);
+    removeLink(i: number): void {
+        this.linkEditField.splice(i, 1);
+        this.viewModel.editSelectedTechniqueValues('links', this.linkEditField);
     }
 
     /** Update links on the selected techniques */
     updateLinks(): void {
-        let value = this.linkEditFields.filter(link => link.valid());
-        this.viewModel.editSelectedTechniqueValues(value, "links");
+        let value = this.linkEditField.filter(link => link.valid());
+        this.viewModel.editSelectedTechniqueValues('links', value);
+    }
+
+    /** Add new metadata */
+    addMetadata(): void {
+        this.metadataEditField.push(new Metadata());
+    }
+
+    /** Remove metadata */
+    removeMetadata(i: number): void {
+        this.metadataEditField.splice(i, 1);
+        this.viewModel.editSelectedTechniqueValues('metadata', this.metadataEditField);
+    }
+
+    /** Update metadata on the selected techniques */
+    updateMetadata(): void {
+        let value = this.metadataEditField.filter(metadata => metadata.valid());
+        this.viewModel.editSelectedTechniqueValues('metadata', value);
     }
 
     /** 
-     *  Checks if a divider can be added after the given link index:
-     *  A divider can only be added after a valid link where
+     *  Checks if a divider can be added after the given link or metadata index:
+     *  A divider can only be added after a valid link/metadata object where
      *  the current and next indices are not dividers
      */
-    canAddDivider(i): boolean {
-        let list = this.linkEditFields.filter(link => link.valid());
+    canAddDivider(i: number, field: string): boolean {
+        let list = this[this.attrToField[field]].filter(value => value.valid());
         if (list[i] && !list[i].divider) {
             if (i + 1 >= list.length) return true;
             if (list[i+1] && !list[i+1].divider) return true;
@@ -416,14 +428,16 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     /** Add or remove a divider */
-    onClickDivider(i, isDivider) {
+    onClickDivider(i: number, isDivider: boolean, field: string) {
+        let list = this[this.attrToField[field]];
         if (isDivider) { // add divider
             let divider = new Link();
             divider.divider = true;
-            this.linkEditFields.splice(i+1, 0, divider);
+            list.splice(i+1, 0, divider);
         } else { // remove divider
-            this.linkEditFields.splice(i, 1);
+            list.splice(i, 1);
         }
-        this.updateLinks();
+        if (field == 'links') this.updateLinks();
+        if (field == 'metadata') this.updateMetadata();
     }
 }
