@@ -71,7 +71,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
+                     (click)="handleDescriptionDropdown()"
                      matTooltipPosition="below"
                      matTooltip="layer information">
                      <img src="assets/icons/ic_description_black_24px.svg" alt="layer information" />

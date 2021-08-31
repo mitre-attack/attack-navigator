@@ -35,10 +35,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
+    @Input() currentDropdown: string = ""; //current dropdown menu
+    @Output() dropdownChange = new EventEmitter<any>();
     @Output() onScroll = new EventEmitter<any>();
     adjustedHeaderHeight = '';
 
-    currentDropdown: string = ""; //current dropdown menu
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
@@ -251,6 +252,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         document.body.removeEventListener('scroll', this.handleSidenavScroll);
+    }
+
+    handleDescriptionDropdown() {
+        this.currentDropdown !== 'description' ? this.currentDropdown = 'description' : this.currentDropdown = '';
+        this.dropdownChange.emit(this.currentDropdown);
     }
 
     handleSidenavScroll = () => {

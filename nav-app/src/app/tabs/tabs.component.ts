@@ -23,7 +23,6 @@ declare var math: any; //use mathjs
     encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements AfterContentInit, AfterViewInit {
-    adjustedHeaderHeight = '';
     //  _____ _   ___   ___ _____ _   _ ___ ___
     // |_   _/_\ | _ ) / __|_   _| | | | __| __|
     //   | |/ _ \| _ \ \__ \ | | | |_| | _|| _|
@@ -33,7 +32,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     ds: DataService = null;
     vms: ViewModelsService = null;
     activeTab: Tab = null;
+    dropdownEnabled = '';
     layerTabs: Tab[] = [];
+    adjustedHeaderHeight = '';
     techniques: Technique[] = [];
 
     alwaysUpgradeVersion: boolean;
@@ -233,6 +234,11 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return this.activeTab;
         // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
         // return activeTabs[0];
+    }
+
+    handleTabClick(tab) {
+        this.activeTab = tab;
+        this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
     filterDomains(version: string) {

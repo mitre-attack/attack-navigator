@@ -31,7 +31,7 @@
            class="tab-title"
            [class.active]="activeTab === tab"
            *ngFor="let tab of layerTabs; let $i = index"
-           (click)="activeTab = tab"
+           (click)="handleTabClick(tab)"
            [active]="activeTab === tab">
             {{tab.isDataTable ? tab.dataContext.name : tab.title}}
             <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">x</span>
@@ -448,5 +448,5 @@
 </ng-template>
 
 <ng-template [ngIf]="activeTab && activeTab.isDataTable">
-    <DataTable [viewModel]="activeTab.dataContext" (onScroll)="adjustHeader($event)"></DataTable>
+    <DataTable [viewModel]="activeTab.dataContext" [currentDropdown]="dropdownEnabled" (dropdownChange)="dropdownEnabled = $event" (onScroll)="adjustHeader($event)"></DataTable>
 </ng-template>
