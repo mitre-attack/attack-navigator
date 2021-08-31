@@ -576,7 +576,7 @@ export class ViewModel {
             }
         }
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
-        if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
+        if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
         this.selectedTechniques.add(technique_tactic_id);
         this.checkValues(true, technique_tactic_id);
     }
@@ -613,7 +613,7 @@ export class ViewModel {
         }
         else {
             for (let id of technique.get_all_technique_tactic_ids()) {
-                if (this.getSelectedTechniqueCount() == 0) this.activeTvm = this.getTechniqueVM_id(id); // first selection
+                if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(id); // first selection
                 this.selectedTechniques.add(id);
                 this.checkValues(true, id);
             }
@@ -700,7 +700,11 @@ export class ViewModel {
         this.clearSelectedTechniques();
         let self = this;
         this.techniqueVMs.forEach(function(tvm, key) {
-            if (!previouslySelected.has(tvm.technique_tactic_union_id)) self.selectedTechniques.add(tvm.technique_tactic_union_id)
+            if (!previouslySelected.has(tvm.technique_tactic_union_id)) {
+                if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+                self.selectedTechniques.add(tvm.technique_tactic_union_id);
+                self.checkValues(true, tvm.technique_tactic_union_id);
+            }
         });
     }
 
@@ -714,12 +718,19 @@ export class ViewModel {
             // deselect techniques without annotations
             let selected = new Set(this.selectedTechniques);
             this.techniqueVMs.forEach(function(tvm, key) {
-                if (selected.has(tvm.technique_tactic_union_id) && !tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
-            })
+                if (selected.has(tvm.technique_tactic_union_id) && !tvm.annotated()) {
+                    self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+                    self.checkValues(false, tvm.technique_tactic_union_id);
+                }
+            });
         } else {
             // select all techniques with annotations
             this.techniqueVMs.forEach(function(tvm, key) {
-                if (tvm.annotated()) self.selectedTechniques.add(tvm.technique_tactic_union_id);
+                if (tvm.annotated()) {
+                    if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+                    self.selectedTechniques.add(tvm.technique_tactic_union_id);
+                    self.checkValues(true, tvm.technique_tactic_union_id);
+                }
             });
         }
     }
@@ -734,8 +745,11 @@ export class ViewModel {
             // deselect techniques with annotations
             let selected = new Set(this.selectedTechniques);
             this.techniqueVMs.forEach(function(tvm, key) {
-                if (selected.has(tvm.technique_tactic_union_id) && tvm.annotated()) self.selectedTechniques.delete(tvm.technique_tactic_union_id);
-            })
+                if (selected.has(tvm.technique_tactic_union_id) && tvm.annotated()) {
+                    self.selectedTechniques.delete(tvm.technique_tactic_union_id);
+                    self.checkValues(false, tvm.technique_tactic_union_id);
+                }
+            });
         } else {
             // select all techniques without annotations
             this.selectAnnotated();
@@ -1579,7 +1593,7 @@ export class TechniqueVM {
      * @return true if it has been modified, false otherwise
      */
     modified(): boolean {
-        return (this.score != "" || this.color != "" || !this.enabled || this.comment != "" || this.showSubtechniques);
+        return (this.annotated() || this.showSubtechniques);
     }
 
     /**
@@ -1587,7 +1601,7 @@ export class TechniqueVM {
      * @return true if it has annotations, false otherwise
      */
     annotated(): boolean {
-        return (this.score != "" || this.color != "" || !this.enabled || this.comment != "");
+        return (this.score != "" || this.color != "" || !this.enabled || this.comment != "" || this.links.length !== 0 || this.metadata.length !== 0);
     }
 
     /**
@@ -1600,6 +1614,8 @@ export class TechniqueVM {
         this.enabled = true;
         this.aggregateScore = "";
         this.aggregateScoreColor = "";
+        this.links = [];
+        this.metadata = [];
     }
 
     /**
@@ -1792,9 +1808,8 @@ export class Metadata {
 
     constructor() {};
 
-    serialize(): string {
-        let rep = this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
-        return JSON.stringify(rep, null, "\t");
+    serialize(): object {
+        return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
     }
 
     deSerialize(rep: any): void {
@@ -1829,9 +1844,8 @@ export class Link {
 
     constructor() {};
 
-    serialize(): string { 
-        let rep = this.label && this.url ? {label: this.label, url: this.url} : {divider: this.divider};
-        return JSON.stringify(rep, null, "\t")
+    serialize(): object { 
+        return this.label && this.url ? {label: this.label, url: this.url} : {divider: this.divider};
     }
 
     deSerialize(rep: any): void {
