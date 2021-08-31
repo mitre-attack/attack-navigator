@@ -34,7 +34,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     activeTab: Tab = null;
     dropdownEnabled = '';
     layerTabs: Tab[] = [];
-    adjustedHeaderHeight = '';
+    adjustedHeaderHeight = 0;
     techniques: Technique[] = [];
 
     alwaysUpgradeVersion: boolean;

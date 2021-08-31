@@ -38,7 +38,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     @Input() currentDropdown: string = ""; //current dropdown menu
     @Output() dropdownChange = new EventEmitter<any>();
     @Output() onScroll = new EventEmitter<any>();
-    adjustedHeaderHeight = '';
 
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
@@ -264,7 +263,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         const toolbarHeight = 34;
         const footerHeight = 33;
         const tabOffset = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), (tabHeight)));
-        this.onScroll.emit(`-${tabOffset}px`);
+        this.onScroll.emit(tabOffset);
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${toolbarHeight + footerHeight + tabHeight - tabOffset}px)`;
     }
 

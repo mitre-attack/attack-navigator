@@ -17,7 +17,7 @@
          matTooltip="help" (click)="showHelpDropDown = !showHelpDropDown">
         ?
     </div>
-    <div class="dropdown-container" *ngIf="showHelpDropDown">
+    <div class="dropdown-container" *ngIf="showHelpDropDown && adjustedHeaderHeight < 48">
         <button (click)="openDialog('help')">help</button>
         <button (click)="openDialog('changelog')">changelog</button>
     </div>
@@ -25,7 +25,7 @@
 
 
 <!-- Tabs display -->
-<div [style.margin-top]="adjustedHeaderHeight" class="tabs-container">
+<div [style.margin-top]="'-'+adjustedHeaderHeight+'px'" class="tabs-container">
     <nav mat-tab-nav-bar class="tabs">
         <a mat-tab-link
            class="tab-title"

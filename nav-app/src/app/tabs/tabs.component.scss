@@ -2,6 +2,9 @@
 
 .tabs-container {
     display: flex;
+    .mat-tab-nav-bar, .mat-tab-header {
+        border-bottom: none !important;
+    }
 }
 
 .tabs {
@@ -157,10 +160,11 @@ input[type=file]{
     text-align: right;
     position: fixed;
     right: 0;
+    z-index: 10 !important;
     div { display: inline-block; cursor: pointer; }
 
     .helpButton {
-        position: fixed;
+        position: absolute;
         top: 10px;
         right: 15px;
         background: white;
@@ -170,7 +174,7 @@ input[type=file]{
         width: 4ex;
         height: 3ex;
         padding: 5px;
-        z-index: 1000;
+        z-index: 10;
         &:hover { background: $panel-light; }
         &::after{
             font-size: 5pt;
@@ -184,8 +188,8 @@ input[type=file]{
     }
 
     .dropdown-container {
-        position: fixed;
-        right: 0;
+        position: absolute;
+        right: 16px;
         display: flex;
         justify-content: center;
         flex-flow: column;
@@ -193,10 +197,11 @@ input[type=file]{
         border-style: solid;
         border-color: #ddd;
         border-width: 1px 0 1px 1px;
-        border-radius: 0 0 0 5px;
+        box-shadow: 2px 1px 1px #ddd;
+        border-radius: 0 0 5px 5px;
         padding: 10px;
-        top: 39px;
-        z-index: 999;
+        top: 40px;
+        z-index: 9;
         button {
             border: none;
             background-color: transparent;
