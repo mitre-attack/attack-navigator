@@ -1012,7 +1012,7 @@ export class ViewModel {
             if (this.linkMismatches.includes(id)) this.linkMismatches.splice(this.linkMismatches.indexOf(id), 1);
             if (this.metadataMismatches.includes(id)) this.metadataMismatches.splice(this.metadataMismatches.indexOf(id), 1);
 
-            if (this.activeTvm.technique_tactic_union_id == id) { // edge case where deselection was the first selected technique
+            if (this.activeTvm && this.activeTvm.technique_tactic_union_id == id) { // edge case where deselection was the first selected technique
                 let first_id = this.selectedTechniques.values().next().value;
                 this.activeTvm = first_id ? this.getTechniqueVM_id(first_id): undefined;
 
