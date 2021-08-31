@@ -67,13 +67,15 @@ export class ViewModelsService {
      * @param  scoreExpression  math expression of score expression
      * @param  scoreVariables   variables in math expression, mapping to viewmodel they correspond to
      * @param  comments         what viewmodel to inherit comments from
+     * @param  links            what viewmodel to inherit links from
+     * @param  metadata         what viewmodel to inherit technique metadata from
      * @param  coloring         what viewmodel to inherit manual colors from
      * @param  enabledness      what viewmodel to inherit state from
      * @param  layerName        new layer name
      * @param  filters          viewmodel to inherit filters from
      * @return                  new viewmodel inheriting above properties
      */
-    layerLayerOperation(domainVersionID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+    layerLayerOperation(domainVersionID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, links: ViewModel, metadata: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
         let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainVersionID, this.dataService);
 
         if (scoreExpression) {
@@ -172,9 +174,11 @@ export class ViewModelsService {
             })
         }
 
-        if (comments)    inherit(comments, "comment")
-        if (coloring)    inherit(coloring, "color")
-        if (enabledness) inherit(enabledness, "enabled")
+        if (comments) inherit(comments, "comment");
+        if (links) inherit(links, "links");
+        if (metadata) inherit(metadata, "metadata");
+        if (coloring) inherit(coloring, "color");
+        if (enabledness) inherit(enabledness, "enabled");
 
         if (filters) { //copy filter settings
             result.filters.deSerialize(JSON.parse(filters.filters.serialize()))
