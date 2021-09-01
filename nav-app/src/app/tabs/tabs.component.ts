@@ -153,6 +153,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 }
             }
         }
+        this.dropdownEnabled = '';
     }
 
     /**
