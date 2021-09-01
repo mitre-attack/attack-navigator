@@ -262,7 +262,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         const tabHeight = 48;
         const toolbarHeight = 34;
         const footerHeight = 33;
-        const tabOffset = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/2), (tabHeight)));
+        const tabOffset = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/5), (tabHeight)));
         this.onScroll.emit(tabOffset);
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${toolbarHeight + footerHeight + tabHeight - tabOffset}px)`;
     }
