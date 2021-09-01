@@ -241,8 +241,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     }
 
     handleTabClick(tab) {
-        this.activeTab = tab;
-        this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
+        if (this.activeTab !== tab) this.activeTab = tab;
+        else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
     filterDomains(version: string) {
