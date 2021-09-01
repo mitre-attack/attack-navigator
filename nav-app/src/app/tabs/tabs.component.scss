@@ -72,6 +72,10 @@
 
     .addTab {
         min-width: fit-content;
+        &:hover {
+            border-color: #ddd #ddd #f1f1f1 #ddd;
+            background-color: #f1f1f1
+        }
     }
 
     &:before {
@@ -120,7 +124,7 @@
             color: rgb(176, 26, 26);
             font-weight:500;
         }
-        height: 2ex;
+        font-size: 1em;
     }
 }
 
@@ -162,7 +166,7 @@ input[type=file]{
 //button on new tab page
 .helpButtonsContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-bottom: 1em;
     width: 100%;
 }
