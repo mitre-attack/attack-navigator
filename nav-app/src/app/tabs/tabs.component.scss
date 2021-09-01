@@ -15,30 +15,11 @@
 
 .tabs {
     .tab-title { //non-datatable tab names
-        font-family: 'Roboto Mono', monospace;
         font-size: 14px;
         text-decoration: none;
         color: black !important;
         display: flex;
         justify-content: space-around;
-
-        input[type=text] { //datatable tab name edit field
-            font-family: 'Roboto Mono', monospace;
-            font-size: 14px;
-            border: none;
-            background: none;
-
-            &:disabled {
-            }
-
-            //when the tab isn't active
-            &:not(:disabled) { //when the tab is active
-                &:focus { //when the input is selected (editing)
-                    background: $panel-light;
-                }
-            }
-
-        }
 
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
