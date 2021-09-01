@@ -12,7 +12,7 @@ tabs {
     margin-left: 16px;
     padding: 0;
     display: block;
-    position: absolute;
+    position: fixed;
     bottom: 16px;
     &:hover {
         text-decoration: underline;

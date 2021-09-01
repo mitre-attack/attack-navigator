@@ -20,6 +20,7 @@
         color: black !important;
         display: flex;
         justify-content: space-around;
+        border-right: #ddd 1px solid;
 
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
@@ -68,6 +69,13 @@
         clear: both;
         content: " ";
     }
+    svg {
+        width: 17px;
+        transition: all ease-in-out 0.2s;
+    }
+    svg:hover {
+        transform: scale(1.2);
+    }
 }
 
 // close tab button
@@ -82,7 +90,7 @@
 }
 
 .newTab {
-    height: calc(100% - 85px);
+    height: 90%;
     display: block;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -145,7 +153,7 @@ input[type=file]{
 }
 
 //button on new tab page
-.helpButtonsContainer {
+.help-links-container {
     display: flex;
     justify-content: center;
     margin-bottom: 1em;
@@ -158,28 +166,24 @@ input[type=file]{
     z-index: 10 !important;
     div { display: inline-block; cursor: pointer; }
 
-    .helpButton {
+    .help-button {
         position: absolute;
         top: 10px;
         right: 15px;
-        background: white;
-        border: solid $panel-dark 1px;
-        border-radius: 50%;
         text-align: center;
         width: 4ex;
         height: 3ex;
         padding: 5px;
         z-index: 10;
-        &:hover { background: $panel-light; }
-        &::after{
-            font-size: 5pt;
-            content: "▼";
-        }
+        &:hover svg { fill: #505050; }
     }
 
     .help-dropdown-open {
         border-radius: 50% 50% 0 0;
+        border: solid $panel-dark 1px;
         border-bottom: solid 1px white;
+        background: white;
+        svg { fill: #505050; }
     }
 
     .dropdown-container {
