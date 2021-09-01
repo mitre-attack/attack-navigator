@@ -11,6 +11,9 @@ tabs {
     text-align: right;
     margin-left: 16px;
     padding: 0;
+    display: block;
+    position: absolute;
+    bottom: 16px;
     &:hover {
         text-decoration: underline;
         cursor: pointer;

@@ -2,8 +2,14 @@
 
 .tabs-container {
     display: flex;
+    .mat-ink-bar {
+        display: none;
+    }
     .mat-tab-nav-bar, .mat-tab-header {
         border-bottom: none !important;
+    }
+    .tabs .tab-title.active {
+        opacity: 1 !important;
     }
 }
 
@@ -91,6 +97,11 @@
 }
 
 .newTab {
+    height: calc(100% - 85px);
+    display: block;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    position: absolute;
     // text-align: center;
     padding: 5% 20%;
     .description {
