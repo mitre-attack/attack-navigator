@@ -139,7 +139,7 @@ layers to inherit properties from:
 
 - <b>Gradient:</b> choose which layer to inherit <a href="#scoring-gradient">scoring gradient</a> from.
 - <b>Coloring:</b> choose which layer to inherit <a href="#assigning-manual-colors">manually assigned technique
-  colors</a> from.
+  colors</a>.
 - <b>Comments:</b> choose which layer to inherit <a href="#adding-comments-to-techniques">
   technique comments</a> from.
 - <b>Links:</b> choose which layer to inherit <a href="#assigning-links-to-techniques">assigned links</a> from.
