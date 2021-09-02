@@ -19,9 +19,9 @@ $cellSize: 15px;
 // content of each tab
 .matrices {
     overflow-x: scroll;
-    height: calc(100vh - 115px);
     min-height: 50vh;
     border: 1px solid $panel-dark;
+    transition: height ease-in-out 0.2s;
 
     .spinner {
         display: flex;

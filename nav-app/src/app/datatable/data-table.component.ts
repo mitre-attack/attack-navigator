@@ -247,12 +247,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
         this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
-        this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.footerHeight}px)`;
-        this.scrollRef.nativeElement.addEventListener('scroll', this.handleSidenavScroll);
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
+        this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
     }
 
     ngOnDestroy() {
-        document.body.removeEventListener('scroll', this.handleSidenavScroll);
+        document.body.removeEventListener('scroll', this.handleScroll);
     }
 
     handleDescriptionDropdown() {
@@ -262,13 +262,29 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     previousScrollTop = 0;
     headerHeight = 0;
-    footerHeight = 77;
-    handleSidenavScroll = (e) => {
-        const isScrollUp = this.scrollRef.nativeElement.scrollTop > this.previousScrollTop;
-        this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
-        const tabOffset = isScrollUp ? this.headerHeight : 0;
-        this.onScroll.emit(tabOffset);
-        this.scrollRef.nativeElement.style.height = `calc(100vh - ${(this.headerHeight - tabOffset) + this.footerHeight}px)`;
+    footerHeight = 33;
+    controlsHeight = 34;
+    isScrollUp = true;
+    handleScroll = (e) => {
+        const diff = this.scrollRef.nativeElement.scrollTop - this.previousScrollTop;
+        if (!this.isScrollUp && diff < 0) {
+            this.isScrollUp =  diff < 0;
+            this.calculateScrollHeight();
+            this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
+        } else if (this.isScrollUp && diff > 0) {
+            this.isScrollUp =  diff < 0;
+            this.calculateScrollHeight();
+            this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
+        } else if (!this.isScrollUp && this.scrollRef.nativeElement.scrollTop > 0 && diff === 0) {
+            this.calculateScrollHeight();
+        }
+    }
+
+    calculateScrollHeight = () => {
+        const tabOffset = this.isScrollUp ? 0 : this.headerHeight;
+        this.onScroll.emit(-1 * tabOffset);
+        const scrollWindowHeight = this.isScrollUp ? this.headerHeight + this.controlsHeight + this.footerHeight : this.controlsHeight;
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
     }
 
     // open custom url in a new tab
