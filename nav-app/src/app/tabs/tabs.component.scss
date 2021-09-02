@@ -171,6 +171,10 @@ input[type=file]{
     z-index: 10 !important;
     div { display: inline-block; cursor: pointer; }
 
+    &.help-header {
+        position: absolute;
+    }
+
     .help-button {
         position: absolute;
         top: 10px;
