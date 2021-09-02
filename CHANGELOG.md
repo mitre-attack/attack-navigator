@@ -1,3 +1,10 @@
+# v4.5
+## New Features
+- Added technique controls to assign links and metadata to selected techniques. Assigned links can be accessed via the context menu and metadata can be viewed in the technique tooltip. Links and metadata can also be added directly to Layer Files (see _Layer File Format Changes_ below for more details). See issue [#321](https://github.com/mitre-attack/attack-navigator/issues/321).
+
+## Layer File Format Changes
+Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects. This supports the assignment of links to techniques which are accessed in the context menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the context menu where the `divider` property occurs in the list of links.
+
 # v4.4 - Changes staged on Develop
 <!-- TODO BEFORE RELEASE: update MONTH_AFTER_RELEASE in search-popover-notification.component.ts to the actual release date of v4.4 -->
 
