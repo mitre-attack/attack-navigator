@@ -1,5 +1,6 @@
+<div [style.margin-top]="'-'+adjustedHeaderHeight+'px'" class="header-wrapper">
 <!-- Banner -->
-<div [style.margin-top]="'-'+(adjustedBannerHeight)+'px'" *ngIf="hasFeature('header') && bannerContent" class="header">
+<div *ngIf="hasFeature('header') && bannerContent" class="header">
     <div class="banner">
         <span class="bannerContent" role="alert" [innerHTML]="bannerContent"></span>
         <div [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="bannerLinks">
@@ -25,7 +26,7 @@
 
 
 <!-- Tabs display -->
-<div [style.margin-top]="'-'+adjustedHeaderHeight+'px'" class="tabs-container">
+<div class="tabs-container">
     <nav mat-tab-nav-bar class="tabs">
         <a mat-tab-link
            class="tab-title"
@@ -51,6 +52,9 @@
     <!-- you shouldn't ever see this, but just in case -->
     <button (click)="newBlankTab()">Start</button>
 </div>
+
+</div>
+
 
 <ng-template #safariWarning>
     <div class="safari-warning">

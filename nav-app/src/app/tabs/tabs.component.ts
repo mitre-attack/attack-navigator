@@ -35,7 +35,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     dropdownEnabled = '';
     layerTabs: Tab[] = [];
     adjustedHeaderHeight = 0;
-    adjustedBannerHeight = 0;
     techniques: Technique[] = [];
 
     alwaysUpgradeVersion: boolean;
@@ -79,11 +78,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         }
     }
 
-    bannerHeight = 50;
     tabHeight = 48;
     adjustHeader(newHeight) {
         this.adjustedHeaderHeight = newHeight;
-        this.adjustedBannerHeight = newHeight < 10 ? newHeight : this.bannerHeight; // to prevent UI overlap when scrolling down
     }
 
     /**

@@ -246,6 +246,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
+        this.headerHeight = document.querySelector('.header-wrapper')?.offsetHeight;
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.footerHeight}px)`;
         this.scrollRef.nativeElement.addEventListener('scroll', this.handleSidenavScroll);
     }
 
@@ -258,13 +260,15 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
-    handleSidenavScroll = () => {
-        const tabHeight = 48;
-        const toolbarHeight = 34;
-        const footerHeight = 33;
-        const tabOffset = Math.floor(Math.min(Math.max(0, this.scrollRef.nativeElement.scrollTop/5), (tabHeight)));
+    previousScrollTop = 0;
+    headerHeight = 0;
+    footerHeight = 77;
+    handleSidenavScroll = (e) => {
+        const isScrollUp = this.scrollRef.nativeElement.scrollTop > this.previousScrollTop;
+        this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
+        const tabOffset = isScrollUp ? this.headerHeight : 0;
         this.onScroll.emit(tabOffset);
-        this.scrollRef.nativeElement.style.height = `calc(100vh - ${toolbarHeight + footerHeight + tabHeight - tabOffset}px)`;
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${(this.headerHeight - tabOffset) + this.footerHeight}px)`;
     }
 
     // open custom url in a new tab

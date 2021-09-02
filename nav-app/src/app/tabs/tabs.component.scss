@@ -1,5 +1,9 @@
 @import "../../colors.scss";
 
+.header-wrapper {
+    transition: all ease-in-out 0.2s;
+}
+
 .tabs-container {
     display: flex;
     .mat-ink-bar {
