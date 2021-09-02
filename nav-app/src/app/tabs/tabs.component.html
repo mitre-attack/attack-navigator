@@ -241,7 +241,10 @@
                             Use constants (numbers) and layer variables (yellow, above) to write an expression for the
                             initial value of scores in the new layer. A full list of supported operations can be found
                             <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to
-                            initialize scores to 0.
+                            initialize scores to 0. Here's a list of available layer variables:
+                            <ul *ngFor="let tab of layerTabs; let $i = index">
+                                <li *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))"><span class="tab-enumerator">{{indexToChar($i)}}</span> ({{tab.title}})</li>
+                            </ul>
                         </td>
                     </tr>
 
