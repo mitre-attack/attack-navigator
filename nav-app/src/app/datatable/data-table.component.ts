@@ -246,7 +246,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
-        this.headerHeight = document.querySelector('.header-wrapper')?.offsetHeight;
+        this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.footerHeight}px)`;
         this.scrollRef.nativeElement.addEventListener('scroll', this.handleSidenavScroll);
     }
