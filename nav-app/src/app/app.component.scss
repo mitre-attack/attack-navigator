@@ -9,7 +9,11 @@ tabs {
     border: none;
     background-color: transparent;
     text-align: right;
+    margin-left: 16px;
     padding: 0;
+    display: block;
+    position: fixed;
+    bottom: 16px;
     &:hover {
         text-decoration: underline;
         cursor: pointer;

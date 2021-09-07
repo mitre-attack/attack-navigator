@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
@@ -27,6 +27,7 @@ import { Subscription } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
 })
 export class DataTableComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('scrollRef') private scrollRef: ElementRef;
 
     //items for custom context menu
     customContextMenuItems = [];
@@ -35,8 +36,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     // The ViewModel being used by this data-table
     @Input() viewModel: ViewModel;
-
-    currentDropdown: string = ""; //current dropdown menu
+    @Input() currentDropdown: string = ""; //current dropdown menu
+    @Output() dropdownChange = new EventEmitter<any>();
+    @Output() onScroll = new EventEmitter<any>();
 
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
@@ -251,10 +253,46 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     ngAfterViewInit(): void {
         // setTimeout(() => this.exportRender(), 500);
+        this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
+        this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.selectionChangeSubscription.unsubscribe();
+        document.body.removeEventListener('scroll', this.handleScroll);
+    }
+
+    handleDescriptionDropdown() {
+        this.currentDropdown !== 'description' ? this.currentDropdown = 'description' : this.currentDropdown = '';
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    previousScrollTop = 0;
+    headerHeight = 0;
+    footerHeight = 33;
+    controlsHeight = 34;
+    isScrollUp = true;
+    handleScroll = (e) => {
+        const diff = this.scrollRef.nativeElement.scrollTop - this.previousScrollTop;
+        if (!this.isScrollUp && diff < 0) {
+            this.isScrollUp =  diff < 0;
+            this.calculateScrollHeight();
+            this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
+        } else if (this.isScrollUp && diff > 0) {
+            this.isScrollUp =  diff < 0;
+            this.calculateScrollHeight();
+            this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
+        } else if (!this.isScrollUp && this.scrollRef.nativeElement.scrollTop > 0 && diff === 0) {
+            this.calculateScrollHeight();
+        }
+    }
+
+    calculateScrollHeight = () => {
+        const tabOffset = this.isScrollUp ? 0 : this.headerHeight;
+        this.onScroll.emit(-1 * tabOffset);
+        const scrollWindowHeight = this.isScrollUp ? this.headerHeight + this.controlsHeight + this.footerHeight : this.controlsHeight;
+        this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
     }
 
     // open custom url in a new tab
