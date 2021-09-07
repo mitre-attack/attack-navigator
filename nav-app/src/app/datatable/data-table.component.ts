@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import {DataService, Technique, Matrix, Domain} from '../data.service';
 import {ConfigService} from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
@@ -18,6 +18,7 @@ import * as FileSaver from 'file-saver';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
 import { TmplAstVariable } from '@angular/compiler';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'DataTable',
@@ -74,7 +75,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     saveLayerLocallyExcel() {
         var workbook = new Excel.Workbook();
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
         for (let matrix of domain.matrices) {
             var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
 
@@ -235,11 +236,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    private selectionChangeSubscription: Subscription;
     constructor(public dataService: DataService,
                 private tabs: TabsComponent,
                 private sanitizer: DomSanitizer,
                 private viewModelsService: ViewModelsService,
-                public configService: ConfigService) { }
+                public configService: ConfigService) {
+
+        this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
+            this.onTechniqueSelect();
+        })
+    }
 
     /**
      * Angular lifecycle hook
@@ -252,6 +259,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.selectionChangeSubscription.unsubscribe();
         document.body.removeEventListener('scroll', this.handleScroll);
     }
 
@@ -309,11 +317,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     scoreEditField: string = "";
     /**
      * triggered on left click of technique
-     * @param  technique      technique which was left clicked
-     * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
-    onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-
+    onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
             if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
@@ -327,7 +332,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        for (let technique of this.dataService.getDomain(this.viewModel.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
                     let tvm = this.viewModel.getTechniqueVM_id(id);
@@ -403,5 +408,15 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     exportRender(): void {
         this.tabs.openSVGDialog(this.viewModel);
+    }
+
+    /**
+     * open search & multiselect sidebar
+     */
+    openSearch(): void {
+        if (this.viewModel.sidebarContentType !== 'layerUpgrade') {
+            this.viewModel.sidebarOpened = (this.viewModel.sidebarContentType !== 'search') ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'search';
+        }
     }
 }

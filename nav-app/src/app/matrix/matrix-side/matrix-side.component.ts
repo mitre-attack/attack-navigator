@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatrixCommon } from '../matrix-common';
 import { ConfigService } from '../../config.service';
+import { ViewModelsService } from '../../viewmodels.service';
 
 @Component({
   selector: 'matrix-side',
@@ -9,8 +10,8 @@ import { ConfigService } from '../../config.service';
 })
 export class MatrixSideComponent extends MatrixCommon implements OnInit  {
 
-    constructor(configService: ConfigService) { 
-        super(configService);
+    constructor(configService: ConfigService, viewModelsService: ViewModelsService) { 
+        super(configService, viewModelsService);
     }
 
     ngOnInit() {}

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix, Domain } from "./data.service";
+import { EventEmitter, Injectable, Output } from '@angular/core';
+import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
 declare var tinygradient: any; //use tinygradient
 // import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
@@ -11,18 +11,27 @@ import * as is from 'is_js';
 
 @Injectable()
 export class ViewModelsService {
+    @Output() onSelectionChange = new EventEmitter<any>();
 
     constructor(private dataService: DataService) { }
 
     viewModels: ViewModel[] = [];
 
     /**
+     * Emit event when technique selection changes
+     */
+    selectionChanged() {
+        this.onSelectionChange.emit();
+    }
+
+    /**
      * Create and return a new viewModel
      * @param {string} name the viewmodel name
+     * @param {string} domainVersionID the ID of the domain & version
      * @return {ViewModel} the created ViewModel
      */
-    newViewModel(name: string, domainID: string) {
-        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainID, this.dataService);
+    newViewModel(name: string, domainVersionID: string) {
+        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainVersionID, this.dataService);
         this.viewModels.push(vm);
         return vm;
     }
@@ -54,17 +63,18 @@ export class ViewModelsService {
 
     /**
      * layer combination operation
-     * @param  scoreExpression math expression of score expression
-     * @param  scoreVariables  variables in math expression, mapping to viewmodel they correspond to
-     * @param  comments           what viewmodel to inherit comments from
-     * @param  coloring           what viewmodel to inherit manual colors from
-     * @param  enabledness        what viewmodel to inherit state from
-     * @param  layerName          new layer name
-     * @param  filters            viewmodel to inherit filters from
-     * @return                    new viewmodel inheriting above properties
+     * @param  domainVersionID  domain & version ID
+     * @param  scoreExpression  math expression of score expression
+     * @param  scoreVariables   variables in math expression, mapping to viewmodel they correspond to
+     * @param  comments         what viewmodel to inherit comments from
+     * @param  coloring         what viewmodel to inherit manual colors from
+     * @param  enabledness      what viewmodel to inherit state from
+     * @param  layerName        new layer name
+     * @param  filters          viewmodel to inherit filters from
+     * @return                  new viewmodel inheriting above properties
      */
-    layerLayerOperation(domainID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
-        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainID, this.dataService);
+    layerLayerOperation(domainVersionID: string, scoreExpression: string, scoreVariables: Map<string, ViewModel>, comments: ViewModel, gradient: ViewModel, coloring: ViewModel, enabledness: ViewModel, layerName: string, filters: ViewModel, legendItems: ViewModel): ViewModel {
+        let result = new ViewModel("layer by operation", "vm" + this.getNonce(), domainVersionID, this.dataService);
 
         if (scoreExpression) {
             scoreExpression = scoreExpression.toLowerCase() //should be enforced by input, but just in case
@@ -343,7 +353,7 @@ export class ViewModel {
     name: string; // layer name
     domain: string = ""; // attack domain
     version: string = ""; // attack version
-    domainID: string; // layer domain & version
+    domainVersionID: string; // layer domain & version
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
 
@@ -382,6 +392,9 @@ export class ViewModel {
     techIDtoUIDMap: Object = {};
     techUIDtoIDMap: Object = {};
 
+    compareTo?: ViewModel;
+    versionChangelog?: VersionChangelog;
+    
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
@@ -394,8 +407,8 @@ export class ViewModel {
         else this._sidebarContentType = '';
     };
 
-    constructor(name: string, uid: string, domainID: string, private dataService: DataService) {
-        this.domainID = domainID;
+    constructor(name: string, uid: string, domainVersionID: string, private dataService: DataService) {
+        this.domainVersionID = domainVersionID;
         console.log("initializing ViewModel '" + name + "'");
         this.filters = new Filter();
         this.name = name;
@@ -403,22 +416,22 @@ export class ViewModel {
     }
 
     loadVMData() {
-        if (!this.domainID || !this.dataService.getDomain(this.domainID).dataLoaded) {
+        if (!this.domainVersionID || !this.dataService.getDomain(this.domainVersionID).dataLoaded) {
             console.log("subscribing to data loaded callback")
             let self = this;
-            this.dataService.onDataLoad(this.domainID, function() {
+            this.dataService.onDataLoad(this.domainVersionID, function() {
                 self.initTechniqueVMs()
-                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainID));
+                self.filters.initPlatformOptions(self.dataService.getDomain(self.domainVersionID));
             });
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainID));
+            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainVersionID));
         }
     }
 
     initTechniqueVMs() {
         console.log(this.name, "initializing technique VMs");
-        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
+        for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
@@ -720,6 +733,71 @@ export class ViewModel {
     }
 
     /**
+     * Copies all annotations on unchanged techniques in the previous version
+     * of ATT&CK to the latest version of ATT&CK
+     */
+    public copyUnchangedAnnotations(): void {
+        if (this.versionChangelog) {
+            this.versionChangelog.unchanged.forEach(attackID => {
+                let fromTechnique = this.dataService.getTechnique(attackID, this.compareTo.domainVersionID);
+                let domain = this.dataService.getDomain(this.domainVersionID);
+                let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
+                tactics.forEach(tactic => {
+                    let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+                    if (fromVM.annotated()) {
+                        let toTechnique = this.dataService.getTechnique(attackID, this.domainVersionID);
+                        this.copyAnnotations(fromTechnique, toTechnique, tactic);
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Copy annotations from one technique to another under the given tactic. 
+     * The previous technique will be disabled
+     * @param fromTechnique the technique to copy annotations from
+     * @param toTechnique the technique to copy annotations to
+     * @param tactic the tactic the techniques are found under
+     */
+    public copyAnnotations(fromTechnique: Technique, toTechnique: Technique, tactic: Tactic): void {
+        let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toVM = this.getTechniqueVM(toTechnique, tactic);
+
+        this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+
+        toVM.deSerialize(fromVM.serialize(), fromTechnique.attackID, tactic.shortname);
+        this.updateScoreColor(toVM);
+        fromVM.enabled = false;
+
+        this.versionChangelog.copied.add(fromVM.technique_tactic_union_id);
+        if (fromTechnique.get_all_technique_tactic_ids().every(id => this.versionChangelog.copied.has(id))) {
+            this.versionChangelog.reviewed.add(fromTechnique.attackID);
+        }
+    }
+
+    /**
+     * Reset the techniqueVM that the annotations were previously copied to
+     * and re-enable the technique the annotations were copied from
+     * @param fromTechnique the technique that annotations were copied from
+     * @param toTechnique the technique that annotations were copied to
+     * @param tactic the tactic the techniques are found under
+     */
+    public revertCopy(fromTechnique: Technique, toTechnique: Technique, tactic: Tactic): void {
+        let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
+        let toVM = this.getTechniqueVM(toTechnique, tactic);
+        this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+
+        toVM.resetAnnotations();
+        fromVM.enabled = true;
+
+        this.versionChangelog.copied.delete(fromVM.technique_tactic_union_id);
+        if (!fromTechnique.get_all_technique_tactic_ids().every(id => this.versionChangelog.copied.has(id))) {
+            this.versionChangelog.reviewed.delete(fromTechnique.attackID);
+        }
+    }
+
+    /**
      * Return true if the given technique is selected, false otherwise
      * @param  {Technique}  technique the technique to check
     * * @param  {Tactic}  tactic wherein the technique occurs
@@ -848,12 +926,7 @@ export class ViewModel {
      */
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
-            this.getTechniqueVM_id(id).score = "";
-            this.getTechniqueVM_id(id).comment = "";
-            this.getTechniqueVM_id(id).color = "";
-            this.getTechniqueVM_id(id).enabled = true;
-            this.getTechniqueVM_id(id).aggregateScore = "";
-            this.getTechniqueVM_id(id).aggregateScoreColor = "";
+            this.getTechniqueVM_id(id).resetAnnotations();
         })
     }
 
@@ -1086,12 +1159,12 @@ export class ViewModel {
         rep.name = this.name;
 
         rep.versions = {
-            "attack": this.dataService.getDomain(this.domainID).getVersion(),
+            "attack": this.dataService.getDomain(this.domainVersionID).getVersion(),
             "navigator": globals.nav_version,
             "layer": globals.layer_version
         }
 
-        rep.domain = this.domainID.substr(0, this.domainID.search(/-v[0-9]/g));
+        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1114,7 +1187,7 @@ export class ViewModel {
      * restore the domain and version from a string
      * @param rep string to restore from
      */
-    deSerializeDomainID(rep: any): void {
+    deSerializeDomainVersionID(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
         this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
@@ -1140,7 +1213,7 @@ export class ViewModel {
         if(obj.domain in this.dataService.domain_backwards_compatibility) {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
-        this.domainID = this.dataService.getDomainID(this.domain, this.version);
+        this.domainVersionID = this.dataService.getDomainVersionID(this.domain, this.version);
     }
 
     /**
@@ -1230,7 +1303,7 @@ export class ViewModel {
                     } else {
                         // occurs in multiple tactics
                         // match to Technique by attackID
-                        for (let technique of this.dataService.getDomain(this.domainID).techniques) {
+                        for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
                                 for (let tactic of technique.tactics) {
@@ -1328,6 +1401,15 @@ export class ViewModel {
             tvm.scoreColor = self.gradient.getColor(tvm.score);
         });
         this.updateLegendColorPresets();
+    }
+
+    /**
+     * Update the score color of a single technique VM to match the current
+     * score and gradient
+     * @param tvm technique VM to update
+     */
+    updateScoreColor(tvm: TechniqueVM): void {
+        tvm.scoreColor = this.gradient.getColor(tvm.score);
     }
 
     legendItems = [
@@ -1438,6 +1520,18 @@ export class TechniqueVM {
      */
     annotated(): boolean {
         return (this.score != "" || this.color != "" || !this.enabled || this.comment != "");
+    }
+
+    /**
+     * Reset this TechniqueVM's annotations to their default values
+     */
+    resetAnnotations(): void {
+        this.score = "";
+        this.comment = "";
+        this.color = "";
+        this.enabled = true;
+        this.aggregateScore = "";
+        this.aggregateScoreColor = "";
     }
 
     /**

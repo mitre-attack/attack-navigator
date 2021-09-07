@@ -64,7 +64,45 @@ layer description, view configuration.
 Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer you've worked on previously. To
 do so, open a new tab and open the "Open Existing Layer" panel. Then click "Upload from local", and select your saved
 configuration file. Doing so will restore your saved layer to the ATT&CK Navigator. This interface also has a "load from
-URL"input allowing you to open a layer json from a remote source.
+URL" input allowing you to open a layer json from a remote source.
+
+## Upgrading a Layer to the Current Version
+
+The layer upgrade interface allows users to upgrade an ATT&CK Navigator layer created on a previous version of ATT&CK to the 
+current version of the dataset. With this interface, users can step through each change in the dataset of techniques:
+- The user can view techniques which have been added to the dataset since the layer was created and annotate them as necessary.
+- The user can see whether the techniques they had previously annotated have changed and adjust the annotations accordingly.
+- The user can determine if any annotated techniques have been removed or replaced by new techniques and in the latter case copy 
+annotations to the replacing technique(s).
+- The user can also verify what techniques haven't changed since the layer was created.
+
+### Mapping Annotations
+
+For annotated techniques which have changed since the layer was created, you may want to update the set of annotations to account 
+for changes to scope or content. Each technique in the interface lists its previous and current state, with links to 
+<a href="https://attack.mitre.org/">the ATT&CK Website</a> for both versions of the technique to enable easy review. In steps with techniques you 
+have previously annotated, you can enable the "show annotated techniques only" filter to view only those techniques which have annotations. 
+
+You can copy annotations from the previous version of the technique to the current one, making adjustments if necessary. There are 
+two approaches to copying annotations from the previous version:
+- For techniques with tactics that map one-to-one between the two versions, annotations can be copied by clicking the ">"
+button next to the tactic. This will copy any existing annotations on the tactic to the technique under the same tactic in
+the current version.
+- For techniques with tactics that have changed between the two versions, annotations can be copied by dragging & dropping the
+annotated tactic from the previous version to the tactic(s) in the current version.
+
+Techniques can be marked as reviewed under their respective panels to visually indicate that they have been reviewed. The "reviewed 
+X/Y techniques" displayed underneath the techniques list can be used to determine if you missed any techniques. The numerator reflects 
+the number of techniques you have marked as "reviewed" and the denominator denotes the total number of techniques shown according
+to your configuration (for example, if you have enabled the "show annotated techniques only" filter, only the number of techniques
+which are annotated are counted in this total).
+
+You can view and verify the status of the layer upgrade at the end of the workflow to ensure you have created or adjusted all annotations 
+as desired. A status is displayed next to each section name to indicate either the number of techniques you have reviewed in the section, 
+if you have skipped the section, or if there are no techniques to review in the section. Once you have finished upgrading the layer, you 
+can click the "done" button to close the sidebar.
+
+<b>Note:</b> You will not be able to return to the layer upgrade interface after the sidebar is closed.
 
 ## Creating Layers from Other Layers
 
