@@ -43,7 +43,7 @@ export class DataService {
      * @param domain
      * @param stixBundles
      */
-    parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
+    parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
         let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
@@ -52,9 +52,6 @@ export class DataService {
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle?
-                if (!includeAll && (sdo.x_mitre_deprecated || sdo.revoked)) continue;
-                
                 // Filter out object not included in this domain if domains field is available
                 if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; 
                 
@@ -270,14 +267,14 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainVersionID: string, refresh: boolean = false, includeAll: boolean = false): Promise<any> {
+    loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
             if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data, includeAll);
+                        this.parseBundle(domain, data);
                         resolve(null);
                     },
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
