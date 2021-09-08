@@ -115,3 +115,13 @@ tr td {
     span { font-size: 14px; }
     &.center { text-align: center; }
 }
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+
+    mat-progress-spinner circle {
+        stroke: on-color-deemphasis(body);
+    }
+}
