@@ -38,7 +38,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     adjustedHeaderHeight = 0;
     techniques: Technique[] = [];
 
-    alwaysUpgradeVersion: boolean;
     nav_version = globals.nav_version;
 
     constructor(private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
@@ -482,10 +481,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     versionUpgradeDialog(viewModel): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let currVersion = this.dataService.getCurrentVersion();
-            if (this.alwaysUpgradeVersion) { // remember user choice to always upgrade layer
-                let newDomainVersionID = this.dataService.getDomainVersionID(viewModel.domain, currVersion);
-                resolve({oldID: viewModel.domainVersionID, newID: newDomainVersionID});
-            } else if (viewModel.version !== currVersion && this.alwaysUpgradeVersion == undefined) { // ask to upgrade
+            if (viewModel.version !== currVersion) { // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
                     data: {
                         layerName: viewModel.name,
@@ -500,9 +496,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
                             reject("Uploaded layer version (" + String(viewModel.version) + ") is not supported by Navigator v" + globals.nav_version)
                         }
-                        if (result.dontAsk) {
-                            this.alwaysUpgradeVersion = result.upgrade;
-                        }
                         if (result.upgrade) {
                             let newDomainVersionID = this.dataService.getDomainVersionID(viewModel.domain, currVersion);
                             resolve({oldID: viewModel.domainVersionID, newID: newDomainVersionID});
@@ -511,9 +504,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     },
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
-            } else { // remember user choice not to upgrade or layer is already current version
-                resolve(null);
-            }
+            } else resolve(null); // layer is already current version
         });
         return dataPromise;
     }
