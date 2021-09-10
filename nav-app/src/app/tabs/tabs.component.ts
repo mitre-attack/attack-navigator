@@ -535,8 +535,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             // load vm for uploaded layer
                             oldViewModel.deSerialize(string);
                             oldViewModel.loadVMData();
-                            // copy unchanged annotations
-                            newViewModel.copyUnchangedAnnotations();
+                            newViewModel.initCopyAnnotations();
                         },
                         complete: () => { dataSubscription.unsubscribe(); }
                     });
@@ -545,8 +544,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     // load vm for uploaded layer
                     oldViewModel.deSerialize(string);
                     oldViewModel.loadVMData();
-                    // copy unchanged annotations
-                    newViewModel.copyUnchangedAnnotations();
+                    newViewModel.initCopyAnnotations();
                 }
             } else {
                 this.openTab("new layer", oldViewModel, true, true, true, true);
