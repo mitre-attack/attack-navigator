@@ -6,7 +6,7 @@ The principal feature of the Navigator is the ability for users to define layers
 
 ## Usage
 
-The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live instance of the current version of the Navigator here](https://mitre-attack.github.io/attack-navigator). 
+The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live instance of the current version of the Navigator here](https://y-security.github.io/attack-navigator). 
 
 Version 4.0 of the ATT&CK Navigator supports all ATT&CK domains in a single instance of the application instead of requiring a different instance for each domain. It also sees the introduction of support for the ICS domain. See [the changelog](CHANGELOG.md) for more information.
 
@@ -15,8 +15,8 @@ Additionally, older versions of ATT&CK can now be loaded in the application. The
 Previous versions of the Navigator application are also hosted via GitHub Pages for users who want a more classic experience:
 | ATT&CK Version | Navigator Version | Domains | |
 |:---------------|:------------------|:--------|-|
-| [ATT&CK v7.2](https://attack.mitre.org/resources/versions/) | [Navigator v3.1](https://github.com/mitre-attack/attack-navigator/releases/tag/v3.1) | [Enterprise](https://mitre-attack.github.io/attack-navigator/v3/enterprise/) | [Mobile](https://mitre-attack.github.io/attack-navigator/v3/mobile/) |
-| [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) | [Navigator v2.3.2](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) | [Enterprise](https://mitre-attack.github.io/attack-navigator/v2/enterprise/) | [Mobile](https://mitre-attack.github.io/attack-navigator/v2/mobile/) |
+| [ATT&CK v7.2](https://attack.mitre.org/resources/versions/) | [Navigator v3.1](https://github.com/mitre-attack/attack-navigator/releases/tag/v3.1) | [Enterprise](https://y-security.github.io/attack-navigator/v3/enterprise/) | [Mobile](https://y-security.github.io/attack-navigator/v3/mobile/) |
+| [ATT&CK v6.3](https://attack.mitre.org/resources/versions/) | [Navigator v2.3.2](https://github.com/mitre-attack/attack-navigator/releases/tag/v2.3.2) | [Enterprise](https://y-security.github.io/attack-navigator/v2/enterprise/) | [Mobile](https://y-security.github.io/attack-navigator/v2/mobile/) |
 
 
 Please see [Install and Run](#Install-and-Run) for information on how to get the ATT&CK Navigator set up locally. 
@@ -185,13 +185,13 @@ Features can also be disabled using the _create customized Navigator_ feature. R
 ## Embedding the Navigator in a Webpage
 If you want to embed the Navigator in a webpage, use an iframe:
 ```HTML
-<iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/" width="1000" height="500"></iframe>
+<iframe src="https://y-security.github.io/attack-navigator/enterprise/" width="1000" height="500"></iframe>
 ```
 If you want to imbed a version of the Navigator with specific features removed (e.g tabs, adding annotations), or with a default layer, we recommend using the _create customized Navigator_ feature. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
 The following is an example iframe which embeds our [*Bear APTs](layers/data/samples/Bear_APT.json) layer with tabs and the ability to add annotations removed:
 ```HTML
-<iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
+<iframe src="https://y-security.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
 ```
 
 ## Related MITRE Work
