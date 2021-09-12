@@ -23,7 +23,7 @@
         "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
     },
 
-    "comment_color": "yellow",
+    "comment_color": "#FF6961",
 
     "features": [
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
