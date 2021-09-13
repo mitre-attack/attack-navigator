@@ -82,7 +82,7 @@ export class SearchAndMultiselectComponent implements OnInit {
      */
     filterAndSort(items: BaseStix[], query = "", sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
-        let results = items;
+        let results = items.filter(t => !t.deprecated && !t.revoked);
         if (query.trim() === "") {
             if (sortTechniquesAndSubtechniques) {
                 results.sort((tA: Technique, tB: Technique) => {
