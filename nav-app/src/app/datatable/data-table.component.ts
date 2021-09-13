@@ -270,7 +270,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     previousScrollTop = 0;
     headerHeight = 0;
-    footerHeight = 33;
+    footerHeight = 32;
     controlsHeight = 34;
     isScrollUp = true;
     handleScroll = (e) => {
