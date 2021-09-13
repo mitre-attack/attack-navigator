@@ -14,6 +14,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 - The application changelog can now be viewed within the application. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
 - Users can disable the comment underline effect on techniques by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#268](https://github.com/mitre-attack/attack-navigator/issues/268).
 - Application now alerts the user when input STIX data contains an object missing an ATT&CK ID instead of failing silently. See issue [#339](https://github.com/mitre-attack/attack-navigator/pull/339).
+- Application UI has been refactored so that it now takes up the entire screen, and the user can scroll the sidebar and main content independently of each other. See issue [#340](https://github.com/mitre-attack/attack-navigator/issues/340).
 ## Fixes
 - Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
 - Fixed issue with sorting when show aggregate score is enabled, where each technique's aggregate score was not correctly calculated into the sorting. See issue [#295](https://github.com/mitre-attack/attack-navigator/issues/295). 

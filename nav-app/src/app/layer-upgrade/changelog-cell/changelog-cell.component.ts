@@ -47,6 +47,7 @@ export class ChangelogCellComponent extends Cell implements OnInit {
             }
             // select technique
             else {
+                this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(this.technique, this.tactic);
             }
             this.viewModelsService.selectionChanged(); // emit selection change
