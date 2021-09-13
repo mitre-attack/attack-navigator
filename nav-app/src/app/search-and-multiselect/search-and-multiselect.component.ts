@@ -140,13 +140,16 @@ export class SearchAndMultiselectComponent implements OnInit {
 
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.filterAndSort(domain.groups, this._query)
+            "objects": this.filterAndSort(domain.groups, this._query),
+            "isExpanded": false
         }, {
             "label": "software",
-            "objects": this.filterAndSort(domain.software, this._query)
+            "objects": this.filterAndSort(domain.software, this._query),
+            "isExpanded": false
         }, {
             "label": "mitigations",
-            "objects": this.filterAndSort(domain.mitigations, this._query)
+            "objects": this.filterAndSort(domain.mitigations, this._query),
+            "isExpanded": false
         }]
     }
 
