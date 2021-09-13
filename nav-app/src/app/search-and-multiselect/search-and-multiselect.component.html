@@ -28,7 +28,7 @@
 
     <div class="sidebar-content">
         <mat-accordion multi>
-            <mat-expansion-panel>
+            <mat-expansion-panel [expanded]="expandedPanels[0]" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <h4>Techniques ({{techniqueResults.length}})</h4>
@@ -67,7 +67,7 @@
                 </ng-template>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngFor="let stixType of stixTypes" class="stixType" [(expanded)]="stixType.isExpanded">
+            <mat-expansion-panel *ngFor="let stixType of stixTypes" class="stixType" [expanded]="stixType.isExpanded" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <h4>

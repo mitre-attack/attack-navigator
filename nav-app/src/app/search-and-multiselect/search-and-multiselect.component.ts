@@ -12,6 +12,13 @@ import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '.
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
     public stixTypes: any[];
+    userClickedExpand = false;
+    expandedPanels = {
+        0: true,
+        1: false,
+        2: false,
+        3: false
+    };
 
     public fields = [
         {
@@ -113,9 +120,13 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    // getResults() checks if this._query is:
-    // 1) valid, and
-    // 2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
+
+    /**
+     * getResults() checks if this._query is:
+     *       1) valid, and
+     *       2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
+    **/
+
     getResults(query = "", fieldToggled = false) {
         if (query.trim() != "" && query.includes(this.previousQuery) && !fieldToggled) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
@@ -123,6 +134,27 @@ export class SearchAndMultiselectComponent implements OnInit {
         } else {
             this.getTechniques();
             this.getStixData();
+        }
+        this.expandPanels();
+    }
+
+    expandPanels() {
+        if (!this.userClickedExpand) {
+            this.expandedPanels[0] = this.techniqueResults.length > 0;
+            let isPrevExpanded = this.expandedPanels[0]
+            if (!isPrevExpanded) {
+                this.stixTypes.forEach((s, i) => {
+                    s.isExpanded = !isPrevExpanded && s.objects.length > 0;
+                    this.expandedPanels[i+1] = s.isExpanded;
+                    isPrevExpanded = s.isExpanded;
+                });
+            }
+        } else {
+            let isAllCollapsed = false;
+            for (const item in this.expandedPanels) {
+                isAllCollapsed = !item;
+            }
+            this.userClickedExpand = isAllCollapsed;
         }
     }
 
