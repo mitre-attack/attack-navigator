@@ -16,7 +16,6 @@ export class VersionUpgradeComponent implements OnInit {
     currVersion: string;
     vmVersion: string;
     layerName: string;
-    dontAsk: boolean = false;
 
     constructor(private dialogRef: MatDialogRef<VersionUpgradeComponent>, 
                 public dataService: DataService,
@@ -30,6 +29,6 @@ export class VersionUpgradeComponent implements OnInit {
     }
 
     upgradeVersion(upgrade: boolean) {
-        this.dialogRef.close({upgrade: upgrade, dontAsk: this.dontAsk});
+        this.dialogRef.close({upgrade: upgrade});
     }
 }

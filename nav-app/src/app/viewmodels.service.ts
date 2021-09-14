@@ -733,23 +733,28 @@ export class ViewModel {
     }
 
     /**
-     * Copies all annotations on unchanged techniques in the previous version
-     * of ATT&CK to the latest version of ATT&CK
+     * Copies all annotations from unchanged techniques and techniques 
+     * which have had minor changes
      */
-    public copyUnchangedAnnotations(): void {
-        if (this.versionChangelog) {
-            this.versionChangelog.unchanged.forEach(attackID => {
-                let fromTechnique = this.dataService.getTechnique(attackID, this.compareTo.domainVersionID);
-                let domain = this.dataService.getDomain(this.domainVersionID);
-                let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
-                tactics.forEach(tactic => {
-                    let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
-                    if (fromVM.annotated()) {
-                        let toTechnique = this.dataService.getTechnique(attackID, this.domainVersionID);
-                        this.copyAnnotations(fromTechnique, toTechnique, tactic);
-                    }
-                });
+    public initCopyAnnotations(): void {
+        let self = this;
+
+        function copy(attackID: string) {
+            let fromTechnique = self.dataService.getTechnique(attackID, self.compareTo.domainVersionID);
+            let domain = self.dataService.getDomain(self.domainVersionID);
+            let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
+            tactics.forEach(tactic => {
+                let fromVM = self.compareTo.getTechniqueVM(fromTechnique, tactic);
+                if (fromVM.annotated()) {
+                    let toTechnique = self.dataService.getTechnique(attackID, self.domainVersionID);
+                    self.copyAnnotations(fromTechnique, toTechnique, tactic);
+                }
             });
+        }
+
+        if (this.versionChangelog) {
+            this.versionChangelog.unchanged.forEach(attackID => copy(attackID));
+            this.versionChangelog.minor_changes.forEach(attackID => copy(attackID));
         }
     }
 
