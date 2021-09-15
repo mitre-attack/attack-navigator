@@ -40,32 +40,14 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
 
-                <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'search' ? 'search' : null;"
+                <div class="control-row-button noselect"
+                    (click)="openSearch()"
                     matTooltipPosition="below"
-                    matTooltip="search">
-                    <img src="assets/icons/ic_search_black_24px.svg"/>
-                </div>
-
-                <div class="dropdown-container search" *ngIf="currentDropdown === 'search'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-techniques-search [viewModel]="viewModel"></app-techniques-search>
+                    matTooltip="search & multiselect">
+                    <img [src]="viewModel.sidebarContentType !== 'layerUpgrade' ? 'assets/icons/ic_search_black_24px.svg' : 'assets/icons/ic_search_gray_24px.svg'"/>
+                    <search-popover-notification [upgradingLayer]="viewModel.sidebarContentType == 'layerUpgrade'"></search-popover-notification>
                 </div>
             </div>
-
-
-            <!-- Multi-select -->
-            <div *ngIf="configService.getFeature('multiselect')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                    (click)="currentDropdown = currentDropdown !== 'multiselect' ? 'multiselect' : null;"
-                    matTooltipPosition="below"
-                    matTooltip="multi-select">
-                    <img src="assets/icons/ic_playlist_add_black_24px.svg"/>
-                </div>
-                <div class="dropdown-container multiselect" *ngIf="currentDropdown === 'multiselect'" #dropdown [class.left]="checkalign(dropdown)">
-                    <app-multiselect [viewModel]="viewModel"></app-multiselect>
-                </div>
-            </div>
-
 
             <!-- deselect all -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
@@ -89,7 +71,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'description' ? 'description' : null"
+                     (click)="handleDescriptionDropdown()"
                      matTooltipPosition="below"
                      matTooltip="layer information">
                      <img src="assets/icons/ic_description_black_24px.svg" alt="layer information" />
@@ -122,7 +104,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 <input matInput readonly disabled
                                     type="text"
                                     placeholder="domain"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).name" />
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
                             </mat-form-field>
 
                             <!-- layer version (uneditable) -->
@@ -130,7 +112,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 <input matInput readonly disabled
                                     type="text"
                                     placeholder="version"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainID).version" />
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version" />
                             </mat-form-field>
 
                     </div>
@@ -535,26 +517,34 @@ oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
  88  888  88    8oooo88    888      888  88o    888     88 888
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
                                                                  -->
-
-<div class="matrices" oncontextmenu="return false">
-        <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainID).dataLoaded">
-            <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-        </div>
-        <div class="matrices-columns">
-            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainID).matrices">
-                <div *ngIf="dataService.getDomain(viewModel.domainID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
-                <div *ngIf="viewModel.layout.layout == 'side'">
-                    <matrix-side [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-side>
+<mat-drawer-container class="matrices-content" autosize>
+    <mat-drawer-content>
+        <div class="matrices" #scrollRef>
+            <div oncontextmenu="return false">
+                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainVersionID).dataLoaded">
+                    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
                 </div>
-                <div *ngIf="viewModel.layout.layout == 'flat'">
-                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-flat>
-                </div>
-                <div *ngIf="viewModel.layout.layout == 'mini'">
-                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel" (selectionChanged)="onTechniqueSelect()"></matrix-mini>
-                </div>
+                        <div class="matrices-columns">
+                            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainVersionID).matrices">
+                                <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                                <div *ngIf="viewModel.layout.layout == 'side'">
+                                    <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
+                                </div>
+                                <div *ngIf="viewModel.layout.layout == 'flat'">
+                                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel"></matrix-flat>
+                                </div>
+                                <div *ngIf="viewModel.layout.layout == 'mini'">
+                                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel"></matrix-mini>
+                                </div>
+                            </div>
+                        </div>
             </div>
         </div>
-    </div>
+    </mat-drawer-content>
+    <mat-drawer [disableClose]="true" mode="side" position="end" [opened]="viewModel.sidebarOpened">
+        <sidebar [viewModel]="viewModel"></sidebar>
+    </mat-drawer>
+</mat-drawer-container>
 
 
 <!--
@@ -567,7 +557,7 @@ o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
 
 <div class="legendBar" (click)="showingLegend = !showingLegend" *ngIf="!showingLegend && configService.getFeature('legend')">
     <img src="assets/icons/ic_keyboard_arrow_up_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
-    <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+    <div class="noselect" style="padding:4px; font-size:14px; position: absolute; width: 100%; text-align:center">
         legend
     </div>
 </div>
@@ -575,7 +565,7 @@ o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
 <div class="legend" *ngIf="showingLegend && configService.getFeature('legend')">
     <div class="legendBar" (click)="showingLegend = !showingLegend" style="position: absolute; top:0px; left:0px;">
         <img src="assets/icons/ic_keyboard_arrow_down_black_24px.svg" style="position: absolute; left:4px; top: 3px;">
-        <div class="noselect" style="padding:4px; font-size:14px; position: absolue; width: 100%; text-align:center">
+        <div class="noselect" style="padding:4px; font-size:14px; position: absolute; width: 100%; text-align:center">
             legend
         </div>
     </div>
