@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { setCookie, getCookie, hasCookie } from '../../cookies';
 
 // TODO make sure this is actually the release date!
-const MONTH_AFTER_RELEASE = moment('2021-08-11', 'YYYY-MM-DD').add(1, 'months');
+const MONTH_AFTER_RELEASE = moment('2021-09-15', 'YYYY-MM-DD').add(1, 'months');
 
 @Component({
     selector: 'search-popover-notification',
