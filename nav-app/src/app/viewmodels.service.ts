@@ -1311,6 +1311,9 @@ export class ViewModel {
                         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
+                                // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
+                                if (technique.deprecated || technique.revoked) break;
+                                
                                 for (let tactic of technique.tactics) {
                                     let tvm = new TechniqueVM("");
                                     tvm.deSerialize(JSON.stringify(obj_technique),
@@ -1323,6 +1326,9 @@ export class ViewModel {
                             //check against subtechniques
                             for (let subtechnique of technique.subtechniques) {
                                 if (subtechnique.attackID == obj_technique.techniqueID) {
+                                    // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
+                                    if (subtechnique.deprecated || subtechnique.revoked) break;
+
                                     for (let tactic of subtechnique.tactics) {
                                         let tvm = new TechniqueVM("");
                                         tvm.deSerialize(JSON.stringify(obj_technique),

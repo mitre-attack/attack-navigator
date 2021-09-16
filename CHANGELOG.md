@@ -1,3 +1,8 @@
+# v4.4.1 - 16 September 2021
+
+## Fixes
+- Fixed a crash that would occur when loading a layer with annotations on a revoked/deprecated technique without explicitly defined tactics. See issue [#354](https://github.com/mitre-attack/attack-navigator/issues/354).
+
 # v4.4 - 15 September 2021
 
 Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
