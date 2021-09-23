@@ -19,12 +19,13 @@
 
 .tabs {
     .tab-title { //non-datatable tab names
+        @include adaptive-color("color", black, white);
+        @include adaptive-color("border-color", #ddd, lighten(color(dark), 10%));
         font-size: 14px;
         text-decoration: none;
-        color: black !important;
         display: flex;
         justify-content: space-around;
-        border-right: #ddd 1px solid;
+        border-right: 1px solid;
 
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
@@ -59,8 +60,8 @@
     .addTab {
         min-width: fit-content;
         &:hover {
+            @include adaptive-color("background-color", #f1f1f1, lighten(color(dark), 3%));
             border-color: #ddd #ddd #f1f1f1 #ddd;
-            background-color: #f1f1f1
         }
     }
 
@@ -74,6 +75,7 @@
         content: " ";
     }
     svg {
+        @include adaptive-color("fill", black, darken(color(primary), 5%));
         width: 17px;
         transition: all ease-in-out 0.2s;
     }
@@ -89,11 +91,16 @@
     text-align: right;
     cursor: pointer;
     &:hover {
-        color: black
+        @include adaptive-color("color", black, white);
     }
 }
 
 .newTab {
+    @include adaptive-color("background-color", color(light), color(dark));
+    @include adaptive-color("color", on-color(light), on-color(dark));
+    @include adaptive-color("border-color", color(panel-dark), darken(color(dark), 5%));
+    border-width: 1px;
+    border-style: solid;
     height: 90%;
     display: block;
     overflow-y: scroll;
@@ -135,12 +142,18 @@
     }
 }
 
+.mat-expansion-panel {
+  @include adaptive-color("background-color", color(light), lighten(color(dark), 10%));
+}
+
 .headers-align .mat-expansion-panel-header-title,
 .headers-align .mat-expansion-panel-header-description {
+  @include adaptive-color("color", on-color(light), darken(on-color(dark), 10%));
   flex-basis: 0;
 }
 
 .headers-align .mat-expansion-panel-header-description {
+  @include adaptive-color-dark-only("color", darken(on-color(dark), 15%));
   justify-content: space-between;
   align-items: center;
 }
