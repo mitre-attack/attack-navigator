@@ -12,6 +12,7 @@ export class AppComponent {
     @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
+    public user_theme: string;
 
     @HostListener('window:beforeunload', ['$event'])
     promptNavAway($event) {
@@ -29,5 +30,11 @@ export class AppComponent {
             }
             return false;
         }
+        window.onload = () => this.matcher();
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', () => this.matcher());
     }
+
+    matcher() {
+        this.user_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'theme-override-dark' : 'theme-override-light';
+      }
 }

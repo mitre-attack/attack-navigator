@@ -1,2 +1,7 @@
-<tabs></tabs>
-<button class="version-footer" (click)="tabsComponent.openDialog('changelog')">MITRE ATT&CK&reg; Navigator v{{nav_version}}</button>
+<div class="theme-use-system" [ngClass]="user_theme">
+    <div class="nav-app">
+        <tabs></tabs>
+        <button class="version-footer" (click)="tabsComponent.openDialog('changelog')">MITRE ATT&CK&reg; Navigator
+            v{{nav_version}}</button>
+    </div>
+</div>
