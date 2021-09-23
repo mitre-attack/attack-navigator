@@ -20,7 +20,7 @@ $cellSize: 15px;
 .matrices {
     overflow-x: scroll;
     min-height: 50vh;
-    border: 1px solid $panel-dark;
+    border: 1px solid color(panel-dark);
     transition: height ease-in-out 0.2s;
 
     .spinner {
@@ -46,10 +46,10 @@ $cellSize: 15px;
                 padding-bottom: 5px;
                 margin-bottom: 5px;
                 font-size: 16px;
-                border-bottom: 1px solid $panel-dark;
+                border-bottom: 1px solid color(panel-dark);
             }
             &+.matrix-column {
-                border-left: 1px solid $panel-dark;
+                border-left: 1px solid color(panel-dark);
             }
         }
     }
@@ -82,7 +82,6 @@ $cellSize: 15px;
 }
 
 //color controls
-$panel-light: lighten($panel-dark, 8%);
 .colorSetup {
     font-size: 8pt;
     .colorpicker {
@@ -103,11 +102,11 @@ $panel-light: lighten($panel-dark, 8%);
         text-align: center;
 
         .squarebutton {
-            border: 1px solid $panel-dark;
+            border: 1px solid color(panel-dark);
             padding: 4px 0;
             cursor: pointer;
             &:hover {
-                background: $panel-light;
+                background: color(panel-light);
             }
             &.gradient:hover {
                 text-decoration: underline; //since background color won't be seen on gradient buttons
@@ -164,7 +163,7 @@ $panel-light: lighten($panel-dark, 8%);
             }
             .minmax {
                 text-align: center;
-                background-color: $panel-light;
+                background-color: color(panel-light);
                 // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
                 // &.bottom { border-top: 1px solid black}
             }
@@ -204,7 +203,7 @@ $panel-light: lighten($panel-dark, 8%);
 
     .contextMenu-section {
         &:not(:first-child) {
-            border-top: 1px solid $panel-dark;
+            border-top: 1px solid color(panel-dark);
             margin-top: 2px;
             padding-top: 2px;
 
@@ -213,7 +212,7 @@ $panel-light: lighten($panel-dark, 8%);
             padding: 3px;
             cursor: pointer;
             &:hover {
-                background: $cell-highlight-color;
+                background: color(cell-highlight-color);
             }
         }
     }
@@ -268,7 +267,7 @@ $panel-light: lighten($panel-dark, 8%);
         }
         .filter-option {
             &:hover {
-                background: $cell-highlight-color;
+                background: color(cell-highlight-color);
             }
         }
     }
@@ -295,13 +294,13 @@ $panel-light: lighten($panel-dark, 8%);
             }
             .multiselect-list-item {
                 &:hover {
-                    background: $cell-highlight-color;
+                    background: color(cell-highlight-color);
                 }
                 .multiselect-list-item-label {
                     width: 25ex;
                 }
                 &.selected:not(:hover) {
-                    background: $panel-dark;
+                    background: color(panel-dark);
                 }
             }
         }
@@ -325,13 +324,13 @@ $panel-light: lighten($panel-dark, 8%);
         }
         .search-list-item {
             &:hover {
-                background: $cell-highlight-color;
+                background: color(cell-highlight-color);
             }
             .search-list-item-label {
                 width: 25ex;
             }
             &.selected:not(:hover) {
-                background: $panel-dark;
+                background: color(panel-dark);
             }
         }
     }
@@ -339,12 +338,12 @@ $panel-light: lighten($panel-dark, 8%);
 
 .search-button {
     &:hover {
-        background: $cell-highlight-color;
+        background: color(cell-highlight-color);
     }
   }
 
 .button {
-    background-color: $panel-dark;
+    background-color: color(panel-dark);
     border: none;
     padding: 4px 10px;
     text-align: center;
@@ -355,7 +354,7 @@ $panel-light: lighten($panel-dark, 8%);
     text-decoration: none;
     cursor: pointer;
     &:hover {
-        background-color: $button-dark;
+        background-color: color(button-dark);
     }
   }
 
@@ -375,7 +374,7 @@ $panel-light: lighten($panel-dark, 8%);
     width:300px;
     height:300px;
     background-color: white;
-    border-left: 1px solid $panel-dark;
+    border-left: 1px solid color(panel-dark);
     .itemArea {
         position: static;
         overflow-y: scroll;
@@ -394,7 +393,7 @@ $panel-light: lighten($panel-dark, 8%);
 
         }
         .even {
-            background-color: $panel-light;
+            background-color: color(panel-light);
             width:100%;
             height:40px;
             .label {
@@ -412,10 +411,10 @@ $panel-light: lighten($panel-dark, 8%);
     right: 0;
     width:300px;
     height:30px;
-    background-color: $panel-dark;
+    background-color: color(panel-dark);
     transition: 0.3s;
     &:hover {
-        background: $cell-highlight-color;
+        background: color(cell-highlight-color);
         cursor: pointer;
     }
 }
@@ -462,7 +461,7 @@ $panel-light: lighten($panel-dark, 8%);
     .section {
         padding: 10px;
         &+.section {
-            border-top: 1px solid $panel-light;
+            border-top: 1px solid color(panel-light);
         }
     }
 

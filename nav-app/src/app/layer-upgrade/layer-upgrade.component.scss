@@ -20,12 +20,12 @@ h4 { margin: 12px 0; }
     top: -10px;
     right: -5px;
     padding: 6px 6px;
-    background: $panel-dark;
+    background: color(panel-dark);
     border-radius: 10px;
     line-height: 10px;
     cursor: pointer;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
-    &:hover { background-color: darken($panel-dark, 5%); }
+    &:hover { background-color: darken(color(panel-dark), 5%); }
 }
 .mat-paginator-container {
     min-height: unset;
@@ -53,7 +53,7 @@ tr td {
     .mat-icon { font-size: 16px; }
     &:disabled {
         cursor: unset;
-        background-color: lighten($panel-dark, 5%);
+        background-color: lighten(color(panel-dark), 5%);
     }
 }
 .cols {
@@ -103,7 +103,7 @@ tr td {
     color: rgba(0, 0, 0, 0.15);
 }
 .dndDragover .technique-cell {
-    box-shadow: 0 0 0 1px $cell-highlight-color inset !important;
+    box-shadow: 0 0 0 1px color(cell-highlight-color) inset !important;
 }
 .mat-vertical-stepper-header {
     pointer-events: none;

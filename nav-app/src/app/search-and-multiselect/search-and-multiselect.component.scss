@@ -30,7 +30,7 @@
     }
     h1 {
         font-size: 14px;
-        background: $panel-light;
+        background: color(panel-light);
         padding: 5px;
         margin: 0;
         text-align: center;
@@ -50,10 +50,10 @@
             border-collapse: collapse;
             width: 100%;
             tr + tr {
-                border-top: 1px solid $panel-light;
+                border-top: 1px solid color(panel-light);
             }
             tr:hover {
-                background: $cell-highlight-color
+                background: color(cell-highlight-color)
             }
             td:first-of-type {
                 width: 200px;

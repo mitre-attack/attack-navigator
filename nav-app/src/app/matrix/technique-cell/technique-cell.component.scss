@@ -9,12 +9,12 @@
 
     font-size: $sizeunit - 1px;
     line-height: $sizeunit;
-    
+
     min-width: $sizeunit;
     min-height: $sizeunit;
-    
-    >div { 
-        padding: $sizeunit /2 3px; 
+
+    >div {
+        padding: $sizeunit /2 3px;
         box-sizing: border-box;
         display: block;
         width: 100%;
@@ -30,8 +30,8 @@
         outline-offset: -0.5px;
         outline: 1px solid rgba(border-color(body), 0.5);
     }
-       
-    &:not(.editing):not(.colored):not(.supertechniquecell) { 
+
+    &:not(.editing):not(.colored):not(.supertechniquecell) {
         box-shadow: 0 0 0 1px border-color(body) inset;
     }
 
@@ -65,7 +65,7 @@
     }
 
     &.highlight {
-        background: $cell-highlight-color;
+        background: color(cell-highlight-color);
         .id-name-break {
             outline: 1px solid rgba(black, 0.5);
         }

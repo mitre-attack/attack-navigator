@@ -31,8 +31,8 @@
                 text-decoration: none;
 
                 &:not(.addTab) { //add tab should not behave like other tabs
-                    border-color: $panel-dark $panel-dark $panel-light $panel-dark; //black border bottom when hovered
-                    background-color: $panel-light;
+                    @include adaptive-color("background-color", color(panel-light), darken(color(dark), 1%));
+                    border-color: color(panel-dark) color(panel-dark) color(panel-light) color(panel-dark); //black border bottom when hovered
                 }
             }
         }
@@ -49,9 +49,9 @@
         }
 
         &.active {
-            color: $tab-text-color; //text color
+            @include adaptive-color("background-color", color(panel-dark), lighten(color(dark), 1%));
+            @include adaptive-color("color", color(tab-text-color), on-color(dark));
             cursor: default; //cursor behavior
-            background-color: $panel-dark;
             border: 1px solid transparent; //override border highlighting on hover
         }
     }
@@ -121,10 +121,6 @@
     }
 }
 
-.border {
-    border: 1px solid $panel-dark;
-}
-
 .layerOpTable {
     td {
         padding: 5px;
@@ -154,10 +150,10 @@ input[type=file]{
     margin: 5px;
     width: 300px;
     // border: 1px solid black;
-    background-color: $panel-light;
+    background-color: color(panel-light);
     border-radius: 0px;
     &:hover {
-        background-color: $panel-dark;
+        background-color: color(panel-dark);
     }
 }
 
@@ -193,7 +189,7 @@ input[type=file]{
 
     .help-dropdown-open {
         border-radius: 50% 50% 0 0;
-        border: solid $panel-dark 1px;
+        border: solid color(panel-dark) 1px;
         border-bottom: solid 1px white;
         background: white;
         svg { fill: #505050; }
@@ -258,7 +254,7 @@ input[type=file]{
             text-decoration-color: on-color(primary);
         }
         a:hover, .helpIcon:hover {
-            color: $panel-dark;
+            color: color(panel-dark);
             opacity: 0.8;
         }
     }
@@ -298,10 +294,10 @@ input[type=file]{
             }
             &.subfeature {
                 &:first-child {
-                    border-left: 1px solid $panel-dark;
+                    border-left: 1px solid color(panel-dark);
                 }
                 &.last {
-                    border-bottom: 1px solid $panel-dark;
+                    border-bottom: 1px solid color(panel-dark);
                 }
             }
         }

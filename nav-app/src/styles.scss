@@ -28,7 +28,7 @@ body {
 // $inputFontSize: 10pt;
 // panel with controls
 .controlsContainer {
-    background-color: $panel-dark;
+    background-color: color(panel-dark);
     // width: 100%;
     text-align: right;
     // padding: 0 3px;
@@ -42,7 +42,7 @@ body {
         list-style: none;
         display: inline-block;
         // &:not(:last-child){
-        border-left: 1px solid darken($panel-dark, 8%);
+        border-left: 1px solid darken(color(panel-dark), 8%);
         padding: 0 5px 0 5px;
         position: relative;
 
@@ -57,10 +57,10 @@ body {
             // width:50%;
             // left: 25%;
             padding: 0 5px;
-            background-color: $panel-dark;
+            background-color: color(panel-dark);
             border-radius: 2px 2px 0 0;
             text-align: center;
-            color: $tab-text-color;
+            color: color(tab-text-color);
             cursor: default;
             user-select: none;
             white-space: nowrap;
@@ -79,7 +79,7 @@ body {
                 padding: 5px;
                 height: 24px;
                 cursor: pointer;
-                &:hover { background-color: darken($panel-dark, 5%); }
+                &:hover { background-color: darken(color(panel-dark), 5%); }
                 &.dropdown::after {
                     font-size: 5pt;
                     content: "▼";
@@ -143,7 +143,7 @@ body {
 .checkbox-custom + .checkbox-custom-label:before {
     content: '';
     background: #fff;
-    border: 3px solid $panel-dark;
+    border: 3px solid color(panel-dark);
     display: inline-block;
     vertical-align: middle;
     width: 10px;
@@ -154,12 +154,12 @@ body {
 }
 
 .checkbox-custom:checked + .checkbox-custom-label:before {
-    background: $cell-highlight-color;
-    box-shadow: inset 0px 0px 0px 1px $cell-highlight-color;
+    background: color(cell-highlight-color);
+    box-shadow: inset 0px 0px 0px 1px color(cell-highlight-color);
 }
 .checkbox-custom:checked:disabled + .checkbox-custom-label:before {
-    background: desaturate($cell-highlight-color, 100%);
-    box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
+    background: desaturate(color(cell-highlight-color), 100%);
+    box-shadow: inset 0px 0px 0px 1px desaturate(color(cell-highlight-color), 100%);
 
 }
 
@@ -175,7 +175,7 @@ body {
 }
 
 .mat-drawer-inner-container {
-    background-color: $panel-light;
+    background-color: color(panel-light);
 }
 
 .mat-dialog-container {

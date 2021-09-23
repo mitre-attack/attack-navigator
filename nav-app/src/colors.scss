@@ -1,11 +1,5 @@
 $column-hover-color: rgb(235, 235, 235);
 $disabled-color: darken($column-hover-color, 20%);
-$cell-highlight-color: rgb(96, 197, 255);
-$hover-cell-font-color: rgb(0, 0, 0);
-$panel-dark: #ddd;
-$panel-light: lighten($panel-dark, 8%);
-$tab-text-color: #555;
-$button-dark: #b8b8b8;
 
 // ATT&CK Brand colors
 $attack-colors: (
@@ -29,6 +23,13 @@ $colors: (
 //  body: (color: rgb(50, 50, 50), on-color: #cdcdcd),                            //example of a dark theme for the site
     link: (color: #4f7cac),                                                     //hyperlinks
     matrix-header: (color: gray, on-color: white),                            //color of matrix headers
+
+    cell-highlight-color: (color: rgb(96, 197, 255)),
+    hover-cell-font-color: (color: rgb(0, 0, 0)),
+    panel-dark: (color: #ddd),
+    panel-light: (color: lighten(#ddd, 8%)),
+    tab-text-color: (color: #555),
+    button-dark: (color: #b8b8b8),
 
     //bootstrap colors
     bootstrap-primary: (color: #428bca, on-color: white),
