@@ -10,7 +10,7 @@
   }
 
   .version-footer {
-    @include adaptive-color("color", on-color(light), color(primary));
+    @include adaptive-color("color", on-color(light), on-color(dark-2));
     font-size: 7pt;
     border: none;
     background-color: transparent;

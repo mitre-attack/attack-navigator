@@ -14,26 +14,37 @@
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
+        @include adaptive-color("color", black, on-color(dark-1));
+        @include adaptive-color("border-color", color(panel-dark), color(dark-1));
+        @include adaptive-color("background-color", color(panel-dark), color(dark-1));
+    }
+    .tabs .tab-title:not(.active) {
+      @include adaptive-color("border-width", 0 1px 0 0, 0);
+      border-style: solid;
+      border-color: color(panel-dark);
     }
 }
 
 .tabs {
     .tab-title { //non-datatable tab names
         @include adaptive-color("color", black, white);
-        @include adaptive-color("border-color", #ddd, lighten(color(dark), 10%));
         font-size: 14px;
         text-decoration: none;
         display: flex;
         justify-content: space-around;
-        border-right: 1px solid;
 
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
                 text-decoration: none;
+                @include adaptive-color("color", black, on-color(dark-2));
+                @include adaptive-color("opacity", 0.6, 0.8);
+                @include adaptive-color("background-color", color(panel-light), color(dark-2));
 
                 &:not(.addTab) { //add tab should not behave like other tabs
-                    @include adaptive-color("background-color", color(panel-light), darken(color(dark), 1%));
-                    border-color: color(panel-dark) color(panel-dark) color(panel-light) color(panel-dark); //black border bottom when hovered
+                    border-color: color(panel-dark); //black border bottom when hovered
+                }
+                svg {
+                  @include adaptive-color("fill", black, on-color(dark-2));
                 }
             }
         }
@@ -41,6 +52,7 @@
 
         //tab number that shows up when tab is highlighted
         .tabEnumerator {
+            @include adaptive-color-dark-only("color", color(dark-1));
             position: absolute;
             top: 2px;
             right: 7px;
@@ -51,7 +63,7 @@
 
         &.active {
             @include adaptive-color("background-color", color(panel-dark), lighten(color(dark), 1%));
-            @include adaptive-color("color", color(tab-text-color), on-color(dark));
+            @include adaptive-color("color", color(tab-text-color), color(panel-dark));
             cursor: default; //cursor behavior
             border: 1px solid transparent; //override border highlighting on hover
         }
@@ -60,7 +72,7 @@
     .addTab {
         min-width: fit-content;
         &:hover {
-            @include adaptive-color("background-color", #f1f1f1, lighten(color(dark), 3%));
+            @include adaptive-color("background-color", #f1f1f1, color(dark-2));
             border-color: #ddd #ddd #f1f1f1 #ddd;
         }
     }
@@ -75,12 +87,11 @@
         content: " ";
     }
     svg {
-        @include adaptive-color("fill", black, darken(color(primary), 5%));
+        @include adaptive-color("fill", black, color(panel-dark));
         width: 17px;
-        transition: all ease-in-out 0.2s;
     }
-    svg:hover {
-        transform: scale(1.2);
+    .tab-title:hover:not(.active) svg, .addTab:hover svg {
+        @include adaptive-color("fill", black, on-color(dark-2));
     }
 }
 
@@ -96,9 +107,9 @@
 }
 
 .newTab {
-    @include adaptive-color("background-color", color(light), color(dark));
+    @include adaptive-color("background-color", color(light), color(dark-1));
     @include adaptive-color("color", on-color(light), on-color(dark));
-    @include adaptive-color("border-color", color(panel-dark), darken(color(dark), 5%));
+    @include adaptive-color("border-color", color(panel-dark), color(dark-1));
     border-width: 1px;
     border-style: solid;
     height: 90%;
@@ -130,12 +141,14 @@
 
 .layerOpTable {
     td {
+        @include adaptive-color-dark-only("color", on-color(dark-1));
         padding: 5px;
         &.disabled {
             color: gray;
         }
     }
     .tab-enumerator {
+        @include adaptive-color-dark-only("color", color(dark-1));
         padding: 2px 4px;
         background: rgb(255, 255, 0);
         border-radius: 5px;
@@ -143,7 +156,64 @@
 }
 
 .mat-expansion-panel {
-  @include adaptive-color("background-color", color(light), lighten(color(dark), 10%));
+  @include adaptive-color("background-color", color(light), color(dark-1));
+  @include adaptive-color-dark-only("color", on-color(dark-3));
+  .mat-expansion-indicator::after {
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-header, button.mat-raised-button { // nested items inside parent expansion panel
+    @include adaptive-color-dark-only("background-color", color(dark-1));
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
+    @include adaptive-color-dark-only("background-color", color(dark-2));
+  }
+  &:not([class*=mat-elevation-z]), .mat-raised-button:not([class*=mat-elevation-z]) {
+    box-shadow: 0px 3px 1px -2px rgba(color(dark-4),20%), 0px 2px 2px 0px rgba(color(dark-4),20%), 0px 1px 5px 1px rgba(color(dark-4),33%) !important;
+  }
+
+  .mat-expansion-panel-body {
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+
+  .mat-form-field {
+    &:not(.mat-form-field-disabled) {
+      .mat-form-field-label, .mat-select-arrow, .mat-select-value-text, .mat-input-element {
+        @include adaptive-color-dark-only("color", on-color(dark-1));
+      }
+    }
+    &.mat-form-field-disabled, .layerOpTable td.disabled {
+      .mat-form-field-label, .mat-select-arrow {
+        @include adaptive-color-dark-only("color", darken(on-color(dark-1), 25%));
+      }
+    }
+    &.mat-form-field-disabled .mat-form-field-underline {
+      @include adaptive-color-dark-only("background-color", darken(on-color(dark-1), 25%));
+    }
+    &:not(.mat-form-field-disabled) .mat-form-field-underline {
+      @include adaptive-color-dark-only("background-color", on-color(dark-3));
+    }
+  }
+  .mat-button {
+    &:not(.mat-button-disabled) {
+      @include adaptive-color-dark-only("background-color", color(dark-3));
+      @include adaptive-color-dark-only("color", on-color(dark-3));
+    }
+    &.mat-button-disabled {
+      @include adaptive-color-dark-only("background-color", color(dark-1));
+      @include adaptive-color-dark-only("border", color(dark-2) 2px solid);
+      @include adaptive-color-dark-only("color", darken(on-color(dark-1), 50%));
+    }
+  }
+  .inputTable tr.featureRow:hover {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+  }
+  a {
+    @include adaptive-color-dark-only("color", color(dark-link));
+  }
+  a:visited, a:active {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+  }
 }
 
 .headers-align .mat-expansion-panel-header-title,
@@ -303,13 +373,14 @@ input[type=file]{
             width: 1%;
             padding: 5px;
             &.featureRow-button {
-                img {vertical-align: middle; margin-bottom: 2px;}
+                svg {height: 16px; vertical-align: middle; margin-bottom: 2px;}
             }
             &.subfeature {
                 &:first-child {
                     border-left: 1px solid color(panel-dark);
                 }
                 &.last {
+                    @include adaptive-color-dark-only("border-bottom", none);
                     border-bottom: 1px solid color(panel-dark);
                 }
             }
@@ -324,10 +395,16 @@ input[type=file]{
         background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
         background-size: 4px 1px;
         background-repeat: repeat-x;
+        @include adaptive-color-dark-only("background", none);
+        @include adaptive-color-dark-only("border-bottom", white dotted 2px);
     }
     #layerLink {
         cursor: pointer;
     }
+}
+.layerLinkCopy svg {
+    @include adaptive-color-dark-only("color", white);
+    width: 14px;
 }
 .layerLinks {
     list-style: none;
