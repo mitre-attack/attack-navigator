@@ -267,18 +267,37 @@ input[type=file]{
         height: 3ex;
         padding: 5px;
         z-index: 10;
-        &:hover svg { fill: #505050; }
+        svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+        }
+        &:hover svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+          fill: #505050;
+        }
     }
 
     .help-dropdown-open {
+        @include adaptive-color-dark-only("background", color(dark-3));
+        @include adaptive-color-dark-only("border", solid color(dark-2) 1px);
+        @include adaptive-color-dark-only("box-shadow", 1px 2px color(dark-2));
+        @include adaptive-color-dark-only("z-index", 1);
+        @include adaptive-color-dark-only("border-bottom", color(dark-3));
+        @include adaptive-color-dark-only("color", on-color(dark-2));
         border-radius: 50% 50% 0 0;
         border: solid color(panel-dark) 1px;
         border-bottom: solid 1px white;
         background: white;
-        svg { fill: #505050; }
+        svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+          fill: #505050;
+        }
     }
 
     .dropdown-container {
+        @include adaptive-color-dark-only("background", color(dark-3));
+        @include adaptive-color-dark-only("border-color", color(dark-3));
+        @include adaptive-color-dark-only("box-shadow", 2px 1px 1px color(dark-2));
+        @include adaptive-color-dark-only("color", on-color(dark-2));
         position: absolute;
         right: 16px;
         display: flex;
@@ -294,6 +313,7 @@ input[type=file]{
         top: 40px;
         z-index: 9;
         button {
+            @include adaptive-color-dark-only("color", on-color(dark-1));
             border: none;
             background-color: transparent;
             text-align: right;

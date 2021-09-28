@@ -13,6 +13,24 @@ body {
   body {
     background-color: color(dark-1);
   }
+  .mat-dialog-container {
+    background-color: color(dark-2);
+    color: on-color(dark-3);
+    .help-dialog h1 {
+      border-color: on-color(dark-1);
+    }
+    .content code {
+      background-color: yellow;
+      border-color: transparent !important;
+      color: color(dark-1) !important;
+    }
+    a {
+      color: color(dark-link) !important;
+    }
+    a:active, a:visited {
+      color: color(dark-link-active);
+    }
+  }
 }
 
 .noselect {
