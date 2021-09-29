@@ -1,5 +1,7 @@
 @import "../matrix-common.scss";
 .technique-cell {
+    @include adaptive-color("background-color", white, color(dark-3));
+    @include adaptive-color("color", black, on-color(dark-3));
     cursor: pointer;
     height: 100%;
     display: flex;

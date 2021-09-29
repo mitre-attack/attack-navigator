@@ -19,9 +19,11 @@
             // height: (($sizeunit + 2) * 3);
             vertical-align: bottom;
         }
-        &.count { 
+        &.count {
+            @include adaptive-color("border-color", black, white);
+            border-width: 0 0 1px 0;
+            border-style: solid;
             font-size: $sizeunit - 1px;
-            border-bottom: 1px solid black;
             padding-bottom: 5px;
             margin-bottom: 5px;
         }
@@ -35,7 +37,7 @@
                 height: 1px;
             }
         }
-        
+
         .supertechnique {
             border-collapse: collapse;
             width: 100%;
@@ -45,7 +47,7 @@
             td {
                 padding: 0;
                 vertical-align: top;
-                
+
                 &.technique {
                     box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
                     // outline: 1px solid on-color-deemphasis(body);
@@ -57,7 +59,7 @@
             &.hidden {
                 display: none;
             }
-            
+
             // expand to entire height of row if it's smaller than supertechnique
             display: flex;
             flex-direction: column;
@@ -69,22 +71,20 @@
 
             white-space: nowrap;
             vertical-align: top;
-            
+
             .subtechnique {
                 height: 100%;
                 flex-grow: 1;
             }
         }
-        
+
         .handle {
             font-family: roboto-regular;
             text-align: center;
             vertical-align: middle;
             transform: rotate(-90deg);
             color: color-alternate(body);
-            
-            width: 12px; height: 12px; 
-            
+            width: 12px; height: 12px;
             font-size: 16px;
             line-height: 12px;
         }
@@ -92,8 +92,7 @@
     .sidebar {
         min-width: 8px;
         width: 12px;
-        
-        padding: 0;    
+        padding: 0;
         background: on-color-deemphasis(body);
         cursor: pointer;
         position:relative;

@@ -14,7 +14,7 @@
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
-        @include adaptive-color("color", black, on-color(dark-1));
+        @include adaptive-color("color", black, on-color(dark));
         @include adaptive-color("border-color", color(panel-dark), color(dark-1));
         @include adaptive-color("background-color", color(panel-dark), color(dark-1));
     }
@@ -141,7 +141,7 @@
 
 .layerOpTable {
     td {
-        @include adaptive-color-dark-only("color", on-color(dark-1));
+        @include adaptive-color-dark-only("color", on-color(dark));
         padding: 5px;
         &.disabled {
             color: gray;
@@ -179,7 +179,7 @@
   .mat-form-field {
     &:not(.mat-form-field-disabled) {
       .mat-form-field-label, .mat-select-arrow, .mat-select-value-text, .mat-input-element {
-        @include adaptive-color-dark-only("color", on-color(dark-1));
+        @include adaptive-color-dark-only("color", on-color(dark));
       }
     }
     &.mat-form-field-disabled, .layerOpTable td.disabled {
@@ -313,7 +313,7 @@ input[type=file]{
         top: 40px;
         z-index: 9;
         button {
-            @include adaptive-color-dark-only("color", on-color(dark-1));
+            @include adaptive-color-dark-only("color", on-color(dark));
             border: none;
             background-color: transparent;
             text-align: right;
