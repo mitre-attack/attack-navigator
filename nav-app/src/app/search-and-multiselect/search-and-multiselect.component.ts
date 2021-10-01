@@ -12,12 +12,17 @@ import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '.
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
     public stixTypes: any[];
+    // Data Components is a map mainly because it is a collection of labels that map to
+    // an array of techniques, where we want to filter/sort by label name
+    public stixDataComponents = new Map<string, any>();
+    public stixDataComponentLabels: string[];
     userClickedExpand = false;
     expandedPanels = {
         0: true,
         1: false,
         2: false,
-        3: false
+        3: false,
+        4: false
     };
 
     public fields = [
@@ -66,10 +71,15 @@ export class SearchAndMultiselectComponent implements OnInit {
         return this._query.length;
     }
 
+    public get stixDataComponentsResults() {
+      return this.stixDataComponentLabels.map((label) => this.stixDataComponents.get(label).objects);
+    }
+
     public techniqueResults: Technique[] = [];
 
     constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
         this.stixTypes = [];
+        this.stixDataComponentLabels = [];
     }
 
     ngOnInit() {
@@ -120,6 +130,15 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
+    filterAndSortLabels(labels, query) {
+      let results = labels;
+      if (query.trim() === "") {
+        return results.sort();
+      } else {
+        return results.filter((r) => r.toLowerCase().includes(query.trim().toLowerCase()));
+      }
+    }
+
 
     /**
      * getResults() checks if this._query is:
@@ -135,6 +154,7 @@ export class SearchAndMultiselectComponent implements OnInit {
             this.getTechniques();
             this.getStixData();
         }
+        this.stixDataComponentLabels = this.filterAndSortLabels(this.stixDataComponentLabels, query);
         this.expandPanels();
     }
 
@@ -182,7 +202,18 @@ export class SearchAndMultiselectComponent implements OnInit {
             "label": "mitigations",
             "objects": this.filterAndSort(domain.mitigations, this._query),
             "isExpanded": false
-        }]
+        }];
+
+        domain.dataComponents.forEach((c) => {
+          const source = c.source(this.viewModel.domainVersionID);
+          const label = `${source.name}: ${c.name}`;
+          const obj = {
+            "objects": c.techniques(this.viewModel.domainVersionID),
+            "url": source.url
+          }
+          this.stixDataComponents.set(label, obj);
+        });
+        this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
     }
 
     public toggleFieldEnabled(field: string) {
