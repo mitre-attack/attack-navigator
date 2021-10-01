@@ -18,11 +18,11 @@ export class SearchAndMultiselectComponent implements OnInit {
     public stixDataComponentLabels: string[];
     userClickedExpand = false;
     expandedPanels = {
-        0: true,
-        1: false,
-        2: false,
-        3: false,
-        4: false
+        0: true, // techniques panel
+        1: false, // groups panel
+        2: false, // software panel
+        3: false, // mitigations panel
+        4: false // data components panel
     };
 
     public fields = [
@@ -165,18 +165,21 @@ export class SearchAndMultiselectComponent implements OnInit {
     expandPanels() {
         if (!this.userClickedExpand) {
             this.expandedPanels[0] = this.techniqueResults.length > 0;
-            let isPrevExpanded = this.expandedPanels[0]
+            let isPrevExpanded = this.expandedPanels[0];
             if (!isPrevExpanded) {
                 this.stixTypes.forEach((s, i) => {
-                    s.isExpanded = !isPrevExpanded && s.objects.length > 0;
-                    this.expandedPanels[i+1] = s.isExpanded;
-                    isPrevExpanded = s.isExpanded;
+                  this.expandedPanels[i+1] = !isPrevExpanded && s.objects.length > 0;
+                  isPrevExpanded = s.isExpanded;
                 });
             }
+            this.expandedPanels[4] = (!isPrevExpanded && this.stixDataComponentLabels.length > 0);
         } else {
             let isAllCollapsed = false;
-            for (const item in this.expandedPanels) {
-                isAllCollapsed = !item;
+            for (const isPanelExpanded in this.expandedPanels) {
+                if (isPanelExpanded) {
+                  isAllCollapsed = true;
+                  break;
+                }
             }
             this.userClickedExpand = isAllCollapsed;
         }
@@ -196,16 +199,13 @@ export class SearchAndMultiselectComponent implements OnInit {
 
         this.stixTypes = [{
             "label": "threat groups",
-            "objects": this.filterAndSort(domain.groups, this._query),
-            "isExpanded": false
+            "objects": this.filterAndSort(domain.groups, this._query)
         }, {
             "label": "software",
-            "objects": this.filterAndSort(domain.software, this._query),
-            "isExpanded": false
+            "objects": this.filterAndSort(domain.software, this._query)
         }, {
             "label": "mitigations",
-            "objects": this.filterAndSort(domain.mitigations, this._query),
-            "isExpanded": false
+            "objects": this.filterAndSort(domain.mitigations, this._query)
         }];
 
         domain.dataComponents.forEach((c) => {

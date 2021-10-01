@@ -67,7 +67,7 @@
                 </ng-template>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngFor="let stixType of stixTypes" class="stixType" [expanded]="stixType.isExpanded" (click)="userClickedExpand = true">
+            <mat-expansion-panel *ngFor="let stixType of stixTypes; let i = index" class="stixType" [expanded]="expandedPanels[i+1]" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <h4>
