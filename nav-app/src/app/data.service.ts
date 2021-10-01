@@ -601,10 +601,16 @@ export class DataComponent {
    * @returns {string[]} technique IDs used by this data component
    */
   public techniques(domainVersionID): string[] {
+    const techniques = [];
     const domain = this.dataService.getDomain(domainVersionID);
     let rels = domain.relationships.component_rel;
-    if (rels.has(this.id)) return rels.get(this.id).map((targetID) => domain.techniques.find((t) => t.id === targetID));
-    return [];
+    if (rels.has(this.id)) {
+      rels.get(this.id).forEach((targetID) => {
+        const t = domain.techniques.find((t) => t.id === targetID);
+        if (t) techniques.push(t);
+      })
+    }
+    return techniques;
   }
   /**
    * get data source related to this data component

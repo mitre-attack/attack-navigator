@@ -125,11 +125,10 @@
                     <div class="results objects">
                         <table *ngIf="stixDataComponentLabels.length > 0; else noResults">
                             <tr  *ngFor="let label of stixDataComponentLabels">
-                                <td>{{ label }}</td>
-<!--                                <td (mouseenter)="mouseEnter(stixObject, false)"-->
-<!--                                    (mouseleave)="mouseLeave()">-->
-<!--                                    {{stixObject.name}}-->
-<!--                                </td>-->
+                                <td (mouseenter)="mouseEnterAll(stixDataComponents.get(label).objects)"
+                                    (mouseleave)="mouseLeave()">
+                                    {{ label }}
+                                </td>
                                 <td><a href="{{stixDataComponents.get(label).url}}" target="_blank">view</a></td>
                                 <td>
                                     <button class="button" (click)="selectAll(stixDataComponents.get(label).objects, true)">select</button>

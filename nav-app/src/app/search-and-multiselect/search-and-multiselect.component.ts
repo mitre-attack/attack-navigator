@@ -71,8 +71,12 @@ export class SearchAndMultiselectComponent implements OnInit {
         return this._query.length;
     }
 
-    public get stixDataComponentsResults() {
-      return this.stixDataComponentLabels.map((label) => this.stixDataComponents.get(label).objects);
+    public get stixDataComponentsResults(): Technique[] {
+      let results = [];
+      this.stixDataComponentLabels.forEach((label) => {
+        results = results.concat(this.stixDataComponents.get(label).objects);
+      });
+      return results;
     }
 
     public techniqueResults: Technique[] = [];
@@ -227,6 +231,10 @@ export class SearchAndMultiselectComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    public mouseEnterAll(techniques: Technique[]) {
+      techniques.forEach((t) => this.mouseEnter(t));
     }
 
     public mouseEnter(technique: Technique, isTechnique = true): void {
