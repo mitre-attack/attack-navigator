@@ -72,15 +72,16 @@ export abstract class Cell {
      * @return               black, white, or gray, depending on technique and column state
      */
     public getTechniqueTextColor() {
-        if (!this.tactic) return "black";
+        let isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (!this.tactic) return isDarkTheme ? "white" : "black";
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
-        if (!tvm.enabled) return "#aaaaaa";
+        if (!tvm.enabled) return isDarkTheme ? "white" : "#aaaaaa";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
         if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
-        else return "black"
+        else return isDarkTheme ? "#dddddd" : "black";
     }
 
     /**

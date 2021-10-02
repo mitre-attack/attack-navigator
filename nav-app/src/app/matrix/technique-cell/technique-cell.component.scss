@@ -1,6 +1,6 @@
 @import "../matrix-common.scss";
 .technique-cell {
-    @include adaptive-color("background-color", white, color(dark-3));
+    @include adaptive-color("background-color", white, color(dark-2));
     @include adaptive-color("color", black, on-color(dark-3));
     cursor: pointer;
     height: 100%;
@@ -34,7 +34,7 @@
     }
 
     &:not(.editing):not(.colored):not(.supertechniquecell) {
-        box-shadow: 0 0 0 1px border-color(body) inset;
+        @include adaptive-color("box-shadow", 0 0 0 1px border-color(body) inset, 0 0 0 1px border-color(dark-2) inset)
     }
 
     &.editing {
