@@ -62,7 +62,6 @@ export class DataService {
                 // parse according to type
                 switch(sdo.type) {
                     case "x-mitre-data-component":
-                        // console.log('DATA COMPONENT', sdo);
                         domain.dataComponents.push(new DataComponent(sdo, this));
                         break;
                     case "x-mitre-data-source":
