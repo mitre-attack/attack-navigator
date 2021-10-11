@@ -589,13 +589,9 @@ export class VersionChangelog {
 /**
  * Object representing a Data Component in the ATT&CK catalogue
  */
-export class DataComponent {
-  public readonly description: string;
+export class DataComponent extends BaseStix {
   public readonly url: string;
-  public readonly id: string;
-  public readonly name: string;
   public readonly dataSource: string;
-  protected readonly dataService: DataService;
   /**
    * get techniques related to this data component
    * @returns {string[]} technique IDs used by this data component
@@ -629,10 +625,7 @@ export class DataComponent {
   }
 
   constructor(stixSDO: any, dataService: DataService) {
-    this.description = stixSDO.description
-    this.id = stixSDO.id;
-    this.name = stixSDO.name;
-    this.dataService = dataService;
+    super(stixSDO, dataService);
     this.dataSource = stixSDO.x_mitre_data_source_ref;
   }
 }
