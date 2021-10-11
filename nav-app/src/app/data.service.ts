@@ -418,7 +418,11 @@ export abstract class BaseStix {
         this.id = stixSDO.id;
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+        if (stixSDO.id.includes("x-mitre-data-component")) {
+          this.attackID = '';
+        } else if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
+          this.attackID = stixSDO.external_references[0].external_id;
+        } else {
           alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
           throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
         }
