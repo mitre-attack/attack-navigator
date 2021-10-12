@@ -196,8 +196,36 @@ body {
     background-color: transparent!important;
 }
 
+.mat-drawer-side.mat-drawer-end {
+  @include adaptive-color-dark-only("border-left", none);
+}
+
 .mat-drawer-inner-container {
-    background-color: color(panel-light);
+  @include adaptive-color("background-color", color(panel-light), color(dark-2));
+  .mat-form-field-outline div {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+    @include adaptive-color-dark-only("color", color(dark-4));
+  }
+  .mat-form-field-label {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+  .mat-card {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+  .mat-expansion-panel .mat-expansion-panel-header, .mat-expansion-panel-body {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+  }
+  .mat-expansion-panel-header-title {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+  .mat-divider {
+    @include adaptive-color-dark-only("border-top-color", color(dark-4));
+  }
+  .mat-button-base {
+    @include adaptive-color-dark-only("background-color", color(dark-4));
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
 }
 
 .mat-dialog-container {
