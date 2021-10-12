@@ -414,8 +414,14 @@ export abstract class BaseStix {
     public readonly deprecated: boolean; // is the object deprecated?
     public readonly version: string;     // object version
     protected readonly dataService: DataService;
-    constructor(stixSDO: any, dataService: DataService) {
+    constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
         this.id = stixSDO.id;
+        if (supportsAttackID) {
+          if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+          }
+        }
         this.name = stixSDO.name;
         this.description = stixSDO.description;
         if (stixSDO.id.includes("x-mitre-data-component")) {
@@ -628,7 +634,7 @@ export class DataComponent extends BaseStix {
   }
 
   constructor(stixSDO: any, dataService: DataService) {
-    super(stixSDO, dataService);
+    super(stixSDO, dataService, false);
     this.dataSource = stixSDO.x_mitre_data_source_ref;
   }
 }
