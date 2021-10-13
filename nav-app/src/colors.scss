@@ -33,6 +33,7 @@ $colors: (
     matrix-header: (color: gray, on-color: white),                            //color of matrix headers
 
     cell-highlight-color: (color: rgb(96, 197, 255)),
+    cell-highlight-dark-color: (color: #464DFF),
     hover-cell-font-color: (color: rgb(0, 0, 0)),
     panel-dark: (color: #ddd),
     panel-light: (color: lighten(#ddd, 8%)),

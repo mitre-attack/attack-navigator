@@ -25,10 +25,9 @@
             div {padding: 3px;}
 
             .contextMenu-button {
-
                 cursor: pointer;
                 &:hover {
-                    background: color(cell-highlight-color);
+                    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
                 }
             }
         }

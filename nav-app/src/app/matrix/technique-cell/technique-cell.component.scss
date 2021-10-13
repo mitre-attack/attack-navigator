@@ -67,7 +67,7 @@
     }
 
     &.highlight {
-        background: color(cell-highlight-color);
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
         .id-name-break {
             outline: 1px solid rgba(black, 0.5);
         }

@@ -176,13 +176,12 @@ body {
 }
 
 .checkbox-custom:checked + .checkbox-custom-label:before {
-    background: color(cell-highlight-color);
-    box-shadow: inset 0px 0px 0px 1px color(cell-highlight-color);
+    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+    @include adaptive-color("box-shadow", inset 0px 0px 0px 1px color(cell-highlight-color), inset 0px 0px 0px 1px color(cell-highlight-dark-color));
 }
 .checkbox-custom:checked:disabled + .checkbox-custom-label:before {
-    background: desaturate(color(cell-highlight-color), 100%);
-    box-shadow: inset 0px 0px 0px 1px desaturate(color(cell-highlight-color), 100%);
-
+    @include adaptive-color("background", desaturate(color(cell-highlight-color), 100%), desaturate(color(cell-highlight-dark-color), 100%));
+    @include adaptive-color("box-shadow", inset 0px 0px 0px 1px desaturate(color(cell-highlight-color), 100%), inset 0px 0px 0px 1px desaturate(color(cell-highlight-dark-color), 100%));
 }
 
 //////////////////////

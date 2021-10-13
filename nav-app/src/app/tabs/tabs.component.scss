@@ -36,7 +36,7 @@
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
                 text-decoration: none;
-                @include adaptive-color("color", black, on-color(dark-2));
+                @include adaptive-color("color", black, color(dark-link));
                 @include adaptive-color("opacity", 0.6, 0.8);
                 @include adaptive-color("background-color", color(panel-light), color(dark-2));
 
@@ -44,7 +44,7 @@
                     border-color: color(panel-dark); //black border bottom when hovered
                 }
                 svg {
-                  @include adaptive-color("fill", black, on-color(dark-2));
+                  @include adaptive-color("fill", black, color(dark-link));
                 }
             }
         }
@@ -90,8 +90,8 @@
         @include adaptive-color("fill", black, color(panel-dark));
         width: 17px;
     }
-    .tab-title:hover:not(.active) svg, .addTab:hover svg {
-        @include adaptive-color("fill", black, on-color(dark-2));
+    .tab-title:hover svg, .addTab:hover svg {
+        @include adaptive-color("fill", black, color(dark-link));
     }
 }
 
@@ -156,24 +156,24 @@
 }
 
 .mat-expansion-panel {
-  @include adaptive-color("background-color", color(light), color(dark-1));
+  @include adaptive-color("background-color", color(light), color(dark-2));
   @include adaptive-color-dark-only("color", on-color(dark-3));
   .mat-expansion-indicator::after {
     @include adaptive-color-dark-only("color", on-color(dark-3));
   }
   .mat-expansion-panel-header, button.mat-raised-button { // nested items inside parent expansion panel
-    @include adaptive-color-dark-only("background-color", color(dark-1));
+    @include adaptive-color-dark-only("background-color", color(dark-2));
     @include adaptive-color-dark-only("color", on-color(dark-3));
   }
   .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
-    @include adaptive-color-dark-only("background-color", color(dark-2));
-  }
-  &:not([class*=mat-elevation-z]), .mat-raised-button:not([class*=mat-elevation-z]) {
-    box-shadow: 0px 3px 1px -2px rgba(color(dark-4),20%), 0px 2px 2px 0px rgba(color(dark-4),20%), 0px 1px 5px 1px rgba(color(dark-4),33%) !important;
+    @include adaptive-color-dark-only("background-color", color(dark-link));
   }
 
   .mat-expansion-panel-body {
     @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-body button:not(:disabled):hover {
+    @include adaptive-color("background", color(cell-highlight-color), color(dark-link));
   }
 
   .mat-form-field {
@@ -282,7 +282,7 @@ input[type=file]{
         @include adaptive-color-dark-only("box-shadow", 1px 2px color(dark-2));
         @include adaptive-color-dark-only("z-index", 1);
         @include adaptive-color-dark-only("border-bottom", color(dark-3));
-        @include adaptive-color-dark-only("color", on-color(dark-2));
+        @include adaptive-color-dark-only("color", color(dark-link));
         border-radius: 50% 50% 0 0;
         border: solid color(panel-dark) 1px;
         border-bottom: solid 1px white;
@@ -297,7 +297,7 @@ input[type=file]{
         @include adaptive-color-dark-only("background", color(dark-3));
         @include adaptive-color-dark-only("border-color", color(dark-3));
         @include adaptive-color-dark-only("box-shadow", 2px 1px 1px color(dark-2));
-        @include adaptive-color-dark-only("color", on-color(dark-2));
+        @include adaptive-color-dark-only("color", color(dark-link));
         position: absolute;
         right: 16px;
         display: flex;
