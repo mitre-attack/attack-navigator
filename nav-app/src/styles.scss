@@ -66,6 +66,12 @@ body {
       color: color(dark-1) !important;
     }
 
+    .help-dialog .content code {
+      background-color: color(dark-1);
+      border-color: color(panel-dark) !important;
+      color: on-color(dark) !important;
+    }
+
     a {
       color: color(dark-link) !important;
     }
