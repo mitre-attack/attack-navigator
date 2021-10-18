@@ -13,7 +13,6 @@ export class AppComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;
 
     nav_version: string = globals.nav_version;
-    public user_theme: string;
 
     @HostListener('window:beforeunload', ['$event'])
     promptNavAway($event) {
@@ -31,15 +30,9 @@ export class AppComponent implements OnInit {
             }
             return false;
         }
-        window.onload = () => this.matcher();
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', () => this.matcher());
     }
 
     ngOnInit() {
         this.iconsService.registerIcons();
     }
-
-    matcher() {
-        this.user_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'theme-override-dark' : 'theme-override-light';
-      }
 }
