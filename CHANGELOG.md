@@ -1,3 +1,8 @@
+# v4.5 - Changes staged on Develop
+
+## New Features
+- The ATT&CK Navigator now has a dark theme. See issue [#71](https://github.com/mitre-attack/attack-navigator/issues/71).
+
 # v4.4.1 - 16 September 2021
 
 ## Fixes
