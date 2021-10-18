@@ -12,6 +12,9 @@
     background: rgba(80, 80, 80, $opacity);
     font-size: 8pt;
     color: white;
+    @media (prefers-color-scheme: dark) {
+      background: rgba(#464DFF, $opacity);
+    }
     &.bottom.right {
         /* ------------------
          * |                |
