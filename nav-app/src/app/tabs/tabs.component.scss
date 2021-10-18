@@ -166,6 +166,11 @@
     @include adaptive-color-dark-only("background-color", color(dark-2));
     @include adaptive-color-dark-only("color", on-color(dark-3));
   }
+  .mat-expansion-panel-content {
+    .mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
+      @include adaptive-color-dark-only("border", 2px solid color(dark-3));
+    }
+  }
   .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
     @include adaptive-color-dark-only("background-color", color(dark-link));
   }
