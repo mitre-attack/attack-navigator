@@ -105,10 +105,10 @@
             pointer-events: none;
         }
         &.expanded .angle {
+            @include adaptive-color("background", color(body), transparent);
             height: 12px;
             display:block;
             position: absolute;
-            background: color(body);
             svg { fill: on-color-deemphasis(body); }
             &.top {
                 top: 0px;
