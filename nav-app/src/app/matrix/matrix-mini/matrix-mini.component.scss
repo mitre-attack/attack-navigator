@@ -1,5 +1,6 @@
 @import "../matrix-common.scss";
 .matrix.mini {
+    .header { text-align: left; }
     .tactic { padding: 0 5px; }
     .tactic.header {
         padding: 5px;
