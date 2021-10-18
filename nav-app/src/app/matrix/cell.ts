@@ -75,7 +75,7 @@ export abstract class Cell {
         let isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
         if (!this.tactic) return isDarkTheme ? "white" : "black";
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
-        if (!tvm.enabled) return isDarkTheme ? "white" : "#aaaaaa";
+        if (!tvm.enabled) return isDarkTheme ? "rgb(255 255 255 / 25%)" : "#aaaaaa";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
