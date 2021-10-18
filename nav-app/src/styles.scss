@@ -169,9 +169,9 @@ body {
 
       // dropdown controls container
       .dropdown-container {
-        @include adaptive-color("background-color", white, color(dark));
-        @include adaptive-color("border", 1px solid black, on-color(dark));
-        @include adaptive-color("box-shadow", 0px 10px 5px rgba(0, 0, 0, 0.5), 0px 10px 5px on-color(dark-4));
+        @include adaptive-color("background-color", white, color(dark-2));
+        @include adaptive-color("border", 1px solid black, 1px solid color(dark-4));
+        @include adaptive-color("box-shadow", 0px 10px 5px rgba(0, 0, 0, 0.5), 0px 10px 5px color(dark-2));
 
         &.left {
           right: 0
@@ -192,6 +192,22 @@ body {
               padding-top: 5px;
             }
           }
+        }
+
+        .mat-form-field-label {
+          @include adaptive-color-dark-only("color", rgba(255, 255, 255, 0.9));
+        }
+
+        .mat-input-element:disabled {
+          @include adaptive-color-dark-only("color", color(dark-disabled));
+        }
+
+        .mat-form-field-underline {
+          @include adaptive-color-dark-only("background-color", on-color(dark));
+        }
+        .mat-form-field-disabled .mat-form-field-underline {
+          @include adaptive-color-dark-only("background-color", transparent);
+          @include adaptive-color-dark-only("background-image", linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 33%, transparent 0%));
         }
       }
 
@@ -223,7 +239,7 @@ body {
   position: relative;
 
   &.disabled {
-    color: rgba(0, 0, 0, 0.46);
+    @include adaptive-color("color", rgba(0, 0, 0, 0.46), color(dark-disabled));
     cursor: default;
   }
 }

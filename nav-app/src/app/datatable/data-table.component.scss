@@ -67,8 +67,8 @@ $cellSize: 15px;
     align-items: center;
     text-align: center;
     .color-block {
+        @include adaptive-color("border", 1px solid black, 1px solid color(dark-disabled));
         cursor: pointer;
-        border: 1px solid black;
         margin: 2.5px;
         &.square {
             display: inline-block;
@@ -76,6 +76,7 @@ $cellSize: 15px;
             height: $cellSize;
         }
         &.wide {
+            @include adaptive-color-dark-only("color", color(dark-disabled));
             display: block;
             height: $cellSize;
             font-size: 10pt;
@@ -96,8 +97,9 @@ $cellSize: 15px;
         text-align: center;
     }
     .gradient-section-content {
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
+        @include adaptive-color("border-color", black, white);
+        border-style: solid;
+        border-width: 1px 0;
         text-align: left;
     }
     .display-buttons {
@@ -105,11 +107,11 @@ $cellSize: 15px;
         text-align: center;
 
         .squarebutton {
-            border: 1px solid color(panel-dark);
+            @include adaptive-color("border", 1px solid color(panel-dark), 1px solid color(dark-disabled));
             padding: 4px 0;
             cursor: pointer;
             &:hover {
-                background: color(panel-light);
+              @include adaptive-color("background", color(panel-light), color(cell-highlight-dark-color));
             }
             &.gradient:hover {
                 text-decoration: underline; //since background color won't be seen on gradient buttons
@@ -135,6 +137,18 @@ $cellSize: 15px;
 
             // border: 1px solid black;
             td {
+                button {
+                  @include adaptive-color-dark-only("background-color", color(dark-1));
+                  @include adaptive-color-dark-only("border", 1px solid color(dark-disabled));
+                  @include adaptive-color-dark-only("color", white);
+                  &:hover {
+                    @include adaptive-color-dark-only("background-color", black);
+                  }
+                }
+                input {
+                  @include adaptive-color-dark-only("background-color", black);
+                  @include adaptive-color-dark-only("color", white);
+                }
                 &.buttons>div {
                     // border: 1px solid black;
                     overflow: hidden;
@@ -165,8 +179,8 @@ $cellSize: 15px;
                 }
             }
             .minmax {
+              @include adaptive-color("background-color", color(panel-light), color(dark-4));
                 text-align: center;
-                background-color: color(panel-light);
                 // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
                 // &.bottom { border-top: 1px solid black}
             }
