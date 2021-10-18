@@ -9,7 +9,7 @@
     // override colors
     @include adaptive-color("background-color", color(body), color(dark-3));
     .arrow::before, .arrow::after {
-        border-bottom-color: color(body) !important;
+        @include adaptive-color("border-bottom-color", color(body) !important, color(dark-3) !important);
     }
 
     .popover-body {
