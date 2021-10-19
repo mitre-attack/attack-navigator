@@ -20,12 +20,15 @@
             vertical-align: bottom;
         }
         &.count {
-            @include adaptive-color("border-color", black, white);
             border-width: 0 0 1px 0;
             border-style: solid;
             font-size: $sizeunit - 1px;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            border-color: black;
+            @media (prefers-color-scheme: dark) {
+              border-color: white;
+            }
         }
         .techniques-table {
             border-collapse: collapse;
@@ -49,13 +52,22 @@
                 vertical-align: top;
 
                 &.technique {
-                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
                     // outline: 1px solid on-color-deemphasis(body);
                     // outline-offset: -1px;
+                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+                    @media (prefers-color-scheme: dark) {
+                      box-shadow: 0 0 0 1px color(dark-3) inset;
+                    }
                 }
             }
         }
         .subtechniques {
+            border-left: 2px solid on-color-deemphasis(body);
+            box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+            @media (prefers-color-scheme: dark) {
+              border-left: 2px solid color(dark-3);
+              box-shadow: 0 0 0 1px color(dark-3) inset;
+            }
             &.hidden {
                 display: none;
             }
@@ -64,11 +76,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-
             margin-left: -1px;
-            border-left: 2px solid on-color-deemphasis(body);
-            box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
-
             white-space: nowrap;
             vertical-align: top;
 
@@ -83,38 +91,47 @@
             text-align: center;
             vertical-align: middle;
             transform: rotate(-90deg);
-            color: color-alternate(body);
             width: 12px; height: 12px;
             font-size: 16px;
             line-height: 12px;
+            color: color-alternate(body);
+            @media (prefers-color-scheme: dark) {
+              color: on-color(dark);
+            }
         }
     }
     .sidebar {
         min-width: 8px;
         width: 12px;
         padding: 0;
-        background: on-color-deemphasis(body);
         cursor: pointer;
         position:relative;
         vertical-align: middle;
+        background: on-color-deemphasis(body);
         .angle {
             display: none;
         }
         &.disabled {
             background: #aaaaaa;
             pointer-events: none;
+            @media (prefers-color-scheme: dark) {
+              background: color(dark-disabled);
+            }
         }
         &.expanded .angle {
-            @include adaptive-color("background", color(body), transparent);
+            background: color(body);
+            @media (prefers-color-scheme: dark) {
+              background: lighten(color(dark-1), 3%);
+            }
             height: 12px;
             display:block;
             position: absolute;
             svg { fill: on-color-deemphasis(body); }
             &.top {
-                top: 0px;
+                top: 0;
             }
             &.bottom {
-                bottom: 0px;
+                bottom: 0;
             }
         }
     }

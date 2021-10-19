@@ -20,7 +20,7 @@ $cellSize: 15px;
 .matrices {
   @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
   @include adaptive-color-dark-only("color", on-color(dark));
-  @include adaptive-color-dark-only("border-color", color(dark-1));
+  @include adaptive-color-dark-only("border", none);
   overflow-x: scroll;
   min-height: 50vh;
   border: 1px solid color(panel-dark);

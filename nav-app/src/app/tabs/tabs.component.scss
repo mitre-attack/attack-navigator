@@ -17,12 +17,12 @@
         @include adaptive-color("color", black, on-color(dark));
         @include adaptive-color("border-color", color(panel-dark), color(dark-1));
         @include adaptive-color("background-color", color(panel-dark), color(dark-2));
-        @include adaptive-color-dark-only("border-bottom", none);
+        @include adaptive-color-dark-only("border", none);
     }
     .tabs .tab-title:not(.active) {
-      @include adaptive-color("border-width", 0 1px 0 0, 0);
+      @include adaptive-color("border-color", color(panel-dark), color(dark-4));
+      border-width: 0 1px 0 0;
       border-style: solid;
-      border-color: color(panel-dark);
     }
 }
 
