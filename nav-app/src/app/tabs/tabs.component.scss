@@ -168,7 +168,7 @@
   }
   .mat-expansion-panel-content {
     .mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
-      @include adaptive-color-dark-only("border", 2px solid color(dark-3));
+      @include adaptive-color-dark-only("border-top", 1px solid lighten(color(dark-4), 5%));
     }
   }
   .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
