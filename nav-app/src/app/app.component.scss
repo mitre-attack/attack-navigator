@@ -1,5 +1,10 @@
 @import "../colors.scss";
 
+.app-container {
+  @include adaptive-color("background-color", color(body), color(dark-1));
+  height: 100vh;
+}
+
 .nav-app {
   @include adaptive-color("background-color", color(light), darken(color(dark), 8%));
 

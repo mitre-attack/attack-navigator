@@ -5,19 +5,11 @@
     box-sizing: border-box;
     &:not(.mini) { min-width: $sizeunit * 3; }
     &.mini {
+        @include adaptive-color("background", black, white);
         width: $sizeunit;
-        background: black;
     }
     min-height: $sizeunit;
     &.bordered {
-        border: 1px solid border-color(body);
-    }
-    @media (prefers-color-scheme: dark) {
-      &.mini {
-        background: white;
-      }
-      &.bordered {
-        border: 1px solid white;
-      }
+        @include adaptive-color("border", 1px solid border-color(body), 1px solid white);
     }
 }

@@ -73,7 +73,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         if (is.safari('<=13')) {
             this.safariDialogRef = this.dialog.open(this.safariWarning, {
                 width: '350px',
-                disableClose: true
+                disableClose: true,
+                panelClass: ['dialog-custom', 'theme-use-system']
             });
         }
     }
@@ -273,7 +274,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * open the help dialog
      */
     openDialog(dialogName: string) {
-        const settings = { maxWidth: "75ch" };
+        const settings = { maxWidth: "75ch", panelClass: ['dialog-custom', 'theme-use-system'] };
         if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
         else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
     }
@@ -285,7 +286,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     openSVGDialog(vm: ViewModel) {
         this.dialog.open(ExporterComponent,
             { data: {vm: vm},
-              panelClass: 'dialog-custom'
+              panelClass: ['dialog-custom', 'theme-use-system']
             });
     }
 
@@ -489,7 +490,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         currVersion: currVersion
                     },
                     disableClose: true,
-                    width: "25%"
+                    width: "25%",
+                    panelClass: ['dialog-custom', 'theme-use-system']
                 });
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {

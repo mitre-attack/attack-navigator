@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic } from '../../../data.service';
 import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
 import { ConfigService, ContextMenuItem } from '../../../config.service';
@@ -7,7 +7,8 @@ import { CellPopover } from '../cell-popover';
 @Component({
   selector: 'app-contextmenu',
   templateUrl: './contextmenu.component.html',
-  styleUrls: ['./contextmenu.component.scss']
+  styleUrls: ['./contextmenu.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

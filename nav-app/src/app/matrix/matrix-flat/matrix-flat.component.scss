@@ -16,16 +16,10 @@
         }
 
         &.count {
-            border-bottom: 1px solid black;
+            @include adaptive-color("border-bottom", 1px solid black, 1px solid white);
             font-size: $sizeunit - 1px;
             padding-bottom: 5px;
             margin-bottom: 5px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          &.count {
-            border-bottom: 1px solid white;
-          }
         }
 
         .subtechniques-row.hidden {

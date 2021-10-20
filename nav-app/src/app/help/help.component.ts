@@ -83,7 +83,8 @@ export class HelpComponent implements OnInit {
      */
     openLayerDialog() {
         this.dialog.open(LayerInformationComponent, {
-            maxWidth: "90ch"
+            maxWidth: "90ch",
+            panelClass: ['dialog-custom', 'theme-use-system']
         });
     }
 }

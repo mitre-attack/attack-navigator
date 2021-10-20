@@ -1,7 +1,9 @@
-<div class="theme-use-system">
-    <div class="nav-app">
-        <tabs></tabs>
-        <button class="version-footer" (click)="tabsComponent.openDialog('changelog')">MITRE ATT&CK&reg; Navigator
-            v{{nav_version}}</button>
+<div class="theme-use-system" [ngClass]="user_theme">
+    <div class="app-container">
+        <div class="nav-app">
+            <tabs (onUserThemeChange)="themeChangeHandler($event)" [userTheme]="user_theme"></tabs>
+            <button class="version-footer" (click)="tabsComponent.openDialog('changelog')">MITRE ATT&CK&reg; Navigator
+                v{{nav_version}}</button>
+        </div>
     </div>
 </div>
