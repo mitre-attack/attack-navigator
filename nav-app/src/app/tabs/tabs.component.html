@@ -21,16 +21,6 @@
     <div class="dropdown-container" *ngIf="showHelpDropDown && adjustedHeaderHeight >= 0">
         <button (click)="openDialog('help')">help</button>
         <button (click)="openDialog('changelog')">changelog</button>
-        <button (click)="themeButtonClicked = themeButtonClicked === 'dropdown' ? '' : 'dropdown'">
-            theme
-            <span *ngIf="themeButtonClicked === 'dropdown'">▴</span>
-            <small *ngIf="themeButtonClicked !== 'dropdown'">▾</small>
-        </button>
-        <ng-container *ngIf="themeButtonClicked === 'dropdown'">
-            <button [ngClass]="{'theme-selected': userTheme?.includes('dark')}" (click)="handleUserThemeChange('dark')">dark</button>
-            <button [ngClass]="{'theme-selected': userTheme?.includes('light')}" (click)="handleUserThemeChange('light')">light</button>
-            <button [ngClass]="{'theme-selected': userTheme?.includes('system')}" (click)="handleUserThemeChange('system')">use system</button>
-        </ng-container>
     </div>
 </div>
 
@@ -99,15 +89,18 @@
             <div class="help-links-container">
                 <button mat-button (click)="openDialog('help')">help</button>
                 <button mat-button (click)="openDialog('changelog')">changelog</button>
-                <button mat-button (click)="themeButtonClicked = themeButtonClicked === 'tabs' ? '' : 'tabs'">
-                    theme
-                    <span *ngIf="themeButtonClicked === 'tabs'">:</span>
+
+
+                <button mat-button (click)="select.open()" class="theme-select-container">
+                    <mat-label>
+                        theme ▾
+                    </mat-label>
+                    <mat-select #select (selectionChange)="handleUserThemeChange($event.value)">
+                        <mat-option value="dark">dark</mat-option>
+                        <mat-option value="light">light</mat-option>
+                        <mat-option value="system">use system</mat-option>
+                    </mat-select>
                 </button>
-                <ng-container *ngIf="themeButtonClicked === 'tabs'">
-                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('dark')}" (click)="handleUserThemeChange('dark')">dark</button>
-                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('light')}" (click)="handleUserThemeChange('light')">light</button>
-                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('system')}" (click)="handleUserThemeChange('system')">use system</button>
-                </ng-container>
             </div>
         </div>
         <mat-accordion class="headers-align">

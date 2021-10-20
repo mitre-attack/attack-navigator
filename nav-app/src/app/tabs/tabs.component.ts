@@ -41,7 +41,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     techniques: Technique[] = [];
 
     nav_version = globals.nav_version;
-    themeButtonClicked = '';
 
     constructor(private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
         console.log("tabs component initializing");
@@ -274,7 +273,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     showHelpDropDown: boolean = false;
 
 
-    handleUserThemeChange(theme: string) {
+    handleUserThemeChange(theme) {
       this.onUserThemeChange.emit(theme);
     }
 

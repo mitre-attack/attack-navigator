@@ -254,6 +254,17 @@ input[type=file]{
     width: 100%;
 }
 
+.theme-select-container {
+  .mat-select {
+    position: absolute;
+    margin-left: -85px;
+    top: 20px;
+  }
+  .mat-select-arrow-wrapper {
+    display: none;
+  }
+}
+
 .header {
     text-align: right;
     right: 0;
