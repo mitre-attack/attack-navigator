@@ -35,9 +35,9 @@ export class AppComponent implements OnInit {
     if (hasCookie("is_user_theme_dark") && getCookie("is_user_theme_dark") === "true") {
       this.user_theme = 'theme-override-dark';
     } else if (getCookie("is_user_theme_dark") === "false") {
-      this.user_theme = 'theme-light-dark';
+      this.user_theme = 'theme-override-light';
     }  else {
-      window.onload = () => this.matcher();
+      this.user_theme = 'theme-use-system';
     }
   }
 
@@ -45,14 +45,10 @@ export class AppComponent implements OnInit {
     this.iconsService.registerIcons();
   }
 
-  matcher() {
-    this.user_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? 'theme-override-dark' : 'theme-override-light';
-  }
-
   themeChangeHandler(theme: string) {
     if (theme === 'system') {
-      this.matcher();
       if (hasCookie("is_user_theme_dark")) deleteCookie("is_user_theme_dark");
+      this.user_theme = 'theme-use-system';
     }
     else {
       this.user_theme = (theme === 'dark') ? 'theme-override-dark' : 'theme-override-light';

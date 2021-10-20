@@ -442,3 +442,8 @@ input[type=file]{
     text-align: center;
     h3 { color: red; }
 }
+
+.theme-selected {
+  text-decoration: underline !important;
+  font-weight: bold;
+}

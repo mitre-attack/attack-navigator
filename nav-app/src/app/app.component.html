@@ -1,4 +1,4 @@
-<div class="theme-use-system" [ngClass]="user_theme">
+<div [ngClass]="user_theme">
     <div class="app-container">
         <div class="nav-app">
             <tabs (onUserThemeChange)="themeChangeHandler($event)" [userTheme]="user_theme"></tabs>

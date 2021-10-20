@@ -27,9 +27,9 @@
             <small *ngIf="themeButtonClicked !== 'dropdown'">▾</small>
         </button>
         <ng-container *ngIf="themeButtonClicked === 'dropdown'">
-            <button *ngIf="!userTheme?.includes('dark')" (click)="handleUserThemeChange('dark')">dark</button>
-            <button *ngIf="!userTheme?.includes('light')" (click)="handleUserThemeChange('light')">light</button>
-            <button (click)="handleUserThemeChange('system')">use system</button>
+            <button [ngClass]="{'theme-selected': userTheme?.includes('dark')}" (click)="handleUserThemeChange('dark')">dark</button>
+            <button [ngClass]="{'theme-selected': userTheme?.includes('light')}" (click)="handleUserThemeChange('light')">light</button>
+            <button [ngClass]="{'theme-selected': userTheme?.includes('system')}" (click)="handleUserThemeChange('system')">use system</button>
         </ng-container>
     </div>
 </div>
@@ -104,9 +104,9 @@
                     <span *ngIf="themeButtonClicked === 'tabs'">:</span>
                 </button>
                 <ng-container *ngIf="themeButtonClicked === 'tabs'">
-                    <button mat-button *ngIf="!userTheme?.includes('dark')" (click)="handleUserThemeChange('dark')">dark</button>
-                    <button mat-button *ngIf="!userTheme?.includes('light')" (click)="handleUserThemeChange('light')">light</button>
-                    <button mat-button (click)="handleUserThemeChange('system')">use system</button>
+                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('dark')}" (click)="handleUserThemeChange('dark')">dark</button>
+                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('light')}" (click)="handleUserThemeChange('light')">light</button>
+                    <button mat-button [ngClass]="{'theme-selected': userTheme?.includes('system')}" (click)="handleUserThemeChange('system')">use system</button>
                 </ng-container>
             </div>
         </div>
