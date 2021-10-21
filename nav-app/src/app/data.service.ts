@@ -329,14 +329,14 @@ export class DataService {
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
+        return this.versions[0].match(/v[0-9]+/g)[0].toLowerCase();
     }
 
     /**
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
+        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]+/g)[0]? false : true;
     }
 
     /**
@@ -801,6 +801,6 @@ export class Domain {
      * Get version of this domain
      */
     getVersion() {
-        return this.version.match(/[0-9]/g)[0];
+        return this.version.match(/[0-9]+/g)[0];
     }
 }
