@@ -432,7 +432,11 @@ export abstract class BaseStix {
           alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
           throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
         }
-        this.url = stixSDO.external_references[0].url;
+        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
+            this.url = stixSDO.external_references[0].url;
+        } else {
+            this.url = "";
+        }
         this.created = stixSDO.created;
         this.modified = stixSDO.modified;
         this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
