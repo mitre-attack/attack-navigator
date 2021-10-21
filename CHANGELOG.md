@@ -1,3 +1,11 @@
+# v4.5.1 - 21 October 2021
+
+## Fixes
+- Fixes support for ATT&CK versions with more than 1 digit (ex. ATT&CK v10). 
+    - Uploaded layers without a specified ATT&CK version will no longer try and fail to load ATT&CK v1
+    - Uploaded layers uring ATT&CK v10 will no longer try and fail to load ATT&CK v1
+    - Downloaded layers using ATT&CK v10 will no longer claim they use ATT&CK v1
+
 # v4.5.0 - 21 October 2021
 
 ## New Features
