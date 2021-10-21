@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic, DataService, Note } from '../../../data.service';
 import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
 import { CellPopover } from '../cell-popover';
@@ -6,7 +6,8 @@ import { CellPopover } from '../cell-popover';
 @Component({
   selector: 'app-tooltip',
   templateUrl: './tooltip.component.html',
-  styleUrls: ['./tooltip.component.scss']
+  styleUrls: ['./tooltip.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

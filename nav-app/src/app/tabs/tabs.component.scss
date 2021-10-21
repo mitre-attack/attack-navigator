@@ -14,25 +14,38 @@
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
+        @include adaptive-color("color", black, on-color(dark));
+        @include adaptive-color("border-color", color(panel-dark), color(dark-1));
+        @include adaptive-color("background-color", color(panel-dark), color(dark-2));
+        @include adaptive-color-dark-only("border", none);
+    }
+    .tabs .tab-title:not(.active) {
+      @include adaptive-color("border-color", color(panel-dark), color(dark-4));
+      border-width: 0 1px 0 0;
+      border-style: solid;
     }
 }
 
 .tabs {
     .tab-title { //non-datatable tab names
+        @include adaptive-color("color", black, white);
         font-size: 14px;
         text-decoration: none;
-        color: black !important;
         display: flex;
         justify-content: space-around;
-        border-right: #ddd 1px solid;
 
         &:hover, &:focus { //when the mouse is over a non-selected tab
             &:not(.active) {
                 text-decoration: none;
+                @include adaptive-color("color", black, color(dark-link));
+                @include adaptive-color("opacity", 0.6, 0.8);
+                @include adaptive-color("background-color", color(panel-light), color(dark-2));
 
                 &:not(.addTab) { //add tab should not behave like other tabs
-                    border-color: $panel-dark $panel-dark $panel-light $panel-dark; //black border bottom when hovered
-                    background-color: $panel-light;
+                    border-color: color(panel-dark); //black border bottom when hovered
+                }
+                svg {
+                  @include adaptive-color("fill", black, color(dark-link));
                 }
             }
         }
@@ -40,6 +53,7 @@
 
         //tab number that shows up when tab is highlighted
         .tabEnumerator {
+            @include adaptive-color-dark-only("color", color(dark-1));
             position: absolute;
             top: 2px;
             right: 7px;
@@ -49,9 +63,9 @@
         }
 
         &.active {
-            color: $tab-text-color; //text color
+            @include adaptive-color("background-color", color(panel-dark), lighten(color(dark), 1%));
+            @include adaptive-color("color", color(tab-text-color), color(panel-dark));
             cursor: default; //cursor behavior
-            background-color: $panel-dark;
             border: 1px solid transparent; //override border highlighting on hover
         }
     }
@@ -59,8 +73,8 @@
     .addTab {
         min-width: fit-content;
         &:hover {
+            @include adaptive-color("background-color", #f1f1f1, color(dark-2));
             border-color: #ddd #ddd #f1f1f1 #ddd;
-            background-color: #f1f1f1
         }
     }
 
@@ -74,11 +88,11 @@
         content: " ";
     }
     svg {
+        @include adaptive-color("fill", black, color(panel-dark));
         width: 17px;
-        transition: all ease-in-out 0.2s;
     }
-    svg:hover {
-        transform: scale(1.2);
+    .tab-title:hover svg, .addTab:hover svg {
+        @include adaptive-color("fill", black, color(dark-link));
     }
 }
 
@@ -89,11 +103,16 @@
     text-align: right;
     cursor: pointer;
     &:hover {
-        color: black
+        @include adaptive-color("color", black, white);
     }
 }
 
 .newTab {
+    @include adaptive-color("background-color", color(light), color(dark-1));
+    @include adaptive-color("color", on-color(light), on-color(dark));
+    @include adaptive-color("border-color", color(panel-dark), color(dark-1));
+    border-width: 1px;
+    border-style: solid;
     height: 90%;
     display: block;
     overflow-y: scroll;
@@ -121,30 +140,96 @@
     }
 }
 
-.border {
-    border: 1px solid $panel-dark;
-}
-
 .layerOpTable {
     td {
+        @include adaptive-color-dark-only("color", on-color(dark));
         padding: 5px;
         &.disabled {
             color: gray;
         }
     }
     .tab-enumerator {
+        @include adaptive-color-dark-only("color", color(dark-1));
         padding: 2px 4px;
         background: rgb(255, 255, 0);
         border-radius: 5px;
     }
 }
 
+.mat-expansion-panel {
+  @include adaptive-color("background-color", color(light), color(dark-2));
+  @include adaptive-color-dark-only("color", on-color(dark-3));
+  .mat-expansion-indicator::after {
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-header, button.mat-raised-button { // nested items inside parent expansion panel
+    @include adaptive-color-dark-only("background-color", color(dark-2));
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-content {
+    .mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
+      @include adaptive-color-dark-only("border-top", 1px solid lighten(color(dark-4), 5%));
+    }
+  }
+  .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
+    @include adaptive-color-dark-only("background-color", color(dark-link));
+  }
+
+  .mat-expansion-panel-body {
+    @include adaptive-color-dark-only("color", on-color(dark-3));
+  }
+  .mat-expansion-panel-body button:not(:disabled):hover {
+    @include adaptive-color("background", color(cell-highlight-color), color(dark-link));
+  }
+
+  .mat-form-field {
+    &:not(.mat-form-field-disabled) {
+      .mat-form-field-label, .mat-select-arrow, .mat-select-value-text, .mat-input-element {
+        @include adaptive-color-dark-only("color", on-color(dark));
+      }
+    }
+    &.mat-form-field-disabled, .layerOpTable td.disabled {
+      .mat-form-field-label, .mat-select-arrow {
+        @include adaptive-color-dark-only("color", darken(on-color(dark-1), 25%));
+      }
+    }
+    &.mat-form-field-disabled .mat-form-field-underline {
+      @include adaptive-color-dark-only("background-color", darken(on-color(dark-1), 25%));
+    }
+    &:not(.mat-form-field-disabled) .mat-form-field-underline {
+      @include adaptive-color-dark-only("background-color", on-color(dark-3));
+    }
+  }
+  .mat-button {
+    &:not(.mat-button-disabled) {
+      @include adaptive-color-dark-only("background-color", color(dark-3));
+      @include adaptive-color-dark-only("color", on-color(dark-3));
+    }
+    &.mat-button-disabled {
+      @include adaptive-color-dark-only("background-color", color(dark-1));
+      @include adaptive-color-dark-only("border", color(dark-2) 2px solid);
+      @include adaptive-color-dark-only("color", darken(on-color(dark-1), 50%));
+    }
+  }
+  .inputTable tr.featureRow:hover {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+  }
+  a {
+    @include adaptive-color-dark-only("color", color(dark-link));
+  }
+  a:visited, a:active {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+  }
+}
+
 .headers-align .mat-expansion-panel-header-title,
 .headers-align .mat-expansion-panel-header-description {
+  @include adaptive-color("color", on-color(light), darken(on-color(dark), 10%));
   flex-basis: 0;
 }
 
 .headers-align .mat-expansion-panel-header-description {
+  @include adaptive-color-dark-only("color", darken(on-color(dark), 15%));
   justify-content: space-between;
   align-items: center;
 }
@@ -154,10 +239,10 @@ input[type=file]{
     margin: 5px;
     width: 300px;
     // border: 1px solid black;
-    background-color: $panel-light;
+    background-color: color(panel-light);
     border-radius: 0px;
     &:hover {
-        background-color: $panel-dark;
+        background-color: color(panel-dark);
     }
 }
 
@@ -167,6 +252,17 @@ input[type=file]{
     justify-content: center;
     margin-bottom: 1em;
     width: 100%;
+}
+
+.theme-select-container {
+  .mat-select {
+    position: absolute;
+    margin-left: -85px;
+    top: 20px;
+  }
+  .mat-select-arrow-wrapper {
+    display: none;
+  }
 }
 
 .header {
@@ -188,18 +284,37 @@ input[type=file]{
         height: 3ex;
         padding: 5px;
         z-index: 10;
-        &:hover svg { fill: #505050; }
+        svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+        }
+        &:hover svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+          fill: #505050;
+        }
     }
 
     .help-dropdown-open {
+        @include adaptive-color-dark-only("background", color(dark-3));
+        @include adaptive-color-dark-only("border", solid color(dark-2) 1px);
+        @include adaptive-color-dark-only("box-shadow", 1px 2px color(dark-2));
+        @include adaptive-color-dark-only("z-index", 1);
+        @include adaptive-color-dark-only("border-bottom", color(dark-3));
+        @include adaptive-color-dark-only("color", color(dark-link));
         border-radius: 50% 50% 0 0;
-        border: solid $panel-dark 1px;
+        border: solid color(panel-dark) 1px;
         border-bottom: solid 1px white;
         background: white;
-        svg { fill: #505050; }
+        svg {
+          @include adaptive-color-dark-only("fill", on-color(dark));
+          fill: #505050;
+        }
     }
 
     .dropdown-container {
+        @include adaptive-color-dark-only("background", color(dark-3));
+        @include adaptive-color-dark-only("border-color", color(dark-3));
+        @include adaptive-color-dark-only("box-shadow", 2px 1px 1px color(dark-2));
+        @include adaptive-color-dark-only("color", color(dark-link));
         position: absolute;
         right: 16px;
         display: flex;
@@ -215,6 +330,7 @@ input[type=file]{
         top: 40px;
         z-index: 9;
         button {
+            @include adaptive-color-dark-only("color", on-color(dark));
             border: none;
             background-color: transparent;
             text-align: right;
@@ -258,7 +374,7 @@ input[type=file]{
             text-decoration-color: on-color(primary);
         }
         a:hover, .helpIcon:hover {
-            color: $panel-dark;
+            color: color(panel-dark);
             opacity: 0.8;
         }
     }
@@ -294,14 +410,15 @@ input[type=file]{
             width: 1%;
             padding: 5px;
             &.featureRow-button {
-                img {vertical-align: middle; margin-bottom: 2px;}
+                svg {height: 16px; vertical-align: middle; margin-bottom: 2px;}
             }
             &.subfeature {
                 &:first-child {
-                    border-left: 1px solid $panel-dark;
+                    border-left: 1px solid color(panel-dark);
                 }
                 &.last {
-                    border-bottom: 1px solid $panel-dark;
+                    @include adaptive-color-dark-only("border-bottom", none);
+                    border-bottom: 1px solid color(panel-dark);
                 }
             }
         }
@@ -315,10 +432,16 @@ input[type=file]{
         background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
         background-size: 4px 1px;
         background-repeat: repeat-x;
+        @include adaptive-color-dark-only("background", none);
+        @include adaptive-color-dark-only("border-bottom", white dotted 2px);
     }
     #layerLink {
         cursor: pointer;
     }
+}
+.layerLinkCopy svg {
+    @include adaptive-color-dark-only("color", white);
+    width: 14px;
 }
 .layerLinks {
     list-style: none;
@@ -329,4 +452,9 @@ input[type=file]{
 .safari-warning {
     text-align: center;
     h3 { color: red; }
+}
+
+.theme-selected {
+  text-decoration: underline !important;
+  font-weight: bold;
 }

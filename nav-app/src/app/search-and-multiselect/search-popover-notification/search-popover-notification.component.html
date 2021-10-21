@@ -3,8 +3,8 @@
 <popover-content #updateNotification placement="bottom" class="search-notification-popover">
     <div (click)="closePopover()">
         <div class="animation-wrapper">
-            <img [@mergeIconLeft]="animationState" class="animated-icon search-icon" src="assets/icons/ic_search_black_24px.svg"/>
-            <img [@mergeIconRight]="animationState" (@mergeIconRight.done)="onAnimationEnd($event)" class="animated-icon multiselect-icon" src="assets/icons/ic_playlist_add_black_24px.svg"/>
+            <span [@mergeIconLeft]="animationState" class="animated-icon search-icon material-icons">search</span>
+            <span [@mergeIconRight]="animationState" (@mergeIconRight.done)="onAnimationEnd($event)" class="animated-icon multiselect-icon material-icons">playlist_add</span>
         </div>
         <p>
             Navigator v4.4 has merged the multiselect and search tools into a single interface.

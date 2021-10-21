@@ -3,20 +3,84 @@
 @import "~@fontsource/roboto/index.css";
 @import "~@fontsource/roboto-mono/index.css";
 @import "colors.scss";
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-display: block;
+  font-weight: 400;
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url(~assets/icons/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
 body {
   margin: 0;
   overflow-y: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.svgcontainer {
+  @include adaptive-color-dark-only("background-color", white);
+}
+
+.mat-dialog-container {
+  @include adaptive-color-dark-only("background-color", color(dark-2));
+  @include adaptive-color-dark-only("color", on-color(dark-3));
+
+  .help-dialog h1 {
+    @include adaptive-color-dark-only("border-color", on-color(dark-1));
+  }
+
+  .content code {
+    @include adaptive-color-dark-only("background-color", color(dark-1));
+    @include adaptive-color-dark-only("border-color", color(panel-dark) !important);
+    @include adaptive-color-dark-only("color", on-color(dark) !important);
+  }
+
+  a {
+    @include adaptive-color-dark-only("color", color(dark-link) !important);
+  }
+
+  a:active, a:visited {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+  }
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                   supported by Chrome and Opera */
 }
 
 
@@ -28,89 +92,127 @@ body {
 // $inputFontSize: 10pt;
 // panel with controls
 .controlsContainer {
-    background-color: $panel-dark;
-    // width: 100%;
-    text-align: right;
-    // padding: 0 3px;
-    // display: flex;
-    display: block;
-    ul { margin: 0; }
-    // justify-content: space-between;
-    // font: 400 12px system-ui;
+  @include adaptive-color("background-color", color(panel-dark), color(dark-2));
 
-    .control-sections>li {
-        list-style: none;
-        display: inline-block;
-        // &:not(:last-child){
-        border-left: 1px solid darken($panel-dark, 8%);
-        padding: 0 5px 0 5px;
-        position: relative;
+  // width: 100%;
+  text-align: right;
+  // padding: 0 3px;
+  // display: flex;
+  display: block;
 
-        // text-align: center;
-        // label for a section of controls, e.g layer controls or technique controls
-        .section-label {
-            font-size: 8pt;
-            // height: 8px;
-            top: -12px;
-            position: absolute;
-            // border: 1px 1px 0 1px solid black;
-            // width:50%;
-            // left: 25%;
-            padding: 0 5px;
-            background-color: $panel-dark;
-            border-radius: 2px 2px 0 0;
-            text-align: center;
-            color: $tab-text-color;
-            cursor: default;
-            user-select: none;
-            white-space: nowrap;
-            z-index: 1;
-            // bottom: 10px;
-        }
+  ul {
+    margin: 0;
+  }
 
-        .control-row-item {
+  // justify-content: space-between;
+  // font: 400 12px system-ui;
 
-            display: inline-block;
-            position: relative;
-            height: 34px;
+  .control-sections > li {
+    list-style: none;
+    display: inline-block;
+    // &:not(:last-child){
+    border-left: 1px solid darken(color(panel-dark), 8%);
+    padding: 0 5px 0 5px;
+    position: relative;
 
-            .control-row-button {
-                border-radius: 3px;
-                padding: 5px;
-                height: 24px;
-                cursor: pointer;
-                &:hover { background-color: darken($panel-dark, 5%); }
-                &.dropdown::after {
-                    font-size: 5pt;
-                    content: "▼";
-                }
-            }
-
-
-            // dropdown controls container
-            .dropdown-container {
-                &.left { right: 0 }
-                border: 1px solid black;
-                background-color: white;
-                box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-                position: absolute;
-                z-index: 100; //draw on top of other controls
-                width: max-content;
-
-                &.inputfield {
-                    width:  150px;
-                    padding: 0px 10px;
-                    mat-form-field {
-                        width: 100%;
-                        &:first-child {
-                            padding-top:5px;
-                        }
-                    }
-                }
-            }
-
-        }
+    // text-align: center;
+    // label for a section of controls, e.g layer controls or technique controls
+    .section-label {
+      @include adaptive-color("background-color", color(panel-dark), color(dark-2));
+      @include adaptive-color("color", color(tab-text-color), on-color(dark));
+      font-size: 8pt;
+      // height: 8px;
+      top: -12px;
+      position: absolute;
+      // border: 1px 1px 0 1px solid black;
+      // width:50%;
+      // left: 25%;
+      padding: 0 5px;
+      border-radius: 2px 2px 0 0;
+      text-align: center;
+      cursor: default;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 1;
+      // bottom: 10px;
     }
+
+    .control-row-item {
+      display: inline-block;
+      position: relative;
+      height: 34px;
+
+      & > :not(.disabled) {
+        @include adaptive-color("color", black, white);
+      }
+
+      & > .disabled {
+        @include adaptive-color("color", #aaaaaa, rgb(255 255 255 / 25%));
+      }
+
+      .control-row-button {
+        border-radius: 3px;
+        padding: 5px;
+        height: 24px;
+        cursor: pointer;
+
+        &:hover {
+          @include adaptive-color("background-color", darken(color(panel-dark), 5%), color(dark-4));
+        }
+
+        &.dropdown::after {
+          font-size: 5pt;
+          content: "▼";
+        }
+      }
+
+      // dropdown controls container
+      .dropdown-container {
+        @include adaptive-color("background-color", white, color(dark-2));
+        @include adaptive-color("border", 1px solid black, 1px solid color(dark-4));
+        @include adaptive-color("box-shadow", 0px 10px 5px rgba(0, 0, 0, 0.5), 0px 10px 5px color(dark-2));
+
+        &.left {
+          right: 0
+        }
+
+        position: absolute;
+        z-index: 100; //draw on top of other controls
+        width: max-content;
+
+        &.inputfield {
+          width: 150px;
+          padding: 0px 10px;
+
+          mat-form-field {
+            width: 100%;
+
+            &:first-child {
+              padding-top: 5px;
+            }
+          }
+        }
+
+        .mat-form-field-label {
+          @include adaptive-color-dark-only("color", rgba(255, 255, 255, 0.9));
+        }
+
+        .mat-input-element:disabled {
+          @include adaptive-color-dark-only("color", color(dark-disabled));
+        }
+
+        .mat-form-field-underline {
+          @include adaptive-color-dark-only("background-color", on-color(dark));
+        }
+
+        .mat-form-field-disabled .mat-form-field-underline {
+          @include adaptive-color-dark-only("background-color", transparent);
+          @include adaptive-color-dark-only("background-image", linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 33%, transparent 0%));
+        }
+      }
+
+    }
+  }
 }
 
 //////////////////////
@@ -118,104 +220,142 @@ body {
 //////////////////////
 
 .checkbox-custom {
-    opacity: 0;
-    position: absolute;
-    &:disabled {
-        cursor: default;
-    }
+  opacity: 0;
+  position: absolute;
+
+  &:disabled {
+    cursor: default;
+  }
 }
 
 .checkbox-custom, .checkbox-custom-label {
-    display: inline-block;
-    vertical-align: middle;
-    margin: 5px;
-    cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5px;
+  cursor: pointer;
 }
 
 .checkbox-custom-label {
-    position: relative;
-    &.disabled {
-        color: rgba(0,0,0,0.46);
-        cursor: default;
-    }
+  position: relative;
+
+  &.disabled {
+    @include adaptive-color("color", rgba(0, 0, 0, 0.46), color(dark-disabled));
+    cursor: default;
+  }
 }
 
 .checkbox-custom + .checkbox-custom-label:before {
-    content: '';
-    background: #fff;
-    border: 3px solid $panel-dark;
-    display: inline-block;
-    vertical-align: middle;
-    width: 10px;
-    height: 10px;
-    padding: 2px;
-    margin-right: 5px;
-    text-align: center;
+  content: '';
+  background: #fff;
+  border: 3px solid color(panel-dark);
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  padding: 2px;
+  margin-right: 5px;
+  text-align: center;
 }
 
 .checkbox-custom:checked + .checkbox-custom-label:before {
-    background: $cell-highlight-color;
-    box-shadow: inset 0px 0px 0px 1px $cell-highlight-color;
+  @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+  @include adaptive-color("box-shadow", inset 0px 0px 0px 1px color(cell-highlight-color), inset 0px 0px 0px 1px color(cell-highlight-dark-color));
 }
-.checkbox-custom:checked:disabled + .checkbox-custom-label:before {
-    background: desaturate($cell-highlight-color, 100%);
-    box-shadow: inset 0px 0px 0px 1px desaturate($cell-highlight-color, 100%);
 
+.checkbox-custom:checked:disabled + .checkbox-custom-label:before {
+  @include adaptive-color("background", desaturate(color(cell-highlight-color), 100%), desaturate(color(cell-highlight-dark-color), 100%));
+  @include adaptive-color("box-shadow", inset 0px 0px 0px 1px desaturate(color(cell-highlight-color), 100%), inset 0px 0px 0px 1px desaturate(color(cell-highlight-dark-color), 100%));
 }
 
 //////////////////////
 /// Dialog Styling ///
 //////////////////////
 .dialog-custom .mat-dialog-container {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .mat-button-focus-overlay {
-    background-color: transparent!important;
+  background-color: transparent !important;
+}
+
+.mat-drawer-side.mat-drawer-end {
+  @include adaptive-color-dark-only("border-left", none);
 }
 
 .mat-drawer-inner-container {
-    background-color: $panel-light;
+  @include adaptive-color("background-color", color(panel-light), color(dark-2));
+
+  .mat-form-field-outline div {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+    @include adaptive-color-dark-only("color", color(dark-4));
+  }
+
+  .mat-form-field-label {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  .mat-card {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  .mat-expansion-panel .mat-expansion-panel-header, .mat-expansion-panel-body {
+    @include adaptive-color-dark-only("background-color", color(dark-3));
+  }
+
+  .mat-expansion-panel-header-title {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  .mat-divider {
+    @include adaptive-color-dark-only("border-top-color", color(dark-4));
+  }
+
+  .mat-button-base {
+    @include adaptive-color-dark-only("background-color", color(dark-4));
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
 }
 
 .mat-dialog-container {
-    .top-button {
-        margin-top: 25px;
-        text-align: right;
-    }
-    .close-button {
-        text-align: center;
-    }
+  .top-button {
+    margin-top: 25px;
+    text-align: right;
+  }
+
+  .close-button {
+    text-align: center;
+  }
 
 }
 
 .mat-dialog-container .content {
-    overflow-y: scroll;
-    max-height: 60vh;
-    font-size: 11pt;
+  overflow-y: scroll;
+  max-height: 60vh;
+  font-size: 11pt;
 
-    p, ul {
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-    }
+  p, ul {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+  }
 
-    code {
-        color: black;
-        padding: 1px 2px;
-        word-break: break-word;
-    }
+  code {
+    color: black;
+    padding: 1px 2px;
+    word-break: break-word;
+  }
 }
 
 .mat-dialog-container .markdown {
-    padding: 25px;
+  padding: 25px;
 }
 
 // patch popover style
 .popover {
-    //positioning because we didn't import bootstrap
-    position: absolute;
-    // add border radius
-    border-radius: 4px !important;
-    //don't force 20rem width, conform to content of popover
-    width: unset !important;
+  //positioning because we didn't import bootstrap
+  position: absolute;
+  // add border radius
+  border-radius: 4px !important;
+  //don't force 20rem width, conform to content of popover
+  width: unset !important;
 }

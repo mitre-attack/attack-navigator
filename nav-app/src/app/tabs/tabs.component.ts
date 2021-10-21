@@ -1,5 +1,5 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
-import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
@@ -24,6 +24,8 @@ declare var math: any; //use mathjs
     encapsulation: ViewEncapsulation.None
 })
 export class TabsComponent implements AfterContentInit, AfterViewInit {
+    @Input() userTheme: string;
+    @Output() onUserThemeChange = new EventEmitter<string>();
     //  _____ _   ___   ___ _____ _   _ ___ ___
     // |_   _/_\ | _ ) / __|_   _| | | | __| __|
     //   | |/ _ \| _ \ \__ \ | | | |_| | _|| _|
@@ -73,7 +75,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         if (is.safari('<=13')) {
             this.safariDialogRef = this.dialog.open(this.safariWarning, {
                 width: '350px',
-                disableClose: true
+                disableClose: true,
+                panelClass: this.userTheme
             });
         }
     }
@@ -269,11 +272,16 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
     showHelpDropDown: boolean = false;
 
+
+    handleUserThemeChange(theme) {
+      this.onUserThemeChange.emit(theme);
+    }
+
     /**
      * open the help dialog
      */
     openDialog(dialogName: string) {
-        const settings = { maxWidth: "75ch" };
+        const settings = { maxWidth: "75ch", panelClass: this.userTheme };
         if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
         else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
     }
@@ -285,7 +293,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     openSVGDialog(vm: ViewModel) {
         this.dialog.open(ExporterComponent,
             { data: {vm: vm},
-              panelClass: 'dialog-custom'
+              panelClass: ['dialog-custom', this.userTheme]
             });
     }
 
@@ -489,7 +497,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         currVersion: currVersion
                     },
                     disableClose: true,
-                    width: "25%"
+                    width: "25%",
+                    panelClass: this.userTheme
                 });
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {

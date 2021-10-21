@@ -1,6 +1,7 @@
 import { Input, Directive } from '@angular/core';
 import { Technique, Tactic, DataService } from '../data.service';
 import { ViewModel } from '../viewmodels.service';
+import { getCookie, hasCookie } from "../cookies";
 
 declare var tinycolor: any; //use tinycolor2
 
@@ -11,9 +12,12 @@ export abstract class Cell {
     @Input() tactic: Tactic;
 
     public showContextmenu: boolean = false;
+    isDarkTheme: boolean;
 
     constructor(public dataService: DataService) {
         this.dataService = dataService;
+        if (hasCookie("is_user_theme_dark")) this.isDarkTheme = getCookie("is_user_theme_dark") === "true";
+        else this.isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
 
     public get isHighlighted(): boolean {
@@ -72,15 +76,15 @@ export abstract class Cell {
      * @return               black, white, or gray, depending on technique and column state
      */
     public getTechniqueTextColor() {
-        if (!this.tactic) return "black";
+        if (!this.tactic) return this.isDarkTheme ? "white" : "black";
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
-        if (!tvm.enabled) return "#aaaaaa";
+        if (!tvm.enabled) return "rgb(255 255 255 / 25%)";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
         if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
-        else return "black"
+        else return this.isDarkTheme ? "white" : "black";
     }
 
     /**
