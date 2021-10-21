@@ -7,9 +7,8 @@
     max-width: 300px;
     text-align: left;
     white-space: normal;
-    
+
     border-radius: 3px;
-    background: rgba(80, 80, 80, $opacity);
     font-size: 8pt;
     color: white;
     &.bottom.right {
@@ -20,7 +19,7 @@
          * ------------------
          */
         transform: translateX(10px);
-        &:before { 
+        &:before {
             left: -9.5px;
             transform: rotate(90deg);
         }
@@ -34,7 +33,7 @@
          */
         transform: translateX(-10px);
         right: 100%;
-        &:before { 
+        &:before {
             right: -9px;
             transform: rotate(-90deg);
         }
