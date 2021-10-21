@@ -39,7 +39,6 @@
     "is_js": "^0.9.0",
     "load-json-file": "^5.3.0",
     "mathjs": "^5.10.3",
-    "moment": "^2.29.1",
     "ngx-color-picker": "^10.1.0",
     "ngx-drag-drop": "^2.0.0",
     "ngx-markdown": "^10.1.1",

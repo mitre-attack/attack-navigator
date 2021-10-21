@@ -211,7 +211,7 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v9";
+            let currVersion = "ATT&CK v10";
             let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
             let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
@@ -517,7 +517,7 @@ export class Technique extends BaseStix {
             this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         }
 
-        this.subtechniques = subtechniques;
+        this.subtechniques = subtechniques.filter(sub => !(sub.deprecated || sub.revoked));
         for (let subtechnique of this.subtechniques) {
             subtechnique.parent = this;
         }
