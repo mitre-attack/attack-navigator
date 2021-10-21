@@ -1,7 +1,9 @@
-# v4.5 - Changes staged on Develop
+# v4.5.0 - 21 October 2021
 
 ## New Features
 - The ATT&CK Navigator now has a dark theme. See issue [#71](https://github.com/mitre-attack/attack-navigator/issues/71).
+- Added support for ATT&CK version 10
+    - Data sources are now listed as full objects in the search and multiselect interface.
 
 # v4.4.1 - 16 September 2021
 
