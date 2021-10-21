@@ -3,7 +3,7 @@
 ## New Features
 - The ATT&CK Navigator now has a dark theme. See issue [#71](https://github.com/mitre-attack/attack-navigator/issues/71).
 - Added support for ATT&CK version 10
-    - Data sources are now listed as full objects in the search and multiselect interface.
+    - Added data sources panel to the search and multiselect interface. See issue [#341](https://github.com/mitre-attack/attack-navigator/issues/341).
 
 # v4.4.1 - 16 September 2021
 
@@ -20,7 +20,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 
 ## Improvements
 - Various improvement to UI aesthetics and usability. See issue [#340](https://github.com/mitre-attack/attack-navigator/issues/340). 
-    - Reduced unnecessary whitespace to to maximize screen real-estate for viewing the matrix.
+    - Reduced unnecessary whitespace to maximize screen real-estate for viewing the matrix.
     - Layer tabs now hide themselves when the user scrolls to maximize screen real-estate for viewing the matrix.
     - Improved favicon for standardization with other ATT&CK tools.
 - Techniques are now shown when disabled (and hide-disabled is enabled) as long as any of any of their sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)

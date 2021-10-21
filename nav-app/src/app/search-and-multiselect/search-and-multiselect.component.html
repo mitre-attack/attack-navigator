@@ -67,7 +67,7 @@
                 </ng-template>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngFor="let stixType of stixTypes" class="stixType" [expanded]="stixType.isExpanded" (click)="userClickedExpand = true">
+            <mat-expansion-panel *ngFor="let stixType of stixTypes; let i = index" class="stixType" [expanded]="expandedPanels[i+1]" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         <h4>
@@ -101,6 +101,45 @@
                         </table>
                         <ng-template #noResults>
                             <div class="no-results">no results for {{stixType.label}}</div>
+                        </ng-template>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="expandedPanels[4]" (click)="userClickedExpand = true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h4>
+                            Data Sources ({{stixDataComponentLabels.length}})
+                        </h4>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <ng-template matExpansionPanelContent>
+                    <div class="allresults-buttons">
+                        <button class="button" (click)="selectAll(stixDataComponentsResults, true)">select all</button>
+                        <button class="button" (click)="deselectAll(stixDataComponentsResults, true)">deselect all</button>
+                    </div>
+                    <div class="results objects">
+                        <table *ngIf="stixDataComponentLabels.length > 0; else noResults">
+                            <tr  *ngFor="let label of stixDataComponentLabels">
+                                <td (mouseenter)="mouseEnterAll(stixDataComponents.get(label).objects)"
+                                    (mouseleave)="mouseLeave()">
+                                    {{ label }}
+                                </td>
+                                <td><a href="{{stixDataComponents.get(label).url}}" target="_blank">view</a></td>
+                                <td>
+                                    <button class="button" (click)="selectAll(stixDataComponents.get(label).objects, true)">select</button>
+                                </td>
+                                <td>
+                                    <button class="button" (click)="deselectAll(stixDataComponents.get(label).objects, true)">deselect</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <ng-template #noResults>
+                            <div class="no-results">no results for data sources</div>
                         </ng-template>
                     </div>
                 </ng-template>

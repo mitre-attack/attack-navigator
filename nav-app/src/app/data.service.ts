@@ -53,14 +53,21 @@ export class DataService {
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
-                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; 
-                
+                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
                 else continue;
 
                 // parse according to type
                 switch(sdo.type) {
+                    case "x-mitre-data-component":
+                        // console.log('DATA COMPONENT', sdo);
+                        domain.dataComponents.push(new DataComponent(sdo, this));
+                        break;
+                    case "x-mitre-data-source":
+                        domain.dataSources.set(sdo.id, {name: sdo.name, external_references: sdo.external_references});
+                        break;
                     case "intrusion-set":
                         domain.groups.push(new Group(sdo, this));
                         break;
@@ -109,6 +116,13 @@ export class DataService {
                         } else if (sdo.relationship_type == 'revoked-by') {
                             // record stix object: stix object relationship
                             domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
+                        } else if (sdo.relationship_type === 'detects') {
+                            if (domain.relationships["component_rel"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["component_rel"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
+                            }
                         }
                         break;
                     case "attack-pattern":
@@ -573,6 +587,57 @@ export class VersionChangelog {
 }
 
 /**
+ * Object representing a Data Component in the ATT&CK catalogue
+ */
+export class DataComponent {
+  public readonly description: string;
+  public readonly url: string;
+  public readonly id: string;
+  public readonly name: string;
+  public readonly dataSource: string;
+  protected readonly dataService: DataService;
+  /**
+   * get techniques related to this data component
+   * @returns {string[]} technique IDs used by this data component
+   */
+  public techniques(domainVersionID): string[] {
+    const techniques = [];
+    const domain = this.dataService.getDomain(domainVersionID);
+    let rels = domain.relationships.component_rel;
+    if (rels.has(this.id)) {
+      rels.get(this.id).forEach((targetID) => {
+        const t = domain.techniques.find((t) => t.id === targetID);
+        if (t) techniques.push(t);
+      })
+    }
+    return techniques;
+  }
+  /**
+   * get data source related to this data component
+   * @returns {name: string, url: string} name, and first url of data source referenced by this data component
+   */
+  public source(domainVersionID) {
+    const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
+    if (dataSources.has(this.dataSource)) {
+      const source = dataSources.get(this.dataSource);
+      let url = "";
+      if (source.external_references && source.external_references[0] && source.external_references[0].url)
+        url = source.external_references[0].url;
+      return {name: source.name, url: url};
+    }
+    else return {name: '', url: ''};
+  }
+
+  constructor(stixSDO: any, dataService: DataService) {
+    this.description = stixSDO.description
+    this.id = stixSDO.id;
+    this.name = stixSDO.name;
+    this.dataService = dataService;
+    this.dataSource = stixSDO.x_mitre_data_source_ref;
+  }
+}
+
+/**
  * Object representing a Software (tool, malware) in the ATT&CK catalogue
  */
 export class Software extends BaseStix {
@@ -604,6 +669,7 @@ export class Software extends BaseStix {
         return this.used(domainVersionID);
     }
 }
+
 /**
  * Object representing a Group (intrusion-set) in the ATT&CK catalogue
  */
@@ -693,6 +759,8 @@ export class Domain {
     public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
+    public dataComponents: DataComponent[] = [];
+    public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
     public notes: Note[] = [];
@@ -700,6 +768,9 @@ export class Domain {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
         subtechniques_of: new Map<string, string[]>(),
+        // data component related to technique
+        // ID of data component to [] of technique IDs
+        component_rel: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         group_uses: new Map<string, string[]>(),
