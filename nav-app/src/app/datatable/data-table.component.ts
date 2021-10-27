@@ -1,13 +1,13 @@
 import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import {DataService, Technique, Matrix, Domain} from '../data.service';
-import {ConfigService} from '../config.service';
+import { DataService, Technique, Matrix, Domain } from '../data.service';
+import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
-import {FormControl} from '@angular/forms';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatMenuTrigger} from '@angular/material/menu';
+import { FormControl } from '@angular/forms';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuTrigger } from '@angular/material/menu';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
 
@@ -37,7 +37,11 @@ export class DataTableComponent implements AfterViewInit {
 
     currentDropdown: string = ""; //current dropdown menu
 
-    
+    // Show mitigation controls for the supported domains
+    mitigationEnabledDomain() {
+        return (this.viewModel.domainID === "enterprise-attack-v9" || this.viewModel.domainID === "nist-attack-v9")
+    }
+
     showMitigations() {
         if (!this.viewModel.showScoredMitigations) {
 
@@ -47,21 +51,21 @@ export class DataTableComponent implements AfterViewInit {
             this.viewModel.showScoredMitigations = false;
         }
     }
-    
+
     //////////////////////////////////////////////////////////
     // Stringifies the current view model into a json string//
     // stores the string as a blob                          //
     // and then saves the blob as a json file               //
     //////////////////////////////////////////////////////////
 
-    saveLayerLocally(){
+    saveLayerLocally() {
         var json = this.viewModel.serialize(); //JSON.stringify(this.viewModel.serialize(), null, "\t");
-        var blob = new Blob([json], {type: "text/json"});
+        var blob = new Blob([json], { type: "text/json" });
         let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
         // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
         this.saveBlob(blob, filename);
     }
-    
+
     saveMitigationsLocally() {
         let mitigations: { [k: string]: any } = { techniques: [] };
 
@@ -98,7 +102,7 @@ export class DataTableComponent implements AfterViewInit {
 
     }
 
-    saveBlob(blob, filename){
+    saveBlob(blob, filename) {
         if (is.ie()) { //internet explorer
             window.navigator.msSaveBlob(blob, filename)
         } else {
@@ -120,10 +124,10 @@ export class DataTableComponent implements AfterViewInit {
         var workbook = new Excel.Workbook();
         let domain = this.dataService.getDomain(this.viewModel.domainID);
         for (let matrix of domain.matrices) {
-            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");  
-                      
+            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
+
             // create tactic columns
-            let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+            let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return { header: this.getDisplayName(tactic), key: tactic.name } });
             worksheet.columns = columns;
 
             // create cells
@@ -138,16 +142,16 @@ export class DataTableComponent implements AfterViewInit {
                 for (let technique of techniques) {
                     let techniqueRow = techniqueCells.indexOf(technique.name);
                     let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-                    if(tvm.showSubtechniques) {
+                    if (tvm.showSubtechniques) {
                         // retrieve subtechniques
                         let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
-                            .map( sub => { return sub.name });
+                            .map(sub => { return sub.name });
                         subtechniqueList = subtechniqueList.concat(technique.subtechniques);
 
                         // format technique cells for subtechniques
                         let excelIndex = 0;
                         for (let subtechnique of subtechniques) {
-                            if(excelIndex !== 0) {
+                            if (excelIndex !== 0) {
                                 techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
                             }
                             subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
@@ -160,10 +164,10 @@ export class DataTableComponent implements AfterViewInit {
                     }
                 }
 
-                if(subtechniqueCells.length > 0) {
+                if (subtechniqueCells.length > 0) {
                     // add subtechniques column
                     let id = columns.findIndex(col => col.key == tactic.name);
-                    columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
+                    columns.splice(id + 1, 0, { header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques" });
                     worksheet.columns = columns;
 
                     // merge subtechniques header
@@ -174,10 +178,11 @@ export class DataTableComponent implements AfterViewInit {
                     // style subtechnique cells
                     const seen = [];
                     subtechniqueCol.eachCell(cell => {
-                        if(cell.row > 1) {
-                            if(cell.value && cell.value !== undefined) {
+                        if (cell.row > 1) {
+                            if (cell.value && cell.value !== undefined) {
                                 let subtechnique = subtechniqueList.find(s => {
-                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
+                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID)
+                                });
                                 seen.push(subtechnique.attackID);
                                 let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
                                 this.styleCells(cell, subtechnique, svm);
@@ -190,9 +195,10 @@ export class DataTableComponent implements AfterViewInit {
                 // style technique cells
                 tacticCol.eachCell(cell => {
                     if (cell.row > 1) {
-                        if(cell.value && cell.value !== undefined) {
-                            let technique = techniques.find( t => {
-                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
+                        if (cell.value && cell.value !== undefined) {
+                            let technique = techniques.find(t => {
+                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value
+                            });
                             let tvm = this.viewModel.getTechniqueVM(technique, tactic);
                             this.styleCells(cell, technique, tvm);
                         }
@@ -211,18 +217,18 @@ export class DataTableComponent implements AfterViewInit {
                 }
             });
 
-            worksheet.getRow(1).alignment = {horizontal: 'center'};
-            worksheet.getRow(1).border = {bottom: {style: 'thin'}};
-            worksheet.getRow(1).font = {bold: true};
+            worksheet.getRow(1).alignment = { horizontal: 'center' };
+            worksheet.getRow(1).border = { bottom: { style: 'thin' } };
+            worksheet.getRow(1).font = { bold: true };
             if (this.viewModel.showTacticRowBackground) {
-                worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
-                worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+                worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { 'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1) } }
+                worksheet.getRow(1).font = { bold: true, color: { "argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex() } };
             }
         }
 
         // save file
         workbook.xlsx.writeBuffer().then(data => {
-            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            const blob = new Blob([data], { type: "application/octet-stream" });
             const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
             this.saveBlob(blob, filename);
         });
@@ -250,40 +256,40 @@ export class DataTableComponent implements AfterViewInit {
         cell.value = this.getDisplayName(technique);
 
         // cell format
-        cell.alignment = {vertical: 'top', horizontal: 'left'};
-        if(tvm.enabled) {
+        cell.alignment = { vertical: 'top', horizontal: 'left' };
+        if (tvm.enabled) {
             if (tvm.color) { //manually assigned
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}};
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.color.substring(1) } };
+                cell.font = { color: { 'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex() } };
             }
             else if (this.viewModel.layout._showAggregateScores && tvm.aggregateScoreColor) {
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.aggregateScoreColor.toHex()}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]).toHex()}};
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.aggregateScoreColor.toHex() } };
+                cell.font = { color: { 'argb': 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]).toHex() } };
             }
             else if (tvm.score) { //score assigned
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}};
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.scoreColor.toHex() } };
+                cell.font = { color: { 'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex() } };
             }
             if (tvm.comment) { //comment present on technique
                 cell.note = tvm.comment;
             }
         } else { //disabled
-            cell.font = {color: {'argb': 'FFBCBCBC'}}
+            cell.font = { color: { 'argb': 'FFBCBCBC' } }
         }
 
         // subtechniques border
         if (tvm.showSubtechniques) {
-            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, left: {style: 'thin'}}
+            cell.border = { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' } }
         } else if (technique.isSubtechnique) {
-            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, right: {style: 'thin'}}
+            cell.border = { top: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }
         }
     }
 
-    constructor(public dataService: DataService, 
-                private tabs: TabsComponent, 
-                private sanitizer: DomSanitizer, 
-                private viewModelsService: ViewModelsService, 
-                public configService: ConfigService) { }
+    constructor(public dataService: DataService,
+        private tabs: TabsComponent,
+        private sanitizer: DomSanitizer,
+        private viewModelsService: ViewModelsService,
+        public configService: ConfigService) { }
 
     /**
      * Angular lifecycle hook
@@ -293,7 +299,7 @@ export class DataTableComponent implements AfterViewInit {
     }
 
     // open custom url in a new tab
-    openCustomURL(event, technique, url){
+    openCustomURL(event, technique, url) {
         // var formattedTechniqueName = this.contextMenuSelectedTechnique.name.replace(/ /g, "_");
 
         // var formattedURL = url.replace(/~Technique_ID~/g, this.contextMenuSelectedTechnique.technique_id);
@@ -318,7 +324,7 @@ export class DataTableComponent implements AfterViewInit {
      * @param  addToSelection add to the technique selection (shift key) or replace selection?
      */
     onTechniqueSelect(technique, addToSelection, eventX, eventY): void {
-        
+
         if (!this.viewModel.isCurrentlyEditing()) {
             if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
@@ -356,8 +362,9 @@ export class DataTableComponent implements AfterViewInit {
      */
     collapseSubtechniques(): void {
         if (this.viewModel.layout.layout == "mini") return; //control disabled in mini layout
-        this.viewModel.techniqueVMs.forEach(function(tvm, key) {
-            tvm.showSubtechniques = false; });
+        this.viewModel.techniqueVMs.forEach(function (tvm, key) {
+            tvm.showSubtechniques = false;
+        });
     }
 
     /**
@@ -374,7 +381,7 @@ export class DataTableComponent implements AfterViewInit {
     setSelectedState(): void {
         let currentState = this.viewModel.getEditingCommonValue('enabled')
         if (currentState === '') this.viewModel.editSelectedTechniques('enabled', false)
-        else                     this.viewModel.editSelectedTechniques('enabled', !currentState)
+        else this.viewModel.editSelectedTechniques('enabled', !currentState)
     }
 
     //sanitize the given css so that it can be displayed without error
