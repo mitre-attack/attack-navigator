@@ -8,6 +8,7 @@ declare var tinycolor: any; //use tinycolor2
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
+import { getCookie, hasCookie } from "./cookies";
 
 @Injectable()
 export class ViewModelsService {
@@ -203,6 +204,8 @@ export class ViewModelsService {
  * Gradient class used by viewmodels
  */
 export class Gradient {
+
+    isDarkTheme: boolean;
     //official colors used in gradients:
 
     colors: Gcolor[] = [new Gcolor("red"), new Gcolor("green")]; //current colors
@@ -268,8 +271,8 @@ export class Gradient {
         greenred: [new Gcolor("#8ec843"), new Gcolor("#ffe766"), new Gcolor("#ff6666")],
         bluered: [new Gcolor("#66b1ff"), new Gcolor("#ff66f4"), new Gcolor("#ff6666")],
         redblue: [new Gcolor("#ff6666"), new Gcolor("#ff66f4"), new Gcolor("#66b1ff")],
-        transparentblue: [new Gcolor("#ffffff00"), new Gcolor("#66b1ff")],
-        transparentred: [new Gcolor("#ffffff00"), new Gcolor("#ff6666")]
+        transparentblue: [new Gcolor("#ffffff"), new Gcolor("#66b1ff")],
+        transparentred: [new Gcolor("#ffffff"), new Gcolor("#ff6666")]
     }
 
     /**
@@ -286,7 +289,16 @@ export class Gradient {
         return tinygradient(colorarray).css('linear', 'to right');
     }
 
-    constructor() { this.setGradientPreset('redgreen'); }
+    constructor() {
+      this.setGradientPreset('redgreen');
+      if (hasCookie("is_user_theme_dark")) this.isDarkTheme = getCookie("is_user_theme_dark") === "true";
+      else this.isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+      if (this.isDarkTheme) {
+        this.presets.transparentblue = [new Gcolor("#2e2e3f"), new Gcolor("#66b1ff")];
+        this.presets.transparentred = [new Gcolor("#2e2e3f"), new Gcolor("#ff6666")];
+      }
+    }
 
     /**
      * set this gradient to use the preset
