@@ -151,8 +151,8 @@ export class ViewModelsService {
                 // set up gradient according to result range
                 if (score_min != Infinity) result.gradient.minValue = score_min;
                 if (score_max != -Infinity) result.gradient.maxValue = score_max;
-                // if it's a binary range, set to whiteblue gradient
-                if (score_min == 0 && score_max == 1) result.gradient.setGradientPreset("whiteblue");
+                // if it's a binary range, set to transparentblue gradient
+                if (score_min == 0 && score_max == 1) result.gradient.setGradientPreset("transparentblue");
             }
         }
 
@@ -268,8 +268,8 @@ export class Gradient {
         greenred: [new Gcolor("#8ec843"), new Gcolor("#ffe766"), new Gcolor("#ff6666")],
         bluered: [new Gcolor("#66b1ff"), new Gcolor("#ff66f4"), new Gcolor("#ff6666")],
         redblue: [new Gcolor("#ff6666"), new Gcolor("#ff66f4"), new Gcolor("#66b1ff")],
-        whiteblue: [new Gcolor("#ffffff"), new Gcolor("#66b1ff")],
-        whitered: [new Gcolor("#ffffff"), new Gcolor("#ff6666")]
+        transparentblue: [new Gcolor("#ffffff00"), new Gcolor("#66b1ff")],
+        transparentred: [new Gcolor("#ffffff00"), new Gcolor("#ff6666")]
     }
 
     /**
@@ -394,7 +394,7 @@ export class ViewModel {
 
     compareTo?: ViewModel;
     versionChangelog?: VersionChangelog;
-    
+
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
@@ -733,7 +733,7 @@ export class ViewModel {
     }
 
     /**
-     * Copies all annotations from unchanged techniques and techniques 
+     * Copies all annotations from unchanged techniques and techniques
      * which have had minor changes
      */
     public initCopyAnnotations(): void {
@@ -759,7 +759,7 @@ export class ViewModel {
     }
 
     /**
-     * Copy annotations from one technique to another under the given tactic. 
+     * Copy annotations from one technique to another under the given tactic.
      * The previous technique will be disabled
      * @param fromTechnique the technique to copy annotations from
      * @param toTechnique the technique to copy annotations to
@@ -1313,7 +1313,7 @@ export class ViewModel {
                                 // match technique
                                 // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
                                 if (technique.deprecated || technique.revoked) break;
-                                
+
                                 for (let tactic of technique.tactics) {
                                     let tvm = new TechniqueVM("");
                                     tvm.deSerialize(JSON.stringify(obj_technique),
