@@ -1,3 +1,7 @@
+# v4.5.2 - changes staged on develop
+## Fixes
+- Fixed an issue when loading multiple default layers (specified in the config or a layerURL) which led to only the first layer being loaded. See issue [#361](https://github.com/mitre-attack/attack-navigator/issues/361).
+
 # v4.5.1 - 21 October 2021
 
 ## Fixes
