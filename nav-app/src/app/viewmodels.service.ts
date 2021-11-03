@@ -1169,7 +1169,7 @@ export class ViewModel {
             "layer": globals.layer_version
         }
 
-        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]/g));
+        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]+/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1199,7 +1199,7 @@ export class ViewModel {
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
                 if (typeof(obj.versions.attack) === "string") {
-                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]/g)[0];
+                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]+/g)[0];
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
