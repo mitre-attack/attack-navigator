@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { ChangelogComponent } from "../changelog/changelog.component";
+import { rejects } from 'assert';
 
 declare var math: any; //use mathjs
 
@@ -104,10 +105,11 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             } else if (defaultLayers["enabled"]) {
                 let first = true;
                 let self = this;
-
                     for (let url of defaultLayers["urls"]) {
+                        console.log("loading", url, first)
                         await self.loadLayerFromURL(url, first);
                         first = false;
+                        console.log("done")
                     }
             }
     }
@@ -518,60 +520,67 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return dataPromise;
     }
 
-    layerUpgrade(oldViewModel: ViewModel, string): void {
-        this.versionUpgradeDialog(oldViewModel).then( (versions) => {
-            if (versions) { // user upgraded to latest version
-                // create and open the latest version
-                let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                newViewModel.name = oldViewModel.name;
-                newViewModel.domainVersionID = versions.newID; // update domainVersionID to new ID
-                newViewModel.version = this.dataService.getCurrentVersion(); // update version to new ID
-                newViewModel.loadVMData();
-                newViewModel.compareTo = oldViewModel;
-                this.openTab("new layer", newViewModel, true, true, true, true);
-                newViewModel.sidebarOpened = true;
-                newViewModel.sidebarContentType = 'layerUpgrade'
-                newViewModel.selectTechniquesAcrossTactics = false;
-
-                // load layer version & latest ATT&CK version
-                let loads: any = {};
-                if (!this.dataService.getDomain(versions.oldID).dataLoaded) loads.old = this.dataService.loadDomainData(versions.oldID, true);
-                if (!this.dataService.getDomain(versions.newID).dataLoaded) loads.new = this.dataService.loadDomainData(versions.newID, true);
-                if (Object.keys(loads).length) {
-                    let dataSubscription = forkJoin(loads).subscribe({
-                        next: () => {
-                            newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
-                            // load vm for uploaded layer
-                            oldViewModel.deSerialize(string);
-                            oldViewModel.loadVMData();
-                            newViewModel.initCopyAnnotations();
-                        },
-                        complete: () => { dataSubscription.unsubscribe(); }
-                    });
-                } else {
-                    newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
-                    // load vm for uploaded layer
-                    oldViewModel.deSerialize(string);
-                    oldViewModel.loadVMData();
-                    newViewModel.initCopyAnnotations();
-                }
-            } else {
-                this.openTab("new layer", oldViewModel, true, true, true, true);
-                if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
-                    this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+    layerUpgrade(oldViewModel: ViewModel, string, replace): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.versionUpgradeDialog(oldViewModel).then( (versions) => {
+                if (versions) { // user upgraded to latest version
+                    // create and open the latest version
+                    let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                    newViewModel.name = oldViewModel.name;
+                    newViewModel.domainVersionID = versions.newID; // update domainVersionID to new ID
+                    newViewModel.version = this.dataService.getCurrentVersion(); // update version to new ID
+                    newViewModel.loadVMData();
+                    newViewModel.compareTo = oldViewModel;
+                    this.openTab("new layer", newViewModel, true, replace, true, true);
+                    newViewModel.sidebarOpened = true;
+                    newViewModel.sidebarContentType = 'layerUpgrade'
+                    newViewModel.selectTechniquesAcrossTactics = false;
+    
+                    // load layer version & latest ATT&CK version
+                    let loads: any = {};
+                    if (!this.dataService.getDomain(versions.oldID).dataLoaded) loads.old = this.dataService.loadDomainData(versions.oldID, true);
+                    if (!this.dataService.getDomain(versions.newID).dataLoaded) loads.new = this.dataService.loadDomainData(versions.newID, true);
+                    if (Object.keys(loads).length) {
+                        let dataSubscription = forkJoin(loads).subscribe({
+                            next: () => {
+                                newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
+                                // load vm for uploaded layer
+                                oldViewModel.deSerialize(string);
+                                oldViewModel.loadVMData();
+                                newViewModel.initCopyAnnotations();
+                                resolve(null);
+                            },
+                            complete: () => { dataSubscription.unsubscribe(); }
+                        });
+                    } else {
+                        newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
+                        // load vm for uploaded layer
                         oldViewModel.deSerialize(string);
                         oldViewModel.loadVMData();
-                    });
+                        newViewModel.initCopyAnnotations();
+                        resolve(null);
+                    }
                 } else {
-                    oldViewModel.deSerialize(string);
-                    oldViewModel.loadVMData();
+                    this.openTab("new layer", oldViewModel, true, replace, true, true);
+                    if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
+                        this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                            oldViewModel.deSerialize(string);
+                            oldViewModel.loadVMData();
+                            resolve(null);
+                        });
+                    } else {
+                        oldViewModel.deSerialize(string);
+                        oldViewModel.loadVMData();
+                        resolve(null);
+                    }
                 }
-            }
+            })
+            .catch( (err) => {
+                console.error(err.message);
+                alert("ERROR parsing file, check the javascript console for more information.");
+                resolve(null);
+            });
         })
-        .catch( (err) => {
-            console.error(err.message);
-            alert("ERROR parsing file, check the javascript console for more information.");
-        });
     }
 
     /**
@@ -603,7 +612,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                     throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                 }
-                this.layerUpgrade(viewModel, string);
+                this.layerUpgrade(viewModel, string, true);
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
@@ -618,19 +627,20 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * attempt an HTTP GET to loadURL, and load the response (if it exists) as a layer.
      */
-    loadLayerFromURL(loadURL, replace): Promise<any> {
-        let layerPromise: Promise<any> = new Promise((resolve, reject) => {
+    async loadLayerFromURL(loadURL, replace): Promise<any> {
+        return new Promise(async(resolve, reject) => {
             // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
             let subscription = this.http.get(loadURL).subscribe({
-                next: (res) => {
+                next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     try {
                         viewModel.deSerializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
                         }
-                        this.layerUpgrade(viewModel, res);
+                        await this.layerUpgrade(viewModel, res, replace);
                         console.log("loaded layer from", loadURL);
+                        resolve(null); //continue
                     } catch(err) {
                         console.error(err)
                         this.viewModelsService.destroyViewModel(viewModel);
@@ -652,7 +662,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
             });
         });
-        return layerPromise;
     }
 
 
