@@ -28,6 +28,13 @@ h4 { margin: 12px 0; }
     &:hover { background-color: darken(color(panel-dark), 5%); }
 }
 
+.mat-step .mat-button-base {
+  @include adaptive-color-dark-only("background-color", rgba(0,0,0,0));
+  &.mat-button-disabled {
+    @include adaptive-color-dark-only("color", rgba(255,255,255,0.5));
+  }
+}
+
 .mat-step-header .mat-step-label {
   @include adaptive-color-dark-only("color", on-color(dark));
 }
