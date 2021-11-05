@@ -41,7 +41,7 @@ export class MappingsDialogButtonComponent {
         ])]
 })
 export class MappingsDialogComponent {
-    mappingsExporter = new MappingsExporter(null, null);
+    mappingsExporter = new MappingsExporter();
     controlFramework = new ControlFramework();
     selectedIdValue = '';
     nistItems = [];

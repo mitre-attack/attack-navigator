@@ -115,7 +115,7 @@ export class ExporterComponent implements OnInit {
     showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
     buildSVGDebounce = false;
-    buildSVG(self?, bypassDebounce=false): void {
+    buildSVG(self?: this, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
         console.log("settings changed")
@@ -177,7 +177,7 @@ export class ExporterComponent implements OnInit {
          * @param  divisions number of divisions
          * @return           number[] where each number corresponds to a division-center offset
          */
-        function getSpacing(distance, divisions) {
+        function getSpacing(distance: number, divisions: number) {
             distance = distance - 1; //1px padding for border
             let spacing = distance/(divisions*2);
             let res = []
@@ -201,7 +201,7 @@ export class ExporterComponent implements OnInit {
         * @param {boolean} center          if true, center the text in the node, else left-align
         * @param {number} cellWidth        total width of the cell to put the text in
         */
-        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
+        function insertLineBreaks(words: string | any[], node: { firstChild: any; removeChild: (arg0: any) => void; }, padding: number, xpos: number, ypos: number, totalDistance: number, spacingDistance: number, center: boolean, cellWidth: number) {
             let el = d3.select(node)
             // el.attr("y", y + (totalDistance - spacingDistance) / 2);
 
@@ -233,7 +233,7 @@ export class ExporterComponent implements OnInit {
          * @return {number}             the largest possible font size
          *                              not larger than 12
          */
-        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
+        function findSpace(words: string[], node: any, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
             let padding = 4; //the amount of padding on the left and right
             //break into multiple lines
             let breakDistance = Math.min(cellHeight, (maxFontSize + 3) * words.length)
@@ -271,7 +271,7 @@ export class ExporterComponent implements OnInit {
          * @param {number} maxFontSize            max font size, default is 12
          * @return {string}                       the size in pixels
          */
-        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
+        function optimalFontSize(text: string, node: any, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
             let words = text.split(" ");
             let bestSize = -Infinity; //beat this size
             let bestWordArrangement = [];
@@ -284,7 +284,7 @@ export class ExporterComponent implements OnInit {
              */
             function find_breaks(num_spaces:number, num_breaks=3) {
                 let breaks = new Set<string>();
-                function recurse(breakset_inherit, depth, num_breaks) {
+                function recurse(breakset_inherit: string | any[], depth: number, num_breaks: number) {
                     for (let i = 0; i < breakset_inherit.length; i++) {
                         let breakset = JSON.parse(JSON.stringify(breakset_inherit)); //deep copy
                         breakset[i] = 1; // insert break at this location
@@ -334,7 +334,7 @@ export class ExporterComponent implements OnInit {
 
         // add properties to the node to set the vertical alignment to center without using
         // dominant-baseline, which isn't widely supported
-        function centerValign(node, fontSize=null) {
+        function centerValign(node: { children: string | any[]; getAttribute: (arg0: string) => any; hasAttribute: (arg0: string) => any; }, fontSize=null) {
             if (node.children && node.children.length > 0) {
                 for (let child of node.children) centerValign(child, node.getAttribute("font-size"));
             } else {
@@ -361,7 +361,7 @@ export class ExporterComponent implements OnInit {
 
         let legend = {"title": "legend", "contents": []};
         if (self.hasScores && self.showGradient()) legend.contents.push({
-            "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
+            "label": "gradient", "data": function(group: { append: (arg0: string) => { (): any; new(): any; attr: { (arg0: string, arg1: string): { (): any; new(): any; call: { (arg0: any): void; new(): any; }; }; new(): any; }; }; }, sectionWidth: number, sectionHeight: any) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
                     let percent = i / (self.viewModel.gradient.colors.length - 1);
@@ -369,7 +369,7 @@ export class ExporterComponent implements OnInit {
                 }
                 let colorScale = d3.scaleLinear()
                     .domain(domain)
-                    .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
+                    .range(self.viewModel.gradient.colors.map(function (color: { color: any; }) { return color.color; }))
                 let nCells = domain.length * 2;
                 let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
                 group.append("g")
@@ -389,10 +389,10 @@ export class ExporterComponent implements OnInit {
             }
         });
         if (self.showLegend()) legend.contents.push({
-            "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
+            "label": "legend", "data": function(group: { append: (arg0: string) => { (): any; new(): any; attr: { (arg0: string, arg1: string): { (): any; new(): any; call: { (arg0: any): void; new(): any; }; }; new(): any; }; }; }, sectionWidth: number, sectionHeight: any) {
                 let colorScale = d3.scaleOrdinal()
-                    .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
-                    .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+                    .domain(self.viewModel.legendItems.map(function(item: { label: any; }) { return item.label; }))
+                    .range(self.viewModel.legendItems.map(function(item: { color: any; }) { return item.color; }))
                 group.append("g")
                     .attr("transform", "translate(0, 5)")
                     .call(d3.legendColor()
@@ -406,7 +406,7 @@ export class ExporterComponent implements OnInit {
             }
         })
 
-        function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
+        function descriptiveBox(group: { append: (arg0: string) => { (): any; new(): any; attr: { (arg0: string, arg1: string): any; new(): any; }; }; }, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
             let boxPadding = 5;
             let boxGroup = group.append("g")
                 .attr("transform", `translate(0,${boxPadding})`);
@@ -739,7 +739,7 @@ export class ExporterComponent implements OnInit {
      * @return          that length in pixels
      */
     convertToPx(quantity: number, unit: string): number {
-        let factor;
+        let factor: number;
 
         switch(unit) {
             case "in": {
@@ -788,11 +788,11 @@ export class ExporterComponent implements OnInit {
      * @param  cellheight stop appending wraps after this height
      * @param  self       reference to self this component because of call context
      */
-    wrap(text, width, cellheight, self): void {
+    wrap(text: { each: (arg0: () => void) => void; }, width: number, cellheight: any, self: any): void {
         text.each(function() {
             var text = d3.select(this),
             words = text.text().split(/\s+/).reverse(),
-            word,
+            word: any,
             line = [],
             lineHeight = 1.1, // ems
             y = text.attr("y"),
@@ -818,9 +818,9 @@ export class ExporterComponent implements OnInit {
      * @param  height [description]
      * @param  self   [description]
      */
-    recenter(text, height, self): void {
+    recenter(text: { each: (arg0: () => void) => void; selectAll: (arg0: string) => { (): any; new(): any; each: { (arg0: (d: any, i: any, els: any) => void): void; new(): any; }; }; }, height: any, self: { getSpacing: (arg0: any, arg1: any) => { (): any; new(): any;[x: string]: any; }; }): void {
         text.each(function() {
-            text.selectAll('tspan').each(function(d, i, els) {
+            text.selectAll('tspan').each(function(d: any, i: string | number, els: string | any[]) {
                 let numTSpan = els.length;
                 let location = self.getSpacing(height, numTSpan)[i]
 
@@ -832,20 +832,20 @@ export class ExporterComponent implements OnInit {
     }
 
     // Capitalizes the first letter of each word in a string
-    toCamelCase(str){
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    toCamelCase(str: string){
+        return str.replace(/\w\S*/g, function(txt: string){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
     //following two functions are only used for iterating over tableconfig options: remove when tableconfig options are hardcoded in html
-    getKeys(obj) { return Object.keys(obj) }
-    type(obj) { return typeof(obj) }
+    getKeys(obj: {}) { return Object.keys(obj) }
+    type(obj: any) { return typeof(obj) }
 
     /**
      * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
      * @param  dropdown the DOM node of the panel
      * @return          true if it would overflow
      */
-    checkalign(dropdown): boolean {
+    checkalign(dropdown: { parentNode: any; getBoundingClientRect: () => { (): any; new(): any; width: any; }; }): boolean {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
@@ -920,9 +920,9 @@ class RenderableTechnique {
     public readonly technique: Technique;
     public readonly tactic: Tactic;
     public readonly matrix: Matrix;
-    public readonly showSubtechniques;
+    public readonly showSubtechniques: boolean;
     private readonly viewModel: ViewModel;
-    constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques=false) {
+    constructor(yPosition: number, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques=false) {
         this.yPosition = yPosition;
         this.technique = technique;
         this.tactic = tactic;

@@ -77,7 +77,7 @@ export class DataTableComponent implements AfterViewInit {
 
                 for (let technique of techniques) {
                     if (technique) {
-                        let mitigationsForTechique = technique.getAllMitigations(this.viewModel.domainID);
+                        let mitigationsForTechique = technique.getAllMitigationsForDomain(this.viewModel.domainID);
                         let tvm = this.viewModel.getTechniqueVM(technique, tactic);
 
                         if (parseInt(tvm.score) > 0) {

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { VersionUpgradeComponent } from './version-upgrade.component';
 
@@ -8,7 +9,7 @@ describe('VersionUpgradeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ VersionUpgradeComponent ]
+      declarations: [ VersionUpgradeComponent, MatDialogRef ],
     })
     .compileComponents();
   }));

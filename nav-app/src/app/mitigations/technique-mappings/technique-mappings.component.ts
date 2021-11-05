@@ -31,13 +31,12 @@ export class TechniqueMappingsComponent implements OnInit {
         this.techniqueToCisCount = this.techniqueToCisCount.bind(this);
         this.sortBy = this.sortBy.bind(this);
 
-
         this.sortByDesc = this.sortByDesc.bind(this);
         this.sortScoredMitigationsBy = this.sortScoredMitigationsBy.bind(this);
         this.techniqueToCis = this.techniqueToCis.bind(this);
         this.techniqueToAsvsCount = this.techniqueToAsvsCount.bind(this);
         this.techniqueToNistCount = this.techniqueToNistCount.bind(this);
-        this.mappingsExporter = new MappingsExporter(dataService, viewModelsService);
+        this.mappingsExporter = new MappingsExporter();
     }
 
     sortScoredMitigationsBy(prop: string) {
@@ -56,27 +55,27 @@ export class TechniqueMappingsComponent implements OnInit {
         return this.viewModel.mitigationTechnique.sort((a, b) => b[prop] > a[prop] ? 1 : b[prop] === a[prop] ? 0 : -1);
     }
 
-    techniqueToNist(technique: Technique) {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.mapping.nist.map(x => x.subcategory.id);
+    techniqueToNist(technique: Technique): string[] {
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Nist.map(x => x.subcategory.id);
     }
 
     techniqueToNistCount(technique: Technique) {
         return this.techniqueToNist(technique)?.length;
     }
 
-    techniqueToCis(technique: Technique) {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.mapping.cis.map(x => x.cisSubControlId);
+    techniqueToCis(technique: Technique): string[] {
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Cis.map(x => x.cisSubControlId);
     }
 
-    techniqueToCisCount(technique: Technique) {
+    techniqueToCisCount(technique: Technique): number {
         return this.techniqueToCis(technique)?.length;
     }
 
-    techniqueToAsvs(technique: Technique) {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.mapping.asvs.map(x => x.itemId);
+    techniqueToAsvs(technique: Technique): string[] {
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Asvs.map(x => x.itemId);
     }
 
-    techniqueToAsvsCount(technique: Technique) {
+    techniqueToAsvsCount(technique: Technique): number {
         return this.techniqueToAsvs(technique)?.length;
     }
 

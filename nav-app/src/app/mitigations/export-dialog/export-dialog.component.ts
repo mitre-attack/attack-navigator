@@ -18,7 +18,7 @@ export class ExportDialogButtonComponent {
     constructor(public dialog: MatDialog, private dataService: DataService, private viewModelsService: ViewModelsService) { }
 
     openDialog(): void {
-        let mappingsExporter = new MappingsExporter(this.dataService, this.viewModelsService);
+        let mappingsExporter = new MappingsExporter();
 
         const dialogRef: MatDialogRef<ExportDialogComponent> = this.dialog.open(ExportDialogComponent, {
             height: "99%",

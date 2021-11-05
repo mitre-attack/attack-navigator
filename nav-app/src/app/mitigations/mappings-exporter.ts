@@ -3,10 +3,11 @@ import { DataService, Technique } from '../data.service';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
 import { ControlFramework } from '../control-framework/control-framework';
+import { TechniqueWithMappings } from "../control-framework/TechniqueWithMappings";
 
 export class MappingsExporter {
 
-  constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
+  constructor() {
 
   }
 
@@ -36,14 +37,14 @@ export class MappingsExporter {
     techniqueWorksheet.columns = ['Technique-Tactic', 'Technique-ID', 'Technique-Name', 'Technique-Description', 'Attack-Mitigations'].map(header => { return { header: header, key: header }; });
 
     techniquesToExport.forEach((x) => {
-      let tech = viewModel.controlFramework.getTechniqueMapping(x, viewModel.domainID);
+      let tech: TechniqueWithMappings = viewModel.controlFramework.getTechniqueMapping(x, viewModel.domainID);
 
       let newRow = techniqueWorksheet.addRow({
-        'Technique-Tactic': tech.technique.get_all_technique_tactic_ids(),
-        'Technique-ID': tech.technique.attackID,
-        'Technique-Name': tech.technique.name,
-        'Technique-Description': tech.technique.description,
-        'Attack-Mitigations': tech.mapping.mitigations ? tech.mapping.mitigations.map(x => x.attackID).join(', ') : ''
+        'Technique-Tactic': tech.Technique.get_all_technique_tactic_ids(),
+        'Technique-ID': tech.Technique.attackID,
+        'Technique-Name': tech.Technique.name,
+        'Technique-Description': tech.Technique.description,
+        'Attack-Mitigations': tech.Mappings.Mitigations ? tech.Mappings.Mitigations.map(x => x.attackID).join(', ') : ''
       });
 
       newRow.alignment = { horizontal: 'left', vertical: 'top' };

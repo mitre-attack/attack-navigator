@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { TooltipComponent } from './tooltip.component';
 
@@ -8,7 +9,7 @@ describe('TooltipComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TooltipComponent ]
+      declarations: [ TooltipComponent, HttpClientTestingModule ]
     })
     .compileComponents();
   }));

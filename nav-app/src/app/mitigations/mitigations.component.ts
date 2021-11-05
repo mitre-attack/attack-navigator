@@ -17,14 +17,14 @@ export class MitigationsComponent implements OnInit {
     expandedElement = {};
     mappingsExporter;
 
-    constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
+    constructor(private dataService: DataService) {
         this.sortBy = this.sortBy.bind(this);
         this.sortByDesc = this.sortByDesc.bind(this);
         this.techniquesSortBy = this.techniquesSortBy.bind(this);
         this.selectMitigation = this.selectMitigation.bind(this);
         this.sortScoredMitigationsBy = this.sortScoredMitigationsBy.bind(this);
         this.processSelectedMitigations = this.processSelectedMitigations.bind(this);
-        this.mappingsExporter = new MappingsExporter(dataService, viewModelsService);
+        this.mappingsExporter = new MappingsExporter();
     }
 
     domainIsNotNist() : Boolean{
@@ -74,11 +74,16 @@ export class MitigationsComponent implements OnInit {
         });
 
         let allTechniquesToSelect: Technique[] = [];
-        this.dataService.getDomain(this.viewModel.domainID).techniques.filter((techniqueToFilter) => setOfTechniqueIds.has(techniqueToFilter.id)).forEach((technique: Technique) => allTechniquesToSelect.push(technique));
+        this.getTechniquesByIds(setOfTechniqueIds).forEach((technique: Technique) => allTechniquesToSelect.push(technique));
 
         allTechniquesToSelect.forEach((techinique: Technique) => {
             this.viewModel.selectTechniqueAcrossTactics(techinique);
         });
+    }
+
+    private getTechniquesByIds(setOfTechniqueIds: Set<string>) {
+        return this.dataService.getDomain(this.viewModel.domainID).techniques
+            .filter((techniqueToFilter) => setOfTechniqueIds.has(techniqueToFilter.id));
     }
 
     IdAccessor(element: scoredMitigationVM): string { return element.mitigation.attackID }

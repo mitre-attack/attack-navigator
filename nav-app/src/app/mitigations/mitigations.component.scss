@@ -49,6 +49,7 @@ tr.mitigation-table-row.highlighted {
   width: 450px;
   display: flex;
   flex-direction: column;
+  margin:20px;
 }
 
 tr.mitigations-component-detail-row {
@@ -112,3 +113,7 @@ tr.mitigations-component-element-row:not(.mitigations-component-expanded-row):ac
   width: 98%;
   height: 4em;
 }
+
+// .mitigations-component-buttongroup {
+  
+// }

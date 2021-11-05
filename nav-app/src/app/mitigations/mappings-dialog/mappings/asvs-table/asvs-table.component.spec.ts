@@ -7,14 +7,12 @@ describe('AsvsTableComponent', () => {
   let component: AsvsTableComponent;
   let fixture: ComponentFixture<AsvsTableComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ AsvsTableComponent ]
     })
     .compileComponents();
-  }));
-
-  beforeEach(() => {
+    
     fixture = TestBed.createComponent(AsvsTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,7 +1,7 @@
 export let cisNist = [
   {
     "cisControlId": "1",
-    "cisSubControlId": 1.1,
+    "cisSubControlId": "1.1",
     "assetType": "Devices",
     "securityFunction": "Identify",
     "title": "Utilize an Active Discovery Tool",

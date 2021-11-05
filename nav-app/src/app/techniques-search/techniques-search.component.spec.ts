@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { TechniquesSearchComponent } from './techniques-search.component';
 
@@ -8,7 +9,8 @@ describe('TechniquesSearchComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TechniquesSearchComponent ]
+      declarations: [ TechniquesSearchComponent ],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   }));

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { MatrixMiniComponent } from './matrix-mini.component';
 
@@ -8,7 +9,8 @@ describe('MatrixMiniComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatrixMiniComponent ]
+      declarations: [ MatrixMiniComponent ],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   }));

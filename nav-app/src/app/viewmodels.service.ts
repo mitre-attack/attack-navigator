@@ -941,7 +941,7 @@ export class ViewModel {
     }
 
     private addToTopMitigations(technique: Technique, mitigationsByAttackId: Map<string, scoredMitigationVM>, score: number) {
-        let mitigationsForTechnique = technique.getAllMitigations(this.domainID);
+        let mitigationsForTechnique = technique.getAllMitigationsForDomain(this.domainID);
         if (mitigationsForTechnique && mitigationsForTechnique.length > 0) {
             for (let currentMitigation of mitigationsForTechnique) {
                 if (mitigationsByAttackId.has(currentMitigation.attackID.toString())) {

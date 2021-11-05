@@ -1,7 +1,7 @@
 <div class="mitigations-component">
 
-  <div>
-    <button *ngIf="techniquesSortBy('score').length > 0" mat-raised-button (click)='clickExport()'>Export</button>
+  <div class='mitigations-component-buttongroup'>
+    <button mat-raised-button *ngIf="techniquesSortBy('score').length > 0" (click)='clickExport()'>Export</button>
     <mappings-dialog-button [viewModel]="viewModel">Mappings</mappings-dialog-button>
   </div>
 
@@ -26,4 +26,5 @@
   <div *ngIf='domainIsNotNist()'>
     <technique-mappings [viewModel]="viewModel"></technique-mappings>
   </div>
+  
 </div>

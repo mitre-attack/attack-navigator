@@ -24,6 +24,7 @@ export class DataService {
         "mitre-enterprise": "enterprise-attack",
         "mitre-mobile": "mobile-attack"
     }
+    
     public domains: Domain[] = [];
     public versions: any[] = [];
 
@@ -41,7 +42,7 @@ export class DataService {
      * Parse the given stix bundle into the relevant data holders
      * @param {any[]} stixBundle: the STIX bundle to parse
      */
-    parseBundle(domain: Domain, stixBundles: any[]): void {
+    public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
@@ -185,7 +186,7 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(versions: []){
+    public setUpURLs(versions: []){
         versions.forEach( (version: any) => {
             let v: string = version["name"];
             this.versions.push(v);
@@ -264,7 +265,7 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
+    public loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainID);
             if (domain) {
@@ -422,7 +423,7 @@ export class Technique extends BaseStix {
      * Gets all of the mitigations associated with this technique
      * @param domain the domain ID of the search domain for mitigations
      */
-     public getAllMitigations(domainID: string): Mitigation[] {
+     public getAllMitigationsForDomain(domainID: string): Mitigation[] {
         let mitigatedByIds = this.dataService.getDomain(domainID).relationships.mitigatedBy.get(this.id);
         return mitigatedByIds ? this.dataService.getDomain(domainID).mitigations.filter(x => mitigatedByIds.includes(x.id)) : null;
     }

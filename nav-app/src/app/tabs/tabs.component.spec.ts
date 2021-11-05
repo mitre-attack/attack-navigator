@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { TabsComponent } from './tabs.component';
 
@@ -8,9 +9,11 @@ describe('TabsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabsComponent ]
+      declarations: [ TabsComponent ],
+      imports: [ MatDialog ]
     })
     .compileComponents();
+
   }));
 
   beforeEach(() => {
