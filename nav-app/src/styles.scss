@@ -310,7 +310,7 @@ body {
     @include adaptive-color-dark-only("background-color", color(dark-3));
   }
 
-  .mat-expansion-panel-header-title, .mat-icon {
+  .mat-expansion-panel-header-title {
     @include adaptive-color-dark-only("color", on-color(dark));
   }
 

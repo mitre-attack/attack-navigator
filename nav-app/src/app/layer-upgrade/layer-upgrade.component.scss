@@ -121,7 +121,7 @@ tr td {
     color: #4BB543;
 }
 .disabled {
-    color: rgba(0, 0, 0, 0.15);
+    @include adaptive-color("color", rgba(0, 0, 0, 0.15), color(dark-link));
 }
 .dndDragover .technique-cell {
     box-shadow: 0 0 0 1px color(cell-highlight-color) inset !important;
