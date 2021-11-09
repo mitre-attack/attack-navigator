@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ViewModelsService } from '../../viewmodels.service';
 import { ConfigService } from '../../config.service';
 import { DataService } from '../../data.service';
@@ -7,7 +7,8 @@ import { Cell } from '../../matrix/cell';
 @Component({
     selector: 'changelog-cell',
     templateUrl: './changelog-cell.component.html',
-    styleUrls: ['./changelog-cell.component.scss']
+    styleUrls: ['./changelog-cell.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() isCurrentVersion?: boolean = true;

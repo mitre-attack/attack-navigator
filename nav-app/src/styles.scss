@@ -285,6 +285,13 @@ body {
 .mat-drawer-inner-container {
   @include adaptive-color("background-color", color(panel-light), color(dark-2));
 
+  a {
+    @include adaptive-color-dark-only("color", color(dark-link));
+  }
+  a:visited, a:active {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+  }
+
   .mat-form-field-outline div {
     @include adaptive-color-dark-only("background-color", color(dark-3));
     @include adaptive-color-dark-only("color", color(dark-4));

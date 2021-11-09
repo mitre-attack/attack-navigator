@@ -492,6 +492,8 @@ from <a href="https://github.com/mitre-attack/attack-navigator">our github
 repo</a>:  
 <code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
 
+Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
+
 ## Disabling Features
 
 Individual ATT&CK Navigator features can be disabled with the checkboxes. Removing a feature only removes the interface
