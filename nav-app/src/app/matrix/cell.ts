@@ -125,7 +125,7 @@ export abstract class Cell {
         if (!tvm.enabled || this.isHighlighted) return null;
         if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
         if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
-        if (tvm.score) return { "background": this.emulate_alpha(tvm.scoreColor, true) }
+        if (tvm.score) return { "background": this.emulate_alpha(tvm.scoreColor) }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 }
