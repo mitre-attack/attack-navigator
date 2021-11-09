@@ -5,6 +5,9 @@
 
 ## Fixes
 - Fixed an issue when loading multiple default layers (specified in the config or a layerURL) which led to only the first layer being loaded. See issue [#361](https://github.com/mitre-attack/attack-navigator/issues/361).
+- Fixed inconsistencies within the ATT&CK Navigator dark theme.
+  - If the user switches from the dark/light theme to use the system's theme, the browser will remember to continue using the system theme until changed again.
+  - The layer upgrade feature now supports dark theme.
 
 # v4.5.1 - 21 October 2021
 
