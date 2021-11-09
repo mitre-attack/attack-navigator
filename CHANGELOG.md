@@ -8,6 +8,7 @@
 - Fixed inconsistencies within the ATT&CK Navigator dark theme.
   - If the user switches from the dark/light theme to use the system's theme, the browser will remember to continue using the system theme until changed again.
   - The layer upgrade feature now supports dark theme.
+  - Fixed scoring gradient preset colors that should make technique cells appear to fade into the background color (if they have a lower score)
 
 # v4.5.1 - 21 October 2021
 
