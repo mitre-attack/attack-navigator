@@ -224,7 +224,7 @@ export class Gradient {
         let colorList: string[] = [];
         let self = this;
         this.colors.forEach(function(gColor: Gcolor) {
-            let hexstring = (tinycolor(gColor.color).toHexString())
+            let hexstring = (tinycolor(gColor.color).toHex8String()); // include the alpha channel
             colorList.push(hexstring)
         });
 

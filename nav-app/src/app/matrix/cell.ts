@@ -70,6 +70,20 @@ export abstract class Cell {
     }
 
     /**
+     * Emulate transparency without an alpha channel
+     * @param color color with alpha channel
+     * @returns color without an alpha channel which has been mixed with the proper background color as if it is transparent
+     */
+    private emulate_alpha(color: any, log=false) {
+        let cell_color = tinycolor(color.toHex8String())
+        let cell_color_alpha = cell_color.getAlpha();
+        // if (!cell_color_alpha) return color;
+        cell_color.setAlpha(1)
+        let result = tinycolor.mix(this.isDarkTheme ? "#2e2e3f" : "#ffffff", cell_color, cell_color_alpha * 100)
+        return result;
+    }
+
+    /**
      * Get most readable text color for the given technique
      * @param  technique     the technique to get the text color for
      * @param  antihighlight boolean, true if the column is not selected.
@@ -81,9 +95,9 @@ export abstract class Cell {
         if (!tvm.enabled) return "rgb(255 255 255 / 25%)";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
-        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
-        if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
+        if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]); 
+        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
+        if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
         else return this.isDarkTheme ? "white" : "black";
     }
 
@@ -109,9 +123,9 @@ export abstract class Cell {
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
         if (!tvm.enabled || this.isHighlighted) return null;
-        if (tvm.color) return { "background": tvm.color }
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return { "background": tvm.aggregateScoreColor }
-        if (tvm.score) return { "background": tvm.scoreColor }
+        if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
+        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
+        if (tvm.score) return { "background": this.emulate_alpha(tvm.scoreColor, true) }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 }
