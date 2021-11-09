@@ -1,3 +1,10 @@
+# Changes staged in develop
+
+## Fixes
+- Fixed inconsistencies within the ATT&CK Navigator dark theme.
+  - If the user switches from the dark/light theme to use the system's theme, the browser will remember to continue using the system theme until changed again.
+  - The layer upgrade feature now supports dark theme.
+
 # v4.5.1 - 21 October 2021
 
 ## Fixes
