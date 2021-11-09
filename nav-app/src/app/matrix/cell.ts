@@ -74,7 +74,7 @@ export abstract class Cell {
      * @param color color with alpha channel
      * @returns color without an alpha channel which has been mixed with the proper background color as if it is transparent
      */
-    private emulate_alpha(color: any, log=false) {
+    private emulate_alpha(color: any) {
         let cell_color = tinycolor(color.toHex8String())
         let cell_color_alpha = cell_color.getAlpha();
         // if (!cell_color_alpha) return color;
