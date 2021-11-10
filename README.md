@@ -174,6 +174,8 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
 
 Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
 
+Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
+
 ## Enabling Banner in Navigator
 The `banner` setting in `nav-app/src/assets/config.json` by default is an empty string `"""` (and not visible), and can be set to whatever content you wish to display inside a banner at the top of the Navigator webpage. The banner supports HTML and hyperlinks in the content.
 

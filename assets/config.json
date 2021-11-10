@@ -5,15 +5,15 @@
             "domains": [
                 {   
                     "name": "Enterprise", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.0/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
                 },
                 {   
                     "name": "Mobile", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.0/mobile-attack/mobile-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.0/ics-attack/ics-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/ics-attack/ics-attack.json"]
                 }
             ]
         },
@@ -116,7 +116,7 @@
 
     "comment_color": "yellow",
 
-    "banner": "ATT&CK v10 has been released! Check out the <a href='https://medium.com/mitre-attack/introducing-attack-v10-7743870b37e3'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-october-2021/'>release notes</a> for more information.",
+    "banner": "",
 
     "features": [
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},

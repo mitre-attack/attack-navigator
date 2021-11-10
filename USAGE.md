@@ -220,7 +220,7 @@ high value.
 Several preset gradients are present within the preset dropdown. If no preset matches your desired gradient, you can
 create your own by adding and removing colors using the interface.
 
-<b>Tip:</b> If your scores are binary (0 or 1), consider setting the low value of 0 to white and the high of 1 to some
+<b>Tip:</b> If your scores are binary (0 or 1), consider setting the low value of 0 to transparent and the high of 1 to some
 other color to only color the techniques which have the value of 1.
 
 ## ![Hiding Disabled Techniques](nav-app/src/assets/icons/ic_visibility_off_black_24px.svg)Hiding Disabled Techniques
@@ -375,7 +375,7 @@ assigned <a href="#assigning-manual-colors">manually</a> supersede the score-gen
 assign techniques scores inside of a predetermined range, such as 0-1 or 0-100. Set the "high value" and "low value"
 inputs in the <a href="#scoring-gradient">scoring gradient setup interface</a> to this range to make sure that the color
 for the score is properly mapped to the gradient. Techniques that are unscored are not assigned a color based on the
-gradient - they are displayed with a white background in the matrix.
+gradient - they are displayed with an uncolored background in the matrix.
 
 ## ![Adding Comments to Techniques](nav-app/src/assets/icons/ic_insert_comment_black_24px.svg)Adding Comments to Techniques
 
@@ -491,6 +491,8 @@ The following is an example ATT&CK Navigator URL with the default layer specifie
 from <a href="https://github.com/mitre-attack/attack-navigator">our github
 repo</a>:  
 <code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
+
+Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
 
 ## Disabling Features
 
