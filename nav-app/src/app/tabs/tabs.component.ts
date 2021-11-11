@@ -13,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { ChangelogComponent } from "../changelog/changelog.component";
-import { rejects } from 'assert';
 
 declare var math: any; //use mathjs
 
