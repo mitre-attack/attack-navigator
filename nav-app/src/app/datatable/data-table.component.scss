@@ -16,207 +16,255 @@ $cellSize: 15px;
  // | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
  // |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
 
-
 // content of each tab
 .matrices {
-    overflow-x: scroll;
-    min-height: 50vh;
-    border: 1px solid $panel-dark;
+  @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+  @include adaptive-color-dark-only("color", on-color(dark));
+  @include adaptive-color-dark-only("border", none);
+  overflow-x: scroll;
+  min-height: 50vh;
+  border: 1px solid color(panel-dark);
+  transition: height ease-in-out 0.2s;
 
-    .spinner {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50vh;
+  .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
 
-        mat-progress-spinner circle {
-            stroke: on-color-deemphasis(body);
-        }
+    mat-progress-spinner circle {
+      stroke: on-color-deemphasis(body);
     }
-    .matrices-columns {
-        // white-space: nowrap;
-        display: table;
-        .matrix-column {
-            display: table-cell;
-            white-space: normal;
-            // display: inline-block;
-            padding: 10px;
-            .matrix-name {
-                text-align: center;
-                padding-bottom: 5px;
-                margin-bottom: 5px;
-                font-size: 16px;
-                border-bottom: 1px solid $panel-dark;
-            }
-            &+.matrix-column {
-                border-left: 1px solid $panel-dark;
-            }
-        }
+  }
+
+  .matrices-columns {
+    // white-space: nowrap;
+    display: table;
+
+    .matrix-column {
+      display: table-cell;
+      white-space: normal;
+      // display: inline-block;
+      padding: 10px;
+
+      .matrix-name {
+        text-align: center;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        font-size: 16px;
+        border-bottom: 1px solid color(panel-dark);
+      }
+
+      & + .matrix-column {
+        border-left: 1px solid color(panel-dark);
+      }
     }
+  }
 }
 
-.multiselect-dropdown{
-    display: inline-block;
+.multiselect-dropdown {
+  display: inline-block;
 }
 
 .colorpicker {
-    width: ($cellSize + 5 + 2) * 4 !important; //override preset width
-    align-items: center;
-    text-align: center;
-    .color-block {
-        cursor: pointer;
-        border: 1px solid black;
-        margin: 2.5px;
-        &.square {
-            display: inline-block;
-            width: $cellSize;
-            height: $cellSize;
-        }
-        &.wide {
-            display: block;
-            height: $cellSize;
-            font-size: 10pt;
-            color: darken(white, 50%);
-        }
+  width: ($cellSize + 5 + 2) * 4 !important; //override preset width
+  align-items: center;
+  text-align: center;
+
+  .color-block {
+    @include adaptive-color("border", 1px solid black, 1px solid color(dark-disabled));
+    cursor: pointer;
+    margin: 2.5px;
+
+    &.square {
+      display: inline-block;
+      width: $cellSize;
+      height: $cellSize;
     }
+
+    &.wide {
+      @include adaptive-color-dark-only("color", color(dark-disabled));
+      display: block;
+      height: $cellSize;
+      font-size: 10pt;
+      color: darken(white, 50%);
+    }
+  }
 }
 
 //color controls
-$panel-light: lighten($panel-dark, 8%);
 .colorSetup {
-    font-size: 8pt;
-    .colorpicker {
-        width: 10ex;
+  font-size: 8pt;
+
+  .colorpicker {
+    width: 10ex;
+  }
+
+  .gradient-section-label {
+    font-weight: bold;
+    padding: 4px;
+    text-align: center;
+  }
+
+  .gradient-section-content {
+    @include adaptive-color("border-color", black, white);
+    border-style: solid;
+    border-width: 1px 0;
+    text-align: left;
+  }
+
+  .display-buttons {
+    // width: 183px;
+    text-align: center;
+
+    .squarebutton {
+      @include adaptive-color("border", 1px solid color(panel-dark), 1px solid color(dark-disabled));
+      padding: 4px 0;
+      cursor: pointer;
+
+      &:hover {
+        @include adaptive-color("background", color(panel-light), color(cell-highlight-dark-color));
+      }
+
+      &.gradient:hover {
+        text-decoration: underline; //since background color won't be seen on gradient buttons
+      }
     }
-    .gradient-section-label {
-        font-weight: bold;
-        padding: 4px;
+
+    .presetsmenu {
+      width: 90%;
+      display: inline-block;
+    }
+
+  }
+
+  .gradient-controls {
+    // width: 200px;
+
+    table {
+      padding: 0;
+      margin: 0;
+      border-collapse: collapse;
+      // select, button {
+      //     font-family: 'Roboto Mono', monospace;
+      //     font-size: 8pt;
+      // }
+
+      // border: 1px solid black;
+      td {
+        button {
+          @include adaptive-color-dark-only("background-color", color(dark-1));
+          @include adaptive-color-dark-only("border", 1px solid color(dark-disabled));
+          @include adaptive-color-dark-only("color", white);
+
+          &:hover {
+            @include adaptive-color-dark-only("background-color", black);
+          }
+        }
+
+        input {
+          @include adaptive-color-dark-only("background-color", black);
+          @include adaptive-color-dark-only("color", white);
+        }
+
+        &.buttons > div {
+          // border: 1px solid black;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+        }
+
+        .left, .right {
+          display: inline-block;
+        }
+
+        .left {
+          float: left
+        }
+
+        .right {
+          text-align: left;
+
+          select {
+            width: 80px;
+          }
+
+          // width: 100%;
+        }
+
+        &.col2 {
+          width: 45px;
+
+          input[type=number] {
+            // background-color: rgb(104, 60, 213);
+            width: 40px
+          }
+        }
+      }
+
+      .minmax {
+        @include adaptive-color("background-color", color(panel-light), color(dark-4));
         text-align: center;
+        // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
+        // &.bottom { border-top: 1px solid black}
+      }
     }
-    .gradient-section-content {
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
-        text-align: left;
+
+    // button {background: red;}
+    .addcolor {
+      width: 100%;
+      // background: red;
     }
-    .display-buttons {
-        // width: 183px;
-        text-align: center;
-
-        .squarebutton {
-            border: 1px solid $panel-dark;
-            padding: 4px 0;
-            cursor: pointer;
-            &:hover {
-                background: $panel-light;
-            }
-            &.gradient:hover {
-                text-decoration: underline; //since background color won't be seen on gradient buttons
-            }
-        }
-
-        .presetsmenu {
-            width: 90%;
-            display: inline-block;
-        }
-
-    }
-    .gradient-controls {
-        // width: 200px;
-
-        table {
-            padding:0; margin:0;
-            border-collapse: collapse;
-            // select, button {
-            //     font-family: 'Roboto Mono', monospace;
-            //     font-size: 8pt;
-            // }
-
-            // border: 1px solid black;
-            td {
-                &.buttons>div {
-                    // border: 1px solid black;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-
-                }
-                .left, .right { display: inline-block; }
-
-                .left {
-                    float: left
-                }
-
-                .right {
-                    text-align: left;
-                    select {
-                        width: 80px;
-                    }
-                    // width: 100%;
-                }
-
-                &.col2 {
-                    width: 45px;
-                    input[type=number] {
-                        // background-color: rgb(104, 60, 213);
-                        width: 40px
-                    }
-                }
-            }
-            .minmax {
-                text-align: center;
-                background-color: $panel-light;
-                // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
-                // &.bottom { border-top: 1px solid black}
-            }
-        }
-        // button {background: red;}
-        .addcolor {
-            width: 100%;
-            // background: red;
-        }
-    }
+  }
 }
 
 .select_behavior {
-    padding: 5px;
-    text-align: left;
+  padding: 5px;
+  text-align: left;
 }
 
 .contextMenu-cover {
-    // covers entire page
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    // background: rgba(0, 0, 0, 0.15);
+  // covers entire page
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  // background: rgba(0, 0, 0, 0.15);
 }
+
 .contextMenu-box {
-    position: absolute;
-    // background: white;
-    &.left { right: 0 }
-    border: 1px solid black;
-    background-color: white;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-    position: absolute;
-    z-index: 100; //draw on top of other controls
-    width: max-content;
+  position: absolute;
+  // background: white;
+  &.left {
+    right: 0
+  }
 
-    .contextMenu-section {
-        &:not(:first-child) {
-            border-top: 1px solid $panel-dark;
-            margin-top: 2px;
-            padding-top: 2px;
+  border: 1px solid black;
+  background-color: white;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+  position: absolute;
+  z-index: 100; //draw on top of other controls
+  width: max-content;
 
-        }
-        .contextMenu-button {
-            padding: 3px;
-            cursor: pointer;
-            &:hover {
-                background: $cell-highlight-color;
-            }
-        }
+  .contextMenu-section {
+    &:not(:first-child) {
+      border-top: 1px solid color(panel-dark);
+      margin-top: 2px;
+      padding-top: 2px;
+
     }
+
+    .contextMenu-button {
+      padding: 3px;
+      cursor: pointer;
+
+      &:hover {
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+      }
+    }
+  }
 
 }
 
@@ -252,224 +300,274 @@ $panel-light: lighten($panel-dark, 8%);
 
 // }
 
-.mat-select{:focus {
+.mat-select {
+  :focus {
     color: #63961C;
-}}
+  }
+}
 
 .filters {
-    padding: 4px;
-    .filter {
-        text-align: left;
-        &:not(:first-child) {
-            margin-top: 4px;
-        }
-        .filter-label {
+  padding: 4px;
 
-        }
-        .filter-option {
-            &:hover {
-                background: $cell-highlight-color;
-            }
-        }
+  .filter {
+    text-align: left;
+
+    &:not(:first-child) {
+      margin-top: 4px;
     }
+
+    .filter-label {
+
+    }
+
+    .filter-option {
+      &:hover {
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+      }
+    }
+  }
 }
 
 .multiselect {
-    // padding: 4px;
-    text-align: center;
-    .multiselect-grouping {
-        .multiselect-grouping-label {
-            padding: 4px;
-            font-weight: bold;
-            // font-size: 14pt;
-        }
-        .multiselect-list {
-            text-align: left;
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            height: 200px;
-            overflow-y: scroll;
-            table {
-                // table-layout:fixed; //fixes width
-                border-collapse: collapse;
-            }
-            .multiselect-list-item {
-                &:hover {
-                    background: $cell-highlight-color;
-                }
-                .multiselect-list-item-label {
-                    width: 25ex;
-                }
-                &.selected:not(:hover) {
-                    background: $panel-dark;
-                }
-            }
-        }
+  // padding: 4px;
+  text-align: center;
+
+  .multiselect-grouping {
+    .multiselect-grouping-label {
+      padding: 4px;
+      font-weight: bold;
+      // font-size: 14pt;
     }
+
+    .multiselect-list {
+      text-align: left;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+      height: 200px;
+      overflow-y: scroll;
+
+      table {
+        // table-layout:fixed; //fixes width
+        border-collapse: collapse;
+      }
+
+      .multiselect-list-item {
+        &:hover {
+          @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+        }
+
+        .multiselect-list-item-label {
+          width: 25ex;
+        }
+
+        &.selected:not(:hover) {
+          background: color(panel-dark);
+        }
+      }
+    }
+  }
 }
 
 .search {
-    // padding: 4px;
-    text-align: center;
-    .search-list {
-        margin-top:2px;
-        text-align: left;
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
-        height: 300px;
-        overflow-y: scroll;
-        table {
-            // table-layout:fixed; //fixes width
-            border-collapse: collapse;
-            width: 325px;
-        }
-        .search-list-item {
-            &:hover {
-                background: $cell-highlight-color;
-            }
-            .search-list-item-label {
-                width: 25ex;
-            }
-            &.selected:not(:hover) {
-                background: $panel-dark;
-            }
-        }
+  // padding: 4px;
+  text-align: center;
+
+  .search-list {
+    margin-top: 2px;
+    text-align: left;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    height: 300px;
+    overflow-y: scroll;
+
+    table {
+      // table-layout:fixed; //fixes width
+      border-collapse: collapse;
+      width: 325px;
     }
+
+    .search-list-item {
+      &:hover {
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+      }
+
+      .search-list-item-label {
+        width: 25ex;
+      }
+
+      &.selected:not(:hover) {
+        background: color(panel-dark);
+      }
+    }
+  }
 }
 
 .search-button {
-    &:hover {
-        background: $cell-highlight-color;
-    }
+  &:hover {
+    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
   }
+}
 
 .button {
-    background-color: $panel-dark;
-    border: none;
-    padding: 4px 10px;
-    text-align: center;
-    //font-size: 16px;
-    margin: 2px 1px;
-    transition: 0.3s;
-    display: inline-block;
-    text-decoration: none;
-    cursor: pointer;
-    &:hover {
-        background-color: $button-dark;
-    }
+  @include adaptive-color("background-color", color(panel-dark), color(dark-4));
+  @include adaptive-color-dark-only("color", on-color(dark));
+  border: none;
+  padding: 4px 10px;
+  text-align: center;
+  //font-size: 16px;
+  margin: 2px 1px;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    @include adaptive-color("background-color", color(button-dark), color(dark-link));
   }
+}
 
 .deselectNumber {
-    font-size: 5pt;
-    bottom: 2px;
-    right: 4px;
-    position: absolute;
-    text-align: right;
+  font-size: 5pt;
+  bottom: 2px;
+  right: 4px;
+  position: absolute;
+  text-align: right;
 }
 
 .legend {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width:300px;
-    height:300px;
-    background-color: white;
-    border-left: 1px solid $panel-dark;
-    .itemArea {
-        position: static;
-        overflow-y: scroll;
-        margin-top:30px;
-        height:270px;
-        width:100%;
-        overflow-x:hidden;
-        .item {
-            width:100%;
-            height:40px;
-            padding-left:5px;
-            .label {
-                margin-left:10px;
-                width:150px;
-            }
+  @include adaptive-color("background-color", white, color(dark-3));
+  @include adaptive-color-light-only("border-left", 1px solid color(panel-dark));
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
 
-        }
-        .even {
-            background-color: $panel-light;
-            width:100%;
-            height:40px;
-            .label {
-                margin-left:10px;
-                width:150px;
-            }
-        }
+  .itemArea {
+    @include adaptive-color-dark-only("color", on-color(dark));
+    position: static;
+    overflow-y: scroll;
+    margin-top: 30px;
+    height: 270px;
+    width: 100%;
+    overflow-x: hidden;
+
+    .item {
+      width: 100%;
+      height: 40px;
+      padding-left: 5px;
+
+      .label {
+        margin-left: 10px;
+        width: 150px;
+      }
+
     }
+
+    .even {
+      @include adaptive-color-dark-only("color", black);
+      background-color: color(panel-light);
+      width: 100%;
+      height: 40px;
+
+      .label {
+        margin-left: 10px;
+        width: 150px;
+      }
+    }
+  }
 }
 
 .legendBar {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width:300px;
-    height:30px;
-    background-color: $panel-dark;
-    transition: 0.3s;
-    &:hover {
-        background: $cell-highlight-color;
-        cursor: pointer;
-    }
+  @include adaptive-color("background-color", color(panel-dark), color(dark-3));
+  @include adaptive-color-dark-only("color", on-color(dark));
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 300px;
+  height: 30px;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+
+  .title {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  &:hover {
+    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+    cursor: pointer;
+  }
 }
 
 .layer_info {
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    width: 250px !important;
-    .name_desc {
-        padding: 0 10px;
-    }
-    .metadata_input {
-        padding-left: 10px;
-        // padding-bottom: 5px;
-        margin-bottom: 2px; //fix funky scroll overflow
-        max-height: 50vh;
-        overflow-y: auto;
-        text-align: left;
-        table {
-            border-spacing: 5px 15px;
-            // width: 500px;
-            // padding: 0;
-            // margin: 0;
-            // list-style: none;
-            .formfield-group {
-                // &:not(:first-child) { margin-bottom: 5px; }
-                td:first-child { border-width: 1px 0 1px 1px; border-color: black; border-style: solid; width: 5px}
-                // border-left: 1px solid black;
-                // padding-left: 5px;
-                // &:not(:first-child) { margin-top: 10px;}
-                button { margin-bottom: 4px; }
-            }
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  width: 250px !important;
+
+  .name_desc {
+    padding: 0 10px;
+  }
+
+  .metadata_input {
+    padding-left: 10px;
+    // padding-bottom: 5px;
+    margin-bottom: 2px; //fix funky scroll overflow
+    max-height: 50vh;
+    overflow-y: auto;
+    text-align: left;
+
+    table {
+      border-spacing: 5px 15px;
+      // width: 500px;
+      // padding: 0;
+      // margin: 0;
+      // list-style: none;
+      .formfield-group {
+        // &:not(:first-child) { margin-bottom: 5px; }
+        td:first-child {
+          border-width: 1px 0 1px 1px;
+          border-color: black;
+          border-style: solid;
+          width: 5px
         }
+
+        // border-left: 1px solid black;
+        // padding-left: 5px;
+        // &:not(:first-child) { margin-top: 10px;}
+        button {
+          margin-bottom: 4px;
+        }
+      }
     }
+  }
 }
 
 .layout {
-    width: 100px;
-    text-align: left;
-    select {
-        width: 100%;
-    }
+  width: 100px;
+  text-align: left;
 
-    .section {
-        padding: 10px;
-        &+.section {
-            border-top: 1px solid $panel-light;
-        }
-    }
+  select {
+    width: 100%;
+  }
 
-    .subsection {
-        padding-left: 5px;
+  .section {
+    padding: 10px;
 
-        .inner-dropdown-container {
-            margin: 5px;
-        }
+    & + .section {
+      border-top: 1px solid color(panel-light);
     }
+  }
+
+  .subsection {
+    padding-left: 5px;
+
+    .inner-dropdown-container {
+      margin: 5px;
+    }
+  }
 }
-

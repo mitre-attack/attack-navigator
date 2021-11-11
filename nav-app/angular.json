@@ -19,11 +19,14 @@
             "polyfills": "src/polyfills.ts",
             "preserveSymlinks": true,
             "assets": [
+              { "glob": "*.md", "input": "../", "output": "/" },
+              { "glob": "*.md", "input": "../layers", "output": "/layers" },
               "src/assets",
               "src/favicon.ico"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/ngx-smart-popover/scss/popover-content.component.scss"
             ],
             "scripts": [
               "node_modules/file-saver/dist/FileSaver.js",
@@ -31,7 +34,8 @@
               "node_modules/tinycolor2/tinycolor.js",
               "node_modules/d3/dist/d3.js",
               "node_modules/d3-svg-legend/d3-legend.js",
-              "node_modules/tinygradient/tinygradient.js"
+              "node_modules/tinygradient/tinygradient.js",
+              "node_modules/marked/lib/marked.js"
             ]
           },
           "configurations": {

@@ -19,11 +19,13 @@
             // height: (($sizeunit + 2) * 3);
             vertical-align: bottom;
         }
-        &.count { 
+        &.count {
+            border-width: 0 0 1px 0;
+            border-style: solid;
             font-size: $sizeunit - 1px;
-            border-bottom: 1px solid black;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            @include adaptive-color("border-color", black, white);
         }
         .techniques-table {
             border-collapse: collapse;
@@ -35,7 +37,7 @@
                 height: 1px;
             }
         }
-        
+
         .supertechnique {
             border-collapse: collapse;
             width: 100%;
@@ -45,46 +47,42 @@
             td {
                 padding: 0;
                 vertical-align: top;
-                
+
                 &.technique {
-                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
                     // outline: 1px solid on-color-deemphasis(body);
                     // outline-offset: -1px;
+                    @include adaptive-color("box-shadow", 0 0 0 1px on-color-deemphasis(body) inset, 0 0 0 1px color(dark-3) inset);
                 }
             }
         }
         .subtechniques {
+            @include adaptive-color("border-left", 2px solid on-color-deemphasis(body), 2px solid color(dark-3));
+            @include adaptive-color("box-shadow", 0 0 0 1px on-color-deemphasis(body) inset, 0 0 0 1px color(dark-3) inset);
             &.hidden {
                 display: none;
             }
-            
+
             // expand to entire height of row if it's smaller than supertechnique
             display: flex;
             flex-direction: column;
             height: 100%;
-
             margin-left: -1px;
-            border-left: 2px solid on-color-deemphasis(body);
-            box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
-
             white-space: nowrap;
             vertical-align: top;
-            
+
             .subtechnique {
                 height: 100%;
                 flex-grow: 1;
             }
         }
-        
+
         .handle {
+            @include adaptive-color("color", color-alternate(body), on-color(dark));
             font-family: roboto-regular;
             text-align: center;
             vertical-align: middle;
             transform: rotate(-90deg);
-            color: color-alternate(body);
-            
-            width: 12px; height: 12px; 
-            
+            width: 12px; height: 12px;
             font-size: 16px;
             line-height: 12px;
         }
@@ -92,30 +90,29 @@
     .sidebar {
         min-width: 8px;
         width: 12px;
-        
-        padding: 0;    
-        background: on-color-deemphasis(body);
+        padding: 0;
         cursor: pointer;
         position:relative;
         vertical-align: middle;
+        background: on-color-deemphasis(body);
         .angle {
             display: none;
         }
         &.disabled {
-            background: #aaaaaa;
+            @include adaptive-color("background", #aaaaaa, color(dark-disabled));
             pointer-events: none;
         }
         &.expanded .angle {
+            @include adaptive-color("background", color(body), lighten(color(dark-1), 3%));
             height: 12px;
             display:block;
             position: absolute;
-            background: color(body);
             svg { fill: on-color-deemphasis(body); }
             &.top {
-                top: 0px;
+                top: 0;
             }
             &.bottom {
-                bottom: 0px;
+                bottom: 0;
             }
         }
     }
