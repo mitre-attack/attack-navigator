@@ -37,7 +37,7 @@ export class MappingsExporter {
     techniqueWorksheet.columns = ['Technique-Tactic', 'Technique-ID', 'Technique-Name', 'Technique-Description', 'Attack-Mitigations'].map(header => { return { header: header, key: header }; });
 
     techniquesToExport.forEach((x) => {
-      let tech: TechniqueWithMappings = viewModel.controlFramework.getTechniqueMapping(x, viewModel.domainID);
+      let tech: TechniqueWithMappings = viewModel.controlFramework.getTechniqueMapping(x, viewModel.domainVersionID);
 
       let newRow = techniqueWorksheet.addRow({
         'Technique-Tactic': tech.Technique.get_all_technique_tactic_ids(),

@@ -59,7 +59,7 @@ export class MappingsDialogComponent {
 
 
     clickExportAll() {
-        this.mappingsExporter.exportToExcel(this.dataService.getDomain(this.viewModel.domainID).techniques.filter(x => !x.isSubtechnique), this.viewModel, "All Mappings Export");
+        this.mappingsExporter.exportToExcel(this.dataService.getDomain(this.viewModel.domainVersionID).techniques.filter(x => !x.isSubtechnique), this.viewModel, "All Mappings Export");
     }
 
     getNistItems(mitigation: scoredMitigationVM) {

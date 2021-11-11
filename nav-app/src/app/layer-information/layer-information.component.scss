@@ -1,0 +1,40 @@
+@import "../../colors.scss";
+
+.layer-dialog {
+  .content {
+    max-height: 75vh;
+    font-size: 10pt;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+      width: calc(100% / 5);
+      padding: 5px;
+      word-break: break-word;
+      line-height: 16pt;
+    }
+
+    th:nth-child(4) {
+      padding: 0 30px;
+    }
+
+    th:nth-child(3), th:nth-child(4), th:last-child, td:nth-child(3), td:nth-child(4) {
+      text-align: center;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    td:not(td:last-child) {
+      hyphens: auto;
+    }
+
+    td {
+      border-top: 1px solid color(panel-dark);
+    }
+  }
+}

@@ -28,7 +28,7 @@ export class MitigationsComponent implements OnInit {
     }
 
     domainIsNotNist() : Boolean{
-        return this.viewModel.domainID !== "nist-attack-v9";
+        return !this.viewModel.domainVersionID.includes("nist-attack");
     }
 
     sortScoredMitigationsBy(prop: string) {
@@ -69,7 +69,7 @@ export class MitigationsComponent implements OnInit {
 
         let setOfTechniqueIds = new Set<string>();
         this.selection.selected.forEach((scoredMitigation: scoredMitigationVM) => {
-            let relatedTechniques: string[] = scoredMitigation.mitigation.relatedTechniques(this.viewModel.domainID);
+            let relatedTechniques: string[] = scoredMitigation.mitigation.relatedTechniques(this.viewModel.domainVersionID);
             relatedTechniques.forEach(x => setOfTechniqueIds.add(x));
         });
 
@@ -82,7 +82,7 @@ export class MitigationsComponent implements OnInit {
     }
 
     private getTechniquesByIds(setOfTechniqueIds: Set<string>) {
-        return this.dataService.getDomain(this.viewModel.domainID).techniques
+        return this.dataService.getDomain(this.viewModel.domainVersionID).techniques
             .filter((techniqueToFilter) => setOfTechniqueIds.has(techniqueToFilter.id));
     }
 

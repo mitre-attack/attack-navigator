@@ -64,7 +64,7 @@ export class ExporterComponent implements OnInit {
         
         let self = this;
         //determine if the layer has any scores
-        for (let matrix of this.dataService.getDomain(this.viewModel.domainID).matrices) {
+        for (let matrix of this.dataService.getDomain(this.viewModel.domainVersionID).matrices) {
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
                 for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
                     if (technique.subtechniques.length > 0) {
@@ -97,7 +97,7 @@ export class ExporterComponent implements OnInit {
     //visibility of SVG parts
     //assess data in viewModel
     hasName(): boolean {return this.viewModel.name.length > 0}
-    hasDomain(): boolean {return this.viewModel.domainID.length > 0}
+    hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
     hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
@@ -497,7 +497,7 @@ export class ExporterComponent implements OnInit {
             const config = {"title": "domain", "contents": []};
             let filterConfig = {"title": "platforms", "contents": []};
             if (self.showDomain()) {
-                let domain = this.dataService.getDomain(this.viewModel.domainID);
+                let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
                 config.contents.push({"label": "domain", "data": domain.name + " " + domain.version});
             }
             if (self.showFilters()) {
@@ -551,7 +551,7 @@ export class ExporterComponent implements OnInit {
             .attr("transform", "translate(0," + (headerHeight + 1) + ")")
 
         // build data model
-        let matrices: RenderableMatrix[] = this.dataService.getDomain(this.viewModel.domainID).matrices.map(function(matrix: Matrix) {
+        let matrices: RenderableMatrix[] = this.dataService.getDomain(this.viewModel.domainVersionID).matrices.map(function(matrix: Matrix) {
             return new RenderableMatrix(matrix, self.viewModel, self.config);
         });
 

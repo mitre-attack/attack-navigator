@@ -56,7 +56,7 @@ export class TechniqueMappingsComponent implements OnInit {
     }
 
     techniqueToNist(technique: Technique): string[] {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Nist.map(x => x.subcategory.id);
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainVersionID)?.Mappings.Nist.map(x => x.subcategory.id);
     }
 
     techniqueToNistCount(technique: Technique) {
@@ -64,7 +64,7 @@ export class TechniqueMappingsComponent implements OnInit {
     }
 
     techniqueToCis(technique: Technique): string[] {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Cis.map(x => x.cisSubControlId);
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainVersionID)?.Mappings.Cis.map(x => x.cisSubControlId);
     }
 
     techniqueToCisCount(technique: Technique): number {
@@ -72,7 +72,7 @@ export class TechniqueMappingsComponent implements OnInit {
     }
 
     techniqueToAsvs(technique: Technique): string[] {
-        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainID)?.Mappings.Asvs.map(x => x.itemId);
+        return this.viewModel.controlFramework.getTechniqueMapping(technique, this.viewModel.domainVersionID)?.Mappings.Asvs.map(x => x.itemId);
     }
 
     techniqueToAsvsCount(technique: Technique): number {

@@ -13,7 +13,7 @@
             <td>{{techniqueVM.score}}
             </td>
         </tr>
-        <tr *ngIf="technique.subtechniques.length > 0 && viewModel.layout.showAggregateScores">
+        <tr *ngIf="technique.subtechniques.length > 0 && viewModel.layout.showAggregateScores && techniqueVM.aggregateScore.length > 0">
             <td>Aggregate Score ({{viewModel.layout.aggregateFunction}}):</td>
             <td>{{techniqueVM.aggregateScore}}</td>
         </tr>

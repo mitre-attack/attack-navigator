@@ -10,7 +10,7 @@ The principal feature of the Navigator is the ability for users to define layers
 
 ## Usage
 
-The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live instance of the current version of the Navigator here](https://mitre-attack.github.io/attack-navigator). 
+The ATT&CK Navigator is hosted live via GitHub Pages. [You can find a live instance of the current version of the Navigator here](https://mitre-attack.github.io/attack-navigator). You can read more about how to use the application itself in the [USAGE](/USAGE.md) document (which is mirrored in the in-app help page).
 
 Version 4.0 of the ATT&CK Navigator supports all ATT&CK domains in a single instance of the application instead of requiring a different instance for each domain. It also sees the introduction of support for the ICS domain. See [the changelog](CHANGELOG.md) for more information.
 
@@ -41,8 +41,11 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 * Internet Explorer 11<sup>[1]</sup>
 * Edge
 * Opera
+* Safari <sup>[2]</sup>
 
 **[1]** There is a recorded issue with the SVG export feature on Internet Explorer. Because of a [missing functionality on SVGElements](https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children) in that browser, text will not be properly vertically centered in SVGs exported in that browser. We recommend switching to a more modern browser for optimal results.
+
+**[2]** ATT&CK Navigator only supports Safari versions 14 and above because older versions of the browser can exhibit an unfixable freeze when selecting a layer tab. Users on unsupported versions of the browser will be warned of this possibility when opening the application.
 
 ## Install and Run
 #### First time
@@ -174,6 +177,8 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
 3. Load/reload the Navigator
 
 Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
+
+Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
 
 ## Enabling Banner in Navigator
 The `banner` setting in `nav-app/src/assets/config.json` by default is an empty string `"""` (and not visible), and can be set to whatever content you wish to display inside a banner at the top of the Navigator webpage. The banner supports HTML and hyperlinks in the content.
