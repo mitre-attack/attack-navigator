@@ -1,49 +1,5 @@
 @import "../../colors.scss";
 
-.tabs {
-    padding-left: 0;
-    margin-bottom: 0;
-    list-style: none;
-    // border-bottom: 1px solid #ddd; //horizontal line border
-    user-select: none;
-    margin-top: 0;
-    background-color: grey;
-
-    &>li {
-        bottom: 0;
-        position: relative;
-        display: block;
-        float: left;
-        margin-bottom: 0;
-        cursor: pointer;
-        height: 23px;
-
-        .tab-title { //non-datatable tab names
-            font-family: 'Roboto Mono', monospace;
-            font-size: 14px;
-            text-decoration: none;
-            color: black;
-        }
-
-        input[type=text] { //datatable tab name edit field
-            font-family: 'Roboto Mono', monospace;
-            font-size: 14px;
-            border: none;
-            background: none;
-            &:disabled {} //when the tab isn't active
-            &:not(:disabled) { //when the tab is active
-                &:focus { //when the input is selected (editing)
-                    background: $panel-light;
-                }
-            }
-
-        }
-
-
-        position: relative;
-        display: block;
-        padding: 10px 15px;
-
 .header-wrapper {
     transition: margin-top 300ms 0ms cubic-bezier(0.4, 0, 0.6, 1), opacity 0s 300ms
 }
@@ -164,11 +120,6 @@
     position: absolute;
     // text-align: center;
     padding: 5% 20%;
-    background-color: white;
-}
-
-.border {
-    border: 1px solid $panel-dark;
     .description {
         display: flex;
         flex-flow: column wrap;
@@ -217,7 +168,7 @@
   }
   .mat-expansion-panel-content {
     .mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
-      @include adaptive-color-dark-only("border-top", 1px solid lighten(color(dark-4), 5%));
+      @include adaptive-color-dark-only("border-top", 1px solid #ffffff21);
     }
   }
   .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {

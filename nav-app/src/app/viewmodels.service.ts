@@ -999,7 +999,7 @@ export class ViewModel {
         let scoredMitigationsByAttackId = new Map<string, scoredMitigationVM>();
         let techniquesInScopeByAttackId = new Map<string, Technique>();
 
-        let matrices = this.dataService.getDomain(this.domainID).matrices;
+        let matrices = this.dataService.getDomain(this.domainVersionID).matrices;
         for (let matrix of matrices) {
 
             for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
@@ -1041,7 +1041,7 @@ export class ViewModel {
     }
 
     private addToTopMitigations(technique: Technique, mitigationsByAttackId: Map<string, scoredMitigationVM>, score: number) {
-        let mitigationsForTechnique = technique.getAllMitigationsForDomain(this.domainID);
+        let mitigationsForTechnique = technique.getAllMitigationsForDomain(this.domainVersionID);
         if (mitigationsForTechnique && mitigationsForTechnique.length > 0) {
             for (let currentMitigation of mitigationsForTechnique) {
                 if (mitigationsByAttackId.has(currentMitigation.attackID.toString())) {
@@ -1254,7 +1254,7 @@ export class ViewModel {
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
         rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
-        rep.domainID = this.domainID;
+        rep.domainVersionID = this.domainVersionID;
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;

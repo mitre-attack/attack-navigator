@@ -88,14 +88,14 @@ export class ControlFramework {
     return this.cisItemsByNistSubCatId.get(nistSubCatId);
   }
 
-  public getTechniqueMapping(technique: Technique, domainID: string): TechniqueWithMappings {
+  public getTechniqueMapping(technique: Technique, domainVersionID: string): TechniqueWithMappings {
     if (!technique) return null
 
-    const key = technique.attackID + domainID;
+    const key = technique.attackID + domainVersionID;
 
     if (!this.techniquesByAttackIdCache.has(key)) {
 
-      let mitigations = technique.getAllMitigationsForDomain(domainID);
+      let mitigations = technique.getAllMitigationsForDomain(domainVersionID);
       let nistItems = [...new Set(mitigations?.map(x => 
         this.getNistByMitigationId(x.attackID)).reduce((x, i) => x.concat(i), []))];
 
@@ -141,14 +141,14 @@ export class ControlFramework {
    * A function to derive the nist mappings for the mitigations when all we have are mapping from technique to mitigation. 
    * This is just a helping function to start the mapping off. The idea being to refine the list. 
    */
-  public getMitigations(dataService: DataService, domainID: string): { mitigation: { attackId: string; description: string; url: string; }; nist: string[]; }[] {
-    var domain = dataService.getDomain(domainID);
+  public getMitigations(dataService: DataService, domainVersionID: string): { mitigation: { attackId: string; description: string; url: string; }; nist: string[]; }[] {
+    var domain = dataService.getDomain(domainVersionID);
 
     return domain.mitigations.map(x => ({
-      mitigation: { attackId: x.attackID, description: x.description, url: x.url }, nist: [...new Set(x.mitigated(domainID).map(i => {
+      mitigation: { attackId: x.attackID, description: x.description, url: x.url }, nist: [...new Set(x.mitigated(domainVersionID).map(i => {
         let technique = domain.techniques.find(j => j.id === i);
         if (technique) {
-          return this.getTechniqueMapping(technique, domainID).Mappings.Nist.map(n => n.subcategory.id);
+          return this.getTechniqueMapping(technique, domainVersionID).Mappings.Nist.map(n => n.subcategory.id);
         } else { return []; }
       }).reduce((i, j) => i.concat(j)).filter(a => a.length > 0))]
     }));

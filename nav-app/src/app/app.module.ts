@@ -22,8 +22,6 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { DndModule } from 'ngx-drag-drop';
 import { PopoverModule } from 'ngx-smart-popover';
 import { HttpClientModule } from '@angular/common/http';
-import { MatSidenavModule } from '@angular/material/sidenav'
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 

@@ -40,11 +40,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     @Output() dropdownChange = new EventEmitter<any>();
     @Output() onScroll = new EventEmitter<any>();
 
-    currentDropdown: string = ""; //current dropdown menu
-
     // Show mitigation controls for the supported domains
     mitigationEnabledDomain() {
-        return (this.viewModel.domainVersionID === "enterprise-attack-v9" || this.viewModel.domainVersionID === "nist-attack-v9")
+        return (this.viewModel.domainVersionID.includes("enterprise-attack") || this.viewModel.domainVersionID.includes("nist-attack"))
     }
 
     showMitigations() {
@@ -74,7 +72,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     saveMitigationsLocally() {
         let mitigations: { [k: string]: any } = { techniques: [] };
 
-        let matrices = this.dataService.getDomain(this.viewModel.domainID).matrices;
+        let matrices = this.dataService.getDomain(this.viewModel.domainVersionID).matrices;
         for (let matrix of matrices) {
             // create cells
             for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
@@ -82,7 +80,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
                 for (let technique of techniques) {
                     if (technique) {
-                        let mitigationsForTechique = technique.getAllMitigationsForDomain(this.viewModel.domainID);
+                        let mitigationsForTechique = technique.getAllMitigationsForDomain(this.viewModel.domainVersionID);
                         let tvm = this.viewModel.getTechniqueVM(technique, tactic);
 
                         if (parseInt(tvm.score) > 0) {
