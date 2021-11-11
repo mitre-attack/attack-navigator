@@ -1,6 +1,23 @@
 {
     "versions": [
         {
+            "name": "ATT&CK v10", 
+            "domains": [
+                {   
+                    "name": "Enterprise", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile", 
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
             "name": "ATT&CK v9", 
             "domains": [
                 {   
@@ -106,17 +123,17 @@
     "banner": "",
 
     "features": [
-        {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
-        {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
-        {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
-        {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
-        {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
-        {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+            {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
+            {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
+            {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
+            {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
+            {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
+            {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},
             {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
             {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
         ]},
-        {"name": "mitigation_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
+            {"name": "mitigation_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "export_mitigations", "enabled": true, "description": "Disable to remove the export mitigations for scored techniques."},
             {"name": "show_mitigations", "enabled": true, "description": "Disable to remove the show mitigations for scored techniques."},
             {"name": "show_mapping_import", "enabled": true, "description": "Disaable to remove the ability to import control frameworks."}
@@ -139,6 +156,7 @@
             {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
+            {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]}
     ]

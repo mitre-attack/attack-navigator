@@ -1,0 +1,118 @@
+@import "../../colors.scss";
+
+.search-and-multiselect {
+  mat-label {
+    padding-left: 5px;
+  }
+
+  .mat-form-field {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  .mat-input-element, .mat-input-element::placeholder {
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  .mat-form-field-appearance-outline {
+    width: 100%;
+  }
+
+  .mat-form-field-outline-start {
+    width: 30px !important;
+  }
+
+  .mat-form-field-outline-start, .mat-form-field-outline-gap, .mat-form-field-outline-end {
+    background-color: white;
+  }
+
+  .sidebar-content {
+    margin: 1rem 0;
+  }
+
+  mat-card-content {
+    margin-bottom: 0;
+  }
+
+  .settings .title {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .fields {
+    text-align: left;
+
+    .field {
+      display: inline-block;
+    }
+  }
+
+  h1 {
+    font-size: 14px;
+    background: color(panel-light);
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+  }
+
+  .allresults-buttons {
+    display: flex;
+    justify-content: space-around;
+
+    button {
+      width: 48.5%;
+    }
+  }
+
+  button {
+    @include adaptive-color-dark-only("background-color", color(dark-4));
+    @include adaptive-color-dark-only("color", on-color(dark));
+  }
+
+  button:hover {
+    @include adaptive-color("background", color(cell-highlight-color), color(dark-link));
+  }
+
+  .results {
+    max-height: 150px;
+    overflow-y: auto;
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+
+      tr + tr {
+        @include adaptive-color("border-top", 1px solid color(panel-light), 1px solid color(dark-4));
+      }
+
+      tr:hover {
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
+      }
+
+      td:first-of-type {
+        width: 200px;
+      }
+
+      td {
+        text-align: left;
+
+        & + td {
+          width: 1px;
+        }
+      }
+    }
+
+    .no-results {
+      padding: 5px;
+      text-align: center;
+    }
+  }
+
+  mat-panel-description {
+    align-items: center;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

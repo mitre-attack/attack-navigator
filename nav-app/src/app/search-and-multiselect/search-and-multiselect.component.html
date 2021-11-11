@@ -1,0 +1,155 @@
+<div class="search-and-multiselect">
+    <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <span matPrefix class="material-icons" alt="search">search</span>
+        <input matInput [(ngModel)]="query" placeholder="Search">
+    </mat-form-field>
+
+    <mat-divider></mat-divider>
+
+    <div class="sidebar-content">
+        <mat-card>
+            <div class="settings">
+                <mat-card-title><h4 class="title">Search Settings</h4></mat-card-title>
+                <mat-card-content>
+                    <div class="fields">
+                        <div class="field" *ngFor="let field of fields">
+                            <input [id]="field.field" class="checkbox-custom" type="checkbox"
+                                   (click)="toggleFieldEnabled(field.field)" [checked]="field.enabled">
+                            <label [for]="field.field" class="checkbox-custom-label noselect">{{field.label}}</label>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </div>
+        </mat-card>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="sidebar-content">
+        <mat-accordion multi>
+            <mat-expansion-panel [expanded]="expandedPanels[0]" (click)="userClickedExpand = true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h4>Techniques ({{techniqueResults.length}})</h4>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <ng-template matExpansionPanelContent>
+                    <div>
+                        <div class="allresults-buttons">
+                            <button class="button" (click)="selectAll(techniqueResults)">select all</button>
+                            <button class="button" (click)="deselectAll(techniqueResults)">deselect all</button>
+                        </div>
+                        <div class="results">
+                            <table class="results" *ngIf="techniqueResults.length > 0; else noTechniquesResults">
+                                <tr *ngFor="let result of techniqueResults">
+                                    <td (mouseenter)="mouseEnter(result)" (mouseleave)="mouseLeave()">
+                                        <span *ngIf="result.isSubtechnique">{{result.parent.name}}
+                                            : </span>{{result.name}}
+                                    </td>
+                                    <td><a href="{{result.url}}" target="_blank">view</a></td>
+                                    <td>
+                                        <button class="button" (click)="select(result)">select</button>
+                                    </td>
+                                    <td>
+                                        <button class="button" (click)="deselect(result)">deselect</button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <ng-template #noTechniquesResults>
+                                <div class="no-results">no results for techniques</div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel *ngFor="let stixType of stixTypes; let i = index" class="stixType" [expanded]="expandedPanels[i+1]" (click)="userClickedExpand = true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h4>
+                            {{stixType.label | titlecase }} ({{stixType.objects.length}})
+                        </h4>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <ng-template matExpansionPanelContent>
+                    <div class="allresults-buttons">
+                        <button class="button" (click)="selectAll(stixType.objects, false)">select all</button>
+                        <button class="button" (click)="deselectAll(stixType.objects, false)">deselect all</button>
+                    </div>
+                    <div class="results objects">
+                        <table *ngIf="stixType.objects.length > 0; else noResults">
+                            <tr *ngFor="let stixObject of stixType.objects">
+                                <td (mouseenter)="mouseEnter(stixObject, false)"
+                                    (mouseleave)="mouseLeave()">
+                                    {{stixObject.name}}
+                                </td>
+                                <td><a href="{{stixObject.url}}" target="_blank">view</a></td>
+                                <td>
+                                    <button class="button" (click)="select(stixObject, false)">select</button>
+                                </td>
+                                <td>
+                                    <button class="button" (click)="deselect(stixObject, false)">deselect</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <ng-template #noResults>
+                            <div class="no-results">no results for {{stixType.label}}</div>
+                        </ng-template>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel [expanded]="expandedPanels[4]" (click)="userClickedExpand = true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h4>
+                            Data Sources ({{stixDataComponentLabels.length}})
+                        </h4>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <ng-template matExpansionPanelContent>
+                    <div class="allresults-buttons">
+                        <button class="button" (click)="selectAll(stixDataComponentsResults, true)">select all</button>
+                        <button class="button" (click)="deselectAll(stixDataComponentsResults, true)">deselect all</button>
+                    </div>
+                    <div class="results objects">
+                        <table *ngIf="stixDataComponentLabels.length > 0; else noResults">
+                            <tr  *ngFor="let label of stixDataComponentLabels">
+                                <td (mouseenter)="mouseEnterAll(stixDataComponents.get(label).objects)"
+                                    (mouseleave)="mouseLeave()">
+                                    {{ label }}
+                                </td>
+                                <td><a href="{{stixDataComponents.get(label).url}}" target="_blank">view</a></td>
+                                <td>
+                                    <button class="button" (click)="selectAll(stixDataComponents.get(label).objects, true)">select</button>
+                                </td>
+                                <td>
+                                    <button class="button" (click)="deselectAll(stixDataComponents.get(label).objects, true)">deselect</button>
+                                </td>
+                            </tr>
+                        </table>
+                        <ng-template #noResults>
+                            <div class="no-results">no results for data sources</div>
+                        </ng-template>
+                    </div>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="button-container sidebar-content">
+        <button (click)="viewModel.sidebarOpened = !viewModel.sidebarOpened" mat-raised-button>Close</button>
+    </div>
+</div>

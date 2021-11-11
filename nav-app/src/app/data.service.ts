@@ -24,7 +24,7 @@ export class DataService {
         "mitre-enterprise": "enterprise-attack",
         "mitre-mobile": "mobile-attack"
     }
-    
+
     public domains: Domain[] = [];
     public versions: any[] = [];
 
@@ -32,28 +32,42 @@ export class DataService {
 
     /**
      * Callback functions passed to this function will be called after data is loaded
+     * @param {string} domainVersionID the ID of the domain and version to load
      * @param {*} callback callback function to call when data is done loading
      */
-    public onDataLoad(domainID, callback) {
-        this.getDomain(domainID).dataLoadedCallbacks.push(callback);
+    public onDataLoad(domainVersionID, callback) {
+        this.getDomain(domainVersionID).dataLoadedCallbacks.push(callback);
     }
 
     /**
      * Parse the given stix bundle into the relevant data holders
-     * @param {any[]} stixBundle: the STIX bundle to parse
+     * @param domain
+     * @param stixBundles
      */
     public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
+        let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
             let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle
-                if (sdo.x_mitre_deprecated || sdo.revoked) continue; 
+                // Filter out object not included in this domain if domains field is available
+                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+
+                // filter out duplicates
+                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
+                else continue;
+
                 // parse according to type
-                switch(sdo.type) {
+                switch (sdo.type) {
+                    case "x-mitre-data-component":
+                        domain.dataComponents.push(new DataComponent(sdo, this));
+                        break;
+                    case "x-mitre-data-source":
+                        domain.dataSources.set(sdo.id, { name: sdo.name, external_references: sdo.external_references });
+                        break;
                     case "intrusion-set":
                         domain.groups.push(new Group(sdo, this));
                         break;
@@ -107,15 +121,24 @@ export class DataService {
                             } else {
                                 domain.relationships["mitigatedBy"].set(sdo.target_ref, [sdo.source_ref])
                             }
+                            
+                        } else if (sdo.relationship_type == 'revoked-by') {
+                            // record stix object: stix object relationship
+                            domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
+                        } else if (sdo.relationship_type === 'detects') {
+                            if (domain.relationships["component_rel"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["component_rel"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
+                            }
                         }
                         break;
                     case "attack-pattern":
                         idToTechniqueSDO.set(sdo.id, sdo);
-                        if (sdo.x_mitre_is_subtechnique) {
-                            if (this.subtechniquesEnabled) {
-                                domain.subtechniques.push(new Technique(sdo, [], this));
-                            }
-                        } else techniqueSDOs.push(sdo);
+                        if (!sdo.x_mitre_is_subtechnique) {
+                            techniqueSDOs.push(sdo);
+                        }
                         break;
                     case "x-mitre-tactic":
                         idToTacticSDO.set(sdo.id, sdo);
@@ -135,23 +158,29 @@ export class DataService {
                 if (this.subtechniquesEnabled) {
                     if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
                         domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                            if (idToTechniqueSDO.has(sub_id)) subtechniques.push(new Technique(idToTechniqueSDO.get(sub_id), [], this));
+                            if (idToTechniqueSDO.has(sub_id)) {
+                                let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
+                                subtechniques.push(subtechnique);
+                                domain.subtechniques.push(subtechnique);
+                            }
                             // else the target was revoked or deprecated and we can skip honoring the relationship
                         })
                     }
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-            
+
             //create matrices, which also creates tactics and filters techniques
             for (let matrixSDO of matrixSDOs) {
                 domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
             }
-            
+
             // parse platforms
             for (let technique of domain.techniques) {
-                for (let platform of technique.platforms) {
-                    platforms.add(platform)
+                if (technique.platforms) {
+                    for (let platform of technique.platforms) {
+                        platforms.add(platform)
+                    }
                 }
             }
             for (let subtechnique of domain.subtechniques) {
@@ -159,14 +188,15 @@ export class DataService {
                     platforms.add(platform)
                 }
             }
-        }
-        domain.platforms = Array.from(platforms); // convert to array
 
-        // data loading complete; update watchers
-        domain.dataLoaded = true;
-        console.log("data.service parsing complete")
-        for (let callback of domain.dataLoadedCallbacks) {
-            callback();
+            domain.platforms = Array.from(platforms); // convert to array
+
+            // data loading complete; update watchers
+            domain.dataLoaded = true;
+            console.log("data.service parsing complete")
+            for (let callback of domain.dataLoadedCallbacks) {
+                callback();
+            }
         }
     }
 
@@ -186,14 +216,14 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    public setUpURLs(versions: []){
-        versions.forEach( (version: any) => {
+    public setUpURLs(versions: []) {
+        versions.forEach((version: any) => {
             let v: string = version["name"];
             this.versions.push(v);
-            version["domains"].forEach( (domain: any) => {
-                let id = this.getDomainID(domain["name"], v);
+            version["domains"].forEach((domain: any) => {
+                let domainVersionID = this.getDomainVersionID(domain["name"], v);
                 let name = domain["name"];
-                let domainObject = new Domain(id, name, v)
+                let domainObject = new Domain(domainVersionID, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -206,12 +236,12 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v7";
-            let enterpriseDomain = new Domain(this.getDomainID("Enterprise", currVersion), "Enterprise", currVersion);
+            let currVersion = "ATT&CK v10";
+            let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain(this.getDomainID("Mobile", currVersion), "Mobile", currVersion);
+            let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
-            let nistDomain = new Domain(this.getDomainID("NIST", currVersion), "NIST", currVersion);
+            let nistDomain = new Domain(this.getDomainVersionID("NIST", currVersion), "NIST", currVersion);
             nistDomain.urls = [this.nistEnterpriseAttackURL];
 
             this.versions.push(currVersion);
@@ -226,7 +256,7 @@ export class DataService {
      * get the current config
      * @param {boolean} refresh: if true fetches the config from file. Otherwise, only fetches if it's never been fetched before
      */
-    getConfig(refresh:boolean = false){
+    getConfig(refresh: boolean = false) {
         if (refresh || !this.configData$) {
             this.configData$ = this.http.get("./assets/config.json");
         }
@@ -236,7 +266,7 @@ export class DataService {
     /**
      * Fetch the domain data from the endpoint
      */
-    getDomainData(domain: Domain, refresh: boolean = false) : Observable<Object>{
+    getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
             console.log("fetching data from TAXII server");
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
@@ -265,9 +295,10 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    public loadDomainData(domainID: string, refresh: boolean = false): Promise<any> {
+    loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
-            let domain = this.getDomain(domainID);
+            let domain = this.getDomain(domainVersionID);
+            if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
@@ -277,7 +308,7 @@ export class DataService {
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
                 });
             } else if (!domain) { // domain not defined in config
-                reject("'" + domainID + "' is not a valid domain.")
+                reject("'" + domainVersionID + "' is not a valid domain & version.")
             }
         });
         return dataPromise;
@@ -286,14 +317,14 @@ export class DataService {
     /**
      * Get domain object by domain ID
      */
-    getDomain(domainID: string): Domain {
-        return this.domains.find((d) => d.id === domainID);
+    getDomain(domainVersionID: string): Domain {
+        return this.domains.find((d) => d.id === domainVersionID);
     }
 
     /**
-     * Get domain ID from domain name & version
+     * Get the ID from domain name & version
      */
-    getDomainID(domain: string, version: string): string {
+    getDomainVersionID(domain: string, version: string): string {
         if (!version) { // layer with no specified version defaults to current version
             version = this.versions[0];
         }
@@ -301,37 +332,166 @@ export class DataService {
     }
 
     /**
+     * Retrieve the technique object with the given attackID in the given domain/version
+     */
+    getTechnique(attackID: string, domainVersionID: string) {
+        let domain = this.getDomain(domainVersionID);
+        let all_techniques = domain.techniques.concat(domain.subtechniques);
+        return all_techniques.find(t => t.attackID == attackID);
+    }
+
+    /**
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
+        return this.versions[0].match(/v[0-9]+/g)[0].toLowerCase();
     }
 
     /**
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
+        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]+/g)[0] ? false : true;
+    }
+
+    /**
+     * Compares techniques between two ATT&CK versions and returns a set of object changes
+     * @param oldDomainVersionID imported layer domain & version to upgrade from
+     * @param newDomainVersionID latest ATT&CK domain & version to upgrade to
+     */
+    public compareVersions(oldDomainVersionID: string, newDomainVersionID: string): VersionChangelog {
+        let changelog = new VersionChangelog(oldDomainVersionID, newDomainVersionID);
+        let oldDomain = this.getDomain(oldDomainVersionID);
+        let newDomain = this.getDomain(newDomainVersionID);
+
+        let previousTechniques = oldDomain.techniques.concat(oldDomain.subtechniques);
+        let latestTechniques = newDomain.techniques.concat(newDomain.subtechniques);
+
+        // object lookup to increase efficiency
+        let objectLookup = new Map<string, Technique>(
+            latestTechniques.map(technique => [technique.id, previousTechniques.find(p => p.id == technique.id)])
+        );
+
+        for (let latestTechnique of latestTechniques) {
+            if (!latestTechnique) continue;
+
+            let prevTechnique = objectLookup.get(latestTechnique.id);
+            if (!prevTechnique) {
+                // object doesn't exist in previous version, added to latest version
+                changelog.additions.push(latestTechnique.attackID);
+            }
+            else if (latestTechnique.modified == prevTechnique.modified) {
+                if (prevTechnique.revoked || prevTechnique.deprecated) {
+                    // object is revoked or deprecated, ignore
+                    continue;
+                } else {
+                    // no changes made to the object
+                    changelog.unchanged.push(latestTechnique.attackID);
+                }
+            } else {
+                // changes were made to the object
+                if (latestTechnique.revoked && !prevTechnique.revoked) {
+                    // object was revoked since the previous version
+                    changelog.revocations.push(latestTechnique.attackID);
+                } else if (latestTechnique.revoked && prevTechnique.revoked) {
+                    // both objects are revoked, ignore
+                    continue;
+                } else if (latestTechnique.deprecated && !prevTechnique.deprecated) {
+                    // object was deprecated since the previous version
+                    changelog.deprecations.push(latestTechnique.attackID);
+                } else if (latestTechnique.deprecated && prevTechnique.deprecated) {
+                    // both objects are deprecated, ignore
+                    continue;
+                } else if (latestTechnique.compareVersion(prevTechnique) != 0) {
+                    // version number changed
+                    changelog.changes.push(latestTechnique.attackID);
+                } else { // minor change
+                    changelog.minor_changes.push(latestTechnique.attackID);
+                }
+            }
+        }
+        return changelog;
     }
 }
 
-/** 
+/**
  * Common attributes for STIX objects
- */ 
+ */
 export abstract class BaseStix {
     public readonly id: string;          // STIX ID
     public readonly attackID: string;    // ATT&CK ID
     public readonly name: string;        // name of object
     public readonly description: string; // description of object
     public readonly url: string;         // URL of object on the ATT&CK website
+    public readonly created: string;     // date object was created
+    public readonly modified: string;    // date object was last modified
+    public readonly revoked: boolean;    // is the object revoked?
+    public readonly deprecated: boolean; // is the object deprecated?
+    public readonly version: string;     // object version
     protected readonly dataService: DataService;
-    constructor(stixSDO: any, dataService: DataService) {
+    constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
         this.id = stixSDO.id;
+        if (supportsAttackID) {
+            if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+                alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+                throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+            }
+        }
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        this.attackID = stixSDO.external_references[0].external_id;
-        this.url = stixSDO.external_references[0].url;
+        if (stixSDO.id.includes("x-mitre-data-component")) {
+            this.attackID = '';
+        } else if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
+            this.attackID = stixSDO.external_references[0].external_id;
+        } else {
+            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+        }
+        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
+            this.url = stixSDO.external_references[0].url;
+        } else {
+            this.url = "";
+        }
+        this.created = stixSDO.created;
+        this.modified = stixSDO.modified;
+        this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
+        this.deprecated = stixSDO.x_mitre_deprecated ? stixSDO.x_mitre_deprecated : false;
+        this.version = stixSDO.x_mitre_version ? stixSDO.x_mitre_version : '';
         this.dataService = dataService;
+    }
+
+    /**
+     * Compare this object's version number to another object's version number
+     * @param that the object to compare to
+     * @returns 0 if the objects have the same version,
+     *          > 0 if this object's version is greater,
+     *          < 0 if that object's version is greater
+     */
+    public compareVersion(that: BaseStix): number {
+        if (!this.version || !that.version) return 0; // one or both of the objects have no version
+
+        let thisVersion = this.version.split('.');
+        let thatVersion = that.version.split('.');
+
+        for (let i = 0; i < Math.max(thisVersion.length, thatVersion.length); i++) {
+            if (thisVersion.length == thatVersion.length && thisVersion.length < i) return 0;
+            if (thisVersion.length < i) return -1;
+            if (thatVersion.length < i) return 1;
+            if (+thisVersion[i] == +thatVersion[i]) continue;
+            return +thisVersion[i] - +thatVersion[i];
+        }
+        return 0;
+    }
+
+    /**
+     * get the stix object that this object is revoked by
+     * @param {string} domainVersionID the ID of the domain & version this object is found in
+     * @returns {string} object ID this object is revoked by
+     */
+    public revoked_by(domainVersionID): string {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.revoked_by;
+        if (rels.has(this.id)) return rels.get(this.id);
+        else return undefined;
     }
 }
 
@@ -366,7 +526,10 @@ export class Tactic extends BaseStix {
     constructor(stixSDO: any, techniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.shortname = stixSDO.x_mitre_shortname;
-        this.techniques = techniques.filter((technique: Technique) => technique.tactics.includes(this.shortname));
+        this.techniques = techniques.filter((technique: Technique) => {
+            if (!technique.revoked && !technique.deprecated)
+                return technique.tactics.includes(this.shortname)
+        });
     }
 }
 /**
@@ -387,17 +550,19 @@ export class Technique extends BaseStix {
     constructor(stixSDO: any, subtechniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms;
-      	if (stixSDO.x_mitre_data_sources !== undefined)
-		      this.datasources = stixSDO.x_mitre_data_sources.toString();
-	      else
-		      this.datasources = "";
-        this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
+        if (stixSDO.x_mitre_data_sources !== undefined)
+            this.datasources = stixSDO.x_mitre_data_sources.toString();
+        else
+            this.datasources = "";
 
-        this.subtechniques = subtechniques;
+        if (!this.revoked && !this.deprecated) {
+            this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
+        }
+
+        this.subtechniques = subtechniques.filter(sub => !(sub.deprecated || sub.revoked));
         for (let subtechnique of this.subtechniques) {
             subtechnique.parent = this;
         }
-
     }
 
     /**
@@ -406,7 +571,7 @@ export class Technique extends BaseStix {
      * @returns {string} ID for this technique under that tactic
      */
     public get_technique_tactic_id(tactic: string | Tactic): string {
-        let tactic_shortname = tactic instanceof Tactic? tactic.shortname : tactic;
+        let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
         if (!this.tactics.includes(tactic_shortname)) throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
         return this.attackID + "^" + tactic_shortname;
     }
@@ -416,16 +581,89 @@ export class Technique extends BaseStix {
      * Basically the same as calling get_technique_tactic_id with all valid tactic values
      */
     public get_all_technique_tactic_ids(): string[] {
+        if (this.revoked || this.deprecated) return [];
         return this.tactics.map((shortname: string) => this.get_technique_tactic_id(shortname));
     }
-    
+
     /**
      * Gets all of the mitigations associated with this technique
      * @param domain the domain ID of the search domain for mitigations
      */
-     public getAllMitigationsForDomain(domainID: string): Mitigation[] {
-        let mitigatedByIds = this.dataService.getDomain(domainID).relationships.mitigatedBy.get(this.id);
-        return mitigatedByIds ? this.dataService.getDomain(domainID).mitigations.filter(x => mitigatedByIds.includes(x.id)) : null;
+    public getAllMitigationsForDomain(domainVersionID: string): Mitigation[] {
+        let mitigatedByIds = this.dataService.getDomain(domainVersionID).relationships.mitigatedBy.get(this.id);
+        return mitigatedByIds ? this.dataService.getDomain(domainVersionID).mitigations.filter(x => mitigatedByIds.includes(x.id)) : null;
+    }
+}
+
+export class VersionChangelog {
+    public oldDomainVersionID: string;
+    public newDomainVersionID: string;
+    public additions: string[] = []; // new objects added to newest version
+    public changes: string[] = []; // object changes between versions
+    public minor_changes: string[] = []; // changes to objects without version increments
+    public deprecations: string[] = []; // objects deprecated since older version
+    public revocations: string[] = []; // objects revoked since older version
+    public unchanged: string[] = []; // objects which have not changed between versions
+
+    public reviewed = new Set<string>();
+    public copied = new Set<string>();
+
+    constructor(oldDomainVersionID: string, newDomainVersionID: string) {
+        this.oldDomainVersionID = oldDomainVersionID;
+        this.newDomainVersionID = newDomainVersionID;
+    }
+
+    public length(): number {
+        return this.additions.length
+            + this.changes.length
+            + this.minor_changes.length
+            + this.deprecations.length
+            + this.revocations.length
+            + this.unchanged.length;
+    }
+}
+
+/**
+ * Object representing a Data Component in the ATT&CK catalogue
+ */
+export class DataComponent extends BaseStix {
+    public readonly url: string;
+    public readonly dataSource: string;
+    /**
+     * get techniques related to this data component
+     * @returns {string[]} technique IDs used by this data component
+     */
+    public techniques(domainVersionID): string[] {
+        const techniques = [];
+        const domain = this.dataService.getDomain(domainVersionID);
+        let rels = domain.relationships.component_rel;
+        if (rels.has(this.id)) {
+            rels.get(this.id).forEach((targetID) => {
+                const t = domain.techniques.find((t) => t.id === targetID);
+                if (t) techniques.push(t);
+            })
+        }
+        return techniques;
+    }
+    /**
+     * get data source related to this data component
+     * @returns {name: string, url: string} name, and first url of data source referenced by this data component
+     */
+    public source(domainVersionID) {
+        const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
+        if (dataSources.has(this.dataSource)) {
+            const source = dataSources.get(this.dataSource);
+            let url = "";
+            if (source.external_references && source.external_references[0] && source.external_references[0].url)
+                url = source.external_references[0].url;
+            return { name: source.name, url: url };
+        }
+        else return { name: '', url: '' };
+    }
+
+    constructor(stixSDO: any, dataService: DataService) {
+        super(stixSDO, dataService, false);
+        this.dataSource = stixSDO.x_mitre_data_source_ref;
     }
 }
 
@@ -449,18 +687,19 @@ export class Software extends BaseStix {
      * get techniques used by this software
      * @returns {string[]} technique IDs used by this software
      */
-    public used(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.software_uses;
+    public used(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.software_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.used(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.used(domainVersionID);
     }
 }
+
 /**
  * Object representing a Group (intrusion-set) in the ATT&CK catalogue
  */
@@ -469,16 +708,16 @@ export class Group extends BaseStix {
      * get techniques used by this group
      * @returns {string[]} technique IDs used by this group
      */
-    public used(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.group_uses;
+    public used(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.group_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.used(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.used(domainVersionID);
     }
 }
 
@@ -490,18 +729,18 @@ export class Mitigation extends BaseStix {
      * get techniques mitigated by this mitigation
      * @returns {string[]} list of technique IDs
      */
-    public mitigated(domainID): string[] {
-        let rels = this.dataService.getDomain(domainID).relationships.mitigates;
+    public mitigated(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.mitigates;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } 
+        }
         else return [];
     }
     /**
      * Return all related techniques
      */
-    public relatedTechniques(domainID): string[] {
-        return this.mitigated(domainID);
+    public relatedTechniques(domainVersionID): string[] {
+        return this.mitigated(domainVersionID);
     }
 
     public serialisable() {
@@ -527,6 +766,11 @@ export class Note {
 
 export class Domain {
     public readonly id: string; // domain ID
+    public get domain_identifier(): string { //domain ID without the version suffix
+        let parts = this.id.split("-");
+        parts.pop();
+        return parts.join("-");
+    }
     public readonly name: string; // domain display name
     public readonly version: string; // ATT&CK version number
 
@@ -537,21 +781,33 @@ export class Domain {
     public dataLoadedCallbacks: any[] = [];
 
     public matrices: Matrix[] = [];
-    public tactics: Tactic[] = [];
+
+    public get tactics(): Tactic[] {
+        let tactics = [];
+        for (let matrix of this.matrices) {
+            tactics = tactics.concat(matrix.tactics);
+        }
+        return tactics;
+    }
     public techniques: Technique[] = [];
     public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
+    public dataComponents: DataComponent[] = [];
+    public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
     public notes: Note[] = [];
     public relationships: any = {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
-        subtechniques_of: new Map<string, string[]>(), 
+        subtechniques_of: new Map<string, string[]>(),
+        // data component related to technique
+        // ID of data component to [] of technique IDs
+        component_rel: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
-        group_uses: new Map<string, string[]>(), 
+        group_uses: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         software_uses: new Map<string, string[]>(),
@@ -560,7 +816,10 @@ export class Domain {
         mitigates: new Map<string, string[]>(),
         // mitigations grouped by technique
         // ID of technique to [] of mitigation IDs
-        mitigatedBy: new Map<string, string[]>()
+        mitigatedBy: new Map<string, string[]>(),
+        // object is revoked-by object
+        // ID of object to ID of revoking object
+        revoked_by: new Map<string, string>()
     }
 
     constructor(id: string, name: string, version: string) {
@@ -573,6 +832,6 @@ export class Domain {
      * Get version of this domain
      */
     getVersion() {
-        return this.version.match(/[0-9]/g)[0];
+        return this.version.match(/[0-9]+/g)[0];
     }
 }

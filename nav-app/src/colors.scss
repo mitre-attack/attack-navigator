@@ -1,11 +1,5 @@
 $column-hover-color: rgb(235, 235, 235);
 $disabled-color: darken($column-hover-color, 20%);
-$cell-highlight-color: rgb(96, 197, 255);
-$hover-cell-font-color: rgb(0, 0, 0);
-$panel-dark: #ddd;
-$panel-light: lighten($panel-dark, 8%);
-$tab-text-color: #555;
-$button-dark: #b8b8b8;
 
 // ATT&CK Brand colors
 $attack-colors: (
@@ -17,7 +11,7 @@ $attack-colors: (
  * Colors used across the Navigator. Shared by the ATT&CK Website.
  * For each color-pair:
  *   - "color" refers to the color itself
- *   - "on-color" refers to the most readable text-color to appear on top of the color. 
+ *   - "on-color" refers to the most readable text-color to appear on top of the color.
  * Note: some colors don't define on-colors. This is because, for these colors, they aren't intended to
  * appear with inner content. For example, "link" is only intended to be used for link text, which inherently
  * cannot have inner text.
@@ -26,9 +20,26 @@ $colors: (
     primary: (color: map-get($attack-colors, attack-orange), on-color: white),  //used for header and some nav elements
     secondary: (color: map-get($attack-colors, attack-blue), on-color: white),  //used for footer and some buttons
     body: (color: white, on-color: #39434C),                                  //primary page body
+    light: (color: white, on-color: #39434C),
+    dark: (color: #08080b,  on-color: white),                               // dark theme colors variations 0-3 (from darkest to lightest)
+    dark-1: (color: #1a1a23,  on-color: white),
+    dark-2: (color: #2e2e3f,  on-color: #fa6341),                           // accent dark color scheme (used for :hover selectors)
+    dark-3: (color: #3f3f56,  on-color: white),
+    dark-4: (color: #4c4c68,  on-color: white),
+    dark-disabled: (color: rgb(255 255 255 / 25%)),
+    dark-link: (color: #7588E8),
+    dark-link-active: (color: #E847E8),
 //  body: (color: rgb(50, 50, 50), on-color: #cdcdcd),                            //example of a dark theme for the site
     link: (color: #4f7cac),                                                     //hyperlinks
     matrix-header: (color: gray, on-color: white),                            //color of matrix headers
+
+    cell-highlight-color: (color: rgb(96, 197, 255)),
+    cell-highlight-dark-color: (color: #464DFF),
+    hover-cell-font-color: (color: rgb(0, 0, 0)),
+    panel-dark: (color: #ddd),
+    panel-light: (color: lighten(#ddd, 8%)),
+    tab-text-color: (color: #555),
+    button-dark: (color: #b8b8b8),
 
     //bootstrap colors
     bootstrap-primary: (color: #428bca, on-color: white),
@@ -38,7 +49,7 @@ $colors: (
     bootstrap-info: (color: #5bc0de, on-color: white),
 
     //TODO deprecate with search page changes
-    search-results-border: (color: black, on-color: lightgrey),  
+    search-results-border: (color: black, on-color: lightgrey),
 );
 
 // accessor helper for $colors. Gets the color of the named pair
@@ -51,7 +62,7 @@ $colors: (
 // if the base color is light, the alternate will be slightly darker.
 // contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
 @function color-alternate($name, $contrast: 1) {
-    @return mix(invert(color($name)), color($name), $weight: $contrast * 5%); 
+    @return mix(invert(color($name)), color($name), $weight: $contrast * 5%);
 }
 
 // accessor helper for $colors. Gets the on-color of the named pair
@@ -62,16 +73,63 @@ $colors: (
 // given a color-name, get an emphasized version of the on-color.
 // The emphasized on-color is less like the background color.
 @function on-color-emphasis($name) {
-    @return mix(invert(color($name)), on-color($name)); 
+    @return mix(invert(color($name)), on-color($name));
 }
 // given a color-name, get an deemphasized version of the on-color.
 // The deemphasized on-color is more like the background color.
 @function on-color-deemphasis($name) {
-    @return mix(color($name), on-color($name), 25%); 
+    @return mix(color($name), on-color($name), 25%);
 }
 
 // given a color name, compute a border color for the color
 @function border-color($name) {
-    @return mix(invert(color($name)), color($name), 12.5%); 
+    @return mix(invert(color($name)), color($name), 12.5%);
     // @return rgba(invert(color($name)), 0.125);
+}
+
+// IMPORTANT USAGE NOTE:
+// to use adaptive colors, you MUST disable view encapsulation on the component
+// you're applying the styles within. Otherwise ancestor classes cannot be assessed
+// by the mixins to determine the app theme configuration.
+
+/// assign the property with different values in the light and dark themes
+/// @param {property} $property the property you want to set the value of
+/// @param {value} $light-value the value to assign when in the light theme
+/// @param {value} $dark-value the value to assign when in the dark theme
+@mixin adaptive-color($property, $light-value, $dark-value) {
+  @include adaptive-color-light-only($property, $light-value);
+  @include adaptive-color-dark-only($property, $dark-value);
+}
+
+/// assign the property with the given value only when in the light theme
+/// @param {property} $property the property you want to set the value of
+/// @param {value} $light-value the value to assign when in the light theme
+@mixin adaptive-color-light-only($property, $light-value) {
+  .theme-use-system & {
+    // when the ancestor class shows that the app is configured to use the system theme,
+    // use a media query to assign the light value
+    @media (prefers-color-scheme: light) { #{$property}: $light-value; }
+  }
+  .theme-override-light & {
+    // when the ancestor class shows that the app is configured to use the light theme,
+    // assign the light value
+    #{$property}: $light-value;
+  }
+}
+
+/// assign the property with the given value only when in the dark theme
+/// @param {property} $property the property you want to set the value of
+/// @param {value} $light-value the value to assign when in the light theme
+/// @param {value} $dark-value the value to assign when in the dark theme
+@mixin adaptive-color-dark-only($property, $dark-value) {
+  .theme-use-system & {
+    // when the ancestor class shows that the app is configured to use the system theme,
+    // use a media query to assign the dark value
+    @media (prefers-color-scheme: dark) { #{$property}: $dark-value; }
+  }
+  .theme-override-dark & {
+    // when the ancestor class shows that the app is configured to use the dark theme,
+    // assign the dark value
+    #{$property}: $dark-value;
+  }
 }

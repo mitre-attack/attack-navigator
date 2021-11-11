@@ -1,0 +1,8 @@
+@import "../../matrix/technique-cell/technique-cell.component.scss";
+
+.nopointer { cursor: unset; }
+.section { margin: 4px 0; }
+.section + .section { border-top: 1px solid rgba(border-color(body), 0.5); }
+.technique-cell { margin: auto; }
+.setwidth { max-width: 50%; }
+.mat-drawer-inner-container .technique-cell { @include adaptive-color-dark-only("background-color", color(dark-4)); }

@@ -1,61 +1,30 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic, Matrix, DataService } from '../../data.service';
-import { ViewModel } from '../../viewmodels.service';
-import {ConfigService} from '../../config.service';
-
-declare var tinycolor: any; //use tinycolor2
+import { ConfigService } from '../../config.service';
+import { Cell } from '../cell';
 
 @Component({
     selector: 'technique-cell',
     templateUrl: './technique-cell.component.html',
-    styleUrls: ['./technique-cell.component.scss']
+    styleUrls: ['./technique-cell.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
-export class TechniqueCellComponent implements OnInit {
-    @Input() tactic: Tactic;
-    @Input() technique: Technique;
-    @Input() viewModel: ViewModel;
+export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;
     @Output() highlight = new EventEmitter<any>(); // emit with the highlighted technique, or null to unhighlight
     @Output() unhighlight = new EventEmitter<any>();
     @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
-    public showContextmenu: boolean = false;
 
     public get showTooltip(): boolean {
         if (this.showContextmenu) return false;
-        if (!this.viewModel.highlightedTechnique) return false;
+        if (this.viewModel.highlightedTechniques.size === 0) return false;
 
-        return (this.viewModel.highlightedTechnique.id == this.technique.id && this.viewModel.highlightedTactic.id == this.tactic.id);
+        return (this.viewModel.highlightedTechnique === this.technique && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id === this.tactic.id);
     }
 
-    public get isHighlighted(): boolean {
-        if (this.viewModel.highlightedTactic) {
-            if (this.viewModel.selectTechniquesAcrossTactics) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
-            } else if (this.viewModel.highlightedTactic.id == this.tactic.id) {
-                if (this.viewModel.selectSubtechniquesWithParent) {
-                    let compareTo = this.viewModel.highlightedTechnique;
-                    if (compareTo.isSubtechnique) compareTo = compareTo.parent;
-                    let compare = this.technique;
-                    if (compare.isSubtechnique) compare = compare.parent;
-                    if (compare.attackID == compareTo.attackID) return true;
-                } else if (this.viewModel.highlightedTechnique.id == this.technique.id) {
-                    return true;
-                }
-            }
-        }
-
-        return this.showContextmenu;
+    constructor(public configService: ConfigService, public dataService: DataService) {
+        super(dataService);
     }
-
-    constructor(public configService: ConfigService, public dataService: DataService) { }
 
     ngOnInit() {
     }
@@ -99,86 +68,16 @@ export class TechniqueCellComponent implements OnInit {
        this.showContextmenu = true;
     }
 
-    /**
-     * Return css classes for a technique
-     * @param  {technique} technique the technique to get the class of
-     * @param  {boolean}   mini is it the minitable?
-     * @return {string}               the classes the technique should currently have
-     */
+    // return css classes for a technique
     public getClass(): string {
-        let theclass = 'link noselect cell'
-        if (this.viewModel.isTechniqueSelected(this.technique, this.tactic))
-            theclass += " editing"
-        if (this.isHighlighted) { //open context menu always keeps highlight even if the mouse has moved elsewhere
-            theclass += " highlight";
-        }
-
-        // classes added by layout config
-        if (this.viewModel.layout.showID)
-            theclass += " showID"
-        if (this.viewModel.layout.showName)
-            theclass += " showName"
-        theclass += " " + this.viewModel.layout.layout;
-
-        // classes according to annotations
-        if (this.viewModel.getTechniqueVM(this.technique, this.tactic).comment.length > 0 || this.hasNotes())
-            theclass += " commented"
-        if (this.getTechniqueBackground())
-            theclass += " colored"
-        if (!this.viewModel.getTechniqueVM(this.technique, this.tactic).enabled)
-            theclass += " disabled"
+        let theclass = super.getClass();
 
         // classes by annotated sub-techniques
         if (!this.annotatedSubtechniques())
             theclass += " unannotated"
 
-        return theclass
+        return theclass;
     }
-
-    /**
-     * get the technique background style for ngstyle
-     * @param  technique technique
-     * @return           background object
-     */
-    public getTechniqueBackground(): any {
-        let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
-        // don't display if disabled or highlighted
-        if (!tvm.enabled || this.isHighlighted) return null
-        if (tvm.color) return {"background": tvm.color}
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return {"background": tvm.aggregateScoreColor}
-        if (tvm.score) return {"background": tvm.scoreColor}
-        // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
-    }
-
-    /**
-     * Get most readable text color for the given technique
-     * @param  technique     the technique to get the text color for
-     * @param  antihighlight boolean, true if the column is not selected.
-     * @return               black, white, or gray, depending on technique and column state
-     */
-    public getTechniqueTextColor() {
-        let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
-        if (!tvm.enabled) return "#aaaaaa";
-        // don't display if disabled or highlighted
-        // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(tvm.color, ["white", "black"]);
-        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]);
-        if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]);
-        else return "black"
-    }
-
-    /**
-     * Check if technique has notes
-     * @return      true if technique has notes, false otherwise
-     */
-    public hasNotes() {
-        let domain = this.dataService.getDomain(this.viewModel.domainID);
-        let notes = domain.notes.filter(note => {
-            return note.object_refs.includes(this.technique.id);
-        });
-        return notes.length > 0;
-    }
-
 }
 
 export class TechniqueEvent {

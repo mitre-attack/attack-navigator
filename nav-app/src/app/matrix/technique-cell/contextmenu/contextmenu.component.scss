@@ -1,7 +1,7 @@
 @import "../cell-popover.scss";
 @import "../../../../colors.scss";
 .contextmenu {
-    
+
     .cover {
         z-index: 100;
         // background: red;
@@ -16,6 +16,7 @@
     .menu {
         cursor: default;
         @include cell-popover(0.85);
+        @include adaptive-color("background", rgba(80, 80, 80, 0.85), rgba(color(cell-highlight-dark-color), 0.85));
         .contextMenu-section {
             &:not(:first-child) {
                 border-top: 1px solid white;
@@ -25,10 +26,9 @@
             div {padding: 3px;}
 
             .contextMenu-button {
-                
                 cursor: pointer;
                 &:hover {
-                    background: $cell-highlight-color;
+                    @include adaptive-color("background", color(cell-highlight-color), darken(color(cell-highlight-dark-color), 10%));
                 }
             }
         }

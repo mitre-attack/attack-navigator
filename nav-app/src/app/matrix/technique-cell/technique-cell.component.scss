@@ -1,5 +1,7 @@
 @import "../matrix-common.scss";
 .technique-cell {
+    @include adaptive-color("background-color", white, color(dark-2));
+    @include adaptive-color("color", black, on-color(dark-3));
     cursor: pointer;
     height: 100%;
     display: flex;
@@ -9,12 +11,12 @@
 
     font-size: $sizeunit - 1px;
     line-height: $sizeunit;
-    
+
     min-width: $sizeunit;
     min-height: $sizeunit;
-    
-    >div { 
-        padding: $sizeunit /2 3px; 
+
+    >div {
+        padding: $sizeunit /2 3px;
         box-sizing: border-box;
         display: block;
         width: 100%;
@@ -30,13 +32,13 @@
         outline-offset: -0.5px;
         outline: 1px solid rgba(border-color(body), 0.5);
     }
-       
-    &:not(.editing):not(.colored):not(.supertechniquecell) { 
-        box-shadow: 0 0 0 1px border-color(body) inset;
+
+    &:not(.editing):not(.colored):not(.supertechniquecell) {
+        @include adaptive-color("box-shadow", 0 0 0 1px border-color(body) inset, 0 0 0 1px border-color(dark-2) inset)
     }
 
     &.editing {
-        box-shadow: 0 0 0 1px black inset;
+        @include adaptive-color("box-shadow", 0 0 0 1px black inset, 0 0 0 1px color(cell-highlight-dark-color) inset);
     }
 
     &.commented {
@@ -65,7 +67,7 @@
     }
 
     &.highlight {
-        background: $cell-highlight-color;
+        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
         .id-name-break {
             outline: 1px solid rgba(black, 0.5);
         }
