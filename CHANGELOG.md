@@ -1,3 +1,16 @@
+# v4.5.2 - 10 November 2021
+
+## Improvements
+- Users will no longer be prompted to upgrade default layers (set in the config file or the "create a customized Navigator" feature) to the current ATT&CK version. This should improve the UX of Navigator instances embedded in iframes or linked to from webpages with a default set of layers loaded. 
+- Add support for ATT&CK v10.1
+
+## Fixes
+- Fixed an issue when loading multiple default layers (specified in the config or a layerURL) which led to only the first layer being loaded. See issue [#361](https://github.com/mitre-attack/attack-navigator/issues/361).
+- Fixed inconsistencies within the ATT&CK Navigator dark theme.
+  - If the user switches from the dark/light theme to use the system's theme, the browser will remember to continue using the system theme until changed again.
+  - The layer upgrade feature now supports dark theme.
+  - Fixed scoring gradient preset colors that should make technique cells appear to fade into the background color (if they have a lower score)
+
 # v4.5.1 - 21 October 2021
 
 ## Fixes
