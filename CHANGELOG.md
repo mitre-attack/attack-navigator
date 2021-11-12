@@ -1,3 +1,9 @@
+# v4.5.3 - 12 November 2021
+
+## Fixes
+- Fixed an issue where the user could not manually assign colors or upload layers with manually assigned colors. See issue [#386](https://github.com/mitre-attack/attack-navigator/issues/386).
+- Fixed an issue where fields with a value of `false` in the layout configuration of a layer would be ignored. See issue [#381](https://github.com/mitre-attack/attack-navigator/issues/381).
+
 # v4.5.2 - 10 November 2021
 
 ## Improvements
