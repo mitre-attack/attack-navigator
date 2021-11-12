@@ -75,9 +75,21 @@ export abstract class Cell {
      * @returns color without an alpha channel which has been mixed with the proper background color as if it is transparent
      */
     private emulate_alpha(color: any) {
-        let cell_color = tinycolor(color.toHex8String())
+        /* note: constructing a tinycolor of a tinycolor makes them aliases. E.g:
+         *
+         *    x = tinycolor("#ffffff")
+         *    y = tinycolor(x)
+         *    y.getAlpha() -> 1
+         *    x.setAlpha(0)
+         *    y.getAlpha() -> 0
+         *
+         * Therefore y must be cloned after it is constructed to avoid transformations of x affecting it.
+         * In this context, the color arg must be cloned because
+         * in some contexts it is a tinycolor and we change its alpha below, 
+         * which could affect the copy in the calling function
+         */
+        let cell_color = tinycolor(color).clone();
         let cell_color_alpha = cell_color.getAlpha();
-        // if (!cell_color_alpha) return color;
         cell_color.setAlpha(1)
         let result = tinycolor.mix(this.isDarkTheme ? "#2e2e3f" : "#ffffff", cell_color, cell_color_alpha * 100)
         return result;
