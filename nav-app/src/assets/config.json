@@ -1,14 +1,14 @@
 {
     "versions": [
         {
-            "name": "ATT&CK v10", 
+            "name": "ATT&CK v10",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/mobile-attack/mobile-attack.json"]
                 },
                 {
@@ -18,14 +18,14 @@
             ]
         },
         {
-            "name": "ATT&CK v9", 
+            "name": "ATT&CK v9",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/mobile-attack/mobile-attack.json"]
                 },
                 {
@@ -35,14 +35,14 @@
             ]
         },
         {
-            "name": "ATT&CK v8", 
+            "name": "ATT&CK v8",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.2/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.2/mobile-attack/mobile-attack.json"]
                 },
                 {
@@ -52,27 +52,27 @@
             ]
         },
         {
-            "name": "ATT&CK v7", 
+            "name": "ATT&CK v7",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]
                 }
             ]
         },
         {
-            "name": "ATT&CK v6", 
+            "name": "ATT&CK v6",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/mobile-attack/mobile-attack.json"]
                 }
             ]
@@ -123,6 +123,7 @@
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
+        {"name": "sticky_tab_bar", "enabled": true, "description": "Disable to stop the top tab bar from disappearing when scrolling down."},
         {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},

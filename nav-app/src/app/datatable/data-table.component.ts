@@ -252,10 +252,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Angular lifecycle hook
      */
     ngAfterViewInit(): void {
-        // setTimeout(() => this.exportRender(), 500);
-        this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
+      // setTimeout(() => this.exportRender(), 500);
+      this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
+      if (this.configService.getFeature('sticky_tab_bar')) {
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
         this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
+      }
     }
 
     ngOnDestroy() {
