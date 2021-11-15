@@ -123,7 +123,6 @@
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
-        {"name": "sticky_tab_bar", "enabled": true, "description": "Disable to stop the top tab bar from disappearing when scrolling down."},
         {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},
