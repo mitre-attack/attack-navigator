@@ -85,7 +85,7 @@ export abstract class Cell {
          *
          * Therefore y must be cloned after it is constructed to avoid transformations of x affecting it.
          * In this context, the color arg must be cloned because
-         * in some contexts it is a tinycolor and we change its alpha below, 
+         * in some contexts it is a tinycolor and we change its alpha below,
          * which could affect the copy in the calling function
          */
         let cell_color = tinycolor(color).clone();
@@ -107,7 +107,7 @@ export abstract class Cell {
         if (!tvm.enabled) return this.isDarkTheme ? "rgb(255 255 255 / 25%)" : "#aaaaaa";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]); 
+        if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
         if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
         else return this.isDarkTheme ? "white" : "black";
@@ -136,7 +136,7 @@ export abstract class Cell {
         // don't display if disabled or highlighted
         if (!tvm.enabled || this.isHighlighted) return null;
         if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore))) return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
+        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0) return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
         if (tvm.score) return { "background": this.emulate_alpha(tvm.scoreColor) }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
