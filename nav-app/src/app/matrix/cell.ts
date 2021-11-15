@@ -88,6 +88,7 @@ export abstract class Cell {
          * in some contexts it is a tinycolor and we change its alpha below,
          * which could affect the copy in the calling function
          */
+        if (!color || color.length < 1) return "";
         let cell_color = tinycolor(color).clone();
         let cell_color_alpha = cell_color.getAlpha();
         cell_color.setAlpha(1)
