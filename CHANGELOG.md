@@ -9,6 +9,10 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.5.4 - 15 November 2021
+## Fixes
+- Fixed a bug where layers with aggregate scores enabled would be render a black background on techniques which have no aggregate score. See issue [#388](https://github.com/mitre-attack/attack-navigator/issues/388).
+
 # v4.5.3 - 12 November 2021
 
 ## Fixes
