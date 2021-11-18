@@ -134,9 +134,9 @@
             {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
         ]},
             {"name": "mitigation_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
-            {"name": "export_mitigations", "enabled": true, "description": "Disable to remove the export mitigations for scored techniques."},
+            {"name": "export_mitigations", "enabled": false, "description": "Disable to remove the export mitigations for scored techniques."},
             {"name": "show_mitigations", "enabled": true, "description": "Disable to remove the show mitigations for scored techniques."},
-            {"name": "show_mapping_import", "enabled": true, "description": "Disaable to remove the ability to import control frameworks."}
+            {"name": "show_mapping_import", "enabled": false, "description": "Disaable to remove the ability to import control frameworks."}
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
