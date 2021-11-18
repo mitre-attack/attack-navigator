@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic, Matrix, DataService } from '../../data.service';
 import { ConfigService } from '../../config.service';
 import { Cell } from '../cell';
@@ -6,7 +6,8 @@ import { Cell } from '../cell';
 @Component({
     selector: 'technique-cell',
     templateUrl: './technique-cell.component.html',
-    styleUrls: ['./technique-cell.component.scss']
+    styleUrls: ['./technique-cell.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;

@@ -12,6 +12,18 @@ import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '.
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
     public stixTypes: any[];
+    // Data Components is a map mainly because it is a collection of labels that map to
+    // an array of techniques, where we want to filter/sort by label name
+    public stixDataComponents = new Map<string, any>();
+    public stixDataComponentLabels: string[];
+    userClickedExpand = false;
+    expandedPanels = {
+        0: true, // techniques panel
+        1: false, // groups panel
+        2: false, // software panel
+        3: false, // mitigations panel
+        4: false // data components panel
+    };
 
     public fields = [
         {
@@ -59,10 +71,19 @@ export class SearchAndMultiselectComponent implements OnInit {
         return this._query.length;
     }
 
+    public get stixDataComponentsResults(): Technique[] {
+      let results = [];
+      this.stixDataComponentLabels.forEach((label) => {
+        results = results.concat(this.stixDataComponents.get(label).objects);
+      });
+      return results;
+    }
+
     public techniqueResults: Technique[] = [];
 
     constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
         this.stixTypes = [];
+        this.stixDataComponentLabels = [];
     }
 
     ngOnInit() {
@@ -82,7 +103,7 @@ export class SearchAndMultiselectComponent implements OnInit {
      */
     filterAndSort(items: BaseStix[], query = "", sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
-        let results = items;
+        let results = items.filter(t => !t.deprecated && !t.revoked);
         if (query.trim() === "") {
             if (sortTechniquesAndSubtechniques) {
                 results.sort((tA: Technique, tB: Technique) => {
@@ -113,9 +134,22 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    // getResults() checks if this._query is:
-    // 1) valid, and
-    // 2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
+    filterAndSortLabels(labels, query) {
+      let results = labels;
+      if (query.trim() === "") {
+        return results.sort();
+      } else {
+        return results.filter((r) => r.toLowerCase().includes(query.trim().toLowerCase()));
+      }
+    }
+
+
+    /**
+     * getResults() checks if this._query is:
+     *       1) valid, and
+     *       2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
+    **/
+
     getResults(query = "", fieldToggled = false) {
         if (query.trim() != "" && query.includes(this.previousQuery) && !fieldToggled) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
@@ -123,6 +157,31 @@ export class SearchAndMultiselectComponent implements OnInit {
         } else {
             this.getTechniques();
             this.getStixData();
+        }
+        this.stixDataComponentLabels = this.filterAndSortLabels(this.stixDataComponentLabels, query);
+        this.expandPanels();
+    }
+
+    expandPanels() {
+        if (!this.userClickedExpand) {
+            this.expandedPanels[0] = this.techniqueResults.length > 0;
+            let isPrevExpanded = this.expandedPanels[0];
+            if (!isPrevExpanded) {
+                this.stixTypes.forEach((s, i) => {
+                  this.expandedPanels[i+1] = !isPrevExpanded && s.objects.length > 0;
+                  isPrevExpanded = s.isExpanded;
+                });
+            }
+            this.expandedPanels[4] = (!isPrevExpanded && this.stixDataComponentLabels.length > 0);
+        } else {
+            let isAllCollapsed = false;
+            for (const isPanelExpanded in this.expandedPanels) {
+                if (isPanelExpanded) {
+                  isAllCollapsed = true;
+                  break;
+                }
+            }
+            this.userClickedExpand = isAllCollapsed;
         }
     }
 
@@ -147,7 +206,18 @@ export class SearchAndMultiselectComponent implements OnInit {
         }, {
             "label": "mitigations",
             "objects": this.filterAndSort(domain.mitigations, this._query)
-        }]
+        }];
+
+        domain.dataComponents.forEach((c) => {
+          const source = c.source(this.viewModel.domainVersionID);
+          const label = `${source.name}: ${c.name}`;
+          const obj = {
+            "objects": c.techniques(this.viewModel.domainVersionID),
+            "url": source.url
+          }
+          this.stixDataComponents.set(label, obj);
+        });
+        this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
     }
 
     public toggleFieldEnabled(field: string) {
@@ -161,6 +231,10 @@ export class SearchAndMultiselectComponent implements OnInit {
                 break;
             }
         }
+    }
+
+    public mouseEnterAll(techniques: Technique[]) {
+      techniques.forEach((t) => this.mouseEnter(t));
     }
 
     public mouseEnter(technique: Technique, isTechnique = true): void {

@@ -14,9 +14,10 @@
             vertical-align: bottom;
             font-weight: bold;
         }
-        &.count { 
+
+        &.count {
+            @include adaptive-color("border-bottom", 1px solid black, 1px solid white);
             font-size: $sizeunit - 1px;
-            border-bottom: 1px solid black;
             padding-bottom: 5px;
             margin-bottom: 5px;
         }
@@ -35,7 +36,7 @@
                 &.sidebar.technique {
                     min-width: 8px;
                     width: 12px;
-                    padding: 0;    
+                    padding: 0;
                     background: on-color-deemphasis(body);
                     cursor: pointer;
                     vertical-align: middle;
@@ -44,9 +45,7 @@
                         vertical-align: middle;
                         transform: rotate(-90deg);
                         color: color-alternate(body);
-                        
-                        width: 12px; height: 12px; 
-                        
+                        width: 12px; height: 12px;
                         font-size: 16px;
                         line-height: 12px;
                     }

@@ -1,35 +1,88 @@
-# v4.5
+<!-- 
+     Reminder: update the version number in package.json when adding a new version!
+
+     If on the master branch and ready to release, you can use one of the following commands:
+         npm version major
+         npm version minor
+         npm version patch
+    This will patch the version number appropriately and create the correct tag on the current commit.
+    The creation of the tag can be disabled with the --no-git-tag-version if desired.
+-->
+# v4.6.0
 ## New Features
 - Added technique controls to assign links and metadata to selected techniques. Assigned links can be accessed via the context menu and metadata can be viewed in the technique tooltip. Links and metadata can also be added directly to Layer Files (see _Layer File Format Changes_ below for more details). See issue [#321](https://github.com/mitre-attack/attack-navigator/issues/321).
 
 ## Layer File Format Changes
 Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects. This supports the assignment of links to techniques which are accessed in the context menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the context menu where the `divider` property occurs in the list of links.
 
-# v4.4 - Changes staged on Develop
-<!-- TODO BEFORE RELEASE: update MONTH_AFTER_RELEASE in search-popover-notification.component.ts to the actual release date of v4.4 -->
+# v4.5.4 - 15 November 2021
+## Fixes
+- Fixed a bug where layers with aggregate scores enabled would be render a black background on techniques which have no aggregate score. See issue [#388](https://github.com/mitre-attack/attack-navigator/issues/388).
+
+# v4.5.3 - 12 November 2021
+
+## Fixes
+- Fixed an issue where the user could not manually assign colors or upload layers with manually assigned colors. See issue [#386](https://github.com/mitre-attack/attack-navigator/issues/386).
+- Fixed an issue where fields with a value of `false` in the layout configuration of a layer would be ignored. See issue [#381](https://github.com/mitre-attack/attack-navigator/issues/381).
+
+# v4.5.2 - 10 November 2021
+
+## Improvements
+- Users will no longer be prompted to upgrade default layers (set in the config file or the "create a customized Navigator" feature) to the current ATT&CK version. This should improve the UX of Navigator instances embedded in iframes or linked to from webpages with a default set of layers loaded. 
+- Add support for ATT&CK v10.1
+
+## Fixes
+- Fixed an issue when loading multiple default layers (specified in the config or a layerURL) which led to only the first layer being loaded. See issue [#361](https://github.com/mitre-attack/attack-navigator/issues/361).
+- Fixed inconsistencies within the ATT&CK Navigator dark theme.
+  - If the user switches from the dark/light theme to use the system's theme, the browser will remember to continue using the system theme until changed again.
+  - The layer upgrade feature now supports dark theme.
+  - Fixed scoring gradient preset colors that should make technique cells appear to fade into the background color (if they have a lower score)
+
+# v4.5.1 - 21 October 2021
+
+## Fixes
+- Fixes support for ATT&CK versions with more than 1 digit (ex. ATT&CK v10). 
+    - Uploaded layers without a specified ATT&CK version will no longer try and fail to load ATT&CK v1
+    - Uploaded layers uring ATT&CK v10 will no longer try and fail to load ATT&CK v1
+    - Downloaded layers using ATT&CK v10 will no longer claim they use ATT&CK v1
+
+# v4.5.0 - 21 October 2021
+
+## New Features
+- The ATT&CK Navigator now has a dark theme. See issue [#71](https://github.com/mitre-attack/attack-navigator/issues/71).
+- Added support for ATT&CK version 10
+    - Added data sources panel to the search and multiselect interface. See issue [#341](https://github.com/mitre-attack/attack-navigator/issues/341).
+
+# v4.4.1 - 16 September 2021
+
+## Fixes
+- Fixed a crash that would occur when loading a layer with annotations on a revoked/deprecated technique without explicitly defined tactics. See issue [#354](https://github.com/mitre-attack/attack-navigator/issues/354).
+
+# v4.4 - 15 September 2021
 
 Version 4.4 of the Navigator restores Safari support provided you are using Safari version 14 or above.
 
 ## New Features
-- Combined the search and multiselect interfaces into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
-- Added the Layer Upgrade UI to upgrade layers created in older versions of ATT&CK. When upgrading a layer, users can view what objects have changed between the two versions and copy annotations from the previous version.  See issue [#181](https://github.com/mitre-attack/attack-navigator/issues/181).
+- Combined the search and multiselect tools into a single UI. This allows groups, software, and mitigations to be filtered alongside techniques and improves usability by moving the interface to a sidebar. See issue [#204](https://github.com/mitre-attack/attack-navigator/issues/204). 
+- Added a workflow for upgrading layers created in older versions of ATT&CK to the current version. When upgrading a layer, users can view techniques have changed between the two versions and copy annotations to their new layer. See issue [#181](https://github.com/mitre-attack/attack-navigator/issues/181).
 
 ## Improvements
-- Improved favicon for standardization with other ATT&CK tools.
+- Various improvement to UI aesthetics and usability. See issue [#340](https://github.com/mitre-attack/attack-navigator/issues/340). 
+    - Reduced unnecessary whitespace to maximize screen real-estate for viewing the matrix.
+    - Layer tabs now hide themselves when the user scrolls to maximize screen real-estate for viewing the matrix.
+    - Improved favicon for standardization with other ATT&CK tools.
 - Techniques are now shown when disabled (and hide-disabled is enabled) as long as any of any of their sub-techniques are enabled. See issue [#298](https://github.com/mitre-attack/attack-navigator/issues/298)
-- The application usage/help page can now be viewed outside of the application (on GitHub). See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
-- The application changelog can now be viewed within the application. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
 - Users can disable the comment underline effect on techniques by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#268](https://github.com/mitre-attack/attack-navigator/issues/268).
 - Application now alerts the user when input STIX data contains an object missing an ATT&CK ID instead of failing silently. See issue [#339](https://github.com/mitre-attack/attack-navigator/pull/339).
+- The application usage/help page can now be viewed [directly on GitHub](https://github.com/mitre-attack/attack-navigator/blob/master/USAGE.md). See issue [#179](https://github.com/mitre-attack/attack-navigator/issues/179).
+- The application changelog can now be viewed within the application. See issue [#178](https://github.com/mitre-attack/attack-navigator/issues/178).
+
 ## Fixes
-- Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
+- Fixed some issues where objects could appear in the wrong domain under specific circumstances. See issue [#308](https://github.com/mitre-attack/attack-navigator/issues/308), [attack-website#310](https://github.com/mitre-attack/attack-website/issues/310).
 - Fixed issue with sorting when show aggregate score is enabled, where each technique's aggregate score was not correctly calculated into the sorting. See issue [#295](https://github.com/mitre-attack/attack-navigator/issues/295). 
 - The Navigator should now use the proper fonts when operating without an internet connection. See issue [#278](https://github.com/mitre-attack/attack-navigator/issues/278)
 - Fixed an issue when loading multiple default layers where subsequent layers would only appear after the user interacted with the first one. See issue [#288](https://github.com/mitre-attack/attack-navigator/issues/288).
-- Fixed an issue with help dropdown appearing above the matrix. See issue [#330](https://github.com/mitre-attack/attack-navigator/issues/330).
 - Updated Safari browser warning to show only for versions 13 and below. See issue [#306](https://github.com/mitre-attack/attack-navigator/issues/306).
-
-
 
 # v4.3 - 29 April 2021
 ## New Features

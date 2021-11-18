@@ -43,7 +43,7 @@ export class DataService {
      * @param domain
      * @param stixBundles
      */
-    parseBundle(domain: Domain, stixBundles: any[], includeAll: boolean = false): void {
+    parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<String>();
         let seenIDs = new Set<String>();
         for (let bundle of stixBundles) {
@@ -52,18 +52,21 @@ export class DataService {
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
-                // ignore deprecated and revoked objects in the bundle?
-                if (!includeAll && (sdo.x_mitre_deprecated || sdo.revoked)) continue;
-                
                 // Filter out object not included in this domain if domains field is available
-                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue; 
-                
+                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
                 else continue;
 
                 // parse according to type
                 switch(sdo.type) {
+                    case "x-mitre-data-component":
+                        domain.dataComponents.push(new DataComponent(sdo, this));
+                        break;
+                    case "x-mitre-data-source":
+                        domain.dataSources.set(sdo.id, {name: sdo.name, external_references: sdo.external_references});
+                        break;
                     case "intrusion-set":
                         domain.groups.push(new Group(sdo, this));
                         break;
@@ -112,6 +115,13 @@ export class DataService {
                         } else if (sdo.relationship_type == 'revoked-by') {
                             // record stix object: stix object relationship
                             domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
+                        } else if (sdo.relationship_type === 'detects') {
+                            if (domain.relationships["component_rel"].has(sdo.source_ref)) {
+                                let ids = domain.relationships["component_rel"].get(sdo.source_ref);
+                                ids.push(sdo.target_ref);
+                            } else {
+                                domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
+                            }
                         }
                         break;
                     case "attack-pattern":
@@ -214,7 +224,7 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v9";
+            let currVersion = "ATT&CK v10";
             let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
             let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
@@ -270,14 +280,14 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainVersionID: string, refresh: boolean = false, includeAll: boolean = false): Promise<any> {
+    loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
             if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data, includeAll);
+                        this.parseBundle(domain, data);
                         resolve(null);
                     },
                     complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
@@ -319,14 +329,14 @@ export class DataService {
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].match(/v[0-9]/g)[0].toLowerCase();
+        return this.versions[0].match(/v[0-9]+/g)[0].toLowerCase();
     }
 
     /**
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]/g)[0]? false : true;
+        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]+/g)[0]? false : true;
     }
 
     /**
@@ -404,15 +414,29 @@ export abstract class BaseStix {
     public readonly deprecated: boolean; // is the object deprecated?
     public readonly version: string;     // object version
     protected readonly dataService: DataService;
-    constructor(stixSDO: any, dataService: DataService) {
+    constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
         this.id = stixSDO.id;
+        if (supportsAttackID) {
+          if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+          }
+        }
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+        if (stixSDO.id.includes("x-mitre-data-component")) {
+          this.attackID = '';
+        } else if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
+          this.attackID = stixSDO.external_references[0].external_id;
+        } else {
           alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
           throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
         }
-        this.url = stixSDO.external_references[0].url;
+        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
+            this.url = stixSDO.external_references[0].url;
+        } else {
+            this.url = "";
+        }
         this.created = stixSDO.created;
         this.modified = stixSDO.modified;
         this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
@@ -520,7 +544,7 @@ export class Technique extends BaseStix {
             this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         }
 
-        this.subtechniques = subtechniques;
+        this.subtechniques = subtechniques.filter(sub => !(sub.deprecated || sub.revoked));
         for (let subtechnique of this.subtechniques) {
             subtechnique.parent = this;
         }
@@ -576,6 +600,50 @@ export class VersionChangelog {
 }
 
 /**
+ * Object representing a Data Component in the ATT&CK catalogue
+ */
+export class DataComponent extends BaseStix {
+  public readonly url: string;
+  public readonly dataSource: string;
+  /**
+   * get techniques related to this data component
+   * @returns {string[]} technique IDs used by this data component
+   */
+  public techniques(domainVersionID): string[] {
+    const techniques = [];
+    const domain = this.dataService.getDomain(domainVersionID);
+    let rels = domain.relationships.component_rel;
+    if (rels.has(this.id)) {
+      rels.get(this.id).forEach((targetID) => {
+        const t = domain.techniques.find((t) => t.id === targetID);
+        if (t) techniques.push(t);
+      })
+    }
+    return techniques;
+  }
+  /**
+   * get data source related to this data component
+   * @returns {name: string, url: string} name, and first url of data source referenced by this data component
+   */
+  public source(domainVersionID) {
+    const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
+    if (dataSources.has(this.dataSource)) {
+      const source = dataSources.get(this.dataSource);
+      let url = "";
+      if (source.external_references && source.external_references[0] && source.external_references[0].url)
+        url = source.external_references[0].url;
+      return {name: source.name, url: url};
+    }
+    else return {name: '', url: ''};
+  }
+
+  constructor(stixSDO: any, dataService: DataService) {
+    super(stixSDO, dataService, false);
+    this.dataSource = stixSDO.x_mitre_data_source_ref;
+  }
+}
+
+/**
  * Object representing a Software (tool, malware) in the ATT&CK catalogue
  */
 export class Software extends BaseStix {
@@ -607,6 +675,7 @@ export class Software extends BaseStix {
         return this.used(domainVersionID);
     }
 }
+
 /**
  * Object representing a Group (intrusion-set) in the ATT&CK catalogue
  */
@@ -696,6 +765,8 @@ export class Domain {
     public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
+    public dataComponents: DataComponent[] = [];
+    public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
     public notes: Note[] = [];
@@ -703,6 +774,9 @@ export class Domain {
         // subtechnique subtechnique-of technique
         // ID of technique to [] of subtechnique IDs
         subtechniques_of: new Map<string, string[]>(),
+        // data component related to technique
+        // ID of data component to [] of technique IDs
+        component_rel: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         group_uses: new Map<string, string[]>(),
@@ -727,6 +801,6 @@ export class Domain {
      * Get version of this domain
      */
     getVersion() {
-        return this.version.match(/[0-9]/g)[0];
+        return this.version.match(/[0-9]+/g)[0];
     }
 }

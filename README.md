@@ -56,6 +56,8 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Run `ng build` within the **nav-app** directory
 2. Copy files from `nav-app/dist/` directory
 
+_Note: `ng build --prod` does not currently work for ATT&CK Navigator without additional flags. To build the production environment instead use `ng build --prod --aot=false --build-optimizer=false`._
+
 #### Running the Navigator offline
 1. Install the Navigator as per instructions above.
 2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. For enterprise-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). For mobile-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json). For pre-attack, use [this file](https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json).
@@ -171,6 +173,8 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
 3. Load/reload the Navigator
 
 Default layers from the web can also be set using a query string in the Navigator URL. Refer to the in-application help page section "Customizing the Navigator" for more details.
+
+Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
 
 ## Enabling Banner in Navigator
 The `banner` setting in `nav-app/src/assets/config.json` by default is an empty string `"""` (and not visible), and can be set to whatever content you wish to display inside a banner at the top of the Navigator webpage. The banner supports HTML and hyperlinks in the content.

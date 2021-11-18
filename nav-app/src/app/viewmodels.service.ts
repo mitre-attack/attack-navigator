@@ -8,6 +8,7 @@ declare var tinycolor: any; //use tinycolor2
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
+import { getCookie, hasCookie } from "./cookies";
 
 @Injectable()
 export class ViewModelsService {
@@ -153,8 +154,8 @@ export class ViewModelsService {
                 // set up gradient according to result range
                 if (score_min != Infinity) result.gradient.minValue = score_min;
                 if (score_max != -Infinity) result.gradient.maxValue = score_max;
-                // if it's a binary range, set to whiteblue gradient
-                if (score_min == 0 && score_max == 1) result.gradient.setGradientPreset("whiteblue");
+                // if it's a binary range, set to transparentblue gradient
+                if (score_min == 0 && score_max == 1) result.gradient.setGradientPreset("transparentblue");
             }
         }
 
@@ -225,7 +226,7 @@ export class Gradient {
         let colorList: string[] = [];
         let self = this;
         this.colors.forEach(function(gColor: Gcolor) {
-            let hexstring = (tinycolor(gColor.color).toHexString())
+            let hexstring = (tinycolor(gColor.color).toHex8String()); // include the alpha channel
             colorList.push(hexstring)
         });
 
@@ -272,8 +273,8 @@ export class Gradient {
         greenred: [new Gcolor("#8ec843"), new Gcolor("#ffe766"), new Gcolor("#ff6666")],
         bluered: [new Gcolor("#66b1ff"), new Gcolor("#ff66f4"), new Gcolor("#ff6666")],
         redblue: [new Gcolor("#ff6666"), new Gcolor("#ff66f4"), new Gcolor("#66b1ff")],
-        whiteblue: [new Gcolor("#ffffff"), new Gcolor("#66b1ff")],
-        whitered: [new Gcolor("#ffffff"), new Gcolor("#ff6666")]
+        transparentblue: [new Gcolor("#ffffff00"), new Gcolor("#66b1ff")],
+        transparentred: [new Gcolor("#ffffff00"), new Gcolor("#ff6666")]
     }
 
     /**
@@ -398,7 +399,7 @@ export class ViewModel {
 
     compareTo?: ViewModel;
     versionChangelog?: VersionChangelog;
-    
+
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
     public set sidebarOpened(newVal: boolean) { this._sidebarOpened = newVal; };
@@ -762,28 +763,33 @@ export class ViewModel {
     }
 
     /**
-     * Copies all annotations on unchanged techniques in the previous version
-     * of ATT&CK to the latest version of ATT&CK
+     * Copies all annotations from unchanged techniques and techniques
+     * which have had minor changes
      */
-    public copyUnchangedAnnotations(): void {
-        if (this.versionChangelog) {
-            this.versionChangelog.unchanged.forEach(attackID => {
-                let fromTechnique = this.dataService.getTechnique(attackID, this.compareTo.domainVersionID);
-                let domain = this.dataService.getDomain(this.domainVersionID);
-                let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
-                tactics.forEach(tactic => {
-                    let fromVM = this.compareTo.getTechniqueVM(fromTechnique, tactic);
-                    if (fromVM.annotated()) {
-                        let toTechnique = this.dataService.getTechnique(attackID, this.domainVersionID);
-                        this.copyAnnotations(fromTechnique, toTechnique, tactic);
-                    }
-                });
+    public initCopyAnnotations(): void {
+        let self = this;
+
+        function copy(attackID: string) {
+            let fromTechnique = self.dataService.getTechnique(attackID, self.compareTo.domainVersionID);
+            let domain = self.dataService.getDomain(self.domainVersionID);
+            let tactics = fromTechnique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
+            tactics.forEach(tactic => {
+                let fromVM = self.compareTo.getTechniqueVM(fromTechnique, tactic);
+                if (fromVM.annotated()) {
+                    let toTechnique = self.dataService.getTechnique(attackID, self.domainVersionID);
+                    self.copyAnnotations(fromTechnique, toTechnique, tactic);
+                }
             });
+        }
+
+        if (this.versionChangelog) {
+            this.versionChangelog.unchanged.forEach(attackID => copy(attackID));
+            this.versionChangelog.minor_changes.forEach(attackID => copy(attackID));
         }
     }
 
     /**
-     * Copy annotations from one technique to another under the given tactic. 
+     * Copy annotations from one technique to another under the given tactic.
      * The previous technique will be disabled
      * @param fromTechnique the technique to copy annotations from
      * @param toTechnique the technique to copy annotations to
@@ -1247,7 +1253,7 @@ export class ViewModel {
             "layer": globals.layer_version
         }
 
-        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]/g));
+        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]+/g));
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1277,7 +1283,7 @@ export class ViewModel {
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
                 if (typeof(obj.versions.attack) === "string") {
-                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]/g)[0];
+                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]+/g)[0];
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
@@ -1389,6 +1395,9 @@ export class ViewModel {
                         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
                             if (technique.attackID == obj_technique.techniqueID) {
                                 // match technique
+                                // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
+                                if (technique.deprecated || technique.revoked) break;
+
                                 for (let tactic of technique.tactics) {
                                     let tvm = new TechniqueVM("");
                                     tvm.deSerialize(JSON.stringify(obj_technique),
@@ -1401,6 +1410,9 @@ export class ViewModel {
                             //check against subtechniques
                             for (let subtechnique of technique.subtechniques) {
                                 if (subtechnique.attackID == obj_technique.techniqueID) {
+                                    // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
+                                    if (subtechnique.deprecated || subtechnique.revoked) break;
+
                                     for (let tactic of subtechnique.tactics) {
                                         let tvm = new TechniqueVM("");
                                         tvm.deSerialize(JSON.stringify(obj_technique),
@@ -1945,28 +1957,28 @@ export class LayoutOptions {
     }
 
     public deserialize(rep: any) {
-        if (rep.showID) {
+        if ("showID" in rep) {
             if (typeof (rep.showID) === "boolean") this.showID = rep.showID;
             else console.error("TypeError: layout field 'showID' is not a boolean:", rep.showID, "(", typeof (rep.showID), ")");
         }
-      if (rep.showName) {
+      if ("showName" in rep) {
           if (typeof (rep.showName) === "boolean") this.showName = rep.showName;
           else console.error("TypeError: layout field 'showName' is not a boolean:", rep.showName, "(", typeof (rep.showName), ")");
       }
       //make sure this one goes last so that it can override name and ID if layout == 'mini'
-      if (rep.layout) {
+      if ("layout" in rep) {
           if (typeof (rep.layout) === "string") this.layout = rep.layout;
           else console.error("TypeError: layout field 'layout' is not a string:", rep.layout, "(", typeof (rep.layout), ")");
       }
-      if (rep.aggregateFunction) {
+      if ("aggregateFunction" in rep) {
           if (typeof (rep.aggregateFunction) === "string") this.aggregateFunction = rep.aggregateFunction;
           else console.error("TypeError: layout field 'aggregateFunction' is not a boolean:", rep.aggregateFunction, "(", typeof (rep.aggregateFunction), ")");
       }
-      if (rep.showAggregateScores) {
+      if ("showAggregateScores" in rep) {
           if (typeof (rep.showAggregateScores) === "boolean") this.showAggregateScores = rep.showAggregateScores;
           else console.error("TypeError: layout field 'showAggregateScores' is not a boolean:", rep.showAggregateScores, "(", typeof (rep.showAggregateScores), ")");
       }
-      if (rep.countUnscored) {
+      if ("countUnscored" in rep) {
           if (typeof (rep.countUnscored) === "boolean") this.countUnscored = rep.countUnscored;
           else console.error("TypeError: layout field 'countUnscored' is not a boolean:", rep.countUnscored, "(", typeof (rep.countUnscored), ")");
       }

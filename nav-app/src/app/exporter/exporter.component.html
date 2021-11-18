@@ -1,7 +1,7 @@
 <div class="controlsContainer">
     <ul class="control-sections">
         <li class="iewarning" *ngIf="isIE()">
-            Warning: this interface is not fully compatable with your browser. For best results please switch to Edge, Chrome, or Firefox.
+            Warning: this interface is not fully compatible with your browser. For best results please switch to Edge, Chrome, or Firefox.
         </li>
         <li>
             <div class="control-row-item noselect">
@@ -10,7 +10,7 @@
                      (click)="unitEnum = (unitEnum + 1) % 3; config.unit = ['in', 'cm', 'px'][unitEnum]; buildSVG()"
                      matTooltipPosition="below"
                      matTooltip="toggle measurement unit">
-                    <svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
                         <text x="4px" y="50%" dominant-baseline="middle" style="font-size: 14px; font-weight: bold; font-family:monospace">{{config.unit}}</text>
                     </svg>
                 </div>
@@ -23,7 +23,7 @@
                      (click)="currentDropdown = currentDropdown !== 'imgsize' ? 'imgsize' : null;"
                      matTooltipPosition="below"
                      matTooltip="image size">
-                    <img src="assets/icons/ic_photo_size_select_large_black_24px.svg"/>
+                    <span class="material-icons">photo_size_select_large</span>
                 </div>
                 <div class="dropdown-container size left" *ngIf="currentDropdown === 'imgsize'">
                     <ul>
@@ -61,7 +61,7 @@
                                        [disabled]="!config.showHeader"
                                        [(ngModel)]="config.headerHeight"
                                        (input)="buildSVG()" />
-                                <span matSuffix  [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
+                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
@@ -73,7 +73,7 @@
                      (click)="currentDropdown = currentDropdown !== 'font' ? 'font' : null;"
                      matTooltipPosition="below"
                      matTooltip="text">
-                    <img src="assets/icons/ic_format_size_black_24px.svg"/>
+                    <span class="material-icons">format_size</span>
                 </div>
                 <div class="dropdown-container font left" *ngIf="currentDropdown === 'font'">
                     <ul>
@@ -94,8 +94,8 @@
                      (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : null;"
                      matTooltipPosition="below"
                      matTooltip="legend"
-                     [style.color]="showLegendContainer() ? '#000000' : '#aaaaaa'">
-                    <img [src]="showLegendContainer()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
+                     [style.color]="showLegendContainer() ? 'inherit' : '#aaaaaa'">
+                    <span class="material-icons">view_list</span>
                 </div>
                 <div class="dropdown-container legend left" *ngIf="currentDropdown === 'legend'">
                     <ul>
@@ -165,7 +165,7 @@
                      (click)="currentDropdown = currentDropdown !== 'visibility' ? 'visibility' : null;"
                      matTooltipPosition="below"
                      matTooltip="display settings">
-                    <img src="assets/icons/ic_visibility_black_24px.svg"/>
+                    <span class="material-icons">visibility</span>
                 </div>
                 <div class="dropdown-container visibility left" *ngIf="currentDropdown === 'visibility'">
                     <ul>
@@ -223,7 +223,7 @@
                     (click)="downloadSVG()"
                     matTooltipPosition="below"
                     matTooltip="download SVG">
-                    <img src="assets/icons/ic_file_download_black_24px.svg" alt="save layer"/>
+                    <span class="material-icons" alt="save layer">file_download</span>
                 </div>
             </div>
 

@@ -1,8 +1,9 @@
 @import "../cell-popover.scss";
-
+@import "../../../../colors";
 
 .tooltip {
     @include cell-popover(0.75);
+    @include adaptive-color("background", rgba(80, 80, 80, 0.75), rgba(#464DFF, 0.75));
     table {
         width: 100%;
         border-collapse: collapse;
@@ -24,7 +25,7 @@
             padding: 0;
             hr {
                 margin: 0;
-                padding: 0;          
+                padding: 0;
             }
         }
     }
