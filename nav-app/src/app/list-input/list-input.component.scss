@@ -1,0 +1,41 @@
+@import "../../colors.scss";
+
+.list-container, .add-more { margin: 10px 0; }
+.item-container {
+    padding: 10px;
+    border: 1px solid color(panel-dark);
+    margin: 4px 0;
+}
+.divider-container {
+    cursor: pointer;
+    .mat-divider {
+        border-top-width: 2px;
+    }
+    .icon {
+        height: 16px;
+        width: 16px;
+        line-height: 16px;
+        border-radius: 3px;
+    }
+    .opt-divider, .divider {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .mat-divider, .button { flex: 1; }
+    }
+    .opt-divider {
+        .icon { background-color: color(panel-dark); }
+        &:hover {
+            .mat-divider { border-top-color: darken(color(panel-dark), 10%); }
+            .icon { background-color: darken(color(panel-dark), 10%); }
+        }
+    }
+    .divider {
+        .icon { background-color: darken(color(panel-dark), 40%); }
+        .mat-divider { border-top-color: darken(color(panel-dark), 40%); }
+        &:hover {
+            .mat-divider { border-top-color: darken(color(panel-dark), 50%); }
+            .icon { background-color: darken(color(panel-dark), 50%); }
+        }
+    }
+}

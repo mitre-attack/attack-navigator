@@ -958,9 +958,10 @@ export class ViewModel {
 
     /**
      * Edit the selected techniques list attribute
-     * @param values the list of values to place in the field
+     * @param {string}  field the field to edit
+     * @param {(Link|Metadata)[]} values the list of values to place in the field
      */
-    public editSelectedTechniqueValues(field: string, values: (Link | Metadata)[], ): void {
+    public editSelectedTechniqueValues(field: string, values: (Link | Metadata)[]): void {
         let fieldToType: any = {"links": Link, "metadata": Metadata};
         this.selectedTechniques.forEach(id => {
             const value_clone = values.map(value => { // deep copy
@@ -1822,7 +1823,7 @@ export class Metadata {
     public value: string;
     public divider: boolean;
 
-    constructor() {};
+    constructor() { }
 
     serialize(): object {
         return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
@@ -1858,7 +1859,7 @@ export class Link {
     public url: string;
     public divider: boolean;
 
-    constructor() {};
+    constructor() { }
 
     serialize(): object { 
         return this.label && this.url ? {label: this.label, url: this.url} : {divider: this.divider};

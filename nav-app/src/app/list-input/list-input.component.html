@@ -1,0 +1,41 @@
+<div class="list-container">
+    <div *ngFor="let item of list; let i = index">
+        <div class="divider-container">
+            <!-- divider -->
+            <div *ngIf="item.divider" class="divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
+                <mat-divider></mat-divider>
+                <button mat-icon-button class="icon">-</button>
+                <mat-divider></mat-divider>
+            </div>
+            <div *ngIf="!item.divider && canAddDivider(i)" class="opt-divider" (click)="addDivider(i)" matTooltipPosition="below" matTooltip="add a divider">
+                <mat-divider></mat-divider>
+                <button mat-icon-button class="icon">+</button>
+                <mat-divider></mat-divider>
+            </div>
+        </div>
+
+        <!-- list item -->
+        <div class="item-container" *ngIf="!item.divider">
+            <mat-form-field>
+                <textarea matInput
+                        matTextareaAutosize
+                        [placeholder]="config.nameField"
+                        [(ngModel)]="list[i][config.nameField]"
+                        (input)="updateList()">
+                </textarea>
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput
+                        matTextareaAutosize
+                        [placeholder]="config.valueField"
+                        [(ngModel)]="list[i][config.valueField]"
+                        (input)="updateList()">
+                </textarea>
+            </mat-form-field>
+            <button class="button" (click)="remove(i)">remove</button>
+        </div>
+    </div>
+</div>
+<div class="add-more">
+    <button class="button" (click)="add()">add {{config.listField}}</button>
+</div>

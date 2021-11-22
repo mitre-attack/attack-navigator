@@ -306,8 +306,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     // edit field bindings
     commentEditField: string = "";
     scoreEditField: string = "";
-    linkEditField: Link[] = [];
-    metadataEditField: Metadata[] = [];
+
     /**
      * triggered on left click of technique
      */
@@ -359,8 +358,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     populateEditFields(): void {
         this.commentEditField = this.viewModel.getEditingCommonValue("comment");
         this.scoreEditField = this.viewModel.getEditingCommonValue("score");
-        this.linkEditField = this.viewModel.activeTvm.links;
-        this.metadataEditField = this.viewModel.activeTvm.metadata;
     }
 
     /**
@@ -408,74 +405,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     /**
      * open search & multiselect sidebar
      */
-     openSearch(): void {
+    openSearch(): void {
         if (this.viewModel.sidebarContentType !== 'layerUpgrade') {
             this.viewModel.sidebarOpened = (this.viewModel.sidebarContentType !== 'search') ? true : !this.viewModel.sidebarOpened;
             this.viewModel.sidebarContentType = 'search';
         }
-    }
-
-    private attrToField: any = {"links": "linkEditField", "metadata": "metadataEditField"}
-    
-    /** Add a new link */
-    addLink(): void {
-        this.linkEditField.push(new Link());
-    }
-
-    /** Remove link */
-    removeLink(i: number): void {
-        this.linkEditField.splice(i, 1);
-        this.viewModel.editSelectedTechniqueValues('links', this.linkEditField);
-    }
-
-    /** Update links on the selected techniques */
-    updateLinks(): void {
-        let value = this.linkEditField.filter(link => link.valid());
-        this.viewModel.editSelectedTechniqueValues('links', value);
-    }
-
-    /** Add new metadata */
-    addMetadata(): void {
-        this.metadataEditField.push(new Metadata());
-    }
-
-    /** Remove metadata */
-    removeMetadata(i: number): void {
-        this.metadataEditField.splice(i, 1);
-        this.viewModel.editSelectedTechniqueValues('metadata', this.metadataEditField);
-    }
-
-    /** Update metadata on the selected techniques */
-    updateMetadata(): void {
-        let value = this.metadataEditField.filter(metadata => metadata.valid());
-        this.viewModel.editSelectedTechniqueValues('metadata', value);
-    }
-
-    /** 
-     *  Checks if a divider can be added after the given link or metadata index:
-     *  A divider can only be added after a valid link/metadata object where
-     *  the current and next indices are not dividers
-     */
-    canAddDivider(i: number, field: string): boolean {
-        let list = this[this.attrToField[field]].filter(value => value.valid());
-        if (list[i] && !list[i].divider) {
-            if (i + 1 >= list.length) return true;
-            if (list[i+1] && !list[i+1].divider) return true;
-        }
-        return false;
-    }
-
-    /** Add or remove a divider */
-    onClickDivider(i: number, isDivider: boolean, field: string) {
-        let list = this[this.attrToField[field]];
-        if (isDivider) { // add divider
-            let divider = new Link();
-            divider.divider = true;
-            list.splice(i+1, 0, divider);
-        } else { // remove divider
-            list.splice(i, 1);
-        }
-        if (field == 'links') this.updateLinks();
-        if (field == 'metadata') this.updateMetadata();
     }
 }
