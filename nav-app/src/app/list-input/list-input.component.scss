@@ -17,20 +17,20 @@
         line-height: 16px;
         border-radius: 3px;
     }
-    .opt-divider, .divider {
+    .divider-option, .show-divider {
         display: flex;
         justify-content: center;
         align-items: center;
         .mat-divider, .button { flex: 1; }
     }
-    .opt-divider {
+    .divider-option {
         .icon { background-color: color(panel-dark); }
         &:hover {
             .mat-divider { border-top-color: darken(color(panel-dark), 10%); }
             .icon { background-color: darken(color(panel-dark), 10%); }
         }
     }
-    .divider {
+    .show-divider {
         .icon { background-color: darken(color(panel-dark), 40%); }
         .mat-divider { border-top-color: darken(color(panel-dark), 40%); }
         &:hover {

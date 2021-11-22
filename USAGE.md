@@ -165,8 +165,6 @@ it appears in the tab title. Additionally, the layer information panel allows th
 Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
 descriptive fields to the layer.
 
-<b>Note:</b> <a href="#adding-metadata-to-techniques">Metadata</a> can also be added to techniques.
-
 ## Sorting
 
 There are four modes of sorting. Clicking the sorting button will toggle between the modes.
@@ -392,13 +390,13 @@ source data. Notes cannot be edited in the Navigator and are displayed in the to
 
 ## ![Assigning Links to Techniques](nav-app/src/assets/icons/ic_link_black_24px.svg)Assigning Links to Techniques
 
-Links can be assigned to techniques by specifying a label and a URL for each link. Multiple links can be added by clicking "add more
-links" in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new 
+Links can be assigned to techniques by specifying a label and a URL for each link. Multiple links can be added by clicking "add links"
+in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new 
 browser tab when clicked. To visually separate the links in the context menu, a divider can be added in the interface which will display a 
 horizontal line in the context menu where the divider occurs in the list of assigned links.
 
 <b>Note</b>: Links can only be added, updated, or removed if the list of links of all the currently selected techniques 
-are identical, which includes the dividers.
+are identical, including dividers.
 
 ## ![Adding Metadata to Techniques](nav-app/src/assets/icons/ic_metadata_black_24px.svg)Adding Metadata to Techniques
 
@@ -407,7 +405,7 @@ for adding supplemental descriptive fields and information to techniques. To vis
 in the interface, which will display a horizontal line in the tooltip where the divider occurs in the list of metadata.
 
 <b>Note</b>: Metadata can only be added, updated, or removed if the list of metadata of all the currently selected techniques 
-are identical, which includes the dividers.
+are identical, including dividers.
 
 ## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg)Clearing Annotations on Techniques
 
@@ -450,7 +448,7 @@ technique will bring up a context menu with more options:
   Note that currently selected sub-techniques will remain selected if the control is disabled when using this option.
 - <b>view technique:</b> For more information / details on the technique.
 - <b>view tactic:</b> For more information / details on the tactic.
-- <b>annotation links:</b> List of links assigned to the technique. These links will open a new browser tab directed to the 
+- <b>user assigned links:</b> List of links assigned to the technique by the user. These links will open a new browser tab directed to the 
 specified URL. See <a href="#assigning-links-to-techniques">Assigning Links to Techniques</a> for more details.
 
 <b>Tip:</b> You can use "select unannotated" followed by disabling those techniques, and then hiding disabled
