@@ -1,5 +1,5 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
-import { DataService, Technique, Matrix, Domain } from '../data.service';
+import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
+import { DataService } from '../data.service';
 import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, ViewModelsService, Link, Metadata } from "../viewmodels.service";

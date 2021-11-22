@@ -579,7 +579,7 @@ $cellSize: 15px;
     .list-container, .add-more { margin: 10px 0; }
     .item-container {
         padding: 10px;
-        border: 1px solid $panel-dark;
+        border: 1px solid color(panel-dark);
         margin: 4px 0;
     }
     .divider {
@@ -600,18 +600,18 @@ $cellSize: 15px;
             .mat-divider, .button { flex: 1; }
         }
         .opt-divider {
-            .icon { background-color: $panel-dark; }
+            .icon { background-color: color(panel-dark); }
             &:hover {
-                .mat-divider { border-top-color: darken($panel-dark, 10%); }
-                .icon { background-color: darken($panel-dark, 10%); }
+                .mat-divider { border-top-color: darken(color(panel-dark), 10%); }
+                .icon { background-color: darken(color(panel-dark), 10%); }
             }
         }
         .set-divider {
-            .icon { background-color: darken($panel-dark, 40%); }
-            .mat-divider { border-top-color: darken($panel-dark, 40%); }
+            .icon { background-color: darken(color(panel-dark), 40%); }
+            .mat-divider { border-top-color: darken(color(panel-dark), 40%); }
             &:hover {
-                .mat-divider { border-top-color: darken($panel-dark, 50%); }
-                .icon { background-color: darken($panel-dark, 50%); }
+                .mat-divider { border-top-color: darken(color(panel-dark), 50%); }
+                .icon { background-color: darken(color(panel-dark), 50%); }
             }
         }
     }
