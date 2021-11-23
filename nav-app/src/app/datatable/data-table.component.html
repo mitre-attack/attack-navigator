@@ -114,36 +114,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                     placeholder="version"
                                     [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version" />
                             </mat-form-field>
-
                     </div>
                     <div class="metadata_input">
                         <b class="metadata-label">Metadata</b>
-                        <table>
-                            <tr class="formfield-group" *ngFor="let metadata of viewModel.metadata; let $i = index">
-                                <td></td>
-                                <td>
-                                    <mat-form-field>
-                                            <input matInput
-                                                    type="text"
-                                                    placeholder="name"
-                                                    [(ngModel)]="metadata.name" />
-                                        </mat-form-field>
-                                        <mat-form-field>
-                                            <input matInput
-                                                type="text"
-                                                placeholder="value"
-                                                [(ngModel)]="metadata.value" />
-                                        </mat-form-field>
-                                        <button class="button" (click)="viewModel.removeMetadata($i)">remove this metadata</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 class="addmore">
-                                        <button class="button" (click)="viewModel.addMetadata()">add more metadata</button>
-                                </td>
-                            </tr>
-                        </table>
-
+                        <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.metadata, 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
                     </div>
                  </div>
              </div>
@@ -521,7 +495,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
                 <!-- link input -->
                 <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'link'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'listField': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.links, 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
                 </div>
              </div>
 
@@ -538,7 +512,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
                  <!-- link input -->
                  <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'metadata'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'listField': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.metadata, 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
                 </div>
              </div>
 

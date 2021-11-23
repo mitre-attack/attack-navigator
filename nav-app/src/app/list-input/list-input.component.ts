@@ -18,14 +18,14 @@ export class ListInputComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.list = this.config.viewModel.activeTvm[this.config.listField] ? this.config.viewModel.activeTvm[this.config.listField]: [];
+        this.list = this.config.list;
     }
     
     /**
      * Adds a new item to the list
      */
     public add(): void {
-        this.list.push(new this.fieldToClass[this.config.listField]());
+        this.list.push(new this.fieldToClass[this.config.type]());
     }
 
     /**
@@ -42,7 +42,7 @@ export class ListInputComponent implements OnInit {
         if (this.list[0] && this.list[0].divider) this.removeDivider(0);
         if (this.list[this.list.length - 1] && this.list[this.list.length - 1].divider) this.removeDivider(this.list.length - 1);
 
-        this.config.viewModel.editSelectedTechniqueValues(this.config.listField, this.list);
+        this.config.viewModel.editSelectedTechniqueValues(this.config.type, this.list);
     }
 
     /**
@@ -50,7 +50,7 @@ export class ListInputComponent implements OnInit {
      */
     public updateList(): void {
         let value = this.list.filter(item => item.valid());
-        this.config.viewModel.editSelectedTechniqueValues(this.config.listField, value);
+        this.config.viewModel.editSelectedTechniqueValues(this.config.type, value);
     }
 
     /**
@@ -76,7 +76,7 @@ export class ListInputComponent implements OnInit {
      * @param i the index at which to add a divider
      */
     public addDivider(i: number): void {
-        let item = new this.fieldToClass[this.config.listField]();
+        let item = new this.fieldToClass[this.config.type]();
         item.divider = true;
         this.list.splice(i, 0, item);
         this.updateList();
@@ -95,8 +95,10 @@ export class ListInputComponent implements OnInit {
 export interface ListInputConfig {
     /** The viewmodel */
     viewModel: ViewModel;
-    /** The name of the technique list field to edit */
-    listField: "links" | "metadata";
+    /** The list to edit */
+    list: (Link|Metadata)[];
+    /** The item type */
+    type: "links" | "metadata";
     /** The label attribute of the list */
     nameField: string;
     /** The value attribute of the list */
