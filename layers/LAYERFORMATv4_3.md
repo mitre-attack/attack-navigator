@@ -20,7 +20,7 @@ This document describes **Version 4.3** of the MITRE ATT&CK Navigator Layer file
 | tacticRowBackground | string | no | "#dddddd" | The tactic row background color |
 | selectTechniquesAcrossTactics | boolean | no | true | If true, selecting a technique also selects all instances with the same technique ID. See also selectSubtechniquesWithParent |
 | selectSubtechniquesWithParent | boolean | no | true | If true, selecting a technique will also select all subtechniques of the technique. See also selectTechniquesAcrossTactics |
-| metadata | Array of Metadata objects | No | | User defined metadata for this layer. See definition of Metadata object |
+| metadata | Array of Metadata objects and Divider objects | No | | User defined metadata for this layer. See definition of Metadata objects and Divider objects below |
 
 
 ## Filter Object Properties
@@ -72,13 +72,18 @@ Technique objects are used to store both techniques and subtechniques. The only 
 | name | String | Yes | n/a | The name of the metadata |
 | value | String | Yes | n/a | The value of the metadata |
 
+Note: Divider objects can be used alongside Metadata objects.
+
 ## Link Object properties
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
-| label | String | Yes | n/a | The label for the link |
-| url | String | Yes | n/a | The URL to open when the label is clicked |
+| label | String | Yes | n/a | The label for the hyperlink |
+| url | String | Yes | n/a | The URL to open when the label is clicked. Note: URLs must be prefixed with a protocol identifier (e.g. 'https://') |
+
+Note: Divider objects can be used alongside Link objects.
 
 ## Divider Object properties
+
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | divider | Boolean | Yes | n/a | If true, display a horizontal separator in the Metadata tooltip or Link context menu where this object occurs in the list
@@ -99,8 +104,8 @@ The following example illustrates the layer file format:
 {
     "name": "example layer",
     "versions": {
-        "attack": "9",
-        "navigator": "4.5",
+        "attack": "10",
+        "navigator": "4.6",
         "layer": "4.3"
     },
     "domain": "enterprise-attack",

@@ -390,7 +390,8 @@ source data. Notes cannot be edited in the Navigator and are displayed in the to
 
 ## ![Assigning Links to Techniques](nav-app/src/assets/icons/ic_link_black_24px.svg)Assigning Links to Techniques
 
-Links can be assigned to techniques by specifying a label and a URL for each link. Multiple links can be added by clicking "add links"
+Links can be assigned to techniques by specifying a label and a URL for each link. URLs must be prefixed with a protocol identifier
+(e.g. 'https://'). Multiple links can be added by clicking "add links"
 in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new 
 browser tab when clicked. To visually separate the links in the context menu, a divider can be added in the interface which will display a 
 horizontal line in the context menu where the divider occurs in the list of assigned links.
