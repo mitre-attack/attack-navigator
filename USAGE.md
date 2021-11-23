@@ -161,9 +161,10 @@ into the score expression input.
 ## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg)Layer Information
 
 The layer name and description can be edited in the layer information dropdown. The layer name can also be edited where
-it appears in the tab title. Additionally, the layer information panel allows the user to add metadata to the layer.
-Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
-descriptive fields to the layer.
+it appears in the tab title. Additionally, the layer information panel allows the user to add metadata and assign links
+to the layer. Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
+descriptive fields to the layer. Links can be useful for providing additional context from other websites that are relevant
+to the layer.
 
 ## Sorting
 

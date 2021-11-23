@@ -6,6 +6,17 @@
     border: 1px solid color(panel-dark);
     margin: 4px 0;
 }
+.remove-button {
+    display: flex;
+    justify-content: flex-end;
+}
+.assigned-link {
+    float: left;
+    @include adaptive-color-dark-only("color", color(dark-link) !important);
+}
+.assigned-link:active, .assigned-link:visited {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+}
 .divider-container {
     cursor: pointer;
     .mat-divider {

@@ -20,7 +20,7 @@
                 <textarea matInput
                         matTextareaAutosize
                         [placeholder]="config.nameField"
-                        [(ngModel)]="list[i][config.nameField]"
+                        [(ngModel)]="item[config.nameField]"
                         (input)="updateList()">
                 </textarea>
             </mat-form-field>
@@ -28,11 +28,14 @@
                 <textarea matInput
                         matTextareaAutosize
                         [placeholder]="config.valueField"
-                        [(ngModel)]="list[i][config.valueField]"
+                        [(ngModel)]="item[config.valueField]"
                         (input)="updateList()">
                 </textarea>
             </mat-form-field>
-            <button class="button" (click)="remove(i)">remove</button>
+            <a *ngIf="includeLinks && item.valid()" class="assigned-link" href="{{item[config.valueField]}}" target="_blank">{{item[config.nameField]}}</a>
+            <div class="remove-button">
+                <button class="button" (click)="remove(i)">remove</button>
+            </div>
         </div>
     </div>
 </div>

@@ -14,6 +14,7 @@ export class ListInputComponent implements OnInit {
         "links": Link,
         "metadata": Metadata
     }
+    public get includeLinks(): boolean { return this.config.type == "links"; }
 
     constructor() { }
 

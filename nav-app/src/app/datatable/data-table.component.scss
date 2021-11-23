@@ -509,11 +509,16 @@ $cellSize: 15px;
     padding: 0 10px;
   }
 
-  .metadata_input {
-      overflow-y: auto;
+  .layer-data {
       text-align: left;
-      max-height: 50vh;
-      margin: 0px 10px;
+      margin: 0 10px;
+
+      .mat-divider { margin-bottom: 10px; }
+  }
+
+  .data-input {
+      overflow-y: auto;
+      max-height: 30vh;
   }
 }
 

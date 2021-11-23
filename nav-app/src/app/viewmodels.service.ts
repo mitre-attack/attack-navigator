@@ -365,6 +365,7 @@ export class ViewModel {
     filters: Filter;
 
     metadata: Metadata[] = [];
+    links: Link[] = [];
 
     /*
      * sorting int meanings (see filterTechniques()):
@@ -998,22 +999,6 @@ export class ViewModel {
         return commonValue;
     }
 
-    /**
-     * add a new blank metadata to the metadata list, for editing in UI
-     */
-    public addMetadata() {
-        let m = new Metadata()
-        this.metadata.push(m);
-    }
-
-    /**
-     * remove a metadata from the metadata list
-     * @param index the index to remove from the list
-     */
-    public removeMetadata(index: number) {
-        this.metadata.splice(index, 1)
-    }
-
     activeTvm: TechniqueVM; // first selected techniqueVM
     linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
     public get linksMatch(): boolean { return !this.linkMismatches.length; }
@@ -1263,7 +1248,8 @@ export class ViewModel {
         rep.techniques = modifiedTechniqueVMs;
         rep.gradient = JSON.parse(this.gradient.serialize());
         rep.legendItems = JSON.parse(JSON.stringify(this.legendItems));
-        rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
+        rep.metadata = this.metadata.filter(m => m.valid()).map(m => m.serialize());
+        rep.links = this.links.filter(l => l.valid()).map(l => l.serialize());
 
         rep.showTacticRowBackground = this.showTacticRowBackground;
         rep.tacticRowBackground = this.tacticRowBackground;
@@ -1435,6 +1421,13 @@ export class ViewModel {
                 let m = new Metadata();
                 m.deSerialize(metadataObj);
                 if (m.valid()) this.metadata.push(m)
+            }
+        }
+        if ("links" in obj) {
+            for (let link of obj.links) {
+                let l = new Link();
+                l.deSerialize(link);
+                if (l.valid()) this.links.push(l);
             }
         }
         if ("layout" in obj) {
@@ -1647,11 +1640,9 @@ export class TechniqueVM {
         rep.color = this.color;
         rep.comment = this.comment;
         rep.enabled = this.enabled;
-        rep.metadata = this.metadata.filter((m)=>m.valid()).map((m) => m.serialize());
-        rep.links = this.links.filter((l) => l.valid()).map((l) => l.serialize());
+        rep.metadata = this.metadata.filter(m => m.valid()).map(m => m.serialize());
+        rep.links = this.links.filter(l => l.valid()).map(l => l.serialize());
         rep.showSubtechniques = this.showSubtechniques;
-        //rep.technique_tactic_union_id = this.technique_tactic_union_id;
-        //console.log(rep);
         return JSON.stringify(rep, null, "\t")
     }
 
@@ -1663,8 +1654,7 @@ export class TechniqueVM {
         let obj = JSON.parse(rep);
         if (techniqueID !== undefined) this.techniqueID = techniqueID;
         else console.error("ERROR: TechniqueID field not present in technique")
-        // if ("technique_tactic_union_id" in obj) this.technique_tactic_union_id = obj.technique_tactic_union_id;
-        // else console.error("ERROR: technique_tactic_union_id field not present in technique")
+
         if ("tactic" !== undefined) this.tactic = tactic;
         else console.error("ERROR: tactic field not present in technique")
         if ("comment" in obj) {

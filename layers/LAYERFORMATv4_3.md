@@ -21,6 +21,7 @@ This document describes **Version 4.3** of the MITRE ATT&CK Navigator Layer file
 | selectTechniquesAcrossTactics | boolean | no | true | If true, selecting a technique also selects all instances with the same technique ID. See also selectSubtechniquesWithParent |
 | selectSubtechniquesWithParent | boolean | no | true | If true, selecting a technique will also select all subtechniques of the technique. See also selectTechniquesAcrossTactics |
 | metadata | Array of Metadata objects and Divider objects | No | | User defined metadata for this layer. See definition of Metadata objects and Divider objects below |
+| links | Array of Link objects and Divider objects | No | | User assigned links for this layer. See definitions of Link objects and Divider objects below |
 
 
 ## Filter Object Properties
