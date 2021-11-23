@@ -315,6 +315,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             if (["comment", "score", "colorpicker", "link", "metadata"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
             return;
         }
+        if (this.currentDropdown == "link" || this.currentDropdown == "metadata") {
+            this.currentDropdown = "";
+            return;
+        }
         //else populate editing controls
         this.populateEditFields();
     }
