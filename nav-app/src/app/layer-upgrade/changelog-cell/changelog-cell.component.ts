@@ -16,7 +16,7 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     @Input() section: string;
 
     constructor(public configService: ConfigService, public dataService: DataService, public viewModelsService: ViewModelsService) {
-        super(dataService);
+        super(dataService, configService);
     }
 
     ngOnInit(): void { }

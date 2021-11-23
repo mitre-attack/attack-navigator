@@ -19,7 +19,11 @@ export class ListInputComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.list = this.config.list;
+        this.list = this.config.list.map(item => {
+            let clone = new this.fieldToClass[this.config.type]();
+            clone.deSerialize(item.serialize());
+            return clone;
+        });
     }
     
     /**
@@ -43,7 +47,8 @@ export class ListInputComponent implements OnInit {
         if (this.list[0] && this.list[0].divider) this.removeDivider(0);
         if (this.list[this.list.length - 1] && this.list[this.list.length - 1].divider) this.removeDivider(this.list.length - 1);
 
-        this.config.viewModel.editSelectedTechniqueValues(this.config.type, this.list);
+        let value = this.list.filter(item => item.valid());
+        this.config.viewModel.editSelectedTechniqueValues(this.config.type, value);
     }
 
     /**

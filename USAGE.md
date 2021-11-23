@@ -385,9 +385,9 @@ gradient - they are displayed with an uncolored background in the matrix.
 A text comment can be added to techniques. This comment will show up in the technique tooltip if a comment has been
 added. Techniques with a comment will be given a yellow underline.
 
-<b>Note:</b> A yellow underline is also shown if the technique has
-attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> in the
-source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
+<b>Note:</b> A yellow underline is also shown if <a href="#adding-metadata-to-techniques">metadata</a> has been added to the 
+technique or if the technique has attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> 
+in the source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
 
 ## ![Assigning Links to Techniques](nav-app/src/assets/icons/ic_link_black_24px.svg)Assigning Links to Techniques
 
@@ -395,7 +395,8 @@ Links can be assigned to techniques by specifying a label and a URL for each lin
 (e.g. 'https://'). Multiple links can be added by clicking "add links"
 in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new 
 browser tab when clicked. To visually separate the links in the context menu, a divider can be added in the interface which will display a 
-horizontal line in the context menu where the divider occurs in the list of assigned links.
+horizontal line in the context menu where the divider occurs in the list of assigned links. 
+Techniques with assigned links will be given a blue underline.
 
 <b>Note</b>: Links can only be added, updated, or removed if the list of links of all the currently selected techniques 
 are identical, including dividers.
@@ -405,6 +406,7 @@ are identical, including dividers.
 Technique metadata can be added by specifying metadata names and values and are displayed in the technique tooltip. Metadata is useful 
 for adding supplemental descriptive fields and information to techniques. To visually separate metadata fields, a divider can be added 
 in the interface, which will display a horizontal line in the tooltip where the divider occurs in the list of metadata.
+Techniques with metadata will be given a yellow underline.
 
 <b>Note</b>: Metadata can only be added, updated, or removed if the list of metadata of all the currently selected techniques 
 are identical, including dividers.
