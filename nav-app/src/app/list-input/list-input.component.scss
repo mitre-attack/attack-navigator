@@ -10,6 +10,7 @@
     cursor: pointer;
     .mat-divider {
         border-top-width: 2px;
+        @include adaptive-color("border-top-color", color(panel-dark), color(dark-4));
     }
     .icon {
         height: 16px;
@@ -17,25 +18,31 @@
         line-height: 16px;
         border-radius: 3px;
     }
-    .divider-option, .show-divider {
+    .divider-option, .divider {
         display: flex;
         justify-content: center;
         align-items: center;
         .mat-divider, .button { flex: 1; }
-    }
-    .divider-option {
-        .icon { background-color: color(panel-dark); }
         &:hover {
-            .mat-divider { border-top-color: darken(color(panel-dark), 10%); }
-            .icon { background-color: darken(color(panel-dark), 10%); }
+            .mat-divider {
+                @include adaptive-color("border-top-color", color(button-dark), color(dark-link));
+            }
+            .icon {
+                @include adaptive-color("background-color", color(button-dark), color(dark-link));
+            }
         }
     }
-    .show-divider {
-        .icon { background-color: darken(color(panel-dark), 40%); }
-        .mat-divider { border-top-color: darken(color(panel-dark), 40%); }
-        &:hover {
-            .mat-divider { border-top-color: darken(color(panel-dark), 50%); }
-            .icon { background-color: darken(color(panel-dark), 50%); }
+    .divider-option {
+        .icon {
+            @include adaptive-color("background-color", color(panel-dark), color(dark-4));
+        }
+    }
+    .divider {
+        .icon {
+            @include adaptive-color("background-color", darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
+        }
+        .mat-divider {
+            @include adaptive-color("border-top-color", darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
         }
     }
 }

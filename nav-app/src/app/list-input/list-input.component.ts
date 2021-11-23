@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Link, Metadata, ViewModel } from '../viewmodels.service';
 
 @Component({
     selector: 'app-list-input',
     templateUrl: './list-input.component.html',
-    styleUrls: ['./list-input.component.scss']
+    styleUrls: ['./list-input.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ListInputComponent implements OnInit {
     @Input() config: ListInputConfig;
