@@ -19,11 +19,15 @@ export class ListInputComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-        this.list = this.config.list.map(item => {
-            let clone = new this.fieldToClass[this.config.type]();
-            clone.deSerialize(item.serialize());
-            return clone;
-        });
+        if (this.config.level == 'technique') {
+            this.list = this.config.list.map(item => {
+                let clone = new this.fieldToClass[this.config.type]();
+                clone.deSerialize(item.serialize());
+                return clone;
+            });
+        } else {
+            this.list = this.config.list;
+        }
     }
     
     /**
@@ -47,8 +51,7 @@ export class ListInputComponent implements OnInit {
         if (this.list[0] && this.list[0].divider) this.removeDivider(0);
         if (this.list[this.list.length - 1] && this.list[this.list.length - 1].divider) this.removeDivider(this.list.length - 1);
 
-        let value = this.list.filter(item => item.valid());
-        this.config.viewModel.editSelectedTechniqueValues(this.config.type, value);
+        this.updateList();
     }
 
     /**
@@ -56,7 +59,10 @@ export class ListInputComponent implements OnInit {
      */
     public updateList(): void {
         let value = this.list.filter(item => item.valid());
-        this.config.viewModel.editSelectedTechniqueValues(this.config.type, value);
+
+        if (this.config.level == 'technique') { // do not update techniques if editing a layer-level list
+            this.config.viewModel.editSelectedTechniqueValues(this.config.type, value);
+        }
     }
 
     /**
@@ -105,6 +111,13 @@ export interface ListInputConfig {
     list: (Link|Metadata)[];
     /** The item type */
     type: "links" | "metadata";
+    /**
+     * Identifies whether the list exists on the technique or layer level
+     * If on the technique level, the list must be cloned to prevent 
+     * empty values from being added; all selected techniques
+     * will be updated with the new values
+     */
+    level: "layer" | "technique";
     /** The label attribute of the list */
     nameField: string;
     /** The value attribute of the list */

@@ -67,7 +67,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 layer controls
             </div>
 
-            <!-- layer name, description and metadata -->
+            <!-- layer name, description, metadata, and links -->
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect"
@@ -116,16 +116,18 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             </mat-form-field>
                     </div>
                     <div class="layer-data">
+                        <!-- layer metadata -->
                         <b>Metadata</b>
                         <div class="data-input">
-                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.metadata, 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.metadata, 'level': 'layer', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
                         </div>
 
                         <mat-divider></mat-divider>
                         
+                        <!-- layer links -->
                         <b>Links</b>
                         <div class="data-input">
-                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.links, 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.links, 'level': 'layer', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
                         </div>
                     </div>
                  </div>
@@ -504,7 +506,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
                 <!-- link input -->
                 <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'link'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.links, 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.links, 'level': 'technique', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
                 </div>
              </div>
 
@@ -521,7 +523,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
                  <!-- link input -->
                  <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'metadata'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.metadata, 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.metadata, 'level': 'technique', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
                 </div>
              </div>
 

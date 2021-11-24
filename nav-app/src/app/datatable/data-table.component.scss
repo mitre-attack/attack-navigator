@@ -513,7 +513,10 @@ $cellSize: 15px;
       text-align: left;
       margin: 0 10px;
 
-      .mat-divider { margin-bottom: 10px; }
+      .mat-divider {
+          margin-bottom: 10px;
+          @include adaptive-color-dark-only("border-top-color", color(dark-4));
+        }
   }
 
   .data-input {
