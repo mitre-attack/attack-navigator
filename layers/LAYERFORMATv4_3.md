@@ -210,6 +210,9 @@ The following example illustrates the layer file format:
             "name": "layer metadata 1", 
             "value": "layer metadata 1 value" 
         },
+        {
+            "divider": true
+        },
         { 
             "name": "layer metadata 2", 
             "value": "layer metadata 2 value" 

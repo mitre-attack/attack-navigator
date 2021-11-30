@@ -116,6 +116,8 @@ export interface ListInputConfig {
      * If on the technique level, the list must be cloned to prevent 
      * empty values from being added; all selected techniques
      * will be updated with the new values
+     * If on the layer level, the list is edited directly and does
+     * not update selected techniques with the new values
      */
     level: "layer" | "technique";
     /** The label attribute of the list */
