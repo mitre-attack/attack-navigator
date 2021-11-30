@@ -106,7 +106,7 @@ The following example illustrates the layer file format:
     "name": "example layer",
     "versions": {
         "attack": "10",
-        "navigator": "4.6",
+        "navigator": "4.5.5",
         "layer": "4.3"
     },
     "domain": "enterprise-attack",
