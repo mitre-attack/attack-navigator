@@ -8,7 +8,7 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
-# v4.6.0
+# v4.5.5 - Changes Staged on Develop
 ## New Features
 - Added the ability to assign hyperlinks and metadata to selected techniques in the technique controls toolbar. See issue [#321](https://github.com/mitre-attack/attack-navigator/issues/321).
     - Hyperlinks can be accessed via the context menu and metadata can be viewed in the technique tooltip. Both hyperlinks and metadata can also be added directly to Layer Files (see _Layer File Format Changes_ below for more details).
@@ -16,7 +16,7 @@
 - Added the ability to assign hyperlinks layers. Hyperlinks can be viewed and edited in the layer information panel alongside layer metadata.
 
 ## Layer File Format Changes
-Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects. This supports the assignment of hyperlinks to techniques which are accessed in the context menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the context menu where the `divider` property occurs in the list of hyperlinks.
+Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects and to layers. This supports the assignment of hyperlinks to techniques which are accessed in the context menu and to layers which are accessed in the layer information dropdown menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the technique context menu where the `divider` property occurs in the list of hyperlinks.
 
 # v4.5.4 - 15 November 2021
 ## Fixes
