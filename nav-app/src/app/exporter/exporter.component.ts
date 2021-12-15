@@ -460,7 +460,7 @@ export class ExporterComponent implements OnInit {
                     contentGroup.append("text")
                         .text(subsectionContent)
                         .attr("font-size", function() {
-                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
+                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
                         })
                         .each(function() { centerValign(this); })
                         // .attr("dominant-baseline", "middle")
