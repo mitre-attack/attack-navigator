@@ -26,15 +26,18 @@ versions, the Navigator can manipulate either the Enterprise, Mobile, or ICS ATT
 Within a technology domain, the Navigator allows you to filter your view of the matrix in a variety of ways, displaying
 the tactics and techniques that are important to you.
 
-You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting "
-view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
+You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting 
+"view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
 way the Navigator allows you to explore a given ATT&CK matrix and access the definitions of the techniques.
 
-Beyond the filters, layers also provide a means to customize your view of the matrix. To that end you can
+Beyond the filters, layers also provide a means to customize your view of the matrix. To that end, you can
 <a href="#assigning-manual-colors">color</a>,
 <a href="#hiding-disabled-techniques">hide</a>,
-<a href="#adding-comments-to-techniques">comment</a>, and assign <a href="#scoring-techniques">numeric scores</a> to
-techniques to aid in analysis of threats and your defenses against those threats. As stated earlier, the Navigator is
+<a href="#adding-comments-to-techniques">comment</a>, and assign 
+<a href="#scoring-techniques">numeric scores</a>,
+<a href="#assigning-links-to-techniques">links</a>, and
+<a href="#adding-metadata-to-techniques">metadata</a>
+to techniques to aid in analysis of threats and your defenses against those threats. As stated earlier, the Navigator is
 designed to be simple, allowing you to assign whatever meaning you want to the color-codings, scores, and comments. This
 way the Navigator can support whatever you want to do without requiring changes to the Navigator code itself.
 
@@ -58,8 +61,8 @@ time.
 Layers can be saved by clicking the "save layer"
 button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">). This will open a dialog to save a layer
 configuration file to your local computer. This contains the configuration for the techniques that have been customized
-(commented, colored, assigned a score, or disabled) as well as the scoring gradient setup, filter selection, layer name,
-layer description, view configuration.
+(commented, colored, disabled, or assigned a score, links, or metadata) as well as the scoring gradient setup, filter selection, 
+layer name, layer description, view configuration.
 
 Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer you've worked on previously. To
 do so, open a new tab and open the "Open Existing Layer" panel. Then click "Upload from local", and select your saved
@@ -136,9 +139,11 @@ layers to inherit properties from:
 
 - <b>Gradient:</b> choose which layer to inherit <a href="#scoring-gradient">scoring gradient</a> from.
 - <b>Coloring:</b> choose which layer to inherit <a href="#assigning-manual-colors">manually assigned technique
-  colors</a>
+  colors</a>.
 - <b>Comments:</b> choose which layer to inherit <a href="#adding-comments-to-techniques">
   technique comments</a> from.
+- <b>Links:</b> choose which layer to inherit <a href="#assigning-links-to-techniques">assigned links</a> from.
+- <b>Metadata:</b> choose which layer to inherit <a href="#adding-metadata-to-techniques"> technique metadata</a> from.
 - <b>States:</b> choose which layer to inherit technique <a href="#disabling-techniques">
   enabled/disabled states</a> from.
 - <b>Filters:</b> choose which layer to inherit <a href="#filtering">layer filter configuration</a> from.
@@ -156,12 +161,10 @@ into the score expression input.
 ## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg)Layer Information
 
 The layer name and description can be edited in the layer information dropdown. The layer name can also be edited where
-it appears in the tab title. Additionally, the layer information panel allows the user to add metadata to the layer.
-Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
-descriptive fields to the layer.
-
-<b>Note:</b> techniques can also have metadata, however metadata on techniques is not editable in the Navigator.
-Metadata on techniques is shown in tooltips.
+it appears in the tab title. Additionally, the layer information panel allows the user to add metadata and assign links
+to the layer. Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
+descriptive fields to the layer. Links can be useful for providing additional context from other websites that are relevant
+to the layer.
 
 ## Sorting
 
@@ -271,18 +274,18 @@ techniques by indentation.
 
 The mini layout is designed to fit more techniques on the screen simultaneously by reducing their size. To do so all
 text is removed and techniques are visualized as squares under the tactic. Selecting this layout disables
-<a href="#showing-ids-and-names">the "show IDs" and "show Names" controls</a>.Tactic headers are visualized as black
+<a href="#showing-ids-and-names">the "show IDs" and "show Names" controls</a>. Tactic headers are visualized as black
 cells above the columns. Technique and tactic names are displayed as tooltips when you hover over a technique or
 tactic-header cell. Techniques and their sub-techniques are grouped inside of an outlined box. The technique is the
-dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques.Techniques without
+dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques. Techniques without
 sub-techniques are displayed without a grouping box, and may appear inline with other sub-techniques-less
-techniques.Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
+techniques. Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
 
 ### Showing IDs and Names
 
 In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled
 by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default)
-will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.These controls can
+will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix. These controls can
 be toggled independently and turned off entirely to remove cell labels entirely. The mini layout forces both of these
 controls to be disabled.
 
@@ -382,13 +385,35 @@ gradient - they are displayed with an uncolored background in the matrix.
 A text comment can be added to techniques. This comment will show up in the technique tooltip if a comment has been
 added. Techniques with a comment will be given a yellow underline.
 
-<b>Note:</b> A yellow underline is also shown if the technique has
-attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> in the
-source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
+<b>Note:</b> A yellow underline is also shown if <a href="#adding-metadata-to-techniques">metadata</a> has been added to the 
+technique or if the technique has attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> 
+in the source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
+
+## ![Assigning Links to Techniques](nav-app/src/assets/icons/ic_link_black_24px.svg)Assigning Links to Techniques
+
+Links can be assigned to techniques by specifying a label and a URL for each link. URLs must be prefixed with a protocol identifier
+(e.g. 'https://'). Multiple links can be added by clicking "add links"
+in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new 
+browser tab when clicked. To visually separate the links in the context menu, a divider can be added in the interface which will display a 
+horizontal line in the context menu where the divider occurs in the list of assigned links. 
+Techniques with assigned links will be given a blue underline.
+
+<b>Note</b>: Links can only be added, updated, or removed if the list of links of all the currently selected techniques 
+are identical, including dividers.
+
+## ![Adding Metadata to Techniques](nav-app/src/assets/icons/ic_metadata_black_24px.svg)Adding Metadata to Techniques
+
+Technique metadata can be added by specifying metadata names and values and are displayed in the technique tooltip. Metadata is useful 
+for adding supplemental descriptive fields and information to techniques. To visually separate metadata fields, a divider can be added 
+in the interface, which will display a horizontal line in the tooltip where the divider occurs in the list of metadata.
+Techniques with metadata will be given a yellow underline.
+
+<b>Note</b>: Metadata can only be added, updated, or removed if the list of metadata of all the currently selected techniques 
+are identical, including dividers.
 
 ## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg)Clearing Annotations on Techniques
 
-Clicking the "clear annotations on selected" button removes comments, colors, scores, and enabled/disabled state from
+Clicking the "clear annotations on selected" button removes comments, links, metadata, colors, scores, and enabled/disabled state from
 all selected techniques.
 
 # Selecting Techniques
@@ -427,6 +452,8 @@ technique will bring up a context menu with more options:
   Note that currently selected sub-techniques will remain selected if the control is disabled when using this option.
 - <b>view technique:</b> For more information / details on the technique.
 - <b>view tactic:</b> For more information / details on the tactic.
+- <b>user assigned links:</b> List of links assigned to the technique by the user. These links will open a new browser tab directed to the 
+specified URL. See <a href="#assigning-links-to-techniques">Assigning Links to Techniques</a> for more details.
 
 <b>Tip:</b> You can use "select unannotated" followed by disabling those techniques, and then hiding disabled
 techniques,to create a layer where only annotated techniques are visible.

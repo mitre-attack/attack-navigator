@@ -246,7 +246,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     }
 
     handleTabClick(tab) {
-        if (this.activeTab !== tab) this.activeTab = tab;
+        if (this.activeTab !== tab) {
+            this.activeTab = tab;
+            this.dropdownEnabled = '';
+        }
         else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
@@ -384,6 +387,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     gradient: ViewModel = null;
     coloring: ViewModel = null;
     comments: ViewModel = null;
+    links: ViewModel = null;
+    metadata: ViewModel = null;
     enabledness: ViewModel = null;
     filters: ViewModel = null;
     scoreExpression: string = "";
@@ -413,7 +418,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             if(vms && !vms.every((vm) => vm.domainVersionID === vms[0].domainVersionID)) {
                 throw {message: "cannot apply operations to layers of different domains"};
             }
-            let vm = this.viewModelsService.layerLayerOperation(this.domain, this.scoreExpression, scoreVariables, this.comments, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
+            let vm = this.viewModelsService.layerLayerOperation(this.domain, this.scoreExpression, scoreVariables, this.comments, this.links, this.metadata, this.gradient, this.coloring, this.enabledness, layerName, this.filters, this.legendItems)
             if (!this.dataService.getDomain(this.domain).dataLoaded) {
                 this.dataService.loadDomainData(this.domain, true).then( () => {
                     vm.loadVMData();

@@ -22,8 +22,8 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         return (this.viewModel.highlightedTechnique === this.technique && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id === this.tactic.id);
     }
 
-    constructor(public configService: ConfigService, public dataService: DataService) {
-        super(dataService);
+    constructor(public dataService: DataService, public configService: ConfigService) {
+        super(dataService, configService);
     }
 
     ngOnInit() {

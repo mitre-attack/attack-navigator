@@ -59,5 +59,15 @@
                 {{contextMenuItem.label}}
             </div>
         </div>
+        <div *ngIf="links.length" class="contextMenu-section">
+            <div class="link-container" *ngFor="let link of links">
+                <div *ngIf="!link.divider else divider" class="contextMenu-button" (click)="openLink(link)">
+                    {{link.label}}
+                </div>
+                <ng-template #divider>
+                    <div class="divider"></div>
+                </ng-template>
+            </div>
+        </div>
     </div>
 </div>
