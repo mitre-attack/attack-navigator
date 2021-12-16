@@ -150,7 +150,8 @@ Example loading content from local files:
 ```
 
 ## Running the Docker File
-1. Navigate to the **nav-app** directory
+
+1. Navigate to the directory where you checked out the git repository
 2. Run `docker build -t yourcustomname .`
 3. Run `docker run -p 4200:4200 yourcustomname`
 4. Navigate to `localhost:4200` in browser
