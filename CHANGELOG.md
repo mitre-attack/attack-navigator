@@ -9,6 +9,13 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 # v4.5.5 - Changes Staged on Develop
+
+## Fixes
+- Fixed an issue with the Dockerfile which was preventing the docker image from building. See issue [#395](https://github.com/mitre-attack/attack-navigator/pull/395).
+
+## Improvements
+- Font sizing in the SVG exports are optimally sized to improve readability and consistency. See issue [#221](https://github.com/mitre-attack/attack-navigator/issues/221).
+
 ## New Features
 - Added the ability to assign hyperlinks and metadata to selected techniques in the technique controls toolbar. See issue [#321](https://github.com/mitre-attack/attack-navigator/issues/321).
     - Hyperlinks can be accessed via the context menu and metadata can be viewed in the technique tooltip. Both hyperlinks and metadata can also be added directly to Layer Files (see _Layer File Format Changes_ below for more details).
