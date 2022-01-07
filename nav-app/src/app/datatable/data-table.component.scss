@@ -316,10 +316,6 @@ $cellSize: 15px;
       margin-top: 4px;
     }
 
-    .filter-label {
-
-    }
-
     .filter-option {
       &:hover {
         @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
@@ -513,37 +509,19 @@ $cellSize: 15px;
     padding: 0 10px;
   }
 
-  .metadata_input {
-    padding-left: 10px;
-    // padding-bottom: 5px;
-    margin-bottom: 2px; //fix funky scroll overflow
-    max-height: 50vh;
-    overflow-y: auto;
-    text-align: left;
+  .layer-data {
+      text-align: left;
+      margin: 0 10px;
 
-    table {
-      border-spacing: 5px 15px;
-      // width: 500px;
-      // padding: 0;
-      // margin: 0;
-      // list-style: none;
-      .formfield-group {
-        // &:not(:first-child) { margin-bottom: 5px; }
-        td:first-child {
-          border-width: 1px 0 1px 1px;
-          border-color: black;
-          border-style: solid;
-          width: 5px
-        }
-
-        // border-left: 1px solid black;
-        // padding-left: 5px;
-        // &:not(:first-child) { margin-top: 10px;}
-        button {
-          margin-bottom: 4px;
-        }
+      .mat-divider.layer-div {
+          margin-bottom: 10px;
+          @include adaptive-color-dark-only("border-top-color", color(dark-4));
       }
-    }
+  }
+
+  .data-input {
+      overflow-y: auto;
+      max-height: 30vh;
   }
 }
 
@@ -570,4 +548,10 @@ $cellSize: 15px;
       margin: 5px;
     }
   }
+}
+
+.list-input {
+    width: 250px !important;
+    overflow-y: auto;
+    max-height: 50vh;
 }

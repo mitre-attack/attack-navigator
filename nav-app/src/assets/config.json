@@ -115,6 +115,7 @@
     },
 
     "comment_color": "yellow",
+    "link_color": "blue",
 
     "banner": "",
 
@@ -130,7 +131,7 @@
             {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
+            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and layer metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
             {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
             {"name": "export_render", "enabled": true, "description": "Disable to remove the button to render the current layer."},
             {"name": "export_excel", "enabled": true, "description": "Disable to remove the button to export the current layer to MS Excel (.xlsx) format."},
@@ -147,6 +148,9 @@
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
+            {"name": "links", "enabled": true, "description": "Disable to remove the ability to assign hyperlinks to techniques."},
+            {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."},
+            {"name": "metadata", "enabled": true, "description": "Disable to remove the ability to add metadata to techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]}
     ]

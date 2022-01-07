@@ -23,8 +23,12 @@
                 margin-top: 2px;
                 padding-top: 2px;
             }
-            div {padding: 3px;}
-
+            div:not(.link-container) {padding: 3px;}
+            .divider {
+                border-top: 1px solid white;
+                margin-top: 2px;
+                padding: 2px 0 0 0 !important;
+            }
             .contextMenu-button {
                 cursor: pointer;
                 &:hover {

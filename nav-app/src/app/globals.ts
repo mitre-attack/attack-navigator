@@ -8,4 +8,4 @@ import * as app_package from "../../package.json";
  //
 
 export const nav_version: string = app_package["version"];
-export const layer_version: string = "4.2"
+export const layer_version: string = "4.3";

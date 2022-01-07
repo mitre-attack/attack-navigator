@@ -1,24 +1,15 @@
-import { Component, Input, ViewChild, HostListener, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
-import {DataService, Technique, Matrix, Domain} from '../data.service';
-import {ConfigService} from '../config.service';
+import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
+import { DataService } from '../data.service';
+import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
-import {FormControl} from '@angular/forms';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {MatSelectModule} from '@angular/material/select';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatMenuTrigger} from '@angular/material/menu';
+import { ViewModel, ViewModelsService, Link, Metadata } from "../viewmodels.service";
+import { DomSanitizer } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
 
 declare var tinygradient: any; //use tinygradient
 declare var tinycolor: any; //use tinycolor2
-
-import * as FileSaver from 'file-saver';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
-import { TmplAstVariable } from '@angular/compiler';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'DataTable',
@@ -315,12 +306,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     // edit field bindings
     commentEditField: string = "";
     scoreEditField: string = "";
+
     /**
      * triggered on left click of technique
      */
     onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
-            if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            if (["comment", "score", "colorpicker", "link", "metadata"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            return;
+        }
+        if (this.currentDropdown == "link" || this.currentDropdown == "metadata") {
+            this.currentDropdown = "";
             return;
         }
         //else populate editing controls
