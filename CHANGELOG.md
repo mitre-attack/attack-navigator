@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# v4.5.5 - Changes Staged on Develop
+# v4.5.5 - 7 January 2022
 
 ## Fixes
 
