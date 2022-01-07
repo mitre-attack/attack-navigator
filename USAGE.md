@@ -21,20 +21,23 @@ repository</a>.
 
 # Layers
 
-A layer constitutes a view of the tactics and techniques matrix for a specific technology domain. In more recent 
+A layer constitutes a view of the tactics and techniques matrix for a specific technology domain. In more recent
 versions, the Navigator can manipulate either the Enterprise, Mobile, or ICS ATT&CK technology domain knowledge bases.
 Within a technology domain, the Navigator allows you to filter your view of the matrix in a variety of ways, displaying
 the tactics and techniques that are important to you.
 
-You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting "
-view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
+You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting
+"view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
 way the Navigator allows you to explore a given ATT&CK matrix and access the definitions of the techniques.
 
-Beyond the filters, layers also provide a means to customize your view of the matrix. To that end you can
+Beyond the filters, layers also provide a means to customize your view of the matrix. To that end, you can
 <a href="#assigning-manual-colors">color</a>,
 <a href="#hiding-disabled-techniques">hide</a>,
-<a href="#adding-comments-to-techniques">comment</a>, and assign <a href="#scoring-techniques">numeric scores</a> to
-techniques to aid in analysis of threats and your defenses against those threats. As stated earlier, the Navigator is
+<a href="#adding-comments-to-techniques">comment</a>, and assign
+<a href="#scoring-techniques">numeric scores</a>,
+<a href="#assigning-links-to-techniques">links</a>, and
+<a href="#adding-metadata-to-techniques">metadata</a>
+to techniques to aid in analysis of threats and your defenses against those threats. As stated earlier, the Navigator is
 designed to be simple, allowing you to assign whatever meaning you want to the color-codings, scores, and comments. This
 way the Navigator can support whatever you want to do without requiring changes to the Navigator code itself.
 
@@ -58,8 +61,8 @@ time.
 Layers can be saved by clicking the "save layer"
 button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">). This will open a dialog to save a layer
 configuration file to your local computer. This contains the configuration for the techniques that have been customized
-(commented, colored, assigned a score, or disabled) as well as the scoring gradient setup, filter selection, layer name,
-layer description, view configuration.
+(commented, colored, disabled, or assigned a score, links, or metadata) as well as the scoring gradient setup, filter selection,
+layer name, layer description, view configuration.
 
 Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer you've worked on previously. To
 do so, open a new tab and open the "Open Existing Layer" panel. Then click "Upload from local", and select your saved
@@ -68,38 +71,40 @@ URL" input allowing you to open a layer json from a remote source.
 
 ## Upgrading a Layer to the Current Version
 
-The layer upgrade interface allows users to upgrade an ATT&CK Navigator layer created on a previous version of ATT&CK to the 
+The layer upgrade interface allows users to upgrade an ATT&CK Navigator layer created on a previous version of ATT&CK to the
 current version of the dataset. With this interface, users can step through each change in the dataset of techniques:
+
 - The user can view techniques which have been added to the dataset since the layer was created and annotate them as necessary.
 - The user can see whether the techniques they had previously annotated have changed and adjust the annotations accordingly.
-- The user can determine if any annotated techniques have been removed or replaced by new techniques and in the latter case copy 
+- The user can determine if any annotated techniques have been removed or replaced by new techniques and in the latter case copy
 annotations to the replacing technique(s).
 - The user can also verify what techniques haven't changed since the layer was created.
 
 ### Mapping Annotations
 
-For annotated techniques which have changed since the layer was created, you may want to update the set of annotations to account 
-for changes to scope or content. Each technique in the interface lists its previous and current state, with links to 
-<a href="https://attack.mitre.org/">the ATT&CK Website</a> for both versions of the technique to enable easy review. In steps with techniques you 
-have previously annotated, you can enable the "show annotated techniques only" filter to view only those techniques which have annotations. 
+For annotated techniques which have changed since the layer was created, you may want to update the set of annotations to account
+for changes to scope or content. Each technique in the interface lists its previous and current state, with links to
+<a href="https://attack.mitre.org/">the ATT&CK Website</a> for both versions of the technique to enable easy review. In steps with techniques you
+have previously annotated, you can enable the "show annotated techniques only" filter to view only those techniques which have annotations.
 
-You can copy annotations from the previous version of the technique to the current one, making adjustments if necessary. There are 
+You can copy annotations from the previous version of the technique to the current one, making adjustments if necessary. There are
 two approaches to copying annotations from the previous version:
+
 - For techniques with tactics that map one-to-one between the two versions, annotations can be copied by clicking the ">"
 button next to the tactic. This will copy any existing annotations on the tactic to the technique under the same tactic in
 the current version.
 - For techniques with tactics that have changed between the two versions, annotations can be copied by dragging & dropping the
 annotated tactic from the previous version to the tactic(s) in the current version.
 
-Techniques can be marked as reviewed under their respective panels to visually indicate that they have been reviewed. The "reviewed 
-X/Y techniques" displayed underneath the techniques list can be used to determine if you missed any techniques. The numerator reflects 
+Techniques can be marked as reviewed under their respective panels to visually indicate that they have been reviewed. The "reviewed
+X/Y techniques" displayed underneath the techniques list can be used to determine if you missed any techniques. The numerator reflects
 the number of techniques you have marked as "reviewed" and the denominator denotes the total number of techniques shown according
 to your configuration (for example, if you have enabled the "show annotated techniques only" filter, only the number of techniques
 which are annotated are counted in this total).
 
-You can view and verify the status of the layer upgrade at the end of the workflow to ensure you have created or adjusted all annotations 
-as desired. A status is displayed next to each section name to indicate either the number of techniques you have reviewed in the section, 
-if you have skipped the section, or if there are no techniques to review in the section. Once you have finished upgrading the layer, you 
+You can view and verify the status of the layer upgrade at the end of the workflow to ensure you have created or adjusted all annotations
+as desired. A status is displayed next to each section name to indicate either the number of techniques you have reviewed in the section,
+if you have skipped the section, or if there are no techniques to review in the section. Once you have finished upgrading the layer, you
 can click the "done" button to close the sidebar.
 
 <b>Note:</b> You will not be able to return to the layer upgrade interface after the sidebar is closed.
@@ -128,17 +133,19 @@ layers to inherit properties from:
   for a full list of operators.
 
   Some example score expressions:
-    - <code>(a+b)/2</code> (average two layers)
-    - <code>a+b+c</code>
-    - <code>a*(b+c)</code>
-    - <code>100-a</code> (reverse the scoring of <code>a</code>, assuming <code>a</code> is on a 0-100 scale)
-    - <code>(a>b) and (a>=75)</code>
+  - <code>(a+b)/2</code> (average two layers)
+  - <code>a+b+c</code>
+  - <code>a*(b+c)</code>
+  - <code>100-a</code> (reverse the scoring of <code>a</code>, assuming <code>a</code> is on a 0-100 scale)
+  - <code>(a>b) and (a>=75)</code>
 
 - <b>Gradient:</b> choose which layer to inherit <a href="#scoring-gradient">scoring gradient</a> from.
 - <b>Coloring:</b> choose which layer to inherit <a href="#assigning-manual-colors">manually assigned technique
-  colors</a>
+  colors</a>.
 - <b>Comments:</b> choose which layer to inherit <a href="#adding-comments-to-techniques">
   technique comments</a> from.
+- <b>Links:</b> choose which layer to inherit <a href="#assigning-links-to-techniques">assigned links</a> from.
+- <b>Metadata:</b> choose which layer to inherit <a href="#adding-metadata-to-techniques"> technique metadata</a> from.
 - <b>States:</b> choose which layer to inherit technique <a href="#disabling-techniques">
   enabled/disabled states</a> from.
 - <b>Filters:</b> choose which layer to inherit <a href="#filtering">layer filter configuration</a> from.
@@ -156,12 +163,10 @@ into the score expression input.
 ## ![Layer Information](nav-app/src/assets/icons/ic_description_black_24px.svg)Layer Information
 
 The layer name and description can be edited in the layer information dropdown. The layer name can also be edited where
-it appears in the tab title. Additionally, the layer information panel allows the user to add metadata to the layer.
-Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
-descriptive fields to the layer.
-
-<b>Note:</b> techniques can also have metadata, however metadata on techniques is not editable in the Navigator.
-Metadata on techniques is shown in tooltips.
+it appears in the tab title. Additionally, the layer information panel allows the user to add metadata and assign links
+to the layer. Metadata can be useful for supporting other applications that use the layer format, or for attaching additional
+descriptive fields to the layer. Links can be useful for providing additional context from other websites that are relevant
+to the layer.
 
 ## Sorting
 
@@ -271,18 +276,18 @@ techniques by indentation.
 
 The mini layout is designed to fit more techniques on the screen simultaneously by reducing their size. To do so all
 text is removed and techniques are visualized as squares under the tactic. Selecting this layout disables
-<a href="#showing-ids-and-names">the "show IDs" and "show Names" controls</a>.Tactic headers are visualized as black
+<a href="#showing-ids-and-names">the "show IDs" and "show Names" controls</a>. Tactic headers are visualized as black
 cells above the columns. Technique and tactic names are displayed as tooltips when you hover over a technique or
 tactic-header cell. Techniques and their sub-techniques are grouped inside of an outlined box. The technique is the
-dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques.Techniques without
+dark-outlined first cell of the group, and the rest of the cells of the group are the sub-techniques. Techniques without
 sub-techniques are displayed without a grouping box, and may appear inline with other sub-techniques-less
-techniques.Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
+techniques. Disabled techniques are denoted with an "x" symbol. Techniques with comments are denoted with an "i" symbol.
 
 ### Showing IDs and Names
 
 In the side and flat layouts, you can change what is shown inside of the technique cells. Enabling "show names" (enabled
 by default) will show technique and tactic names on each cell of the matrix. Enabling "show IDs" (disabled by default)
-will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix.These controls can
+will show ATT&CK IDs (e.g "T1000" for techniques, or "TA1000" for tactics) on each cell of the matrix. These controls can
 be toggled independently and turned off entirely to remove cell labels entirely. The mini layout forces both of these
 controls to be disabled.
 
@@ -309,18 +314,18 @@ aggregate score.
 There are 4 available functions to calculate the aggregate score: average, min, max, and sum.
 
 - Average:
-    - if including unscored techniques, will add up the scores of a technique and all of its sub-techniques, and divide
+  - if including unscored techniques, will add up the scores of a technique and all of its sub-techniques, and divide
       by all; if not including unscored techniques, will add up the onlythe nonzero scores of a technique and its
       sub-techniques, and divide by the count of non-zeroscores.
 
 - Min:
-    - will take the minimum of the scores of a technique and all of its sub-techniques.
+  - will take the minimum of the scores of a technique and all of its sub-techniques.
 
 - Max:
-    - will take the maximum of the scores of a technique and all of its sub-techniques.
+  - will take the maximum of the scores of a technique and all of its sub-techniques.
 
 - Sum:
-    - will add the scores of a technique and all of its sub-techniques.
+  - will add the scores of a technique and all of its sub-techniques.
 
 ## Legend Bar
 
@@ -382,13 +387,35 @@ gradient - they are displayed with an uncolored background in the matrix.
 A text comment can be added to techniques. This comment will show up in the technique tooltip if a comment has been
 added. Techniques with a comment will be given a yellow underline.
 
-<b>Note:</b> A yellow underline is also shown if the technique has
-attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a> in the
-source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
+<b>Note:</b> A yellow underline is also shown if <a href="#adding-metadata-to-techniques">metadata</a> has been added to the
+technique or if the technique has attached <a href="https://docs.oasis-open.org/cti/stix/v2.1/cs01/stix-v2.1-cs01.html#_gudodcg1sbb9">Notes</a>
+in the source data. Notes cannot be edited in the Navigator and are displayed in the tooltip.
+
+## ![Assigning Links to Techniques](nav-app/src/assets/icons/ic_link_black_24px.svg)Assigning Links to Techniques
+
+Links can be assigned to techniques by specifying a label and a URL for each link. URLs must be prefixed with a protocol identifier
+(e.g. 'https://'). Multiple links can be added by clicking "add links"
+in the interface. These are displayed in the context menu (accessed by right clicking on a technique) and will open a new
+browser tab when clicked. To visually separate the links in the context menu, a divider can be added in the interface which will display a
+horizontal line in the context menu where the divider occurs in the list of assigned links.
+Techniques with assigned links will be given a blue underline.
+
+<b>Note</b>: Links can only be added, updated, or removed if the list of links of all the currently selected techniques
+are identical, including dividers.
+
+## ![Adding Metadata to Techniques](nav-app/src/assets/icons/ic_metadata_black_24px.svg)Adding Metadata to Techniques
+
+Technique metadata can be added by specifying metadata names and values and are displayed in the technique tooltip. Metadata is useful
+for adding supplemental descriptive fields and information to techniques. To visually separate metadata fields, a divider can be added
+in the interface, which will display a horizontal line in the tooltip where the divider occurs in the list of metadata.
+Techniques with metadata will be given a yellow underline.
+
+<b>Note</b>: Metadata can only be added, updated, or removed if the list of metadata of all the currently selected techniques
+are identical, including dividers.
 
 ## ![Clearing Annotations on Techniques](nav-app/src/assets/icons/ic_clear_black_24px.svg)Clearing Annotations on Techniques
 
-Clicking the "clear annotations on selected" button removes comments, colors, scores, and enabled/disabled state from
+Clicking the "clear annotations on selected" button removes comments, links, metadata, colors, scores, and enabled/disabled state from
 all selected techniques.
 
 # Selecting Techniques
@@ -427,6 +454,8 @@ technique will bring up a context menu with more options:
   Note that currently selected sub-techniques will remain selected if the control is disabled when using this option.
 - <b>view technique:</b> For more information / details on the technique.
 - <b>view tactic:</b> For more information / details on the tactic.
+- <b>user assigned links:</b> List of links assigned to the technique by the user. These links will open a new browser tab directed to the
+specified URL. See <a href="#assigning-links-to-techniques">Assigning Links to Techniques</a> for more details.
 
 <b>Tip:</b> You can use "select unannotated" followed by disabling those techniques, and then hiding disabled
 techniques,to create a layer where only annotated techniques are visible.
@@ -490,7 +519,7 @@ a layer link you've already added to remove it.
 The following is an example ATT&CK Navigator URL with the default layer specified to be the *Bear APTs layer
 from <a href="https://github.com/mitre-attack/attack-navigator">our github
 repo</a>:  
-<code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
+<code><https://mitre-attack.github.io/attack-navigator/enterprise/><b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
 
 Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
 
@@ -505,7 +534,7 @@ assets/config.json</code>.
 
 The following is an example ATT&CK Navigator URL with the ability to download the layer and add comments
 disabled:  
-<code>https://mitre-attack.github.io/attack-navigator/enterprise/<b>#download_layer=false&comments=false</b></code>
+<code><https://mitre-attack.github.io/attack-navigator/enterprise/><b>#download_layer=false&comments=false</b></code>
 
 # ![Rendering Layers as SVG](nav-app/src/assets/icons/ic_camera_alt_black_24px.svg)Rendering Layers as SVG
 
@@ -587,7 +616,7 @@ Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 License. You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "
 AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific
