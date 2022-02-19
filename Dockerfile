@@ -2,23 +2,29 @@
 
 FROM node:16
 
-WORKDIR /src
-
-# copy over needed files
-COPY nav-app/ /src/nav-app/
-COPY layers/*.md /src/layers/
-COPY *.md /src/
-
+# install node packages - cache for faster future builds
 WORKDIR /src/nav-app
+COPY nav-app/package*.json nav-app/patch-webpack.js .
+# install packages and build 
+RUN npm install --unsafe-perm
 
 # give user permissions
 RUN chown -R node:node ./
 
-# install packages and build 
-RUN npm install --unsafe-perm
+
+# copy over needed files
+USER node
+COPY nav-app/ ./
+
+WORKDIR /src
+COPY layers/*.md ./layers/
+
+COPY *.md ./
+
+WORKDIR /src/nav-app
 
 EXPOSE 4200
 
 CMD npm start
 
-USER node
+# USER node
