@@ -198,6 +198,7 @@ export class DataService {
     // URLs in case config file doesn't load properly
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
 
     /**
      * Set up the URLs for data
@@ -224,7 +225,7 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v10";
+            let currVersion = "ATT&CK v11";
             let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
             let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
