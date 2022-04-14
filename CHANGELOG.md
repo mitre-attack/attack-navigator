@@ -9,6 +9,10 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.0 - 25 April 2022
+
+Updated the Navigator configuration file and version in support of the v11 ATT&CK release.
+
 # v4.5.5 - 7 January 2022
 
 ## Fixes
