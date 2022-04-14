@@ -230,11 +230,11 @@ export class DataService {
             enterpriseDomain.urls = [this.enterpriseAttackURL];
             let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
+            let icsDomain = new Domain(this.getDomainVersionID("ICS", currVersion), "ICS", currVersion);
+            icsDomain.urls = [this.icsAttackURL];
 
             this.versions.push(currVersion);
-            this.domains.push(enterpriseDomain);
-            this.domains.push(mobileDomain);
-            console.log(this.domains)
+            this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
     }
 
