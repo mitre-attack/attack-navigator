@@ -209,7 +209,7 @@ export class DataService {
             let v: string = version["name"];
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let domainVersionID = this.getDomainVersionID(domain["name"], v);
+                let domainVersionID = this.getDomainVersionID(domain["identifier"], version["version"]);
                 let name = domain["name"];
                 let domainObject = new Domain(domainVersionID, name, v)
 
@@ -225,9 +225,9 @@ export class DataService {
 
         if (this.domains.length == 0) { // issue loading config
             let currVersion = "ATT&CK v10";
-            let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
+            let enterpriseDomain = new Domain(this.getDomainVersionID("enterprise-attack", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
+            let mobileDomain = new Domain(this.getDomainVersionID("mobile-attack", currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
 
             this.versions.push(currVersion);
@@ -313,7 +313,7 @@ export class DataService {
         if (!version) { // layer with no specified version defaults to current version
             version = this.versions[0];
         }
-        return domain.replace(/\s/g, "-").concat('-', version.replace(/\s/g, "-").replace("&", "a").toLowerCase()).toLowerCase();
+        return domain + '-' + version;
     }
 
     /**
