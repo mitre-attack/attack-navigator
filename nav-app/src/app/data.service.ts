@@ -211,7 +211,7 @@ export class DataService {
             version["domains"].forEach( (domain: any) => {
                 let domainVersionID = this.getDomainVersionID(domain["identifier"], version["version"]);
                 let name = domain["name"];
-                let domainObject = new Domain(domainVersionID, name, v)
+                let domainObject = new Domain(domain["identifier"], domainVersionID, name, v)
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -225,9 +225,9 @@ export class DataService {
 
         if (this.domains.length == 0) { // issue loading config
             let currVersion = "ATT&CK v10";
-            let enterpriseDomain = new Domain(this.getDomainVersionID("enterprise-attack", currVersion), "Enterprise", currVersion);
+            let enterpriseDomain = new Domain('enterprise-attack', this.getDomainVersionID("enterprise-attack", currVersion), "Enterprise", currVersion);
             enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain(this.getDomainVersionID("mobile-attack", currVersion), "Mobile", currVersion);
+            let mobileDomain = new Domain('mobile-attack', this.getDomainVersionID('mobile-attack', currVersion), "Mobile", currVersion);
             mobileDomain.urls = [this.mobileAttackURL];
 
             this.versions.push(currVersion);
@@ -738,11 +738,7 @@ export class Note {
 
 export class Domain {
     public readonly id: string; // domain ID
-    public get domain_identifier(): string { //domain ID without the version suffix
-        let parts = this.id.split("-");
-        parts.pop();
-        return parts.join("-");
-    }
+    public readonly domain_identifier: string //domain ID without the version suffix
     public readonly name: string; // domain display name
     public readonly version: string; // ATT&CK version number
 
@@ -791,7 +787,8 @@ export class Domain {
         revoked_by: new Map<string, string>()
     }
 
-    constructor(id: string, name: string, version: string) {
+    constructor(domain_identifier: string, id: string, name: string, version: string) {
+        this.domain_identifier = domain_identifier;
         this.id = id;
         this.name = name;
         this.version = version;
