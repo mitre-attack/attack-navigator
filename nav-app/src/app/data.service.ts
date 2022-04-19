@@ -211,7 +211,7 @@ export class DataService {
             version["domains"].forEach( (domain: any) => {
                 let domainVersionID = this.getDomainVersionID(domain["identifier"], version["version"]);
                 let name = domain["name"];
-                let domainObject = new Domain(domain["identifier"], domainVersionID, name, v)
+                let domainObject = new Domain(domain["identifier"], domainVersionID, name, version["version"]);
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -311,7 +311,7 @@ export class DataService {
      */
     getDomainVersionID(domain: string, version: string): string {
         if (!version) { // layer with no specified version defaults to current version
-            version = this.versions[0];
+            version = this.domains[0].version;
         }
         return domain + '-' + version;
     }
@@ -329,7 +329,7 @@ export class DataService {
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].match(/v[0-9]+/g)[0].toLowerCase();
+        return this.domains[0].version;
     }
 
     /**
