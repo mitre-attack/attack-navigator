@@ -9,6 +9,13 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# Changes staged in develop - 19 April 2022
+
+## New Features
+
+- Added new fields `version.version` and `domain.identifier` to the `config.json` to improve how Navigator derives domain information. See issue [#370](https://github.com/mitre-attack/attack-navigator/issues/370).
+
+
 # v4.5.5 - 7 January 2022
 
 ## Fixes
