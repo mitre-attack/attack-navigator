@@ -13,10 +13,18 @@ import { getCookie, hasCookie } from "./cookies";
 @Injectable()
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
+    @Output() onClickViewComment = new EventEmitter<any>();
 
     constructor(private dataService: DataService) { }
 
     viewModels: ViewModel[] = [];
+
+    /**
+     * Emit event when 'View Comment' in technique cell context menu is clicked
+     */
+    viewComment() {
+        this.onClickViewComment.emit();
+    }
 
     /**
      * Emit event when technique selection changes

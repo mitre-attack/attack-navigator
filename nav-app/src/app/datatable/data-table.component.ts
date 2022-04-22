@@ -228,6 +228,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     private selectionChangeSubscription: Subscription;
+    private viewCommentClickedSubscription: Subscription;
     constructor(public dataService: DataService,
                 private tabs: TabsComponent,
                 private sanitizer: DomSanitizer,
@@ -236,6 +237,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
+        })
+
+        this.viewCommentClickedSubscription = this.viewModelsService.onClickViewComment.subscribe(() => {
+            this.currentDropdown = 'comment';
         })
     }
 
@@ -251,6 +256,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.selectionChangeSubscription.unsubscribe();
+        this.viewCommentClickedSubscription.unsubscribe();
         document.body.removeEventListener('scroll', this.handleScroll);
     }
 
