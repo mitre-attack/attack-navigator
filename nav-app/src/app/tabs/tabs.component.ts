@@ -1,6 +1,6 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
+import { DataService, Technique, Version } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
 import { forkJoin } from 'rxjs';
@@ -13,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { ChangelogComponent } from "../changelog/changelog.component";
-import { rejects } from 'assert';
 
 declare var math: any; //use mathjs
 
@@ -253,8 +252,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
-    filterDomains(version: string) {
-        return this.dataService.domains.filter((d) => d.version.number === version)
+    filterDomains(version: Version) {
+        return this.dataService.domains.filter((d) => d.version == version)
     }
 
     hasFeature(featureName: string): boolean {

@@ -118,7 +118,7 @@
 
                 <!-- Domain buttons for latest version -->
                 <table class="btn-group" role="group">
-                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0].number)" let-domainIndex="index">
+                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
                         <td>
                             <button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button>
                         </td>
@@ -141,7 +141,7 @@
                                     <mat-select placeholder="version" [(ngModel)]="nVersion" required>
                                         <mat-option [value]="null">none</mat-option>
                                         <mat-option *ngFor="let nVersion of this.dataService.versions"
-                                                    [value]="nVersion.number">{{nVersion.name}}</mat-option>
+                                                    [value]="nVersion">{{nVersion.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
