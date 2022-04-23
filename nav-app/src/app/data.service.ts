@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-// import { Http } from '@angular/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
+import { TaxiiConnect, Collection } from './taxii2lib';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +10,7 @@ import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2l
 export class DataService {
 
     constructor(private http: HttpClient) {
-        console.log("initializing data service singleton")
+        console.log("initializing data service")
         let subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config["versions"]);
@@ -60,12 +59,12 @@ export class DataService {
                 else continue;
 
                 // parse according to type
-                switch(sdo.type) {
+                switch (sdo.type) {
                     case "x-mitre-data-component":
                         domain.dataComponents.push(new DataComponent(sdo, this));
                         break;
                     case "x-mitre-data-source":
-                        domain.dataSources.set(sdo.id, {name: sdo.name, external_references: sdo.external_references});
+                        domain.dataSources.set(sdo.id, { name: sdo.name, external_references: sdo.external_references });
                         break;
                     case "intrusion-set":
                         domain.groups.push(new Group(sdo, this));
@@ -183,7 +182,6 @@ export class DataService {
 
         // data loading complete; update watchers
         domain.dataLoaded = true;
-        console.log("data.service parsing complete")
         for (let callback of domain.dataLoadedCallbacks) {
             callback();
         }
@@ -196,8 +194,10 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
+    private latestVersion: Version = {name: "ATT&CK v10", number: "10"};
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
 
     /**
      * Set up the URLs for data
@@ -206,12 +206,11 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: string = version["name"];
+            let v: Version = new Version(version["name"], version["version"]);
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let domainVersionID = this.getDomainVersionID(domain["identifier"], version["version"]);
-                let name = domain["name"];
-                let domainObject = new Domain(domain["identifier"], domainVersionID, name, version["version"]);
+                let identifier = domain["identifier"];
+                let domainObject = new Domain(identifier, domain["name"], v);
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -224,16 +223,12 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v10";
-            let enterpriseDomain = new Domain('enterprise-attack', this.getDomainVersionID("enterprise-attack", currVersion), "Enterprise", currVersion);
-            enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain('mobile-attack', this.getDomainVersionID('mobile-attack', currVersion), "Mobile", currVersion);
-            mobileDomain.urls = [this.mobileAttackURL];
-
-            this.versions.push(currVersion);
-            this.domains.push(enterpriseDomain);
-            this.domains.push(mobileDomain);
-            console.log(this.domains)
+            this.versions.push(this.latestVersion);
+            // let domainVersionID = `${identifier}-${version.number}`;
+            let enterpriseDomain = new Domain( "enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
+            let mobileDomain = new Domain("mobile-attack", "Mobile", this.latestVersion, [this.mobileAttackURL]);
+            let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
+            this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
     }
 
@@ -309,11 +304,11 @@ export class DataService {
     /**
      * Get the ID from domain name & version
      */
-    getDomainVersionID(domain: string, version: string): string {
-        if (!version) { // layer with no specified version defaults to current version
-            version = this.domains[0].version;
+    getDomainVersionID(domain: string, versionNumber: string): string {
+        if (!versionNumber) { // layer with no specified version defaults to current version
+            versionNumber = this.versions[0].number;
         }
-        return domain + '-' + version;
+        return domain + '-' + versionNumber;
     }
 
     /**
@@ -336,7 +331,7 @@ export class DataService {
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]+/g)[0]? false : true;
+        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].number.match(/[0-9]+/g)[0] ? false : true;
     }
 
     /**
@@ -740,7 +735,7 @@ export class Domain {
     public readonly id: string; // domain ID
     public readonly domain_identifier: string //domain ID without the version suffix
     public readonly name: string; // domain display name
-    public readonly version: string; // ATT&CK version number
+    public readonly version: Version; // ATT&CK version
 
     public urls: string[] = [];
     public taxii_url: string = "";
@@ -787,17 +782,32 @@ export class Domain {
         revoked_by: new Map<string, string>()
     }
 
-    constructor(domain_identifier: string, id: string, name: string, version: string) {
+    constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
+        this.id = `${domain_identifier}-${version.number}`;
         this.domain_identifier = domain_identifier;
-        this.id = id;
         this.name = name;
         this.version = version;
+        if (urls) this.urls = urls;
     }
 
     /**
-     * Get version of this domain
+     * Get the version number for this domain
      */
-    getVersion() {
-        return this.version.match(/[0-9]+/g)[0];
+    getVersion(): string {
+        return this.version.number;
+    }
+}
+export class Version {
+    public readonly name: string;
+    public readonly number: string;
+
+    /**
+     * Creates an instance of Version
+     * @param name version name
+     * @param number version number
+     */
+    constructor(name: string, number: string) {
+        this.name = name;
+        this.number = number;
     }
 }

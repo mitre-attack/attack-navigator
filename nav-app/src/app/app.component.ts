@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
 
   constructor(public configService: ConfigService, private iconsService: IconsService) {
     Array.prototype.includes = function (value): boolean {
-      // console.log("checking include")
       for (let i = 0; i < this.length; i++) {
         if (this[i] === value) return true
       }

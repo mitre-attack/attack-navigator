@@ -118,7 +118,7 @@
 
                 <!-- Domain buttons for latest version -->
                 <table class="btn-group" role="group">
-                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
+                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0].number)" let-domainIndex="index">
                         <td>
                             <button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button>
                         </td>
@@ -141,13 +141,13 @@
                                     <mat-select placeholder="version" [(ngModel)]="nVersion" required>
                                         <mat-option [value]="null">none</mat-option>
                                         <mat-option *ngFor="let nVersion of this.dataService.versions"
-                                                    [value]="nVersion">{{nVersion}}</mat-option>
+                                                    [value]="nVersion.number">{{nVersion.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
                             <td>
                                 Choose the version for the new layer. <em>*Versions prior
-                                to {{ds.versions[ds.versions.length - 1]}} are not supported by Navigator
+                                to {{ds.versions[ds.versions.length - 1].name}} are not supported by Navigator
                                 v{{nav_version}}.</em>
                             </td>
                         </tr>
@@ -229,7 +229,7 @@
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
                                     <mat-option *ngFor="let domain of this.dataService.domains"
-                                                [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
+                                                [value]=domain.id>{{domain.name}} {{domain.version.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
