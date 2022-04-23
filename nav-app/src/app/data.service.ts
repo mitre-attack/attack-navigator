@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-// import { Http } from '@angular/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2lib';
+import { TaxiiConnect, Collection } from './taxii2lib';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +10,7 @@ import { TaxiiConnect, Server, Collections, Collection, Status } from './taxii2l
 export class DataService {
 
     constructor(private http: HttpClient) {
-        console.log("initializing data service singleton")
+        console.log("initializing data service")
         let subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config["versions"]);
@@ -53,19 +52,19 @@ export class DataService {
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
-                if ("x_mitre_domains" in sdo && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+                if ("x_mitre_domains" in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
                 else continue;
 
                 // parse according to type
-                switch(sdo.type) {
+                switch (sdo.type) {
                     case "x-mitre-data-component":
                         domain.dataComponents.push(new DataComponent(sdo, this));
                         break;
                     case "x-mitre-data-source":
-                        domain.dataSources.set(sdo.id, {name: sdo.name, external_references: sdo.external_references});
+                        domain.dataSources.set(sdo.id, { name: sdo.name, external_references: sdo.external_references });
                         break;
                     case "intrusion-set":
                         domain.groups.push(new Group(sdo, this));
@@ -183,7 +182,6 @@ export class DataService {
 
         // data loading complete; update watchers
         domain.dataLoaded = true;
-        console.log("data.service parsing complete")
         for (let callback of domain.dataLoadedCallbacks) {
             callback();
         }
@@ -196,6 +194,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
+    private latestVersion: Version = {name: "ATT&CK v11", number: "11"};
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
@@ -207,12 +206,11 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: string = version["name"];
+            let v: Version = new Version(version["name"], version["version"]);
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
-                let domainVersionID = this.getDomainVersionID(domain["name"], v);
-                let name = domain["name"];
-                let domainObject = new Domain(domainVersionID, name, v)
+                let identifier = domain["identifier"];
+                let domainObject = new Domain(identifier, domain["name"], v);
 
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
@@ -225,15 +223,10 @@ export class DataService {
         });
 
         if (this.domains.length == 0) { // issue loading config
-            let currVersion = "ATT&CK v11";
-            let enterpriseDomain = new Domain(this.getDomainVersionID("Enterprise", currVersion), "Enterprise", currVersion);
-            enterpriseDomain.urls = [this.enterpriseAttackURL];
-            let mobileDomain = new Domain(this.getDomainVersionID("Mobile", currVersion), "Mobile", currVersion);
-            mobileDomain.urls = [this.mobileAttackURL];
-            let icsDomain = new Domain(this.getDomainVersionID("ICS", currVersion), "ICS", currVersion);
-            icsDomain.urls = [this.icsAttackURL];
-
-            this.versions.push(currVersion);
+            this.versions.push(this.latestVersion);
+            let enterpriseDomain = new Domain( "enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
+            let mobileDomain = new Domain("mobile-attack", "Mobile", this.latestVersion, [this.mobileAttackURL]);
+            let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
     }
@@ -310,11 +303,11 @@ export class DataService {
     /**
      * Get the ID from domain name & version
      */
-    getDomainVersionID(domain: string, version: string): string {
-        if (!version) { // layer with no specified version defaults to current version
-            version = this.versions[0];
+    getDomainVersionID(domain: string, versionNumber: string): string {
+        if (!versionNumber) { // layer with no specified version defaults to current version
+            versionNumber = this.versions[0].number;
         }
-        return domain.replace(/\s/g, "-").concat('-', version.replace(/\s/g, "-").replace("&", "a").toLowerCase()).toLowerCase();
+        return domain + '-' + versionNumber;
     }
 
     /**
@@ -330,14 +323,14 @@ export class DataService {
      * Retrieves the first version defined in the config file
      */
     getCurrentVersion() {
-        return this.versions[0].match(/v[0-9]+/g)[0].toLowerCase();
+        return this.domains[0].version;
     }
 
     /**
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].match(/[0-9]+/g)[0]? false : true;
+        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].number.match(/[0-9]+/g)[0] ? false : true;
     }
 
     /**
@@ -739,13 +732,9 @@ export class Note {
 
 export class Domain {
     public readonly id: string; // domain ID
-    public get domain_identifier(): string { //domain ID without the version suffix
-        let parts = this.id.split("-");
-        parts.pop();
-        return parts.join("-");
-    }
+    public readonly domain_identifier: string //domain ID without the version suffix
     public readonly name: string; // domain display name
-    public readonly version: string; // ATT&CK version number
+    public readonly version: Version; // ATT&CK version
 
     public urls: string[] = [];
     public taxii_url: string = "";
@@ -792,16 +781,32 @@ export class Domain {
         revoked_by: new Map<string, string>()
     }
 
-    constructor(id: string, name: string, version: string) {
-        this.id = id;
+    constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
+        this.id = `${domain_identifier}-${version.number}`;
+        this.domain_identifier = domain_identifier;
         this.name = name;
         this.version = version;
+        if (urls) this.urls = urls;
     }
 
     /**
-     * Get version of this domain
+     * Get the version number for this domain
      */
-    getVersion() {
-        return this.version.match(/[0-9]+/g)[0];
+    getVersion(): string {
+        return this.version.number;
+    }
+}
+export class Version {
+    public readonly name: string;
+    public readonly number: string;
+
+    /**
+     * Creates an instance of Version
+     * @param name version name
+     * @param number version number
+     */
+    constructor(name: string, number: string) {
+        this.name = name;
+        this.number = number;
     }
 }
