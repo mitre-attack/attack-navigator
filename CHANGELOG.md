@@ -9,6 +9,16 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.0 - 25 April 2022
+
+Adds support for ATT&CK v11.
+
+## Improvements
+
+- Revised the rigid versioning structure in the configuration file which enforced too many constraints on importing custom data. Added new fields `version.version` and `domain.identifier` to improve how Navigator derives domain information. More details are provided in the [integration documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/integrations.md#attck-navigator-integration) on how to integrate the ATT&CK Navigator with the ATT&CK Workbench. See issue [#370](https://github.com/mitre-attack/attack-navigator/issues/370).
+- Fixed an issue where a long technique name or metadata value would overflow outside of the technique tooltip. See issue [#359](https://github.com/mitre-attack/attack-navigator/issues/359).
+
+
 # v4.5.5 - 7 January 2022
 
 ## Fixes
