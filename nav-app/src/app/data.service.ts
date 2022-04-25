@@ -194,7 +194,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = {name: "ATT&CK v10", number: "10"};
+    private latestVersion: Version = {name: "ATT&CK v11", number: "11"};
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
@@ -224,7 +224,6 @@ export class DataService {
 
         if (this.domains.length == 0) { // issue loading config
             this.versions.push(this.latestVersion);
-            // let domainVersionID = `${identifier}-${version.number}`;
             let enterpriseDomain = new Domain( "enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
             let mobileDomain = new Domain("mobile-attack", "Mobile", this.latestVersion, [this.mobileAttackURL]);
             let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
