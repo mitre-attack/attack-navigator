@@ -9,6 +9,9 @@
             </div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+            <div class="contextMenu-button" (click)="pinCell()">
+                pin/unpin this cell
+            </div>
             <div class="contextMenu-button" (click)="select()">
                 select
             </div>
@@ -52,9 +55,6 @@
             </div>
             <div class="contextMenu-button" (click)="viewTactic()">
                 view tactic
-            </div>
-            <div class="contextMenu-button" (click)="viewComment()">
-                view comment
             </div>
         </div>
         <div class="contextMenu-section" *ngIf="configService.contextMenuItems.length > 0">

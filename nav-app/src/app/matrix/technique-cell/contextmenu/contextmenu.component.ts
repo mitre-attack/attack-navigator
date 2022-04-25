@@ -98,8 +98,9 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.closeContextmenu();
     }
 
-    public viewComment() {
-        this.viewModelsService.onClickViewComment.emit();
+    public pinCell() {
+        this.viewModelsService.pinnedCell = (this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id) ? "" : this.techniqueVM.technique_tactic_union_id;
+        this.closeContextmenu();
     }
 
     public openCustomContextMenuItem(customItem: ContextMenuItem) {

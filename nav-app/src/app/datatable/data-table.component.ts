@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestro
 import { DataService } from '../data.service';
 import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, ViewModelsService, Link, Metadata } from "../viewmodels.service";
+import { ViewModel, ViewModelsService } from "../viewmodels.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
@@ -228,7 +228,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     private selectionChangeSubscription: Subscription;
-    private viewCommentClickedSubscription: Subscription;
     constructor(public dataService: DataService,
                 private tabs: TabsComponent,
                 private sanitizer: DomSanitizer,
@@ -237,10 +236,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
-        })
-
-        this.viewCommentClickedSubscription = this.viewModelsService.onClickViewComment.subscribe(() => {
-            this.currentDropdown = 'comment';
         })
     }
 
@@ -256,7 +251,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.selectionChangeSubscription.unsubscribe();
-        this.viewCommentClickedSubscription.unsubscribe();
         document.body.removeEventListener('scroll', this.handleScroll);
     }
 
