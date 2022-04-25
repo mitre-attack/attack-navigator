@@ -6,11 +6,11 @@
             <!-- title -->
             <div class="title">
                 <h2>Layer Upgrade</h2>
-                (ATT&CK {{compareTo.version}} <mat-icon inline="true">east</mat-icon> ATT&CK {{viewModel.version}})
+                (ATT&CK v{{compareTo.version}} <mat-icon inline="true">east</mat-icon> ATT&CK v{{viewModel.version}})
             </div>
             <p>
                 Review techniques which have been added, changed, replaced, or removed
-                from the knowledge base since ATT&CK {{compareTo.version}} and update 
+                from the knowledge base since ATT&CK v{{compareTo.version}} and update 
                 your Navigator layer to reflect these changes.
             </p>
             <p>
@@ -68,7 +68,7 @@
                                     <div class="cols">
                                         <div class="float wide" *ngIf="section !== 'additions'">
                                             <div class="version">
-                                                <a href="{{getPreservedURL(attackID)}}" target="_blank">ATT&CK {{compareTo.version}}</a>
+                                                <a href="{{getPreservedURL(attackID)}}" target="_blank">ATT&CK v{{compareTo.version}}</a>
                                             </div>
                                             <mat-divider></mat-divider>
                                         </div>
@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="float wide" *ngIf="section !== 'deprecations'">
                                             <div class="version">
-                                                <a href="{{getTechnique(attackID, viewModel, section).url}}" target="_blank">ATT&CK {{viewModel.version}}</a>
+                                                <a href="{{getTechnique(attackID, viewModel, section).url}}" target="_blank">ATT&CK v{{viewModel.version}}</a>
                                             </div>
                                             <mat-divider></mat-divider>
                                         </div>
@@ -101,7 +101,7 @@
                     
                                         <div class="float arrow">
                                             <mat-icon class="info" matTooltipPosition="above" 
-                                                matTooltip='Drag and drop to copy annotations to the desired tactics in ATT&CK {{viewModel.version}}.'>
+                                                matTooltip='Drag and drop to copy annotations to the desired tactics in ATT&CK v{{viewModel.version}}.'>
                                                 info_outline
                                             </mat-icon>
                                         </div>
