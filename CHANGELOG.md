@@ -11,7 +11,7 @@
 
 # v4.6.0 - 25 April 2022
 
-Updated the Navigator in support of the ATT&CK v11 release.
+Adds support for ATT&CK v11.
 
 ## Improvements
 
