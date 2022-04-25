@@ -1,6 +1,6 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService, Technique } from '../data.service'; //import the DataService component so we can use it
+import { DataService, Technique, Version } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
 import { forkJoin } from 'rxjs';
@@ -13,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { ChangelogComponent } from "../changelog/changelog.component";
-import { rejects } from 'assert';
 
 declare var math: any; //use mathjs
 
@@ -253,8 +252,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
-    filterDomains(version: string) {
-        return this.dataService.domains.filter((d) => d.version === version)
+    filterDomains(version: Version) {
+        return this.dataService.domains.filter((d) => d.version == version)
     }
 
     hasFeature(featureName: string): boolean {
@@ -495,7 +494,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      */
     versionUpgradeDialog(viewModel): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
-            let currVersion = this.dataService.getCurrentVersion();
+            let currVersion = this.dataService.getCurrentVersion().number;
             if (viewModel.version !== currVersion) { // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
                     data: {
@@ -542,7 +541,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                         newViewModel.name = oldViewModel.name;
                         newViewModel.domainVersionID = versions.newID; // update domainVersionID to new ID
-                        newViewModel.version = this.dataService.getCurrentVersion(); // update version to new ID
+                        newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
                         newViewModel.loadVMData();
                         newViewModel.compareTo = oldViewModel;
                         this.openTab("new layer", newViewModel, true, replace, true, true);
@@ -638,7 +637,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             try{
                 viewModel.deSerializeDomainVersionID(string);
                 if (!this.dataService.getDomain(viewModel.domainVersionID)) {
-                    throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                    throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
                 }
                 this.layerUpgrade(viewModel, string, true);
             }
@@ -668,7 +667,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     try {
                         viewModel.deSerializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
-                            throw {message: "Error: '" + viewModel.domain + "' (" + viewModel.version + ") is an invalid domain."};
+                            throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
                         }
                         await this.layerUpgrade(viewModel, res, replace, defaultLayers);
                         console.log("loaded layer from", loadURL);

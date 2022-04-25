@@ -1,10 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
 declare var tinygradient: any; //use tinygradient
-// import * as tinygradient from 'tinygradient'
 declare var tinycolor: any; //use tinycolor2
-// import * as tinycolor from 'tinycolor2';
-// import * as FileSaver from 'file-saver';
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
@@ -431,7 +428,6 @@ export class ViewModel {
 
     loadVMData() {
         if (!this.domainVersionID || !this.dataService.getDomain(this.domainVersionID).dataLoaded) {
-            console.log("subscribing to data loaded callback")
             let self = this;
             this.dataService.onDataLoad(this.domainVersionID, function() {
                 self.initTechniqueVMs()
@@ -1247,7 +1243,8 @@ export class ViewModel {
             "layer": globals.layer_version
         }
 
-        rep.domain = this.domainVersionID.substr(0, this.domainVersionID.search(/-v[0-9]+/g));
+        let domain = this.dataService.getDomain(this.domainVersionID);
+        rep.domain = domain.domain_identifier;
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1274,11 +1271,11 @@ export class ViewModel {
     deSerializeDomainVersionID(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
         this.name = obj.name
-        this.version = this.dataService.getCurrentVersion(); // layer with no specified version defaults to current version
+        this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
                 if (typeof(obj.versions.attack) === "string") {
-                    if (obj.versions.attack.length > 0) this.version = "v" + obj.versions.attack.match(/[0-9]+/g)[0];
+                    if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/[0-9]+/g)[0];
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
