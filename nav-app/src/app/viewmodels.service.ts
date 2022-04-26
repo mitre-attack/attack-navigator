@@ -1652,8 +1652,11 @@ export class TechniqueVM {
         if (techniqueID !== undefined) this.techniqueID = techniqueID;
         else console.error("ERROR: TechniqueID field not present in technique")
 
-        if ("tactic" !== undefined) this.tactic = tactic;
-        else console.error("ERROR: tactic field not present in technique")
+        if (tactic !== undefined && tactic !== "") this.tactic = tactic;
+        else {
+            if ("comment" in obj && obj["comment"] !== undefined) alert(`WARNING: Tactic field for technique ID ${techniqueID} is empty, and will not be displayed in the matrix.`);
+            console.error("WARNING: tactic field not present in technique")
+        }
         if ("comment" in obj) {
             if (typeof(obj.comment) === "string") this.comment = obj.comment;
             else console.error("TypeError: technique comment field is not a number:", obj.comment, "(",typeof(obj.comment),")")
