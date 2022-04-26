@@ -9,6 +9,12 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.1 - 26 April 2022
+
+## Fixes
+
+- Fixed a versioning error that occurred when loading a local layer with a previous version of ATT&CK.
+
 # v4.6.0 - 25 April 2022
 
 Adds support for ATT&CK v11.

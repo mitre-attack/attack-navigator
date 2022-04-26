@@ -589,7 +589,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     }
                 })
                 .catch( (err) => {
-                    console.error(err.message);
+                    console.error(err);
                     alert("ERROR parsing file, check the javascript console for more information.");
                     resolve(null);
                 });
