@@ -9,6 +9,12 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.1 - Changes staged on develop
+
+## Improvements
+
+- Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
+
 # v4.6.0 - 25 April 2022
 
 Adds support for ATT&CK v11.
@@ -17,8 +23,6 @@ Adds support for ATT&CK v11.
 
 - Revised the rigid versioning structure in the configuration file which enforced too many constraints on importing custom data. Added new fields `version.version` and `domain.identifier` to improve how Navigator derives domain information. More details are provided in the [integration documentation](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/integrations.md#attck-navigator-integration) on how to integrate the ATT&CK Navigator with the ATT&CK Workbench. See issue [#370](https://github.com/mitre-attack/attack-navigator/issues/370).
 - Fixed an issue where a long technique name or metadata value would overflow outside the technique tooltip. See issue [#359](https://github.com/mitre-attack/attack-navigator/issues/359).
-- Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
-
 
 # v4.5.5 - 7 January 2022
 

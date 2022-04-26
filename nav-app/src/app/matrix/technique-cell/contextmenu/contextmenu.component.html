@@ -8,10 +8,12 @@
                 {{technique.name}} ({{technique.attackID}})
             </div>
         </div>
-        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
+        <div class="contextMenu-section">
             <div class="contextMenu-button" (click)="pinCell()">
-                pin/unpin this cell
+                pin/unpin tooltip
             </div>
+        </div>
+        <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
             <div class="contextMenu-button" (click)="select()">
                 select
             </div>
