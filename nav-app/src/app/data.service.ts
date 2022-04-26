@@ -206,7 +206,7 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: Version = new Version(version["name"], version["version"]);
+            let v: Version = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
                 let identifier = domain["identifier"];
