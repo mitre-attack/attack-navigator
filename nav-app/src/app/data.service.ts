@@ -24,7 +24,7 @@ export class DataService {
         "mitre-mobile": "mobile-attack"
     }
     public domains: Domain[] = [];
-    public versions: any[] = [];
+    public versions: Version[] = [];
 
     public subtechniquesEnabled: boolean = true;
 
@@ -206,7 +206,7 @@ export class DataService {
      */
     setUpURLs(versions: []){
         versions.forEach( (version: any) => {
-            let v: Version = new Version(version["name"], version["version"]);
+            let v: Version = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
             this.versions.push(v);
             version["domains"].forEach( (domain: any) => {
                 let identifier = domain["identifier"];
@@ -330,7 +330,9 @@ export class DataService {
      * Is the given version supported?
      */
     isSupported(version: string) {
-        return version.match(/[0-9]+/g)[0] < this.versions[this.versions.length - 1].number.match(/[0-9]+/g)[0] ? false : true;
+        let supported = this.versions.map(v => v.number);
+        let match = version.match(/[0-9]+/g)[0];
+        return supported.includes(match);
     }
 
     /**
