@@ -1,4 +1,4 @@
-<div [ngClass]="'tooltip ' + placement">
+<div [ngClass]="'tooltip ' + placement" [style.width]="isCellPinned ? '200ch' : ''">
     <table>
         <tr>
             <td colspan=2 class="technique-name">
