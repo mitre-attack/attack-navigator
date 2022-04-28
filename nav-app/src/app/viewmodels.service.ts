@@ -10,6 +10,7 @@ import { getCookie, hasCookie } from "./cookies";
 @Injectable()
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
+    pinnedCell = "";
 
     constructor(private dataService: DataService) { }
 
