@@ -1656,7 +1656,7 @@ export class TechniqueVM {
         if (tactic !== undefined && tactic !== "") this.tactic = tactic;
         else {
             console.error("WARNING: tactic field not present in technique");
-            alert(`WARNING: The tactic field on the technique ID ${techniqueID} is not defined. Annotations for this technique will not be restored.`);
+            alert(`WARNING: The tactic field on the technique ID ${techniqueID} is not defined. Annotations for this technique may not be restored.`);
         }
         if ("comment" in obj) {
             if (typeof(obj.comment) === "string") this.comment = obj.comment;
