@@ -15,6 +15,7 @@
 
 - Fixed a versioning error that occurred when loading a local layer with a previous version of ATT&CK.
 - Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
+- Added a popup alert to notify users if a layer with an empty tactic field is uploaded, and therefore will not be displayed. See issue [#326](https://github.com/mitre-attack/attack-navigator/issues/326).
 
 # v4.6.0 - 25 April 2022
 
