@@ -205,21 +205,37 @@ export class DataService {
      * @memberof DataService
      */
     setUpURLs(versions: []) {
-        versions.forEach((version: any) => {
-            let v: Version = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
-            this.versions.push(v);
-            version["domains"].forEach((domain: any) => {
-                let identifier = domain["identifier"];
-                let domainObject = new Domain(identifier, domain["name"], v);
-
-                if (domain["taxii_url"] && domain["taxii_collection"]) {
-                    domainObject.taxii_url = domain["taxii_url"];
-                    domainObject.taxii_collection = domain["taxii_collection"];
-                } else {
-                    domainObject.urls = domain["data"]
-                }
-                this.domains.push(domainObject);
-            });
+        versions.forEach((version: any, index) => {
+            let v: Version;
+            try {
+                v = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
+                this.versions.push(v);
+                version["domains"].forEach((domain: any) => {
+                    let identifier;
+                    let domainObject;
+                    try {
+                        identifier = domain["identifier"];
+                        domainObject = new Domain(identifier, domain["name"], v);
+                        if (domain["taxii_url"] && domain["taxii_collection"]) {
+                            domainObject.taxii_url = domain["taxii_url"];
+                            domainObject.taxii_collection = domain["taxii_collection"];
+                            this.domains.push(domainObject);
+                        } else if (domain["data"]) {
+                            domainObject.urls = domain["data"]
+                            this.domains.push(domainObject);
+                        } else {
+                            alert(`ERROR: domain (${version["name"]}) 'data' field could not be loaded correctly from config.json.`);
+                            console.error(`ERROR: domain (${version["name"]}) does not have either a valid 'data', 'taxii_url', or 'taxii_collection' field.`);
+                        }
+                    } catch {
+                        alert(`ERROR: domain (${version["name"]}) 'identifier' field could not be loaded correctly from config.json.`);
+                        console.error(`ERROR: domain (${version["name"]}) does not have a valid 'identifier' field.`);
+                    }
+                });
+            } catch {
+                alert(`ERROR: version 'name' or 'version' field could not be loaded correctly from config.json.`);
+                console.error(`ERROR: version at index ${index} does not have a valid 'name' or 'version' field.`);
+            }
         });
 
         if (this.domains.length == 0) { // issue loading config
