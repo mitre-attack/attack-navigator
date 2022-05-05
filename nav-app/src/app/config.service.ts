@@ -42,7 +42,7 @@ export class ConfigService {
                 if (config["link_color"] && config["link_color"] !== undefined)
                     self.link_color = config["link_color"];
                 else alert("ERROR: config.json does not have a valid 'link_color' field");
-                if (config["banner"] && config["banner"] !== undefined)
+                if (config["banner"] !== undefined)
                     self.banner = config["banner"];
                 else alert("ERROR: config.json does not have a valid 'banner' field");
 

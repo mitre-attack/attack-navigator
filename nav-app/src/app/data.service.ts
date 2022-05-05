@@ -258,7 +258,7 @@ export class DataService {
             this.configData$.subscribe(
                 data => data,
                 error => {
-                        alert(`ERROR: failed to load config.json.`);
+                        alert(`ERROR: failed to load config.json, check the javascript console for more information.`);
                         console.error(error);
                         return of(null);
                     }
