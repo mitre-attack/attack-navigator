@@ -25,4 +25,4 @@ jobs:
         run: |
           cd nav-app/
           npm ci
-          npm run build:ci
+          npm run build
