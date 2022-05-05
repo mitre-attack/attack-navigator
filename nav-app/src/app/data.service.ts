@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http'
 import { Observable } from "rxjs/Rx"
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Collection } from './taxii2lib';
+import { of } from "rxjs";
 
 @Injectable({
     providedIn: 'root',
@@ -253,7 +254,15 @@ export class DataService {
      */
     getConfig(refresh: boolean = false) {
         if (refresh || !this.configData$) {
-            this.configData$ = this.http.get("./assets/config.json");
+            this.configData$ = this.http.get("./assets/config.json")
+            this.configData$.subscribe(
+                data => data,
+                error => {
+                        alert(`ERROR: failed to load config.json.`);
+                        console.error(error);
+                        return of(null);
+                    }
+              );
         }
         return this.configData$;
     }

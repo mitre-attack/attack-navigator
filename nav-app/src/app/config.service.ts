@@ -33,6 +33,19 @@ export class ConfigService {
                     //     console.log(key, "is not a feature")
                     // }
                 })
+                if (config["features"] && config["features"] !== undefined)
+                    self.featureStructure = config["features"];
+                else alert("ERROR: config.json does not have a valid 'features' field");
+                if (config["comment_color"] && config["comment_color"] !== undefined)
+                    self.comment_color = config["comment_color"];
+                else alert("ERROR: config.json does not have a valid 'comment_color' field");
+                if (config["link_color"] && config["link_color"] !== undefined)
+                    self.link_color = config["link_color"];
+                else alert("ERROR: config.json does not have a valid 'link_color' field");
+                if (config["banner"] && config["banner"] !== undefined)
+                    self.banner = config["banner"];
+                else alert("ERROR: config.json does not have a valid 'banner' field");
+
                 dataService.subtechniquesEnabled = self.getFeature("subtechniques");
                 self.featureStructure = config["features"];
                 self.comment_color = config["comment_color"];
