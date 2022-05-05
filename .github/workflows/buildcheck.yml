@@ -23,5 +23,6 @@ jobs:
 
       - name: npm install and npm run build
         run: |
+          cd nav-app/
           npm ci
           npm run build:ci
