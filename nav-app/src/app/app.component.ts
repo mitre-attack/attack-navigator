@@ -1,5 +1,6 @@
 import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
-
+import { TabsComponent } from './tabs/tabs.component';
+import { ConfigService } from './config.service';
 import * as globals from "./globals";
 import { IconsService } from "./icons.service";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "./cookies";
