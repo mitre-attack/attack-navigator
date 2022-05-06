@@ -47,8 +47,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
-import { SearchPopoverNotificationComponent } from './search-and-multiselect/search-popover-notification/search-popover-notification.component';
 import { MatTabsModule } from "@angular/material/tabs";
+import { ListInputComponent } from './list-input/list-input.component';
 
 
 @NgModule({
@@ -72,7 +72,7 @@ import { MatTabsModule } from "@angular/material/tabs";
     ChangelogCellComponent,
     LayerInformationComponent,
     ChangelogComponent,
-    SearchPopoverNotificationComponent
+    ListInputComponent,
   ],
   imports: [
     BrowserModule,

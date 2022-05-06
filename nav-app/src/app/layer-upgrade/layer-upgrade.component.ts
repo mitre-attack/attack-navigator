@@ -71,7 +71,7 @@ export class LayerUpgradeComponent implements OnInit {
     public getPreservedURL(attackID: string): string {
         let url = this.getTechnique(attackID, this.compareTo).url;
         let i = url.search('/techniques');
-        return url.substring(0, i) + '/versions/' + this.compareTo.version + url.substring(i);
+        return url.substring(0, i) + '/versions/v' + this.compareTo.version + url.substring(i);
     }
 
     /**

@@ -10,7 +10,7 @@ Also, if you contribute any source code, we need you to agree to the following D
 
 ## Developer's Certificate of Origin v1.1
 
-```
+```text
 By making a contribution to this project, I certify that:
 
 (a) The contribution was created in whole or in part by me and I
