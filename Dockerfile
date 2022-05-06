@@ -1,11 +1,15 @@
 # Build stage
 
-FROM node:latest 
+FROM node:16
 
-WORKDIR /nav-app/
+WORKDIR /src
 
 # copy over needed files
-COPY . ./
+COPY nav-app/ /src/nav-app/
+COPY layers/*.md /src/layers/
+COPY *.md /src/
+
+WORKDIR /src/nav-app
 
 # give user permissions
 RUN chown -R node:node ./

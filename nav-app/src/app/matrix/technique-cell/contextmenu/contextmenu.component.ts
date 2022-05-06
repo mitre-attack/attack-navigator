@@ -1,13 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic } from '../../../data.service';
-import { ViewModel, TechniqueVM } from '../../../viewmodels.service';
+import { ViewModel, ViewModelsService, TechniqueVM, Link } from '../../../viewmodels.service';
 import { ConfigService, ContextMenuItem } from '../../../config.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
   selector: 'app-contextmenu',
   templateUrl: './contextmenu.component.html',
-  styleUrls: ['./contextmenu.component.scss']
+  styleUrls: ['./contextmenu.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
@@ -20,7 +21,11 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 
-    constructor(private element: ElementRef, public configService: ConfigService) {
+    public get links(): Link[] {
+        return this.techniqueVM.links;
+    }
+
+    constructor(private element: ElementRef, public configService: ConfigService, public viewModelsService: ViewModelsService) {
         super(element);
     }
 
@@ -93,8 +98,18 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.closeContextmenu();
     }
 
+    public pinCell() {
+        this.viewModelsService.pinnedCell = (this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id) ? "" : this.techniqueVM.technique_tactic_union_id;
+        this.closeContextmenu();
+    }
+
     public openCustomContextMenuItem(customItem: ContextMenuItem) {
         window.open(customItem.getReplacedURL(this.technique, this.tactic), "_blank");
+        this.closeContextmenu();
+    }
+
+    public openLink(link: Link) {
+        window.open(link.url);
         this.closeContextmenu();
     }
 }

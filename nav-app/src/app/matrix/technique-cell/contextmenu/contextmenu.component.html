@@ -8,6 +8,11 @@
                 {{technique.name}} ({{technique.attackID}})
             </div>
         </div>
+        <div class="contextMenu-section">
+            <div class="contextMenu-button" (click)="pinCell()">
+                pin/unpin tooltip
+            </div>
+        </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
             <div class="contextMenu-button" (click)="select()">
                 select
@@ -57,6 +62,16 @@
         <div class="contextMenu-section" *ngIf="configService.contextMenuItems.length > 0">
             <div class="contextMenu-button" *ngFor="let contextMenuItem of configService.contextMenuItems" (click)="openCustomContextMenuItem(contextMenuItem)">
                 {{contextMenuItem.label}}
+            </div>
+        </div>
+        <div *ngIf="links.length" class="contextMenu-section">
+            <div class="link-container" *ngFor="let link of links">
+                <div *ngIf="!link.divider else divider" class="contextMenu-button" (click)="openLink(link)">
+                    {{link.label}}
+                </div>
+                <ng-template #divider>
+                    <div class="divider"></div>
+                </ng-template>
             </div>
         </div>
     </div>

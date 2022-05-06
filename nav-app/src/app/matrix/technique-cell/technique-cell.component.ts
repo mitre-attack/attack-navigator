@@ -1,12 +1,14 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Technique, Tactic, Matrix, DataService } from '../../data.service';
 import { ConfigService } from '../../config.service';
 import { Cell } from '../cell';
+import { ViewModelsService } from "../../viewmodels.service";
 
 @Component({
     selector: 'technique-cell',
     templateUrl: './technique-cell.component.html',
-    styleUrls: ['./technique-cell.component.scss']
+    styleUrls: ['./technique-cell.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;
@@ -14,19 +16,23 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     @Output() unhighlight = new EventEmitter<any>();
     @Output() leftclick = new EventEmitter<any>(); // emit with the selected technique and the modifier keys
 
+    public get isCellPinned(): boolean {
+        return this.viewModelsService.pinnedCell === this.viewModel.getTechniqueVM(this.technique, this.tactic).technique_tactic_union_id
+    }
+
     public get showTooltip(): boolean {
+        if (this.isCellPinned) return true;
         if (this.showContextmenu) return false;
         if (this.viewModel.highlightedTechniques.size === 0) return false;
 
         return (this.viewModel.highlightedTechnique === this.technique && this.viewModel.highlightedTactic && this.viewModel.highlightedTactic.id === this.tactic.id);
     }
 
-    constructor(public configService: ConfigService, public dataService: DataService) {
-        super(dataService);
+    constructor(public dataService: DataService, public configService: ConfigService, public viewModelsService: ViewModelsService) {
+        super(dataService, configService);
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() {}
 
     // count number of annotated sub-techniques on this technique
     public annotatedSubtechniques() {
@@ -51,6 +57,7 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         this.unhighlight.emit();
     }
     public onLeftClick(event) {
+        if (!this.isCellPinned) this.viewModelsService.pinnedCell = "";
         if (this.configService.getFeature("selecting_techniques")) this.leftclick.emit({
                 "technique": this.technique,
                 // modifier keys
@@ -64,7 +71,8 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         else this.onRightClick(event);
     }
     public onRightClick(event) {
-       this.showContextmenu = true;
+        if (!this.isCellPinned) this.viewModelsService.pinnedCell = "";
+        this.showContextmenu = true;
     }
 
     // return css classes for a technique
@@ -74,6 +82,8 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         // classes by annotated sub-techniques
         if (!this.annotatedSubtechniques())
             theclass += " unannotated"
+
+        if (this.isCellPinned) theclass += " editing";
 
         return theclass;
     }
