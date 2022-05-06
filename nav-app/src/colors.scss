@@ -60,7 +60,7 @@ $colors: (
 // given a color name, get an alternate version of the color, for patterning
 // if the base color is dark, the alternate will be slightly lighter.
 // if the base color is light, the alternate will be slightly darker.
-// contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
+// contrast, an optional argument, multiplies to create a more distant or similar color. >1 is more distant, <1 is more similar.
 @function color-alternate($name, $contrast: 1) {
     @return mix(invert(color($name)), color($name), $weight: $contrast * 5%);
 }
