@@ -4,12 +4,17 @@
 .tooltip {
     @include cell-popover(0.75);
     @include adaptive-color("background", rgba(80, 80, 80, 0.75), rgba(#464DFF, 0.75));
+    max-height: 45vh;
+    overflow: scroll;
+    padding-bottom: 1em;
+    z-index: 1000;
     table {
         width: 100%;
         border-collapse: collapse;
         td {
             padding: 3px;
             vertical-align: top;
+            white-space: pre-line !important;
         }
         td:first-child {
             white-space: nowrap;
