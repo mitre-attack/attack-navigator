@@ -41,7 +41,7 @@
         @include adaptive-color("box-shadow", 0 0 0 1px black inset, 0 0 0 1px color(cell-highlight-dark-color) inset);
     }
 
-    &.commented {
+    &.underlined {
         &.mini div:before {
             position: absolute;
             content: "i";

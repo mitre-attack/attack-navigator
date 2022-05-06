@@ -61,7 +61,7 @@
                                        [disabled]="!config.showHeader"
                                        [(ngModel)]="config.headerHeight"
                                        (input)="buildSVG()" />
-                                <span matSuffix  [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
+                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
@@ -94,8 +94,8 @@
                      (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : null;"
                      matTooltipPosition="below"
                      matTooltip="legend"
-                     [style.color]="showLegendContainer() ? '#000000' : '#aaaaaa'">
-                    <img [src]="showLegendContainer()? 'assets/icons/ic_view_list_black_24px.svg' : 'assets/icons/ic_view_list_grey_24px.svg'"/>
+                     [style.color]="showLegendContainer() ? 'inherit' : '#aaaaaa'">
+                    <span class="material-icons">view_list</span>
                 </div>
                 <div class="dropdown-container legend left" *ngIf="currentDropdown === 'legend'">
                     <ul>
