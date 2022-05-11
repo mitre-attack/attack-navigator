@@ -9,7 +9,9 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# v4.6.2 - Staged on Develop
+# v4.6.2 - 11 May 2022
+
+Adds support for ATT&CK v11.1.
 
 ## Improvements
 - Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
