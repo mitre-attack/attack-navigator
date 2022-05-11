@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
-declare var tinygradient: any; //use tinygradient
-declare var tinycolor: any; //use tinycolor2
+import * as tinygradient from 'tinygradient';
+import * as tinycolor from 'tinycolor2';
 declare var math: any; //use mathjs
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
