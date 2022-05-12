@@ -194,7 +194,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = {name: "ATT&CK v11", number: "11"};
+    private latestVersion: Version = { name: "ATT&CK v11", number: "11" };
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
@@ -204,11 +204,11 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(versions: []){
-        versions.forEach( (version: any) => {
+    setUpURLs(versions: []) {
+        versions.forEach((version: any) => {
             let v: Version = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
             this.versions.push(v);
-            version["domains"].forEach( (domain: any) => {
+            version["domains"].forEach((domain: any) => {
                 let identifier = domain["identifier"];
                 let domainObject = new Domain(identifier, domain["name"], v);
 
@@ -224,7 +224,7 @@ export class DataService {
 
         if (this.domains.length == 0) { // issue loading config
             this.versions.push(this.latestVersion);
-            let enterpriseDomain = new Domain( "enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
+            let enterpriseDomain = new Domain("enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
             let mobileDomain = new Domain("mobile-attack", "Mobile", this.latestVersion, [this.mobileAttackURL]);
             let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
@@ -235,7 +235,7 @@ export class DataService {
      * get the current config
      * @param {boolean} refresh: if true fetches the config from file. Otherwise, only fetches if it's never been fetched before
      */
-    getConfig(refresh:boolean = false){
+    getConfig(refresh: boolean = false) {
         if (refresh || !this.configData$) {
             this.configData$ = this.http.get("./assets/config.json");
         }
@@ -245,7 +245,7 @@ export class DataService {
     /**
      * Fetch the domain data from the endpoint
      */
-    getDomainData(domain: Domain, refresh: boolean = false) : Observable<Object>{
+    getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
             console.log("fetching data from TAXII server");
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
@@ -358,7 +358,7 @@ export class DataService {
 
             let prevTechnique = objectLookup.get(latestTechnique.id);
             if (!prevTechnique) {
-                 // object doesn't exist in previous version, added to latest version
+                // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique.attackID);
             }
             else if (latestTechnique.modified == prevTechnique.modified) {
@@ -413,20 +413,20 @@ export abstract class BaseStix {
     constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
         this.id = stixSDO.id;
         if (supportsAttackID) {
-          if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
-            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
-            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
-          }
+            if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
+                alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+                throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+            }
         }
         this.name = stixSDO.name;
         this.description = stixSDO.description;
         if (stixSDO.id.includes("x-mitre-data-component")) {
-          this.attackID = '';
+            this.attackID = '';
         } else if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
-          this.attackID = stixSDO.external_references[0].external_id;
+            this.attackID = stixSDO.external_references[0].external_id;
         } else {
-          alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
-          throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
+            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
         }
         if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
             this.url = stixSDO.external_references[0].url;
@@ -469,7 +469,7 @@ export abstract class BaseStix {
      * @param {string} domainVersionID the ID of the domain & version this object is found in
      * @returns {string} object ID this object is revoked by
      */
-     public revoked_by(domainVersionID): string {
+    public revoked_by(domainVersionID): string {
         let rels = this.dataService.getDomain(domainVersionID).relationships.revoked_by;
         if (rels.has(this.id)) return rels.get(this.id);
         else return undefined;
@@ -530,11 +530,8 @@ export class Technique extends BaseStix {
      */
     constructor(stixSDO: any, subtechniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
-        this.platforms = stixSDO.x_mitre_platforms;
-      	if (stixSDO.x_mitre_data_sources !== undefined)
-		      this.datasources = stixSDO.x_mitre_data_sources.toString();
-	    else
-		      this.datasources = "";
+        this.platforms = stixSDO.x_mitre_platforms ? stixSDO.x_mitre_platforms.map(platform => platform.trim()) : undefined;
+        this.datasources = stixSDO.x_mitre_data_sources ? stixSDO.x_mitre_data_sources.toString() : "";
 
         if (!this.revoked && !this.deprecated) {
             this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
@@ -552,7 +549,7 @@ export class Technique extends BaseStix {
      * @returns {string} ID for this technique under that tactic
      */
     public get_technique_tactic_id(tactic: string | Tactic): string {
-        let tactic_shortname = tactic instanceof Tactic? tactic.shortname : tactic;
+        let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
         if (!this.tactics.includes(tactic_shortname)) throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
         return this.attackID + "^" + tactic_shortname;
     }
@@ -587,11 +584,11 @@ export class VersionChangelog {
 
     public length(): number {
         return this.additions.length
-             + this.changes.length
-             + this.minor_changes.length
-             + this.deprecations.length
-             + this.revocations.length
-             + this.unchanged.length;
+            + this.changes.length
+            + this.minor_changes.length
+            + this.deprecations.length
+            + this.revocations.length
+            + this.unchanged.length;
     }
 }
 
@@ -599,44 +596,44 @@ export class VersionChangelog {
  * Object representing a Data Component in the ATT&CK catalogue
  */
 export class DataComponent extends BaseStix {
-  public readonly url: string;
-  public readonly dataSource: string;
-  /**
-   * get techniques related to this data component
-   * @returns {string[]} technique IDs used by this data component
-   */
-  public techniques(domainVersionID): string[] {
-    const techniques = [];
-    const domain = this.dataService.getDomain(domainVersionID);
-    let rels = domain.relationships.component_rel;
-    if (rels.has(this.id)) {
-      rels.get(this.id).forEach((targetID) => {
-        const t = domain.techniques.find((t) => t.id === targetID);
-        if (t) techniques.push(t);
-      })
+    public readonly url: string;
+    public readonly dataSource: string;
+    /**
+     * get techniques related to this data component
+     * @returns {string[]} technique IDs used by this data component
+     */
+    public techniques(domainVersionID): string[] {
+        const techniques = [];
+        const domain = this.dataService.getDomain(domainVersionID);
+        let rels = domain.relationships.component_rel;
+        if (rels.has(this.id)) {
+            rels.get(this.id).forEach((targetID) => {
+                const t = domain.techniques.find((t) => t.id === targetID);
+                if (t) techniques.push(t);
+            })
+        }
+        return techniques;
     }
-    return techniques;
-  }
-  /**
-   * get data source related to this data component
-   * @returns {name: string, url: string} name, and first url of data source referenced by this data component
-   */
-  public source(domainVersionID) {
-    const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
-    if (dataSources.has(this.dataSource)) {
-      const source = dataSources.get(this.dataSource);
-      let url = "";
-      if (source.external_references && source.external_references[0] && source.external_references[0].url)
-        url = source.external_references[0].url;
-      return {name: source.name, url: url};
+    /**
+     * get data source related to this data component
+     * @returns {name: string, url: string} name, and first url of data source referenced by this data component
+     */
+    public source(domainVersionID) {
+        const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
+        if (dataSources.has(this.dataSource)) {
+            const source = dataSources.get(this.dataSource);
+            let url = "";
+            if (source.external_references && source.external_references[0] && source.external_references[0].url)
+                url = source.external_references[0].url;
+            return { name: source.name, url: url };
+        }
+        else return { name: '', url: '' };
     }
-    else return {name: '', url: ''};
-  }
 
-  constructor(stixSDO: any, dataService: DataService) {
-    super(stixSDO, dataService, false);
-    this.dataSource = stixSDO.x_mitre_data_source_ref;
-  }
+    constructor(stixSDO: any, dataService: DataService) {
+        super(stixSDO, dataService, false);
+        this.dataSource = stixSDO.x_mitre_data_source_ref;
+    }
 }
 
 /**
@@ -652,7 +649,7 @@ export class Software extends BaseStix {
     */
     constructor(stixSDO: any, dataService: DataService) {
         super(stixSDO, dataService);
-        this.platforms = stixSDO.x_mitre_platforms;
+        this.platforms = stixSDO.x_mitre_platforms ? stixSDO.x_mitre_platforms.map(platform => platform.trim()) : undefined;
     }
 
     /**

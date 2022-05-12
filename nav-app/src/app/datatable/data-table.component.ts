@@ -2,14 +2,12 @@ import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestro
 import { DataService } from '../data.service';
 import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, ViewModelsService, Link, Metadata } from "../viewmodels.service";
+import { ViewModel, ViewModelsService } from "../viewmodels.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
-
-declare var tinygradient: any; //use tinygradient
-declare var tinycolor: any; //use tinycolor2
+import * as tinycolor from 'tinycolor2';
 
 @Component({
     selector: 'DataTable',
