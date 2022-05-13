@@ -2,7 +2,7 @@ import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../data.service';
 import { ViewModel, ViewModelsService } from '../viewmodels.service';
 import { ConfigService } from '../config.service';
-declare var tinycolor: any; //use tinycolor2
+import * as tinycolor from 'tinycolor2';
 
 @Directive()
 export abstract class MatrixCommon {
