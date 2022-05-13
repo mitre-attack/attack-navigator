@@ -9,6 +9,12 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.3 - 13 May 2022
+
+## Fixes
+
+- Fixed package import issues causing failure to load techniques with scores or colors, and impacting the ability to render a layer as SVG. See issues [#451](https://github.com/mitre-attack/attack-navigator/issues/451) and [#452](https://github.com/mitre-attack/attack-navigator/issues/452).
+
 # v4.6.2 - 12 May 2022
 
 Adds support for ATT&CK v11.1.
