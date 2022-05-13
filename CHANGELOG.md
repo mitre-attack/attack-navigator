@@ -9,10 +9,18 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# v4.6.2 - Staged on Develop
+# v4.6.3 - 13 May 2022
+
+## Fixes
+
+- Fixed package import issues causing failure to load techniques with scores or colors, and impacting the ability to render a layer as SVG. See issues [#451](https://github.com/mitre-attack/attack-navigator/issues/451) and [#452](https://github.com/mitre-attack/attack-navigator/issues/452).
+
+# v4.6.2 - 12 May 2022
+
+Adds support for ATT&CK v11.1.
 
 ## Improvements
-- Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
+- Added a feature to pin a technique cell when viewed in the matrix, enabling the user to scroll through the details of the technique in the tooltip. See issue [#320](https://github.com/mitre-attack/attack-navigator/issues/320).
 - Added a popup alert to notify users if a layer with an empty tactic field is uploaded, and therefore will not be displayed. See issue [#326](https://github.com/mitre-attack/attack-navigator/issues/326).
 
 # v4.6.1 - 26 April 2022

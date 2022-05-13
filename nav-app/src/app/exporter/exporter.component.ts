@@ -4,8 +4,8 @@ import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
+import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
-declare var tinycolor: any; //use tinycolor2
 
 @Component({
     selector: 'exporter',
