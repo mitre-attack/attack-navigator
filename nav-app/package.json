@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/mitre-attack/attack-navigator.git"
   },
-  "version": "4.6.2",
+  "version": "4.6.3",
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
@@ -44,7 +44,7 @@
     "ngx-markdown": "^10.1.1",
     "ngx-smart-popover": "^1.4.0",
     "rxjs": "^6.6.7",
-    "rxjs-compat": "^6.6.3",
+    "rxjs-compat": "^6.6.7",
     "tinygradient": "^0.4.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

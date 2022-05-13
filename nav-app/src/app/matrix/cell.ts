@@ -3,8 +3,7 @@ import { Technique, Tactic, DataService } from '../data.service';
 import { ViewModel } from '../viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
 import { ConfigService } from '../config.service';
-
-declare var tinycolor: any; //use tinycolor2
+import * as tinycolor from 'tinycolor2';
 
 @Directive()
 export abstract class Cell {

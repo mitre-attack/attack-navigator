@@ -8,13 +8,10 @@ import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.comp
 import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
 import { ViewModelsService, ViewModel } from "../viewmodels.service";
-
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import * as globals from './../globals';
 import { ChangelogComponent } from "../changelog/changelog.component";
-
-declare var math: any; //use mathjs
 
 @Component({
     selector: 'tabs',
@@ -462,21 +459,16 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     // trim
                     scope[match] = 0;
                     // check if letter is too large
-                    // console.log("chartoindex["+match+"]", self.charToIndex(match))
                     if (typeof(self.charToIndex(match)) == "undefined") {
                         noMatch = "Variable " + match + " does not match any layers"
                     } else if (self.domain && self.layerTabs[self.charToIndex(match)].dataContext.domainVersionID !== self.domain) {
                         noMatch = "Layer " + match + " does not match the chosen domain"
                     }
                 });
-                // console.log(noMatch)
                 if (noMatch.length > 0) return noMatch;
             }
-            let result = math.eval(self.scoreExpression, scope)
-            // console.log(result)
-            return null
+            return null;
         } catch(err) {
-            // console.log(err.message)
             return err.message
         }
     }

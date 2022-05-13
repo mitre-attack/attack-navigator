@@ -1,11 +1,10 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
-declare var tinygradient: any; //use tinygradient
-declare var tinycolor: any; //use tinycolor2
-declare var math: any; //use mathjs
+import * as tinygradient from 'tinygradient';
+import * as tinycolor from 'tinycolor2';
+import { evaluate } from 'mathjs';
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
-import { getCookie, hasCookie } from "./cookies";
 
 @Injectable()
 export class ViewModelsService {
@@ -92,7 +91,7 @@ export class ViewModelsService {
             //attempt to evaluate without a scope to catch the case of a static assignment
             try {
                 // evaluate with an empty scope
-                let mathResult = math.eval(scoreExpression, {});
+                let mathResult = evaluate(scoreExpression, {});
                 // if it didn't except after this, it evaluated to a single result.
                 console.log("score expression evaluated to single result to be applied to all techniques");
                 if (is.boolean(mathResult)) {
@@ -132,8 +131,7 @@ export class ViewModelsService {
                     //don't record a result if none of VMs had a score for this technique
                     //did at least one technique have a score for this technique?
                     if (misses < scoreVariables.size) {
-                        // console.log(scope);
-                        let mathResult = math.eval(scoreExpression, scope);
+                        let mathResult = evaluate(scoreExpression, scope);
                         if (is.boolean(mathResult)) {
                             mathResult = mathResult ? "1" : "0"; //boolean to binary
                         } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
@@ -168,7 +166,6 @@ export class ViewModelsService {
             inherit_vm.techniqueVMs.forEach(function(inherit_TVM) {
                 let tvm = result.hasTechniqueVM_id(inherit_TVM.technique_tactic_union_id) ? result.getTechniqueVM_id(inherit_TVM.technique_tactic_union_id) : new TechniqueVM(inherit_TVM.technique_tactic_union_id)
                 tvm[fieldname] = inherit_TVM[fieldname];
-                // console.log(inherit_TVM.techniqueName, "->", tvm)
                 result.techniqueVMs.set(inherit_TVM.technique_tactic_union_id, tvm);
             })
         }
