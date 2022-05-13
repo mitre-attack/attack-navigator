@@ -4,7 +4,7 @@ import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
-declare var d3: any; //d3js
+import * as d3 from 'd3';
 import * as tinycolor from 'tinycolor2';
 
 @Component({
