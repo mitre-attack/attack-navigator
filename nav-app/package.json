@@ -58,7 +58,7 @@
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^17.0.32",
     "codelyzer": "^6.0.0",
-    "exceljs": "^2.0.1",
+    "exceljs": "^4.3.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
