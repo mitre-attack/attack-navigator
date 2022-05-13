@@ -46,7 +46,7 @@
     "rxjs": "^6.6.7",
     "rxjs-compat": "^6.6.7",
     "tinygradient": "^0.4.3",
-    "tslib": "^2.0.0",
+    "tslib": "^2.4.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -70,6 +70,6 @@
     "protractor": "~7.0.0",
     "ts-node": "~10.7.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.5"
+    "typescript": "~4.0.8"
   }
 }
