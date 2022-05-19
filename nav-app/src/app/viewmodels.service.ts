@@ -1080,7 +1080,12 @@ export class ViewModel {
     public isSubtechniqueEnabled(technique, techniqueVM, tactic): boolean {
         if (techniqueVM.enabled) return true;
         else if (technique.subtechniques.length > 0) {
-            return technique.subtechniques.some(subtechnique => this.getTechniqueVM(subtechnique, tactic).enabled);
+            return technique.subtechniques.some(subtechnique => {
+                let sub_platforms = new Set(subtechnique.platforms);
+                let filter = new Set(this.filters.platforms.selection);
+                let platforms = new Set([...filter].filter(p => sub_platforms.has(p)));
+                return this.getTechniqueVM(subtechnique, tactic).enabled && platforms.size > 0;
+            });
         }
         else return false;
     }
