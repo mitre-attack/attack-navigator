@@ -9,6 +9,13 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.4 - 25 May 2022
+
+Adds support for ATT&CK v11.2.
+
+## Fixes
+- Fixed an issue causing disabled techniques with no enabled sub-techniques to appear in the matrix when the hide-disabled control is active. See issue [#466](https://github.com/mitre-attack/attack-navigator/issues/466).
+
 # v4.6.3 - 13 May 2022
 
 ## Fixes
