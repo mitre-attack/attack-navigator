@@ -9,6 +9,13 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.5 - Changes staged
+
+Adds support for ATT&CK v11.3 and Mobile ATT&CK sub-techniques.
+
+## Fixes
+- Fixed an issue where matrices that have been deprecated would load into the Navigator. See issue [#473](https://github.com/mitre-attack/attack-navigator/issues/473).
+
 # v4.6.4 - 25 May 2022
 
 Adds support for ATT&CK v11.2.
