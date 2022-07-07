@@ -161,6 +161,7 @@ export class DataService {
 
             //create matrices, which also creates tactics and filters techniques
             for (let matrixSDO of matrixSDOs) {
+                if (matrixSDO.x_mitre_deprecated) continue;
                 domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
             }
 
@@ -550,7 +551,9 @@ export class Technique extends BaseStix {
      */
     public get_technique_tactic_id(tactic: string | Tactic): string {
         let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
-        if (!this.tactics.includes(tactic_shortname)) throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
+        if (!this.tactics.includes(tactic_shortname)) {
+            throw new Error(tactic_shortname + " is not a tactic of " + this.attackID);
+        }
         return this.attackID + "^" + tactic_shortname;
     }
 
