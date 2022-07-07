@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# v4.6.5 - Changes staged
+# v4.6.5 - 7 July 2022
 
 Adds support for ATT&CK v11.3 and Mobile ATT&CK sub-techniques.
 
