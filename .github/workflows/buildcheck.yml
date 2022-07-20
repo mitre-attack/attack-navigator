@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master, develop
+      - github-action-test
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
@@ -26,3 +26,9 @@ jobs:
           cd nav-app/
           npm ci
           npm run build
+      - name: Upload content
+        uses: actions/upload-artifact@v3
+        with:
+           name: my-artifact
+           path: dist/
+        
