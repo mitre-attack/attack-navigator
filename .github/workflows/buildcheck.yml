@@ -26,3 +26,9 @@ jobs:
           cd nav-app/
           npm ci
           npm run build
+      - name: Upload content
+        uses: actions/upload-artifact@v3
+        with:
+           name: App-directory
+           path: nav-app/dist/
+        
