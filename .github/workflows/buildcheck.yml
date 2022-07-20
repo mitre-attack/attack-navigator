@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - github-action-test
+      - master, develop
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
