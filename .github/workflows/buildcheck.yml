@@ -29,6 +29,6 @@ jobs:
       - name: Upload content
         uses: actions/upload-artifact@v3
         with:
-           name: app-directory
+           name: App-directory
            path: nav-app/dist/
         
