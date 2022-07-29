@@ -20,8 +20,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Upgrade NPM
-        run: npm install -g npm
       - name: npm install and npm run build
         run: |
           cd nav-app/
