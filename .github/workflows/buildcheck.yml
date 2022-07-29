@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 16.x, 18.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -24,8 +24,8 @@ jobs:
         run: |
           cd nav-app/
           npm ci
-          npm run build
           npm run test-ci
+          npm run build
       - name: Upload content
         uses: actions/upload-artifact@v3
         with:
