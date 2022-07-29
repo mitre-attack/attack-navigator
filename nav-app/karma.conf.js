@@ -25,7 +25,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: [],
+    browsers: ['Chrome'],
     singleRun: false,
     webpack: { node: { fs: 'empty', } } //https://github.com/angular/angular-cli/issues/8357
   });
