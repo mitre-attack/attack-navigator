@@ -26,6 +26,7 @@ jobs:
           cd nav-app/
           npm ci
           npm run build
+          npm run test-ci
       - name: Upload content
         uses: actions/upload-artifact@v3
         with:

@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HelpComponent } from './help.component';
-
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import { MarkdownComponent, MarkdownService, MarkdownModule } from "ngx-markdown";
 describe('HelpComponent', () => {
   let component: HelpComponent;
   let fixture: ComponentFixture<HelpComponent>;
@@ -9,7 +10,9 @@ describe('HelpComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
     imports: [
-        MatDialogModule
+    	HttpClientModule,
+        MatDialogModule,
+        MarkdownModule.forRoot({ loader: HttpClient })
       ],
       declarations: [ HelpComponent ],
       providers: [
@@ -20,7 +23,9 @@ describe('HelpComponent', () => {
      { 
      	provide: MAT_DIALOG_DATA, 
      	useValue: {} 
-     }]
+     },
+     MarkdownService
+     ]
     })
     .compileComponents();
   }));
