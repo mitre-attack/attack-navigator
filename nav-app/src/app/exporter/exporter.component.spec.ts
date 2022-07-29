@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {HttpClientModule} from '@angular/common/http';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ExporterComponent } from './exporter.component';
 
 describe('ExporterComponent', () => {
@@ -8,7 +10,20 @@ describe('ExporterComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExporterComponent ]
+      imports: [
+        HttpClientTestingModule,
+        MatDialogModule 
+      ],
+      declarations: [ ExporterComponent ],
+      providers: [
+     {
+       provide: MatDialogRef,
+       useValue: {}
+     },
+     { 
+     	provide: MAT_DIALOG_DATA, 
+     	useValue: {} 
+     }]
     })
     .compileComponents();
   }));

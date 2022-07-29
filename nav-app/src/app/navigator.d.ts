@@ -3,5 +3,6 @@
 // msSaveBlob removal issued: https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029
 // workaround pulled from: https://github.com/microsoft/TypeScript/issues/45612
 interface Navigator {
-    msSaveBlob?: (blob: Blob, defaultName?: string) => boolean;
+    msSaveOrOpenBlob: (blobOrBase64: Blob | string, filename: string) => boolean
+
 } 

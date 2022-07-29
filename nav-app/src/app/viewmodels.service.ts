@@ -6,7 +6,9 @@ import { evaluate } from 'mathjs';
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
     pinnedCell = "";
@@ -1023,7 +1025,7 @@ export class ViewModel {
                 // re-evaluate mismatched values
                 this.linkMismatches = [];
                 this.metadataMismatches = [];
-                for (let technique_tactic_id of this.selectedTechniques) {
+                for (let technique_tactic_id of Array.from(this.selectedTechniques.values())) {
                     let tvm = this.getTechniqueVM_id(technique_tactic_id);
                     if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(technique_tactic_id);
                     if (this.activeTvm.metadataStr !== tvm.metadataStr) this.metadataMismatches.push(technique_tactic_id);
@@ -1083,7 +1085,7 @@ export class ViewModel {
             return technique.subtechniques.some(subtechnique => {
                 let sub_platforms = new Set(subtechnique.platforms);
                 let filter = new Set(this.filters.platforms.selection);
-                let platforms = new Set([...filter].filter(p => sub_platforms.has(p)));
+                let platforms = new Set([filter].filter(p => sub_platforms.has(p)));
                 return this.getTechniqueVM(subtechnique, tactic).enabled && platforms.size > 0;
             });
         }
