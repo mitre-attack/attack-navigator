@@ -25,7 +25,13 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'ChromeHeadlessCI'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: false,
     webpack: { node: { fs: 'empty', } } //https://github.com/angular/angular-cli/issues/8357
   });

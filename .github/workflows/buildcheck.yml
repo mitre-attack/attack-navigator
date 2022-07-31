@@ -20,15 +20,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install and npm run build
+      - name: npm install, test, build
         run: |
           cd nav-app/
           npm ci
-          npm run test-ci
+          npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI --code-coverage --source-map=false
           npm run build
       - name: Upload content
         uses: actions/upload-artifact@v3
         with:
-           name: App-directory
-           path: nav-app/dist/
-        
+          name: App-directory
+          path: nav-app/dist/
