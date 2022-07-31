@@ -16,14 +16,15 @@ describe('ExporterComponent', () => {
       ],
       declarations: [ ExporterComponent ],
       providers: [
-     {
-       provide: MatDialogRef,
-       useValue: {}
-     },
-     { 
-     	provide: MAT_DIALOG_DATA, 
-     	useValue: {} 
-     }]
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {}
+        }
+      ]
     })
     .compileComponents();
   }));
