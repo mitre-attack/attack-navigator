@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } fro
 import { Technique, Tactic, Matrix, DataService } from '../../data.service';
 import { ConfigService } from '../../config.service';
 import { Cell } from '../cell';
-import { ViewModelsService } from "../../viewmodels.service";
+import { ViewModelsService } from '../../viewmodels.service';
 
 @Component({
     selector: 'technique-cell',
