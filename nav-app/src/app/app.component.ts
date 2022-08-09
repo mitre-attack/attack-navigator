@@ -1,4 +1,5 @@
 import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { TabsComponent } from './tabs/tabs.component';
 import { ConfigService } from './config.service';
 import * as globals from "./globals";
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
 
   nav_version: string = globals.nav_version;
   public user_theme: string;
+  title = 'ATT&CK® Navigator';
 
   @HostListener('window:beforeunload', ['$event'])
   promptNavAway($event) {
@@ -24,7 +26,7 @@ export class AppComponent implements OnInit {
     $event.returnValue = 'Are you sure you want to navigate away? Your data may be lost!';
   }
 
-  constructor(public configService: ConfigService, private iconsService: IconsService) {
+  constructor(public configService: ConfigService, private iconsService: IconsService, private titleService:Title) {
     Array.prototype.includes = function (value): boolean {
       for (let i = 0; i < this.length; i++) {
         if (this[i] === value) return true
@@ -42,6 +44,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.iconsService.registerIcons();
+    this.titleService.setTitle(this.title);
   }
 
   themeChangeHandler(theme: string) {

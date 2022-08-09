@@ -745,7 +745,7 @@ export class ExporterComponent implements OnInit {
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
         if (is.ie()) { //internet explorer
-            window.navigator.msSaveBlob(svgBlob, filename)
+            window.navigator.msSaveOrOpenBlob(svgBlob, filename)
         } else {
             var svgUrl = URL.createObjectURL(svgBlob);
             var downloadLink = document.createElement("a");
