@@ -1085,7 +1085,7 @@ export class ViewModel {
             return technique.subtechniques.some(subtechnique => {
                 let sub_platforms = new Set(subtechnique.platforms);
                 let filter = new Set(this.filters.platforms.selection);
-                let platforms = new Set([...filter].filter(p => sub_platforms.has(p)));
+                let platforms = new Set(Array.from(filter.values()).filter(p => sub_platforms.has(p)));
                 return this.getTechniqueVM(subtechnique, tactic).enabled && platforms.size > 0;
             });
         }
