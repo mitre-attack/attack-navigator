@@ -16,6 +16,15 @@ describe('ListInputComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(ListInputComponent);
         component = fixture.componentInstance;
+        // component.config = {'viewModel': viewModel, 'list': viewModel.metadata, 'level': 'layer', 'type': 'metadata', 'nameField': 'name', valueField: 'value'};
+        component.config = {
+            'viewModel': null,
+            'list': null,
+            'level': 'layer',
+            'type': 'metadata',
+            'nameField': 'name',
+            valueField: 'value'
+        };
         fixture.detectChanges();
     });
 

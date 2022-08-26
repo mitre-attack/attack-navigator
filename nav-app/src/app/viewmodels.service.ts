@@ -6,7 +6,9 @@ import { evaluate } from 'mathjs';
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
     pinnedCell = "";
@@ -1023,7 +1025,7 @@ export class ViewModel {
                 // re-evaluate mismatched values
                 this.linkMismatches = [];
                 this.metadataMismatches = [];
-                for (let technique_tactic_id of this.selectedTechniques) {
+                for (let technique_tactic_id of Array.from(this.selectedTechniques.values())) {
                     let tvm = this.getTechniqueVM_id(technique_tactic_id);
                     if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(technique_tactic_id);
                     if (this.activeTvm.metadataStr !== tvm.metadataStr) this.metadataMismatches.push(technique_tactic_id);
@@ -1083,7 +1085,7 @@ export class ViewModel {
             return technique.subtechniques.some(subtechnique => {
                 let sub_platforms = new Set(subtechnique.platforms);
                 let filter = new Set(this.filters.platforms.selection);
-                let platforms = new Set([...filter].filter(p => sub_platforms.has(p)));
+                let platforms = new Set(Array.from(filter.values()).filter(p => sub_platforms.has(p)));
                 return this.getTechniqueVM(subtechnique, tactic).enabled && platforms.size > 0;
             });
         }
@@ -1091,7 +1093,7 @@ export class ViewModel {
     }
 
     /**
-     * sort techniques accoding to viewModel state
+     * sort techniques according to viewModel state
      * @param {Technique[]} techniques techniques to sort
      * @param {Tactic} tactic tactic the techniques fall under
      * @returns {Technique[]} sorted techniques
@@ -1115,44 +1117,53 @@ export class ViewModel {
                 score2 = this.calculateAggregateScore(technique2, tactic);
                 techniqueVM2.aggregateScore = Number.isFinite(score2) ? score2.toString() : "";
             }
-
-            switch (this.sorting) {
-                default:
-                case 0: // A-Z
-                    return technique1.name.localeCompare(technique2.name);
-                case 1: // Z-A
-                    return technique2.name.localeCompare(technique1.name);
-                case 2: // ascending
-                    if (score1 === score2) {
-                        return technique1.name.localeCompare(technique2.name);
-                    } else {
-                        return score1 - score2;
-                    }
-                case 3: // descending
-                    if (score1 === score2) {
-                        return technique1.name.localeCompare(technique2.name);
-                    } else {
-                        return score2 - score1;
-                    }
-            }
+            return this.sortingAlgorithm(technique1, technique2, score1, score2);
         });
     }
 
+    /**
+     * sort subtechniques according to viewModel state
+     * @param {Technique} technique technique to sort
+     * @param {Tactic} tactic tactic the technique falls under
+     */
     public sortSubTechniques(technique: Technique, tactic: Tactic) {
         technique.subtechniques.sort((technique1: Technique, technique2: Technique) => {
             const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
             const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
             const score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
             const score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-            switch (this.sorting) {
-                case 2:
-                    return score1 - score2;
-                case 3:
-                    return score2 - score1;
-                default:
-                    return 0;
-            }
+            return this.sortingAlgorithm(technique1, technique2, score1, score2);
         });
+    }
+
+    /**
+     * execute the sorting algorithm for techniques according to the viewModel state
+     * @param {Technique} technique1 the first technique in the comparison
+     * @param {Technique} technique2 the second technique in the comparison
+     * @param {number} score1 the first score in the comparison
+     * @param {number} score2 the second score in the comparison
+     * @returns technique or score comparison
+     */
+    private sortingAlgorithm(technique1: Technique, technique2: Technique, score1: number, score2: number) {
+        switch (this.sorting) {
+            default:
+            case 0: // A-Z
+                return technique1.name.localeCompare(technique2.name);
+            case 1: // Z-A
+                return technique2.name.localeCompare(technique1.name);
+            case 2: // 1-2
+                if (score1 === score2) {
+                    return technique1.name.localeCompare(technique2.name);
+                } else {
+                    return score1 - score2;
+                }
+            case 3: // 2-1
+                if (score1 === score2) {
+                    return technique1.name.localeCompare(technique2.name);
+                } else {
+                    return score2 - score1;
+                }
+        }
     }
 
     public calculateAggregateScore(technique: Technique, tactic: Tactic): any {
