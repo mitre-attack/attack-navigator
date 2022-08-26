@@ -9,6 +9,11 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# v4.6.6 - 26 August 2022
+
+## Fixes
+- Fixed an issue where the sorting selection was not honored for sub-techniques when rendered as an SVG. See issue [#494](https://github.com/mitre-attack/attack-navigator/issues/494).
+
 # v4.6.5 - 7 July 2022
 
 Adds support for ATT&CK v11.3 and Mobile ATT&CK sub-techniques.

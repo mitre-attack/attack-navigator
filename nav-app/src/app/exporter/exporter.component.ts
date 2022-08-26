@@ -929,7 +929,6 @@ class RenderableTactic {
 
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
 
-            
             if (filteredSubtechniques.length > 0 && showSubtechniques) {
                 for (let subtechnique of filteredSubtechniques) {
                     this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));
