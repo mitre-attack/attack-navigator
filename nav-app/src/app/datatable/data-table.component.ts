@@ -38,7 +38,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     saveLayerLocally(){
         var json = this.viewModel.serialize(); //JSON.stringify(this.viewModel.serialize(), null, "\t");
         var blob = new Blob([json], {type: "text/json"});
-        let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
+        let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
         // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
         this.saveBlob(blob, filename);
 
