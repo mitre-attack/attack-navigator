@@ -169,7 +169,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         // save file
         workbook.xlsx.writeBuffer().then(data => {
             const blob = new Blob( [data], {type: "application/octet-stream"} );
-            const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
+            const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
             this.saveBlob(blob, filename);
         });
     }
