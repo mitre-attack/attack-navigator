@@ -15,7 +15,7 @@ WORKDIR /src/nav-app
 RUN chown -R node:node ./
 
 # install packages and build 
-RUN npm install --unsafe-perm
+RUN npm install --unsafe-perm --legacy-peer-deps
 
 EXPOSE 4200
 
