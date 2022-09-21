@@ -131,6 +131,13 @@ export class DataService {
                             } else {
                                 domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
                             }
+                        } else if (sdo.relationship_type == "attributed-to") {
+                            if (domain.relationships["campaigns_attributed_to"].has(sdo.target_ref)) {
+                                let ids = domain.relationships["campaigns_attributed_to"].get(sdo.target_ref);
+                                ids.push(sdo.source_ref);
+                            } else {
+                                domain.relationships["campaigns_attributed_to"].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
+                            }
                         }
                         break;
                     case "attack-pattern":
@@ -696,10 +703,30 @@ export class Group extends BaseStix {
         else return [];
     }
     /**
+     * get techniques used by campaigns attributed to this group
+     * @returns {string[]} technique IDs used by campaigns attributed to this group
+     */
+    public campaignsUsed(domainVersionID): string[] {
+        // get campaigns attributed to groups
+        let attributedCampaigns = this.dataService.getDomain(domainVersionID).relationships.campaigns_attributed_to;
+        // get techniques used by campaigns
+        let rels = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
+        if (attributedCampaigns.has(this.id)) {
+            // get set of techniques used by attributed campaigns
+            let techniques = [];
+            attributedCampaigns.get(this.id).forEach(campaign_id => {
+                if (rels.has(campaign_id)) techniques = techniques.concat(rels.get(campaign_id))
+            });
+            return techniques;
+        } else return []; // no attributed campaigns
+
+    }
+    /**
      * Return all related techniques
      */
     public relatedTechniques(domainVersionID): string[] {
-        return this.used(domainVersionID);
+        let usedSet = new Set(this.used(domainVersionID).concat(this.campaignsUsed(domainVersionID)));
+        return Array.from(usedSet);
     }
 }
 
@@ -806,8 +833,11 @@ export class Domain {
         // ID of software to [] of technique IDs
         software_uses: new Map<string, string[]>(),
         // campaign uses technique
-        // ID of campaign to [] to technique IDs
+        // ID of campaign to [] of technique IDs
         campaign_uses: new Map<string, string[]>(),
+        // campaigns attributed to group
+        // ID of group to [] of campaign IDs
+        campaigns_attributed_to: new Map<string, string[]>(),
         // mitigation mitigates technique
         // ID of mitigation to [] of technique IDs
         mitigates: new Map<string, string[]>(),
