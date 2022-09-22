@@ -16,6 +16,7 @@
 
 ## Fixes
 - Fixed an issue with the Docker build caused by conflicting peer dependencies. See issue [#497](https://github.com/mitre-attack/attack-navigator/issues/497).
+- Fixed an issue with loading STIX bundles that do not contain all of the tactics referenced by the included matrix. See issue [#489](https://github.com/mitre-attack/attack-navigator/issues/489).
 
 # v4.6.6 - 26 August 2022
 
