@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
-import { Observable } from "rxjs/Rx"
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Buffer } from 'buffer';
+import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Collection } from './taxii2lib';
 
@@ -212,12 +213,12 @@ export class DataService {
             version["domains"].forEach((domain: any) => {
                 let identifier = domain["identifier"];
                 let domainObject = new Domain(identifier, domain["name"], v);
-
+                if (version["authentication"]) domainObject.authentication = version["authentication"];
                 if (domain["taxii_url"] && domain["taxii_collection"]) {
                     domainObject.taxii_url = domain["taxii_url"];
                     domainObject.taxii_collection = domain["taxii_collection"];
                 } else {
-                    domainObject.urls = domain["data"]
+                    domainObject.urls = domain["data"];
                 }
                 this.domains.push(domainObject);
             });
@@ -263,10 +264,16 @@ export class DataService {
         } else if (refresh || !this.domainData$) {
             console.log("retrieving data", domain.urls)
             let bundleData = [];
+            const httpOptions = {
+                headers: undefined
+            }
+            if (domain.authentication && domain.authentication.enabled) { // include authorization header, if configured (integrations)
+                let token = `${domain.authentication.serviceName}:${domain.authentication.apiKey}`;
+                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64')})
+            }
             domain.urls.forEach((url) => {
-                bundleData.push(this.http.get(url));
+                bundleData.push(this.http.get(url, httpOptions));
             });
-
             this.domainData$ = Observable.forkJoin(bundleData);
         }
         return this.domainData$;
@@ -741,6 +748,7 @@ export class Domain {
     public urls: string[] = [];
     public taxii_url: string = "";
     public taxii_collection: string = "";
+    public authentication: ServiceAuth;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
 
@@ -811,4 +819,10 @@ export class Version {
         this.name = name;
         this.number = number;
     }
+}
+
+export interface ServiceAuth {
+    enabled: boolean;
+    serviceName: string;
+    apiKey: string;
 }
