@@ -1,7 +1,7 @@
-// declaration merging workaround for msSaveBlob function that was
+// declaration merging workaround for msSaveOrOpenBlob function that was
 // marked for removal as a non-standard feature due to the removal of IE support
-// msSaveBlob removal issued: https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029
+// msSaveorOpenBlob removal issued: https://github.com/microsoft/TypeScript-DOM-lib-generator/issues/1029
 // workaround pulled from: https://github.com/microsoft/TypeScript/issues/45612
 interface Navigator {
-    msSaveBlob?: (blob: Blob, defaultName?: string) => boolean;
+    msSaveOrOpenBlob: (blobOrBase64: Blob | string, filename: string) => boolean
 } 
