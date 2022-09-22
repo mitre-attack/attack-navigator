@@ -514,7 +514,10 @@ export class Matrix extends BaseStix {
      */
     constructor(stixSDO: any, idToTacticSDO: Map<string, any>, techniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
-        this.tactics = stixSDO.tactic_refs.map((tacticID) => new Tactic(idToTacticSDO.get(tacticID), techniques, this.dataService))
+        this.tactics = stixSDO.tactic_refs
+          .map(tacticID => idToTacticSDO.get(tacticID))  // Get tacticSDOs
+          .filter(tacticSDO => tacticSDO)                // Filter out nulls (tacticSDO not found)
+          .map(tacticSDO => new Tactic(tacticSDO, techniques, this.dataService));  // Create Tactic objects
     }
 }
 
