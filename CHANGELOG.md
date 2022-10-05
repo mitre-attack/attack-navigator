@@ -10,6 +10,8 @@
 -->
 # 4.7.0 - Changes staged on Develop
 
+Adds support for ATT&CK v12.
+
 ## New Features
 - Integration compatibility with the [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend). See issue [#474](https://github.com/mitre-attack/attack-navigator/pull/474).
 - Extended search interface to support searching for techniques based on campaign. See [#501](https://github.com/mitre-attack/attack-navigator/issues/501).
