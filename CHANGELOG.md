@@ -8,7 +8,7 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
-# Changes staged on Develop
+# 4.7.0 - Changes staged on Develop
 
 ## New Features
 - Integration compatibility with the [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend). See issue [#474](https://github.com/mitre-attack/attack-navigator/pull/474).
