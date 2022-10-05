@@ -72,8 +72,10 @@ export class DataService {
                         break;
                     case "malware":
                     case "tool":
-                        let soft = new Software(sdo, this)
-                        domain.software.push(soft);
+                        domain.software.push(new Software(sdo, this));
+                        break;
+                    case "campaign":
+                        domain.campaigns.push(new Campaign(sdo, this));
                         break;
                     case "course-of-action":
                         domain.mitigations.push(new Mitigation(sdo, this));
@@ -104,6 +106,14 @@ export class DataService {
                                 } else {
                                     domain.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
                                 }
+                            } else if (sdo.source_ref.startsWith("campaign") && sdo.target_ref.startsWith("attack-pattern")) {
+                                // record campaign:technique relationship
+                                if (domain.relationships["campaign_uses"].has(sdo.source_ref)) {
+                                    let ids = domain.relationships["campaign_uses"].get(sdo.source_ref);
+                                    ids.push(sdo.target_ref);
+                                } else {
+                                    domain.relationships["campaign_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                }
                             }
                         } else if (sdo.relationship_type == "mitigates") {
                             if (domain.relationships["mitigates"].has(sdo.source_ref)) {
@@ -121,6 +131,13 @@ export class DataService {
                                 ids.push(sdo.target_ref);
                             } else {
                                 domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
+                            }
+                        } else if (sdo.relationship_type == "attributed-to") {
+                            if (domain.relationships["campaigns_attributed_to"].has(sdo.target_ref)) {
+                                let ids = domain.relationships["campaigns_attributed_to"].get(sdo.target_ref);
+                                ids.push(sdo.source_ref);
+                            } else {
+                                domain.relationships["campaigns_attributed_to"].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
                             }
                         }
                         break;
@@ -696,10 +713,30 @@ export class Group extends BaseStix {
         else return [];
     }
     /**
+     * get techniques used by campaigns attributed to this group
+     * @returns {string[]} technique IDs used by campaigns attributed to this group
+     */
+    public campaignsUsed(domainVersionID): string[] {
+        // get campaigns attributed to groups
+        let attributedCampaigns = this.dataService.getDomain(domainVersionID).relationships.campaigns_attributed_to;
+        // get techniques used by campaigns
+        let rels = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
+        if (attributedCampaigns.has(this.id)) {
+            // get set of techniques used by attributed campaigns
+            let techniques = [];
+            attributedCampaigns.get(this.id).forEach(campaign_id => {
+                if (rels.has(campaign_id)) techniques = techniques.concat(rels.get(campaign_id))
+            });
+            return techniques;
+        } else return []; // no attributed campaigns
+
+    }
+    /**
      * Return all related techniques
      */
     public relatedTechniques(domainVersionID): string[] {
-        return this.used(domainVersionID);
+        let usedSet = new Set(this.used(domainVersionID).concat(this.campaignsUsed(domainVersionID)));
+        return Array.from(usedSet);
     }
 }
 
@@ -723,6 +760,25 @@ export class Mitigation extends BaseStix {
      */
     public relatedTechniques(domainVersionID): string[] {
         return this.mitigated(domainVersionID);
+    }
+}
+
+export class Campaign extends BaseStix {
+    /**
+     * get techniques used by this campaign
+     * @returns {string[]} technique IDs used by this campaign
+     */
+     public used(domainVersionID): string[] {
+        let rels = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
+        if (rels.has(this.id)) return rels.get(this.id);
+        else return [];
+    }
+
+    /**
+     * Return all related techniques
+     */
+     public relatedTechniques(domainVersionID): string[] {
+        return this.used(domainVersionID);
     }
 }
 
@@ -768,6 +824,7 @@ export class Domain {
     public platforms: String[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
+    public campaigns: Campaign[] = [];
     public dataComponents: DataComponent[] = [];
     public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
@@ -783,9 +840,15 @@ export class Domain {
         // group uses technique
         // ID of group to [] of technique IDs
         group_uses: new Map<string, string[]>(),
-        // group uses technique
-        // ID of group to [] of technique IDs
+        // software uses technique
+        // ID of software to [] of technique IDs
         software_uses: new Map<string, string[]>(),
+        // campaign uses technique
+        // ID of campaign to [] of technique IDs
+        campaign_uses: new Map<string, string[]>(),
+        // campaigns attributed to group
+        // ID of group to [] of campaign IDs
+        campaigns_attributed_to: new Map<string, string[]>(),
         // mitigation mitigates technique
         // ID of mitigation to [] of technique IDs
         mitigates: new Map<string, string[]>(),
