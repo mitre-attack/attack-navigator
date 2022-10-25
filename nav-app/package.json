@@ -28,7 +28,7 @@
     "@angular/platform-browser": "^11.0.3",
     "@angular/platform-browser-dynamic": "^11.0.3",
     "@angular/router": "^11.0.3",
-    "@fontsource/roboto": "^4.2.3",
+    "@fontsource/roboto": "^4.5.8",
     "@fontsource/roboto-mono": "^4.2.2",
     "@types/file-saver": "^2.0.1",
     "classlist.js": "^1.1.20150312",
