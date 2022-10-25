@@ -8,7 +8,7 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
-# 4.7.0 - Changes staged on Develop
+# 4.7.0 - 25 October 2022
 
 Adds support for ATT&CK v12.
 
