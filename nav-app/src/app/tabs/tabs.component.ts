@@ -331,8 +331,21 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return root;
     }
 
+    loadData = {
+        url: undefined,
+        version: undefined,
+        identifier: undefined
+    }
+
     /**
-     * Open a new blank layer tab
+     * Create a new layer from URL
+     */
+    newLayerFromURL(loadData: any) {
+        
+    }
+
+    /**
+     * Create a new layer in the given domain/version
      */
     newLayer(domainVersionID: string) {
         // load domain data, if not yet loaded
