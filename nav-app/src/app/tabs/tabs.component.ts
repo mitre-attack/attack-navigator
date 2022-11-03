@@ -1,6 +1,6 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService, Technique, Version } from '../data.service'; //import the DataService component so we can use it
+import { DataService, Domain, Technique, Version } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
 import { forkJoin } from 'rxjs';
@@ -341,7 +341,35 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Create a new layer from URL
      */
     newLayerFromURL(loadData: any) {
-        
+        try {
+            // validate URL
+            let url = new URL(loadData.url);
+
+            // validate version
+            if (isNaN(loadData.version)) {
+                throw {message: "version is not a number"};
+            }
+            let v: Version = new Version(`ATT&CK v${loadData.version}`, loadData.version);
+            this.dataService.versions.push(v);
+
+            // validate domain is unique
+            let domain_identifier = loadData.identifier.toLowerCase();
+            let domainID = this.dataService.getDomainVersionID(domain_identifier, loadData.version);
+            console.log('**', domainID)
+            if (this.dataService.getDomain(domainID)) {
+                throw {message: `the domain and version provided conflict with an existing set of ATT&CK data ('${domainID}')`};
+            }
+
+            // create domain object
+            let domainObject = new Domain(domain_identifier, "Custom Data", v, [url.toString()]);
+            console.log('** creating domain obj', domainObject)
+            this.dataService.domains.push(domainObject);
+
+            this.newLayer(domainID);
+        } catch (err) {
+            console.error(err)
+            alert("ERROR " + err.message)
+        }
     }
 
     /**
@@ -443,8 +471,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             console.error(err)
             alert("Layer Layer operation error: " + err.message)
         }
-
-
     }
 
     /**
