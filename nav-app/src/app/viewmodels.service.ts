@@ -1251,6 +1251,10 @@ export class ViewModel {
 
         let domain = this.dataService.getDomain(this.domainVersionID);
         rep.domain = domain.domain_identifier;
+        if (domain.isCustom) {
+            // custom data url
+            rep.dataURLs = domain.urls;
+        }
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;

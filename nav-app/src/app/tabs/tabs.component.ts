@@ -341,8 +341,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Create a new layer from URL
      */
     newLayerFromURL(loadData: any) {
-        let domain_identifier = loadData.identifier.toLowerCase();
-        let domainVersionID = this.dataService.getDomainVersionID(domain_identifier, loadData.version);
+        let domain_id = loadData.identifier.toLowerCase();
+        let domainVersionID = this.dataService.getDomainVersionID(domain_id, loadData.version);
 
         // validate input data
         let valid = this.validateInput(loadData, domainVersionID);
@@ -351,7 +351,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create domain object
         let url = new URL(loadData.url);
         let v: Version = new Version(`ATT&CK v${loadData.version}`, loadData.version);
-        let domainObject = new Domain(domain_identifier, "Custom Data", v, [url.toString()]);
+        let domainObject = new Domain(domain_id, domain_id, v, [url.toString()]);
 
         // bypass domain checks to allow users to create a valid domain identifier
         // alert("WARNING: creating a new layer via URL will automatically bypass domain checks. Objects from multiple domains may be displayed.")
