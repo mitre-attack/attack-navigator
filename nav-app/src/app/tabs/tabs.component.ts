@@ -341,6 +341,28 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Create a new layer from URL
      */
     newLayerFromURL(loadData: any) {
+        let domain_identifier = loadData.identifier.toLowerCase();
+        let domainVersionID = this.dataService.getDomainVersionID(domain_identifier, loadData.version);
+
+        // validate input data
+        let valid = this.validateInput(loadData, domainVersionID);
+        if (!valid) return;
+
+        // create domain object
+        let url = new URL(loadData.url);
+        let v: Version = new Version(`ATT&CK v${loadData.version}`, loadData.version);
+        let domainObject = new Domain(domain_identifier, "Custom Data", v, [url.toString()]);
+
+        // bypass domain checks to allow users to create a valid domain identifier
+        // alert("WARNING: creating a new layer via URL will automatically bypass domain checks. Objects from multiple domains may be displayed.")
+        domainObject.isCustom = true;
+        // add custom domain to list of domains
+        this.dataService.domains.push(domainObject);
+
+        this.newLayer(domainVersionID);
+    }
+
+    validateInput(loadData: any, domainID: string): boolean {
         try {
             // validate URL
             let url = new URL(loadData.url);
@@ -349,26 +371,21 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             if (isNaN(loadData.version)) {
                 throw {message: "version is not a number"};
             }
-            let v: Version = new Version(`ATT&CK v${loadData.version}`, loadData.version);
-            this.dataService.versions.push(v);
 
             // validate domain is unique
-            let domain_identifier = loadData.identifier.toLowerCase();
-            let domainID = this.dataService.getDomainVersionID(domain_identifier, loadData.version);
-            console.log('**', domainID)
-            if (this.dataService.getDomain(domainID)) {
-                throw {message: `the domain and version provided conflict with an existing set of ATT&CK data ('${domainID}')`};
+            let err = this.dataService.getDomain(domainID);
+            if (err) {
+                throw {message: `the domain and version specified conflict with an existing set of ATT&CK data (${err.name} ${err.version.name})`};
             }
-
-            // create domain object
-            let domainObject = new Domain(domain_identifier, "Custom Data", v, [url.toString()]);
-            console.log('** creating domain obj', domainObject)
-            this.dataService.domains.push(domainObject);
-
-            this.newLayer(domainID);
+            return true;
         } catch (err) {
-            console.error(err)
-            alert("ERROR " + err.message)
+            console.error(err);
+            if (err instanceof TypeError) {
+                alert("ERROR: invalid url, check the javascript console for more information.");
+            } else {
+                alert("ERROR " + err.message);
+            }
+            return false;
         }
     }
 
