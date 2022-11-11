@@ -4,9 +4,8 @@ import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
+import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
-declare var tinycolor: any; //use tinycolor2
-import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
     selector: 'exporter',
@@ -136,9 +135,9 @@ export class ExporterComponent implements OnInit {
         //check preconditions, make sure they're in the right range
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
-        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); console.log("width", width);
-        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
-        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); console.log("headerHeight", headerHeight);
+        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); // console.log("width", width);
+        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); // console.log("height", height)
+        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); // console.log("headerHeight", headerHeight);
 
         let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
         let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
@@ -460,7 +459,7 @@ export class ExporterComponent implements OnInit {
                     contentGroup.append("text")
                         .text(subsectionContent)
                         .attr("font-size", function() {
-                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 32)
+                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
                         })
                         .each(function() { centerValign(this); })
                         // .attr("dominant-baseline", "middle")
@@ -498,7 +497,7 @@ export class ExporterComponent implements OnInit {
             let filterConfig = {"title": "platforms", "contents": []};
             if (self.showDomain()) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version});
+                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version.name});
             }
             if (self.showFilters()) {
               const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
@@ -651,14 +650,20 @@ export class ExporterComponent implements OnInit {
         // 888o     oo 888          888   888           888    888           o88 88o    888   
         //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
                                                                                            
-        
+        // Track the smallest optimal technique/subtechnique font size
+        let minCellTextSize = Infinity;
 
         techniqueGroups.append("text")
             .text(function(technique: RenderableTechnique) { 
                 return technique.text;
             })
             .attr("font-size", function(technique: RenderableTechnique) {
-                return optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
+                const fontSize = optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
+                // Track the smallest font size found
+                if (fontSize < minCellTextSize) {
+                    minCellTextSize = fontSize;
+                }
+                return fontSize
             })
             // .attr("dominant-baseline", "middle")
             .each(function() { centerValign(this); })
@@ -669,12 +674,24 @@ export class ExporterComponent implements OnInit {
                 return subtechnique.text;
             })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
-                return optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
+                const fontSize = optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
+                // Track the smallest font size found
+                if (fontSize < minCellTextSize) {
+                    minCellTextSize = fontSize;
+                }
+                return fontSize
             })
             // .attr("dominant-baseline", "middle")
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
             .each(function() { centerValign(this); })
     
+        // Set technique and subtechnique groups to the same font size
+        techniqueGroups.select("text").attr("font-size", minCellTextSize)
+        subtechniqueGroups.select("text").attr("font-size", minCellTextSize)
+
+        // Track the smallest optimal tactic label font size
+        let minTacticLabelTextSize = Infinity;
+
         let tacticLabels = tacticGroups.append("g")
             .attr("class", "tactic-label");
         tacticLabels.append("text")
@@ -682,7 +699,12 @@ export class ExporterComponent implements OnInit {
                 return tactic.tactic.name;
             })
             .attr("font-size", function(tactic: RenderableTactic) {
-                return optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
+                const fontSize = optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
+                // Track the smallest font size found
+                if (fontSize < minTacticLabelTextSize) {
+                    minTacticLabelTextSize = fontSize;
+                }
+                return fontSize
             })
             // .attr("dominant-baseline", "middle")
             .attr("fill", function(tactic: RenderableTactic) {
@@ -691,6 +713,9 @@ export class ExporterComponent implements OnInit {
             })
             .attr("font-weight", "bold")
             .each(function() { centerValign(this); })
+
+        // Set tactic labels to same font size
+        tacticLabels.select("text").attr("font-size", minTacticLabelTextSize)
 
         //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
         // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
@@ -720,7 +745,7 @@ export class ExporterComponent implements OnInit {
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
         if (is.ie()) { //internet explorer
-            window.navigator.msSaveBlob(svgBlob, filename)
+            window.navigator.msSaveOrOpenBlob(svgBlob, filename)
         } else {
             var svgUrl = URL.createObjectURL(svgBlob);
             var downloadLink = document.createElement("a");
@@ -904,7 +929,6 @@ class RenderableTactic {
 
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
 
-            
             if (filteredSubtechniques.length > 0 && showSubtechniques) {
                 for (let subtechnique of filteredSubtechniques) {
                     this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));

@@ -1,0 +1,59 @@
+@import "../../colors.scss";
+
+.list-container, .add-more { margin: 10px 0; }
+.item-container {
+    padding: 10px;
+    border: 1px solid color(panel-dark);
+    margin: 4px 0;
+}
+.remove-button {
+    display: flex;
+    justify-content: flex-end;
+}
+.assigned-link {
+    float: left;
+    @include adaptive-color-dark-only("color", color(dark-link) !important);
+}
+.assigned-link:active, .assigned-link:visited {
+    @include adaptive-color-dark-only("color", color(dark-link-active));
+}
+.divider-container {
+    cursor: pointer;
+    .mat-divider {
+        border-top-width: 2px;
+        @include adaptive-color("border-top-color", color(panel-dark), color(dark-4));
+    }
+    .icon {
+        height: 16px;
+        width: 16px;
+        line-height: 16px;
+        border-radius: 3px;
+    }
+    .divider-option, .divider {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .mat-divider, .button { flex: 1; }
+        &:hover {
+            .mat-divider {
+                @include adaptive-color("border-top-color", color(button-dark), color(dark-link));
+            }
+            .icon {
+                @include adaptive-color("background-color", color(button-dark), color(dark-link));
+            }
+        }
+    }
+    .divider-option {
+        .icon {
+            @include adaptive-color("background-color", color(panel-dark), color(dark-4));
+        }
+    }
+    .divider {
+        .icon {
+            @include adaptive-color("background-color", darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
+        }
+        .mat-divider {
+            @include adaptive-color("border-top-color", darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
+        }
+    }
+}

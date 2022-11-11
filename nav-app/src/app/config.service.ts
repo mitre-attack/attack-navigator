@@ -6,6 +6,7 @@ import { DataService, Technique, Tactic } from './data.service'; //import the Da
 })
 export class ConfigService {
     public comment_color = "yellow";
+    public link_color = "blue";
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -35,6 +36,7 @@ export class ConfigService {
                 dataService.subtechniquesEnabled = self.getFeature("subtechniques");
                 self.featureStructure = config["features"];
                 self.comment_color = config["comment_color"];
+                self.link_color = config["link_color"];
                 self.banner = config["banner"];
                 for (let obj of config["custom_context_menu_items"]) {
                     self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))

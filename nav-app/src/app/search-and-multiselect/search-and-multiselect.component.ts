@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel, ViewModelsService } from '../viewmodels.service';
-import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '../data.service';
+import { BaseStix, DataService, Group, Mitigation, Software, Technique, Campaign } from '../data.service';
 
 @Component({
   selector: 'app-search-and-multiselect',
@@ -21,8 +21,9 @@ export class SearchAndMultiselectComponent implements OnInit {
         0: true, // techniques panel
         1: false, // groups panel
         2: false, // software panel
-        3: false, // mitigations panel
-        4: false // data components panel
+        3: false, // campaign panel
+        4: false, // mitigations panel
+        5: false // data components panel
     };
 
     public fields = [
@@ -36,11 +37,6 @@ export class SearchAndMultiselectComponent implements OnInit {
             "field": "attackID",
             "enabled": true
         },
-        // {
-        //     "label": "STIX ID",
-        //     "field": "id",
-        //     "enabled": false
-        // },
         {
             "label": "description",
             "field": "description",
@@ -206,6 +202,9 @@ export class SearchAndMultiselectComponent implements OnInit {
         }, {
             "label": "mitigations",
             "objects": this.filterAndSort(domain.mitigations, this._query)
+        }, {
+            "label": "campaigns",
+            "objects": this.filterAndSort(domain.campaigns, this._query)
         }];
 
         domain.dataComponents.forEach((c) => {
@@ -307,6 +306,8 @@ export class SearchAndMultiselectComponent implements OnInit {
             return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
             return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
+        } else if (stixObject instanceof Campaign) {
+            return allTechniques.filter((technique: Technique) => (stixObject as Campaign).relatedTechniques(domainVersionID).includes(technique.id));
         }
     }
 }

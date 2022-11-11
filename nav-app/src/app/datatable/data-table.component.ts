@@ -3,22 +3,15 @@ import { DataService, Technique, Matrix, Domain } from '../data.service';
 import { ConfigService } from '../config.service';
 import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, TechniqueVM, Filter, Gradient, Gcolor, ViewModelsService } from "../viewmodels.service";
-import { FormControl } from '@angular/forms';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatMenuTrigger } from '@angular/material/menu';
+import {FormControl} from '@angular/forms';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {MatSelectModule} from '@angular/material/select';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuTrigger} from '@angular/material/menu';
+import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
-
-declare var tinygradient: any; //use tinygradient
-declare var tinycolor: any; //use tinycolor2
-
-import * as FileSaver from 'file-saver';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { SearchAndMultiselectComponent } from '../search-and-multiselect/search-and-multiselect.component';
-import { TmplAstVariable } from '@angular/compiler';
-import { Subscription } from 'rxjs';
+import * as tinycolor from 'tinycolor2';
 
 @Component({
     selector: 'DataTable',
@@ -63,8 +56,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     saveLayerLocally() {
         var json = this.viewModel.serialize(); //JSON.stringify(this.viewModel.serialize(), null, "\t");
-        var blob = new Blob([json], { type: "text/json" });
-        let filename = this.viewModel.name.replace(/ /g, "_") + ".json";
+        var blob = new Blob([json], {type: "text/json"});
+        let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
         // FileSaver.saveAs(blob, this.viewModel.name.replace(/ /g, "_") + ".json");
         this.saveBlob(blob, filename);
     }
@@ -107,7 +100,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     saveBlob(blob, filename) {
         if (is.ie()) { //internet explorer
-            window.navigator.msSaveBlob(blob, filename)
+            window.navigator.msSaveOrOpenBlob(blob, filename)
         } else {
             var svgUrl = URL.createObjectURL(blob);
             var downloadLink = document.createElement("a");
@@ -231,8 +224,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
         // save file
         workbook.xlsx.writeBuffer().then(data => {
-            const blob = new Blob([data], { type: "application/octet-stream" });
-            const filename = this.viewModel.name.replace(/ /g, "_") + ".xlsx";
+            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
             this.saveBlob(blob, filename);
         });
     }
@@ -367,12 +360,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     // edit field bindings
     commentEditField: string = "";
     scoreEditField: string = "";
+
     /**
      * triggered on left click of technique
      */
     onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
-            if (["comment", "score", "colorpicker"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            if (["comment", "score", "colorpicker", "link", "metadata"].includes(this.currentDropdown)) this.currentDropdown = ""; //remove technique control dropdowns, because everything was deselected
+            return;
+        }
+        if (this.currentDropdown == "link" || this.currentDropdown == "metadata") {
+            this.currentDropdown = "";
             return;
         }
         //else populate editing controls

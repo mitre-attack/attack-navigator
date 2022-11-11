@@ -6,10 +6,13 @@ module.exports = function (config) {
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
-      require('karma-coverage'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
+      require('karma-coverage'),
+      // require('karma-coverage-istanbul-reporter'),
+      require('karma-jasmine'),
       require('karma-jasmine-html-reporter'),
+      require('karma-coverage-istanbul-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client:{
@@ -38,13 +41,33 @@ module.exports = function (config) {
         { type: 'text-summary', subdir: '.', file: 'text-summary.txt' },
       ]
     },
-    reporters: ['progress', 'coverage'],
+    
+    reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'ChromeHeadlessCI'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: false,
-    webpack: { node: { fs: 'empty', } } //https://github.com/angular/angular-cli/issues/8357
+    webpack: { node: { fs: 'empty', } }, // https://github.com/angular/angular-cli/issues/8357
+
+    // For code coverage
+    files: [
+      'src/**/*.ts'
+    ],
+    preprocessors: {
+      'src/**/*.js': ['coverage']
+    },
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
+    }
+
   });
 };

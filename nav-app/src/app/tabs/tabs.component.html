@@ -141,13 +141,13 @@
                                     <mat-select placeholder="version" [(ngModel)]="nVersion" required>
                                         <mat-option [value]="null">none</mat-option>
                                         <mat-option *ngFor="let nVersion of this.dataService.versions"
-                                                    [value]="nVersion">{{nVersion}}</mat-option>
+                                                    [value]="nVersion">{{nVersion.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
                             <td>
                                 Choose the version for the new layer. <em>*Versions prior
-                                to {{ds.versions[ds.versions.length - 1]}} are not supported by Navigator
+                                to {{ds.versions[ds.versions.length - 1].name}} are not supported by Navigator
                                 v{{nav_version}}.</em>
                             </td>
                         </tr>
@@ -229,7 +229,7 @@
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
                                     <mat-option *ngFor="let domain of this.dataService.domains"
-                                                [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
+                                                [value]=domain.id>{{domain.name}} {{domain.version.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
@@ -308,6 +308,36 @@
                         </td>
                         <td [ngClass]="{disabled: !domain}">
                             Choose which layer to import comments from. Leave blank to initialize with no comments.
+                        </td>
+                    </tr>
+
+                    <!-- Links -->
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="links" [(ngModel)]="links" [disabled]="!domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td [ngClass]="{disabled: !domain}">
+                            Choose which layer to import technique links from. Leave blank to initialize without links.
+                        </td>
+                    </tr>
+
+                    <!-- Metadata -->
+                    <tr>
+                        <td>
+                            <mat-form-field>
+                                <mat-select placeholder="metadata" [(ngModel)]="metadata" [disabled]="!domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                        <td [ngClass]="{disabled: !domain}">
+                            Choose which layer to import technique metadata from. Leave blank to initialize without metadata.
                         </td>
                     </tr>
 

@@ -3,7 +3,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { HelpComponent } from './help.component';
-
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import { MarkdownComponent, MarkdownService, MarkdownModule } from "ngx-markdown";
 describe('HelpComponent', () => {
   let component: HelpComponent;
   let fixture: ComponentFixture<HelpComponent>;

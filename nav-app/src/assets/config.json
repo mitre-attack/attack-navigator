@@ -1,35 +1,85 @@
 {
     "versions": [
         {
-            "name": "ATT&CK v10", 
+            "name": "ATT&CK v12",
+            "version": "12",
             "domains": [
                 {   
-                    "name": "Enterprise", 
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
                 },
                 {   
-                    "name": "Mobile", 
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "identifier": "ics-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v11",
+            "version": "11",
+            "domains": [
+                {   
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v11.3/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v11.3/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "identifier": "ics-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v11.3/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v10", 
+            "version": "10",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
+                },
+                {
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
+                    "identifier": "ics-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/ics-attack/ics-attack.json"]
                 }
             ]
         },
         {
-            "name": "ATT&CK v9", 
+            "name": "ATT&CK v9",
+            "version": "9",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
+                    "identifier": "ics-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/ics-attack/ics-attack.json"]
                 },
                 {
@@ -39,70 +89,86 @@
             ]
         },
         {
-            "name": "ATT&CK v8", 
+            "name": "ATT&CK v8",
+            "version": "8",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.2/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.2/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
+                    "identifier": "ics-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v8.2/ics-attack/ics-attack.json"]
                 }
             ]
         },
         {
-            "name": "ATT&CK v7", 
+            "name": "ATT&CK v7",
+            "version": "7",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v7.2/mobile-attack/mobile-attack.json"]
                 }
             ]
         },
         {
-            "name": "ATT&CK v6", 
+            "name": "ATT&CK v6",
+            "version": "6",
             "domains": [
-                {   
-                    "name": "Enterprise", 
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/enterprise-attack/enterprise-attack.json"]
                 },
-                {   
-                    "name": "Mobile", 
+                {
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v6.3/mobile-attack/mobile-attack.json"]
                 }
             ]
         },
         {
             "name": "ATT&CK v5",
+            "version": "5",
             "domains": [
                 {
                     "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.2/enterprise-attack/enterprise-attack.json"]
                 },
                 {
                     "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v5.2/mobile-attack/mobile-attack.json"]
                 }
             ]
         },
         {
             "name": "ATT&CK v4",
+            "version": "4",
             "domains": [
                 {
                     "name": "Enterprise",
+                    "identifier": "enterprise-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v4.0/enterprise-attack/enterprise-attack.json"]
                 },
                 {
                     "name": "Mobile",
+                    "identifier": "mobile-attack",
                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v4.0/mobile-attack/mobile-attack.json"]
                 }
             ]
@@ -119,6 +185,7 @@
     },
 
     "comment_color": "yellow",
+    "link_color": "blue",
 
     "banner": "",
 
@@ -139,7 +206,7 @@
             {"name": "show_mapping_import", "enabled": false, "description": "Disaable to remove the ability to import control frameworks."}
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
+            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and layer metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
             {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
             {"name": "save_to_local_storage", "enabled": true, "description": "Disable to remove the button to save layers to a local storage."},
             {"name": "export_render", "enabled": true, "description": "Disable to remove the button to render the current layer."},
@@ -157,6 +224,9 @@
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
+            {"name": "links", "enabled": true, "description": "Disable to remove the ability to assign hyperlinks to techniques."},
+            {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."},
+            {"name": "metadata", "enabled": true, "description": "Disable to remove the ability to add metadata to techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]}
     ]

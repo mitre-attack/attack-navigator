@@ -107,7 +107,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 layer controls
             </div>
 
-            <!-- layer name, description and metadata -->
+            <!-- layer name, description, metadata, and links -->
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
 
                 <div class="control-row-button dropdown noselect" (click)="handleDescriptionDropdown()"
@@ -138,36 +138,28 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
                         </mat-form-field>
 
-                        <!-- layer version (uneditable) -->
-                        <mat-form-field>
-                            <input matInput readonly disabled type="text" placeholder="version"
-                                [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version" />
-                        </mat-form-field>
-
+                            <!-- layer version (uneditable) -->
+                            <mat-form-field>
+                                <input matInput readonly disabled
+                                    type="text"
+                                    placeholder="version"
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
+                            </mat-form-field>
                     </div>
-                    <div class="metadata_input">
-                        <b class="metadata-label">Metadata</b>
-                        <table>
-                            <tr class="formfield-group" *ngFor="let metadata of viewModel.metadata; let $i = index">
-                                <td></td>
-                                <td>
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="name" [(ngModel)]="metadata.name" />
-                                    </mat-form-field>
-                                    <mat-form-field>
-                                        <input matInput type="text" placeholder="value" [(ngModel)]="metadata.value" />
-                                    </mat-form-field>
-                                    <button class="button" (click)="viewModel.removeMetadata($i)">remove this
-                                        metadata</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan=2 class="addmore">
-                                    <button class="button" (click)="viewModel.addMetadata()">add more metadata</button>
-                                </td>
-                            </tr>
-                        </table>
+                    <div class="layer-data">
+                        <!-- layer metadata -->
+                        <b>Metadata</b>
+                        <div class="data-input">
+                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.metadata, 'level': 'layer', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                        </div>
 
+                        <mat-divider class="layer-div"></mat-divider>
+                        
+                        <!-- layer links -->
+                        <b>Links</b>
+                        <div class="data-input">
+                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.links, 'level': 'layer', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -533,8 +525,42 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             (input)="viewModel.editSelectedTechniques('comment', $event.target.value)">
                         </textarea>
                     </mat-form-field>
+                 </div>
+             </div>
+
+            <!-- links -->
+            <div *ngIf="configService.getFeature('links')"  class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing() || !viewModel.linksMatch}"
+                     (click)="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? currentDropdown = currentDropdown !== 'link' ? 'link' : null : continue"
+                     matTooltipPosition="below"
+                     [matTooltip]="viewModel.linksMatch ? 'link' : 'cannot edit links on selected techniques with differing links'"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                     <span class="material-icons" alt="add a link">link</span>
                 </div>
-            </div>
+                <!-- link input -->
+                <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'link'" [class.left]="checkalign(dropdown)">
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.links, 'level': 'technique', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                </div>
+             </div>
+
+
+            <!-- technique metadata -->
+            <div *ngIf="configService.getFeature('metadata')"  class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing() || !viewModel.metadataMatch}"
+                     (click)="viewModel.isCurrentlyEditing() && viewModel.metadataMatch ? currentDropdown = currentDropdown !== 'metadata' ? 'metadata' : null : continue"
+                     matTooltipPosition="below"
+                     [matTooltip]="viewModel.metadataMatch ? 'metadata' : 'cannot edit metadata on selected techniques with differing metadata'"
+                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                     <span class="material-icons" alt="add metadata">list</span>
+                 </div>
+                 <!-- metadata input -->
+                 <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'metadata'" [class.left]="checkalign(dropdown)">
+                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.metadata, 'level': 'technique', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                </div>
+             </div>
+
             <!-- remove all annotations -->
             <div *ngIf="configService.getFeature('clear_annotations')" class="control-row-item">
                 <div class="control-row-button noselect" [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
