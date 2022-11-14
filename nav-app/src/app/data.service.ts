@@ -131,7 +131,7 @@ export class DataService {
                             } else {
                                 domain.relationships["mitigatedBy"].set(sdo.target_ref, [sdo.source_ref])
                             }
-                            
+
                         } else if (sdo.relationship_type == 'revoked-by') {
                             // record stix object: stix object relationship
                             domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
@@ -209,10 +209,11 @@ export class DataService {
 
             domain.platforms = Array.from(platforms); // convert to array
 
-        // data loading complete; update watchers
-        domain.dataLoaded = true;
-        for (let callback of domain.dataLoadedCallbacks) {
-            callback();
+            // data loading complete; update watchers
+            domain.dataLoaded = true;
+            for (let callback of domain.dataLoadedCallbacks) {
+                callback();
+            }
         }
     }
 
@@ -297,7 +298,7 @@ export class DataService {
             }
             if (domain.authentication && domain.authentication.enabled) { // include authorization header, if configured (integrations)
                 let token = `${domain.authentication.serviceName}:${domain.authentication.apiKey}`;
-                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64')})
+                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64') })
             }
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url, httpOptions));
@@ -526,9 +527,9 @@ export class Matrix extends BaseStix {
     constructor(stixSDO: any, idToTacticSDO: Map<string, any>, techniques: Technique[], dataService: DataService) {
         super(stixSDO, dataService);
         this.tactics = stixSDO.tactic_refs
-          .map(tacticID => idToTacticSDO.get(tacticID))  // Get tacticSDOs
-          .filter(tacticSDO => tacticSDO)                // Filter out nulls (tacticSDO not found)
-          .map(tacticSDO => new Tactic(tacticSDO, techniques, this.dataService));  // Create Tactic objects
+            .map(tacticID => idToTacticSDO.get(tacticID))  // Get tacticSDOs
+            .filter(tacticSDO => tacticSDO)                // Filter out nulls (tacticSDO not found)
+            .map(tacticSDO => new Tactic(tacticSDO, techniques, this.dataService));  // Create Tactic objects
     }
 }
 
@@ -792,7 +793,7 @@ export class Campaign extends BaseStix {
      * get techniques used by this campaign
      * @returns {string[]} technique IDs used by this campaign
      */
-     public used(domainVersionID): string[] {
+    public used(domainVersionID): string[] {
         let rels = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
         if (rels.has(this.id)) return rels.get(this.id);
         else return [];
@@ -801,7 +802,7 @@ export class Campaign extends BaseStix {
     /**
      * Return all related techniques
      */
-     public relatedTechniques(domainVersionID): string[] {
+    public relatedTechniques(domainVersionID): string[] {
         return this.used(domainVersionID);
     }
 }

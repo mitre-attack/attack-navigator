@@ -1,12 +1,12 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
-import * as tinygradient from 'tinygradient';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from 'tinycolor2';
 import { evaluate } from 'mathjs';
 import * as globals from './globals'; //global variables
 import * as is from 'is_js';
 import { ControlFramework } from './control-framework/control-framework';
 import { scoredMitigationVM } from './mitigations/scored-mitigation-vm';
+import tinygradient from 'tinygradient';
 
 @Injectable({
   providedIn: 'root'
@@ -123,7 +123,7 @@ export class ViewModelsService {
                             if (score == "") {
                                 scoreValue = 0;
                                 misses++;
-                            } else if (isNaN(Number(score))) {
+                            } else if (Number.isNaN(score)) {
                                 scoreValue = 0;
                                 misses++;
                             } else {

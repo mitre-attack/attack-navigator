@@ -61,7 +61,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MarkdownModule } from "ngx-markdown";
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
-import { MatTabsModule } from "@angular/material/tabs";
 import { ListInputComponent } from './list-input/list-input.component';
 
 
