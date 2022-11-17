@@ -358,9 +358,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             let domainObject = new Domain(domain_id, domain_id, v, [url]);
             domainObject.isCustom = true;
             this.dataService.domains.push(domainObject);
-        } else {
-            // use specified custom domain url
-            url = exists.urls[0];
         }
 
         this.newLayer(domainVersionID, url, obj);
