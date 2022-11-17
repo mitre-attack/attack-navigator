@@ -340,7 +340,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * Create a new layer from URL
      */
-    newLayerFromURL(loadData: any) {
+    newLayerFromURL(loadData: any, obj: any = undefined) {
         let domain_id = loadData.identifier.toLowerCase();
         let domainVersionID = this.dataService.getDomainVersionID(domain_id, loadData.version);
 
@@ -350,7 +350,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
         // create domain object
         let url = new URL(loadData.url);
-        let v: Version = new Version(`ATT&CK v${loadData.version}`, loadData.version);
+        let v: Version = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
         let domainObject = new Domain(domain_id, domain_id, v, [url.toString()]);
 
         // bypass domain checks to allow users to create a valid domain identifier
@@ -359,7 +359,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // add custom domain to list of domains
         this.dataService.domains.push(domainObject);
 
-        this.newLayer(domainVersionID);
+        this.newLayer(domainVersionID, obj);
     }
 
     validateInput(loadData: any, domainID: string): boolean {
@@ -392,7 +392,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * Create a new layer in the given domain/version
      */
-    newLayer(domainVersionID: string) {
+    newLayer(domainVersionID: string, obj: any = undefined) {
         // load domain data, if not yet loaded
         if (!this.dataService.getDomain(domainVersionID).dataLoaded) {
             this.dataService.loadDomainData(domainVersionID, true);
@@ -403,6 +403,11 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);
+
+        if (obj) {
+            // restore the VM from the given string
+            vm.deSerialize(obj);
+        }
         vm.loadVMData();
         this.openTab(name, vm, true, true, true, true)
     }
@@ -583,7 +588,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     layerUpgrade(oldViewModel: ViewModel, serialized: any, replace: boolean, defaultLayers: boolean = false): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!defaultLayers) { 
-            this.versionUpgradeDialog(oldViewModel).then( (versions) => {
+            this.versionUpgradeDialog(oldViewModel)
+                .then((versions) => {
                     if (versions) { // user upgraded to latest version
                         // create and open the latest version
                         let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
@@ -676,18 +682,30 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * and adds the properties to a new viewModel, and loads that viewmodel into a new layer.
      */
     readJSONFile(file: File) {
-        // var input = (<HTMLInputElement>document.getElementById("uploader"));
         var reader = new FileReader();
         let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
 
         reader.onload = (e) =>{
-            var string = String(reader.result);
+            var result = String(reader.result);
             try{
-                viewModel.deSerializeDomainVersionID(string);
-                if (!this.dataService.getDomain(viewModel.domainVersionID)) {
-                    throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
+                let obj = (typeof(result) == "string")? JSON.parse(result) : result
+                viewModel.deSerializeDomainVersionID(obj);
+                let isCustom = "customDataURL" in obj ? true : false;
+                if (!isCustom) {
+                    if (!this.dataService.getDomain(viewModel.domainVersionID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
+                    }
+                    this.layerUpgrade(viewModel, obj, true);
+                } else {
+                    // load custom data
+                    viewModel.deSerialize(obj);
+                    this.openTab("new layer", viewModel, true, true, true, true);
+                    this.newLayerFromURL({
+                        'url': obj['customDataURL'],
+                        'version': viewModel.version,
+                        'identifier': viewModel.domain
+                    }, obj);
                 }
-                this.layerUpgrade(viewModel, string, true);
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);

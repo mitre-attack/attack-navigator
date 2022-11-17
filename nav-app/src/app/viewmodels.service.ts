@@ -1253,7 +1253,7 @@ export class ViewModel {
         rep.domain = domain.domain_identifier;
         if (domain.isCustom) {
             // custom data url
-            rep.dataURLs = domain.urls;
+            rep.customDataURL = domain.urls[0];
         }
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
