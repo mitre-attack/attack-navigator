@@ -348,18 +348,22 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let valid = this.validateInput(loadData, domainVersionID);
         if (!valid) return;
 
-        // create domain object
-        let url = new URL(loadData.url);
-        let v: Version = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
-        let domainObject = new Domain(domain_id, domain_id, v, [url.toString()]);
+        let custom_domains = this.dataService.domains.filter(d => d.isCustom);
+        let exists = custom_domains.find(d => d.id === domainVersionID);
+        let url = new URL(loadData.url).toString();
 
-        // bypass domain checks to allow users to create a valid domain identifier
-        // alert("WARNING: creating a new layer via URL will automatically bypass domain checks. Objects from multiple domains may be displayed.")
-        domainObject.isCustom = true;
-        // add custom domain to list of domains
-        this.dataService.domains.push(domainObject);
+        if (!exists) {
+            // create new custom domain object
+            let v: Version = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
+            let domainObject = new Domain(domain_id, domain_id, v, [url]);
+            domainObject.isCustom = true;
+            this.dataService.domains.push(domainObject);
+        } else {
+            // use specified custom domain url
+            url = exists.urls[0];
+        }
 
-        this.newLayer(domainVersionID, url.toString(), obj);
+        this.newLayer(domainVersionID, url, obj);
     }
 
     validateInput(loadData: any, domainVersionID: string): boolean {
