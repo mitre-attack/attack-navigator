@@ -358,6 +358,7 @@ export class ViewModel {
     domainVersionID: string; // layer domain & version
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
+    bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
 
     filters: Filter;
 
@@ -1444,6 +1445,10 @@ export class ViewModel {
                 l.deSerialize(link);
                 if (l.valid()) this.links.push(l);
             }
+        }
+        // add custom data URL
+        if ("customDataURL" in obj) {
+            this.bundleURL = obj.customDataURL;
         }
         if ("layout" in obj) {
             this.layout.deserialize(obj.layout);

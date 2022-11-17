@@ -114,6 +114,14 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                     placeholder="version"
                                     [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
                             </mat-form-field>
+
+                            <!-- bundle URL (uneditable) -->
+                            <mat-form-field *ngIf="viewModel.bundleURL">
+                                <input matInput readonly disabled
+                                    type="text"
+                                    placeholder="collection/bundle url"
+                                    [(ngModel)]="viewModel.bundleURL" />
+                            </mat-form-field>
                     </div>
                     <div class="layer-data">
                         <!-- layer metadata -->
