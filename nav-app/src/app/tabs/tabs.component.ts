@@ -359,10 +359,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // add custom domain to list of domains
         this.dataService.domains.push(domainObject);
 
-        this.newLayer(domainVersionID, obj);
+        this.newLayer(domainVersionID, url.toString(), obj);
     }
 
-    validateInput(loadData: any, domainID: string): boolean {
+    validateInput(loadData: any, domainVersionID: string): boolean {
         try {
             // validate URL
             let url = new URL(loadData.url);
@@ -372,8 +372,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 throw {message: "version is not a number"};
             }
 
-            // validate domain is unique
-            let err = this.dataService.getDomain(domainID);
+            // validate domain is unique from official ATT&CK data
+            let attack_domains = this.dataService.domains.filter(d => !d.isCustom);
+            let err = attack_domains.find(d => d.id === domainVersionID);
             if (err) {
                 throw {message: `the domain and version specified conflict with an existing set of ATT&CK data (${err.name} ${err.version.name})`};
             }
@@ -392,7 +393,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * Create a new layer in the given domain/version
      */
-    newLayer(domainVersionID: string, obj: any = undefined) {
+    newLayer(domainVersionID: string, customURL: string = undefined, obj: any = undefined) {
         // load domain data, if not yet loaded
         if (!this.dataService.getDomain(domainVersionID).dataLoaded) {
             this.dataService.loadDomainData(domainVersionID, true);
@@ -404,6 +405,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);
 
+        if (customURL) {
+            vm.bundleURL = customURL;
+        }
         if (obj) {
             // restore the VM from the given string
             vm.deSerialize(obj);
