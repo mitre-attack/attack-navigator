@@ -348,18 +348,24 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let valid = this.validateInput(loadData, domainVersionID);
         if (!valid) return;
 
-        let custom_domains = this.dataService.domains.filter(d => d.isCustom);
-        let exists = custom_domains.find(d => d.id === domainVersionID);
+        let exists = this.dataService.domains.find(d => d.isCustom && d.id === domainVersionID);
         let url = new URL(loadData.url).toString();
 
         if (!exists) {
+            // create or retrieve version
+            let v: Version = this.dataService.versions.find(v => v.number == loadData.version);
+            if (!v) {
+                v = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
+                this.dataService.versions.push(v);
+            }
+
             // create new custom domain object
-            let v: Version = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
             let domainObject = new Domain(domain_id, domain_id, v, [url]);
             domainObject.isCustom = true;
             this.dataService.domains.push(domainObject);
-        }
+        } 
 
+        this.loadData = {url: undefined, version: undefined, identifier: undefined}; // reset fields
         this.newLayer(domainVersionID, url, obj);
     }
 
@@ -373,12 +379,13 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 throw {message: "version is not a number"};
             }
 
-            // validate domain is unique from official ATT&CK data
-            let attack_domains = this.dataService.domains.filter(d => !d.isCustom);
-            let err = attack_domains.find(d => d.id === domainVersionID);
-            if (err) {
-                throw {message: `the domain and version specified conflict with an existing set of ATT&CK data (${err.name} ${err.version.name})`};
+            // validate domainVersionID is unique
+            let exists = this.dataService.domains.find(d => d.id == domainVersionID);
+            // Note: if a user inputs the same domain, version, AND url, do not check for collisions, just reload the custom dataset
+            if (exists && !(exists.isCustom && exists.urls[0] == url.toString())) {
+                throw {message: `the domain and version specified conflict with an existing set of ATT&CK data (${exists.name} ${exists.version.name})`};
             }
+
             return true;
         } catch (err) {
             console.error(err);

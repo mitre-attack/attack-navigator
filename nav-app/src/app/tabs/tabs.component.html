@@ -155,7 +155,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <div>
-                                    <em>*Versions prior to {{ds.versions[ds.versions.length - 1].name}} are not supported by Navigator v{{nav_version}}.</em>
+                                    <em>* Official ATT&CK Versions prior to {{ds.lowestSupportedVersion.name}} are not supported by Navigator v{{nav_version}}.</em>
                                 </div>
                             </td>
 
@@ -172,7 +172,7 @@
                                 </mat-form-field>
                                 <mat-form-field>
                                     <input type="text" matInput placeholder="Domain" [(ngModel)]="loadData.identifier"/>
-                                    <mat-hint>Domain identifier (e.g. enterprise-attack)</mat-hint>
+                                    <mat-hint>Domain identifier (e.g. defending-iaas)</mat-hint>
                                 </mat-form-field>
                             </td>
                         </tr>
