@@ -216,6 +216,7 @@ export class DataService {
 
     // URLs in case config file doesn't load properly
     private latestVersion: Version = { name: "ATT&CK v12", number: "12" };
+    private lowestSupportedVersion: Version;
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
@@ -250,6 +251,8 @@ export class DataService {
             let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
+
+        this.lowestSupportedVersion = this.versions[this.versions.length-1];
     }
 
     /**
