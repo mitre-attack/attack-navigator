@@ -366,7 +366,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         } 
 
         this.loadData = {url: undefined, version: undefined, identifier: undefined}; // reset fields
-        this.newLayer(domainVersionID, url, obj);
+        this.newLayer(domainVersionID, obj);
     }
 
     validateInput(loadData: any, domainVersionID: string): boolean {
@@ -401,9 +401,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     /**
      * Create a new layer in the given domain/version
      */
-    newLayer(domainVersionID: string, customURL: string = undefined, obj: any = undefined) {
+    newLayer(domainVersionID: string, obj: any = undefined) {
         // load domain data, if not yet loaded
-        if (!this.dataService.getDomain(domainVersionID).dataLoaded) {
+        let domain = this.dataService.getDomain(domainVersionID);
+        if (!domain.dataLoaded) {
             this.dataService.loadDomainData(domainVersionID, true);
         }
 
@@ -413,8 +414,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);
 
-        if (customURL) {
-            vm.bundleURL = customURL;
+        if (domain.isCustom) {
+            vm.bundleURL = domain.urls[0];
         }
         if (obj) {
             // restore the VM from the given string
