@@ -348,25 +348,38 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let valid = this.validateInput(loadData, domainVersionID);
         if (!valid) return;
 
-        let exists = this.dataService.domains.find(d => d.isCustom && d.id === domainVersionID);
         let url = new URL(loadData.url).toString();
+        let subscription = this.http.get(url).subscribe({
+            next: (res) => {
+                let exists = this.dataService.domains.find(d => d.isCustom && d.id === domainVersionID);
+                if (!exists) {
+                    // create or retrieve version
+                    let v: Version = this.dataService.versions.find(v => v.number == loadData.version);
+                    if (!v) {
+                        v = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
+                        this.dataService.versions.push(v);
+                    }
+        
+                    // create new custom domain object
+                    let domainObject = new Domain(domain_id, domain_id, v, [url]);
+                    domainObject.isCustom = true;
+                    this.dataService.domains.push(domainObject);
+                } 
 
-        if (!exists) {
-            // create or retrieve version
-            let v: Version = this.dataService.versions.find(v => v.number == loadData.version);
-            if (!v) {
-                v = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
-                this.dataService.versions.push(v);
-            }
-
-            // create new custom domain object
-            let domainObject = new Domain(domain_id, domain_id, v, [url]);
-            domainObject.isCustom = true;
-            this.dataService.domains.push(domainObject);
-        } 
-
-        this.loadData = {url: undefined, version: undefined, identifier: undefined}; // reset fields
-        this.newLayer(domainVersionID, obj);
+                this.newLayer(domainVersionID, obj);
+            },
+            error: (err) => {
+                console.error(err)
+                if (err.status == 0) {
+                    // no response
+                    alert("ERROR retrieving data from " + url + ", check the javascript console for more information.")
+                } else {
+                    // response, but not a good one
+                    alert("ERROR retrieving data from " + url + ", check the javascript console for more information.")
+                }
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } // prevent memory leaks
+        })
     }
 
     validateInput(loadData: any, domainVersionID: string): boolean {
