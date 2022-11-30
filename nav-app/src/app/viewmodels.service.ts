@@ -420,7 +420,12 @@ export class ViewModel {
     }
 
     loadVMData() {
-        if (!this.domainVersionID || !this.dataService.getDomain(this.domainVersionID).dataLoaded) {
+        let domain = this.dataService.getDomain(this.domainVersionID);
+        if (domain.isCustom) {
+            this.bundleURL = domain.urls[0];
+        }
+
+        if (!this.domainVersionID || !domain.dataLoaded) {
             let self = this;
             this.dataService.onDataLoad(this.domainVersionID, function() {
                 self.initTechniqueVMs()
@@ -428,7 +433,7 @@ export class ViewModel {
             });
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainVersionID));
+            this.filters.initPlatformOptions(domain);
         }
     }
 

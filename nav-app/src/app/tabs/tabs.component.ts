@@ -427,9 +427,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);
 
-        if (domain.isCustom) {
-            vm.bundleURL = domain.urls[0];
-        }
         if (obj) {
             // restore the VM from the given string
             vm.deSerialize(obj);
