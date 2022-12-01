@@ -422,7 +422,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         }
 
         // find non conflicting name
-        let name = this.getUniqueLayerName("layer")
+        let name;
+        if (obj && 'name' in obj && obj['name']) {
+            name = obj['name']
+        } else name = this.getUniqueLayerName("layer")
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);

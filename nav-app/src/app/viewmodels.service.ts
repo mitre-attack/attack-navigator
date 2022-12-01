@@ -359,6 +359,7 @@ export class ViewModel {
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
     bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
+    loaded: boolean = false; // whether or not techniqueVMs are loaded
 
     filters: Filter;
 
@@ -435,6 +436,7 @@ export class ViewModel {
             this.initTechniqueVMs();
             this.filters.initPlatformOptions(domain);
         }
+        this.loaded = true;
     }
 
     initTechniqueVMs() {
@@ -1060,6 +1062,7 @@ export class ViewModel {
      * @returns {Tactic[]} filtered tactics
      */
     public filterTactics(tactics: Tactic[], matrix: Matrix): Tactic[] {
+        if (!this.loaded) return; // still initializing technique VMs
         return tactics.filter((tactic: Tactic) => this.filterTechniques(tactic.techniques, tactic, matrix).length > 0);
     }
 
