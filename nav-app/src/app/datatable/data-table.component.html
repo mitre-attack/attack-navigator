@@ -561,23 +561,25 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
     <mat-drawer-content>
         <div class="matrices" #scrollRef>
             <div oncontextmenu="return false">
-                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainVersionID).dataLoaded">
+                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainVersionID) || !dataService.getDomain(viewModel.domainVersionID).dataLoaded; else loadMatrices">
                     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
                 </div>
-                        <div class="matrices-columns">
-                            <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainVersionID).matrices">
-                                <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
-                                <div *ngIf="viewModel.layout.layout == 'side'">
-                                    <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
-                                </div>
-                                <div *ngIf="viewModel.layout.layout == 'flat'">
-                                    <matrix-flat [matrix]="matrix" [viewModel]="viewModel"></matrix-flat>
-                                </div>
-                                <div *ngIf="viewModel.layout.layout == 'mini'">
-                                    <matrix-mini [matrix]="matrix" [viewModel]="viewModel"></matrix-mini>
-                                </div>
+                <ng-template #loadMatrices>
+                    <div class="matrices-columns">
+                        <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainVersionID).matrices">
+                            <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                            <div *ngIf="viewModel.layout.layout == 'side'">
+                                <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
+                            </div>
+                            <div *ngIf="viewModel.layout.layout == 'flat'">
+                                <matrix-flat [matrix]="matrix" [viewModel]="viewModel"></matrix-flat>
+                            </div>
+                            <div *ngIf="viewModel.layout.layout == 'mini'">
+                                <matrix-mini [matrix]="matrix" [viewModel]="viewModel"></matrix-mini>
                             </div>
                         </div>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </mat-drawer-content>
