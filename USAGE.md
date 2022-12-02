@@ -22,9 +22,9 @@ repository</a>.
 # Layers
 
 A layer constitutes a view of the tactics and techniques matrix for a specific technology domain. In more recent
-versions, the Navigator can manipulate either the Enterprise, Mobile, or ICS ATT&CK technology domain knowledge bases.
-Within a technology domain, the Navigator allows you to filter your view of the matrix in a variety of ways, displaying
-the tactics and techniques that are important to you.
+versions, the Navigator can manipulate the Enterprise, Mobile, or ICS ATT&CK technology domain knowledge bases, as
+well as custom ATT&CK collections or STIX bundles. Within a technology domain, the Navigator allows you to filter 
+your view of the matrix in a variety of ways, displaying the tactics and techniques that are important to you.
 
 You can view the definition of any technique in the visible matrix by right-clicking on the technique and selecting
 "view technique" in the pop-up menu. A new browser tab will be opened displaying the definition of the technique. In this
@@ -51,9 +51,14 @@ described <a href="layers/">here</a>.
 ## Creating New Layers
 
 To create a new layer, open a new tab and click the "Create New Layer" dropdown. The quick access buttons will create a
-layer with the current version of ATT&CK. Past versions of ATT&CK compatible with the Navigator are accessible in the
-"More Options" dropdown. This interface allows you to specify the desired version and domain for the new layer. Note
-that for performance reasons, the Navigator currently imposes a limit of ten (10) active layers at any given point in
+layer with the current version of ATT&CK. Past versions of ATT&CK that are compatible with the Navigator are accessible in the 
+"More Options" dropdown. This interface allows you to create a new layer from one of the following options:
+- Specifying the desired ATT&CK version and domain for the new layer; or
+- Specifying the URL of a custom collection or STIX bundle for the new layer. For example, the URL of a bundle hosted on GitHub:
+<code>https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json</code>. Note: the collection or
+STIX bundle must have a Matrix object in order to display techniques in the Navigator.
+
+For performance reasons, the Navigator currently imposes a limit of ten (10) active layers at any given point in
 time.
 
 ## Saving and Loading Layers
@@ -66,7 +71,8 @@ layer name, layer description, view configuration.
 
 Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer you've worked on previously. To
 do so, open a new tab and open the "Open Existing Layer" panel. Then click "Upload from local", and select your saved
-configuration file. Doing so will restore your saved layer to the ATT&CK Navigator. This interface also has a "load from
+configuration file. Doing so will restore your saved layer to the ATT&CK Navigator. Layers generated from a custom collection 
+or STIX bundle will be restored from the URL the layer was created with. This interface also has a "load from
 URL" input allowing you to open a layer json from a remote source.
 
 ## Upgrading a Layer to the Current Version
