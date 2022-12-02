@@ -87,27 +87,38 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Open initial tabs on application load
      */
      async loadTabs(defaultLayers) {
-            let fragment_value = this.getNamedFragmentValue("layerURL");
+        let bundle_url = this.getNamedFragmentValue("bundleURL")[0];
+        let bundle_version = this.getNamedFragmentValue("version")[0];
+        let bundle_domain = this.getNamedFragmentValue("domain")[0];
+        let fragment_value = this.getNamedFragmentValue("layerURL");
 
-            if (fragment_value && fragment_value.length > 0) {
-                let first = true;
-                let self = this;
+        if (bundle_url && bundle_url.length > 0 && bundle_version && bundle_domain && bundle_domain.length > 0) {
+            // load base data from URL
+            let self = this;
+            await self.newLayerFromURL({
+                'url': bundle_url,
+                'version': bundle_version,
+                'identifier': bundle_domain
+            });
+        } else if (fragment_value && fragment_value.length > 0) {
+            // load layer from URL
+            let first = true;
+            let self = this;
 
-                    for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
-                        var url = urls_1[_i];
-                        await self.loadLayerFromURL(url, first, true);
-                        first = false;
-                    }
-            } else if (defaultLayers["enabled"]) {
-                let first = true;
-                let self = this;
-                    for (let url of defaultLayers["urls"]) {
-                        console.log("loading", url, first)
-                        await self.loadLayerFromURL(url, first, true);
-                        first = false;
-                        console.log("done")
-                    }
+            for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
+                var url = urls_1[_i];
+                await self.loadLayerFromURL(url, first, true);
+                first = false;
             }
+        } else if (defaultLayers["enabled"]) {
+            // load any default layers from config
+            let first = true;
+            let self = this;
+            for (let url of defaultLayers["urls"]) {
+                await self.loadLayerFromURL(url, first, true);
+                first = false;
+            }
+        }
     }
 
     /**
