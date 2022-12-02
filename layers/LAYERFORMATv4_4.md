@@ -9,7 +9,7 @@ This document describes **Version 4.4** of the MITRE ATT&CK Navigator Layer file
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack", "mobile-attack", "ics-attack" |
-| customDataURL | String | No | n/a | The URL of the Collection or STIX bundle from which the layer was built. |
+| customDataURL | String | No | n/a | The URL of the custom Collection or STIX bundle from which the layer was built. |
 | filters | Filter object | No | | See Filter object definition below
 | sorting | Number | No | 0 | Specifies the ordering of the techniques within each tactic category as follows: <br>**0**: sort ascending alphabetically by technique name <br>**1**: sort descending alphabetically by technique name <br>**2**: sort ascending by technique score <br>**3**: sort descending by technique score |
 | layout | Layout object | No | | See definition of Layout object below |
@@ -106,7 +106,7 @@ The following example illustrates the layer file format:
 {
     "name": "example layer",
     "versions": {
-        "attack": "11",
+        "attack": "12",
         "navigator": "4.8.0",
         "layer": "4.4"
     },
