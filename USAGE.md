@@ -54,8 +54,9 @@ To create a new layer, open a new tab and click the "Create New Layer" dropdown.
 layer with the current version of ATT&CK. Past versions of ATT&CK that are compatible with the Navigator are accessible in the 
 "More Options" dropdown. This interface allows you to create a new layer from one of the following options:
 - Specifying the desired ATT&CK version and domain for the new layer; or
-- Specifying the URL of a custom collection or STIX bundle for the new layer (Note: this does not support integration with
-the ATT&CK Workbench)
+- Specifying the URL of a custom collection or STIX bundle for the new layer. For example, the URL of a bundle hosted on GitHub:
+<code>https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json</code>. Note: the collection or
+STIX bundle must have a Matrix object in order to display techniques in the Navigator.
 
 For performance reasons, the Navigator currently imposes a limit of ten (10) active layers at any given point in
 time.
