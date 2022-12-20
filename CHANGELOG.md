@@ -9,10 +9,14 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# 4.8.0 - Changes staged on develop
+# 4.8.0 - 20 December 2022
 
 ## New Features
-- Added the ability to create a layer from a custom [Collection](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collections) or Stix Bundle. Users can specify the URL, version, and domain of a custom bundle in the Create New Layer interface. This will load the base data from the file at the given URL into the Navigator. Layers created from a custom collection/STIX bundle support all of the standard layer features (annotations, filter/sort, download/upload, layer-layer operations, etc.), apart from upgrading the layer to a newer ATT&CK version. See issue [#499](https://github.com/mitre-attack/attack-navigator/issues/499). 
+- Added the ability to create a layer from a custom [Collection](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collections) or Stix Bundle. Users can specify the URL, version, and domain of a custom bundle in the Create New Layer interface. This will load the base data from the file at the given URL into the Navigator. Layers created from a custom collection/STIX bundle support all of the standard layer features (annotations, filter/sort, download/upload, layer-layer operations, etc.), apart from upgrading the layer to a newer ATT&CK version. See issue [#499](https://github.com/mitre-attack/attack-navigator/issues/499).
+
+## Layer File Format Changes
+
+Layer file format updated to version 4.4. This update adds support for layers created with a custom collection or STIX bundle; the optional `customDataURL` field contains the URL from which custom data was loaded. This update is fully backwards compatible with layer format v4.3 since the added field is optional. See [layers/LAYERFORMATv4_4.md](layers/LAYERFORMATv4_4.md) for the full specification.
 
 # 4.7.1 - 8 November 2022
 
