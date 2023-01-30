@@ -25,7 +25,6 @@ import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { HelpComponent } from './help/help.component';
-import { ExporterComponent } from './exporter/exporter.component';
 import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.component';
 import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component';
 import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
@@ -49,6 +48,7 @@ import { LayerInformationComponent } from './layer-information/layer-information
 import { ChangelogComponent } from './changelog/changelog.component';
 import { MatTabsModule } from "@angular/material/tabs";
 import { ListInputComponent } from './list-input/list-input.component';
+import { SvgExportComponent } from './svg-export/svg-export.component';
 
 
 @NgModule({
@@ -57,7 +57,6 @@ import { ListInputComponent } from './list-input/list-input.component';
     DataTableComponent,
     TabsComponent,
     HelpComponent,
-    ExporterComponent,
     TechniqueCellComponent,
     MatrixSideComponent,
     MatrixFlatComponent,
@@ -73,6 +72,7 @@ import { ListInputComponent } from './list-input/list-input.component';
     LayerInformationComponent,
     ChangelogComponent,
     ListInputComponent,
+    SvgExportComponent,
   ],
   imports: [
     BrowserModule,
@@ -115,6 +115,6 @@ import { ListInputComponent } from './list-input/list-input.component';
     Title
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ VersionUpgradeComponent, HelpComponent, ExporterComponent ]
+  entryComponents: [ VersionUpgradeComponent, HelpComponent, SvgExportComponent ]
 })
 export class AppModule { }

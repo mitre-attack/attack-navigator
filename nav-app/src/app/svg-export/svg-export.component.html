@@ -1,0 +1,240 @@
+<div class="controlsContainer">
+    <ul class="control-sections">
+        <li class="iewarning" *ngIf="isIE()">
+            Warning: this interface is not fully compatible with your browser. For best results please switch to Edge, Chrome, or Firefox.
+        </li>
+        <li>
+            <div class="control-row-item noselect">
+                <!-- {{config.unit}} -->
+                <div class="control-row-button"
+                     (click)="unitEnum = (unitEnum + 1) % 3; config.unit = ['in', 'cm', 'px'][unitEnum]; buildSVG()"
+                     matTooltipPosition="below"
+                     matTooltip="toggle measurement unit">
+                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                        <text x="4px" y="50%" dominant-baseline="middle" style="font-size: 14px; font-weight: bold; font-family:monospace">{{config.unit}}</text>
+                    </svg>
+                </div>
+            </div>
+
+        </li>
+        <li>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'imgsize' ? 'imgsize' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="image size">
+                    <span class="material-icons">photo_size_select_large</span>
+                </div>
+                <div class="dropdown-container size left" *ngIf="currentDropdown === 'imgsize'">
+                    <ul>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="width"
+                                       step="0.01"
+                                       [(ngModel)]="config.width"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="height"
+                                       step="0.01"
+                                       [(ngModel)]="config.height"
+                                       (input)="buildSVG()" />
+                                <span matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="header height"
+                                       step="0.01"
+                                       [disabled]="!config.showHeader"
+                                       [(ngModel)]="config.headerHeight"
+                                       (input)="buildSVG()" />
+                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'font' ? 'font' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="text">
+                    <span class="material-icons">format_size</span>
+                </div>
+                <div class="dropdown-container font left" *ngIf="currentDropdown === 'font'">
+                    <ul>
+                        <li>
+                            <mat-form-field>
+                                <mat-select placeholder="font" [(ngModel)]="config.font" (selectionChange)="buildSVG()">
+                                    <mat-option value="serif">serif</mat-option>
+                                    <mat-option value="sans-serif">sans-serif</mat-option>
+                                    <mat-option value="monospace">monospace</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="showLegendContainer()? currentDropdown = currentDropdown !== 'legend' ? 'legend' : null : null;"
+                     matTooltipPosition="below"
+                     matTooltip="legend"
+                     [style.color]="showLegendContainer() ? 'inherit' : '#aaaaaa'">
+                    <span class="material-icons">view_list</span>
+                </div>
+                <div class="dropdown-container legend left" *ngIf="currentDropdown === 'legend'">
+                    <ul>
+                        <li>
+                            <input [id]="uid + 'legendDockedCheckbox'"type="checkbox" class="checkbox-custom" [(ngModel)]="config.legendDocked" (change)="buildSVG()">
+                            <label [for]="uid + 'legendDockedCheckbox'" class="checkbox-custom-label noselect">
+                                dock legend in header
+                            </label>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend X position"
+                                       [disabled]="config.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="config.legendX"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend Y position"
+                                       [disabled]="config.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="config.legendY"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend width"
+                                       [disabled]="config.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="config.legendWidth"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="legend height"
+                                       [disabled]="config.legendDocked"
+                                       step="1"
+                                       [(ngModel)]="config.legendHeight"
+                                       (input)="buildSVG()" />
+                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                            </mat-form-field>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                     (click)="currentDropdown = currentDropdown !== 'visibility' ? 'visibility' : null;"
+                     matTooltipPosition="below"
+                     matTooltip="display settings">
+                    <span class="material-icons">visibility</span>
+                </div>
+                <div class="dropdown-container visibility left" *ngIf="currentDropdown === 'visibility'">
+                    <ul>
+                        <li>
+                            <input [id]="uid+'checkboxheader'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.showHeader" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxheader'" class="checkbox-custom-label noselect">show header</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxAbout'" type="checkbox" [disabled]="(!hasName() && !hasDescription()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showAbout" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxAbout'" class="checkbox-custom-label noselect" [class.disabled]="(!hasName() && !hasDescription()) || !config.showHeader">show about</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxDomain'" type="checkbox" [disabled]="(!hasDomain()) || !config.showHeader" class="checkbox-custom" [(ngModel)]="config.showDomain" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxDomain'" class="checkbox-custom-label noselect" [class.disabled]="(!hasDomain()) || !config.showHeader">show domain</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxfilters'" type="checkbox" class="checkbox-custom" [disabled]="!config.showHeader"[(ngModel)]="config.showFilters" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxfilters'" class="checkbox-custom-label noselect" [class.disabled]="!config.showHeader">show filters</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxlegend'" type="checkbox" [disabled]="!hasLegendItems()" class="checkbox-custom" [(ngModel)]="config.showLegend" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxlegend'" class="checkbox-custom-label noselect" [class.disabled]="!hasLegendItems()">show legend</label>
+                        </li>
+                        <li>
+                            <input [id]="uid+'checkboxGradient'" type="checkbox" [disabled]="!hasScores" class="checkbox-custom" [(ngModel)]="config.showGradient" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxGradient'" class="checkbox-custom-label noselect" [class.disabled]="!hasScores">show gradient score</label>
+                        </li>
+                        <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
+                            <mat-form-field>
+                                <mat-select placeholder="sub-techniques" [(ngModel)]="config.showSubtechniques" (selectionChange)="buildSVG()">
+                                    <mat-option value="all">show all</mat-option>
+                                    <mat-option value="expanded">show expanded</mat-option>
+                                    <mat-option value="none">show none</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                        <!-- <li>
+                            <input [id]="uid+'checkboxtcount'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.showTechniqueCount" (change)="buildSVG()">
+                            <label [for]="uid+'checkboxtcount'" class="checkbox-custom-label noselect">show technique count</label>
+                        </li> -->
+                        <li>
+                            <input [id]="uid+'tableBorderInput'" class="colorpicker" [(colorPicker)]="config.tableBorderColor" [style.background]="config.tableBorderColor" cpPosition="bottom" [cpPresetColors]="['#6B7279', '#aaaaaa', '#205B8F', '#B9482D', '#ffffff', '#000000']"
+                             (colorPickerSelect)="buildSVG()" [cpOKButton]="true" [cpOKButtonText]="'apply'" [cpCancelButton]="true" style="width: 14px; margin: 5px 0 0 5px;">
+                             <label [for]="uid+'tableBorderInput'" class="noselect">cell border</label>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="control-row-item">
+                <div class="control-row-button noselect"
+                [id]="'download-button' + viewModel.uid"
+                    (click)="downloadSVG()"
+                    matTooltipPosition="below"
+                    matTooltip="download SVG">
+                    <span class="material-icons" alt="save layer">file_download</span>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+<div class="svgcontainer" [id]="'svgInsert' + viewModel.uid">
+    loading...
+</div>
+
+<div class="close-button">
+    <button mat-button mat-dialog-close>close</button>
+</div>

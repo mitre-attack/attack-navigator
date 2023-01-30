@@ -91,7 +91,7 @@ body {
 
 // $inputFontSize: 10pt;
 // panel with controls
-.controlsContainer {
+.controls-container {
   @include adaptive-color("background-color", color(panel-dark), color(dark-2));
 
   // width: 100%;
