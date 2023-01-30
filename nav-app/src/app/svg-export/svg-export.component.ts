@@ -39,17 +39,21 @@ const svgConfigDefaults: any = {
     encapsulation: ViewEncapsulation.None
 })
 export class SvgExportComponent implements OnInit {
+    // vm to render
+    public viewModel: ViewModel;
     
-    public currentDropdown: string = null;
-    viewModel: ViewModel;
-    public config: any = {}
+    // svg configuration
+    public config: any = {};
+    public hasScores: boolean;
+    private svgDivName: string = "svgInsert_tmp";
+    private buildSVGDebounce: boolean = false;
     
-    public isIE() {
-        return is.ie();
-    }
+    // browser compatibility
+    public get isIE() { return is.ie(); }
 
-    private svgDivName = "svgInsert_tmp"
+    public currentDropdown: string = null;
     unitEnum = 0; //counter for unit change ui element
+
     constructor(private dialogRef: MatDialogRef<SvgExportComponent>, 
                 private dataService: DataService,
                 @Inject(MAT_DIALOG_DATA) public data) {
@@ -97,7 +101,6 @@ export class SvgExportComponent implements OnInit {
     hasName(): boolean {return this.viewModel.name.length > 0}
     hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
-    hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
     //above && user preferences
@@ -112,7 +115,6 @@ export class SvgExportComponent implements OnInit {
     showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
     showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
-    buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
