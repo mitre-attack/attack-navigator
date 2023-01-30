@@ -1,16 +1,39 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
-import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
+
 import * as is from 'is_js';
 import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
 
+const svgConfigDefaults: any = {
+    "width": 11,
+    "height": 8.5,
+    "headerHeight": 1,
+    "unit": "in",
+    "showSubtechniques": "expanded",
+    "font": "sans-serif",
+    "tableBorderColor": "#6B7279",
+    "showHeader": true,
+    "legendDocked": true,
+    "legendX": 0,
+    "legendY": 0,
+    "legendWidth": 2,
+    "legendHeight": 1,
+    "showLegend": true,
+    "showGradient": true,
+    "showFilters": true,
+    "showAbout": true,
+    "showDomain": true,
+    "showAggregate": false,
+}
+
 @Component({
     selector: 'app-svg-export',
     templateUrl: './svg-export.component.html',
-    styleUrls: ['./svg-export.component.scss']
+    styleUrls: ['./svg-export.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class SvgExportComponent implements OnInit {
     
@@ -25,36 +48,9 @@ export class SvgExportComponent implements OnInit {
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
     constructor(private dialogRef: MatDialogRef<SvgExportComponent>, 
-                private configService: ConfigService, 
                 private dataService: DataService,
                 @Inject(MAT_DIALOG_DATA) public data) {
-        this.config = { 
-            "width": 11,
-            "height": 8.5,
-            "headerHeight": 1,
-
-            "unit": "in",
-
-            "showSubtechniques": "expanded",
-
-            "font": 'sans-serif',
-            "tableBorderColor": "#6B7279",
-
-            "showHeader": true,
-
-            "legendDocked": true,
-            "legendX": 0,
-            "legendY": 0,
-            "legendWidth": 2,
-            "legendHeight": 1,
-
-            "showLegend": true,
-            "showGradient": true,
-            "showFilters": true,
-            "showAbout": true,
-            "showDomain": true,
-            "showAggregate": false,
-        }
+        this.config = svgConfigDefaults;
     }
 
     ngOnInit() {
