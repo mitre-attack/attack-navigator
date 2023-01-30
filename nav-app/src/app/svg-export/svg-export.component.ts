@@ -1,7 +1,10 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ViewModel, TechniqueVM } from "../viewmodels.service";
-import { Technique, DataService, Tactic, Matrix } from '../data.service';
+import { ViewModel } from "../viewmodels.service";
+import { DataService, Matrix } from '../data.service';
+import { RenderableMatrix } from './renderable-objects/renderable-matrix';
+import { RenderableTactic } from './renderable-objects/renderable-tactic';
+import { RenderableTechnique } from './renderable-objects/renderable-technique';
 
 import * as is from 'is_js';
 import * as tinycolor from 'tinycolor2';
@@ -889,92 +892,3 @@ export class SvgExportComponent implements OnInit {
         return res
     }
 }
-
-
-
-class RenderableMatrix {
-    public readonly matrix: Matrix;
-    public readonly tactics: RenderableTactic[] = [];
-    public get height() {
-        let heights = this.tactics.map(function(tactic: RenderableTactic) { return tactic.height; })
-        return Math.max(...heights);
-    }
-    constructor(matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
-        this.matrix = matrix;
-        let filteredTactics = viewModel.filterTactics(matrix.tactics, matrix);
-        for (let tactic of filteredTactics) {
-            this.tactics.push(new RenderableTactic(tactic, matrix, viewModel, renderConfig));
-        }
-    }
-}
-
-class RenderableTactic {
-    public readonly tactic: Tactic;
-    public readonly techniques: RenderableTechnique[] = [];
-    public readonly subtechniques: RenderableTechnique[] = [];
-    public readonly height: number;
-    constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
-        this.tactic = tactic;
-        let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
-        let yPosition = 1; //start at 1 to make space for tactic label
-        for (let technique of filteredTechniques) {
-            let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
-            let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix);
-            
-            let showSubtechniques = renderConfig.showSubtechniques == "all" || (renderConfig.showSubtechniques == "expanded" && techniqueVM.showSubtechniques)
-
-            this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
-
-            if (filteredSubtechniques.length > 0 && showSubtechniques) {
-                for (let subtechnique of filteredSubtechniques) {
-                    this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));
-                }
-            }
-        }
-        this.height = yPosition;
-    }
-}
-
-class RenderableTechnique {
-    public readonly yPosition: number;
-    public readonly technique: Technique;
-    public readonly tactic: Tactic;
-    public readonly matrix: Matrix;
-    public readonly showSubtechniques;
-    private readonly viewModel: ViewModel;
-    constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques=false) {
-        this.yPosition = yPosition;
-        this.technique = technique;
-        this.tactic = tactic;
-        this.matrix = matrix;
-        this.viewModel = viewModel;
-        this.showSubtechniques = showSubtechniques;
-    }
-
-    public get fill() {
-        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
-            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
-            if (!techniqueVM.enabled) return "white";
-            if (techniqueVM.color) return techniqueVM.color;
-            if (this.viewModel.layout.showAggregateScores && techniqueVM.aggregateScoreColor) return techniqueVM.aggregateScoreColor;
-            if (techniqueVM.score) return techniqueVM.scoreColor;
-        } 
-        return "white"; //default
-    }
-
-    public get textColor() {
-        if (this.viewModel.hasTechniqueVM(this.technique, this.tactic)) {
-            let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
-            if (!techniqueVM.enabled) return "#aaaaaa";
-        }
-        return tinycolor.mostReadable(this.fill, ["white", "black"]); //default;
-    }
-
-    public get text() {
-        let text = [];
-        if (this.viewModel.layout.showID) text.push(this.technique.attackID);
-        if (this.viewModel.layout.showName) text.push(this.technique.name);
-        return text.join(": ")
-    }
-}
-
