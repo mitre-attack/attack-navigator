@@ -45,7 +45,7 @@ export class SvgExportComponent implements OnInit {
     // svg configuration
     public config: any = {};
     public hasScores: boolean;
-    private svgDivName: string = "svgInsert_tmp";
+    private svgElementID: string = "svgInsert_tmp";
     private buildSVGDebounce: boolean = false;
     
     // browser compatibility
@@ -62,7 +62,7 @@ export class SvgExportComponent implements OnInit {
 
     ngOnInit() {
         this.viewModel = this.data.vm;
-        this.svgDivName = "svgInsert" + this.viewModel.uid;
+        this.svgElementID = "svgInsert" + this.viewModel.uid;
         
         let self = this;
         //determine if the layer has any scores
@@ -82,28 +82,31 @@ export class SvgExportComponent implements OnInit {
                 }
             }
         }
+
         // dynamic legend height according to content;
         let legendSectionCount = 0;
         if (self.hasScores) legendSectionCount++;
         if (self.hasLegendItems()) legendSectionCount++;
-        self.config.legendHeight = 0.5 * legendSectionCount; 
+        self.config.legendHeight = 0.5 * legendSectionCount;
+
         //initial legend position for undocked legend
         this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
         this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
         if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
 
-        //put at the end of the function queue so that the page can render before building the svg
-        window.setTimeout(function() {self.buildSVG(self)}, 0)
+        // build SVG at end of fn queue to page can render before build
+        window.setTimeout(function() {
+            self.buildSVG(self)
+        }, 0);
     }
 
     //visibility of SVG parts
-    //assess data in viewModel
     hasName(): boolean {return this.viewModel.name.length > 0}
     hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
-    //above && user preferences
+    //above & user preferences
     showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
     showDomain(): boolean {return this.config.showDomain && this.hasDomain() && this.config.showHeader}
     showAggregate(): boolean {return this.viewModel.layout.showAggregateScores && this.config.showHeader}
@@ -114,30 +117,30 @@ export class SvgExportComponent implements OnInit {
     showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
     showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
     showLegendInHeader(): boolean {return this.config.legendDocked}
-    // showItemCount(): boolean {return this.config.showTechniqueCount}
-    buildSVG(self?, bypassDebounce=false): void {
-        if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
-        console.log("settings changed")
-        if (self.buildSVGDebounce && !bypassDebounce) {
-            // console.log("skipping debounce...")
-            return;
-        }
+    /** Build the SVG */
+    public buildSVG(self?: any, bypassDebounce: boolean = false): void {
+        if (!self) self = this; // called from somewhere other than ngOnInit
+
+        // debounce
+        if (self.buildSVGDebounce && !bypassDebounce) return;
         if (!bypassDebounce) {
-            // console.log("debouncing...");
             self.buildSVGDebounce = true;
-            window.setTimeout(function() {self.buildSVG(self, true)}, 500)
+            window.setTimeout(function() {
+                self.buildSVG(self, true)
+            }, 500);
             return;
         }
         self.buildSVGDebounce = false;
 
-        console.log("building SVG");
-
-        //check preconditions, make sure they're in the right range
+        // calculate svg height and width
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
         let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); // console.log("width", width);
+        let svgWidth = width + margin.left + margin.right;
         let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); // console.log("height", height)
+        let svgHeight = height + margin.top + margin.bottom;
+
         let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); // console.log("headerHeight", headerHeight);
 
         let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
@@ -145,19 +148,19 @@ export class SvgExportComponent implements OnInit {
         let legendWidth = Math.max(self.convertToPx(self.config.legendWidth, self.config.unit), 10);
         let legendHeight = Math.max(self.convertToPx(self.config.legendHeight, self.config.unit), 10);
 
-        //remove previous graphic
-        let element = <HTMLElement>document.getElementById(self.svgDivName);
-        element.innerHTML = "";
+        // remove previous graphic
+        let svgElement: HTMLElement = document.getElementById(self.svgElementID);
+        svgElement.innerHTML = "";
 
-        let svg = d3.select("#" + self.svgDivName).append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+        // create new SVG
+        let svg = d3.select("#" + self.svgElementID).append("svg")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
             .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("id", "svg" + self.viewModel.uid) //Tag for downloadSVG
+            .attr("id", "svg" + self.viewModel.uid) // SVG download tag
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("font-family", self.config.font);
-        let stroke_width = 1;
 
         // ooooo ooooo            o888                                                 
         //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
@@ -840,33 +843,6 @@ export class SvgExportComponent implements OnInit {
     }
 
     /**
-     * Recenter the selected element's tspan elements
-     * @param  height [description]
-     * @param  self   [description]
-     */
-    recenter(text, height, self): void {
-        text.each(function() {
-            text.selectAll('tspan').each(function(d, i, els) {
-                let numTSpan = els.length;
-                let location = self.getSpacing(height, numTSpan)[i]
-
-                let tspan = d3.select(this)
-                    .attr("y", ( location))
-                    .attr("dy", "0")
-            })
-        })
-    }
-
-    // Capitalizes the first letter of each word in a string
-    toCamelCase(str){
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-
-    //following two functions are only used for iterating over tableconfig options: remove when tableconfig options are hardcoded in html
-    getKeys(obj) { return Object.keys(obj) }
-    type(obj) { return typeof(obj) }
-
-    /**
      * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
      * @param  dropdown the DOM node of the panel
      * @return          true if it would overflow
@@ -875,22 +851,5 @@ export class SvgExportComponent implements OnInit {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
-    }
-
-    /**
-     * Divide distance into divisions equidestant anchor points S.T they all have equal
-     * padding from each other and the beginning and end of the distance
-     * @param  distance  distance to divide
-     * @param  divisions number of divisions
-     * @return           number[] where each number corresponds to a division-center offset
-     */
-    getSpacing(distance: number, divisions: number): number[] {
-        distance = distance - 1; //1px padding for border
-        let spacing = distance/(divisions*2);
-        let res = []
-        for (let i = 1; i <= divisions*2; i+=2) {
-            res.push(1 + (spacing * i))
-        }
-        return res
     }
 }
