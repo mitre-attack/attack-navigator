@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel } from "../viewmodels.service";
-import { DataService, Matrix } from '../data.service';
+import { DataService } from '../data.service';
 import { ConfigService } from '../config.service';
 import { RenderableMatrix } from './renderable-objects/renderable-matrix';
 import { RenderableTactic } from './renderable-objects/renderable-tactic';
@@ -50,7 +50,7 @@ export class SvgExportComponent implements OnInit {
     private buildSVGDebounce: boolean = false;
 
     public currentDropdown: string = null;
-    public unitEnum: number = 0; //counter for unit change ui element
+    public unitEnum: number = 0; // counter for unit change ui element
     
     // browser compatibility
     public get isIE(): boolean { return is.ie(); }
@@ -169,21 +169,6 @@ export class SvgExportComponent implements OnInit {
         // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
         //                             o888                                            
 
-        // Essentially, the following functions brute force the optimal text arrangement for each cell 
-        // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
-        // in the cell text.
-
-        class HeaderSectionContent {
-            label: string;
-            // either string to display in box, or a callback to create complex content in the box
-            // callback function option takes params node, width, height, and appends data to node
-            data: string | Function;
-        }
-        class HeaderSection {
-            title: string;
-            contents: HeaderSectionContent[];
-        }
-
         let legend = {"title": "legend", "contents": []};
         if (self.hasScores && self.showGradient) legend.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
@@ -230,77 +215,6 @@ export class SvgExportComponent implements OnInit {
                 )
             }
         })
-
-        function descriptiveBox(group, sectionData: HeaderSection, boxWidth: number, boxHeight: number) {
-            let boxPadding = 5;
-            let boxGroup = group.append("g")
-                .attr("transform", `translate(0,${boxPadding})`);
-            // adjust height for padding
-            boxHeight -= 2 * boxPadding;
-            let outerbox = boxGroup.append("rect")
-                .attr("class", "header-box")
-                .attr("width", boxWidth)
-                .attr("height", boxHeight)
-                .attr("stroke", "black")
-                .attr("fill", "white")
-                .attr("rx", boxPadding); //rounded corner
-            let titleEl = boxGroup.append("text")
-                .attr("class", "header-box-label")
-                .text(sectionData.title)
-                .attr("x", 2 * boxPadding)
-                .attr("font-size", 12)
-                .each(function() { self.verticalAlignCenter(this); })
-                // .attr("dominant-baseline", "middle")
-            // add cover mask so that the box lines crop around the text
-            let bbox = titleEl.node().getBBox();
-            let coverPadding = 2;
-            let cover = boxGroup.append("rect")
-                .attr("class", "label-cover")
-                .attr("x", bbox.x - coverPadding)
-                .attr("y", bbox.y - coverPadding)
-                .attr("width", bbox.width + 2*coverPadding)
-                .attr("height", bbox.height + 2*coverPadding)
-                .attr("fill", "white")
-                .attr("rx", boxPadding); //rounded corner just in case it's being shown on a transparent background
-            titleEl.raise(); //push title to front;
-
-            // add content to box
-            let boxContentGroup = boxGroup.append("g")
-                .attr("class", "header-box-content")
-                .attr("transform", `translate(${boxPadding}, 0)`)
-            let boxContentHeight = boxHeight;// - 2*boxPadding;
-            let boxContentWidth = boxWidth - 2*boxPadding;
-
-            let boxGroupY = d3.scaleBand()
-                .padding(0.05)
-                .align(0.5)
-                .domain(sectionData.contents.map(function(content) { return content.label }))
-                .range([0, boxContentHeight]);
-            for (let i = 0; i < sectionData.contents.length; i++) {
-                let subsectionContent = sectionData.contents[i];
-                let contentGroup = boxContentGroup.append("g")
-                    .attr("transform", `translate(0, ${boxGroupY( subsectionContent.label )})`);
-                if (typeof(subsectionContent.data) == "string") {
-                    // add text to contentGroup
-                    contentGroup.append("text")
-                        .text(subsectionContent)
-                        .attr("font-size", function() {
-                            return self.optimalFontSize(this, subsectionContent.data as string, boxContentWidth, boxGroupY.bandwidth(), false, 12)
-                        })
-                        .each(function() { self.verticalAlignCenter(this); })
-                        // .attr("dominant-baseline", "middle")
-                } else {
-                    //call callback to add complex data to contentGroup
-                    (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
-                }
-                if (i != sectionData.contents.length - 1) contentGroup.append("line") //dividing line
-                    .attr("x1", 0)
-                    .attr("x2", boxContentWidth)
-                    .attr("y1", boxGroupY.bandwidth())
-                    .attr("y2", boxGroupY.bandwidth())
-                    .attr("stroke", "#dddddd");
-            }
-        }
 
         // ooooo ooooo                             oooo                        
         //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo   
@@ -355,7 +269,7 @@ export class SvgExportComponent implements OnInit {
             for (let section of headerSections) {
                 let sectionGroup = headerGroup.append("g");
                 if (headerSections.length > 1) sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
-                descriptiveBox(sectionGroup, section, headerSections.length == 1? width : headerX.bandwidth(), headerHeight);
+                self.buildHeaderSection(this, sectionGroup, section, headerSections.length == 1? width : headerX.bandwidth(), headerHeight);
             }
 
             if (headerSections.length == 0) headerHeight = 0; //no header sections to show
@@ -514,18 +428,99 @@ export class SvgExportComponent implements OnInit {
         // set tactic labels to same font size
         tacticLabels.select("text").attr("font-size", minTacticFontSize);
 
-        //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
-        // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
-        // 888    88  888   888 888    888 888     888 888     888 888o888   888oooooo8 888    888        888        888oooooo8  888    88o 888oooooo8   888   888 888    888  
-        // 888    88  888   888 888    888 888     888 888         8888 88o  888        888    888        888      o 888          888oo888o 888          888   888 888    888  
-        // 888oo88  o888o o888o  88ooo888o  88ooo88     88ooo888 o888o o888o  88oooo888  88ooo888o      o888ooooo88   88oooo888 888     888  88oooo888 o888o o888o  88ooo888o 
-        //                                                                                                                         888ooo888                                    
-
+        // -----------------------------------------------------------------------------
+        // UNDOCKED LEGEND
+        // -----------------------------------------------------------------------------
 
         if (self.showLegendContainer && !self.showLegendInHeader) {
-            let legendGroup = datatable.append("g")
-                .attr("transform", `translate(${legendX}, ${legendY})`)
-            descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
+            let legendGroup = datatable.append("g").attr("transform", `translate(${legendX}, ${legendY})`);
+            self.buildHeaderSection(this, legendGroup, legend, legendWidth, legendHeight);
+        }
+    }
+
+    /**
+     * Build the box for the given header section
+     * @param self      this DOM node
+     * @param group     outer group element
+     * @param section   header section
+     * @param width     width of the cell
+     * @param height    height of the cell
+     */
+    private buildHeaderSection(self: any, group: any, section: HeaderSection, width: number, height: number): void {
+        let padding = 5;
+        height -= 2 * padding; // adjust height for padding
+
+        // header section group
+        let boxGroup = group.append("g").attr("transform", `translate(0,${padding})`);
+
+        // create outer box
+        boxGroup.append("rect")
+            .attr("class", "header-box")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("stroke", "black")
+            .attr("fill", "white")
+            .attr("rx", padding); // rounded corner
+
+        // box title
+        let boxTitle = boxGroup.append("text")
+            .attr("class", "header-box-label")
+            .text(section.title)
+            .attr("x", 2 * padding)
+            .attr("font-size", 12)
+            .each(function() { self.verticalAlignCenter(this); })
+
+        // add cover mask so that the box lines crop around the text
+        let bbox = boxTitle.node().getBBox();
+        let coverPadding = 2;
+        boxGroup.append("rect")
+            .attr("class", "label-cover")
+            .attr("x", bbox.x - coverPadding)
+            .attr("y", bbox.y - coverPadding)
+            .attr("width", bbox.width + 2 * coverPadding)
+            .attr("height", bbox.height + 2 * coverPadding)
+            .attr("fill", "white")
+            .attr("rx", padding); // rounded corner
+        boxTitle.raise(); // push title to front
+
+        // add content to box
+        let boxContentGroup = boxGroup.append("g")
+            .attr("class", "header-box-content")
+            .attr("transform", `translate(${padding}, 0)`)
+
+        let yRange = d3.scaleBand()
+            .padding(0.05)
+            .align(0.5)
+            .domain(section.contents.map(function(content) { return content.label }))
+            .range([0, height]);
+
+        // add each subsection to box
+        let contentWidth = width - 2 * padding;
+        for (let i = 0; i < section.contents.length; i++) {
+            let subsection = section.contents[i];
+            let contentGroup = boxContentGroup.append("g")
+                .attr("transform", `translate(0, ${yRange( subsection.label )})`);
+            if (typeof(subsection.data) == "string") {
+                // add text to contentGroup
+                contentGroup.append("text")
+                    .text(subsection)
+                    .attr("font-size", function() {
+                        return self.optimalFontSize(this, subsection.data as string, contentWidth, yRange.bandwidth(), false, 12);
+                    })
+                    .each(function() { self.verticalAlignCenter(this); })
+            } else {
+                // call callback to add complex data to contentGroup
+                (subsection.data as Function)(contentGroup, contentWidth, yRange.bandwidth());
+            }
+            if (i != section.contents.length - 1) {
+                // add dividing line
+                contentGroup.append("line")
+                    .attr("x1", 0)
+                    .attr("x2", contentWidth)
+                    .attr("y1", yRange.bandwidth())
+                    .attr("y2", yRange.bandwidth())
+                    .attr("stroke", "#dddddd");
+            }
         }
     }
 
@@ -744,4 +739,16 @@ export class SvgExportComponent implements OnInit {
             document.body.removeChild(downloadLink);
         }
     }
+}
+
+class HeaderSectionContent {
+    label: string;
+    // either string to display in box, or a callback to create complex content in the box
+    // callback function option takes params node, width, height, and appends data to node
+    data: string | Function;
+}
+
+class HeaderSection {
+    title: string;
+    contents: HeaderSectionContent[];
 }
