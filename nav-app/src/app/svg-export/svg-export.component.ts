@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel } from "../viewmodels.service";
 import { DataService, Matrix } from '../data.service';
+import { ConfigService } from '../config.service';
 import { RenderableMatrix } from './renderable-objects/renderable-matrix';
 import { RenderableTactic } from './renderable-objects/renderable-tactic';
 import { RenderableTechnique } from './renderable-objects/renderable-technique';
@@ -47,15 +48,34 @@ export class SvgExportComponent implements OnInit {
     public hasScores: boolean;
     private svgElementID: string = "svgInsert_tmp";
     private buildSVGDebounce: boolean = false;
-    
-    // browser compatibility
-    public get isIE() { return is.ie(); }
 
     public currentDropdown: string = null;
-    unitEnum = 0; //counter for unit change ui element
+    public unitEnum: number = 0; //counter for unit change ui element
+    
+    // browser compatibility
+    public get isIE(): boolean { return is.ie(); }
 
-    constructor(private dialogRef: MatDialogRef<SvgExportComponent>, 
+    //visibility of SVG parts
+    public get hasName(): boolean { return this.viewModel.name.length > 0; }
+    public get hasDomain(): boolean { return this.viewModel.domainVersionID.length > 0; }
+    public get hasDescription(): boolean { return this.viewModel.description.length > 0; }
+    public get hasLegendItems(): boolean { return this.viewModel.legendItems.length > 0; }
+
+    //above & user preferences
+    public get showName(): boolean { return this.config.showAbout && this.hasName && this.config.showHeader; }
+    public get showDomain(): boolean { return this.config.showDomain && this.hasDomain && this.config.showHeader; }
+    public get showAggregate(): boolean { return this.viewModel.layout.showAggregateScores && this.config.showHeader; }
+    public get showDescription(): boolean { return this.config.showAbout && this.hasDescription && this.config.showHeader; }
+    public get showLayerInfo(): boolean { return (this.showName || this.showDescription) && this.config.showHeader; }
+    public get showFilters(): boolean { return this.config.showFilters && this.config.showHeader; }
+    public get showGradient(): boolean { return this.config.showGradient && this.hasScores && this.config.showHeader; }
+    public get showLegend(): boolean { return this.config.showLegend && this.hasLegendItems; }
+    public get showLegendContainer(): boolean { return this.showLegend || this.showGradient; }
+    public get showLegendInHeader(): boolean { return this.config.legendDocked }
+
+    constructor(private dialogRef: MatDialogRef<SvgExportComponent>,
                 private dataService: DataService,
+                public configService: ConfigService,
                 @Inject(MAT_DIALOG_DATA) public data) {
         this.config = svgConfigDefaults;
     }
@@ -86,7 +106,7 @@ export class SvgExportComponent implements OnInit {
         // dynamic legend height according to content;
         let legendSectionCount = 0;
         if (self.hasScores) legendSectionCount++;
-        if (self.hasLegendItems()) legendSectionCount++;
+        if (self.hasLegendItems) legendSectionCount++;
         self.config.legendHeight = 0.5 * legendSectionCount;
 
         //initial legend position for undocked legend
@@ -99,24 +119,6 @@ export class SvgExportComponent implements OnInit {
             self.buildSVG(self)
         }, 0);
     }
-
-    //visibility of SVG parts
-    hasName(): boolean {return this.viewModel.name.length > 0}
-    hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
-    hasDescription(): boolean {return this.viewModel.description.length > 0}
-    hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
-
-    //above & user preferences
-    showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
-    showDomain(): boolean {return this.config.showDomain && this.hasDomain() && this.config.showHeader}
-    showAggregate(): boolean {return this.viewModel.layout.showAggregateScores && this.config.showHeader}
-    showDescription(): boolean {return this.config.showAbout && this.hasDescription() && this.config.showHeader}
-    showLayerInfo(): boolean {return (this.showName() || this.showDescription()) && this.config.showHeader}
-    showFilters(): boolean {return this.config.showFilters && this.config.showHeader};
-    showGradient(): boolean {return this.config.showGradient && this.hasScores && this.config.showHeader}
-    showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
-    showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
-    showLegendInHeader(): boolean {return this.config.legendDocked}
 
     /** Build the SVG */
     public buildSVG(self?: any, bypassDebounce: boolean = false): void {
@@ -363,7 +365,7 @@ export class SvgExportComponent implements OnInit {
         }
 
         let legend = {"title": "legend", "contents": []};
-        if (self.hasScores && self.showGradient()) legend.contents.push({
+        if (self.hasScores && self.showGradient) legend.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
@@ -391,7 +393,7 @@ export class SvgExportComponent implements OnInit {
                 )
             }
         });
-        if (self.showLegend()) legend.contents.push({
+        if (self.showLegend) legend.contents.push({
             "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
                 let colorScale = d3.scaleOrdinal()
                     .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
@@ -490,22 +492,22 @@ export class SvgExportComponent implements OnInit {
         if (self.config.showHeader) {
             let headerSections: HeaderSection[] = []
 
-            if (self.showName() || self.showDescription()) {
+            if (self.showName || self.showDescription) {
                 let about = {"title": "about", "contents": []};
-                if (self.showName()) about.contents.push({"label": "name", "data": this.viewModel.name});
-                if (self.showDescription()) about.contents.push({"label": "description", "data": this.viewModel.description});
+                if (self.showName) about.contents.push({"label": "name", "data": this.viewModel.name});
+                if (self.showDescription) about.contents.push({"label": "description", "data": this.viewModel.description});
                 headerSections.push(about)
             }
 
             const config = {"title": "domain", "contents": []};
             let filterConfig = {"title": "platforms", "contents": []};
-            if (self.showDomain()) {
+            if (self.showDomain) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
                 config.contents.push({"label": "domain", "data": domain.name + " " + domain.version.name});
             }
-            if (self.showFilters()) {
+            if (self.showFilters) {
               const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
-              if (self.showAggregate()) {
+              if (self.showAggregate) {
                 config.title = "domain & platforms";
                 config.contents.push(filterData);
               } else filterConfig.contents.push(filterData);
@@ -513,14 +515,14 @@ export class SvgExportComponent implements OnInit {
             if (config.contents.length > 0) headerSections.push(config);
             if (filterConfig.contents.length > 0) headerSections.push(filterConfig);
 
-            if (self.showAggregate()) {
+            if (self.showAggregate) {
               const aggregateConfig = { "title": "aggregate", "contents": []};
               aggregateConfig.contents.push({"label": "function", "data": "showing aggregate scores using the " + this.viewModel.layout.aggregateFunction + " aggregate function"});
               if (this.viewModel.layout.countUnscored) aggregateConfig.contents.push({"label": "unscored", "data": "includes unscored techniques as having a score of 0"});
               headerSections.push(aggregateConfig);
             }
 
-            if (self.showLegendContainer() && self.showLegendInHeader()) headerSections.push(legend);
+            if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legend);
 
             let headerGroup = svg.append("g");
 
@@ -729,7 +731,7 @@ export class SvgExportComponent implements OnInit {
         //                                                                                                                         888ooo888                                    
 
 
-        if (self.showLegendContainer() && !self.showLegendInHeader()) {
+        if (self.showLegendContainer && !self.showLegendInHeader) {
             let legendGroup = tablebody.append("g")
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
