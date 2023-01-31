@@ -55,18 +55,17 @@ export class SvgExportComponent implements OnInit {
     // browser compatibility
     public get isIE(): boolean { return is.ie(); }
 
-    //visibility of SVG parts
+    // visibility of SVG sections
     public get hasName(): boolean { return this.viewModel.name.length > 0; }
     public get hasDomain(): boolean { return this.viewModel.domainVersionID.length > 0; }
     public get hasDescription(): boolean { return this.viewModel.description.length > 0; }
     public get hasLegendItems(): boolean { return this.viewModel.legendItems.length > 0; }
 
-    //above & user preferences
+    // user preferences
     public get showName(): boolean { return this.config.showAbout && this.hasName && this.config.showHeader; }
     public get showDomain(): boolean { return this.config.showDomain && this.hasDomain && this.config.showHeader; }
     public get showAggregate(): boolean { return this.viewModel.layout.showAggregateScores && this.config.showHeader; }
     public get showDescription(): boolean { return this.config.showAbout && this.hasDescription && this.config.showHeader; }
-    public get showLayerInfo(): boolean { return (this.showName || this.showDescription) && this.config.showHeader; }
     public get showFilters(): boolean { return this.config.showFilters && this.config.showHeader; }
     public get showGradient(): boolean { return this.config.showGradient && this.hasScores && this.config.showHeader; }
     public get showLegend(): boolean { return this.config.showLegend && this.hasLegendItems; }
@@ -137,7 +136,6 @@ export class SvgExportComponent implements OnInit {
 
         // calculate svg height and width
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
-
         let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); // console.log("width", width);
         let svgWidth = width + margin.left + margin.right;
         let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); // console.log("height", height)
@@ -799,59 +797,5 @@ export class SvgExportComponent implements OnInit {
         }
 
         return quantity * factor;
-    }
-
-    // wrap(text, width, padding) {
-    //     var self = d3.select(this),
-    //     textLength = self.node().getComputedTextLength(),
-    //     text = self.text();
-    //     while (textLength > (width - 2 * padding) && text.length > 0) {
-    //         text = text.slice(0, -1);
-    //         self.text(text + '...');
-    //         textLength = self.node().getComputedTextLength();
-    //     }
-    // }
-
-    /**
-     * wrap the given text svg element
-     * @param  text       element to wrap
-     * @param  width      width to wrap to
-     * @param  cellheight stop appending wraps after this height
-     * @param  self       reference to self this component because of call context
-     */
-    wrap(text, width, cellheight, self): void {
-        text.each(function() {
-            var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineHeight = 1.1, // ems
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    let thisdy = lineHeight + dy
-                    // if (self.convertToPx(thisdy, "em") > cellheight) return;
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
-                }
-            }
-        });
-    }
-
-    /**
-     * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
-     * @param  dropdown the DOM node of the panel
-     * @return          true if it would overflow
-     */
-    checkalign(dropdown): boolean {
-        // console.log(anchor)
-        let anchor = dropdown.parentNode;
-        return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
     }
 }
