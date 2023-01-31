@@ -525,112 +525,101 @@ export class SvgExportComponent implements OnInit {
             headerHeight = 0
         }
 
-
-
-        // oooo     oooo            o8              o88               
-        //  8888o   888   ooooooo o888oo oo oooooo  oooo  oooo   oooo 
-        //  88 888o8 88   ooooo888 888    888    888 888    888o888   
-        //  88  888  88 888    888 888    888        888    o88 88o   
-        // o88o  8  o88o 88ooo88 8o 888o o888o      o888o o88o   o88o 
-                                                                   
-
-        let tablebody = svg.append("g")
-            .attr("transform", "translate(0," + (headerHeight + 1) + ")")
+        // -----------------------------------------------------------------------------
+        // MATRIX
+        // -----------------------------------------------------------------------------
 
         // build data model
-        let matrices: RenderableMatrix[] = this.dataService.getDomain(this.viewModel.domainVersionID).matrices.map(function(matrix: Matrix) {
-            return new RenderableMatrix(matrix, self.viewModel, self.config);
-        });
+        let datatable = svg.append("g").attr("transform", "translate(0," + (headerHeight + 1) + ")")
+        let domain = self.dataService.getDomain(self.viewModel.domainVersionID);
+        let matrices: RenderableMatrix[] = domain.matrices.map(m => new RenderableMatrix(m, self.viewModel, self.config));
 
+        // get flattened list of tactics
         let tactics: RenderableTactic[] = [];
-        //flattened list of tactics
-        for (let matrix of matrices) { tactics = tactics.concat(matrix.tactics); }
+        for (let matrix of matrices) {
+            tactics = tactics.concat(matrix.tactics);
+        }
         
-
-        let x = d3.scaleBand()
-            .paddingInner(0.1)
-            .align(0.01)
-            .domain(tactics.map(function(tactic: RenderableTactic) { return tactic.tactic.id; }))
+        // build tactic columns
+        let xRange = d3.scaleBand()
+            .domain(tactics.map(t => t.tactic.id))
             .range([0, width])
-
-        let y = d3.scaleLinear()
-            .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height}), 0])
+        let yRange = d3.scaleLinear()
+            .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height }), 0])
             .range([height - (headerHeight), 0])
-            
-        // let subtechniqueIndent = (1/3) * x.bandwidth(); //2/3 of full techinque width
-        // let subtechniqueIndent = 2 * y(1); //2*the height of a cell, to make room for y(1) width sidebar
-        let subtechniqueIndent = Math.min(2 * y(1), 15);     
         
-        //add tactic row backgroun
+        // tactic row background
         if (self.viewModel.showTacticRowBackground) {
-            tablebody.append("rect")
+            datatable.append("rect")
                 .attr("class", "tactic-header-background")
                 .attr("width", width)
-                .attr("height", y(1))
+                .attr("height", yRange(1))
                 .attr("fill", self.viewModel.tacticRowBackground)
                 .attr("stroke", self.config.tableBorderColor)
         }
 
-        let tacticGroups = tablebody.append("g").selectAll("g")
+        // tactic names
+        let tacticGroups = datatable.append("g").selectAll("g")
             .data(tactics)
             .enter().append("g")
             .attr("class", function(tactic: RenderableTactic) { return "tactic " + tactic.tactic.shortname; })
-            .attr("transform", function(tactic: RenderableTactic) {
-                return `translate(${x(tactic.tactic.id)}, 0)`;
-            })
-        // add technique and subtechnique groups
+            .attr("transform", function(tactic: RenderableTactic) { return `translate(${xRange(tactic.tactic.id)}, 0)`; })
+
+        // add technique groups to tactic column
         let techniqueGroups = tacticGroups.append("g")
             .attr("class", "techniques").selectAll("g")
-            .data(function(tactic: RenderableTactic) { return tactic.techniques})
+            .data(function(tactic: RenderableTactic) { return tactic.techniques; })
             .enter().append("g")
             .attr("class", function(technique: RenderableTechnique) { return "technique " + technique.technique.attackID; })
-            .attr("transform", function(technique: RenderableTechnique) {
-                return `translate(0, ${y(technique.yPosition)})`
-            });
+            .attr("transform", function(technique: RenderableTechnique) { return `translate(0, ${yRange(technique.yPosition)})`; });
+        
+        // add sub-technique groups to tactic column
+        let subtechniqueIndent = Math.min(2 * yRange(1), 15);
         let subtechniqueGroups = tacticGroups.append("g")
             .attr("class", "subtechniques").selectAll("g")
-            .data(function(tactic: RenderableTactic) { return tactic.subtechniques})
+            .data(function(tactic: RenderableTactic) { return tactic.subtechniques; })
             .enter().append("g")
             .attr("class", function(subtechnique: RenderableTechnique) { return "subtechnique " + subtechnique.technique.attackID; })
-            .attr("transform", function(subtechnique: RenderableTechnique) {
-                return `translate(${subtechniqueIndent}, ${y(subtechnique.yPosition)})`
-            });
-        // add cells to techniques and subtechniques
-        let techniqueRects = techniqueGroups.append("rect")
-            .attr("class", "cell")
-            .attr("height", y(1))
-            .attr("width", x.bandwidth())
-            .attr("fill", function(technique: RenderableTechnique) { return technique.fill })
-            .attr("stroke", self.config.tableBorderColor);
-        let subtechniqueRects = subtechniqueGroups.append("rect")
-            .attr("class", "cell")
-            .attr("height", y(1))
-            .attr("width", x.bandwidth() - subtechniqueIndent)
-            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill })
-            .attr("stroke", self.config.tableBorderColor);
-        // add sidebar
-        // let sidebarWidth = y(1);
-        let sidebarWidth = 3;
+            .attr("transform", function(subtechnique: RenderableTechnique) { return `translate(${subtechniqueIndent}, ${yRange(subtechnique.yPosition)})`; });
 
-        let sidebar = subtechniqueGroups.append("rect")
+        // add cell style to techniques
+        techniqueGroups.append("rect")
             .attr("class", "cell")
-            .attr("height", y(1))
+            .attr("height", yRange(1))
+            .attr("width", xRange.bandwidth())
+            .attr("fill", function(technique: RenderableTechnique) { return technique.fill; })
+            .attr("stroke", self.config.tableBorderColor);
+        
+        // add cell style to sub-techniques
+        subtechniqueGroups.append("rect")
+            .attr("class", "cell")
+            .attr("height", yRange(1))
+            .attr("width", xRange.bandwidth() - subtechniqueIndent)
+            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill; })
+            .attr("stroke", self.config.tableBorderColor);
+
+        // add styling for sub-technique sidebar
+        let sidebarWidth = 3;
+        subtechniqueGroups.append("rect")
+            .attr("class", "cell")
+            .attr("height", yRange(1))
             .attr("width", sidebarWidth)
             .attr("transform",  `translate(${-sidebarWidth}, 0)`)
             .attr("fill", self.config.tableBorderColor)
             .attr("stroke", self.config.tableBorderColor);
-        let sidebarAngle = techniqueGroups.append("polygon")
+
+        techniqueGroups.append("polygon")
             .attr("class", "sidebar")
-            .attr("transform", `translate(0, ${y(1)})`)
+            .attr("transform", `translate(0, ${yRange(1)})`)
             .attr("points", function(technique: RenderableTechnique) {
                 return [
                     "0,0",
                     `${subtechniqueIndent - sidebarWidth},0`,
-                    `${subtechniqueIndent - sidebarWidth},${Math.min(subtechniqueIndent - sidebarWidth, y(self.viewModel.filterTechniques(technique.technique.subtechniques, technique.tactic, technique.matrix).length))}`
+                    `${subtechniqueIndent - sidebarWidth},${Math.min(subtechniqueIndent - sidebarWidth, yRange(self.viewModel.filterTechniques(technique.technique.subtechniques, technique.tactic, technique.matrix).length))}`
                 ].join(" ");
             })
             .attr("fill", self.config.tableBorderColor)
-            .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? "visible" : "hidden"});
+            .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? "visible" : "hidden"; });
 
         // -----------------------------------------------------------------------------
         // CELL TEXT
@@ -643,7 +632,7 @@ export class SvgExportComponent implements OnInit {
         techniqueGroups.append("text")
             .text(function(technique: RenderableTechnique) { return technique.text; })
             .attr("font-size", function(technique: RenderableTechnique) {
-                const fontSize = optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
+                const fontSize = optimalFontSize(technique.text, this, xRange.bandwidth(), yRange(1), false);
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
@@ -654,7 +643,7 @@ export class SvgExportComponent implements OnInit {
         subtechniqueGroups.append("text")
             .text(function(subtechnique: RenderableTechnique) { return subtechnique.text; })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
-                const fontSize = optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
+                const fontSize = optimalFontSize(subtechnique.text, this, xRange.bandwidth() - subtechniqueIndent, yRange(1), false);
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
@@ -673,7 +662,7 @@ export class SvgExportComponent implements OnInit {
         tacticLabels.append("text")
             .text(function(tactic: RenderableTactic) { return tactic.tactic.name; })
             .attr("font-size", function(tactic: RenderableTactic) {
-                const fontSize = optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
+                const fontSize = optimalFontSize(tactic.tactic.name, this, xRange.bandwidth(), yRange(1), true);
                 if (fontSize < minTacticFontSize) minTacticFontSize = fontSize;
                 return fontSize;
             })
@@ -696,7 +685,7 @@ export class SvgExportComponent implements OnInit {
 
 
         if (self.showLegendContainer && !self.showLegendInHeader) {
-            let legendGroup = tablebody.append("g")
+            let legendGroup = datatable.append("g")
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
         }
