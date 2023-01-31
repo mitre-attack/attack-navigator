@@ -162,59 +162,21 @@ export class SvgExportComponent implements OnInit {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("font-family", self.config.font);
 
-        // ooooo ooooo            o888                                                 
-        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
-        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
-        //  888   888 888          888  888    888 888          888                888 
-        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
-        //                             o888                                            
+        // -----------------------------------------------------------------------------
+        // LEGEND
+        // -----------------------------------------------------------------------------          
 
-        let legend = {"title": "legend", "contents": []};
-        if (self.hasScores && self.showGradient) legend.contents.push({
-            "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
-                let domain = [];
-                for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
-                    let percent = i / (self.viewModel.gradient.colors.length - 1);
-                    domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
-                }
-                let colorScale = d3.scaleLinear()
-                    .domain(domain)
-                    .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
-                let nCells = domain.length * 2;
-                let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
-                group.append("g")
-                    .attr("transform", "translate(0, 5)")
-                    .call(d3.legendColor()
-                    .shapeWidth((sectionWidth / nCells))
-                    .shapePadding(0)
-                    .cells(nCells)
-                    .shape("rect")
-                    .orient("horizontal")
-                    .scale(colorScale)
-                    .labelOffset(2)
-                    .labelFormat(d3.format("0.02r"))
-                    
-                    // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
-                )
-            }
-        });
-        if (self.showLegend) legend.contents.push({
-            "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
-                let colorScale = d3.scaleOrdinal()
-                    .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
-                    .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
-                group.append("g")
-                    .attr("transform", "translate(0, 5)")
-                    .call(d3.legendColor()
-                    .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
-                    .shapePadding(0)
-                    .shape("rect")
-                    .orient("horizontal")
-                    .scale(colorScale)
-                    .labelOffset(2)
-                )
-            }
-        })
+        let legendSection = { "title": "legend", "contents": [] };
+
+        // SCORES & GRADIENT
+        if (self.hasScores && self.showGradient) {
+            legendSection.contents.push( {"label": "gradient", "data": self.buildGradient()} );
+        }
+
+        // LEGEND ITEMS
+        if (self.showLegend) {
+            legendSection.contents.push( {"label": "legend", "data": self.buildLegend()} );
+        }
 
         // -----------------------------------------------------------------------------
         // HEADER
@@ -265,7 +227,7 @@ export class SvgExportComponent implements OnInit {
             }
 
             // LEGEND
-            if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legend);
+            if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legendSection);
 
             // build header
             let headerGroup = svg.append("g");
@@ -447,7 +409,61 @@ export class SvgExportComponent implements OnInit {
 
         if (self.showLegendContainer && !self.showLegendInHeader) {
             let legendGroup = datatable.append("g").attr("transform", `translate(${legendX}, ${legendY})`);
-            self.buildHeaderSection(this, legendGroup, legend, legendWidth, legendHeight);
+            self.buildHeaderSection(this, legendGroup, legendSection, legendWidth, legendHeight);
+        }
+    }
+
+    /** Callback function to build the legend section */
+    private buildLegend(): Function {
+        return function(self, group, width) {
+            // legend colors
+            let colorScale = d3.scaleOrdinal()
+                .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
+                .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+            
+            // legend svg group
+            group.append("g")
+                .attr("transform", "translate(0, 5)")
+                .call(d3.legendColor()
+                .shapeWidth((width / self.viewModel.legendItems.length))
+                .shapePadding(0)
+                .shape("rect")
+                .orient("horizontal")
+                .scale(colorScale)
+                .labelOffset(2)
+            )
+        }
+    }
+
+    /** Callback function to build the gradient section */
+    private buildGradient(): Function {
+        return function(self, group, width) {
+            // build gradient
+            let gradient = [];
+            for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
+                let percent = i / (self.viewModel.gradient.colors.length - 1);
+                gradient.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
+            }
+
+            // build color scale
+            let colorScale = d3.scaleLinear()
+                .domain(gradient)
+                .range(self.viewModel.gradient.colors.map(color => color.color));
+            
+            // gradient svg group
+            let nCells = gradient.length * 2;
+            group.append("g")
+                .attr("transform", "translate(0, 5)")
+                .call(d3.legendColor()
+                .shapeWidth((width / nCells))
+                .shapePadding(0)
+                .cells(nCells)
+                .shape("rect")
+                .orient("horizontal")
+                .scale(colorScale)
+                .labelOffset(2)
+                .labelFormat(d3.format("0.02r"))
+            )
         }
     }
 
@@ -523,7 +539,7 @@ export class SvgExportComponent implements OnInit {
                     .each(function() { self.verticalAlignCenter(this); })
             } else {
                 // call callback to add complex data to contentGroup
-                (subsection.data as Function)(contentGroup, contentWidth, yRange.bandwidth());
+                (subsection.data as Function)(self, contentGroup, contentWidth);
             }
             if (i != section.contents.length - 1) {
                 // add dividing line
