@@ -141,13 +141,6 @@ export class SvgExportComponent implements OnInit {
         let height = Math.max(self.toPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
         let svgHeight = height + margin.top + margin.bottom;
 
-        let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
-
-        let legendX = Math.max(self.toPx(self.config.legendX, self.config.unit), 0);
-        let legendY = Math.max(self.toPx(self.config.legendY, self.config.unit), 0);
-        let legendWidth = Math.max(self.toPx(self.config.legendWidth, self.config.unit), 10);
-        let legendHeight = Math.max(self.toPx(self.config.legendHeight, self.config.unit), 10);
-
         // remove previous graphic
         let svgElement: HTMLElement = document.getElementById(self.svgElementID);
         svgElement.innerHTML = "";
@@ -182,6 +175,7 @@ export class SvgExportComponent implements OnInit {
         // HEADER
         // -----------------------------------------------------------------------------
 
+        let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
         if (self.config.showHeader) {
             let headerSections: HeaderSection[] = []
 
@@ -408,6 +402,11 @@ export class SvgExportComponent implements OnInit {
         // -----------------------------------------------------------------------------
 
         if (self.showLegendContainer && !self.showLegendInHeader) {
+            let legendX = Math.max(self.toPx(self.config.legendX, self.config.unit), 0);
+            let legendY = Math.max(self.toPx(self.config.legendY, self.config.unit), 0);
+            let legendWidth = Math.max(self.toPx(self.config.legendWidth, self.config.unit), 10);
+            let legendHeight = Math.max(self.toPx(self.config.legendHeight, self.config.unit), 10);
+
             let legendGroup = datatable.append("g").attr("transform", `translate(${legendX}, ${legendY})`);
             self.buildHeaderSection(this, legendGroup, legendSection, legendWidth, legendHeight);
         }
