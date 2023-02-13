@@ -49,6 +49,8 @@ import { ChangelogComponent } from './changelog/changelog.component';
 import { MatTabsModule } from "@angular/material/tabs";
 import { ListInputComponent } from './list-input/list-input.component';
 import { SvgExportComponent } from './svg-export/svg-export.component';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -99,7 +101,9 @@ import { SvgExportComponent } from './svg-export/svg-export.component';
     MatPaginatorModule,
     MarkdownModule.forRoot(),
     PopoverModule,
-    MatTabsModule
+    MatTabsModule,
+    MatButtonToggleModule,
+    MatToolbarModule
   ],
   exports: [
       MatSelectModule,
@@ -110,6 +114,8 @@ import { SvgExportComponent } from './svg-export/svg-export.component';
       MatMenuModule,
       MatExpansionModule,
       MatTabsModule,
+      MatButtonToggleModule,
+      MatToolbarModule
   ],
   providers: [
     Title

@@ -306,6 +306,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         this.dialog.open(SvgExportComponent, {
             data: {vm: vm},
             height: "80vh",
+            width: "75vw",
             panelClass: ['dialog-custom', this.userTheme]
         });
     }

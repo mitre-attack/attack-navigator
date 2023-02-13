@@ -89,6 +89,20 @@ body {
 // | (_| (_) | .` | | | |   / (_) | |__\__ \
 //  \___\___/|_|\_| |_| |_|_\\___/|____|___/
 
+.toolbar-container {
+    @include adaptive-color("background-color", color(panel-dark), color(dark-2));
+    padding: 0px !important;
+    height: 34px;
+
+    .spacer {
+        flex: 1 1 auto;
+    }
+
+    button {
+        box-sizing: content-box;
+    }
+}
+
 // $inputFontSize: 10pt;
 // panel with controls
 .controls-container {
