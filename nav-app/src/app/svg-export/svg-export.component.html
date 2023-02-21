@@ -1,5 +1,5 @@
-<div class="svg-export-dialog">
-    <!-- svg toolbar -->
+<div class="svg-exporter">
+    <!-- toolbar -->
     <mat-toolbar class="toolbar-container">
         <div class="section">
             <!-- close dialog -->
@@ -14,8 +14,12 @@
                 <mat-icon>view_sidebar</mat-icon>
             </button>
             <!-- download SVG -->
-            <button mat-icon-button (click)="downloadSVG()" matTooltipPosition="below" matTooltip="download">
+            <button mat-icon-button (click)="downloadSVG()" matTooltipPosition="below" matTooltip="download SVG">
                 <mat-icon>file_download</mat-icon>
+            </button>
+            <!-- download PNG -->
+            <button mat-icon-button (click)="downloadPNG()" matTooltipPosition="below" matTooltip="download PNG">
+                <mat-icon>image</mat-icon>
             </button>
         </div>
     </mat-toolbar>

@@ -740,6 +740,44 @@ export class SvgExportComponent implements OnInit {
         return quantity * factor;
     }
 
+    public downloadPNG(): void {
+        // get SVG element
+        let svgElement = document.getElementById("svg" + this.viewModel.uid);
+        svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+        // get SVG width & height
+        let width = svgElement.getAttribute("width");
+        let height = svgElement.getAttribute("height");
+
+        // create canvas element to draw to
+        let canvas = document.createElement('canvas');
+        canvas.width = parseInt(width);
+        canvas.height = parseInt(height);
+
+
+        // create SVG blob
+        let svgBlob = new Blob([new XMLSerializer().serializeToString(svgElement)], {type: 'image/svg+xml;charset=utf-8'});
+        let svgURL = URL.createObjectURL(svgBlob);
+
+        // generate filename
+        let filename = this.viewModel.name.split(' ').join('_');
+        filename = filename.replace(/\W/g, "")  + ".png";
+
+        // draw SVG to canvas
+        let self = this;
+        let image = new Image();
+        image.onload = function () {
+            let context = canvas.getContext('2d');
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(svgURL);
+
+            // download PNG
+            let pngURL = canvas.toDataURL('image/png')
+            self.triggerDownload(pngURL, filename);
+        };
+        image.src = svgURL;
+    }
+
     /** Download the SVG */
     public downloadSVG(): void {
         // get SVG element
@@ -759,13 +797,17 @@ export class SvgExportComponent implements OnInit {
         if (is.ie()) {
             window.navigator.msSaveOrOpenBlob(svgBlob, filename)
         } else {
-            const downloadLink = document.createElement("a");
-            downloadLink.download = filename;
-            downloadLink.href = URL.createObjectURL(svgBlob);
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+            this.triggerDownload(URL.createObjectURL(svgBlob), filename);
         }
+    }
+
+    public triggerDownload(url: string, filename: string): void {
+        let downloadLink = document.createElement("a");
+        downloadLink.download = filename;
+        downloadLink.href = url;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
     }
 }
 

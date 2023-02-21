@@ -1,59 +1,58 @@
 @import "../../styles.scss";
 @import "../../colors.scss";
 
-.svg-export-dialog {
-    // display: flex;
-    // flex-direction: column;
+.svg-exporter {
     .svg-content {
-        // display: flex;
-        // flex-direction: column;
+        display: flex;
+        flex-direction: column;
     }
+    
+    .svg-container {
+        align-items: center;
+        height: 100%;
+        min-height: 80vh;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .fit-content {
+        width: fit-content;
+    }
+    
+    .sidenav-container {
+        height: 100%;
+        .mat-drawer {
+            width: 14em;
+        }
+        .sidenav {
+            padding: 6px;
+        }
+    }
+    
+    .control-sections {
+        @extend .noselect;
+    }
+    
+    .iewarning {
+        padding: 8px;
+        text-align: center;
+        color: red;
+    }
+    
     .colorpicker {
         width: 14px;
         margin: 5px 0 0 5px;
     }
-}
-
-.svg-container {
-    align-items: center;
-    height: 100%;
-    min-height: 80vh;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-}
-
-.fit-content {
-    width: fit-content;
-}
-
-.sidenav-container {
-    height: 100%;
-    .mat-drawer {
-        width: 14em;
-    }
-    .sidenav {
-        padding: 6px;
-    }
-}
-
-.control-sections {
-    @extend .noselect;
-}
-
-.iewarning {
-    padding: 8px;
-    text-align: center;
-    color: red;
-}
-
-.spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-
-    mat-progress-spinner circle {
-        stroke: on-color-deemphasis(body);
+    
+    .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+    
+        mat-progress-spinner circle {
+            stroke: on-color-deemphasis(body);
+        }
     }
 }
