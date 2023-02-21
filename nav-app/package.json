@@ -41,7 +41,7 @@
     "mathjs": "^10.5.3",
     "ngx-color-picker": "^10.1.0",
     "ngx-drag-drop": "^2.0.0",
-    "ngx-markdown": "^10.1.1",
+    "ngx-markdown": "^11.2.0",
     "ngx-smart-popover": "^1.4.0",
     "rxjs": "^6.6.7",
     "rxjs-compat": "^6.6.7",
