@@ -1,6 +1,6 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService, Technique, Version } from '../data.service'; //import the DataService component so we can use it
+import { DataService, Domain, Technique, Version } from '../data.service'; //import the DataService component so we can use it
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
 import { forkJoin } from 'rxjs';
@@ -87,27 +87,38 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Open initial tabs on application load
      */
      async loadTabs(defaultLayers) {
-            let fragment_value = this.getNamedFragmentValue("layerURL");
+        let bundle_url = this.getNamedFragmentValue("bundleURL")[0];
+        let bundle_version = this.getNamedFragmentValue("version")[0];
+        let bundle_domain = this.getNamedFragmentValue("domain")[0];
+        let fragment_value = this.getNamedFragmentValue("layerURL");
 
-            if (fragment_value && fragment_value.length > 0) {
-                let first = true;
-                let self = this;
+        if (bundle_url && bundle_url.length > 0 && bundle_version && bundle_domain && bundle_domain.length > 0) {
+            // load base data from URL
+            let self = this;
+            await self.newLayerFromURL({
+                'url': bundle_url,
+                'version': bundle_version,
+                'identifier': bundle_domain
+            });
+        } else if (fragment_value && fragment_value.length > 0) {
+            // load layer from URL
+            let first = true;
+            let self = this;
 
-                    for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
-                        var url = urls_1[_i];
-                        await self.loadLayerFromURL(url, first, true);
-                        first = false;
-                    }
-            } else if (defaultLayers["enabled"]) {
-                let first = true;
-                let self = this;
-                    for (let url of defaultLayers["urls"]) {
-                        console.log("loading", url, first)
-                        await self.loadLayerFromURL(url, first, true);
-                        first = false;
-                        console.log("done")
-                    }
+            for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
+                var url = urls_1[_i];
+                await self.loadLayerFromURL(url, first, true);
+                first = false;
             }
+        } else if (defaultLayers["enabled"]) {
+            // load any default layers from config
+            let first = true;
+            let self = this;
+            for (let url of defaultLayers["urls"]) {
+                await self.loadLayerFromURL(url, first, true);
+                first = false;
+            }
+        }
     }
 
     /**
@@ -331,20 +342,109 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return root;
     }
 
+    loadData = {
+        url: undefined,
+        version: undefined,
+        identifier: undefined
+    }
+
     /**
-     * Open a new blank layer tab
+     * Create a new layer from URL
      */
-    newLayer(domainVersionID: string) {
+    newLayerFromURL(loadData: any, obj: any = undefined) {
+        let domain_id = loadData.identifier.toLowerCase();
+        let domainVersionID = this.dataService.getDomainVersionID(domain_id, loadData.version);
+
+        // validate input data
+        let valid = this.validateInput(loadData, domainVersionID);
+        if (!valid) return;
+
+        let url = new URL(loadData.url).toString();
+        let subscription = this.http.get(url).subscribe({
+            next: (res) => {
+                let exists = this.dataService.domains.find(d => d.isCustom && d.id === domainVersionID);
+                if (!exists) {
+                    // create or retrieve version
+                    let v: Version = this.dataService.versions.find(v => v.number == loadData.version);
+                    if (!v) {
+                        v = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
+                        this.dataService.versions.push(v);
+                    }
+        
+                    // create new custom domain object
+                    let domainObject = new Domain(domain_id, domain_id, v, [url]);
+                    domainObject.isCustom = true;
+                    this.dataService.domains.push(domainObject);
+                } 
+
+                this.newLayer(domainVersionID, obj);
+            },
+            error: (err) => {
+                console.error(err)
+                if (err.status == 0) {
+                    // no response
+                    alert("ERROR retrieving data from " + url + ", check the javascript console for more information.")
+                } else {
+                    // response, but not a good one
+                    alert("ERROR retrieving data from " + url + ", check the javascript console for more information.")
+                }
+            },
+            complete: () => { if (subscription) subscription.unsubscribe(); } // prevent memory leaks
+        })
+    }
+
+    validateInput(loadData: any, domainVersionID: string): boolean {
+        try {
+            // validate URL
+            let url = new URL(loadData.url);
+
+            // validate version
+            if (isNaN(loadData.version)) {
+                throw {message: "version is not a number"};
+            }
+
+            // validate domainVersionID is unique
+            let exists = this.dataService.domains.find(d => d.id == domainVersionID);
+            // Note: if a user inputs the same domain, version, AND url, do not check for collisions, just reload the custom dataset
+            if (exists && !(exists.isCustom && exists.urls[0] == url.toString())) {
+                throw {message: `the domain and version specified conflict with an existing set of ATT&CK data (${exists.name} ${exists.version.name})`};
+            }
+
+            return true;
+        } catch (err) {
+            console.error(err);
+            if (err instanceof TypeError) {
+                alert("ERROR: invalid url, check the javascript console for more information.");
+            } else {
+                alert("ERROR " + err.message);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Create a new layer in the given domain/version
+     */
+    newLayer(domainVersionID: string, obj: any = undefined) {
         // load domain data, if not yet loaded
-        if (!this.dataService.getDomain(domainVersionID).dataLoaded) {
+        let domain = this.dataService.getDomain(domainVersionID);
+        if (!domain.dataLoaded) {
             this.dataService.loadDomainData(domainVersionID, true);
         }
 
         // find non conflicting name
-        let name = this.getUniqueLayerName("layer")
+        let name;
+        if (obj && 'name' in obj && obj['name']) {
+            name = obj['name']
+        } else name = this.getUniqueLayerName("layer")
 
         // create and open VM
         let vm = this.viewModelsService.newViewModel(name, domainVersionID);
+
+        if (obj) {
+            // restore the VM from the given string
+            vm.deSerialize(obj);
+        }
         vm.loadVMData();
         this.openTab(name, vm, true, true, true, true)
     }
@@ -430,8 +530,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             console.error(err)
             alert("Layer Layer operation error: " + err.message)
         }
-
-
     }
 
     /**
@@ -527,7 +625,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     layerUpgrade(oldViewModel: ViewModel, serialized: any, replace: boolean, defaultLayers: boolean = false): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!defaultLayers) { 
-            this.versionUpgradeDialog(oldViewModel).then( (versions) => {
+            this.versionUpgradeDialog(oldViewModel)
+                .then((versions) => {
                     if (versions) { // user upgraded to latest version
                         // create and open the latest version
                         let newViewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
@@ -620,18 +719,30 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * and adds the properties to a new viewModel, and loads that viewmodel into a new layer.
      */
     readJSONFile(file: File) {
-        // var input = (<HTMLInputElement>document.getElementById("uploader"));
         var reader = new FileReader();
         let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
 
         reader.onload = (e) =>{
-            var string = String(reader.result);
+            var result = String(reader.result);
             try{
-                viewModel.deSerializeDomainVersionID(string);
-                if (!this.dataService.getDomain(viewModel.domainVersionID)) {
-                    throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
+                let obj = (typeof(result) == "string")? JSON.parse(result) : result
+                viewModel.deSerializeDomainVersionID(obj);
+                let isCustom = "customDataURL" in obj ? true : false;
+                if (!isCustom) {
+                    if (!this.dataService.getDomain(viewModel.domainVersionID)) {
+                        throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
+                    }
+                    this.layerUpgrade(viewModel, obj, true);
+                } else {
+                    // load custom data
+                    viewModel.deSerialize(obj);
+                    this.openTab("new layer", viewModel, true, true, true, true);
+                    this.newLayerFromURL({
+                        'url': obj['customDataURL'],
+                        'version': viewModel.version,
+                        'identifier': viewModel.domain
+                    }, obj);
                 }
-                this.layerUpgrade(viewModel, string, true);
             }
             catch(err){
                 console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);

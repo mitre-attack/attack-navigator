@@ -53,7 +53,9 @@ export class DataService {
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
-                if ("x_mitre_domains" in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+                if (!domain.isCustom) {
+                    if ("x_mitre_domains" in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+                }
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
@@ -214,6 +216,7 @@ export class DataService {
 
     // URLs in case config file doesn't load properly
     private latestVersion: Version = { name: "ATT&CK v12", number: "12" };
+    private lowestSupportedVersion: Version;
     private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
     private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
     private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
@@ -248,6 +251,8 @@ export class DataService {
             let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
+
+        this.lowestSupportedVersion = this.versions[this.versions.length-1];
     }
 
     /**
@@ -810,6 +815,8 @@ export class Domain {
     public authentication: ServiceAuth;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
+    // this should only be enabled if the user loads custom data via URL
+    public isCustom: boolean = false;
 
     public matrices: Matrix[] = [];
 
