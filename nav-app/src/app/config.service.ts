@@ -26,12 +26,8 @@ export class ConfigService {
                 self.getAllFragments().forEach(function(value: string, key: string) {
                     let valueBool = (value == 'true');
                     if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                        // console.log("setting feature", key, valueBool)
                         self.setFeature(key, valueBool);
                     }
-                    // else {
-                    //     console.log(key, "is not a feature")
-                    // }
                 })
                 dataService.subtechniquesEnabled = self.getFeature("subtechniques");
                 self.featureStructure = config["features"];
@@ -101,7 +97,6 @@ export class ConfigService {
      */
     public setFeature(featureName: string, value: any): string[] {
         let self = this
-        // console.log(featureName, value);
 
         if (typeof(value) == "boolean") { //base case
             if (this.featureGroups.has(featureName)) { //feature group, assign to all subfeatures
