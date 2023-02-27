@@ -199,6 +199,9 @@
     &:not(.mat-form-field-disabled) .mat-form-field-underline {
       @include adaptive-color-dark-only("background-color", on-color(dark-3));
     }
+    .mat-hint {
+        @include adaptive-color-dark-only("color", on-color(dark));
+    }
   }
   .mat-button {
     &:not(.mat-button-disabled) {
@@ -422,6 +425,16 @@ input[type=file]{
                 }
             }
         }
+    }
+    .width-lg {
+        width: 40%;
+        .mat-form-field {
+            width: 100%;
+        }
+    }
+    .width-sm {
+        width: 20%;
+        text-align: center;
     }
 }
 
