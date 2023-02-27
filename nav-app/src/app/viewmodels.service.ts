@@ -358,6 +358,8 @@ export class ViewModel {
     domainVersionID: string; // layer domain & version
     description: string = ""; //layer description
     uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
+    bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
+    loaded: boolean = false; // whether or not techniqueVMs are loaded
 
     filters: Filter;
 
@@ -416,10 +418,16 @@ export class ViewModel {
         this.filters = new Filter();
         this.name = name;
         this.uid = uid;
+        this.legendColorPresets = this.backgroundPresets;
     }
 
     loadVMData() {
-        if (!this.domainVersionID || !this.dataService.getDomain(this.domainVersionID).dataLoaded) {
+        let domain = this.dataService.getDomain(this.domainVersionID);
+        if (domain.isCustom) {
+            this.bundleURL = domain.urls[0];
+        }
+
+        if (!this.domainVersionID || !domain.dataLoaded) {
             let self = this;
             this.dataService.onDataLoad(this.domainVersionID, function() {
                 self.initTechniqueVMs()
@@ -427,8 +435,9 @@ export class ViewModel {
             });
         } else {
             this.initTechniqueVMs();
-            this.filters.initPlatformOptions(this.dataService.getDomain(this.domainVersionID));
+            this.filters.initPlatformOptions(domain);
         }
+        this.loaded = true;
     }
 
     initTechniqueVMs() {
@@ -1054,6 +1063,7 @@ export class ViewModel {
      * @returns {Tactic[]} filtered tactics
      */
     public filterTactics(tactics: Tactic[], matrix: Matrix): Tactic[] {
+        if (!this.loaded) return; // still initializing technique VMs
         return tactics.filter((tactic: Tactic) => this.filterTechniques(tactic.techniques, tactic, matrix).length > 0);
     }
 
@@ -1251,6 +1261,10 @@ export class ViewModel {
 
         let domain = this.dataService.getDomain(this.domainVersionID);
         rep.domain = domain.domain_identifier;
+        if (domain.isCustom) {
+            // custom data url
+            rep.customDataURL = domain.urls[0];
+        }
         rep.description = this.description;
         rep.filters = JSON.parse(this.filters.serialize());
         rep.sorting = this.sorting;
@@ -1440,6 +1454,10 @@ export class ViewModel {
                 l.deSerialize(link);
                 if (l.valid()) this.links.push(l);
             }
+        }
+        // add custom data URL
+        if ("customDataURL" in obj) {
+            this.bundleURL = obj.customDataURL;
         }
         if ("layout" in obj) {
             this.layout.deserialize(obj.layout);
