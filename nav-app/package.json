@@ -39,7 +39,7 @@
     "is_js": "^0.9.0",
     "load-json-file": "^7.0.1",
     "mathjs": "^10.5.3",
-    "ngx-color-picker": "^10.1.0",
+    "ngx-color-picker": "^11.0.0",
     "ngx-drag-drop": "^2.0.0",
     "ngx-markdown": "^11.2.0",
     "ngx-smart-popover": "^1.5.0",
