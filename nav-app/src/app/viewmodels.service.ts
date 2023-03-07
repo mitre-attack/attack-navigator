@@ -418,6 +418,7 @@ export class ViewModel {
         this.filters = new Filter();
         this.name = name;
         this.uid = uid;
+        this.legendColorPresets = this.backgroundPresets;
     }
 
     loadVMData() {
