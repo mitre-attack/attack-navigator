@@ -113,7 +113,7 @@ export abstract class Cell {
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
         if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
-        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor && this.configService.getFeature('aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
+        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor && !this.technique.isSubtechnique && this.configService.getFeature('aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score)) && this.configService.getFeature('non_aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
         else return this.isDarkTheme ? "white" : "black";
     }
@@ -158,7 +158,7 @@ export abstract class Cell {
         // don't display if disabled or highlighted
         if (!tvm.enabled || this.isHighlighted) return null;
         if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0 && this.configService.getFeature('aggregate_score_color')) {
+        if (this.viewModel.layout.showAggregateScores && !this.technique.isSubtechnique && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0 && this.configService.getFeature('aggregate_score_color')) {
             return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
         }
         if (tvm.score && this.configService.getFeature('non_aggregate_score_color')) return { "background": this.emulate_alpha(tvm.scoreColor) }
