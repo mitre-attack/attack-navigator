@@ -9,6 +9,11 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# Changes Staged on Develop
+
+## New Features
+- Users can disable the background color effect on manually assigned colors, aggregate scores, or non-aggregate scores by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#371](https://github.com/mitre-attack/attack-navigator/issues/371).
+
 # 4.8.0 - 20 December 2022
 
 ## New Features
