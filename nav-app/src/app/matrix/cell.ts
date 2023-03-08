@@ -107,12 +107,12 @@ export abstract class Cell {
      * @return               black, white, or gray, depending on technique and column state
      */
     public getTechniqueTextColor() {
-        if (!this.tactic || !this.configService.getFeature('background_color')) return this.isDarkTheme ? "white" : "black";
+        if (!this.tactic) return this.isDarkTheme ? "white" : "black";
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         if (!tvm.enabled) return this.isDarkTheme ? "rgb(255 255 255 / 25%)" : "#aaaaaa";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
+        if (tvm.color && this.configService.getFeature('background_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
         if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor && !this.technique.isSubtechnique && this.configService.getFeature('aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
         if (tvm.score && !isNaN(Number(tvm.score)) && this.configService.getFeature('non_aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
         else return this.isDarkTheme ? "white" : "black";
@@ -156,8 +156,8 @@ export abstract class Cell {
         if (!this.tactic) return null;
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
-        if (!tvm.enabled || this.isHighlighted || !this.configService.getFeature('background_color')) return null;
-        if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
+        if (!tvm.enabled || this.isHighlighted) return null;
+        if (tvm.color && this.configService.getFeature('background_color')) return { "background": this.emulate_alpha(tvm.color) }
         if (this.viewModel.layout.showAggregateScores && !this.technique.isSubtechnique && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0 && this.configService.getFeature('aggregate_score_color')) {
             return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
         }
