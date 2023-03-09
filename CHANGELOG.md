@@ -14,6 +14,9 @@
 ## New Features
 - Users can disable the background color effect on manually assigned colors, aggregate scores, or non-aggregate scores by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#371](https://github.com/mitre-attack/attack-navigator/issues/371).
 
+## Fixes
+- Fixed an issue where aggregate scores were calculated on techniques with no sub-techniques. See issue [#539](https://github.com/mitre-attack/attack-navigator/issues/539).
+
 # 4.8.0 - 20 December 2022
 
 ## New Features

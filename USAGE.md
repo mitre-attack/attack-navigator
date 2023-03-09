@@ -300,7 +300,7 @@ controls to be disabled.
 ## Aggregate Scores
 
 Aggregate scores will combine the scores of a technique and all of its sub-techniques, and can be calculated using
-either the average, max, min or sum function. They will display only on techniques with sub-techniques. The display of
+either the average, max, min or sum function. They are only calculated on techniques with sub-techniques. The display of
 aggregate scores in the matrix view and the score calculations can be customized via the "Matrix Configuration" dropdown
 menu.
 

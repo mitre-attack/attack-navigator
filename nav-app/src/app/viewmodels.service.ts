@@ -1112,20 +1112,18 @@ export class ViewModel {
         return techniques.sort((technique1: Technique, technique2: Technique) => {
             const techniqueVM1 = this.getTechniqueVM(technique1, tactic);
             const techniqueVM2 = this.getTechniqueVM(technique2, tactic);
-            let score1, score2;
 
             this.sortSubTechniques(technique1, tactic);
             this.sortSubTechniques(technique2, tactic);
 
-            if (!this.layout.showAggregateScores) {
-                score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : 0;
-                score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : 0;
-            }
-            else { // if show aggregate scores is enabled, factor that into sorting, and prefer techniques scored 0 over unscored
-                score1 = this.calculateAggregateScore(technique1, tactic);
-                techniqueVM1.aggregateScore = Number.isFinite(score1) ? score1.toString() : "";
-                score2 = this.calculateAggregateScore(technique2, tactic);
-                techniqueVM2.aggregateScore = Number.isFinite(score2) ? score2.toString() : "";
+            // prefer techniques scored 0 over unscored
+            let score1 = techniqueVM1.score.length > 0 ? Number(techniqueVM1.score) : Number.NEGATIVE_INFINITY;
+            let score2 = techniqueVM2.score.length > 0 ? Number(techniqueVM2.score) : Number.NEGATIVE_INFINITY;
+
+            if (this.layout.showAggregateScores) {
+                // if enabled, factor aggregate scores of parent techniques into sorting
+                if (technique1.subtechniques.length > 0) score1 = this.calculateAggregateScore(technique1, tactic);
+                if (technique2.subtechniques.length > 0) score2 = this.calculateAggregateScore(technique2, tactic);
             }
             return this.sortingAlgorithm(technique1, technique2, score1, score2);
         });
@@ -1216,6 +1214,7 @@ export class ViewModel {
 
         aggScore = aggScore.toFixed(2);
         tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
+        tvm.aggregateScore = Number.isFinite(+aggScore) ? (+aggScore).toString() : "";
         return +aggScore;
     }
 
