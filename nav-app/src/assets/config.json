@@ -211,6 +211,9 @@
         {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
             {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
+            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."},
+            {"name": "non_aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on non-aggregate scores."},
+            {"name": "aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on aggregate scores."},
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
