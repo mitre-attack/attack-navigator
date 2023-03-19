@@ -4,9 +4,8 @@ import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
 import { Technique, DataService, Tactic, Matrix } from '../data.service';
 import * as is from 'is_js';
+import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
-declare var tinycolor: any; //use tinycolor2
-import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
     selector: 'exporter',
@@ -136,9 +135,9 @@ export class ExporterComponent implements OnInit {
         //check preconditions, make sure they're in the right range
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
 
-        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); console.log("width", width);
-        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); console.log("height", height)
-        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); console.log("headerHeight", headerHeight);
+        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); // console.log("width", width);
+        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); // console.log("height", height)
+        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); // console.log("headerHeight", headerHeight);
 
         let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
         let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
@@ -498,7 +497,7 @@ export class ExporterComponent implements OnInit {
             let filterConfig = {"title": "platforms", "contents": []};
             if (self.showDomain()) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version});
+                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version.name});
             }
             if (self.showFilters()) {
               const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
@@ -746,7 +745,7 @@ export class ExporterComponent implements OnInit {
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
         if (is.ie()) { //internet explorer
-            window.navigator.msSaveBlob(svgBlob, filename)
+            window.navigator.msSaveOrOpenBlob(svgBlob, filename)
         } else {
             var svgUrl = URL.createObjectURL(svgBlob);
             var downloadLink = document.createElement("a");
@@ -930,7 +929,6 @@ class RenderableTactic {
 
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
 
-            
             if (filteredSubtechniques.length > 0 && showSubtechniques) {
                 for (let subtechnique of filteredSubtechniques) {
                     this.subtechniques.push(new RenderableTechnique(yPosition++, subtechnique, tactic, matrix, viewModel, renderConfig));

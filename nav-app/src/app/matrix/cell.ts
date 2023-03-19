@@ -3,8 +3,7 @@ import { Technique, Tactic, DataService } from '../data.service';
 import { ViewModel } from '../viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
 import { ConfigService } from '../config.service';
-
-declare var tinycolor: any; //use tinycolor2
+import * as tinycolor from 'tinycolor2';
 
 @Directive()
 export abstract class Cell {
@@ -113,9 +112,9 @@ export abstract class Cell {
         if (!tvm.enabled) return this.isDarkTheme ? "rgb(255 255 255 / 25%)" : "#aaaaaa";
         // don't display if disabled or highlighted
         // if (this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_tactic_union_id == this.technique.technique_tactic_union_id) return "black"
-        if (tvm.color) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
-        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
-        if (tvm.score && !isNaN(Number(tvm.score))) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
+        if (tvm.color && this.configService.getFeature('background_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.color), ["white", "black"]);
+        if (this.viewModel.layout.showAggregateScores && tvm.aggregateScoreColor && this.technique.subtechniques.length > 0 && this.configService.getFeature('aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.aggregateScoreColor), ["white", "black"]);
+        if (tvm.score && !isNaN(Number(tvm.score)) && this.configService.getFeature('non_aggregate_score_color')) return tinycolor.mostReadable(this.emulate_alpha(tvm.scoreColor), ["white", "black"]);
         else return this.isDarkTheme ? "white" : "black";
     }
 
@@ -158,9 +157,11 @@ export abstract class Cell {
         let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic)
         // don't display if disabled or highlighted
         if (!tvm.enabled || this.isHighlighted) return null;
-        if (tvm.color) return { "background": this.emulate_alpha(tvm.color) }
-        if (this.viewModel.layout.showAggregateScores && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0) return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
-        if (tvm.score) return { "background": this.emulate_alpha(tvm.scoreColor) }
+        if (tvm.color && this.configService.getFeature('background_color')) return { "background": this.emulate_alpha(tvm.color) }
+        if (this.viewModel.layout.showAggregateScores && this.technique.subtechniques.length > 0 && !isNaN(Number(tvm.aggregateScore)) && tvm.aggregateScore.length > 0 && this.configService.getFeature('aggregate_score_color')) {
+            return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
+        }
+        if (tvm.score && this.configService.getFeature('non_aggregate_score_color')) return { "background": this.emulate_alpha(tvm.scoreColor) }
         // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 }

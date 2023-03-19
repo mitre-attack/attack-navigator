@@ -1,28 +1,32 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel, ViewModelsService } from '../viewmodels.service';
-import { BaseStix, DataService, Group, Mitigation, Software, Technique } from '../data.service';
+import { BaseStix, DataService, Group, Mitigation, Software, Technique, Campaign } from '../data.service';
 
 @Component({
-  selector: 'app-search-and-multiselect',
-  templateUrl: './search-and-multiselect.component.html',
-  styleUrls: ['./search-and-multiselect.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-search-and-multiselect',
+    templateUrl: './search-and-multiselect.component.html',
+    styleUrls: ['./search-and-multiselect.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
-    public stixTypes: any[];
+
+    public stixTypes: any[] = [];
+    public techniqueResults: Technique[] = [];
     // Data Components is a map mainly because it is a collection of labels that map to
     // an array of techniques, where we want to filter/sort by label name
     public stixDataComponents = new Map<string, any>();
-    public stixDataComponentLabels: string[];
-    userClickedExpand = false;
-    expandedPanels = {
+    public stixDataComponentLabels: string[] = [];
+    public userClickedExpand: boolean = false;
+
+    public expandedPanels = {
         0: true, // techniques panel
         1: false, // groups panel
         2: false, // software panel
-        3: false, // mitigations panel
-        4: false // data components panel
+        3: false, // campaign panel
+        4: false, // mitigations panel
+        5: false // data components panel
     };
 
     public fields = [
@@ -36,11 +40,6 @@ export class SearchAndMultiselectComponent implements OnInit {
             "field": "attackID",
             "enabled": true
         },
-        // {
-        //     "label": "STIX ID",
-        //     "field": "id",
-        //     "enabled": false
-        // },
         {
             "label": "description",
             "field": "description",
@@ -56,6 +55,8 @@ export class SearchAndMultiselectComponent implements OnInit {
     private debounceFunction;
     private previousQuery: string = "";
     private _query: string = "";
+
+    // query setter
     public set query(newQuery: string) {
         this._query = newQuery;
         if (!this.debounceFunction) {
@@ -63,27 +64,26 @@ export class SearchAndMultiselectComponent implements OnInit {
                 this.getResults(this._query);
                 this.debounceFunction = null;
                 this.previousQuery = this._query;
-                }, 300);
+            }, 300);
         }
     }
 
+    // get query length
     public get queryLength(): number {
         return this._query.length;
     }
 
+    // get techniques matching label
     public get stixDataComponentsResults(): Technique[] {
-      let results = [];
-      this.stixDataComponentLabels.forEach((label) => {
-        results = results.concat(this.stixDataComponents.get(label).objects);
-      });
-      return results;
+        let results = [];
+        this.stixDataComponentLabels.forEach((label) => {
+            results = results.concat(this.stixDataComponents.get(label).objects);
+        });
+        return results;
     }
 
-    public techniqueResults: Technique[] = [];
-
     constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
-        this.stixTypes = [];
-        this.stixDataComponentLabels = [];
+        // intentionally left blank
     }
 
     ngOnInit() {
@@ -91,7 +91,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     /**
-     * filterAndSort() takes an array of items and does the following:
+     * Takes an array of items and does the following:
      *       1) if the query is empty, then it sorts the array
      *       2) if the query is not empty, then it filters the already sorted array until nothing is left, or until
      *          the query is cleared out and empty again
@@ -101,10 +101,12 @@ export class SearchAndMultiselectComponent implements OnInit {
      *                                       to sort techniques and all its subtechniques,
      *                                       otherwise just sort BaseStix items by name
      */
-    filterAndSort(items: BaseStix[], query = "", sortTechniquesAndSubtechniques = false): any[] {
+    public filterAndSort(items: BaseStix[], query: string = "", sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
         let results = items.filter(t => !t.deprecated && !t.revoked);
+
         if (query.trim() === "") {
+            // sort the array
             if (sortTechniquesAndSubtechniques) {
                 results.sort((tA: Technique, tB: Technique) => {
                     let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
@@ -134,23 +136,27 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    filterAndSortLabels(labels, query) {
-      let results = labels;
-      if (query.trim() === "") {
-        return results.sort();
-      } else {
-        return results.filter((r) => r.toLowerCase().includes(query.trim().toLowerCase()));
-      }
+    /**
+     * Filters and sorts data component labels
+     * @param labels list of data component labels
+     * @param query user-input query in search bar
+     */
+    public filterAndSortLabels(labels: string[], query: string): string[] {
+        let results: string[] = labels;
+        if (query.trim() === "") {
+            return results.sort();
+        } else {
+            return results.filter((r) => r.toLowerCase().includes(query.trim().toLowerCase()));
+        }
     }
 
 
     /**
-     * getResults() checks if this._query is:
+     * Checks if the query is:
      *       1) valid, and
      *       2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
     **/
-
-    getResults(query = "", fieldToggled = false) {
+    public getResults(query: string = "", fieldToggled = false) {
         if (query.trim() != "" && query.includes(this.previousQuery) && !fieldToggled) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
             this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
@@ -162,14 +168,17 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.expandPanels();
     }
 
-    expandPanels() {
+    /**
+     * Update expanded panels based on query and results
+     */
+    public expandPanels() {
         if (!this.userClickedExpand) {
             this.expandedPanels[0] = this.techniqueResults.length > 0;
             let isPrevExpanded = this.expandedPanels[0];
             if (!isPrevExpanded) {
                 this.stixTypes.forEach((s, i) => {
-                  this.expandedPanels[i+1] = !isPrevExpanded && s.objects.length > 0;
-                  isPrevExpanded = s.isExpanded;
+                    this.expandedPanels[i + 1] = !isPrevExpanded && s.objects.length > 0;
+                    isPrevExpanded = s.isExpanded;
                 });
             }
             this.expandedPanels[4] = (!isPrevExpanded && this.stixDataComponentLabels.length > 0);
@@ -177,16 +186,18 @@ export class SearchAndMultiselectComponent implements OnInit {
             let isAllCollapsed = false;
             for (const isPanelExpanded in this.expandedPanels) {
                 if (isPanelExpanded) {
-                  isAllCollapsed = true;
-                  break;
+                    isAllCollapsed = true;
+                    break;
                 }
             }
             this.userClickedExpand = isAllCollapsed;
         }
     }
 
-    getTechniques() {
-        //get master list of techniques and sub-techniques
+    /**
+     * Retrieve master list of techniques and sub-techniques
+     */
+    public getTechniques(): void {
         let allTechniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
         for (let technique of allTechniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
@@ -194,7 +205,10 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.techniqueResults = this.filterAndSort(allTechniques, this._query, true);
     }
 
-    getStixData() {
+    /**
+     * Retrieve master list of STIX objects
+     */
+    public getStixData(): void {
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
 
         this.stixTypes = [{
@@ -206,16 +220,19 @@ export class SearchAndMultiselectComponent implements OnInit {
         }, {
             "label": "mitigations",
             "objects": this.filterAndSort(domain.mitigations, this._query)
+        }, {
+            "label": "campaigns",
+            "objects": this.filterAndSort(domain.campaigns, this._query)
         }];
 
         domain.dataComponents.forEach((c) => {
-          const source = c.source(this.viewModel.domainVersionID);
-          const label = `${source.name}: ${c.name}`;
-          const obj = {
-            "objects": c.techniques(this.viewModel.domainVersionID),
-            "url": source.url
-          }
-          this.stixDataComponents.set(label, obj);
+            const source = c.source(this.viewModel.domainVersionID);
+            const label = `${source.name}: ${c.name}`;
+            const obj = {
+                "objects": c.techniques(this.viewModel.domainVersionID),
+                "url": source.url
+            }
+            this.stixDataComponents.set(label, obj);
         });
         this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
     }
@@ -234,7 +251,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     public mouseEnterAll(techniques: Technique[]) {
-      techniques.forEach((t) => this.mouseEnter(t));
+        techniques.forEach((t) => this.mouseEnter(t));
     }
 
     public mouseEnter(technique: Technique, isTechnique = true): void {
@@ -251,7 +268,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.viewModel.clearHighlight();
     }
 
-    public select(stixObject: any, isTechnique= true): void {
+    public select(stixObject: any, isTechnique = true): void {
         if (isTechnique) {
             this.viewModel.selectTechniqueAcrossTactics(stixObject);
         }
@@ -307,6 +324,8 @@ export class SearchAndMultiselectComponent implements OnInit {
             return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
             return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
+        } else if (stixObject instanceof Campaign) {
+            return allTechniques.filter((technique: Technique) => (stixObject as Campaign).relatedTechniques(domainVersionID).includes(technique.id));
         }
     }
 }

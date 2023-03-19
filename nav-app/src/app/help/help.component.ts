@@ -11,18 +11,20 @@ import { LayerInformationComponent } from "../layer-information/layer-informatio
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;
-    @ViewChild('markdownElement', {static: false}) private markdownElement: MarkdownComponent;
+    @ViewChild('markdownElement', { static: false }) private markdownElement: MarkdownComponent;
     public headingAnchors: MarkdownHeadingAnchor[] = [];
 
 
     constructor(private dialog: MatDialog,
                 private markdownService: MarkdownService,
                 private renderer: Renderer2,
-                @Inject(MAT_DIALOG_DATA) public data) {}
+                @Inject(MAT_DIALOG_DATA) public data) {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
         setTimeout(() => {
-           this.scrollTo('toc');
+            this.scrollTo('toc');
         }, 175);
 
         let self = this;
@@ -35,15 +37,19 @@ export class HelpComponent implements OnInit {
                 anchor: escapedText,
                 label: text.replace("&amp;", "&")
             });
-            return '<h' + level + ' class="' + escapedText + '">' + img +
-              text +
-              '</h' + level + '>';
+            return `<h${level} class="${escapedText}">${img}${text}</h${level}>`;
         }
 
         this.markdownService.renderer.html = (html: string) => {
             if (!html.match(/(nav-app\/src\/)/g))
                 return html;
             return html.replace(/(nav-app\/src\/)/g, '');
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.listenObj) {
+            this.listenObj();
         }
     }
 
@@ -67,21 +73,15 @@ export class HelpComponent implements OnInit {
         }
     }
 
-    ngOnDestroy(): void {
-        if (this.listenObj) {
-            this.listenObj();
-        }
-    }
-
     public scrollTo(anchor) {
         let element = document.querySelector("." + anchor);
-        if (element) element.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});
+        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
     }
 
     /**
      * open the layer information dialog
      */
-    openLayerDialog() {
+    public openLayerDialog(): void {
         this.dialog.open(LayerInformationComponent, {
             maxWidth: "90ch"
         });

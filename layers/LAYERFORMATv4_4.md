@@ -1,5 +1,5 @@
 # ATT&CK® Navigator Layer File Format Definition
-This document describes **Version 4.3** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
+This document describes **Version 4.4** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
 
 ## Property Table
 
@@ -9,6 +9,7 @@ This document describes **Version 4.3** of the MITRE ATT&CK Navigator Layer file
 | name | String | Yes | n/a | The name of the layer |
 | description | String | No | "" | A free-form text field that describes the contents or intent of the layer |
 | domain | String | Yes | n/a | Technology domain that this layer represents. Valid values are: "enterprise-attack", "mobile-attack", "ics-attack" |
+| customDataURL | String | No | n/a | The URL of the custom Collection or STIX bundle from which the layer was built. |
 | filters | Filter object | No | | See Filter object definition below
 | sorting | Number | No | 0 | Specifies the ordering of the techniques within each tactic category as follows: <br>**0**: sort ascending alphabetically by technique name <br>**1**: sort descending alphabetically by technique name <br>**2**: sort ascending by technique score <br>**3**: sort descending by technique score |
 | layout | Layout object | No | | See definition of Layout object below |
@@ -35,8 +36,8 @@ This document describes **Version 4.3** of the MITRE ATT&CK Navigator Layer file
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | attack | String | No | Current version of ATT&CK | ATT&CK version of this layer |
-| navigator | String | Yes | | Must be "4.6.5" |
-| layer | String | Yes | | Must be "4.3" |
+| navigator | String | Yes | | Must be at least "4.8.0" |
+| layer | String | Yes | | Must be "4.4" |
 
 ## Technique Object properties
 
@@ -105,9 +106,9 @@ The following example illustrates the layer file format:
 {
     "name": "example layer",
     "versions": {
-        "attack": "11",
-        "navigator": "4.6.5",
-        "layer": "4.3"
+        "attack": "12",
+        "navigator": "4.8.0",
+        "layer": "4.4"
     },
     "domain": "enterprise-attack",
     "description": "hello, world",

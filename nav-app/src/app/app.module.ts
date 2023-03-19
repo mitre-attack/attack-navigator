@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import 'rxjs/add/operator/map'
@@ -111,7 +111,9 @@ import { ListInputComponent } from './list-input/list-input.component';
       MatExpansionModule,
       MatTabsModule,
   ],
-  providers: [],
+  providers: [
+    Title
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ VersionUpgradeComponent, HelpComponent, ExporterComponent ]
 })

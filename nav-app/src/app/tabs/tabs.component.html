@@ -133,44 +133,63 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <table class="layerOpTable">
-                        <!-- Choose version -->
+                    <table class="inputTable">
                         <tr>
-                            <td>
+                            <!-- Load data from different version -->
+                            <td class="width-lg">
+                                <!-- Choose version -->
                                 <mat-form-field>
-                                    <mat-select placeholder="version" [(ngModel)]="nVersion" required>
+                                    <mat-select placeholder="Choose a version" [(ngModel)]="nVersion" required>
                                         <mat-option [value]="null">none</mat-option>
                                         <mat-option *ngFor="let nVersion of this.dataService.versions"
-                                                    [value]="nVersion">{{nVersion}}</mat-option>
+                                                    [value]="nVersion">{{nVersion.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                            </td>
-                            <td>
-                                Choose the version for the new layer. <em>*Versions prior
-                                to {{ds.versions[ds.versions.length - 1]}} are not supported by Navigator
-                                v{{nav_version}}.</em>
-                            </td>
-                        </tr>
-                        <!-- Choose domain -->
-                        <tr>
-                            <td>
+                                <!-- Choose domain -->
                                 <mat-form-field>
-                                    <mat-select placeholder="domain" [(ngModel)]="nDomain" [disabled]="!nVersion"
+                                    <mat-select placeholder="Choose a domain" [(ngModel)]="nDomain" [disabled]="!nVersion"
                                                 required>
                                         <mat-option [value]="null">none</mat-option>
                                         <mat-option *ngFor="let nDomain of filterDomains(nVersion)"
                                                     [value]=nDomain>{{nDomain.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <div>
+                                    <em>* Official ATT&CK Versions prior to {{ds.lowestSupportedVersion.name}} are not supported by Navigator v{{nav_version}}.</em>
+                                </div>
                             </td>
-                            <td [ngClass]="{disabled: !nVersion}">
-                                Choose a domain for the new layer.
+
+                            <td class="width-sm"><b style="font-size: 8pt">OR</b></td>
+    
+                            <!-- Load data from collection or STIX bundle URL -->
+                            <td class="width-lg">
+                                <mat-form-field>
+                                    <input type="url" matInput placeholder="Collection or STIX bundle URL" [(ngModel)]="loadData.url"/>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <input type="number" matInput placeholder="Version number" [(ngModel)]="loadData.version"/>
+                                    <mat-hint>ATT&CK version (e.g. 12)</mat-hint>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <input type="text" matInput placeholder="Domain" [(ngModel)]="loadData.identifier"/>
+                                    <mat-hint>Domain identifier (e.g. defending-iaas)</mat-hint>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="width-lg">
+                                <button style="margin-top: 20px" mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">
+                                    Create layer from Version
+                                </button>
+                            </td>
+                            <td class="width-sm"></td>
+                            <td class="width-lg">
+                                <button style="margin-top: 20px" mat-button [disabled]="!loadData.url || !loadData.version || !loadData.identifier" (click)="newLayerFromURL(loadData)">
+                                    Create layer from URL
+                                </button>
                             </td>
                         </tr>
                     </table>
-
-                    <!-- Create new layer with chosen version & domain -->
-                    <button mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">Create</button>
                 </mat-expansion-panel>
             </mat-expansion-panel>
 
@@ -229,7 +248,7 @@
                                 <mat-select placeholder="domain" [(ngModel)]="domain" required>
                                     <mat-option [value]="null">none</mat-option>
                                     <mat-option *ngFor="let domain of this.dataService.domains"
-                                                [value]=domain.id>{{domain.name}} {{domain.version}}</mat-option>
+                                                [value]=domain.id>{{domain.name}} {{domain.version.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>

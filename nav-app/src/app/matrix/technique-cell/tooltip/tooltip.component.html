@@ -1,4 +1,4 @@
-<div [ngClass]="'tooltip ' + placement">
+<div [ngClass]="'tooltip ' + placement" [style.width]="isCellPinned ? '200ch' : ''">
     <table>
         <tr>
             <td colspan=2 class="technique-name">
@@ -13,7 +13,7 @@
             <td>{{techniqueVM.score}}
             </td>
         </tr>
-        <tr *ngIf="technique.subtechniques.length > 0 && viewModel.layout.showAggregateScores && techniqueVM.aggregateScore.length > 0">
+        <tr *ngIf="viewModel.layout.showAggregateScores && techniqueVM.aggregateScore">
             <td>Aggregate Score ({{viewModel.layout.aggregateFunction}}):</td>
             <td>{{techniqueVM.aggregateScore}}</td>
         </tr>
