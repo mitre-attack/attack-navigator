@@ -26,5 +26,3 @@ WORKDIR /src/nav-app
 EXPOSE 4200
 
 CMD npm start
-
-# USER node
