@@ -4,7 +4,7 @@ FROM node:16
 
 # Install node packages - cache for faster future builds
 WORKDIR /src/nav-app
-COPY nav-app/package*.json nav-app/patch-webpack.js .
+COPY nav-app/package*.json nav-app/patch-webpack.js ./
 # Install packages and build
 RUN npm install --unsafe-perm
 
