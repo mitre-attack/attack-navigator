@@ -29,9 +29,8 @@ $colors: (
     dark-disabled: (color: rgb(255 255 255 / 25%)),
     dark-link: (color: #7588E8),
     dark-link-active: (color: #E847E8),
-//  body: (color: rgb(50, 50, 50), on-color: #cdcdcd),                            //example of a dark theme for the site
-    link: (color: #4f7cac),                                                     //hyperlinks
-    matrix-header: (color: gray, on-color: white),                            //color of matrix headers
+    link: (color: #4f7cac),                                                     // hyperlinks
+    matrix-header: (color: gray, on-color: white),                            // color of matrix headers
 
     cell-highlight-color: (color: rgb(96, 197, 255)),
     cell-highlight-dark-color: (color: #464DFF),

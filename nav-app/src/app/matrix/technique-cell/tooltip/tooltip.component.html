@@ -2,7 +2,10 @@
     <table>
         <tr>
             <td colspan=2 class="technique-name">
-                {{technique.name}} ({{technique.attackID}})
+                <span>{{technique.name}} ({{technique.attackID}})</span>
+                <span *ngIf="isCellPinned" class="pin" matTooltip="unpin" matTooltipPosition="above" (click)="unpin()">
+                    <mat-icon>push_pin</mat-icon>
+                </span>
             </td>
         </tr>
         <tr *ngIf="!techniqueVM.enabled">

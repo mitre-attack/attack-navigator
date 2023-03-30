@@ -35,4 +35,8 @@ export class TooltipComponent extends CellPopover implements OnInit {
             return note.object_refs.includes(this.technique.id);
         });
     }
+
+    public unpin(): void {
+        this.viewModelsService.pinnedCell = "";
+    }
 }
