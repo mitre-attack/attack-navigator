@@ -39,7 +39,7 @@
             vertical-align: middle;
         }
         .pin {
-            @include adaptive-color("background-color", rgba(160, 160, 160, 0.75), rgba(#898dff, 0.75));
+            @include adaptive-color("background-color", rgba(160, 160, 160, 0.75), rgba(#8f92fe, 0.75));
             border-radius: 4px;
             float: right;
             cursor: pointer;
