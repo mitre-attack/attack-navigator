@@ -61,7 +61,7 @@
                                        [disabled]="!config.showHeader"
                                        [(ngModel)]="config.headerHeight"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': !config.showHeader}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
