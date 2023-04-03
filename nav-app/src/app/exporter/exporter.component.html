@@ -61,7 +61,7 @@
                                        [disabled]="!config.showHeader"
                                        [(ngModel)]="config.headerHeight"
                                        (input)="buildSVG()" />
-                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
+                                <span matSuffix>{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
