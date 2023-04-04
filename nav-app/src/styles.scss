@@ -215,6 +215,10 @@ body {
           @include adaptive-color-dark-only("color", rgba(255, 255, 255, 0.9));
         }
 
+        .mat-select-arrow {
+          @include adaptive-color-dark-only("color", rgba(255, 255, 255, 0.9));
+        }
+
         .disabled-text {
           @include adaptive-color("color", rgba(0,0,0,.38), color(dark-disabled));
         }
