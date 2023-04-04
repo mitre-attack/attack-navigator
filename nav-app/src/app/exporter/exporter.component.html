@@ -61,7 +61,7 @@
                                        [disabled]="!config.showHeader"
                                        [(ngModel)]="config.headerHeight"
                                        (input)="buildSVG()" />
-                                <span matSuffix [style.color]="!config.showHeader ? 'rgba(0,0,0,0.42)' : 'black'">{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': !config.showHeader}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
@@ -115,7 +115,7 @@
                                        step="1"
                                        [(ngModel)]="config.legendX"
                                        (input)="buildSVG()" />
-                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.legendDocked}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -128,7 +128,7 @@
                                        step="1"
                                        [(ngModel)]="config.legendY"
                                        (input)="buildSVG()" />
-                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.legendDocked}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -141,7 +141,7 @@
                                        step="1"
                                        [(ngModel)]="config.legendWidth"
                                        (input)="buildSVG()" />
-                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.legendDocked}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -154,7 +154,7 @@
                                        step="1"
                                        [(ngModel)]="config.legendHeight"
                                        (input)="buildSVG()" />
-                                <span [style.color]="config.legendDocked ? 'rgba(0,0,0,0.42)' : 'black'" matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.legendDocked}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                     </ul>
