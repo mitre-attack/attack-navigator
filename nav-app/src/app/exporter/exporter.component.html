@@ -29,14 +29,35 @@
                     <ul>
                         <li>
                             <mat-form-field>
+                                <mat-select placeholder="orientation" [(ngModel)]="config.orientation" (selectionChange)="buildSVG()">
+                                    <mat-option value="portrait">Portrait</mat-option>
+                                    <mat-option value="landscape">Landscape</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <mat-select matSelect placeholder="size" [(ngModel)]="config.size" (selectionChange)="buildSVG()">
+                                    <mat-option value="custom">Custom</mat-option>
+                                    <mat-option value="letter">US Letter: 8.5x11</mat-option>
+                                    <mat-option value="legal">US Legal: 8.5x14</mat-option>
+                                    <mat-option value="small">Small: 11x17</mat-option>
+                                    <mat-option value="medium">Medium: 18x24</mat-option>
+                                    <mat-option value="large">Large 24x36</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </li>
+                        <li>
+                            <mat-form-field>
                                 <input matInput
                                        class="has-suffix"
                                        type="number"
                                        placeholder="width"
                                        step="0.01"
+                                       [disabled]="config.size !== 'custom'"
                                        [(ngModel)]="config.width"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.size !== 'custom'}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
@@ -46,9 +67,10 @@
                                        type="number"
                                        placeholder="height"
                                        step="0.01"
+                                       [disabled]="config.size !== 'custom'"
                                        [(ngModel)]="config.height"
                                        (input)="buildSVG()" />
-                                <span matSuffix>{{config.unit}}</span>
+                                <span matSuffix [ngClass]="{'disabled-text': config.size !== 'custom'}">{{config.unit}}</span>
                             </mat-form-field>
                         </li>
                         <li>
