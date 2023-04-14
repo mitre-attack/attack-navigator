@@ -34,6 +34,8 @@ export class ExporterComponent implements OnInit {
             "headerHeight": 1,
 
             "unit": "in",
+            "orientation": "landscape",
+            "size": "letter",
 
             "showSubtechniques": "expanded",
 
@@ -131,6 +133,8 @@ export class ExporterComponent implements OnInit {
         self.buildSVGDebounce = false;
 
         console.log("building SVG");
+
+        setSize(self.config.size, self.config.orientation)
 
         //check preconditions, make sure they're in the right range
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
@@ -473,6 +477,27 @@ export class ExporterComponent implements OnInit {
                     .attr("y1", boxGroupY.bandwidth())
                     .attr("y2", boxGroupY.bandwidth())
                     .attr("stroke", "#dddddd");
+            }
+        }
+
+        /**
+         * Function to set width and height based on selected size and orientaiton
+         * @param {string} size dimensions
+         * @param {string} orientation  portrait or landscape
+         */
+        function setSize(size, orientation) {
+            const ratioMap = {
+                letter: {portrait: [8.5, 11], landscape: [11, 8.5]},
+                legal: {portrait: [8.5, 14], landscape: [14, 8.5]},
+                small: {portrait: [11, 17], landscape: [17, 11]},
+                medium: {portrait: [18, 24], landscape: [24, 18]},
+                large: {portrait: [24, 36], landscape: [36, 24]},
+            };
+
+            if (size !== "custom") {
+                const [w, h] = ratioMap[size][orientation];
+                self.config.width = w;
+                self.config.height = h;
             }
         }
 
