@@ -35,7 +35,7 @@ export class ExporterComponent implements OnInit {
 
             "unit": "in",
             "orientation": "landscape",
-            "size": "custom",
+            "size": "letter",
 
             "showSubtechniques": "expanded",
 
