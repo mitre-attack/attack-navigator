@@ -9,7 +9,9 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# Changes Staged on Develop
+# 4.8.1 - 25 April 2023
+
+Adds support for ATT&CK v13.
 
 ## Improvements
 - Users can disable the background color effect on manually assigned colors, aggregate scores, or non-aggregate scores by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#371](https://github.com/mitre-attack/attack-navigator/issues/371).
