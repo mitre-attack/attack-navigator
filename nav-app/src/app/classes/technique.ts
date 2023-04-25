@@ -1,8 +1,8 @@
 import { DataService } from "../data.service";
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 import { Tactic } from "./tactic";
 
-export class Technique extends BaseStix {
+export class Technique extends StixObject {
     public readonly platforms: string[];        // platforms for this technique.
     public readonly tactics: string[];          // tactics this technique is found under in phase-name format
     public readonly subtechniques: Technique[]; // subtechniques under this technique

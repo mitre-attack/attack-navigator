@@ -1,4 +1,4 @@
-export { BaseStix } from './base-stix';
+export { StixObject } from './stix-object';
 export { Campaign } from "./campaign";
 export { DataComponent } from "./data-component";
 export { Domain } from "./domain";

@@ -1,6 +1,6 @@
 import { DataService } from "../data.service";
 
-export abstract class BaseStix {
+export abstract class StixObject {
     public readonly id: string;          // STIX ID
     public readonly attackID: string;    // ATT&CK ID
     public readonly name: string;        // name of object
@@ -51,7 +51,7 @@ export abstract class BaseStix {
      *          > 0 if this object's version is greater,
      *          < 0 if that object's version is greater
      */
-    public compareVersion(that: BaseStix): number {
+    public compareVersion(that: StixObject): number {
         if (!this.version || !that.version) return 0; // one or both of the objects have no version
 
         let thisVersion = this.version.split('.');

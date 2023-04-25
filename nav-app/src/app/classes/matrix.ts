@@ -1,9 +1,9 @@
 import { DataService } from "../data.service";
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 import { Tactic } from "./tactic";
 import { Technique } from "./technique";
 
-export class Matrix extends BaseStix {
+export class Matrix extends StixObject {
     public readonly tactics: Tactic[]; //tactics found under this Matrix
     /**
      * Creates an instance of Matrix.

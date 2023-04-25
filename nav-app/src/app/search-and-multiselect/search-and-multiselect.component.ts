@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel, ViewModelsService } from '../viewmodels.service';
-import { BaseStix, Group, Mitigation, Software, Technique, Campaign } from '../classes';
+import { StixObject, Group, Mitigation, Software, Technique, Campaign } from '../classes';
 import { DataService } from '../data.service';
 
 @Component({
@@ -96,13 +96,13 @@ export class SearchAndMultiselectComponent implements OnInit {
      *       1) if the query is empty, then it sorts the array
      *       2) if the query is not empty, then it filters the already sorted array until nothing is left, or until
      *          the query is cleared out and empty again
-     * @param items BaseStix[] or Technique[] objects to be filtered and sorted
+     * @param items StixObject[] or Technique[] objects to be filtered and sorted
      * @param query user-input query in search bar
      * @param sortTechniquesAndSubtechniques will be true if called from getTechniqueResults(),
      *                                       to sort techniques and all its subtechniques,
-     *                                       otherwise just sort BaseStix items by name
+     *                                       otherwise just sort StixObject items by name
      */
-    public filterAndSort(items: BaseStix[], query: string = "", sortTechniquesAndSubtechniques = false): any[] {
+    public filterAndSort(items: StixObject[], query: string = "", sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
         let results = items.filter(t => !t.deprecated && !t.revoked);
 
@@ -313,7 +313,7 @@ export class SearchAndMultiselectComponent implements OnInit {
         this.viewModelsService.onSelectionChange.emit(); // emit selection change
     }
 
-    public getRelated(stixObject: BaseStix): Technique[] {
+    public getRelated(stixObject: StixObject): Technique[] {
         // master list of all techniques and sub-techniques
         let techniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
         let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainVersionID).subtechniques);

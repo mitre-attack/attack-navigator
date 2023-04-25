@@ -1,8 +1,8 @@
 import { DataService } from "../data.service";
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 import { Technique } from "./technique";
 
-export class Tactic extends BaseStix {
+export class Tactic extends StixObject {
     public readonly techniques: Technique[];  // techniques found under this tactic
     public readonly shortname: string;        // shortname property, AKA phase-name for techniques' kill-chain phases
     /**

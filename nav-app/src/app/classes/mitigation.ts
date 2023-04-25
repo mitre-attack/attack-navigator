@@ -1,6 +1,6 @@
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 
-export class Mitigation extends BaseStix {
+export class Mitigation extends StixObject {
     /**
      * get techniques mitigated by this mitigation
      * @returns {string[]} list of technique IDs

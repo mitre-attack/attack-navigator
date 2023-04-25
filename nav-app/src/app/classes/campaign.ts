@@ -1,6 +1,6 @@
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 
-export class Campaign extends BaseStix {
+export class Campaign extends StixObject {
     /**
      * get techniques used by this campaign
      * @returns {string[]} technique IDs used by this campaign

@@ -1,6 +1,6 @@
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 
-export class Group extends BaseStix {
+export class Group extends StixObject {
     /**
      * get techniques used by this group
      * @returns {string[]} technique IDs used by this group

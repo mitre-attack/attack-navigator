@@ -1,7 +1,7 @@
 import { DataService } from "../data.service";
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 
-export class DataComponent extends BaseStix {
+export class DataComponent extends StixObject {
     public readonly url: string;
     public readonly dataSource: string;
     /**

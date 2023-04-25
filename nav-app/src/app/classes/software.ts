@@ -1,7 +1,7 @@
 import { DataService } from "../data.service";
-import { BaseStix } from "./base-stix";
+import { StixObject } from "./stix-object";
 
-export class Software extends BaseStix {
+export class Software extends StixObject {
     public readonly platforms: string[] = []; //platforms for this software
 
     /**
