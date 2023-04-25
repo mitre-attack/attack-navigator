@@ -2,19 +2,23 @@ import { StixObject } from "./stix-object";
 
 export class Campaign extends StixObject {
     /**
-     * get techniques used by this campaign
-     * @returns {string[]} technique IDs used by this campaign
+     * Get techniques used by the campaign
+     * @param domainVersionID the ID of the domain and version
+     * @returns {string[]} technique IDs used by the campaign
      */
-     public used(domainVersionID): string[] {
-        let rels = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
-        if (rels.has(this.id)) return rels.get(this.id);
-        else return [];
+    public used(domainVersionID): string[] {
+        let relationships = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
+        if (relationships.has(this.id)) {
+            return relationships.get(this.id);
+        } else { return []; }
     }
 
     /**
-     * Return all related techniques
+     * Get all techniques related to the campaign
+     * @param domainVersionID the ID of the domain and version
+     * @returns {string[]} technique IDs used by the campaign
      */
-     public relatedTechniques(domainVersionID): string[] {
+    public relatedTechniques(domainVersionID): string[] {
         return this.used(domainVersionID);
     }
 }

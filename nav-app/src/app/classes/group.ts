@@ -2,16 +2,20 @@ import { StixObject } from "./stix-object";
 
 export class Group extends StixObject {
     /**
-     * get techniques used by this group
+     * Get the techniques used by this group
+     * @param domainVersionID the ID of the domain and version
      * @returns {string[]} technique IDs used by this group
      */
     public used(domainVersionID): string[] {
         let rels = this.dataService.getDomain(domainVersionID).relationships.group_uses;
-        if (rels.has(this.id)) return rels.get(this.id);
-        else return [];
+        if (rels.has(this.id)) {
+            return rels.get(this.id);
+        } else { return []; }
     }
+
     /**
-     * get techniques used by campaigns attributed to this group
+     * Get techniques used by campaigns attributed to this group
+     * @param domainVersionID the ID of the domain and version
      * @returns {string[]} technique IDs used by campaigns attributed to this group
      */
     public campaignsUsed(domainVersionID): string[] {
@@ -29,8 +33,9 @@ export class Group extends StixObject {
         } else return []; // no attributed campaigns
 
     }
+
     /**
-     * Return all related techniques
+     * Get all techniques related to the group
      */
     public relatedTechniques(domainVersionID): string[] {
         let usedSet = new Set(this.used(domainVersionID).concat(this.campaignsUsed(domainVersionID)));

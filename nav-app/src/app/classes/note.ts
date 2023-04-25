@@ -5,7 +5,7 @@ export class Note {
 
     /**
      * Creates an instance of Note.
-     * @param {*} stixSDO for the note
+     * @param {any} stixSDO for the note
     */
     constructor(stixSDO: any) {
         if (stixSDO.abstract) this.abstract = stixSDO.abstract;

@@ -14,34 +14,33 @@ export abstract class StixObject {
     protected readonly dataService: DataService;
 
     constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
+        // Properties
         this.id = stixSDO.id;
-        if (supportsAttackID) {
-            if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) this.attackID = stixSDO.external_references[0].external_id; else {
-                alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
-                throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
-            }
-        }
         this.name = stixSDO.name;
         this.description = stixSDO.description;
-        if (stixSDO.id.includes("x-mitre-data-component")) {
-            this.attackID = '';
-        } else if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
-            this.attackID = stixSDO.external_references[0].external_id;
-        } else {
-            alert('Error: external_references has invalid format in imported BaseStix object (ID: ' + stixSDO.id + ')');
-            throw new Error('Error: external_references has invalid format in imported BaseStix object. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
-        }
-        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
-            this.url = stixSDO.external_references[0].url;
-        } else {
-            this.url = "";
-        }
         this.created = stixSDO.created;
         this.modified = stixSDO.modified;
         this.revoked = stixSDO.revoked ? stixSDO.revoked : false;
         this.deprecated = stixSDO.x_mitre_deprecated ? stixSDO.x_mitre_deprecated : false;
         this.version = stixSDO.x_mitre_version ? stixSDO.x_mitre_version : '';
         this.dataService = dataService;
+
+        // ATT&CK ID
+        if (supportsAttackID) {
+            if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
+                this.attackID = stixSDO.external_references[0].external_id; 
+            } else {
+                alert('Error: external_references has invalid format in imported StixObject (ID: ' + stixSDO.id + ')');
+                throw new Error('Error: external_references has invalid format in imported StixObject. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+            }
+        }
+
+        // URL
+        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
+            this.url = stixSDO.external_references[0].url;
+        } else {
+            this.url = "";
+        }
     }
 
     /**

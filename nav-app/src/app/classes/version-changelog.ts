@@ -16,6 +16,7 @@ export class VersionChangelog {
         this.newDomainVersionID = newDomainVersionID;
     }
 
+    /** Get the length of the version changelog */
     public length(): number {
         return this.additions.length
             + this.changes.length

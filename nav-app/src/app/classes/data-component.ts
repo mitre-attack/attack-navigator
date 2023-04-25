@@ -4,25 +4,34 @@ import { StixObject } from "./stix-object";
 export class DataComponent extends StixObject {
     public readonly url: string;
     public readonly dataSource: string;
+
+    constructor(stixSDO: any, dataService: DataService) {
+        super(stixSDO, dataService, false);
+        this.dataSource = stixSDO.x_mitre_data_source_ref;
+    }
+
     /**
-     * get techniques related to this data component
-     * @returns {string[]} technique IDs used by this data component
+     * Get techniques related to the data component
+     * @param domainVersionID the ID of the domain and version
+     * @returns {string[]} technique IDs used by the data component
      */
     public techniques(domainVersionID): string[] {
         const techniques = [];
         const domain = this.dataService.getDomain(domainVersionID);
-        let rels = domain.relationships.component_rel;
-        if (rels.has(this.id)) {
-            rels.get(this.id).forEach((targetID) => {
-                const t = domain.techniques.find((t) => t.id === targetID);
-                if (t) techniques.push(t);
+
+        let relationships = domain.relationships.component_rel;
+        if (relationships.has(this.id)) {
+            relationships.get(this.id).forEach((targetID) => {
+                const technique = domain.techniques.find((t) => t.id === targetID);
+                if (technique) techniques.push(technique);
             })
         }
         return techniques;
     }
     /**
-     * get data source related to this data component
-     * @returns {name: string, url: string} name, and first url of data source referenced by this data component
+     * Get the data source related to this data component
+     * @param domainVersionID the ID of the domain and version
+     * @returns { name: string, url: string } the name and first url of the data source referenced by this data component
      */
     public source(domainVersionID) {
         const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
@@ -34,10 +43,5 @@ export class DataComponent extends StixObject {
             return { name: source.name, url: url };
         }
         else return { name: '', url: '' };
-    }
-
-    constructor(stixSDO: any, dataService: DataService) {
-        super(stixSDO, dataService, false);
-        this.dataSource = stixSDO.x_mitre_data_source_ref;
     }
 }

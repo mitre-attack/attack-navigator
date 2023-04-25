@@ -6,7 +6,7 @@ export class Software extends StixObject {
 
     /**
      * Creates an instance of Software.
-     * @param {*} stixSDO for the software
+     * @param {any} stixSDO for the software
      * @param {DataService} DataService the software occurs within
     */
     constructor(stixSDO: any, dataService: DataService) {
@@ -15,16 +15,18 @@ export class Software extends StixObject {
     }
 
     /**
-     * get techniques used by this software
+     * Get techniques used by this software
+     * @param domainVersionID the ID of the domain and version
      * @returns {string[]} technique IDs used by this software
      */
     public used(domainVersionID): string[] {
         let rels = this.dataService.getDomain(domainVersionID).relationships.software_uses;
-        if (rels.has(this.id)) return rels.get(this.id);
-        else return [];
+        if (rels.has(this.id)) {
+            return rels.get(this.id);
+        } else { return []; }
     }
     /**
-     * Return all related techniques
+     * Get all techniques related to the software
      */
     public relatedTechniques(domainVersionID): string[] {
         return this.used(domainVersionID);

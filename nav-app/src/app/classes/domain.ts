@@ -23,11 +23,11 @@ export class Domain {
     public authentication: ServiceAuth;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
+
     // this should only be enabled if the user loads custom data via URL
     public isCustom: boolean = false;
 
     public matrices: Matrix[] = [];
-
     public get tactics(): Tactic[] {
         let tactics = [];
         for (let matrix of this.matrices) {
@@ -83,7 +83,7 @@ export class Domain {
     /**
      * Get the version number for this domain
      */
-    getVersion(): string {
+    public getVersion(): string {
         return this.version.number;
     }
 }

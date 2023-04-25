@@ -8,10 +8,12 @@ export class Technique extends StixObject {
     public readonly subtechniques: Technique[]; // subtechniques under this technique
     public readonly datasources: string;        // data sources of the technique
     public parent: Technique = null;            // parent technique. Only present if it's a sub-technique
+
     public get isSubtechnique() { return this.parent != null; }
+
     /**
      * Creates an instance of Technique.
-     * @param {*} stixSDO for the technique
+     * @param {any} stixSDO for the technique
      * @param {Technique[]} subtechniques occuring under the technique
      */
     constructor(stixSDO: any, subtechniques: Technique[], dataService: DataService) {

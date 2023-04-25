@@ -5,9 +5,10 @@ import { Technique } from "./technique";
 export class Tactic extends StixObject {
     public readonly techniques: Technique[];  // techniques found under this tactic
     public readonly shortname: string;        // shortname property, AKA phase-name for techniques' kill-chain phases
+
     /**
      * Creates an instance of Tactic.
-     * @param {*} stixSDO for the tactic
+     * @param {any} stixSDO for the tactic
      * @param {Technique[]} techniques all techniques in the domain
      */
     constructor(stixSDO: any, techniques: Technique[], dataService: DataService) {
