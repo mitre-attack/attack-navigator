@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter, Directive } from '@angular/core';
+import { Input, Directive } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../classes';
 import { ViewModel, ViewModelsService } from '../viewmodels.service';
 import { ConfigService } from '../config.service';

@@ -1,6 +1,5 @@
 // utilities for working with browser cookies
 
-
 /**
  * Set a cookie
  * @param  {string} key            key to set under
