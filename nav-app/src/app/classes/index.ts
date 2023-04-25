@@ -11,3 +11,4 @@ export { Tactic } from "./stix/tactic";
 export { Technique } from "./stix/technique";
 export { VersionChangelog } from "./version-changelog";
 export { Version } from "./version";
+export { ContextMenuItem } from "./context-menu-item";

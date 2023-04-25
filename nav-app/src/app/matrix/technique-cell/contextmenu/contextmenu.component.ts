@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewEncapsulation } from '@angular/core';
-import { Technique, Tactic } from '../../../classes';
+import { Technique, Tactic, ContextMenuItem } from '../../../classes';
 import { ViewModel, ViewModelsService, TechniqueVM, Link } from '../../../services/viewmodels.service';
-import { ConfigService, ContextMenuItem } from '../../../services/config.service';
+import { ConfigService } from '../../../services/config.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
