@@ -9,6 +9,19 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 4.8.1 - 25 April 2023
+
+Adds support for ATT&CK v13.
+
+## Improvements
+- Users can disable the background color effect on manually assigned colors, aggregate scores, or non-aggregate scores by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#371](https://github.com/mitre-attack/attack-navigator/issues/371).
+- Added image orientation options and new preset image size options to the SVG exporter. See issue [#547](https://github.com/mitre-attack/attack-navigator/pull/547).
+
+## Fixes
+- Fixed an issue where aggregate scores were calculated on techniques with no sub-techniques. See issue [#539](https://github.com/mitre-attack/attack-navigator/issues/539).
+- Fixed an issue where pinned tooltips would cover the "pin/unpin tooltip" option in the context menu. See issue [#542](https://github.com/mitre-attack/attack-navigator/issues/542).
+- Fixed inconsistencies with dark theme in the SVG exporter. See issue [#546](https://github.com/mitre-attack/attack-navigator/pull/546).
+
 # 4.8.0 - 20 December 2022
 
 ## New Features
