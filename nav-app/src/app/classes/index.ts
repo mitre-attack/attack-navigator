@@ -12,3 +12,4 @@ export { Technique } from "./stix/technique";
 export { VersionChangelog } from "./version-changelog";
 export { Version } from "./version";
 export { ContextMenuItem } from "./context-menu-item";
+export { Gradient, Gcolor} from "./gradient";

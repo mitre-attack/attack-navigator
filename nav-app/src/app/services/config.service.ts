@@ -14,6 +14,7 @@ export class ConfigService {
     private featureStructure: object[];
 
     public contextMenuItems: ContextMenuItem[] = [];
+
     constructor(private dataService: DataService) {
         console.log("initializing config service");
         let self = this;
@@ -184,7 +185,7 @@ export class ConfigService {
      * @param  url optional, url to parse instead of window location href
      * @return     all fragments as key-value pairs
      */
-    getAllFragments(url?: string): Map<string, string> {
+    public getAllFragments(url?: string): Map<string, string> {
         if (!url) url = window.location.href;
         let fragments = new Map<string, string>();
         let regex = /[#&](\w+)=(\w+)/g
