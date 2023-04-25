@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { ViewModel, ViewModelsService } from '../viewmodels.service';
+import { ViewModel, ViewModelsService } from '../services/viewmodels.service';
 import { StixObject, Group, Mitigation, Software, Technique, Campaign } from '../classes';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 
 @Component({
     selector: 'app-search-and-multiselect',

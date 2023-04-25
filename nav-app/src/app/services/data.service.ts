@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { TaxiiConnect, Collection } from './taxii2lib';
-import { Campaign, Domain, Version, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note, VersionChangelog } from "./classes";
+import { TaxiiConnect, Collection } from '../taxii2lib';
+import { Campaign, Domain, Version, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note, VersionChangelog } from "../classes";
 
 @Injectable({
     providedIn: 'root',

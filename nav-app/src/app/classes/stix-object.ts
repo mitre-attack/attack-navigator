@@ -1,4 +1,4 @@
-import { DataService } from "../data.service";
+import { DataService } from "../services/data.service";
 
 export abstract class StixObject {
     public readonly id: string;          // STIX ID

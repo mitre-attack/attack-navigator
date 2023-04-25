@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Tactic } from '../../classes';
-import { ViewModel } from '../../viewmodels.service';
+import { ViewModel } from '../../services/viewmodels.service';
 
 @Component({
     selector: 'tactic-cell',

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Link, Metadata, ViewModel } from '../viewmodels.service';
+import { Link, Metadata, ViewModel } from '../services/viewmodels.service';
 
 @Component({
     selector: 'app-list-input',

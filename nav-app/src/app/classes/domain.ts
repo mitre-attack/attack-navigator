@@ -1,4 +1,4 @@
-import { ServiceAuth } from "../data.service";
+import { ServiceAuth } from "../services/data.service";
 import { Campaign } from "./campaign";
 import { DataComponent } from "./data-component";
 import { Group } from "./group";

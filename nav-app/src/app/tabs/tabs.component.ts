@@ -1,12 +1,12 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 import { Domain, Technique, Version } from '../classes';
-import { ConfigService } from '../config.service';
+import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { ExporterComponent } from '../exporter/exporter.component';
-import { ViewModelsService, ViewModel } from "../viewmodels.service";
+import { ViewModelsService, ViewModel } from "../services/viewmodels.service";
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from "../changelog/changelog.component";

@@ -1,9 +1,9 @@
 import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TabsComponent } from './tabs/tabs.component';
-import { ConfigService } from './config.service';
+import { ConfigService } from './services/config.service';
 import * as globals from "./globals";
-import { IconsService } from "./icons.service";
+import { IconsService } from "./services/icons.service";
 import { deleteCookie, getCookie, hasCookie, setCookie } from "./cookies";
 
 @Component({

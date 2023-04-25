@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service'; //import the DataService component so we can use it
-import { Technique, Tactic } from './classes';
+import { Technique, Tactic } from '../classes';
 
 @Injectable({
     providedIn: 'root',

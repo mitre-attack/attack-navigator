@@ -1,6 +1,6 @@
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {TechniqueCellComponent} from './technique-cell.component';
-import {ViewModelsService} from '../../viewmodels.service';
+import {ViewModelsService} from '../../services/viewmodels.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
 

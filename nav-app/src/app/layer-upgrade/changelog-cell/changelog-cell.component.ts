@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ViewModelsService } from '../../viewmodels.service';
-import { ConfigService } from '../../config.service';
-import { DataService } from '../../data.service';
+import { ViewModelsService } from '../../services/viewmodels.service';
+import { ConfigService } from '../../services/config.service';
+import { DataService } from '../../services/data.service';
 import { Cell } from '../../matrix/cell';
 
 @Component({

@@ -1,9 +1,9 @@
 import { Input, Directive } from '@angular/core';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 import { Technique, Tactic } from '../classes';
-import { ViewModel } from '../viewmodels.service';
+import { ViewModel } from '../services/viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
-import { ConfigService } from '../config.service';
+import { ConfigService } from '../services/config.service';
 import * as tinycolor from 'tinycolor2';
 
 @Directive()

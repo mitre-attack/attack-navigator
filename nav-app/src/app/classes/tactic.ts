@@ -1,4 +1,4 @@
-import { DataService } from "../data.service";
+import { DataService } from "../services/data.service";
 import { StixObject } from "./stix-object";
 import { Technique } from "./technique";
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatrixCommon } from '../matrix-common';
-import { ConfigService } from '../../config.service';
-import { ViewModelsService } from '../../viewmodels.service';
+import { ConfigService } from '../../services/config.service';
+import { ViewModelsService } from '../../services/viewmodels.service';
 
 @Component({
   selector: 'matrix-side',

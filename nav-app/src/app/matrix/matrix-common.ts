@@ -1,7 +1,7 @@
 import { Input, Directive } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../classes';
-import { ViewModel, ViewModelsService } from '../viewmodels.service';
-import { ConfigService } from '../config.service';
+import { ViewModel, ViewModelsService } from '../services/viewmodels.service';
+import { ConfigService } from '../services/config.service';
 import * as tinycolor from 'tinycolor2';
 
 @Directive()

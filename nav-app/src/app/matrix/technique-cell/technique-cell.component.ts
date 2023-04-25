@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
-import { DataService } from '../../data.service';
+import { DataService } from '../../services/data.service';
 import { Technique, Tactic, Matrix } from '../../classes';
-import { ConfigService } from '../../config.service';
+import { ConfigService } from '../../services/config.service';
 import { Cell } from '../cell';
-import { ViewModelsService } from '../../viewmodels.service';
+import { ViewModelsService } from '../../services/viewmodels.service';
 
 @Component({
     selector: 'technique-cell',

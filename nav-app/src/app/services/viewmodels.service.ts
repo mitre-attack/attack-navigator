@@ -1,10 +1,10 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Technique, Tactic, Matrix, Domain, VersionChangelog } from './classes';
+import { Technique, Tactic, Matrix, Domain, VersionChangelog } from '../classes';
 import { DataService } from './data.service';
 import * as tinygradient from 'tinygradient';
 import * as tinycolor from 'tinycolor2';
 import { evaluate } from 'mathjs';
-import * as globals from './globals'; //global variables
+import * as globals from '../globals'; //global variables
 import * as is from 'is_js';
 
 @Injectable({
