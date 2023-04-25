@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../viewmodels.service';
-import { DataService, Tactic, Technique, VersionChangelog } from '../data.service';
+import { DataService } from '../data.service';
+import { Tactic, Technique, VersionChangelog } from '../classes';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';

@@ -1,6 +1,7 @@
 // https://embed.plnkr.co/wWKnXzpm8V31wlvu64od/
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService, Domain, Technique, Version } from '../data.service'; //import the DataService component so we can use it
+import { DataService } from '../data.service'; //import the DataService component so we can use it
+import { Domain, Technique, Version } from '../classes';
 import { ConfigService } from '../config.service';
 import * as is from 'is_js';
 import { forkJoin } from 'rxjs';

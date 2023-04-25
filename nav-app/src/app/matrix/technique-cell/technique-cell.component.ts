@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
-import { Technique, Tactic, Matrix, DataService } from '../../data.service';
+import { DataService } from '../../data.service';
+import { Technique, Tactic, Matrix } from '../../classes';
 import { ConfigService } from '../../config.service';
 import { Cell } from '../cell';
 import { ViewModelsService } from '../../viewmodels.service';

@@ -1,5 +1,6 @@
 import { Input, Directive } from '@angular/core';
-import { Technique, Tactic, DataService } from '../data.service';
+import { DataService } from '../data.service';
+import { Technique, Tactic } from '../classes';
 import { ViewModel } from '../viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
 import { ConfigService } from '../config.service';

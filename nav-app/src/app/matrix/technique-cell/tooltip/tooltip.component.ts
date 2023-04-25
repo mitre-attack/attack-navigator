@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ElementRef, ViewEncapsulation } from '@angular/core';
-import { Technique, Tactic, DataService, Note } from '../../../data.service';
+import { DataService } from '../../../data.service';
+import { Technique, Tactic, Note } from '../../../classes';
 import { ViewModel, TechniqueVM, ViewModelsService } from '../../../viewmodels.service';
 import { CellPopover } from '../cell-popover';
 

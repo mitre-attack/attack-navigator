@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel, TechniqueVM } from "../viewmodels.service";
 import { ConfigService } from "../config.service";
-import { Technique, DataService, Tactic, Matrix } from '../data.service';
+import { DataService } from '../data.service';
+import { Technique, Tactic, Matrix } from '../classes';
 import * as is from 'is_js';
 import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js

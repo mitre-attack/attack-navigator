@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { DataService, Technique, Tactic, Matrix, Domain, VersionChangelog } from "./data.service";
+import { Technique, Tactic, Matrix, Domain, VersionChangelog } from './classes';
+import { DataService } from './data.service';
 import * as tinygradient from 'tinygradient';
 import * as tinycolor from 'tinycolor2';
 import { evaluate } from 'mathjs';
