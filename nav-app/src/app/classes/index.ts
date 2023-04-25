@@ -16,3 +16,4 @@ export { Gradient, Gcolor} from "./gradient";
 export { Filter } from "./filter";
 export { LayoutOptions } from "./layout-options";
 export { Link } from "./link";
+export { Metadata } from "./metadata";

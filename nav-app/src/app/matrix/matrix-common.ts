@@ -104,12 +104,3 @@ export abstract class MatrixCommon {
          } : {}
     }
 }
-
-// export class TechniqueEvent {
-//     public readonly event: Event;
-//     public readonly technique: Technique;
-//     constructor(event, technique) {
-//         this.technique = technique;
-//         this.event = event;
-//     }
-// }
