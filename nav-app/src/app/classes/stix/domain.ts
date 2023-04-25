@@ -1,4 +1,4 @@
-import { ServiceAuth } from "../services/data.service";
+import { ServiceAuth } from "../../services/data.service";
 import { Campaign } from "./campaign";
 import { DataComponent } from "./data-component";
 import { Group } from "./group";
@@ -8,7 +8,7 @@ import { Note } from "./note";
 import { Software } from "./software";
 import { Tactic } from "./tactic";
 import { Technique } from "./technique";
-import { Version } from "./version";
+import { Version } from "../version";
 
 
 export class Domain {
