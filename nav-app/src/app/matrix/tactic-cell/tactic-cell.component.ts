@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { Tactic } from '../../classes';
+import { Tactic } from '../../classes/stix';
 import { ViewModel } from '../../services/viewmodels.service';
 
 @Component({

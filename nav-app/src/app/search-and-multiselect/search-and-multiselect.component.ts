@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel, ViewModelsService } from '../services/viewmodels.service';
-import { StixObject, Group, Mitigation, Software, Technique, Campaign } from '../classes';
+import { StixObject, Group, Mitigation, Software, Technique, Campaign } from '../classes/stix';
 import { DataService } from '../services/data.service';
 
 @Component({

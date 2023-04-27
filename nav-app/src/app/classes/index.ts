@@ -1,14 +1,3 @@
-export { StixObject } from './stix/stix-object';
-export { Campaign } from "./stix/campaign";
-export { DataComponent } from "./stix/data-component";
-export { Domain } from "./stix/domain";
-export { Group } from "./stix/group";
-export { Matrix } from "./stix/matrix";
-export { Mitigation } from "./stix/mitigation";
-export { Note } from "./stix/note";
-export { Software } from "./stix/software";
-export { Tactic } from "./stix/tactic";
-export { Technique } from "./stix/technique";
 export { VersionChangelog } from "./version-changelog";
 export { Version } from "./version";
 export { ContextMenuItem } from "./context-menu-item";

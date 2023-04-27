@@ -4,7 +4,8 @@ import { Buffer } from 'buffer';
 import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { TaxiiConnect, Collection } from '../taxii2lib';
-import { Campaign, Domain, Version, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note, VersionChangelog } from "../classes";
+import { Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
+import { Version, VersionChangelog } from '../classes';
 
 @Injectable({
     providedIn: 'root',

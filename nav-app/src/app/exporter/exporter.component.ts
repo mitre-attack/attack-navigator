@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel, TechniqueVM } from "../services/viewmodels.service";
 import { ConfigService } from "../services/config.service";
 import { DataService } from '../services/data.service';
-import { Technique, Tactic, Matrix } from '../classes';
+import { Technique, Tactic, Matrix } from '../classes/stix';
 import * as is from 'is_js';
 import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js

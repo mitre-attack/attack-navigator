@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Technique, Tactic, Matrix, VersionChangelog, Gradient, Filter, LayoutOptions, Link, Metadata } from '../classes';
+import { VersionChangelog, Gradient, Filter, LayoutOptions, Link, Metadata } from '../classes';
+import { Technique, Tactic, Matrix } from '../classes/stix';
 import { DataService } from './data.service';
 import * as tinycolor from 'tinycolor2';
 import { evaluate } from 'mathjs';
