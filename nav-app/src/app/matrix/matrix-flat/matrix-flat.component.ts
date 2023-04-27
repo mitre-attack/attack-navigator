@@ -9,11 +9,13 @@ import { ViewModelsService } from '../../services/viewmodels.service';
   styleUrls: ['./matrix-flat.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class MatrixFlatComponent extends MatrixCommon implements OnInit  {
+export class MatrixFlatComponent extends MatrixCommon implements OnInit {
 
-    constructor(configService: ConfigService, viewModelsService: ViewModelsService) {
-        super(configService, viewModelsService);
-    }
+  constructor(configService: ConfigService, viewModelsService: ViewModelsService) {
+    super(configService, viewModelsService);
+  }
 
-    ngOnInit() {}
+  ngOnInit(): void {
+    // intentionally left blank
+  }
 }

@@ -8,11 +8,13 @@ import { ViewModelsService } from '../../services/viewmodels.service';
   templateUrl: './matrix-mini.component.html',
   styleUrls: ['./matrix-mini.component.scss']
 })
-export class MatrixMiniComponent extends MatrixCommon implements OnInit  {
+export class MatrixMiniComponent extends MatrixCommon implements OnInit {
 
-    constructor(configService: ConfigService, viewModelsService: ViewModelsService) { 
-        super(configService, viewModelsService);
-    }
+  constructor(configService: ConfigService, viewModelsService: ViewModelsService) {
+    super(configService, viewModelsService);
+  }
 
-    ngOnInit() {}
+  ngOnInit(): void {
+    // intentionally left blank
+  }
 }

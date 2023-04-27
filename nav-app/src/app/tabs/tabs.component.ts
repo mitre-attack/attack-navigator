@@ -55,9 +55,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 this.newBlankTab();
                 this.loadTabs(config["default_layers"]).then( () => {
                     if (this.layerTabs.length == 0) {
-                        this.newLayer(this.dataService.domains[0].id); // failed load from url, so create new blank layer
+                        // failed load from url, so create new blank layer
+                        this.newLayer(this.dataService.domains[0].id);
                     }
-                    // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
 
                     // if there is no active tab set, activate the first
                     if(!this.activeTab) { this.selectTab(this.layerTabs[0]); }
@@ -107,8 +107,8 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             let first = true;
             let self = this;
 
-            for (var _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
-                var url = urls_1[_i];
+            for (let _i = 0, urls_1 = fragment_value; _i < urls_1.length; _i++) {
+                let url = urls_1[_i];
                 await self.loadLayerFromURL(url, first, true);
                 first = false;
             }
@@ -128,7 +128,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param  {[type]}  title               title of new tab
      * @param  {[type]}  data                data to put in template
      * @param  {Boolean} [isCloseable=false] can this tab be closed?
-     * @param  {Boolean} [replace=false]     replace the current tab with the new tab, TODO
+     * @param  {Boolean} [replace=false]     replace the current tab with the new tab
      * @param  {Boolean} [forceNew=false]    force open a new tab even if a tab of that name already exists
      * @param  {Boolean} [dataTable=false]   is this a data-table tab? if so tab text should be editable
 
@@ -136,9 +136,9 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     openTab(title: string, data, isCloseable = false, replace = true, forceNew = false, dataTable = false) {
         // determine if tab is already open. If it is, just change to that tab
         if (!forceNew) {
-            for (let i = 0; i < this.layerTabs.length; i++) {
-                if (this.layerTabs[i].title === title) {
-                    this.selectTab(this.layerTabs[i])
+            for (let layerTab of this.layerTabs) {
+                if (layerTab.title === title) {
+                    this.selectTab(layerTab)
                     return;
                 }
             }
@@ -172,11 +172,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param  {Tab} tab tab to select
      */
     selectTab(tab: Tab){
-        // deactivate all tabs
-        // this.layerTabs.forEach(tab => tab.active = false);
         this.activeTab = tab;
-        // activate the tab the user has clicked on.
-        // tab.active = true;
         this.viewModelsService.viewModels.forEach(viewModel => {
             if (viewModel.sidebarContentType === 'search') {
                 viewModel.sidebarOpened = false;
@@ -240,18 +236,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      */
     closeActiveTab(allowNoTab=false) {
         if (this.activeTab) this.closeTab(this.activeTab, allowNoTab);
-        // this.activeTab = null;
-        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
-        // if(activeTabs.length > 0)  {
-        //     // close the 1st active tab (should only be one at a time)
-        //     this.closeTab(activeTabs[0], allowNoTab);
-        // }
     }
 
     getActiveTab() {
         return this.activeTab;
-        // let activeTabs = this.layerTabs.filter((tab)=>tab.active);
-        // return activeTabs[0];
     }
 
     handleTabClick(tab) {
@@ -321,18 +309,18 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let viewModels = this.viewModelsService.viewModels
 
         function isInteger(str) {
-            var n = Math.floor(Number(str));
+            let n = Math.floor(Number(str));
             return String(n) === str;
         }
 
-        for (let i = 0; i < viewModels.length; i++) {
-            if (!viewModels[i].name.startsWith(root)) continue;
-            if (viewModels[i].name === root) { //case where it's "new layer" aka  "new layer 0"
+        for (let viewModel of viewModels) {
+            if (!viewModel.name.startsWith(root)) continue;
+            if (viewModel.name === root) { //case where it's "layer" aka  "layer0"
                 conflictNumber = Math.max(conflictNumber, 1);
                 continue;
             }
 
-            let numberPortion = viewModels[i].name.substring(root.length, viewModels[i].name.length)
+            let numberPortion = viewModel.name.substring(root.length, viewModel.name.length)
 
             //find lowest number higher than existing number
             if (isInteger(numberPortion)) {
@@ -577,7 +565,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * open upload new layer prompt
      */
     openUploadPrompt(): void {
-        var input = (<HTMLInputElement>document.getElementById("uploader"));
+        let input = (<HTMLInputElement>document.getElementById("uploader"));
         input.click();
     }
 
@@ -707,7 +695,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * Loads an existing layer into a tab
      */
     loadLayerFromFile(): void {
-        var input = (<HTMLInputElement>document.getElementById("uploader"));
+        let input = (<HTMLInputElement>document.getElementById("uploader"));
         if(input.files.length < 1){
             alert("You must select a file to upload!")
             return;
@@ -721,11 +709,11 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * and adds the properties to a new viewModel, and loads that viewmodel into a new layer.
      */
     readJSONFile(file: File) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
 
         reader.onload = (e) =>{
-            var result = String(reader.result);
+            let result = String(reader.result);
             try{
                 let obj = (typeof(result) == "string")? JSON.parse(result) : result
                 viewModel.deSerializeDomainVersionID(obj);
@@ -765,7 +753,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      */
     async loadLayerFromURL(loadURL, replace, defaultLayers = false): Promise<any> {
         return new Promise(async(resolve, reject) => {
-            // if (!loadURL.startsWith("http://") && !loadURL.startsWith("https://") && !loadURL.startsWith("FTP://")) loadURL = "https://" + loadURL;
             let subscription = this.http.get(loadURL).subscribe({
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
@@ -842,24 +829,23 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      *         specifying layerLinkURL as the URL to fetch the default layer from
      */
     getLayerLink(): string {
-        // if (!this.layerLinkURL) return "";
         let str = window.location.href.split("#")[0];
         let join = "#" //hash first, then ampersand
         for (let layerLinkURL of this.layerLinkURLs) {
             str += join + "layerURL=" + encodeURIComponent(layerLinkURL)
             join = "&";
         }
-        for (let i = 0; i < this.customizedConfig.length; i++) {
-            if (this.customizedConfig[i].subfeatures) {
-                for (let j = 0; j < this.customizedConfig[i].subfeatures.length; j++) {
-                    if (!this.customizedConfig[i].subfeatures[j].enabled) {
-                        str += join + this.customizedConfig[i].subfeatures[j].name + "=false"
+        for (let feature of this.customizedConfig) {
+            if (feature.subfeatures) {
+                for (let subfeature of feature.subfeatures) {
+                    if (!subfeature.enabled) {
+                        str += join + subfeature.name + "=false"
                         join = "&";
                     }
                 }
             } else {
-                if (!this.customizedConfig[i].enabled) {
-                    str += join + this.customizedConfig[i].name + "=false"
+                if (!feature.enabled) {
+                    str += join + feature.name + "=false"
                     join = "&";
                 }
             }
@@ -906,10 +892,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @return {string}      fragment param value
      */
     getNamedFragmentValue(name: string, url?: string): any {
-
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[#&]" + name + "(?:=([^&#]*)|&|#|$)", "g");
+        let regex = new RegExp("[#&]" + name + "(?:=([^&#]*)|&|#|$)", "g");
+        
         //match as many results as exist under the name
         let results = [];
         let match = regex.exec(url);

@@ -3,7 +3,9 @@ export class Metadata {
     public value: string;
     public divider: boolean;
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     serialize(): object {
         return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};

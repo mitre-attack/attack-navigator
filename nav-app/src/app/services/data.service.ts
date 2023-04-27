@@ -46,8 +46,8 @@ export class DataService {
      * @param stixBundles
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
-        let platforms = new Set<String>();
-        let seenIDs = new Set<String>();
+        let platforms = new Set<string>();
+        let seenIDs = new Set<string>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
             let matrixSDOs = [];
@@ -230,7 +230,7 @@ export class DataService {
      */
     setUpURLs(versions: []) {
         versions.forEach((version: any) => {
-            let v: Version = new Version(version["name"], version["version"].match(/[0-9]+/g)[0]);
+            let v: Version = new Version(version["name"], version["version"].match(/\d+/g)[0]);
             this.versions.push(v);
             version["domains"].forEach((domain: any) => {
                 let identifier = domain["identifier"];
@@ -363,7 +363,7 @@ export class DataService {
      */
     isSupported(version: string) {
         let supported = this.versions.map(v => v.number);
-        let match = version.match(/[0-9]+/g)[0];
+        let match = version.match(/\d+/g)[0];
         return supported.includes(match);
     }
 

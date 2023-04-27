@@ -33,7 +33,9 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         super(dataService, configService);
     }
 
-    ngOnInit() {}
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 
     // count number of annotated sub-techniques on this technique
     public annotatedSubtechniques() {

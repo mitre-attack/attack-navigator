@@ -17,7 +17,9 @@ export class ListInputComponent implements OnInit {
     }
     public get includeLinks(): boolean { return this.config.type == "links"; }
 
-    constructor() { }
+    constructor() {
+        // intentionally left blank
+    }
 
     ngOnInit(): void {
         if (this.config.level == 'technique') {

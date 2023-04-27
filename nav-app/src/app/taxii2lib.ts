@@ -225,7 +225,7 @@ export class Server {
      * @returns {Promise} a Map of key=the url and value=the api root object.
      */
     async api_rootsMap() {
-        var apiRootMap = new Map();
+        let apiRootMap = new Map();
         await this.discovery().then(discovery => this._getApiRoots(discovery, apiRootMap));
         return apiRootMap;
     }
@@ -331,7 +331,7 @@ export class Collections {
      * @returns {Array} an array of collection objects
      */
     async collections(range?) { //CHANGED
-        var theConfig = this.conn.getConfig;
+        let theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
                 'method': 'get',
@@ -438,7 +438,7 @@ export class Collection {
      * @returns {Promise} the Bundle with the STIX-2 objects of this collection
      */
     async getObjects(filter, range) {
-        var theConfig = this.conn.getStixConfig;
+        let theConfig = this.conn.getStixConfig;
         if (range !== undefined) {
             theConfig = {
                 'method': 'get',
@@ -483,7 +483,7 @@ export class Collection {
      * @return {Array} an array of manifest entries object
      */
     async getManifests(filter, range?) {
-        var theConfig = this.conn.getConfig;
+        let theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
                 'method': 'get',

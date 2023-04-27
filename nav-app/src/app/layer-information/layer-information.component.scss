@@ -27,14 +27,11 @@
 
     td {
       vertical-align: middle;
+      border-top: 1px solid color(panel-dark);
     }
 
     td:not(td:last-child) {
       hyphens: auto;
-    }
-
-    td {
-      border-top: 1px solid color(panel-dark);
     }
   }
 }

@@ -36,7 +36,7 @@ export class Domain {
         return tactics;
     }
     public techniques: Technique[] = [];
-    public platforms: String[] = []; // platforms defined on techniques and software of the domain
+    public platforms: string[] = []; // platforms defined on techniques and software of the domain
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
     public campaigns: Campaign[] = [];

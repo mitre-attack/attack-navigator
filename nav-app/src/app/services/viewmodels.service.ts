@@ -789,7 +789,7 @@ export class ViewModel {
      */
     public isTacticSelected(tactic: Tactic) {
         let self = this;
-        var result = tactic.techniques.every(function(technique) {
+        let result = tactic.techniques.every(function(technique) {
             return self.isTechniqueSelected(technique, tactic)
         });
         return result;
@@ -1097,8 +1097,7 @@ export class ViewModel {
      * @return string representation
      */
     serialize(): string {
-        let modifiedTechniqueVMs = []
-        let self = this;
+        let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
             if (value.modified()) modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
         })
@@ -1147,7 +1146,7 @@ export class ViewModel {
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
                 if (typeof(obj.versions.attack) === "string") {
-                    if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/[0-9]+/g)[0];
+                    if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/\d+/g)[0];
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
@@ -1196,31 +1195,31 @@ export class ViewModel {
         }
 
         if ("legendItems" in obj) {
-            for (let i = 0; i < obj.legendItems.length; i++) {
+            for (let item of obj.legendItems) {
                 let legendItem = {
                     color: "#defa217",
                     label: "default label"
                 };
-                if (!("label" in obj.legendItems[i])) {
+                if (!("label" in item)) {
                     console.error("Error: LegendItem required field 'label' not present")
                     continue;
                 }
-                if (!("color" in obj.legendItems[i])) {
+                if (!("color" in item)) {
                     console.error("Error: LegendItem required field 'label' not present")
                     continue;
                 }
 
-                if (typeof(obj.legendItems[i].label) === "string") {
-                    legendItem.label = obj.legendItems[i].label;
+                if (typeof(item.label) === "string") {
+                    legendItem.label = item.label;
                 } else {
                     console.error("TypeError: legendItem label field is not a string")
                     continue
                 }
 
-                if (typeof(obj.legendItems[i].color) === "string" && tinycolor(obj.legendItems[i].color).isValid()) {
-                    legendItem.color = obj.legendItems[i].color;
+                if (typeof(item.color) === "string" && tinycolor(item.color).isValid()) {
+                    legendItem.color = item.color;
                 } else {
-                    console.error("TypeError: legendItem color field is not a color-string:", obj.legendItems[i].color, "(", typeof(obj.legendItems[i].color),")")
+                    console.error("TypeError: legendItem color field is not a color-string:", item.color, "(", typeof(item.color),")")
                     continue
                 }
                 this.legendItems.push(legendItem);
@@ -1245,43 +1244,35 @@ export class ViewModel {
         }
         if ("techniques" in obj) {
             if(obj.techniques.length > 0) {
-                for (let i = 0; i < obj.techniques.length; i++) {
-                    var obj_technique = obj.techniques[i];
-                    if ("tactic" in obj_technique) {
+                for (let objTechnique of obj.techniques) {
+                    if ("tactic" in objTechnique) {
                         let tvm = new TechniqueVM("");
-                        tvm.deSerialize(JSON.stringify(obj_technique),
-                                        obj_technique.techniqueID,
-                                        obj_technique.tactic);
+                        tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, objTechnique.tactic);
                         this.setTechniqueVM(tvm);
                     } else {
-                        // occurs in multiple tactics
-                        // match to Technique by attackID
+                        // occurs in multiple tactics, match to Technique by attackID
                         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
-                            if (technique.attackID == obj_technique.techniqueID) {
+                            if (technique.attackID == objTechnique.techniqueID) {
                                 // match technique
                                 // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
                                 if (technique.deprecated || technique.revoked) break;
 
                                 for (let tactic of technique.tactics) {
                                     let tvm = new TechniqueVM("");
-                                    tvm.deSerialize(JSON.stringify(obj_technique),
-                                                    obj_technique.techniqueID,
-                                                    tactic);
+                                    tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
                                     this.setTechniqueVM(tvm);
                                 }
                                 break;
                             }
                             //check against subtechniques
                             for (let subtechnique of technique.subtechniques) {
-                                if (subtechnique.attackID == obj_technique.techniqueID) {
+                                if (subtechnique.attackID == objTechnique.techniqueID) {
                                     // don't load deprecated/revoked, causes crash since tactics don't get loaded on revoked techniques
                                     if (subtechnique.deprecated || subtechnique.revoked) break;
 
                                     for (let tactic of subtechnique.tactics) {
                                         let tvm = new TechniqueVM("");
-                                        tvm.deSerialize(JSON.stringify(obj_technique),
-                                                        obj_technique.techniqueID,
-                                                        tactic);
+                                        tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
                                         this.setTechniqueVM(tvm);
                                     }
                                     break;
@@ -1404,12 +1395,8 @@ export class ViewModel {
 
     updateLegendColorPresets(): void {
         this.legendColorPresets = [];
-        for(var i = 0; i < this.backgroundPresets.length; i++){
-            this.legendColorPresets.push(this.backgroundPresets[i]);
-        }
-        for(var i = 0; i < this.gradient.colors.length; i++){
-            this.legendColorPresets.push(this.gradient.colors[i].color);
-        }
+        this.backgroundPresets.forEach(preset => this.legendColorPresets.push(preset));
+        this.gradient.colors.forEach(color => this.legendColorPresets.push(color.color));
     }
 
     /**
@@ -1424,7 +1411,6 @@ export class ViewModel {
         let wordSplit = words.split(" ");
         if (wordSplit.length > 1) {
             let wordIndex = 0;
-            // console.log(wordSplit);
             while (result.length < 4 && wordIndex < wordSplit.length) {
                 if (skipWords.includes(wordSplit[wordIndex].toLowerCase())) {
                     wordIndex++;
@@ -1585,7 +1571,7 @@ export class TechniqueVM {
 
     constructor(technique_tactic_union_id: string) {
         this.technique_tactic_union_id = technique_tactic_union_id;
-        var idSplit = technique_tactic_union_id.split("^");
+        let idSplit = technique_tactic_union_id.split("^");
         this.techniqueID = idSplit[0];
         this.tactic = idSplit[1];
     }

@@ -6,7 +6,6 @@ export class Gradient {
     //official colors used in gradients:
 
     colors: Gcolor[] = [new Gcolor("red"), new Gcolor("green")]; //current colors
-    // options: string[] = ["white", "red", "orange", "yellow", "green", "blue", "purple"]; //possible colors
     options: string[] = ["#ffffff", "#ff6666", "#ffaf66","#ffe766", "#8ec843", "#66b1ff", "#ff66f4"]; //possible colors
     minValue: number = 0;
     maxValue: number = 100;
@@ -39,10 +38,10 @@ export class Gradient {
      */
     deSerialize(rep: string): void {
         let obj = JSON.parse(rep)
-        let isColorStringArray = function(check): boolean {
-            for (let i = 0; i < check.length; i++) {
-                if (typeof(check[i]) !== "string" || !tinycolor(check[i]).isValid()) {
-                    console.error("TypeError:", check[i], "(",typeof(check[i]),")", "is not a color-string")
+        let isColorStringArray = function(colors): boolean {
+            for (let color of colors) {
+                if (typeof(color) !== "string" || !tinycolor(color).isValid()) {
+                    console.error("TypeError:", color, "(",typeof(color),")", "is not a color-string")
                     return false;
                 }
             }
@@ -79,7 +78,6 @@ export class Gradient {
      */
     presetToTinyColor(preset) {
         let colorarray = []
-        let self = this;
         this.presets[preset].forEach(function(gcolor: Gcolor) {
             colorarray.push(gcolor.color);
         });
@@ -102,11 +100,7 @@ export class Gradient {
      */
     updateGradient(): void {
         let colorarray = [];
-        let self = this;
         this.colors.forEach(function(colorobj) {
-            // figure out what kind of color this is
-            // let format = tinycolor(colorobj.color).getFormat();
-            // if (format == "name" && colorobj.color in self.labelToColor)
             colorarray.push(colorobj.color)
         });
         this.gradient = tinygradient(colorarray);

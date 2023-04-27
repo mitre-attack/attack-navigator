@@ -64,18 +64,17 @@ export class Filter {
      * @param rep filter object
      */
     deSerialize(rep: any): void {
-        // console.log(rep)
-        let isStringArray = function(check): boolean {
-            for (let i = 0; i < check.length; i++) {
-                if (typeof(check[i]) !== "string") {
-                    console.error("TypeError:", check[i], "(",typeof(check[i]),")", "is not a string")
+        let isStringArray = function(arr): boolean {
+            for (let item of arr) {
+                if (typeof(item) !== "string") {
+                    console.error("TypeError:", item, "(",typeof(item),")", "is not a string")
                     return false;
                 }
 
             }
             return true;
         }
-        // let obj = JSON.parse(rep);
+
         if (rep.platforms) {
             if (isStringArray(rep.platforms)) {
                 let backwards_compatibility_mappings = { //backwards compatibility with older layers

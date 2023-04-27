@@ -24,11 +24,11 @@ def download_domain(domain):
     stix_data = requests.get(domains[domain]["url"], verify=False).json()["objects"]
     print("\t-", "parsing data for", domain)
     # get stixID to attackID mapping for techniques
-    stixID_to_attackID = {}
+    attack_id_map = {}
     techniques = filter(lambda sdo: sdo["type"] == "attack-pattern", stix_data)
     for technique in techniques:
         tactics = list(map(lambda kcp: kcp["phase_name"], technique["kill_chain_phases"])) if "kill_chain_phases" in technique else []
-        stixID_to_attackID[technique["id"]] = {
+        attack_id_map[technique["id"]] = {
             "attackID": technique["external_references"][0]["external_id"],
             "tactics": tactics
         }
@@ -36,8 +36,8 @@ def download_domain(domain):
     # build revocations of techniques
     revocations = filter(lambda sdo: sdo["type"] == "relationship" and sdo["relationship_type"] == "revoked-by", stix_data)
     for revocation in revocations:
-        if revocation["source_ref"] in stixID_to_attackID and revocation["target_ref"] in stixID_to_attackID:
-            revoked_by[stixID_to_attackID[revocation["source_ref"]]["attackID"]] = stixID_to_attackID[revocation["target_ref"]]
+        if revocation["source_ref"] in attack_id_map and revocation["target_ref"] in attack_id_map:
+            revoked_by[attack_id_map[revocation["source_ref"]]["attackID"]] = attack_id_map[revocation["target_ref"]]
     # record that it's already downloaded so we don't download twice
     domains[domain]["downloaded"] = True
 
@@ -89,9 +89,9 @@ def update_layer(layerfile, replace=False):
                 "mac": "macOS"
             }
             if platform in platform_mappings:
-                newPlatform = platform_mappings[platform]
-                print("\t-", "updating platform", platform, "to", newPlatform)
-                platforms.append(newPlatform)
+                new_platform = platform_mappings[platform]
+                print("\t-", "updating platform", platform, "to", new_platform)
+                platforms.append(new_platform)
             else:
                 platforms.append(platform)
         layer["filters"]["platforms"] = platforms
@@ -103,16 +103,16 @@ def update_layer(layerfile, replace=False):
     # update techniques by revocations
     for technique in layer["techniques"]:
         if technique["techniqueID"] in revoked_by:
-            newID = revoked_by[technique["techniqueID"]]["attackID"]
+            new_id = revoked_by[technique["techniqueID"]]["attackID"]
             if "tactic" in technique:
-                print("\t-", "updating technique", technique["techniqueID"], "(" + technique["tactic"] + ")", "to", newID)
+                print("\t-", "updating technique", technique["techniqueID"], "(" + technique["tactic"] + ")", "to", new_id)
             else: 
-                print("\t-", "updating technique", technique["techniqueID"], "to", newID)
+                print("\t-", "updating technique", technique["techniqueID"], "to", new_id)
             # make sure tactic hasn't changed
-            if "tactic" in technique and not technique["tactic"] in revoked_by[technique["techniqueID"]]["tactics"]:
+            if "tactic" in technique and technique["tactic"] not in revoked_by[technique["techniqueID"]]["tactics"]:
                 print("\t   -", "WARNING: replacing technique is no longer in the", technique["tactic"], "tactic, annotations will be skipped")
                 continue
-            technique["techniqueID"] = newID
+            technique["techniqueID"] = new_id
     
     # set the version to current
     layer["versions"] = {

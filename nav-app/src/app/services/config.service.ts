@@ -77,8 +77,8 @@ export class ConfigService {
         if (!this.featureGroups.has(featureGroup)) return -1;
         let count = 0
         let subFeatures = this.featureGroups.get(featureGroup)
-        for (let i = 0; i < subFeatures.length; i++) {
-            if (this.getFeature(subFeatures[i])) count += 1
+        for (let subFeature of subFeatures) {
+            if (this.getFeature(subFeature)) count += 1;
         }
         return count;
     }
@@ -190,8 +190,7 @@ export class ConfigService {
         let fragments = new Map<string, string>();
         let regex = /[#&](\w+)=(\w+)/g
 
-        // let results = url.match(regex)
-        var match;
+        let match;
         while (match = regex.exec(url)) {
             fragments.set(match[1], match[2])
         }

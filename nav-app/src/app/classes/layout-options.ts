@@ -35,7 +35,7 @@ export class LayoutOptions {
     public _showID: boolean = false;
     public set showID(newval: boolean) {
         this._showID = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
+        if (newval && this._layout == "mini") this._layout = "side";
     }
     public get showID(): boolean { return this._showID; }
 
@@ -43,7 +43,7 @@ export class LayoutOptions {
     public _showName: boolean = true;
     public set showName(newval: boolean) {
         this._showName = newval;
-        if (newval == true && this._layout == "mini") this._layout = "side";
+        if (newval && this._layout == "mini") this._layout = "side";
     }
     public get showName(): boolean { return this._showName; }
 

@@ -1,6 +1,5 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 
 describe('DataService', () => {

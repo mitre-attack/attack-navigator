@@ -4,8 +4,7 @@ import { MarkdownComponent, MarkdownService } from "ngx-markdown";
 
 @Component({
     selector: 'app-changelog',
-    templateUrl: './changelog.component.html',
-    styleUrls: ['./changelog.component.scss']
+    templateUrl: './changelog.component.html'
 })
 export class ChangelogComponent {
     @ViewChild('markdownElement', { static: false }) private markdownElement: MarkdownComponent;

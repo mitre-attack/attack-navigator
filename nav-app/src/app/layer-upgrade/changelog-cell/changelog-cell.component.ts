@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModelsService } from '../../services/viewmodels.service';
 import { ConfigService } from '../../services/config.service';
 import { DataService } from '../../services/data.service';
@@ -10,7 +10,7 @@ import { Cell } from '../../matrix/cell';
     styleUrls: ['./changelog-cell.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChangelogCellComponent extends Cell implements OnInit {
+export class ChangelogCellComponent extends Cell {
     @Input() isCurrentVersion?: boolean = true;
     @Input() isDraggable?: boolean = false;
     @Input() section: string;
@@ -18,8 +18,6 @@ export class ChangelogCellComponent extends Cell implements OnInit {
     constructor(public configService: ConfigService, public dataService: DataService, public viewModelsService: ViewModelsService) {
         super(dataService, configService);
     }
-
-    ngOnInit(): void { }
 
     /**
      * Highlight the moused over technique

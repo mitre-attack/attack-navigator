@@ -91,8 +91,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         if (is.ie()) { // internet explorer
             window.navigator.msSaveOrOpenBlob(blob, filename)
         } else {
-            var svgUrl = URL.createObjectURL(blob);
-            var downloadLink = document.createElement("a");
+            let svgUrl = URL.createObjectURL(blob);
+            let downloadLink = document.createElement("a");
             downloadLink.href = svgUrl;
             downloadLink.download = filename
             document.body.appendChild(downloadLink);
@@ -107,8 +107,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveLayerLocally(): void {
-        var json = this.viewModel.serialize();
-        var blob = new Blob([json], {type: "text/json"});
+        let json = this.viewModel.serialize();
+        let blob = new Blob([json], {type: "text/json"});
         let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
         this.saveBlob(blob, filename);
     }
@@ -152,12 +152,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     /** Export layer to Excel */
     public saveLayerLocallyExcel(): void {
         // create new excel workbook
-        var workbook = new Excel.Workbook();
+        let workbook = new Excel.Workbook();
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
 
         // create a worksheet for each matrix in the domain
         for (let matrix of domain.matrices) {
-            var worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
+            let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
 
             // create tactic columns
             let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
@@ -284,7 +284,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Handle drop down change
      */
     public handleDescriptionDropdown(): void {
-        this.currentDropdown !== 'description' ? this.currentDropdown = 'description' : this.currentDropdown = '';
+        if (this.currentDropdown !== 'description') {
+            this.currentDropdown = 'description';
+        } else {
+            this.currentDropdown = '';
+        }
         this.dropdownChange.emit(this.currentDropdown);
     }
 
