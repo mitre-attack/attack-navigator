@@ -7,17 +7,17 @@
                 {   
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.0/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
                 },
                 {   
                     "name": "Mobile",
                     "identifier": "mobile-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.0/mobile-attack/mobile-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
                     "identifier": "ics-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.0/ics-attack/ics-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/ics-attack/ics-attack.json"]
                 }
             ]
         },
