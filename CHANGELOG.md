@@ -9,6 +9,14 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 4.8.2 - 9 May 2023
+
+Adds support for ATT&CK v13.1.
+
+## Miscellaneous
+
+- Refactored the codebase to improve maintainability of the application.
+
 # 4.8.1 - 25 April 2023
 
 Adds support for ATT&CK v13.
