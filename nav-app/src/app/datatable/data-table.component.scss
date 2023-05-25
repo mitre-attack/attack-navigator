@@ -324,6 +324,14 @@ $cellSize: 15px;
   }
 }
 
+.warning {
+  color: yellow;
+}
+
+.warning-label {
+  vertical-align: super;
+}
+
 .multiselect {
   // padding: 4px;
   text-align: center;
