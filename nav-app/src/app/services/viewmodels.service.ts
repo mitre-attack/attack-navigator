@@ -1093,13 +1093,66 @@ export class ViewModel {
     // |___/___|_|_\___/_/ \_\____|___/___/_/ \_\_| |___\___/|_|\_|
 
     /**
+     * Number of modified hidden techniques
+     * @returns number of hidden techniques that are annotated
+     */
+    modifiedHiddenTechniques(): number {
+        let modifiedHiddenTechniques = 0
+        let techniqueList = []
+        let d = this.dataService.getDomain(this.domainVersionID);
+        for (let matrix of d.matrices) {
+            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
+                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
+                for (let technique of techniques) {
+                    techniqueList.push(technique.attackID)
+                    let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
+                    .map( sub => { return sub });
+                    for (let subtechnique of subtechniques) {
+                        techniqueList.push(subtechnique.attackID)
+                    }
+                }
+            }
+        }
+        this.techniqueVMs.forEach(function(value,key) {
+            if (value.modified()) {
+                if (!techniqueList.includes(value.techniqueID)) {
+                    modifiedHiddenTechniques++
+                }
+            }
+        })
+        return modifiedHiddenTechniques;
+    }
+
+    /**
      * stringify this vm
      * @return string representation
      */
-    serialize(): string {
+    serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
+        let techniqueList = []
+        let d = this.dataService.getDomain(this.domainVersionID);
+        for (let matrix of d.matrices) {
+            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
+                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
+                for (let technique of techniques) {
+                    techniqueList.push(technique.attackID)
+                    let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
+                    .map( sub => { return sub });
+                    for (let subtechnique of subtechniques) {
+                        techniqueList.push(subtechnique.attackID)
+                    }
+                }
+            }
+        }
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
-            if (value.modified()) modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
+            if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
+                modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
+            }
+            else if (value.modified() && downloadAnnotationsOnVisibleTechniques) {
+                if (techniqueList.includes(value.techniqueID)) {
+                    modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
+                }
+            }
         })
         let rep: {[k: string]: any } = {};
         rep.name = this.name;
