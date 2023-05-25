@@ -141,36 +141,65 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                  </div>
              </div>
 
-
-
-            <!-- save locally as JSON -->
-            <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="saveLayerLocally()"
-                     matTooltipPosition="below"
-                     matTooltip="download layer as json">
-                    <span class="material-icons" alt="save layer">file_download</span>
+             <!-- export, save, and render features -->
+             <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
+                <div class="control-row-button dropdown noselect"
+                    (click)="handleExportDropdown()"
+                    matTooltipPosition="below"
+                    matTooltip="export">
+                    <span class="material-icons" alt="export">file_download</span>
                 </div>
-            </div>
+                <div class="dropdown-container select_behavior" #dropdown [class.left]="checkalign(dropdown)"
+                *ngIf="currentDropdown === 'export'">
+                    <div>
+                        <b class="filter-label">Export</b>
+                    </div>
+                    <div>
+                        <!-- save locally as JSON -->
+                        <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
+                            <div class="control-row-button noselect"
+                                (click)="saveLayerLocally()"
+                                matTooltipPosition="below"
+                                matTooltip="download layer as json">
+                                <span class="material-icons" alt="save layer">code</span>
+                            </div>
+                        </div>
 
-            <!-- export to excel -->
-            <div *ngIf="configService.getFeature('export_excel')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="saveLayerLocallyExcel()"
-                     matTooltipPosition="below"
-                     matTooltip="export to excel">
-                    <span class="material-icons" alt="save layer">grid_on</span>
-                </div>
-            </div>
-
-
-            <!-- render layer to SVG -->
-            <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="exportRender()"
-                     matTooltipPosition="below"
-                     matTooltip="render layer to SVG">
-                    <span class="material-icons" alt="export render">camera_alt</span>
+                        <!-- export to excel -->
+                        <div *ngIf="configService.getFeature('export_excel')" class="control-row-item">
+                            <div class="control-row-button noselect"
+                                (click)="saveLayerLocallyExcel()"
+                                matTooltipPosition="below"
+                                matTooltip="export to excel">
+                                <span class="material-icons" alt="save layer">grid_on</span>
+                            </div>
+                        </div>
+                        <!-- render layer to SVG -->
+                        <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
+                            <div class="control-row-button noselect"
+                                (click)="exportRender()"
+                                matTooltipPosition="below"
+                                matTooltip="render layer to SVG">
+                                <span class="material-icons" alt="export render">camera_alt</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <b class="filter-label">Options</b>
+                    </div>
+                    <!-- Additional Export Options -->
+                    <div>
+                        <input id="select_download_annotations" class="checkbox-custom" type="checkbox" [(ngModel)]="downloadAnnotationsOnVisibleTechniques">
+                        <label for="select_download_annotations" class="checkbox-custom-label noselect">Only download annotations on visible techniques</label>
+                    </div>
+                    <div class="warning" *ngIf="downloadAnnotationsOnVisibleTechniques && this.viewModel.modifiedHiddenTechniques() == 1">
+                        <span class="material-icons" alt="warning">warning</span>
+                        <label class="warning-label"> {{this.viewModel.modifiedHiddenTechniques()}} hidden technique has annotations</label>
+                    </div>
+                    <div class="warning" *ngIf="downloadAnnotationsOnVisibleTechniques && this.viewModel.modifiedHiddenTechniques() > 1">
+                        <span class="material-icons" alt="warning">warning</span>
+                        <label class="warning-label"> {{this.viewModel.modifiedHiddenTechniques()}} hidden techniques have annotations</label>
+                    </div>
                 </div>
             </div>
 
