@@ -1093,11 +1093,11 @@ export class ViewModel {
     // |___/___|_|_\___/_/ \_\____|___/___/_/ \_\_| |___\___/|_|\_|
 
     /**
-     * Number of modified hidden techniques
-     * @returns number of hidden techniques that are annotated
+     * List of technique and subtechnique attack IDs
+     *
+     * @returns list of strings of each technique and subtechnique attack ID
      */
-    modifiedHiddenTechniques(): number {
-        let modifiedHiddenTechniques = 0
+    getTechniquesList(): string[] {
         let techniqueList = []
         let d = this.dataService.getDomain(this.domainVersionID);
         for (let matrix of d.matrices) {
@@ -1113,6 +1113,16 @@ export class ViewModel {
                 }
             }
         }
+        return techniqueList
+    }
+
+    /**
+     * Number of modified hidden techniques
+     * @returns number of hidden techniques that are annotated
+     */
+    modifiedHiddenTechniques(): number {
+        let modifiedHiddenTechniques = 0
+        let techniqueList = this.getTechniquesList()
         this.techniqueVMs.forEach(function(value,key) {
             if (value.modified()) {
                 if (!techniqueList.includes(value.techniqueID)) {
@@ -1128,21 +1138,8 @@ export class ViewModel {
      * @return string representation
      */
     serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
-        let techniqueList = []
-        let d = this.dataService.getDomain(this.domainVersionID);
-        for (let matrix of d.matrices) {
-            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
-                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
-                for (let technique of techniques) {
-                    techniqueList.push(technique.attackID)
-                    let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
-                    .map( sub => { return sub });
-                    for (let subtechnique of subtechniques) {
-                        techniqueList.push(subtechnique.attackID)
-                    }
-                }
-            }
-        }
+        let techniqueList = this.getTechniquesList()
+
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
             if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
