@@ -1093,13 +1093,65 @@ export class ViewModel {
     // |___/___|_|_\___/_/ \_\____|___/___/_/ \_\_| |___\___/|_|\_|
 
     /**
+     * List of visible technique and subtechnique attack IDs
+     *
+     * @returns list of strings of each visible technique and subtechnique attack ID
+     */
+    getVisibleTechniquesList(): string[] {
+        let techniqueList = []
+        let d = this.dataService.getDomain(this.domainVersionID);
+        for (let matrix of d.matrices) {
+            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
+                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
+                for (let technique of techniques) {
+                    let technique_tactic_union_id = technique.get_technique_tactic_id(tactic);
+                    techniqueList.push(technique_tactic_union_id);
+                    let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
+                    .map( sub => { return sub });
+                    for (let subtechnique of subtechniques) {
+                        let subtechnique_tactic_union_id = subtechnique.get_technique_tactic_id(tactic);
+                        techniqueList.push(subtechnique_tactic_union_id);
+                    }
+                }
+            }
+        }
+        return techniqueList
+    }
+
+    /**
+     * Number of modified hidden techniques
+     * @returns number of hidden techniques that are annotated
+     */
+    modifiedHiddenTechniques(): number {
+        let modifiedHiddenTechniques = 0
+        let techniqueList = this.getVisibleTechniquesList()
+        this.techniqueVMs.forEach(function(value,key) {
+            if (value.modified()) {
+                if (!techniqueList.includes(value.technique_tactic_union_id)) {
+                    modifiedHiddenTechniques++
+                }
+            }
+        })
+        return modifiedHiddenTechniques;
+    }
+
+    /**
      * stringify this vm
      * @return string representation
      */
-    serialize(): string {
+    serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
+        let techniqueList = this.getVisibleTechniquesList()
+
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
-            if (value.modified()) modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
+            if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
+                modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
+            }
+            else if (value.modified() && downloadAnnotationsOnVisibleTechniques) {
+                if (techniqueList.includes(value.technique_tactic_union_id)) {
+                    modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
+                }
+            }
         })
         let rep: {[k: string]: any } = {};
         rep.name = this.name;

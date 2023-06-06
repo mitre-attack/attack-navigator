@@ -54,6 +54,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
     }
 
+    public downloadAnnotationsOnVisibleTechniques: boolean = false;
+
     // edit field bindings
     public commentEditField: string = "";
     public scoreEditField: string = "";
@@ -107,7 +109,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveLayerLocally(): void {
-        let json = this.viewModel.serialize();
+        let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
         let blob = new Blob([json], {type: "text/json"});
         let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
         this.saveBlob(blob, filename);
@@ -291,6 +293,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
         this.dropdownChange.emit(this.currentDropdown);
     }
+
+        /**
+     * Handle export drop down change
+     */
+        public handleExportDropdown(): void {
+            if (this.currentDropdown !== 'export') {
+                this.currentDropdown = 'export';
+            } else {
+                this.currentDropdown = '';
+            }
+            this.dropdownChange.emit(this.currentDropdown);
+        }
 
     /**
      * Triggered on left click of technique

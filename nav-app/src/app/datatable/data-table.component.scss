@@ -324,6 +324,14 @@ $cellSize: 15px;
   }
 }
 
+.warning {
+  @include adaptive-color("color", #b30000, #ffab0f);
+}
+
+.warning-label {
+  vertical-align: super;
+}
+
 .multiselect {
   // padding: 4px;
   text-align: center;
