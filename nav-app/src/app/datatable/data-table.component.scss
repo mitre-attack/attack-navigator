@@ -325,7 +325,7 @@ $cellSize: 15px;
 }
 
 .warning {
-  color: orange;
+  @include adaptive-color("color", #b30000, #ffab0f);
 }
 
 .warning-label {
