@@ -873,33 +873,6 @@ export class SvgExportComponent implements OnInit {
     }
 
     /**
-     * Recenter the selected element's tspan elements
-     * @param  height [description]
-     * @param  self   [description]
-     */
-    recenter(text, height, self): void {
-        text.each(function() {
-            text.selectAll('tspan').each(function(d, i, els) {
-                let numTSpan = els.length;
-                let location = self.getSpacing(height, numTSpan)[i]
-
-                let tspan = d3.select(this)
-                    .attr("y", ( location))
-                    .attr("dy", "0")
-            })
-        })
-    }
-
-    // Capitalizes the first letter of each word in a string
-    toCamelCase(str){
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-
-    //following two functions are only used for iterating over tableconfig options: remove when tableconfig options are hardcoded in html
-    getKeys(obj) { return Object.keys(obj) }
-    type(obj) { return typeof(obj) }
-
-    /**
      * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
      * @param  dropdown the DOM node of the panel
      * @return          true if it would overflow
@@ -908,22 +881,5 @@ export class SvgExportComponent implements OnInit {
         // console.log(anchor)
         let anchor = dropdown.parentNode;
         return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
-    }
-
-    /**
-     * Divide distance into divisions equidestant anchor points S.T they all have equal
-     * padding from each other and the beginning and end of the distance
-     * @param  distance  distance to divide
-     * @param  divisions number of divisions
-     * @return           number[] where each number corresponds to a division-center offset
-     */
-    getSpacing(distance: number, divisions: number): number[] {
-        distance = distance - 1; //1px padding for border
-        let spacing = distance/(divisions*2);
-        let res = []
-        for (let i = 1; i <= divisions*2; i+=2) {
-            res.push(1 + (spacing * i))
-        }
-        return res
     }
 }
