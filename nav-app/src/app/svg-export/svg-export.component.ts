@@ -51,7 +51,7 @@ export class SvgExportComponent implements OnInit {
     // SVG settings
     public currentDropdown: string = null;
     public hasScores: boolean;
-    private svgDivName: string = "svgInsert_tmp";
+    private svgElementID: string = "svgInsert_tmp";
     private buildSVGDebounce: boolean = false;
 
     // counter for unit change ui element
@@ -70,7 +70,7 @@ export class SvgExportComponent implements OnInit {
 
     ngOnInit() {
         this.viewModel = this.data.vm;
-        this.svgDivName = "svgInsert" + this.viewModel.uid;
+        this.svgElementID = "svgInsert" + this.viewModel.uid;
         
         let self = this;
         //determine if the layer has any scores
@@ -90,28 +90,31 @@ export class SvgExportComponent implements OnInit {
                 }
             }
         }
-        // dynamic legend height according to content;
+
+        // dynamic legend height according to content
         let legendSectionCount = 0;
         if (self.hasScores) legendSectionCount++;
         if (self.hasLegendItems()) legendSectionCount++;
-        self.config.legendHeight = 0.5 * legendSectionCount; 
+        self.config.legendHeight = 0.5 * legendSectionCount;
+
         //initial legend position for undocked legend
         this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
         this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
         if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
 
-        //put at the end of the function queue so that the page can render before building the svg
-        window.setTimeout(function() {self.buildSVG(self)}, 0)
+        // build SVG at end of fn queue so page can render before build
+        window.setTimeout(function() {
+            self.buildSVG(self)
+        }, 0);
     }
 
-    //visibility of SVG parts
-    //assess data in viewModel
+    // visibility of SVG header sections
     hasName(): boolean {return this.viewModel.name.length > 0}
     hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
-    //above && user preferences
+    // above && user preferences
     showName(): boolean {return this.config.showAbout && this.hasName() && this.config.showHeader}
     showDomain(): boolean {return this.config.showDomain && this.hasDomain() && this.config.showHeader}
     showAggregate(): boolean {return this.viewModel.layout.showAggregateScores && this.config.showHeader}
@@ -122,52 +125,51 @@ export class SvgExportComponent implements OnInit {
     showLegend(): boolean {return this.config.showLegend && this.hasLegendItems()}
     showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
     showLegendInHeader(): boolean {return this.config.legendDocked}
-    // showItemCount(): boolean {return this.config.showTechniqueCount}
-    buildSVG(self?, bypassDebounce=false): void {
-        if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
-        console.log("settings changed")
-        if (self.buildSVGDebounce && !bypassDebounce) {
-            // console.log("skipping debounce...")
-            return;
-        }
+    /** build the SVG */
+    public buildSVG(self?: any, bypassDebounce: boolean = false): void {
+        if (!self) self = this; // called from somewhere other than ngOnInit
+
+        // debounce
+        if (self.buildSVGDebounce && !bypassDebounce) return;
         if (!bypassDebounce) {
-            // console.log("debouncing...");
             self.buildSVGDebounce = true;
-            window.setTimeout(function() {self.buildSVG(self, true)}, 500)
+            window.setTimeout(function() {
+                self.buildSVG(self, true)
+            }, 500);
             return;
         }
         self.buildSVGDebounce = false;
 
-        console.log("building SVG");
-
         setSize(self.config.size, self.config.orientation)
 
-        //check preconditions, make sure they're in the right range
+        // calculate svg height and width
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
+        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10);
+        let svgWidth = width + margin.left + margin.right;
+        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
+        let svgHeight = height + margin.top + margin.bottom;
+        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1);
 
-        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10); // console.log("width", width);
-        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10); // console.log("height", height)
-        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1); // console.log("headerHeight", headerHeight);
-
+        // calculate legend height and width
         let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
         let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
         let legendWidth = Math.max(self.convertToPx(self.config.legendWidth, self.config.unit), 10);
         let legendHeight = Math.max(self.convertToPx(self.config.legendHeight, self.config.unit), 10);
 
-        //remove previous graphic
-        let element = <HTMLElement>document.getElementById(self.svgDivName);
-        element.innerHTML = "";
+        // remove previous graphic
+        let svgElement: HTMLElement = document.getElementById(self.svgElementID);
+        svgElement.innerHTML = "";
 
-        let svg = d3.select("#" + self.svgDivName).append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+        // create new SVG
+        let svg = d3.select("#" + self.svgElementID).append("svg")
+            .attr("width", svgWidth)
+            .attr("height", svgHeight)
             .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("id", "svg" + self.viewModel.uid) //Tag for downloadSVG
+            .attr("id", "svg" + self.viewModel.uid) // SVG download tag
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("font-family", self.config.font);
-        let stroke_width = 1;
 
         // ooooo ooooo            o888                                                 
         //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
