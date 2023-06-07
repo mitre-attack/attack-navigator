@@ -5,10 +5,12 @@ import { ViewModel } from "../../services/viewmodels.service";
 export class RenderableMatrix {
     public readonly matrix: Matrix;
     public readonly tactics: RenderableTactic[] = [];
+
     public get height() {
         let heights = this.tactics.map(function(tactic: RenderableTactic) { return tactic.height; })
         return Math.max(...heights);
     }
+
     constructor(matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.matrix = matrix;
         let filteredTactics = viewModel.filterTactics(matrix.tactics, matrix);

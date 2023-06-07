@@ -9,6 +9,7 @@ export class RenderableTechnique {
     public readonly matrix: Matrix;
     public readonly showSubtechniques;
     private readonly viewModel: ViewModel;
+
     constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques = false) {
         this.yPosition = yPosition;
         this.technique = technique;
@@ -41,6 +42,6 @@ export class RenderableTechnique {
         let text = [];
         if (this.viewModel.layout.showID) text.push(this.technique.attackID);
         if (this.viewModel.layout.showName) text.push(this.technique.name);
-        return text.join(": ")
+        return text.join(": ");
     }
 }

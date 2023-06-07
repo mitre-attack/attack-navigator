@@ -7,10 +7,11 @@ export class RenderableTactic {
     public readonly techniques: RenderableTechnique[] = [];
     public readonly subtechniques: RenderableTechnique[] = [];
     public readonly height: number;
+
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;
         let filteredTechniques = viewModel.sortTechniques(viewModel.filterTechniques(tactic.techniques, tactic, matrix), tactic);
-        let yPosition = 1; //start at 1 to make space for tactic label
+        let yPosition = 1; // start at 1 to make space for tactic label
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
             let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix);
