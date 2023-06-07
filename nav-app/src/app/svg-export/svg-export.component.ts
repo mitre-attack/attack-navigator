@@ -89,20 +89,12 @@ export class SvgExportComponent implements OnInit {
         
         let self = this;
         //determine if the layer has any scores
-        for (let matrix of this.dataService.getDomain(this.viewModel.domainVersionID).matrices) {
-            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
-                for (let technique of this.viewModel.filterTechniques(tactic.techniques, tactic, matrix)) {
-                    if (technique.subtechniques.length > 0) {
-                        for (let subtechnique of this.viewModel.filterTechniques(technique.subtechniques, tactic, matrix)) {
-                            if (self.viewModel.hasTechniqueVM(subtechnique, tactic)) {
-                                if (self.viewModel.getTechniqueVM(subtechnique, tactic).score != "") self.hasScores = true;
-                            }
-                        }
-                    }
-                    if (self.viewModel.hasTechniqueVM(technique, tactic)) {
-                        if (self.viewModel.getTechniqueVM(technique, tactic).score != "") self.hasScores = true;
-                    }
-                }
+        let visibleTechniques = self.viewModel.getVisibleTechniquesList();
+        for (let unionID of visibleTechniques) {
+            let techniqueVM = self.viewModel.getTechniqueVM_id(unionID);
+            if (techniqueVM.score != "") {
+                self.hasScores = true;
+                break; // at least one score found
             }
         }
 
