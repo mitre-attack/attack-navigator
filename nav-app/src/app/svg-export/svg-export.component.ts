@@ -625,14 +625,12 @@ export class SvgExportComponent implements OnInit {
      * @param self      this DOM node
      * @param words     array of words to space
      * @param padding   element padding
-     * @param x         x position to place multiline text
-     * @param y         y position to place multiline text
      * @param spacing   distance to space text inside element
      * @param center    center the text?
      * @param width     width of the cell
      * @param height    height of the cell
      */
-    private insertLineBreaks(self: any, words: string[], padding: number, x: number, y: number, spacing: number, center: boolean, width: number, height: number) {
+    private insertLineBreaks(self: any, words: string[], padding: number, spacing: number, center: boolean, width: number, height: number) {
         let element = d3.select(self);
 
         // clear previous content
@@ -643,8 +641,8 @@ export class SvgExportComponent implements OnInit {
         for (let i = 0; i < words.length; i++) {
             let tspan = element.append('tspan').text(words[i]);
             if (center) tspan.attr("text-anchor", "middle");
-            tspan.attr('x', center? x + (width / 2) : x + padding)
-                 .attr('y', ((height - spacing) / 2) + y + division[i]);
+            tspan.attr('x', center? (width / 2) : padding)
+                 .attr('y', ((height - spacing) / 2) + division[i]);
         }
     }
 
@@ -664,15 +662,15 @@ export class SvgExportComponent implements OnInit {
 
         // break into multiple lines
         let distance = Math.min(height, (maxFontSize + 3) * words.length)
-        this.insertLineBreaks(self, words, padding, 0, 0, distance, center, width, height);
+        this.insertLineBreaks(self, words, padding, distance, center, width, height);
 
         // find text size to fit height of cell
         let textHeight = Math.min((distance / words.length), height) * 0.8;
 
         // find text size to fit width of cell
         let longestWordLength = -Infinity;
-        for (let i = 0; i < words.length; i++) {
-            longestWordLength = Math.max(longestWordLength, words[i].length)
+        for (let word of words) {
+            longestWordLength = Math.max(longestWordLength, word.length)
         }
         let textWidth = ((width - (2 * padding)) / longestWordLength) * 1.45;
 
