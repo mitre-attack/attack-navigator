@@ -9,11 +9,11 @@ import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
 
 @Component({
-    selector: 'exporter',
-    templateUrl: './exporter.component.html',
-    styleUrls: ['./exporter.component.scss']
+    selector: 'app-svg-export',
+    templateUrl: './svg-export.component.html',
+    styleUrls: ['./svg-export.component.scss']
 })
-export class ExporterComponent implements OnInit {
+export class SvgExportComponent implements OnInit {
     
     public currentDropdown: string = null;
     viewModel: ViewModel;
@@ -25,7 +25,7 @@ export class ExporterComponent implements OnInit {
 
     private svgDivName = "svgInsert_tmp"
     unitEnum = 0; //counter for unit change ui element
-    constructor(private dialogRef: MatDialogRef<ExporterComponent>, 
+    constructor(private dialogRef: MatDialogRef<SvgExportComponent>, 
                 private configService: ConfigService, 
                 private dataService: DataService,
                 @Inject(MAT_DIALOG_DATA) public data) {
