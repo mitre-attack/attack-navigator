@@ -138,7 +138,8 @@ export class SvgExportComponent implements OnInit {
         }
         self.buildSVGDebounce = false;
 
-        setSize(self.config.size, self.config.orientation)
+        // set svg size
+        this.setSize(self, self.config.size, self.config.orientation);
 
         // calculate svg height and width
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
@@ -218,28 +219,7 @@ export class SvgExportComponent implements OnInit {
                     .labelOffset(2)
                 )
             }
-        })
-
-        /**
-         * Function to set width and height based on selected size and orientaiton
-         * @param {string} size dimensions
-         * @param {string} orientation  portrait or landscape
-         */
-        function setSize(size, orientation) {
-            const ratioMap = {
-                letter: {portrait: [8.5, 11], landscape: [11, 8.5]},
-                legal: {portrait: [8.5, 14], landscape: [14, 8.5]},
-                small: {portrait: [11, 17], landscape: [17, 11]},
-                medium: {portrait: [18, 24], landscape: [24, 18]},
-                large: {portrait: [24, 36], landscape: [36, 24]},
-            };
-
-            if (size !== "custom") {
-                const [w, h] = ratioMap[size][orientation];
-                self.config.width = w;
-                self.config.height = h;
-            }
-        }
+        });
 
         // -----------------------------------------------------------------------------
         // HEADER
@@ -561,6 +541,28 @@ export class SvgExportComponent implements OnInit {
                     .attr("y2", yRange.bandwidth())
                     .attr("stroke", "#dddddd");
             }
+        }
+    }
+
+    /**
+     * Set width and height based on selected size and orientaiton
+     * @param {any}    self this DOM node
+     * @param {string} size dimensions
+     * @param {string} orientation  portrait or landscape
+     */
+    private setSize(self: any, size: string, orientation: string) {
+        const ratioMap = {
+            letter: {portrait: [8.5, 11], landscape: [11, 8.5]},
+            legal: {portrait: [8.5, 14], landscape: [14, 8.5]},
+            small: {portrait: [11, 17], landscape: [17, 11]},
+            medium: {portrait: [18, 24], landscape: [24, 18]},
+            large: {portrait: [24, 36], landscape: [36, 24]},
+        };
+
+        if (size !== "custom") {
+            const [w, h] = ratioMap[size][orientation];
+            self.config.width = w;
+            self.config.height = h;
         }
     }
 
