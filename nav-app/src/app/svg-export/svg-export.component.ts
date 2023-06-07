@@ -494,7 +494,7 @@ export class SvgExportComponent implements OnInit {
                     .each(function() { self.verticalAlignCenter(this); })
             } else {
                 // call callback to add complex data to contentGroup
-                (subsection.data as Function)(self, contentGroup, contentWidth);
+                subsection.data(self, contentGroup, contentWidth);
             }
             if (i != section.contents.length - 1) {
                 // add dividing line
