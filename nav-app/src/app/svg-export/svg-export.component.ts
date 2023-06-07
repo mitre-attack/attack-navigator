@@ -482,8 +482,8 @@ export class SvgExportComponent implements OnInit {
         let contentWidth = width - 2 * padding;
         for (let i = 0; i < section.contents.length; i++) {
             let subsection = section.contents[i];
-            let contentGroup = boxContentGroup.append("g")
-                .attr("transform", `translate(0, ${yRange( subsection.label )})`);
+            let contentGroup = boxContentGroup.append("g").attr("transform", `translate(0, ${yRange( subsection.label )})`);
+
             if (typeof(subsection.data) == "string") {
                 // add text to contentGroup
                 contentGroup.append("text")
@@ -799,37 +799,6 @@ export class SvgExportComponent implements OnInit {
             downloadLink.click();
             document.body.removeChild(downloadLink);
         }
-    }
-
-    /**
-     * wrap the given text svg element
-     * @param  text       element to wrap
-     * @param  width      width to wrap to
-     * @param  cellheight stop appending wraps after this height
-     * @param  self       reference to self this component because of call context
-     */
-    wrap(text, width, cellheight, self): void {
-        text.each(function() {
-            var text = d3.select(this),
-            words = text.text().split(/\s+/).reverse(),
-            word,
-            line = [],
-            lineHeight = 1.1, // ems
-            y = text.attr("y"),
-            dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    let thisdy = lineHeight + dy
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
-                }
-            }
-        });
     }
 }
 
