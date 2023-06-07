@@ -339,22 +339,6 @@ export class SvgExportComponent implements OnInit {
             return bestSize;
         }
 
-        // add properties to the node to set the vertical alignment to center without using
-        // dominant-baseline, which isn't widely supported
-        function centerValign(node, fontSize=null) {
-            if (node.children && node.children.length > 0) {
-                for (let child of node.children) centerValign(child, node.getAttribute("font-size"));
-            } else {
-                // base case
-                // transform by half the font size - 1/2px for proper centering
-                fontSize = fontSize ? fontSize : node.getAttribute("font-size");
-                if (fontSize.endsWith("px")) fontSize = Number(fontSize.split("px")[0])
-                let currY = node.hasAttribute("y") ? Number(node.getAttribute("y")) : 0;
-                let newY = currY + Math.floor((fontSize * 0.3))
-                d3.select(node).attr("y", newY);
-            }
-        }
-
         class HeaderSectionContent {
             label: string;
             // either string to display in box, or a callback to create complex content in the box
@@ -429,7 +413,7 @@ export class SvgExportComponent implements OnInit {
                 .text(sectionData.title)
                 .attr("x", 2 * boxPadding)
                 .attr("font-size", 12)
-                .each(function() { centerValign(this); })
+                .each(function() { self.verticalAlignCenter(this); })
             // add cover mask so that the box lines crop around the text
             let bbox = titleEl.node().getBBox();
             let coverPadding = 2;
@@ -466,7 +450,7 @@ export class SvgExportComponent implements OnInit {
                         .attr("font-size", function() {
                             return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
                         })
-                        .each(function() { centerValign(this); })
+                        .each(function() { self.verticalAlignCenter(this); })
                 } else {
                     //call callback to add complex data to contentGroup
                     (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
@@ -681,7 +665,7 @@ export class SvgExportComponent implements OnInit {
                 return fontSize;
             })
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
-            .each(function() { centerValign(this); })
+            .each(function() { self.verticalAlignCenter(this); })
 
         // set sub-technique font size
         subtechniqueGroups.append("text")
@@ -692,7 +676,7 @@ export class SvgExportComponent implements OnInit {
                 return fontSize;
             })
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
-            .each(function() { centerValign(this); })
+            .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
         techniqueGroups.select("text").attr("font-size", minFontSize);
@@ -715,7 +699,7 @@ export class SvgExportComponent implements OnInit {
                 else return "black";
             })
             .attr("font-weight", "bold")
-            .each(function() { centerValign(this); })
+            .each(function() { self.verticalAlignCenter(this); })
 
         // set tactic labels to same font size
         tacticLabels.select("text").attr("font-size", minTacticFontSize);
@@ -733,6 +717,46 @@ export class SvgExportComponent implements OnInit {
                 .attr("transform", `translate(${legendX}, ${legendY})`)
             descriptiveBox(legendGroup, legend, legendWidth, legendHeight);
         }
+    }
+
+    /**
+     * Set the vertical alignment of the given node to center
+     * @param self this DOM node
+     * @param fontSize the font size of the node
+     */
+    private verticalAlignCenter(self: any, fontSize: any = null) {
+        if (self.children && self.children.length > 0) {
+            for (let child of self.children) {
+                this.verticalAlignCenter(child, self.getAttribute("font-size"));
+            }
+        } else {
+            // transform by half the font size - 1/2px for proper centering
+            fontSize = fontSize ? fontSize : self.getAttribute("font-size");
+            if (fontSize.endsWith("px")) fontSize = Number(fontSize.split("px")[0]);
+            let yPosition = self.hasAttribute("y") ? Number(self.getAttribute("y")) : 0;
+            let newYPosition = yPosition + Math.floor((fontSize * 0.3));
+            d3.select(self).attr("y", newYPosition);
+        }
+    }
+
+    /**
+     * Convert any length in various units to pixels
+     * @param  quantity what length
+     * @param  unit     which unit system (in, cm, px, em, pt)
+     * @return          that length in pixels
+     */
+    private toPx(quantity: number, unit: string): number {
+        let factor: any;
+        if      (unit == "in") factor = 96;
+        else if (unit == "cm") factor = 3.779375 * 10;
+        else if (unit == "px") factor = 1;
+        else if (unit == "em") factor = 16;
+        else if (unit == "pt") factor = 1.33;
+        else {
+            console.error("unknown unit", unit);
+            factor = 0;
+        }
+        return quantity * factor;
     }
 
     /** Download the SVG */
@@ -762,26 +786,6 @@ export class SvgExportComponent implements OnInit {
             downloadLink.click();
             document.body.removeChild(downloadLink);
         }
-    }
-
-    /**
-     * Convert any length in various units to pixels
-     * @param  quantity what length
-     * @param  unit     which unit system (in, cm, px, em, pt)
-     * @return          that length in pixels
-     */
-    private toPx(quantity: number, unit: string): number {
-        let factor: any;
-        if      (unit == "in") factor = 96;
-        else if (unit == "cm") factor = 3.779375 * 10;
-        else if (unit == "px") factor = 1;
-        else if (unit == "em") factor = 16;
-        else if (unit == "pt") factor = 1.33;
-        else {
-            console.error("unknown unit", unit);
-            factor = 0;
-        }
-        return quantity * factor;
     }
 
     /**
