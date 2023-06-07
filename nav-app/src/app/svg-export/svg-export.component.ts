@@ -174,49 +174,16 @@ export class SvgExportComponent implements OnInit {
         // -----------------------------------------------------------------------------
 
         let legendSection = { "title": "legend", "contents": [] };
-        if (self.hasScores && self.showGradient) legendSection.contents.push({
-            "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
-                let domain = [];
-                for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
-                    let percent = i / (self.viewModel.gradient.colors.length - 1);
-                    domain.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
-                }
-                let colorScale = d3.scaleLinear()
-                    .domain(domain)
-                    .range(self.viewModel.gradient.colors.map(function (color) { return color.color; }))
-                let nCells = domain.length * 2;
-                let valuesRange = self.viewModel.gradient.maxValue - self.viewModel.gradient.minValue;
-                group.append("g")
-                    .attr("transform", "translate(0, 5)")
-                    .call(d3.legendColor()
-                    .shapeWidth((sectionWidth / nCells))
-                    .shapePadding(0)
-                    .cells(nCells)
-                    .shape("rect")
-                    .orient("horizontal")
-                    .scale(colorScale)
-                    .labelOffset(2)
-                    .labelFormat(d3.format("0.02r"))
-                )
-            }
-        });
-        if (self.showLegend) legendSection.contents.push({
-            "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
-                let colorScale = d3.scaleOrdinal()
-                    .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
-                    .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
-                group.append("g")
-                    .attr("transform", "translate(0, 5)")
-                    .call(d3.legendColor()
-                    .shapeWidth((sectionWidth / self.viewModel.legendItems.length))
-                    .shapePadding(0)
-                    .shape("rect")
-                    .orient("horizontal")
-                    .scale(colorScale)
-                    .labelOffset(2)
-                )
-            }
-        });
+
+        // scores and gradient
+        if (self.hasScores && self.showGradient) {
+            legendSection.contents.push( {"label": "gradient", "data": self.buildGradient()} );
+        }
+
+        // legend items
+        if (self.showLegend) {
+            legendSection.contents.push( {"label": "legend", "data": self.buildLegend()} );
+        }
 
         // -----------------------------------------------------------------------------
         // HEADER
@@ -527,7 +494,7 @@ export class SvgExportComponent implements OnInit {
                     .each(function() { self.verticalAlignCenter(this); })
             } else {
                 // call callback to add complex data to contentGroup
-                (subsection.data as Function)(contentGroup, contentWidth, yRange.bandwidth());
+                (subsection.data as Function)(self, contentGroup, contentWidth);
             }
             if (i != section.contents.length - 1) {
                 // add dividing line
@@ -538,6 +505,60 @@ export class SvgExportComponent implements OnInit {
                     .attr("y2", yRange.bandwidth())
                     .attr("stroke", "#dddddd");
             }
+        }
+    }
+
+    /** Callback function to build the legend section */
+    private buildLegend(): Function {
+        return function(self, group, width) {
+            // legend colors
+            let colorScale = d3.scaleOrdinal()
+                .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
+                .range(self.viewModel.legendItems.map(function(item) { return item.color; }))
+
+            // legend svg group
+            group.append("g")
+                .attr("transform", "translate(0, 5)")
+                .call(d3.legendColor()
+                .shapeWidth((width / self.viewModel.legendItems.length))
+                .shapePadding(0)
+                .shape("rect")
+                .orient("horizontal")
+                .scale(colorScale)
+                .labelOffset(2)
+            )
+        }
+    }
+
+    /** Callback function to build the gradient section */
+    private buildGradient(): Function {
+        return function(self, group, width) {
+            // build gradient
+            let gradient = [];
+            for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
+                let percent = i / (self.viewModel.gradient.colors.length - 1);
+                gradient.push(d3.interpolateNumber(self.viewModel.gradient.minValue, self.viewModel.gradient.maxValue)(percent))
+            }
+
+            // build color scale
+            let colorScale = d3.scaleLinear()
+                .domain(gradient)
+                .range(self.viewModel.gradient.colors.map(color => color.color));
+
+            // gradient svg group
+            let nCells = gradient.length * 2;
+            group.append("g")
+                .attr("transform", "translate(0, 5)")
+                .call(d3.legendColor()
+                .shapeWidth((width / nCells))
+                .shapePadding(0)
+                .cells(nCells)
+                .shape("rect")
+                .orient("horizontal")
+                .scale(colorScale)
+                .labelOffset(2)
+                .labelFormat(d3.format("0.02r"))
+            )
         }
     }
 
