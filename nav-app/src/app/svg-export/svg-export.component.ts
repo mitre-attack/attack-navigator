@@ -1,12 +1,13 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ViewModel, TechniqueVM } from "../services/viewmodels.service";
+import { ViewModel } from "../services/viewmodels.service";
 import { ConfigService } from "../services/config.service";
 import { DataService } from '../services/data.service';
-import { Technique, Tactic, Matrix } from '../classes/stix';
+import { Matrix } from '../classes/stix';
 import { RenderableTechnique } from './renderable-objects/renderable-technique';
 import { RenderableTactic } from './renderable-objects/renderable-tactic';
 import { RenderableMatrix } from './renderable-objects/renderable-matrix';
+
 import * as is from 'is_js';
 import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
@@ -18,10 +19,11 @@ declare var d3: any; //d3js
     encapsulation: ViewEncapsulation.None
 })
 export class SvgExportComponent implements OnInit {
-    
-    public currentDropdown: string = null;
-    viewModel: ViewModel;
-    public config: any = {}
+    // vm to render
+    public viewModel: ViewModel;
+
+    // SVG configuration
+    public config: any = {};
     public svgConfigDefaults: any = { 
         "width": 11,
         "height": 8.5,
@@ -45,13 +47,20 @@ export class SvgExportComponent implements OnInit {
         "showDomain": true,
         "showAggregate": false,
     }
+
+    // SVG settings
+    public currentDropdown: string = null;
+    public hasScores: boolean;
+    private svgDivName: string = "svgInsert_tmp";
+    private buildSVGDebounce: boolean = false;
+
+    // counter for unit change ui element
+    public unitEnum: number = 0;
     
     public isIE() {
         return is.ie();
     }
 
-    private svgDivName = "svgInsert_tmp"
-    unitEnum = 0; //counter for unit change ui element
     constructor(private dialogRef: MatDialogRef<SvgExportComponent>, 
                 private configService: ConfigService, 
                 private dataService: DataService,
@@ -100,7 +109,6 @@ export class SvgExportComponent implements OnInit {
     hasName(): boolean {return this.viewModel.name.length > 0}
     hasDomain(): boolean {return this.viewModel.domainVersionID.length > 0}
     hasDescription(): boolean {return this.viewModel.description.length > 0}
-    hasScores: boolean; //does the viewmodel have scores? built in ngAfterViewInit
     hasLegendItems(): boolean {return this.viewModel.legendItems.length > 0;}
 
     //above && user preferences
@@ -115,7 +123,6 @@ export class SvgExportComponent implements OnInit {
     showLegendContainer(): boolean{return this.showLegend() || this.showGradient()}
     showLegendInHeader(): boolean {return this.config.legendDocked}
     // showItemCount(): boolean {return this.config.showTechniqueCount}
-    buildSVGDebounce = false;
     buildSVG(self?, bypassDebounce=false): void {
         if (!self) self = this; //in case we were called from somewhere other than ngViewInit
 
