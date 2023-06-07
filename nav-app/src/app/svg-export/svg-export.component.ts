@@ -169,15 +169,12 @@ export class SvgExportComponent implements OnInit {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("font-family", self.config.font);
 
-        // ooooo ooooo            o888                                                 
-        //  888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8  
-        //  888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo  
-        //  888   888 888          888  888    888 888          888                888 
-        // o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88  
-        //                             o888                                            
+        // -----------------------------------------------------------------------------
+        // LEGEND
+        // -----------------------------------------------------------------------------
 
-        let legend = {"title": "legend", "contents": []};
-        if (self.hasScores && self.showGradient) legend.contents.push({
+        let legendSection = { "title": "legend", "contents": [] };
+        if (self.hasScores && self.showGradient) legendSection.contents.push({
             "label": "gradient", "data": function(group, sectionWidth, sectionHeight) {
                 let domain = [];
                 for (let i = 0; i < self.viewModel.gradient.colors.length; i++) {
@@ -203,7 +200,7 @@ export class SvgExportComponent implements OnInit {
                 )
             }
         });
-        if (self.showLegend) legend.contents.push({
+        if (self.showLegend) legendSection.contents.push({
             "label": "legend", "data": function(group, sectionWidth, sectionHeight) {
                 let colorScale = d3.scaleOrdinal()
                     .domain(self.viewModel.legendItems.map(function(item) { return item.label; }))
@@ -272,7 +269,7 @@ export class SvgExportComponent implements OnInit {
             }
 
             // legend section
-            if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legend);
+            if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legendSection);
 
             // build header
             let headerGroup = svg.append("g");
@@ -454,7 +451,7 @@ export class SvgExportComponent implements OnInit {
 
         if (self.showLegendContainer && !self.showLegendInHeader) {
             let legendGroup = datatable.append("g").attr("transform", `translate(${legendX}, ${legendY})`);
-            self.buildHeaderSection(this, legendGroup, legend, legendWidth, legendHeight);
+            self.buildHeaderSection(this, legendGroup, legendSection, legendWidth, legendHeight);
         }
     }
 
