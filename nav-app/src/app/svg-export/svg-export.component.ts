@@ -241,64 +241,80 @@ export class SvgExportComponent implements OnInit {
             }
         }
 
-        // ooooo ooooo                             oooo                        
-        //  888   888  ooooooooo8  ooooooo    ooooo888  ooooooooo8 oo oooooo   
-        //  888ooo888 888oooooo8   ooooo888 888    888 888oooooo8   888    888 
-        //  888   888 888        888    888 888    888 888          888        
-        // o888o o888o  88oooo888 88ooo88 8o  88ooo888o  88oooo888 o888o       
-                                                                            
+        // -----------------------------------------------------------------------------
+        // HEADER
+        // -----------------------------------------------------------------------------
 
         if (self.config.showHeader) {
             let headerSections: HeaderSection[] = []
 
+            // about section
             if (self.showName || self.showDescription) {
-                let about = {"title": "about", "contents": []};
-                if (self.showName) about.contents.push({"label": "name", "data": this.viewModel.name});
-                if (self.showDescription) about.contents.push({"label": "description", "data": this.viewModel.description});
-                headerSections.push(about)
+                let aboutSection = { "title": "about", "contents": [] };
+                if (self.showName) aboutSection.contents.push({ "label": "name", "data": this.viewModel.name });
+                if (self.showDescription) aboutSection.contents.push({ "label": "description", "data": this.viewModel.description });
+                headerSections.push(aboutSection)
             }
 
-            const config = {"title": "domain", "contents": []};
-            let filterConfig = {"title": "platforms", "contents": []};
+            // domain section
+            let domainSection = { "title": "domain", "contents": [] };
             if (self.showDomain) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-                config.contents.push({"label": "domain", "data": domain.name + " " + domain.version.name});
+                domainSection.contents.push({ "label": "domain", "data": domain.name + " " + domain.version.name });
             }
+
+            // platform section
+            let platformSection = { "title": "platforms", "contents": [] };
             if (self.showFilters) {
-              const filterData = {"label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ")};
-              if (self.showAggregate) {
-                config.title = "domain & platforms";
-                config.contents.push(filterData);
-              } else filterConfig.contents.push(filterData);
-            }
-            if (config.contents.length > 0) headerSections.push(config);
-            if (filterConfig.contents.length > 0) headerSections.push(filterConfig);
+                let filterData = { "label": "platforms", "data": this.viewModel.filters.platforms.selection.join(", ") };
 
+                // domain + platforms
+                if (self.showAggregate) {
+                    domainSection.title = "domain & platforms";
+                    domainSection.contents.push(filterData);
+                } else {
+                    platformSection.contents.push(filterData);
+                }
+            }
+
+            // add relevant sections to header
+            if (domainSection.contents.length > 0) headerSections.push(domainSection);
+            if (platformSection.contents.length > 0) headerSections.push(platformSection);
+
+            // aggregate scores
             if (self.showAggregate) {
-              const aggregateConfig = { "title": "aggregate", "contents": []};
-              aggregateConfig.contents.push({"label": "function", "data": "showing aggregate scores using the " + this.viewModel.layout.aggregateFunction + " aggregate function"});
-              if (this.viewModel.layout.countUnscored) aggregateConfig.contents.push({"label": "unscored", "data": "includes unscored techniques as having a score of 0"});
-              headerSections.push(aggregateConfig);
+                let aggregateSection = { "title": "aggregate", "contents": [] };
+                aggregateSection.contents.push({ "label": "function", "data": "showing aggregate scores using the " + this.viewModel.layout.aggregateFunction + " aggregate function" });
+                if (this.viewModel.layout.countUnscored) {
+                    aggregateSection.contents.push({ "label": "unscored", "data": "includes unscored techniques as having a score of 0" });
+                }
+                headerSections.push(aggregateSection);
             }
 
+            // legend section
             if (self.showLegendContainer && self.showLegendInHeader) headerSections.push(legend);
 
+            // build header
             let headerGroup = svg.append("g");
-
             let headerX = d3.scaleBand()
                 .paddingInner(0.05)
-                .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
+                .domain(headerSections.map(section => section.title))
                 .range([0, width]);
-            
+
+            // build header sections
             for (let section of headerSections) {
                 let sectionGroup = headerGroup.append("g");
-                if (headerSections.length > 1) sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
-                self.buildHeaderSection(this, sectionGroup, section, headerSections.length == 1? width : headerX.bandwidth(), headerHeight);
+                if (headerSections.length > 1) {
+                    sectionGroup.attr("transform", `translate(${headerX(section.title)}, 0)`);
+                }
+                let headerWidth = headerSections.length == 1 ? width : headerX.bandwidth();
+                self.buildHeaderSection(this, sectionGroup, section, headerWidth, headerHeight);
             }
 
-            if (headerSections.length == 0) headerHeight = 0; //no header sections to show
-        } else { //no header
-            headerHeight = 0
+            if (headerSections.length == 0) headerHeight = 0; // no header sections
+        } else {
+            //no header
+            headerHeight = 0;
         }
 
         // -----------------------------------------------------------------------------
