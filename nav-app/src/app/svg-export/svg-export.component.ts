@@ -180,165 +180,6 @@ export class SvgExportComponent implements OnInit {
         // in the matrix to maximize text size. The algorithm tries different combinations of line breaks
         // in the cell text.
 
-        /**
-         * Divide distance into divisions equidistant anchor points S.T they all have equal
-         * padding from each other and the beginning and end of the distance
-         * @param  distance  distance to divide
-         * @param  divisions number of divisions
-         * @return           number[] where each number corresponds to a division-center offset
-         */
-        function getSpacing(distance, divisions) {
-            distance = distance - 1; //1px padding for border
-            let spacing = distance/(divisions*2);
-            let res = []
-            for (let i = 1; i <= divisions*2; i+=2) {
-                res.push(1 + (spacing * i))
-            }
-            return res
-        };
-
-        /**
-         * Magic function to insert line breaks. 
-        * @param  {string[]} words         array of words to space
-        * @param  {dom node} self          the dom element with the text
-        * @param  {number} xpos            x pos to place multiline text at
-        * @param  {number} ypos            same but with y
-        * @param  {number} totalDistance   total distance to contain broken text.
-        *                                  amt in excess of spacingDistance
-        *                                  becomes v padding.
-        * @param  {number} spacingDistance total distance to space text inside,
-        *                                  should be < totalDistance
-        * @param {boolean} center          if true, center the text in the node, else left-align
-        * @param {number} cellWidth        total width of the cell to put the text in
-        */
-        function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
-            let el = d3.select(node)
-
-            //clear previous content
-            el.text('');
-            while(node.firstChild) node.removeChild(node.firstChild);
-
-            let spacing = getSpacing(spacingDistance, words.length)
-            for (var i = 0; i < words.length; i++) {
-                var tspan = el.append('tspan').text(words[i]);
-                if (center) tspan.attr("text-anchor","middle");
-                // if (i > 0)
-                let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
-                tspan
-                    .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
-                    .attr('y', offsetY);
-            }
-        };
-
-        /**
-         * Given an array of words, find the optimal font size for the array of words to be
-         * broken onto 1 line each.
-         * @param  {string[]} words     to be broken onto each line
-         * @param  {dom node} node      the dom node of the cell
-         * @param  {cellWidth} number   the width of the cell
-         * @param  {cellHeight} number  the height of the cell
-         * @param {boolean} center      center the text?
-         * @param {number} maxFontSize  max font size, default is 12
-         * @return {number}             the largest possible font size
-         *                              not larger than 12
-         */
-        function findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
-            let padding = 4; //the amount of padding on the left and right
-            //break into multiple lines
-            let breakDistance = Math.min(cellHeight, (maxFontSize + 3) * words.length)
-            insertLineBreaks(words, node, padding, 0, 0, cellHeight, breakDistance, center, cellWidth)
-
-            //find right size to fit the height of the cell
-            let breakTextHeight = breakDistance / words.length;
-            let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8; //0.8
-
-            //find right size to fit the width of the cell
-            let longestWordLength = -Infinity;
-            for (let w = 0; w < words.length; w++) {
-                let word = words[w];
-                longestWordLength = Math.max(longestWordLength, word.length)
-            }
-            let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
-
-            //the min fitting text size not larger than MaxFontSize
-            let size = Math.min(maxFontSize, fitTextHeight, fitTextWidth);
-
-            return size;
-        }
-
-        /**
-         * Given text, a dom node, and sizing parameters, 
-         * try all combinations of word breaks to maximize font size inside of the given space
-         * returns font size in pixels
-         * @param {string} text                   the text to render in the cell
-         * @param {dom node} node                 the node for the cell
-         * @param {number} cellWidth              width of the cell to get the font size for
-         * @param {number} cellHeight             height of the cell to get the font size for
-         * @param {boolean} center                center the text?
-         * @param {number} maxFontSize            max font size, default is 12
-         * @return {string}                       the size in pixels
-         */
-        function optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
-            let words = text.split(" ");
-            let bestSize = -Infinity; //beat this size
-            let bestWordArrangement = [];
-
-            /**
-             * determine placement of line breaks to try. Shorter lists of words can try more positions
-             * @param {number} num_spaces the number of spaces in the words, aka words.length - 1
-             * @param {number} [num_breaks=3]  the number of breaks to insert
-             * @returns str[] where each index is a combination of breaks represented as [01]+ where 1 is a break and 0 is a space
-             */
-            function find_breaks(num_spaces:number, num_breaks=3) {
-                let breaks = new Set<string>();
-                function recurse(breakset_inherit, depth, num_breaks) {
-                    for (let i = 0; i < breakset_inherit.length; i++) {
-                        let breakset = JSON.parse(JSON.stringify(breakset_inherit)); //deep copy
-                        breakset[i] = 1; // insert break at this location
-                        breaks.add(breakset.join("")); //save this combination
-                        if (depth < num_breaks - 1) recurse(breakset, depth + 1, num_breaks);
-                    }
-                }
-                let initial_breaks = []
-                while (initial_breaks.length < num_spaces) initial_breaks.push(0); //fill with 0s
-                breaks.add(initial_breaks.join("")); //save this combination
-                recurse(initial_breaks, 0, num_breaks)
-                return breaks
-            }
-
-            let num_spaces = words.length;
-            // longer strings can't try as many combinations without the page lagging
-            let num_breaks = 1;
-            if (num_spaces < 20) num_breaks = 3;
-            else if (num_spaces < 50) num_breaks = 2;
-            else num_breaks = 1;
-            let breaks = Array.from(find_breaks(num_spaces, num_breaks))
-            for (let binaryString of breaks) { // find the best option of the proposed placements generated by find_breaks
-                //binaryString: binary representation of newline locations, e.g 001011
-                //where 1 is newline and 0 is no newline
-                let wordSet = []; //build this array
-                
-                for (let k = 0; k < binaryString.length; k++) {
-                    if (binaryString[k] === "0") {//join with space
-                        if (wordSet.length == 0) wordSet.push(words[k]);
-                        else wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
-                    } else { //linebreak
-                        wordSet.push(words[k]) //new word in array
-                    }
-                }
-
-                let size = findSpace(wordSet, node, cellWidth, cellHeight, center, maxFontSize);
-                if (size > bestSize) { //found new optimum
-                    bestSize = size;
-                    bestWordArrangement = wordSet;
-                }
-                if (size == maxFontSize) break; //if largest text found, no need to search more
-            }
-
-            findSpace(bestWordArrangement, node, cellWidth, cellHeight, center, maxFontSize);
-            return bestSize;
-        }
-
         class HeaderSectionContent {
             label: string;
             // either string to display in box, or a callback to create complex content in the box
@@ -448,7 +289,7 @@ export class SvgExportComponent implements OnInit {
                     contentGroup.append("text")
                         .text(subsectionContent)
                         .attr("font-size", function() {
-                            return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
+                            return self.optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
                         })
                         .each(function() { self.verticalAlignCenter(this); })
                 } else {
@@ -652,7 +493,7 @@ export class SvgExportComponent implements OnInit {
         techniqueGroups.append("text")
             .text(function(technique: RenderableTechnique) { return technique.text; })
             .attr("font-size", function(technique: RenderableTechnique) {
-                const fontSize = optimalFontSize(technique.text, this, xRange.bandwidth(), yRange(1), false);
+                const fontSize = self.optimalFontSize(technique.text, this, xRange.bandwidth(), yRange(1), false);
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
@@ -663,7 +504,7 @@ export class SvgExportComponent implements OnInit {
         subtechniqueGroups.append("text")
             .text(function(subtechnique: RenderableTechnique) { return subtechnique.text; })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
-                const fontSize = optimalFontSize(subtechnique.text, this, xRange.bandwidth() - subtechniqueIndent, yRange(1), false);
+                const fontSize = self.optimalFontSize(subtechnique.text, this, xRange.bandwidth() - subtechniqueIndent, yRange(1), false);
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
@@ -682,7 +523,7 @@ export class SvgExportComponent implements OnInit {
         tacticLabels.append("text")
             .text(function(tactic: RenderableTactic) { return tactic.tactic.name; })
             .attr("font-size", function(tactic: RenderableTactic) {
-                const fontSize = optimalFontSize(tactic.tactic.name, this, xRange.bandwidth(), yRange(1), true);
+                const fontSize = self.optimalFontSize(tactic.tactic.name, this, xRange.bandwidth(), yRange(1), true);
                 if (fontSize < minTacticFontSize) minTacticFontSize = fontSize;
                 return fontSize;
             })
@@ -729,6 +570,165 @@ export class SvgExportComponent implements OnInit {
             let newYPosition = yPosition + Math.floor((fontSize * 0.3));
             d3.select(self).attr("y", newYPosition);
         }
+    }
+
+    /**
+     * Divide distance into divisions equidistant anchor points S.T they all have equal
+     * padding from each other and the beginning and end of the distance
+     * @param  distance  distance to divide
+     * @param  divisions number of divisions
+     * @return           number[] where each number corresponds to a division-center offset
+     */
+    private getSpacing(distance, divisions) {
+        distance = distance - 1; //1px padding for border
+        let spacing = distance/(divisions*2);
+        let res = []
+        for (let i = 1; i <= divisions*2; i+=2) {
+            res.push(1 + (spacing * i))
+        }
+        return res
+    };
+
+    /**
+     * Magic function to insert line breaks. 
+    * @param  {string[]} words         array of words to space
+    * @param  {dom node} self          the dom element with the text
+    * @param  {number} xpos            x pos to place multiline text at
+    * @param  {number} ypos            same but with y
+    * @param  {number} totalDistance   total distance to contain broken text.
+    *                                  amt in excess of spacingDistance
+    *                                  becomes v padding.
+    * @param  {number} spacingDistance total distance to space text inside,
+    *                                  should be < totalDistance
+    * @param {boolean} center          if true, center the text in the node, else left-align
+    * @param {number} cellWidth        total width of the cell to put the text in
+    */
+    private insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
+        let el = d3.select(node)
+
+        //clear previous content
+        el.text('');
+        while(node.firstChild) node.removeChild(node.firstChild);
+
+        let spacing = this.getSpacing(spacingDistance, words.length)
+        for (var i = 0; i < words.length; i++) {
+            var tspan = el.append('tspan').text(words[i]);
+            if (center) tspan.attr("text-anchor","middle");
+            // if (i > 0)
+            let offsetY = ((totalDistance - spacingDistance) / 2) + ypos + spacing[i]
+            tspan
+                .attr('x', center? xpos + (cellWidth/2) : xpos + padding)
+                .attr('y', offsetY);
+        }
+    };
+
+    /**
+     * Given an array of words, find the optimal font size for the array of words to be
+     * broken onto 1 line each.
+     * @param  {string[]} words     to be broken onto each line
+     * @param  {dom node} node      the dom node of the cell
+     * @param  {cellWidth} number   the width of the cell
+     * @param  {cellHeight} number  the height of the cell
+     * @param {boolean} center      center the text?
+     * @param {number} maxFontSize  max font size, default is 12
+     * @return {number}             the largest possible font size
+     *                              not larger than 12
+     */
+    private findSpace(words: string[], node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12) {
+        let padding = 4; //the amount of padding on the left and right
+        //break into multiple lines
+        let breakDistance = Math.min(cellHeight, (maxFontSize + 3) * words.length)
+        this.insertLineBreaks(words, node, padding, 0, 0, cellHeight, breakDistance, center, cellWidth)
+
+        //find right size to fit the height of the cell
+        let breakTextHeight = breakDistance / words.length;
+        let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8; //0.8
+
+        //find right size to fit the width of the cell
+        let longestWordLength = -Infinity;
+        for (let w = 0; w < words.length; w++) {
+            let word = words[w];
+            longestWordLength = Math.max(longestWordLength, word.length)
+        }
+        let fitTextWidth = ((cellWidth - (2 * padding)) / longestWordLength) * 1.45;
+
+        //the min fitting text size not larger than MaxFontSize
+        let size = Math.min(maxFontSize, fitTextHeight, fitTextWidth);
+
+        return size;
+    }
+
+    /**
+     * Given text, a dom node, and sizing parameters, 
+     * try all combinations of word breaks to maximize font size inside of the given space
+     * returns font size in pixels
+     * @param {string} text                   the text to render in the cell
+     * @param {dom node} node                 the node for the cell
+     * @param {number} cellWidth              width of the cell to get the font size for
+     * @param {number} cellHeight             height of the cell to get the font size for
+     * @param {boolean} center                center the text?
+     * @param {number} maxFontSize            max font size, default is 12
+     * @return {string}                       the size in pixels
+     */
+    private optimalFontSize(text: string, node, cellWidth: number, cellHeight: number, center: boolean, maxFontSize=12): number {
+        let words = text.split(" ");
+        let bestSize = -Infinity; //beat this size
+        let bestWordArrangement = [];
+
+        /**
+         * determine placement of line breaks to try. Shorter lists of words can try more positions
+         * @param {number} num_spaces the number of spaces in the words, aka words.length - 1
+         * @param {number} [num_breaks=3]  the number of breaks to insert
+         * @returns str[] where each index is a combination of breaks represented as [01]+ where 1 is a break and 0 is a space
+         */
+        function find_breaks(num_spaces:number, num_breaks=3) {
+            let breaks = new Set<string>();
+            function recurse(breakset_inherit, depth, num_breaks) {
+                for (let i = 0; i < breakset_inherit.length; i++) {
+                    let breakset = JSON.parse(JSON.stringify(breakset_inherit)); //deep copy
+                    breakset[i] = 1; // insert break at this location
+                    breaks.add(breakset.join("")); //save this combination
+                    if (depth < num_breaks - 1) recurse(breakset, depth + 1, num_breaks);
+                }
+            }
+            let initial_breaks = []
+            while (initial_breaks.length < num_spaces) initial_breaks.push(0); //fill with 0s
+            breaks.add(initial_breaks.join("")); //save this combination
+            recurse(initial_breaks, 0, num_breaks)
+            return breaks
+        }
+
+        let num_spaces = words.length;
+        // longer strings can't try as many combinations without the page lagging
+        let num_breaks = 1;
+        if (num_spaces < 20) num_breaks = 3;
+        else if (num_spaces < 50) num_breaks = 2;
+        else num_breaks = 1;
+        let breaks = Array.from(find_breaks(num_spaces, num_breaks))
+        for (let binaryString of breaks) { // find the best option of the proposed placements generated by find_breaks
+            //binaryString: binary representation of newline locations, e.g 001011
+            //where 1 is newline and 0 is no newline
+            let wordSet = []; //build this array
+            
+            for (let k = 0; k < binaryString.length; k++) {
+                if (binaryString[k] === "0") {//join with space
+                    if (wordSet.length == 0) wordSet.push(words[k]);
+                    else wordSet[wordSet.length - 1] = wordSet[wordSet.length - 1] + " " + words[k]; //append to previous word in array
+                } else { //linebreak
+                    wordSet.push(words[k]) //new word in array
+                }
+            }
+
+            let size = this.findSpace(wordSet, node, cellWidth, cellHeight, center, maxFontSize);
+            if (size > bestSize) { //found new optimum
+                bestSize = size;
+                bestWordArrangement = wordSet;
+            }
+            if (size == maxFontSize) break; //if largest text found, no need to search more
+        }
+
+        this.findSpace(bestWordArrangement, node, cellWidth, cellHeight, center, maxFontSize);
+        return bestSize;
     }
 
     /**
