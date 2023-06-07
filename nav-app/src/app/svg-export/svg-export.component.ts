@@ -213,7 +213,6 @@ export class SvgExportComponent implements OnInit {
         */
         function insertLineBreaks(words, node, padding, xpos, ypos, totalDistance, spacingDistance, center, cellWidth) {
             let el = d3.select(node)
-            // el.attr("y", y + (totalDistance - spacingDistance) / 2);
 
             //clear previous content
             el.text('');
@@ -254,7 +253,6 @@ export class SvgExportComponent implements OnInit {
             let fitTextHeight = Math.min(breakTextHeight, cellHeight) * 0.8; //0.8
 
             //find right size to fit the width of the cell
-            // let longestWord = words.sort(function(a,b) {return b.length - a.length})[0]
             let longestWordLength = -Infinity;
             for (let w = 0; w < words.length; w++) {
                 let word = words[w];
@@ -265,7 +263,6 @@ export class SvgExportComponent implements OnInit {
             //the min fitting text size not larger than MaxFontSize
             let size = Math.min(maxFontSize, fitTextHeight, fitTextWidth);
 
-            // if (size < 5) return "0px"; //enable for min text size
             return size;
         }
 
@@ -393,8 +390,6 @@ export class SvgExportComponent implements OnInit {
                     .scale(colorScale)
                     .labelOffset(2)
                     .labelFormat(d3.format("0.02r"))
-                    
-                    // .labelFormat( valuesRange < nCells ? d3.format("0.01f") : d3.format(".2"))
                 )
             }
         });
@@ -435,7 +430,6 @@ export class SvgExportComponent implements OnInit {
                 .attr("x", 2 * boxPadding)
                 .attr("font-size", 12)
                 .each(function() { centerValign(this); })
-                // .attr("dominant-baseline", "middle")
             // add cover mask so that the box lines crop around the text
             let bbox = titleEl.node().getBBox();
             let coverPadding = 2;
@@ -453,7 +447,7 @@ export class SvgExportComponent implements OnInit {
             let boxContentGroup = boxGroup.append("g")
                 .attr("class", "header-box-content")
                 .attr("transform", `translate(${boxPadding}, 0)`)
-            let boxContentHeight = boxHeight;// - 2*boxPadding;
+            let boxContentHeight = boxHeight;
             let boxContentWidth = boxWidth - 2*boxPadding;
 
             let boxGroupY = d3.scaleBand()
@@ -473,7 +467,6 @@ export class SvgExportComponent implements OnInit {
                             return optimalFontSize(subsectionContent.data as string, this, boxContentWidth, boxGroupY.bandwidth(), false, 12)
                         })
                         .each(function() { centerValign(this); })
-                        // .attr("dominant-baseline", "middle")
                 } else {
                     //call callback to add complex data to contentGroup
                     (subsectionContent.data as Function)(contentGroup, boxContentWidth, boxGroupY.bandwidth());
@@ -554,7 +547,6 @@ export class SvgExportComponent implements OnInit {
 
             let headerX = d3.scaleBand()
                 .paddingInner(0.05)
-                // .align(0.5)
                 .domain(headerSections.map(function(section: HeaderSection) { return section.title }))
                 .range([0, width]);
             
@@ -600,12 +592,10 @@ export class SvgExportComponent implements OnInit {
         let y = d3.scaleLinear()
             .domain([d3.max(tactics, function(tactic: RenderableTactic) { return tactic.height}), 0])
             .range([height - (headerHeight), 0])
-            
-        // let subtechniqueIndent = (1/3) * x.bandwidth(); //2/3 of full techinque width
-        // let subtechniqueIndent = 2 * y(1); //2*the height of a cell, to make room for y(1) width sidebar
+
         let subtechniqueIndent = Math.min(2 * y(1), 15);     
         
-        //add tactic row backgroun
+        //add tactic row background
         if (self.viewModel.showTacticRowBackground) {
             tablebody.append("rect")
                 .attr("class", "tactic-header-background")
@@ -653,7 +643,6 @@ export class SvgExportComponent implements OnInit {
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill })
             .attr("stroke", self.config.tableBorderColor);
         // add sidebar
-        // let sidebarWidth = y(1);
         let sidebarWidth = 3;
 
         let sidebar = subtechniqueGroups.append("rect")
@@ -697,7 +686,6 @@ export class SvgExportComponent implements OnInit {
                 }
                 return fontSize
             })
-            // .attr("dominant-baseline", "middle")
             .each(function() { centerValign(this); })
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
 
@@ -713,7 +701,6 @@ export class SvgExportComponent implements OnInit {
                 }
                 return fontSize
             })
-            // .attr("dominant-baseline", "middle")
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
             .each(function() { centerValign(this); })
     
@@ -738,7 +725,6 @@ export class SvgExportComponent implements OnInit {
                 }
                 return fontSize
             })
-            // .attr("dominant-baseline", "middle")
             .attr("fill", function(tactic: RenderableTactic) {
                 if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
                 else return "black";
@@ -768,10 +754,6 @@ export class SvgExportComponent implements OnInit {
         let svgEl = document.getElementById("svg" + this.viewModel.uid);
         svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         let svgData = new XMLSerializer().serializeToString(svgEl);
-        // // var svgData = svgEl.outerHTML;
-        // console.log(svgData)
-        // let svgData2 = new XMLSerializer().serializeToString(svgEl);
-        // console.log(svgData2)
         let filename = this.viewModel.name.split(' ').join('_');
         filename = filename.replace(/\W/g, "")  + ".svg"; // remove all non alphanumeric characters
         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
@@ -827,17 +809,6 @@ export class SvgExportComponent implements OnInit {
         return quantity * factor;
     }
 
-    // wrap(text, width, padding) {
-    //     var self = d3.select(this),
-    //     textLength = self.node().getComputedTextLength(),
-    //     text = self.text();
-    //     while (textLength > (width - 2 * padding) && text.length > 0) {
-    //         text = text.slice(0, -1);
-    //         self.text(text + '...');
-    //         textLength = self.node().getComputedTextLength();
-    //     }
-    // }
-
     /**
      * wrap the given text svg element
      * @param  text       element to wrap
@@ -863,21 +834,9 @@ export class SvgExportComponent implements OnInit {
                     tspan.text(line.join(" "));
                     line = [word];
                     let thisdy = lineHeight + dy
-                    // if (self.convertToPx(thisdy, "em") > cellheight) return;
                     tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", thisdy + "em").text(word);
                 }
             }
         });
-    }
-
-    /**
-     * Return whether the given dropdown element would overflow the side of the page if aligned to the right of its anchor
-     * @param  dropdown the DOM node of the panel
-     * @return          true if it would overflow
-     */
-    checkalign(dropdown): boolean {
-        // console.log(anchor)
-        let anchor = dropdown.parentNode;
-        return anchor.getBoundingClientRect().left + dropdown.getBoundingClientRect().width > document.body.clientWidth;
     }
 }
