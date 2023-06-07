@@ -143,17 +143,17 @@ export class SvgExportComponent implements OnInit {
 
         // calculate svg height and width
         let margin = {top: 5, right: 5, bottom: 5, left: 5};
-        let width = Math.max(self.convertToPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10);
+        let width = Math.max(self.toPx(self.config.width, self.config.unit)  - (margin.right + margin.left), 10);
         let svgWidth = width + margin.left + margin.right;
-        let height = Math.max(self.convertToPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
+        let height = Math.max(self.toPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
         let svgHeight = height + margin.top + margin.bottom;
-        let headerHeight = Math.max(self.convertToPx(self.config.headerHeight, self.config.unit), 1);
+        let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
 
         // calculate legend height and width
-        let legendX = Math.max(self.convertToPx(self.config.legendX, self.config.unit), 0);
-        let legendY = Math.max(self.convertToPx(self.config.legendY, self.config.unit), 0);
-        let legendWidth = Math.max(self.convertToPx(self.config.legendWidth, self.config.unit), 10);
-        let legendHeight = Math.max(self.convertToPx(self.config.legendHeight, self.config.unit), 10);
+        let legendX = Math.max(self.toPx(self.config.legendX, self.config.unit), 0);
+        let legendY = Math.max(self.toPx(self.config.legendY, self.config.unit), 0);
+        let legendWidth = Math.max(self.toPx(self.config.legendWidth, self.config.unit), 10);
+        let legendHeight = Math.max(self.toPx(self.config.legendHeight, self.config.unit), 10);
 
         // remove previous graphic
         let svgElement: HTMLElement = document.getElementById(self.svgElementID);
@@ -665,65 +665,50 @@ export class SvgExportComponent implements OnInit {
             .attr("fill", self.config.tableBorderColor)
             .attr("visibility", function(technique: RenderableTechnique) { return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? "visible" : "hidden"});
 
-        //   oooooooo8             o888  o888       ooooooooooo                          o8   
-        // o888     88  ooooooooo8  888   888       88  888  88 ooooooooo8 oooo   oooo o888oo 
-        // 888         888oooooo8   888   888           888    888oooooo8    888o888    888   
-        // 888o     oo 888          888   888           888    888           o88 88o    888   
-        //  888oooo88    88oooo888 o888o o888o         o888o     88oooo888 o88o   o88o   888o 
+        // -----------------------------------------------------------------------------
+        // CELL TEXT
+        // -----------------------------------------------------------------------------
                                                                                            
-        // Track the smallest optimal technique/subtechnique font size
-        let minCellTextSize = Infinity;
+        // track smallest optimal font size
+        let minFontSize = Infinity;
 
+        // set technique font size
         techniqueGroups.append("text")
-            .text(function(technique: RenderableTechnique) { 
-                return technique.text;
-            })
+            .text(function(technique: RenderableTechnique) { return technique.text; })
             .attr("font-size", function(technique: RenderableTechnique) {
                 const fontSize = optimalFontSize(technique.text, this, x.bandwidth(), y(1), false);
-                // Track the smallest font size found
-                if (fontSize < minCellTextSize) {
-                    minCellTextSize = fontSize;
-                }
-                return fontSize
+                if (fontSize < minFontSize) minFontSize = fontSize;
+                return fontSize;
             })
-            .each(function() { centerValign(this); })
             .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
+            .each(function() { centerValign(this); })
 
+        // set sub-technique font size
         subtechniqueGroups.append("text")
-            .text(function(subtechnique: RenderableTechnique) { 
-                return subtechnique.text;
-            })
+            .text(function(subtechnique: RenderableTechnique) { return subtechnique.text; })
             .attr("font-size", function(subtechnique: RenderableTechnique) {
                 const fontSize = optimalFontSize(subtechnique.text, this, x.bandwidth() - subtechniqueIndent, y(1), false);
-                // Track the smallest font size found
-                if (fontSize < minCellTextSize) {
-                    minCellTextSize = fontSize;
-                }
-                return fontSize
+                if (fontSize < minFontSize) minFontSize = fontSize;
+                return fontSize;
             })
             .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
             .each(function() { centerValign(this); })
     
-        // Set technique and subtechnique groups to the same font size
-        techniqueGroups.select("text").attr("font-size", minCellTextSize)
-        subtechniqueGroups.select("text").attr("font-size", minCellTextSize)
+        // set technique and sub-technique groups to the same font size
+        techniqueGroups.select("text").attr("font-size", minFontSize);
+        subtechniqueGroups.select("text").attr("font-size", minFontSize);
 
-        // Track the smallest optimal tactic label font size
-        let minTacticLabelTextSize = Infinity;
+        // track the smallest optimal font size for tactics
+        let minTacticFontSize = Infinity;
 
-        let tacticLabels = tacticGroups.append("g")
-            .attr("class", "tactic-label");
+        // set tactic font size
+        let tacticLabels = tacticGroups.append("g").attr("class", "tactic-label");
         tacticLabels.append("text")
-            .text(function(tactic: RenderableTactic) {
-                return tactic.tactic.name;
-            })
+            .text(function(tactic: RenderableTactic) { return tactic.tactic.name; })
             .attr("font-size", function(tactic: RenderableTactic) {
                 const fontSize = optimalFontSize(tactic.tactic.name, this, x.bandwidth(), y(1), true);
-                // Track the smallest font size found
-                if (fontSize < minTacticLabelTextSize) {
-                    minTacticLabelTextSize = fontSize;
-                }
-                return fontSize
+                if (fontSize < minTacticFontSize) minTacticFontSize = fontSize;
+                return fontSize;
             })
             .attr("fill", function(tactic: RenderableTactic) {
                 if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
@@ -732,8 +717,8 @@ export class SvgExportComponent implements OnInit {
             .attr("font-weight", "bold")
             .each(function() { centerValign(this); })
 
-        // Set tactic labels to same font size
-        tacticLabels.select("text").attr("font-size", minTacticLabelTextSize)
+        // set tactic labels to same font size
+        tacticLabels.select("text").attr("font-size", minTacticFontSize);
 
         //ooooo  oooo                  oooo                       oooo                         oooo      ooooo                                                            oooo 
         // 888    88 oo oooooo    ooooo888   ooooooo     ooooooo   888  ooooo ooooooooo8  ooooo888        888         ooooooooo8   oooooooo8 ooooooooo8 oo oooooo    ooooo888  
@@ -750,21 +735,29 @@ export class SvgExportComponent implements OnInit {
         }
     }
 
-    downloadSVG() {
-        let svgEl = document.getElementById("svg" + this.viewModel.uid);
-        svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-        let svgData = new XMLSerializer().serializeToString(svgEl);
+    /** Download the SVG */
+    public downloadSVG(): void {
+        // get SVG element
+        let svgElement = document.getElementById("svg" + this.viewModel.uid);
+        svgElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+        // generate filename
         let filename = this.viewModel.name.split(' ').join('_');
-        filename = filename.replace(/\W/g, "")  + ".svg"; // remove all non alphanumeric characters
-        var preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
-        if (is.ie()) { //internet explorer
+        // remove all non alphanumeric characters
+        filename = filename.replace(/\W/g, "")  + ".svg";
+
+        // build SVG blob
+        const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+
+        // download
+        if (this.isIE) {
             window.navigator.msSaveOrOpenBlob(svgBlob, filename)
         } else {
-            var svgUrl = URL.createObjectURL(svgBlob);
-            var downloadLink = document.createElement("a");
-            downloadLink.href = svgUrl;
-            downloadLink.download = filename
+            const downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = URL.createObjectURL(svgBlob);
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
@@ -774,38 +767,20 @@ export class SvgExportComponent implements OnInit {
     /**
      * Convert any length in various units to pixels
      * @param  quantity what length
-     * @param  unit     which unit system (in, cm, px?)
+     * @param  unit     which unit system (in, cm, px, em, pt)
      * @return          that length in pixels
      */
-    convertToPx(quantity: number, unit: string): number {
-        let factor;
-
-        switch(unit) {
-            case "in": {
-                factor = 96
-                break
-            }
-            case "cm": {
-                factor = 3.779375 * 10;
-                break;
-            }
-            case "px": {
-                factor = 1;
-                break;
-            }
-            case "em": {
-                factor = 16;
-                break;
-            }
-            case "pt": {
-                factor = 1.33;
-            }
-            default: {
-                console.error("unknown unit", unit)
-                factor = 0;
-            }
+    private toPx(quantity: number, unit: string): number {
+        let factor: any;
+        if      (unit == "in") factor = 96;
+        else if (unit == "cm") factor = 3.779375 * 10;
+        else if (unit == "px") factor = 1;
+        else if (unit == "em") factor = 16;
+        else if (unit == "pt") factor = 1.33;
+        else {
+            console.error("unknown unit", unit);
+            factor = 0;
         }
-
         return quantity * factor;
     }
 
