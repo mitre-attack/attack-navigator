@@ -25,7 +25,7 @@ import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { HelpComponent } from './help/help.component';
-import { ExporterComponent } from './exporter/exporter.component';
+import { SvgExportComponent } from './svg-export/svg-export.component';
 import { TechniqueCellComponent } from './matrix/technique-cell/technique-cell.component';
 import { MatrixSideComponent } from './matrix/matrix-side/matrix-side.component';
 import { MatrixFlatComponent } from './matrix//matrix-flat/matrix-flat.component';
@@ -57,7 +57,7 @@ import { ListInputComponent } from './list-input/list-input.component';
     DataTableComponent,
     TabsComponent,
     HelpComponent,
-    ExporterComponent,
+    SvgExportComponent,
     TechniqueCellComponent,
     MatrixSideComponent,
     MatrixFlatComponent,
@@ -115,6 +115,6 @@ import { ListInputComponent } from './list-input/list-input.component';
     Title
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ VersionUpgradeComponent, HelpComponent, ExporterComponent ]
+  entryComponents: [ VersionUpgradeComponent, HelpComponent, SvgExportComponent ]
 })
 export class AppModule { }

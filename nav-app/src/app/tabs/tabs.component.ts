@@ -6,7 +6,7 @@ import { Version } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
-import { ExporterComponent } from '../exporter/exporter.component';
+import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { ViewModelsService, ViewModel } from "../services/viewmodels.service";
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
@@ -293,7 +293,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param {ViewModel} vm    the viewModel to render
      */
     openSVGDialog(vm: ViewModel) {
-        this.dialog.open(ExporterComponent,
+        this.dialog.open(SvgExportComponent,
             { data: {vm: vm},
               panelClass: ['dialog-custom', this.userTheme]
             });

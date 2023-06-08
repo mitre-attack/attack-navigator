@@ -1,12 +1,11 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ExporterComponent } from './exporter.component';
+import { SvgExportComponent } from './svg-export.component';
 
-describe('ExporterComponent', () => {
-  let component: ExporterComponent;
-  let fixture: ComponentFixture<ExporterComponent>;
+describe('SvgExportComponent', () => {
+  let component: SvgExportComponent;
+  let fixture: ComponentFixture<SvgExportComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -14,7 +13,7 @@ describe('ExporterComponent', () => {
         HttpClientTestingModule,
         MatDialogModule 
       ],
-      declarations: [ ExporterComponent ],
+      declarations: [ SvgExportComponent ],
       providers: [
         {
           provide: MatDialogRef,
@@ -30,7 +29,7 @@ describe('ExporterComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ExporterComponent);
+    fixture = TestBed.createComponent(SvgExportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
