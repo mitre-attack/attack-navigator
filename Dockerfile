@@ -4,18 +4,9 @@ FROM node:18
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
-WORKDIR /src
-
-# copy over needed files
-COPY nav-app/ /src/nav-app/
-COPY layers/*.md /src/layers/
-COPY *.md /src/
-
+# install node packages - cache for faster future builds
 WORKDIR /src/nav-app
-
-# give user permissions
-RUN chown -R node:node ./
-
+COPY nav-app/package*.json nav-app/patch-webpack.js .
 # install packages and build 
 RUN npm install --unsafe-perm --legacy-peer-deps
 
@@ -25,8 +16,19 @@ RUN npm install --unsafe-perm --legacy-peer-deps
 # upgrading karma to 5.1.0 cascades into a litany of other dependency conflicts, which would ultimately require us to
 # upgrade from Angular v11 to v12. Therefore, legacy-peer-deps will be allowed until a major framework upgrade can occur
 
+# give user permissions
+RUN chown -R node:node ./
+
+# copy over needed files
+USER node
+COPY nav-app/ ./
+
+WORKDIR /src
+COPY layers/*.md ./layers/
+
+COPY *.md ./
+
+WORKDIR /src/nav-app
 EXPOSE 4200
 
 CMD npm start
-
-USER node
