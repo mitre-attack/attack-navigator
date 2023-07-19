@@ -5,6 +5,18 @@
         </li>
         <li>
             <div class="control-row-item noselect">
+                <!-- {{config.theme}} -->
+                <div class="control-row-button"
+                     (click)="themeEnum = (themeEnum + 1) % 2; config.theme = ['light', 'dark'][themeEnum]; buildSVG()"
+                     matTooltipPosition="below"
+                     matTooltip="theme">
+                     <span *ngIf="config.theme === 'light'" class="material-icons">nightlight_round</span>
+                     <span *ngIf="config.theme === 'dark'" class="material-icons">wb_sunny</span>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="control-row-item noselect">
                 <!-- {{config.unit}} -->
                 <div class="control-row-button"
                      (click)="unitEnum = (unitEnum + 1) % 3; config.unit = ['in', 'cm', 'px'][unitEnum]; buildSVG()"
@@ -249,7 +261,7 @@
     </ul>
 </div>
 
-<div class="svgcontainer" [id]="'svgInsert' + viewModel.uid">
+<div [ngClass]="[config.theme === 'light' ? 'svgcontainer' : 'svgcontainer dark-mode']" [id]="'svgInsert' + viewModel.uid">
     loading...
 </div>
 
