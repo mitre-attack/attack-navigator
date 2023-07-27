@@ -1,3 +1,4 @@
+@use 'sass:math' as math;
 @import "../matrix-common.scss";
 .technique-cell {
     @include adaptive-color("background-color", white, color(dark-2));
@@ -16,7 +17,7 @@
     min-height: $sizeunit;
 
     >div {
-        padding: $sizeunit /2 3px;
+        padding: math.div($sizeunit, 2) 3px;
         box-sizing: border-box;
         display: block;
         width: 100%;
