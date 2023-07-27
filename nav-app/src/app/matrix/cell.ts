@@ -4,7 +4,7 @@ import { Technique, Tactic } from '../classes/stix';
 import { ViewModel } from '../services/viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
 import { ConfigService } from '../services/config.service';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
 @Directive()
 export abstract class Cell {

@@ -7,7 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/es5/exceljs.browser';
 import * as is from 'is_js';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
 @Component({
     selector: 'DataTable',
