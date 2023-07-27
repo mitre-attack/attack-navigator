@@ -43,11 +43,9 @@
     "ngx-smart-popover": "^1.5.0",
     "rxjs": "^6.6.7",
     "rxjs-compat": "^6.6.7",
-    "stream": "0.0.2",
     "tinycolor2": "^1.6.0",
     "tinygradient": "^1.1.5",
     "tslib": "^2.5.0",
-    "util": "^0.12.5",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
