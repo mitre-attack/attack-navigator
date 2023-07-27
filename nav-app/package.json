@@ -13,8 +13,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "postinstall": "node patch-webpack.js"
+    "e2e": "ng e2e"
   },
   "dependencies": {
     "@angular/animations": "^12.2.17",
