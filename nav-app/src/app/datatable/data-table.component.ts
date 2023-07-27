@@ -5,7 +5,7 @@ import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, ViewModelsService } from "../services/viewmodels.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import * as Excel from 'exceljs/dist/es5/exceljs.browser';
+import * as Excel from 'exceljs/dist/exceljs.min.js';
 import * as is from 'is_js';
 import tinycolor from "tinycolor2";
 
