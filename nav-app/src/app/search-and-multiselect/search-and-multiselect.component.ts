@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel, ViewModelsService } from '../services/viewmodels.service';
-import { StixObject, Group, Mitigation, Software, Technique, Campaign } from '../classes/stix';
+import { StixObject, Group, Mitigation, Software, Technique, Campaign, Asset } from '../classes/stix';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -27,7 +27,8 @@ export class SearchAndMultiselectComponent implements OnInit {
         2: false, // software panel
         3: false, // campaign panel
         4: false, // mitigations panel
-        5: false // data components panel
+        5: false, // data components panel
+        6: false, // assets panel
     };
 
     public fields = [
@@ -224,6 +225,9 @@ export class SearchAndMultiselectComponent implements OnInit {
         }, {
             "label": "campaigns",
             "objects": this.filterAndSort(domain.campaigns, this._query)
+        }, {
+            "label": "assets",
+            "objects": this.filterAndSort(domain.assets, this._query)
         }];
 
         domain.dataComponents.forEach((c) => {
@@ -327,6 +331,8 @@ export class SearchAndMultiselectComponent implements OnInit {
             return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Campaign) {
             return allTechniques.filter((technique: Technique) => (stixObject as Campaign).relatedTechniques(domainVersionID).includes(technique.id));
+        } else if (stixObject instanceof Asset) {
+            return allTechniques.filter((technique: Technique) => (stixObject as Asset).relatedTechniques(domainVersionID).includes(technique.id));
         }
     }
 }
