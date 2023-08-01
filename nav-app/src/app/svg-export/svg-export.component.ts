@@ -322,7 +322,18 @@ export class SvgExportComponent implements OnInit {
             .attr("class", "cell")
             .attr("height", yRange(1))
             .attr("width", xRange.bandwidth())
-            .attr("fill", function(technique: RenderableTechnique) { return technique.fill !== null ? technique.fill : self.config.theme === "light" ? "#ffffff" : "#2e2e3f" })
+            .attr("fill", function(technique: RenderableTechnique) {
+                if (technique.fill !== null) {
+                    return technique.fill;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#ffffff";
+                    }
+                    else {
+                        return "#2e2e3f";
+                    }
+                }})
             .attr("stroke", self.config.tableBorderColor);
 
         // add cell style to sub-techniques
@@ -330,7 +341,18 @@ export class SvgExportComponent implements OnInit {
             .attr("class", "cell")
             .attr("height", yRange(1))
             .attr("width", xRange.bandwidth() - subtechniqueIndent)
-            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill !== null ? subtechnique.fill : self.config.theme === "light" ? "#ffffff" : "#2e2e3f" })
+            .attr("fill", function(subtechnique: RenderableTechnique) {
+                if (subtechnique.fill !== null) {
+                    return subtechnique.fill;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#ffffff";
+                    }
+                    else {
+                        return "#2e2e3f";
+                    }
+                }})
             .attr("stroke", self.config.tableBorderColor);
 
         // add styling for sub-technique sidebar
@@ -370,7 +392,18 @@ export class SvgExportComponent implements OnInit {
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
-            .attr("fill", function(technique: RenderableTechnique) { return technique.textColor !== null ? technique.textColor : self.config.theme === "light" ? "#000000" : "#ffffff" })
+            .attr("fill", function(technique: RenderableTechnique) {
+                if (technique.textColor !== null) {
+                    return technique.textColor;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#000000";
+                    }
+                    else {
+                        return "#ffffff";
+                    }
+                }})
             .each(function() { self.verticalAlignCenter(this); })
 
         // set sub-technique font size
@@ -381,7 +414,18 @@ export class SvgExportComponent implements OnInit {
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
-            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor !== null ? subtechnique.textColor : self.config.theme === "light" ? "#000000" : "#ffffff" })
+            .attr("fill", function(subtechnique: RenderableTechnique) {
+                if (subtechnique.textColor !== null) {
+                    return subtechnique.textColor;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#000000";
+                    }
+                    else {
+                        return "#ffffff";
+                    }
+                }})
             .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
