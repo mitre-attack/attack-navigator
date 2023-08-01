@@ -13,6 +13,7 @@
 
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
+- Extended search interface to support searching for techniques based on asset.
 
 # 4.8.2 - 9 May 2023
 
