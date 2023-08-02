@@ -30,6 +30,7 @@ Adds support for ATT&CK v13.
 ## Improvements
 - Users can disable the background color effect on manually assigned colors, aggregate scores, or non-aggregate scores by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#371](https://github.com/mitre-attack/attack-navigator/issues/371).
 - Added image orientation options and new preset image size options to the SVG exporter. See issue [#547](https://github.com/mitre-attack/attack-navigator/pull/547).
+- Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564)
 
 ## Fixes
 - Fixed an issue where aggregate scores were calculated on techniques with no sub-techniques. See issue [#539](https://github.com/mitre-attack/attack-navigator/issues/539).

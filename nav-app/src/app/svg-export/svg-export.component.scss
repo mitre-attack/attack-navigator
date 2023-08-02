@@ -8,6 +8,10 @@
     min-width: 75vw;
     max-width: 75vw;
     padding:25px;
+
+    &.dark-mode {
+        background-color: color(dark-1) !important;
+    }
 }
 
 .close-button {
