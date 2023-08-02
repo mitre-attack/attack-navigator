@@ -30,6 +30,7 @@ export class SvgExportComponent implements OnInit {
         "unit": "in",
         "orientation": "landscape",
         "size": "letter",
+        "theme": "light",
         "showSubtechniques": "expanded",
         "font": "sans-serif",
         "tableBorderColor": "#6B7279",
@@ -55,6 +56,9 @@ export class SvgExportComponent implements OnInit {
 
     // counter for unit change ui element
     public unitEnum: number = 0;
+
+    // counter for theme change ui element
+    public themeEnum: number = 0;
     
     // browser compatibility
     public get isIE(): boolean { return is.ie(); }
@@ -108,6 +112,14 @@ export class SvgExportComponent implements OnInit {
         this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
         this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
         if (this.config.showHeader) this.config.legendY -= this.config.headerHeight; 
+
+        //initial table border color
+        if (this.config.theme === 'light') {
+            this.config.tableBorderColor = "#6B7279"
+        }
+        else if (this.config.theme === 'dark') {
+            this.config.tableBorderColor = "#4c4c68"
+        }
 
         // build SVG at end of fn queue so page can render before build
         window.setTimeout(function() {
@@ -310,7 +322,18 @@ export class SvgExportComponent implements OnInit {
             .attr("class", "cell")
             .attr("height", yRange(1))
             .attr("width", xRange.bandwidth())
-            .attr("fill", function(technique: RenderableTechnique) { return technique.fill })
+            .attr("fill", function(technique: RenderableTechnique) {
+                if (technique.fill !== null) {
+                    return technique.fill;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#ffffff";
+                    }
+                    else {
+                        return "#2e2e3f";
+                    }
+                }})
             .attr("stroke", self.config.tableBorderColor);
 
         // add cell style to sub-techniques
@@ -318,7 +341,18 @@ export class SvgExportComponent implements OnInit {
             .attr("class", "cell")
             .attr("height", yRange(1))
             .attr("width", xRange.bandwidth() - subtechniqueIndent)
-            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.fill })
+            .attr("fill", function(subtechnique: RenderableTechnique) {
+                if (subtechnique.fill !== null) {
+                    return subtechnique.fill;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#ffffff";
+                    }
+                    else {
+                        return "#2e2e3f";
+                    }
+                }})
             .attr("stroke", self.config.tableBorderColor);
 
         // add styling for sub-technique sidebar
@@ -358,7 +392,18 @@ export class SvgExportComponent implements OnInit {
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
-            .attr("fill", function(technique: RenderableTechnique) { return technique.textColor; })
+            .attr("fill", function(technique: RenderableTechnique) {
+                if (technique.textColor !== null) {
+                    return technique.textColor;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#000000";
+                    }
+                    else {
+                        return "#ffffff";
+                    }
+                }})
             .each(function() { self.verticalAlignCenter(this); })
 
         // set sub-technique font size
@@ -369,7 +414,18 @@ export class SvgExportComponent implements OnInit {
                 if (fontSize < minFontSize) minFontSize = fontSize;
                 return fontSize;
             })
-            .attr("fill", function(subtechnique: RenderableTechnique) { return subtechnique.textColor; })
+            .attr("fill", function(subtechnique: RenderableTechnique) {
+                if (subtechnique.textColor !== null) {
+                    return subtechnique.textColor;
+                }
+                else {
+                    if (self.config.theme === "light") {
+                        return "#000000";
+                    }
+                    else {
+                        return "#ffffff";
+                    }
+                }})
             .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
@@ -390,7 +446,7 @@ export class SvgExportComponent implements OnInit {
             })
             .attr("fill", function(tactic: RenderableTactic) {
                 if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ["white", "black"]); 
-                else return "black";
+                else return self.config.theme === 'light' ? "black" : "white";
             })
             .attr("font-weight", "bold")
             .each(function() { self.verticalAlignCenter(this); })
@@ -434,8 +490,8 @@ export class SvgExportComponent implements OnInit {
             .attr("class", "header-box")
             .attr("width", width)
             .attr("height", height)
-            .attr("stroke", "black")
-            .attr("fill", "white")
+            .attr("stroke", self.config.theme === 'light' ? "black" : "#4c4c68")
+            .attr("fill", self.config.theme === 'light' ? "white" : "#1a1a23")
             .attr("rx", padding); // rounded corner
 
         // box title
@@ -444,6 +500,7 @@ export class SvgExportComponent implements OnInit {
             .text(section.title)
             .attr("x", 2 * padding)
             .attr("font-size", 12)
+            .attr("fill", self.config.theme === 'light' ? "black" : "white")
             .each(function() { self.verticalAlignCenter(this); })
 
         // add cover mask so that the box lines crop around the text
@@ -455,13 +512,14 @@ export class SvgExportComponent implements OnInit {
             .attr("y", bbox.y - coverPadding)
             .attr("width", bbox.width + 2 * coverPadding)
             .attr("height", bbox.height + 2 * coverPadding)
-            .attr("fill", "white")
+            .attr("fill", self.config.theme === 'light' ? "white" : "#1a1a23")
             .attr("rx", padding); // rounded corner
         boxTitle.raise(); // push title to front
 
         // add content to box
         let boxContentGroup = boxGroup.append("g")
             .attr("class", "header-box-content")
+            .attr("fill", self.config.theme === 'light' ? "black" : "white")
             .attr("transform", `translate(${padding}, 0)`)
 
         let yRange = d3.scaleBand()
