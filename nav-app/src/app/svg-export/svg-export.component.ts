@@ -779,7 +779,8 @@ export class SvgExportComponent implements OnInit {
 
         // download
         if (this.isIE) {
-            window.navigator.msSaveOrOpenBlob(svgBlob, filename)
+            const nav = (window.navigator as any);
+            nav.msSaveOrOpenBlob(svgBlob, filename);
         } else {
             const downloadLink = document.createElement("a");
             downloadLink.download = filename;

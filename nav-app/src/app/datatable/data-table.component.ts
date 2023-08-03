@@ -91,7 +91,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public saveBlob(blob, filename): void {
         if (is.ie()) { // internet explorer
-            window.navigator.msSaveOrOpenBlob(blob, filename)
+            const nav = (window.navigator as any);
+            nav.msSaveOrOpenBlob(blob, filename);
         } else {
             let svgUrl = URL.createObjectURL(blob);
             let downloadLink = document.createElement("a");
