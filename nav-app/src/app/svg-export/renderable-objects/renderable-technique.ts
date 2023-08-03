@@ -27,7 +27,7 @@ export class RenderableTechnique {
             if (this.viewModel.layout.showAggregateScores && techniqueVM.aggregateScoreColor) return techniqueVM.aggregateScoreColor;
             if (techniqueVM.score) return techniqueVM.scoreColor;
         }
-        return "white"; //default
+        return null; //default
     }
 
     public get textColor() {
@@ -35,7 +35,10 @@ export class RenderableTechnique {
             let techniqueVM: TechniqueVM = this.viewModel.getTechniqueVM(this.technique, this.tactic);
             if (!techniqueVM.enabled) return "#aaaaaa";
         }
-        return tinycolor.mostReadable(this.fill, ["white", "black"]); //default;
+        if (this.fill) {
+            return tinycolor.mostReadable(this.fill, ["white", "black"]); //default;
+        }
+        return null;
     }
 
     public get text() {
