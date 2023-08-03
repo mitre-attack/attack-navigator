@@ -151,7 +151,6 @@
       }
     }
   },
-  "defaultProject": "nav-app",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
