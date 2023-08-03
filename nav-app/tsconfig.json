@@ -6,7 +6,7 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2018",
+    "target": "es2020",
     "typeRoots": [
       "node_modules/@types"
     ],
