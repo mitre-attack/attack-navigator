@@ -931,13 +931,23 @@ export class ViewModel {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
             // filter by enabled
-            if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) return false;
-            if (matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
+            if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
+                techniqueVM.setIsVisible(false);
+                return false;
+            }
+            if (matrix.name == "PRE-ATT&CK") {
+                techniqueVM.setIsVisible(true);
+                return true; // don't filter by platform if it's pre-attack
+            }
             // filter by platform
             let platforms = new Set(technique.platforms)
             for (let platform of this.filters.platforms.selection) {
-                if (platforms.has(platform)) return true; //platform match
+                if (platforms.has(platform)) {
+                    techniqueVM.setIsVisible(true);
+                    return true; //platform match
+                }
             }
+            techniqueVM.setIsVisible(false);
             return false; //no platform match
         })
     }
@@ -1124,12 +1134,9 @@ export class ViewModel {
      */
     modifiedHiddenTechniques(): number {
         let modifiedHiddenTechniques = 0
-        let techniqueList = this.getVisibleTechniquesList()
         this.techniqueVMs.forEach(function(value,key) {
-            if (value.modified()) {
-                if (!techniqueList.includes(value.technique_tactic_union_id)) {
-                    modifiedHiddenTechniques++
-                }
+            if (value.modified() && value.isVisible === false) {
+                modifiedHiddenTechniques++;
             }
         })
         return modifiedHiddenTechniques;
@@ -1140,17 +1147,13 @@ export class ViewModel {
      * @return string representation
      */
     serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
-        let techniqueList = this.getVisibleTechniquesList()
-
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
             if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
                 modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
             }
-            else if (value.modified() && downloadAnnotationsOnVisibleTechniques) {
-                if (techniqueList.includes(value.technique_tactic_union_id)) {
-                    modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
-                }
+            else if (value.modified() && value.isVisible === true && downloadAnnotationsOnVisibleTechniques) {
+                modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
             }
         })
         let rep: {[k: string]: any } = {};
@@ -1510,6 +1513,8 @@ export class TechniqueVM {
     aggregateScore: any; // number rather than string as this is not based on an input from user
     aggregateScoreColor: string; // hex color for aggregate score
 
+    isVisible: boolean = true; // is technique currently displayed on matrix
+
     //print this object to the console
     print(): void {
         console.log(this.serialize())
@@ -1544,6 +1549,13 @@ export class TechniqueVM {
         this.aggregateScoreColor = "";
         this.links = [];
         this.metadata = [];
+    }
+
+    /**
+     * Set isVisible based on filters
+     */
+    setIsVisible(visible: boolean): void {
+        this.isVisible = visible;
     }
 
     /**
