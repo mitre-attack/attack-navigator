@@ -139,18 +139,11 @@ $cellSize: 15px;
   }
 
   .gradient-controls {
-    // width: 200px;
-
     table {
       padding: 0;
       margin: 0;
       border-collapse: collapse;
-      // select, button {
-      //     font-family: 'Roboto Mono', monospace;
-      //     font-size: 8pt;
-      // }
 
-      // border: 1px solid black;
       td {
         button {
           @include adaptive-color-dark-only("background-color", color(dark-1));

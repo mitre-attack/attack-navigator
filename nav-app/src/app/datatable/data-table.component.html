@@ -480,11 +480,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                      <mat-form-field>
                          <!-- update data whenever it is typed in -->
                          <input matInput
-                                type="text"
-                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46 || event.charCode == 45"
+                                type="number"
                                 [(ngModel)]="scoreEditField"
                                 placeholder="score"
-                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getColor($event.target.value));">
+                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getHexColor($event.target.value));">
                          <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
                      </mat-form-field>
                 </div>

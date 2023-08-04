@@ -4,7 +4,7 @@ import { Technique, Tactic } from '../classes/stix';
 import { ViewModel } from '../services/viewmodels.service';
 import { getCookie, hasCookie } from "../cookies";
 import { ConfigService } from '../services/config.service';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
 @Directive()
 export abstract class Cell {
@@ -163,6 +163,5 @@ export abstract class Cell {
             return { "background": this.emulate_alpha(tvm.aggregateScoreColor) }
         }
         if (tvm.score && this.configService.getFeature('non_aggregate_score_color')) return { "background": this.emulate_alpha(tvm.scoreColor) }
-        // return tvm.enabled && tvm.score && !tvm.color && !(this.viewModel.highlightedTechnique && this.viewModel.highlightedTechnique.technique_id == technique.technique_id)
     }
 }

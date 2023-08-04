@@ -17,6 +17,9 @@
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
 
+## Fixes
+- Updated Angular from 11.0.3 to 14.3.0.
+
 # 4.8.2 - 9 May 2023
 
 Adds support for ATT&CK v13.1.
