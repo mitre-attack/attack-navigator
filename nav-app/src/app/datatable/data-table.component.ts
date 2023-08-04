@@ -5,9 +5,9 @@ import { TabsComponent } from '../tabs/tabs.component';
 import { ViewModel, ViewModelsService } from "../services/viewmodels.service";
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import * as Excel from 'exceljs/dist/es5/exceljs.browser';
+import * as Excel from 'exceljs/dist/exceljs.min.js';
 import * as is from 'is_js';
-import * as tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 
 @Component({
     selector: 'DataTable',
@@ -91,7 +91,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public saveBlob(blob, filename): void {
         if (is.ie()) { // internet explorer
-            window.navigator.msSaveOrOpenBlob(blob, filename)
+            const nav = (window.navigator as any);
+            nav.msSaveOrOpenBlob(blob, filename);
         } else {
             let svgUrl = URL.createObjectURL(blob);
             let downloadLink = document.createElement("a");
@@ -129,11 +130,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}};
             }
             else if (this.viewModel.layout._showAggregateScores && tvm.aggregateScoreColor) {
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.aggregateScoreColor.toHex()}};
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.aggregateScoreColor.substring(1)}};
                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]).toHex()}};
             }
             else if (tvm.score) { //score assigned
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.toHex()}};
+                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.substring(1)}};
                 cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}};
             }
             if (tvm.comment) { //comment present on technique
