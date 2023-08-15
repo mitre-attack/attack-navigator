@@ -2,9 +2,9 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { VersionChangelog, Gradient, Filter, LayoutOptions, Link, Metadata } from '../classes';
 import { Technique, Tactic, Matrix } from '../classes/stix';
 import { DataService } from './data.service';
-import * as tinycolor from 'tinycolor2';
 import { evaluate } from 'mathjs';
-import * as globals from '../globals'; //global variables
+import tinycolor from "tinycolor2";
+import * as globals from '../globals'; // global variables
 import * as is from 'is_js';
 
 @Injectable({
@@ -931,13 +931,23 @@ export class ViewModel {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
             // filter by enabled
-            if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) return false;
-            if (matrix.name == "PRE-ATT&CK") return true; // don't filter by platform if it's pre-attack
+            if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
+                techniqueVM.setIsVisible(false);
+                return false;
+            }
+            if (matrix.name == "PRE-ATT&CK") {
+                techniqueVM.setIsVisible(true);
+                return true; // don't filter by platform if it's pre-attack
+            }
             // filter by platform
             let platforms = new Set(technique.platforms)
             for (let platform of this.filters.platforms.selection) {
-                if (platforms.has(platform)) return true; //platform match
+                if (platforms.has(platform)) {
+                    techniqueVM.setIsVisible(true);
+                    return true; //platform match
+                }
             }
+            techniqueVM.setIsVisible(false);
             return false; //no platform match
         })
     }
@@ -1066,7 +1076,7 @@ export class ViewModel {
         }
 
         aggScore = aggScore.toFixed(2);
-        tvm.aggregateScoreColor = this.gradient.getColor(aggScore.toString());
+        tvm.aggregateScoreColor = this.gradient.getHexColor(aggScore.toString());
         tvm.aggregateScore = Number.isFinite(+aggScore) ? (+aggScore).toString() : "";
         return +aggScore;
     }
@@ -1124,12 +1134,9 @@ export class ViewModel {
      */
     modifiedHiddenTechniques(): number {
         let modifiedHiddenTechniques = 0
-        let techniqueList = this.getVisibleTechniquesList()
         this.techniqueVMs.forEach(function(value,key) {
-            if (value.modified()) {
-                if (!techniqueList.includes(value.technique_tactic_union_id)) {
-                    modifiedHiddenTechniques++
-                }
+            if (value.modified() && value.isVisible === false) {
+                modifiedHiddenTechniques++;
             }
         })
         return modifiedHiddenTechniques;
@@ -1140,17 +1147,13 @@ export class ViewModel {
      * @return string representation
      */
     serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
-        let techniqueList = this.getVisibleTechniquesList()
-
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function(value,key) {
             if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
                 modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
             }
-            else if (value.modified() && downloadAnnotationsOnVisibleTechniques) {
-                if (techniqueList.includes(value.technique_tactic_union_id)) {
-                    modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
-                }
+            else if (value.modified() && value.isVisible === true && downloadAnnotationsOnVisibleTechniques) {
+                modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
             }
         })
         let rep: {[k: string]: any } = {};
@@ -1407,11 +1410,10 @@ export class ViewModel {
      * Update this vm's gradient
      */
     updateGradient(): void {
-        console.log("updating gradient")
         this.gradient.updateGradient();
         let self = this;
         this.techniqueVMs.forEach(function(tvm, key) {
-            tvm.scoreColor = self.gradient.getColor(tvm.score);
+            tvm.scoreColor = self.gradient.getHexColor(tvm.score);
         });
         this.updateLegendColorPresets();
     }
@@ -1422,7 +1424,7 @@ export class ViewModel {
      * @param tvm technique VM to update
      */
     updateScoreColor(tvm: TechniqueVM): void {
-        tvm.scoreColor = this.gradient.getColor(tvm.score);
+        tvm.scoreColor = this.gradient.getHexColor(tvm.score);
     }
 
     legendItems = [
@@ -1497,7 +1499,7 @@ export class TechniqueVM {
     tactic: string;
 
     score: string = "";
-    scoreColor: any; //color for score gradient
+    scoreColor: string; // hex color for score gradient
 
     color: string = ""; //manually assigned color-class name
     enabled: boolean = true;
@@ -1509,7 +1511,9 @@ export class TechniqueVM {
 
     showSubtechniques = false;
     aggregateScore: any; // number rather than string as this is not based on an input from user
-    aggregateScoreColor: any;
+    aggregateScoreColor: string; // hex color for aggregate score
+
+    isVisible: boolean = true; // is technique currently displayed on matrix
 
     //print this object to the console
     print(): void {
@@ -1545,6 +1549,13 @@ export class TechniqueVM {
         this.aggregateScoreColor = "";
         this.links = [];
         this.metadata = [];
+    }
+
+    /**
+     * Set isVisible based on filters
+     */
+    setIsVisible(visible: boolean): void {
+        this.isVisible = visible;
     }
 
     /**

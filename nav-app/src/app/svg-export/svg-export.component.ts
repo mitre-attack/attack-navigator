@@ -6,9 +6,8 @@ import { DataService } from '../services/data.service';
 import { RenderableTechnique } from './renderable-objects/renderable-technique';
 import { RenderableTactic } from './renderable-objects/renderable-tactic';
 import { RenderableMatrix } from './renderable-objects/renderable-matrix';
-
+import tinycolor from "tinycolor2";
 import * as is from 'is_js';
-import * as tinycolor from 'tinycolor2';
 declare var d3: any; //d3js
 
 @Component({
@@ -838,7 +837,8 @@ export class SvgExportComponent implements OnInit {
 
         // download
         if (this.isIE) {
-            window.navigator.msSaveOrOpenBlob(svgBlob, filename)
+            const nav = (window.navigator as any);
+            nav.msSaveOrOpenBlob(svgBlob, filename);
         } else {
             const downloadLink = document.createElement("a");
             downloadLink.download = filename;

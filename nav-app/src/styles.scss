@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import "~@fontsource/roboto/index.css";
-@import "~@fontsource/roboto-mono/index.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import "@fontsource/roboto";
+@import "@fontsource/roboto-mono";
 @import "colors.scss";
 
 @font-face {

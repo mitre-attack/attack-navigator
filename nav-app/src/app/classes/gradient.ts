@@ -1,4 +1,4 @@
-import * as tinycolor from 'tinycolor2';
+import tinycolor from "tinycolor2";
 import * as tinygradient from 'tinygradient';
 
 export class Gradient {
@@ -122,19 +122,18 @@ export class Gradient {
         this.colors.splice(index, 1)
     }
 
-    // get the gradient color for a given value in the scale. Value is string format number
-    getColor(valueString: string) {
+    // get the gradient hex color for a given value in the scale. Value is string format number
+    getHexColor(valueString: string) {
         if (!this.gradient) this.updateGradient();
 
         let value: number;
         if (valueString.length == 0) return;
         else value = Number(valueString);
 
-        if (value >= this.maxValue) { return this.gradientRGB[this.gradientRGB.length - 1]; }
-        if (value <= this.minValue) { return this.gradientRGB[0]; }
+        if (value >= this.maxValue) { return this.gradientRGB[this.gradientRGB.length - 1].toHexString(); }
+        if (value <= this.minValue) { return this.gradientRGB[0].toHexString(); }
         let index = (value - this.minValue)/(this.maxValue - this.minValue) * 100;
-        // console.log(value, "->", index)
-        return this.gradientRGB[Math.round(index)];
+        return this.gradientRGB[Math.round(index)].toHexString();
     }
 }
 
