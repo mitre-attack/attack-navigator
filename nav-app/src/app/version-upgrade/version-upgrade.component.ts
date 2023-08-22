@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModelsService } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
-import * as globals from '../utilities/globals';
+import * as globals from '../utils/globals';
 
 @Component({
     selector: 'app-version-upgrade',

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import * as globals from "../utilities/globals";
+import * as globals from "../utils/globals";
 
 @Component({
   selector: 'app-layer-information',

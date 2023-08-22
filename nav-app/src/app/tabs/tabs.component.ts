@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from "../changelog/changelog.component";
 import { forkJoin } from 'rxjs';
 import * as is from 'is_js';
-import * as globals from '../utilities/globals';
+import * as globals from '../utils/globals';
 
 @Component({
     selector: 'tabs',

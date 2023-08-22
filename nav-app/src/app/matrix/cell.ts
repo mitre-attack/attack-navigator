@@ -2,7 +2,7 @@ import { Input, Directive } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Technique, Tactic } from '../classes/stix';
 import { ViewModel } from '../services/viewmodels.service';
-import { getCookie, hasCookie } from "../utilities/cookies";
+import { getCookie, hasCookie } from "../utils/cookies";
 import { ConfigService } from '../services/config.service';
 import tinycolor from "tinycolor2";
 
