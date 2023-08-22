@@ -55,7 +55,6 @@ export class ViewModelsService {
     destroyViewModel(vm: ViewModel): void {
         for (let i = 0; i < this.viewModels.length; i++) {
             if (this.viewModels[i] == vm) {
-                // console.log("destroying viewmodel", vm)
                 this.viewModels.splice(i,1)
                 return;
             }
@@ -96,7 +95,7 @@ export class ViewModelsService {
                 // evaluate with an empty scope
                 let mathResult = evaluate(scoreExpression, {});
                 // if it didn't except after this, it evaluated to a single result.
-                console.log("score expression evaluated to single result to be applied to all techniques");
+                console.debug("score expression evaluated to single result to be applied to all techniques");
                 if (is.boolean(mathResult)) {
                     mathResult = mathResult ? "1" : "0"; //boolean to binary
                 } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
@@ -165,7 +164,6 @@ export class ViewModelsService {
          * @param  {string}    fieldname  the field to inherit from the viewmodel
          */
         function inherit(inherit_vm: ViewModel, fieldname: string) {
-            // console.log("inherit", fieldname)
             inherit_vm.techniqueVMs.forEach(function(inherit_TVM) {
                 let tvm = result.hasTechniqueVM_id(inherit_TVM.technique_tactic_union_id) ? result.getTechniqueVM_id(inherit_TVM.technique_tactic_union_id) : new TechniqueVM(inherit_TVM.technique_tactic_union_id)
                 tvm[fieldname] = inherit_TVM[fieldname];
@@ -193,7 +191,6 @@ export class ViewModelsService {
         }
 
         result.name = layerName;
-        // console.log(result)
         this.viewModels.push(result)
         result.updateGradient();
         return result;
@@ -267,7 +264,7 @@ export class ViewModel {
 
     constructor(name: string, uid: string, domainVersionID: string, private dataService: DataService) {
         this.domainVersionID = domainVersionID;
-        console.log("initializing ViewModel '" + name + "'");
+        console.debug("initializing ViewModel '" + name + "'");
         this.filters = new Filter();
         this.name = name;
         this.uid = uid;
@@ -294,7 +291,7 @@ export class ViewModel {
     }
 
     initTechniqueVMs() {
-        console.log(this.name, "initializing technique VMs");
+        console.debug(this.name, "initializing technique VMs");
         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
@@ -1613,7 +1610,7 @@ export class TechniqueVM {
         if (this.tactic !== undefined && this.techniqueID !== undefined) {
             this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;
         } else {
-            console.log("ERROR: Tactic and TechniqueID field needed.")
+            console.error("ERROR: Tactic and TechniqueID field needed.")
         }
 
         if ("metadata" in obj) {

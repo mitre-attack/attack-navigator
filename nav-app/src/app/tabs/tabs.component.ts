@@ -42,7 +42,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     nav_version = globals.nav_version;
 
     constructor(private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
-        console.log("tabs component initializing");
+        console.debug("initializing tabs component");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
@@ -458,7 +458,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @return      tab index
      */
     charToIndex(char: string): number {
-        // console.log("searching for char", char)
         let realIndex = 0;
         for (let i = 0; i < this.layerTabs.length; i++) {
             if (this.layerTabs[i].dataContext) {
@@ -762,7 +761,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                             throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
                         }
                         await this.layerUpgrade(viewModel, res, replace, defaultLayers);
-                        console.log("loaded layer from", loadURL);
+                        console.debug("loaded layer from", loadURL);
                         resolve(null); //continue
                     } catch(err) {
                         console.error(err)
@@ -816,11 +815,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param {number} index the index to remove
      */
     removeLayerLink(index: number): void {
-        console.log("removing index", index)
-        console.log(this.layerLinkURLs);
+        console.debug("removing index", index)
         if (this.layerLinkURLs.length == 1) this.layerLinkURLs = [];
         else this.layerLinkURLs.splice(index, 1);
-        console.log(this.layerLinkURLs);
+        console.debug(this.layerLinkURLs);
     }
 
     /**
@@ -858,8 +856,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      */
     selectLayerLink(): void {
         let copyText = <HTMLInputElement>document.getElementById("layerLink");
-        console.log(copyText)
-        console.log(copyText.value)
+        console.debug('copied', copyText.value)
         copyText.select();
     }
 
@@ -868,7 +865,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * copy the created layer link to the user's clipboard
      */
     copyLayerLink(): void {
-        console.log("attempting copy")
         this.selectLayerLink();
         document.execCommand("Copy");
         this.copiedRecently = true;

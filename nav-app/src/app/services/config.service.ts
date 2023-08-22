@@ -16,7 +16,7 @@ export class ConfigService {
     public contextMenuItems: ContextMenuItem[] = [];
 
     constructor(private dataService: DataService) {
-        console.log("initializing config service");
+        console.debug("initializing config service");
         let self = this;
         let subscription = dataService.getConfig().subscribe({
             next: function(config: any) {

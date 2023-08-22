@@ -32,7 +32,7 @@ export class Filter {
      * @param {*} value the value to toggle
      */
     toggleInFilter(filterName: string, value: string): void {
-        if (!this[filterName].options.includes(value)) { console.log("not a valid option to toggle", value, this[filterName]); return }
+        if (!this[filterName].options.includes(value)) { console.error("not a valid option to toggle", value, this[filterName]); return }
         if (this[filterName].selection.includes(value)) {
             let index = this[filterName].selection.indexOf(value)
             this[filterName].selection.splice(index, 1);

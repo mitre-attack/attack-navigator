@@ -13,7 +13,7 @@ import { Version, VersionChangelog } from '../classes';
 export class DataService {
 
     constructor(private http: HttpClient) {
-        console.log("initializing data service")
+        console.debug("initializing data service")
         let subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config["versions"]);
@@ -273,7 +273,7 @@ export class DataService {
      */
     getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
-            console.log("fetching data from TAXII server");
+            console.debug("fetching data from TAXII server");
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
             let collectionInfo: any = {
                 'id': domain.taxii_collection,
@@ -286,7 +286,7 @@ export class DataService {
             const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
-            console.log("retrieving data", domain.urls)
+            console.debug("retrieving data", domain.urls)
             let bundleData = [];
             const httpOptions = {
                 headers: undefined
