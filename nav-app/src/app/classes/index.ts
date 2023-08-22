@@ -6,3 +6,4 @@ export { Filter } from "./filter";
 export { LayoutOptions } from "./layout-options";
 export { Link } from "./link";
 export { Metadata } from "./metadata";
+export { TechniqueVM } from "./technique-vm";

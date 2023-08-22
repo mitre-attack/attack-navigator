@@ -1,5 +1,6 @@
 import { Matrix, Tactic, Technique } from "../../classes/stix";
-import { TechniqueVM, ViewModel } from "../../services/viewmodels.service";
+import { ViewModel } from "../../services/viewmodels.service";
+import { TechniqueVM } from "../../classes";
 import tinycolor from "tinycolor2";
 
 export class RenderableTechnique {
