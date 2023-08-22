@@ -254,7 +254,7 @@ export class DataService {
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
 
-        this.lowestSupportedVersion = this.versions[this.versions.length-1];
+        this.lowestSupportedVersion = this.versions[this.versions.length - 1];
     }
 
     /**
@@ -293,7 +293,7 @@ export class DataService {
             }
             if (domain.authentication && domain.authentication.enabled) { // include authorization header, if configured (integrations)
                 let token = `${domain.authentication.serviceName}:${domain.authentication.apiKey}`;
-                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64')})
+                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64') })
             }
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url, httpOptions));

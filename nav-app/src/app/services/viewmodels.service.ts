@@ -8,7 +8,7 @@ import * as globals from '../globals'; // global variables
 import * as is from 'is_js';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
@@ -32,7 +32,7 @@ export class ViewModelsService {
      * @return {ViewModel} the created ViewModel
      */
     newViewModel(name: string, domainVersionID: string) {
-        let vm = new ViewModel(name, "vm"+ this.getNonce(), domainVersionID, this.dataService);
+        let vm = new ViewModel(name, "vm" + this.getNonce(), domainVersionID, this.dataService);
         this.viewModels.push(vm);
         return vm;
     }
@@ -55,7 +55,7 @@ export class ViewModelsService {
     destroyViewModel(vm: ViewModel): void {
         for (let i = 0; i < this.viewModels.length; i++) {
             if (this.viewModels[i] == vm) {
-                this.viewModels.splice(i,1)
+                this.viewModels.splice(i, 1)
                 return;
             }
         }
@@ -85,8 +85,8 @@ export class ViewModelsService {
 
             //get list of all technique IDs used in the VMs
             let techniqueIDs = new Set<string>();
-            scoreVariables.forEach(function(vm, key) {
-                vm.techniqueVMs.forEach(function(techniqueVM, techniqueID) {
+            scoreVariables.forEach(function (vm, key) {
+                vm.techniqueVMs.forEach(function (techniqueVM, techniqueID) {
                     techniqueIDs.add(techniqueID);
                 })
             })
@@ -99,19 +99,19 @@ export class ViewModelsService {
                 if (is.boolean(mathResult)) {
                     mathResult = mathResult ? "1" : "0"; //boolean to binary
                 } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
-                    throw {message: "math result ( " + mathResult + " ) is not a number"};
+                    throw { message: "math result ( " + mathResult + " ) is not a number" };
                 }
                 // if it didn't error, and outputted a single value, apply this to all techniques.
                 result.initializeScoresTo = String(mathResult); //initialize scores to this value
                 score_min = mathResult;
                 score_max = mathResult;
-            } catch(err) { //couldn't evaluate with empty scope, build scope for each technique
+            } catch (err) { //couldn't evaluate with empty scope, build scope for each technique
                 // compute the score of each techniqueID
-                techniqueIDs.forEach(function(technique_id) {
+                techniqueIDs.forEach(function (technique_id) {
                     let new_tvm = new TechniqueVM(technique_id);
                     let scope = {};
                     let misses = 0; //number of times a VM is missing the value
-                    scoreVariables.forEach(function(vm, key) {
+                    scoreVariables.forEach(function (vm, key) {
                         let scoreValue: number;
                         if (!vm.hasTechniqueVM_id(technique_id)) { //missing technique
                             scoreValue = 0;
@@ -137,7 +137,7 @@ export class ViewModelsService {
                         if (is.boolean(mathResult)) {
                             mathResult = mathResult ? "1" : "0"; //boolean to binary
                         } else if (is.not.number(mathResult)) { //user inputted something weird, complain about it
-                            throw {message: "math result ( " + mathResult + " ) is not a number"};
+                            throw { message: "math result ( " + mathResult + " ) is not a number" };
                         }
                         new_tvm.score = String(mathResult);
                         result.techniqueVMs.set(technique_id, new_tvm);
@@ -164,7 +164,7 @@ export class ViewModelsService {
          * @param  {string}    fieldname  the field to inherit from the viewmodel
          */
         function inherit(inherit_vm: ViewModel, fieldname: string) {
-            inherit_vm.techniqueVMs.forEach(function(inherit_TVM) {
+            inherit_vm.techniqueVMs.forEach(function (inherit_TVM) {
                 let tvm = result.hasTechniqueVM_id(inherit_TVM.technique_tactic_union_id) ? result.getTechniqueVM_id(inherit_TVM.technique_tactic_union_id) : new TechniqueVM(inherit_TVM.technique_tactic_union_id)
                 tvm[fieldname] = inherit_TVM[fieldname];
                 result.techniqueVMs.set(inherit_TVM.technique_tactic_union_id, tvm);
@@ -279,7 +279,7 @@ export class ViewModel {
 
         if (!this.domainVersionID || !domain.dataLoaded) {
             let self = this;
-            this.dataService.onDataLoad(this.domainVersionID, function() {
+            this.dataService.onDataLoad(this.domainVersionID, function () {
                 self.initTechniqueVMs()
                 self.filters.initPlatformOptions(self.dataService.getDomain(self.domainVersionID));
             });
@@ -329,10 +329,10 @@ export class ViewModel {
     //     this.techUIDtoIDMap = Object.freeze(techUIDtoIDMapt);
     // }
 
-     //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
-     // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
-     //   | | | _| (__| __ | .` || | (_) | |_| | _|   / _ \|  _/| |
-     //   |_| |___\___|_||_|_|\_|___\__\_\\___/|___| /_/ \_\_| |___|
+    //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
+    // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
+    //   | | | _| (__| __ | .` || | (_) | |_| | _|   / _ \|  _/| |
+    //   |_| |___\___|_||_|_|\_|___\__\_\\___/|___| /_/ \_\_| |___|
 
     techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); //configuration for each technique
     // Getter
@@ -349,7 +349,7 @@ export class ViewModel {
      * @param {techniqueVM} techniqueVM: the techniqueVM to set
      * @param {boolean} overwrite (default true) if true, overwrite existing techniqueVMs under that ID.
      */
-    public setTechniqueVM(techniqueVM: TechniqueVM, overwrite=true): void {
+    public setTechniqueVM(techniqueVM: TechniqueVM, overwrite = true): void {
         if (this.techniqueVMs.has(techniqueVM.technique_tactic_union_id)) {
             if (overwrite) this.techniqueVMs.delete(techniqueVM.technique_tactic_union_id)
             else return;
@@ -425,7 +425,7 @@ export class ViewModel {
      * @param {Tactic} tactic wherein the technique occurs
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public selectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren=true): void {
+    public selectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren = true): void {
         if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
             if (technique.isSubtechnique) { //select from parent
                 this.selectTechniqueInTactic(technique.parent, tactic, true);
@@ -458,7 +458,7 @@ export class ViewModel {
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      * @param highlightTechniques, if true, highlight techniques rather than add to selected techniques group
      */
-    public selectTechniqueAcrossTactics(technique: Technique, walkChildren= true, highlightTechniques = false): void {
+    public selectTechniqueAcrossTactics(technique: Technique, walkChildren = true, highlightTechniques = false): void {
         if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
             if (technique.isSubtechnique) { //select from parent
                 this.selectTechniqueAcrossTactics(technique.parent, true, highlightTechniques);
@@ -487,7 +487,7 @@ export class ViewModel {
      * @param {Tactic} tactic wherein the technique occurs
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public unselectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren=true): void {
+    public unselectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren = true): void {
         if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
             if (technique.isSubtechnique) { //select from parent
                 this.unselectTechniqueInTactic(technique.parent, tactic, true);
@@ -518,7 +518,7 @@ export class ViewModel {
      * @param {Technique} technique to unselect
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public unselectTechniqueAcrossTactics(technique: Technique, walkChildren=true) {
+    public unselectTechniqueAcrossTactics(technique: Technique, walkChildren = true) {
         if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
             if (technique.isSubtechnique) { //select from parent
                 this.unselectTechniqueAcrossTactics(technique.parent, true);
@@ -560,7 +560,7 @@ export class ViewModel {
         let previouslySelected = new Set(this.selectedTechniques);
         this.clearSelectedTechniques();
         let self = this;
-        this.techniqueVMs.forEach(function(tvm, key) {
+        this.techniqueVMs.forEach(function (tvm, key) {
             if (!previouslySelected.has(tvm.technique_tactic_union_id)) {
                 if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
                 self.selectedTechniques.add(tvm.technique_tactic_union_id);
@@ -578,7 +578,7 @@ export class ViewModel {
         if (this.isCurrentlyEditing()) {
             // deselect techniques without annotations
             let selected = new Set(this.selectedTechniques);
-            this.techniqueVMs.forEach(function(tvm, key) {
+            this.techniqueVMs.forEach(function (tvm, key) {
                 if (selected.has(tvm.technique_tactic_union_id) && !tvm.annotated()) {
                     self.selectedTechniques.delete(tvm.technique_tactic_union_id);
                     self.checkValues(false, tvm.technique_tactic_union_id);
@@ -586,7 +586,7 @@ export class ViewModel {
             });
         } else {
             // select all techniques with annotations
-            this.techniqueVMs.forEach(function(tvm, key) {
+            this.techniqueVMs.forEach(function (tvm, key) {
                 if (tvm.annotated()) {
                     if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
                     self.selectedTechniques.add(tvm.technique_tactic_union_id);
@@ -605,7 +605,7 @@ export class ViewModel {
         if (this.isCurrentlyEditing()) {
             // deselect techniques with annotations
             let selected = new Set(this.selectedTechniques);
-            this.techniqueVMs.forEach(function(tvm, key) {
+            this.techniqueVMs.forEach(function (tvm, key) {
                 if (selected.has(tvm.technique_tactic_union_id) && tvm.annotated()) {
                     self.selectedTechniques.delete(tvm.technique_tactic_union_id);
                     self.checkValues(false, tvm.technique_tactic_union_id);
@@ -694,7 +694,7 @@ export class ViewModel {
     * * @param  {Tactic}  tactic wherein the technique occurs
      * @return {boolean}           true if selected, false otherwise
      */
-    public isTechniqueSelected(technique: Technique, tactic: Tactic, walkChildren=true): boolean {
+    public isTechniqueSelected(technique: Technique, tactic: Tactic, walkChildren = true): boolean {
         if (this.selectTechniquesAcrossTactics) {
             if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
                 if (technique.isSubtechnique) { //select from parent
@@ -786,7 +786,7 @@ export class ViewModel {
      */
     public isTacticSelected(tactic: Tactic) {
         let self = this;
-        let result = tactic.techniques.every(function(technique) {
+        let result = tactic.techniques.every(function (technique) {
             return self.isTechniqueSelected(technique, tactic)
         });
         return result;
@@ -818,7 +818,7 @@ export class ViewModel {
      * @param {(Link|Metadata)[]} values the list of values to place in the field
      */
     public editSelectedTechniqueValues(field: string, values: (Link | Metadata)[]): void {
-        let fieldToType: any = {"links": Link, "metadata": Metadata};
+        let fieldToType: any = { "links": Link, "metadata": Metadata };
         this.selectedTechniques.forEach(id => {
             const value_clone = values.map(value => { // deep copy
                 let clone = new fieldToType[field]();
@@ -879,7 +879,7 @@ export class ViewModel {
 
             if (this.activeTvm && this.activeTvm.technique_tactic_union_id == id) { // edge case where deselection was the first selected technique
                 let first_id = this.selectedTechniques.values().next().value;
-                this.activeTvm = first_id ? this.getTechniqueVM_id(first_id): undefined;
+                this.activeTvm = first_id ? this.getTechniqueVM_id(first_id) : undefined;
 
                 // re-evaluate mismatched values
                 this.linkMismatches = [];
@@ -1114,7 +1114,7 @@ export class ViewModel {
                     let technique_tactic_union_id = technique.get_technique_tactic_id(tactic);
                     techniqueList.push(technique_tactic_union_id);
                     let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
-                    .map( sub => { return sub });
+                        .map(sub => { return sub });
                     for (let subtechnique of subtechniques) {
                         let subtechnique_tactic_union_id = subtechnique.get_technique_tactic_id(tactic);
                         techniqueList.push(subtechnique_tactic_union_id);
@@ -1131,7 +1131,7 @@ export class ViewModel {
      */
     modifiedHiddenTechniques(): number {
         let modifiedHiddenTechniques = 0
-        this.techniqueVMs.forEach(function(value,key) {
+        this.techniqueVMs.forEach(function (value, key) {
             if (value.modified() && value.isVisible === false) {
                 modifiedHiddenTechniques++;
             }
@@ -1145,7 +1145,7 @@ export class ViewModel {
      */
     serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
         let modifiedTechniqueVMs = [];
-        this.techniqueVMs.forEach(function(value,key) {
+        this.techniqueVMs.forEach(function (value, key) {
             if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
                 modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified
             }
@@ -1153,7 +1153,7 @@ export class ViewModel {
                 modifiedTechniqueVMs.push(JSON.parse(value.serialize())) //only save techniqueVMs which have been modified and are visible
             }
         })
-        let rep: {[k: string]: any } = {};
+        let rep: { [k: string]: any } = {};
         rep.name = this.name;
 
         rep.versions = {
@@ -1192,29 +1192,29 @@ export class ViewModel {
      * @param rep string to restore from
      */
     deSerializeDomainVersionID(rep: any): void {
-        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        let obj = (typeof (rep) == "string") ? JSON.parse(rep) : rep
         this.name = obj.name
         this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
         if ("versions" in obj) {
             if ("attack" in obj.versions) {
-                if (typeof(obj.versions.attack) === "string") {
+                if (typeof (obj.versions.attack) === "string") {
                     if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/\d+/g)[0];
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
-            if(obj.versions["layer"] !== globals.layer_version){
+            if (obj.versions["layer"] !== globals.layer_version) {
                 alert("WARNING: Uploaded layer version (" + String(obj.versions["layer"]) + ") does not match Navigator's layer version ("
-                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+                    + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
         if ("version" in obj) { // backwards compatibility with Layer Format 3
-            if (obj.version !== globals.layer_version){
+            if (obj.version !== globals.layer_version) {
                 alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
-                + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+                    + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
         // patch for old domain name convention
-        if(obj.domain in this.dataService.domain_backwards_compatibility) {
+        if (obj.domain in this.dataService.domain_backwards_compatibility) {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
         this.domainVersionID = this.dataService.getDomainVersionID(this.domain, this.version);
@@ -1225,19 +1225,19 @@ export class ViewModel {
      * @param  rep string to restore from
      */
     deSerialize(rep: any): void {
-        let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep
+        let obj = (typeof (rep) == "string") ? JSON.parse(rep) : rep
 
         if ("description" in obj) {
-            if (typeof(obj.description) === "string") this.description = obj.description;
+            if (typeof (obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
         }
         if ("filters" in obj) { this.filters.deSerialize(obj.filters); }
         if ("sorting" in obj) {
-            if (typeof(obj.sorting) === "number") this.sorting = obj.sorting;
+            if (typeof (obj.sorting) === "number") this.sorting = obj.sorting;
             else console.error("TypeError: sorting field is not a number")
         }
         if ("hideDisabled" in obj) {
-            if (typeof(obj.hideDisabled) === "boolean") this.hideDisabled = obj.hideDisabled;
+            if (typeof (obj.hideDisabled) === "boolean") this.hideDisabled = obj.hideDisabled;
             else console.error("TypeError: hideDisabled field is not a boolean")
         }
 
@@ -1261,17 +1261,17 @@ export class ViewModel {
                     continue;
                 }
 
-                if (typeof(item.label) === "string") {
+                if (typeof (item.label) === "string") {
                     legendItem.label = item.label;
                 } else {
                     console.error("TypeError: legendItem label field is not a string")
                     continue
                 }
 
-                if (typeof(item.color) === "string" && tinycolor(item.color).isValid()) {
+                if (typeof (item.color) === "string" && tinycolor(item.color).isValid()) {
                     legendItem.color = item.color;
                 } else {
-                    console.error("TypeError: legendItem color field is not a color-string:", item.color, "(", typeof(item.color),")")
+                    console.error("TypeError: legendItem color field is not a color-string:", item.color, "(", typeof (item.color), ")")
                     continue
                 }
                 this.legendItems.push(legendItem);
@@ -1279,23 +1279,23 @@ export class ViewModel {
         }
 
         if ("showTacticRowBackground" in obj) {
-            if (typeof(obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
+            if (typeof (obj.showTacticRowBackground) === "boolean") this.showTacticRowBackground = obj.showTacticRowBackground
             else console.error("TypeError: showTacticRowBackground field is not a boolean")
         }
         if ("tacticRowBackground" in obj) {
-            if (typeof(obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
-            else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof(obj.tacticRowBackground),")")
+            if (typeof (obj.tacticRowBackground) === "string" && tinycolor(obj.tacticRowBackground).isValid()) this.tacticRowBackground = obj.tacticRowBackground;
+            else console.error("TypeError: tacticRowBackground field is not a color-string:", obj.tacticRowBackground, "(", typeof (obj.tacticRowBackground), ")")
         }
         if ("selectTechniquesAcrossTactics" in obj) {
-            if (typeof(obj.selectTechniquesAcrossTactics) === "boolean") this.selectTechniquesAcrossTactics = obj.selectTechniquesAcrossTactics
+            if (typeof (obj.selectTechniquesAcrossTactics) === "boolean") this.selectTechniquesAcrossTactics = obj.selectTechniquesAcrossTactics
             else console.error("TypeError: selectTechniquesAcrossTactics field is not a boolean")
         }
         if ("selectSubtechniquesWithParent" in obj) {
-            if (typeof(obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
+            if (typeof (obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
             else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
         }
         if ("techniques" in obj) {
-            if(obj.techniques.length > 0) {
+            if (obj.techniques.length > 0) {
                 for (let objTechnique of obj.techniques) {
                     if ("tactic" in objTechnique) {
                         let tvm = new TechniqueVM("");
@@ -1364,8 +1364,8 @@ export class ViewModel {
              * 1: compact table (side layout, show ID)
              * 2: mini table (mini layout, show neither name nor ID)
              */
-            if (typeof(obj.viewMode) === "number") {
-                switch(obj.viewMode) {
+            if (typeof (obj.viewMode) === "number") {
+                switch (obj.viewMode) {
                     default:
                     case 0:
                         break; //default matrix layout already initialized
@@ -1409,7 +1409,7 @@ export class ViewModel {
     updateGradient(): void {
         this.gradient.updateGradient();
         let self = this;
-        this.techniqueVMs.forEach(function(tvm, key) {
+        this.techniqueVMs.forEach(function (tvm, key) {
             tvm.scoreColor = self.gradient.getHexColor(tvm.score);
         });
         this.updateLegendColorPresets();
@@ -1437,7 +1437,7 @@ export class ViewModel {
     }
 
     deleteLegendItem(index: number): void {
-        this.legendItems.splice(index,1);
+        this.legendItems.splice(index, 1);
     }
 
     clearLegend(): void {
@@ -1456,7 +1456,7 @@ export class ViewModel {
      * @return       the acronym string
      */
     acronym(words: string): string {
-        let skipWords = ["on","and", "the", "with", "a", "an", "of", "in", "for", "from"]
+        let skipWords = ["on", "and", "the", "with", "a", "an", "of", "in", "for", "from"]
 
         let result = "";
         let wordSplit = words.split(" ");
@@ -1560,7 +1560,7 @@ export class TechniqueVM {
      * @return string representation
      */
     serialize(): string {
-        let rep: {[k: string]: any } = {};
+        let rep: { [k: string]: any } = {};
         rep.techniqueID = this.techniqueID;
         rep.tactic = this.tactic;
         if (this.score !== "" && !(isNaN(Number(this.score)))) rep.score = Number(this.score);
@@ -1588,24 +1588,24 @@ export class TechniqueVM {
             alert(`WARNING: The tactic field on the technique ID ${techniqueID} is not defined. Annotations for this technique may not be restored.`);
         }
         if ("comment" in obj) {
-            if (typeof(obj.comment) === "string") this.comment = obj.comment;
-            else console.error("TypeError: technique comment field is not a number:", obj.comment, "(",typeof(obj.comment),")")
+            if (typeof (obj.comment) === "string") this.comment = obj.comment;
+            else console.error("TypeError: technique comment field is not a number:", obj.comment, "(", typeof (obj.comment), ")")
         }
         if ("color" in obj && obj.color !== "") {
-            if (typeof(obj.color) === "string" && tinycolor(obj.color).isValid()) this.color = obj.color;
-            else console.error("TypeError: technique color field is not a color-string:", obj.color, "(", typeof(obj.color),")")
+            if (typeof (obj.color) === "string" && tinycolor(obj.color).isValid()) this.color = obj.color;
+            else console.error("TypeError: technique color field is not a color-string:", obj.color, "(", typeof (obj.color), ")")
         }
         if ("score" in obj) {
-            if (typeof(obj.score) === "number") this.score = String(obj.score);
-            else console.error("TypeError: technique score field is not a number:", obj.score, "(", typeof(obj.score), ")")
+            if (typeof (obj.score) === "number") this.score = String(obj.score);
+            else console.error("TypeError: technique score field is not a number:", obj.score, "(", typeof (obj.score), ")")
         }
         if ("enabled" in obj) {
-            if (typeof(obj.enabled) === "boolean") this.enabled = obj.enabled;
-            else console.error("TypeError: technique enabled field is not a boolean:", obj.enabled, "(", typeof(obj.enabled), ")");
+            if (typeof (obj.enabled) === "boolean") this.enabled = obj.enabled;
+            else console.error("TypeError: technique enabled field is not a boolean:", obj.enabled, "(", typeof (obj.enabled), ")");
         }
         if ("showSubtechniques" in obj) {
-            if (typeof(obj.showSubtechniques) === "boolean") this.showSubtechniques = obj.showSubtechniques;
-            else console.error("TypeError: technique showSubtechnique field is not a boolean:", obj.showSubtechniques, "(", typeof(obj.showSubtechniques), ")");
+            if (typeof (obj.showSubtechniques) === "boolean") this.showSubtechniques = obj.showSubtechniques;
+            else console.error("TypeError: technique showSubtechnique field is not a boolean:", obj.showSubtechniques, "(", typeof (obj.showSubtechniques), ")");
         }
         if (this.tactic !== undefined && this.techniqueID !== undefined) {
             this.technique_tactic_union_id = this.techniqueID + "^" + this.tactic;
