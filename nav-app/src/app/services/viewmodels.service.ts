@@ -4,7 +4,7 @@ import { Technique, Tactic, Matrix } from '../classes/stix';
 import { DataService } from './data.service';
 import { evaluate } from 'mathjs';
 import tinycolor from "tinycolor2";
-import * as globals from '../globals'; // global variables
+import * as globals from '../utilities/globals'; // global variables
 import * as is from 'is_js';
 
 @Injectable({

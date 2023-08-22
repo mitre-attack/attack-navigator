@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { TaxiiConnect, Collection } from '../taxii2lib';
+import { TaxiiConnect, Collection } from '../utilities/taxii2lib';
 import { Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
 import { Version, VersionChangelog } from '../classes';
 

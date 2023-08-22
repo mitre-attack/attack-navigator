@@ -2,9 +2,9 @@ import { Component, ViewChild, HostListener, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TabsComponent } from './tabs/tabs.component';
 import { ConfigService } from './services/config.service';
-import * as globals from "./globals";
+import * as globals from "./utilities/globals";
 import { IconsService } from "./services/icons.service";
-import { deleteCookie, getCookie, hasCookie, setCookie } from "./cookies";
+import { deleteCookie, getCookie, hasCookie, setCookie } from "./utilities/cookies";
 
 @Component({
   selector: 'app-root',
