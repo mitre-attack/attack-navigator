@@ -442,8 +442,10 @@ export class ViewModel {
         }
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
         if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
-        this.selectedTechniques.add(technique_tactic_id);
-        this.checkValues(true, technique_tactic_id);
+        if ((this.selectVisibleTechniques && this.getTechniqueVM_id(technique_tactic_id).isVisible) || (!this.selectVisibleTechniques)) {
+            this.selectedTechniques.add(technique_tactic_id);
+            this.checkValues(true, technique_tactic_id);
+        }
     }
 
     /**
