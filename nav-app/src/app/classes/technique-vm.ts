@@ -2,40 +2,41 @@ import { Link } from "./link";
 import { Metadata } from "./metadata";
 import tinycolor from "tinycolor2";
 
-// the viewmodel for a specific technique
 export class TechniqueVM {
-    techniqueID: string;
-    technique_tactic_union_id: string;
-    tactic: string;
+    // Defines the ViewModel for a specific Technique
+    public techniqueID: string;
+    public technique_tactic_union_id: string;
+    public tactic: string;
 
-    score: string = "";
-    scoreColor: string; // hex color for score gradient
+    public score: string = "";
+    public scoreColor: string; // hex color for score gradient
+    public aggregateScore: any; // number rather than string as this is not based on an input from user
+    public aggregateScoreColor: string; // hex color for aggregate score
+    public color: string = ""; // manually assigned color-class name
+    public enabled: boolean = true;
+    public comment: string = ""
 
-    color: string = ""; //manually assigned color-class name
-    enabled: boolean = true;
-    comment: string = ""
-    metadata: Metadata[] = [];
+    public metadata: Metadata[] = [];
     public get metadataStr(): string { return JSON.stringify(this.metadata); }
-    links: Link[] = [];
+
+    public links: Link[] = [];
     public get linkStr(): string { return JSON.stringify(this.links); }
 
-    showSubtechniques = false;
-    aggregateScore: any; // number rather than string as this is not based on an input from user
-    aggregateScoreColor: string; // hex color for aggregate score
+    public showSubtechniques = false;
+    public isVisible: boolean = true; // is technique currently displayed on matrix?
 
-    isVisible: boolean = true; // is technique currently displayed on matrix
-
-    //print this object to the console
-    print(): void {
-        console.log(this.serialize())
-        console.log(this)
+    constructor(technique_tactic_union_id: string) {
+        this.technique_tactic_union_id = technique_tactic_union_id;
+        let idSplit = technique_tactic_union_id.split("^");
+        this.techniqueID = idSplit[0];
+        this.tactic = idSplit[1];
     }
 
     /**
      * Has this TechniqueVM been modified from its initialized state?
      * @return true if it has been modified, false otherwise
      */
-    modified(): boolean {
+    public modified(): boolean {
         return (this.annotated() || this.showSubtechniques);
     }
 
@@ -43,14 +44,14 @@ export class TechniqueVM {
      * Check if this TechniqueVM has been annotated
      * @return true if it has annotations, false otherwise
      */
-    annotated(): boolean {
+    public annotated(): boolean {
         return (this.score != "" || this.color != "" || !this.enabled || this.comment != "" || this.links.length !== 0 || this.metadata.length !== 0);
     }
 
     /**
      * Reset this TechniqueVM's annotations to their default values
      */
-    resetAnnotations(): void {
+    public resetAnnotations(): void {
         this.score = "";
         this.comment = "";
         this.color = "";
@@ -64,7 +65,7 @@ export class TechniqueVM {
     /**
      * Set isVisible based on filters
      */
-    setIsVisible(visible: boolean): void {
+    public setIsVisible(visible: boolean): void {
         this.isVisible = visible;
     }
 
@@ -72,7 +73,7 @@ export class TechniqueVM {
      * Convert to string representation
      * @return string representation
      */
-    serialize(): string {
+    public serialize(): string {
         let rep: { [k: string]: any } = {};
         rep.techniqueID = this.techniqueID;
         rep.tactic = this.tactic;
@@ -83,14 +84,14 @@ export class TechniqueVM {
         rep.metadata = this.metadata.filter(m => m.valid()).map(m => m.serialize());
         rep.links = this.links.filter(l => l.valid()).map(l => l.serialize());
         rep.showSubtechniques = this.showSubtechniques;
-        return JSON.stringify(rep, null, "\t")
+        return JSON.stringify(rep, null, "\t");
     }
 
     /**
      * Restore this technique from serialized technique
      * @param rep serialized technique string
      */
-    deSerialize(rep: string, techniqueID: string, tactic: string): void {
+    public deserialize(rep: string, techniqueID: string, tactic: string): void {
         let obj = JSON.parse(rep);
         if (techniqueID !== undefined) this.techniqueID = techniqueID;
         else console.error("ERROR: TechniqueID field not present in technique")
@@ -140,12 +141,5 @@ export class TechniqueVM {
                 if (link.valid()) this.links.push(link);
             }
         }
-    }
-
-    constructor(technique_tactic_union_id: string) {
-        this.technique_tactic_union_id = technique_tactic_union_id;
-        let idSplit = technique_tactic_union_id.split("^");
-        this.techniqueID = idSplit[0];
-        this.tactic = idSplit[1];
     }
 }

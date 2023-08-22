@@ -657,7 +657,7 @@ export class ViewModel {
 
         this.versionChangelog.reviewed.delete(fromTechnique.attackID);
 
-        toVM.deSerialize(fromVM.serialize(), fromTechnique.attackID, tactic.shortname);
+        toVM.deserialize(fromVM.serialize(), fromTechnique.attackID, tactic.shortname);
         this.updateScoreColor(toVM);
         fromVM.enabled = false;
 
@@ -1299,7 +1299,7 @@ export class ViewModel {
                 for (let objTechnique of obj.techniques) {
                     if ("tactic" in objTechnique) {
                         let tvm = new TechniqueVM("");
-                        tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, objTechnique.tactic);
+                        tvm.deserialize(JSON.stringify(objTechnique), objTechnique.techniqueID, objTechnique.tactic);
                         this.setTechniqueVM(tvm);
                     } else {
                         // occurs in multiple tactics, match to Technique by attackID
@@ -1311,7 +1311,7 @@ export class ViewModel {
 
                                 for (let tactic of technique.tactics) {
                                     let tvm = new TechniqueVM("");
-                                    tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
+                                    tvm.deserialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
                                     this.setTechniqueVM(tvm);
                                 }
                                 break;
@@ -1324,7 +1324,7 @@ export class ViewModel {
 
                                     for (let tactic of subtechnique.tactics) {
                                         let tvm = new TechniqueVM("");
-                                        tvm.deSerialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
+                                        tvm.deserialize(JSON.stringify(objTechnique), objTechnique.techniqueID, tactic);
                                         this.setTechniqueVM(tvm);
                                     }
                                     break;

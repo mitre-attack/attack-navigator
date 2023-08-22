@@ -328,7 +328,7 @@ export class LayerUpgradeComponent implements OnInit {
             // copy annotations
             let rep = fromTvm.serialize();
             toTvm.resetAnnotations();
-            toTvm.deSerialize(rep, toTechnique.attackID, toTactic.shortname);
+            toTvm.deserialize(rep, toTechnique.attackID, toTactic.shortname);
             this.viewModel.updateScoreColor(toTvm);
         } else {
             // invalid target
