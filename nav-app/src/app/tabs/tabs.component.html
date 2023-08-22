@@ -95,7 +95,7 @@
                     <mat-label>
                         theme ▾
                     </mat-label>
-                    <mat-select #select (selectionChange)="handleUserThemeChange($event.value)">
+                    <mat-select #select class="hide-select" (selectionChange)="handleUserThemeChange($event.value)">
                         <mat-option value="dark">dark</mat-option>
                         <mat-option value="light">light</mat-option>
                         <mat-option value="system">use system</mat-option>
