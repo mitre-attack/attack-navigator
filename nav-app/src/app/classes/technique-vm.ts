@@ -130,14 +130,14 @@ export class TechniqueVM {
         if ("metadata" in obj) {
             for (let metadataObj of obj.metadata) {
                 let m = new Metadata();
-                m.deSerialize(metadataObj);
+                m.deserialize(metadataObj);
                 if (m.valid()) this.metadata.push(m)
             }
         }
         if ("links" in obj) {
             for (let linkObj of obj.links) {
                 let link = new Link();
-                link.deSerialize(linkObj);
+                link.deserialize(linkObj);
                 if (link.valid()) this.links.push(link);
             }
         }

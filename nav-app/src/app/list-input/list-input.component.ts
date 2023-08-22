@@ -25,7 +25,7 @@ export class ListInputComponent implements OnInit {
         if (this.config.level == 'technique') {
             this.list = this.config.list.map(item => {
                 let clone = new this.fieldToClass[this.config.type]();
-                clone.deSerialize(item.serialize());
+                clone.deserialize(item.serialize());
                 return clone;
             });
         } else {

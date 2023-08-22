@@ -178,7 +178,7 @@ export class ViewModelsService {
         if (enabledness) inherit(enabledness, "enabled");
 
         if (filters) { //copy filter settings
-            result.filters.deSerialize(JSON.parse(filters.filters.serialize()))
+            result.filters.deserialize(JSON.parse(filters.filters.serialize()))
         }
 
         if (legendItems) {
@@ -187,7 +187,7 @@ export class ViewModelsService {
 
         if (gradient) {
             result.gradient = new Gradient();
-            result.gradient.deSerialize(gradient.gradient.serialize());
+            result.gradient.deserialize(gradient.gradient.serialize());
         }
 
         result.name = layerName;
@@ -1231,7 +1231,7 @@ export class ViewModel {
             if (typeof (obj.description) === "string") this.description = obj.description;
             else console.error("TypeError: description field is not a string")
         }
-        if ("filters" in obj) { this.filters.deSerialize(obj.filters); }
+        if ("filters" in obj) { this.filters.deserialize(obj.filters); }
         if ("sorting" in obj) {
             if (typeof (obj.sorting) === "number") this.sorting = obj.sorting;
             else console.error("TypeError: sorting field is not a number")
@@ -1243,7 +1243,7 @@ export class ViewModel {
 
         if ("gradient" in obj) {
             this.gradient = new Gradient();
-            this.gradient.deSerialize(JSON.stringify(obj.gradient))
+            this.gradient.deserialize(JSON.stringify(obj.gradient))
         }
 
         if ("legendItems" in obj) {
@@ -1339,14 +1339,14 @@ export class ViewModel {
         if ("metadata" in obj) {
             for (let metadataObj of obj.metadata) {
                 let m = new Metadata();
-                m.deSerialize(metadataObj);
+                m.deserialize(metadataObj);
                 if (m.valid()) this.metadata.push(m)
             }
         }
         if ("links" in obj) {
             for (let link of obj.links) {
                 let l = new Link();
-                l.deSerialize(link);
+                l.deserialize(link);
                 if (l.valid()) this.links.push(l);
             }
         }

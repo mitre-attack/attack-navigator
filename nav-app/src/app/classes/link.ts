@@ -7,11 +7,11 @@ export class Link {
         // intentionally left blank
     }
 
-    serialize(): object { 
+    public serialize(): object { 
         return this.label && this.url ? {label: this.label, url: this.url} : {divider: this.divider};
     }
 
-    deSerialize(rep: any): void {
+    public deserialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep;
         if ("url" in obj) { // label & url object
             if (typeof(obj.url) === "string") this.url = obj.url;
@@ -30,7 +30,7 @@ export class Link {
         else console.error("Error: Link required field 'url' or 'divider' not present");
     }
 
-    valid(): boolean {
+    public valid(): boolean {
         return (this.label && this.label.length > 0 && this.url && this.url.length > 0) || (this.divider !== undefined)
     }
 }
