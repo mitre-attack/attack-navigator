@@ -942,10 +942,18 @@ export class ViewModel {
             // filter by enabled
             if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
                 techniqueVM.setIsVisible(false);
+                technique.subtechniques.forEach((subtechnique) => {
+                    let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                    subtechniqueVM.setIsVisible(false)
+                })
                 return false;
             }
             if (matrix.name == "PRE-ATT&CK") {
                 techniqueVM.setIsVisible(true);
+                technique.subtechniques.forEach((subtechnique) => {
+                    let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                    subtechniqueVM.setIsVisible(true)
+                })
                 return true; // don't filter by platform if it's pre-attack
             }
             // filter by platform
@@ -953,10 +961,18 @@ export class ViewModel {
             for (let platform of this.filters.platforms.selection) {
                 if (platforms.has(platform)) {
                     techniqueVM.setIsVisible(true);
+                    technique.subtechniques.forEach((subtechnique) => {
+                        let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                        subtechniqueVM.setIsVisible(true)
+                    })
                     return true; //platform match
                 }
             }
             techniqueVM.setIsVisible(false);
+            technique.subtechniques.forEach((subtechnique) => {
+                let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                subtechniqueVM.setIsVisible(false)
+            })
             return false; //no platform match
         })
     }
