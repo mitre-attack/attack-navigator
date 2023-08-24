@@ -20,6 +20,10 @@
 ## Fixes
 - Updated Angular from 11.0.3 to 14.3.0.
 
+## Layer File Format Changes
+
+Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+
 # 4.8.2 - 9 May 2023
 
 Adds support for ATT&CK v13.1.
