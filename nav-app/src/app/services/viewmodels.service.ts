@@ -115,7 +115,7 @@ export class ViewModelsService {
                     result = result ? "1" : "0";
                 } else if (is.not.number(result)) {
                     // unexpected user input
-                    throw { message: "math result ( " + result + " ) is not a number" };
+                    throw Error("math result ( " + result + " ) is not a number");
                 }
 
                 // apply result to all techniques
@@ -157,7 +157,7 @@ export class ViewModelsService {
                             mathResult = mathResult ? "1" : "0";
                         } else if (is.not.number(mathResult)) {
                             // unexpected user input
-                            throw { message: "math result ( " + mathResult + " ) is not a number" };
+                            throw Error("math result ( " + mathResult + " ) is not a number");
                         }
 
                         newTechniqueVM.score = String(mathResult);
