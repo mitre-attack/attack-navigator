@@ -2,12 +2,12 @@
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Domain, Technique } from '../classes/stix';
-import { Version } from '../classes';
+import { Version, ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
-import { ViewModelsService, ViewModel } from "../services/viewmodels.service";
+import { ViewModelsService } from "../services/viewmodels.service";
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from "../changelog/changelog.component";

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ViewModel } from "../services/viewmodels.service";
+import { ViewModel } from "../classes";
 import { ConfigService } from "../services/config.service";
 import { DataService } from '../services/data.service';
 import { RenderableTechnique } from './renderable-objects/renderable-technique';
