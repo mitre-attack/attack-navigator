@@ -11,56 +11,57 @@ import * as globals from '../utils/globals';
 import tinycolor from "tinycolor2";
 
 export class ViewModel {
-    // PROPERTIES & DEFAULTS
+    public name: string; // layer name
+    public domain: string = ""; // attack domain
+    public version: string = ""; // attack version
+    public domainVersionID: string; // layer domain & version
+    public description: string = ""; // layer description
+    public uid: string; // unique identifier for this ViewModel
+    public bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
+    public loaded: boolean = false; // whether or not techniqueVMs are loaded
 
-    name: string; // layer name
-    domain: string = ""; // attack domain
-    version: string = ""; // attack version
-    domainVersionID: string; // layer domain & version
-    description: string = ""; //layer description
-    uid: string; //unique identifier for this ViewModel. Do not serialize, let it get initialized by the VmService
-    bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
-    loaded: boolean = false; // whether or not techniqueVMs are loaded
+    public techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); // configuration for each technique
+    private selectedTechniques: Set<string> = new Set<string>(); // currently selected techniques (technique_tactic_id)
+    public activeTvm: TechniqueVM; // first selected techniqueVM
 
-    filters: Filter;
+    private linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
+    public get linksMatch(): boolean { return !this.linkMismatches.length; }
+    private metadataMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching metadata
+    public get metadataMatch(): boolean { return !this.metadataMismatches.length; }
 
-    metadata: Metadata[] = [];
-    links: Link[] = [];
+    public highlightedTactic: Tactic = null;
+    public highlightedTechniques: Set<string> = new Set<string>();
+    public highlightedTechnique: Technique = null; // the Technique that was actually moused over
+
+    public filters: Filter;
+    public layout: LayoutOptions = new LayoutOptions();
+    public hideDisabled: boolean = false; // are disabled techniques hidden?
+    public showTacticRowBackground: boolean = false;
+    public tacticRowBackground: string = "#dddddd";
+
+    public gradient: Gradient = new Gradient(); // scoring gradient
+    public legendItems: any[] = [];
+    public backgroundPresets: string[] = ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
+    public legendColorPresets: string[] = [];
+    public initializeScoresTo = ""; // value to initialize scores to
+
+    public metadata: Metadata[] = [];
+    public links: Link[] = [];
 
     /*
-     * sorting int meanings (see filterTechniques()):
      * 0: ascending alphabetically
      * 1: descending alphabetically
      * 2: ascending numerically
      * 3: descending numerically
      */
-    sorting: number = 0;
+    public sorting: number = 0;
 
-    layout: LayoutOptions = new LayoutOptions();
+    public selectTechniquesAcrossTactics: boolean = true;
+    public selectSubtechniquesWithParent: boolean = false;
+    public selectVisibleTechniques: boolean = false;
 
-
-    hideDisabled: boolean = false; //are disabled techniques hidden?
-
-
-    gradient: Gradient = new Gradient(); //gradient for scores
-
-    backgroundPresets: string[] = ['#e60d0d', '#fc3b3b', '#fc6b6b', '#fca2a2', '#e6550d', '#fd8d3c', '#fdae6b', '#fdd0a2', '#e6d60d', '#fce93b', '#fcf26b', '#fcf3a2', '#31a354', '#74c476', '#a1d99b', '#c7e9c0', '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#756bb1', '#9e9ac8', '#bcbddc', '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
-    legendColorPresets: string[] = [];
-
-    selectTechniquesAcrossTactics: boolean = true;
-    selectSubtechniquesWithParent: boolean = false;
-    selectVisibleTechniques: boolean = false;
-
-    needsToConstructTechniqueVMs = false;
-    legacyTechniques = [];
-
-    initializeScoresTo = ""; //value to initialize scores to
-
-    techIDtoUIDMap: Object = {};
-    techUIDtoIDMap: Object = {};
-
-    compareTo?: ViewModel;
-    versionChangelog?: VersionChangelog;
+    public compareTo?: ViewModel;
+    public versionChangelog?: VersionChangelog;
 
     private _sidebarOpened: boolean;
     public get sidebarOpened(): boolean { return this._sidebarOpened; };
@@ -75,15 +76,15 @@ export class ViewModel {
     };
 
     constructor(name: string, uid: string, domainVersionID: string, private dataService: DataService) {
-        this.domainVersionID = domainVersionID;
         console.debug("initializing ViewModel '" + name + "'");
+        this.domainVersionID = domainVersionID;
         this.filters = new Filter();
         this.name = name;
         this.uid = uid;
         this.legendColorPresets = this.backgroundPresets;
     }
 
-    loadVMData() {
+    public loadVMData(): void {
         let domain = this.dataService.getDomain(this.domainVersionID);
         if (domain.isCustom) {
             this.bundleURL = domain.urls[0];
@@ -102,15 +103,17 @@ export class ViewModel {
         this.loaded = true;
     }
 
-    initTechniqueVMs() {
+    private initTechniqueVMs(): void {
         console.debug(this.name, "initializing technique VMs");
         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
+            // init techniques
             for (let id of technique.get_all_technique_tactic_ids()) {
                 let techniqueVM = new TechniqueVM(id);
                 techniqueVM.score = this.initializeScoresTo;
                 this.setTechniqueVM(techniqueVM, false);
             }
-            //init subtechniques
+
+            // init sub-techniques
             for (let subtechnique of technique.subtechniques) {
                 for (let id of subtechnique.get_all_technique_tactic_ids()) {
                     let techniqueVM = new TechniqueVM(id);
@@ -121,41 +124,20 @@ export class ViewModel {
         }
     }
 
-    // changeTechniqueIDSelectionLock() {
-    //     this.selectTechniquesAcrossTactics = !this.selectTechniquesAcrossTactics;
-    // }
-
-    showTacticRowBackground: boolean = false;
-    tacticRowBackground: string = "#dddddd";
-
-    // getTechniqueIDFromUID(technique_tactic_union_id: string){
-    //     return this.techIDtoUIDMap[technique_tactic_union_id];
-    // }
-
-    // getTechniquesUIDFromID(technique_id: string){
-    //     return this.techIDtoUIDMap[technique_id];
-    // }
-
-    // setTechniqueMaps(techIDtoUIDMapt, techUIDtoIDMapt){
-    //     this.techIDtoUIDMap = Object.freeze(techIDtoUIDMapt);
-    //     this.techUIDtoIDMap = Object.freeze(techUIDtoIDMapt);
-    // }
-
-    //  _____ ___ ___ _  _ _  _ ___ ___  _   _ ___     _   ___ ___
-    // |_   _| __/ __| || | \| |_ _/ _ \| | | | __|   /_\ | _ \_ _|
-    //   | | | _| (__| __ | .` || | (_) | |_| | _|   / _ \|  _/| |
-    //   |_| |___\___|_||_|_|\_|___\__\_\\___/|___| /_/ \_\_| |___|
-
-    techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); //configuration for each technique
-    // Getter
     public getTechniqueVM(technique: Technique, tactic: Tactic): TechniqueVM {
-        if (!this.hasTechniqueVM(technique, tactic)) throw Error("technique VM not found: " + technique.attackID + ", " + tactic.attackID);
+        if (!this.hasTechniqueVM(technique, tactic)) {
+            throw Error("technique VM not found: " + technique.attackID + ", " + tactic.attackID);
+        }
         return this.techniqueVMs.get(technique.get_technique_tactic_id(tactic));
     }
+
     public getTechniqueVM_id(technique_tactic_id: string): TechniqueVM {
-        if (!this.hasTechniqueVM_id(technique_tactic_id)) throw Error("technique VM not found: " + technique_tactic_id);
+        if (!this.hasTechniqueVM_id(technique_tactic_id)) {
+            throw Error("technique VM not found: " + technique_tactic_id);
+        }
         return this.techniqueVMs.get(technique_tactic_id);
     }
+
     /**
      * setter
      * @param {techniqueVM} techniqueVM: the techniqueVM to set
@@ -168,48 +150,35 @@ export class ViewModel {
         }
         this.techniqueVMs.set(techniqueVM.technique_tactic_union_id, techniqueVM);
     }
-    //checker
+
     public hasTechniqueVM(technique: Technique, tactic: Tactic): boolean {
         return this.techniqueVMs.has(technique.get_technique_tactic_id(tactic));
     }
+
     public hasTechniqueVM_id(technique_tactic_id: string): boolean {
         return this.techniqueVMs.has(technique_tactic_id);
     }
-
-    //  ___ ___ ___ _____ ___ _  _  ___     _   ___ ___
-    // | __|   \_ _|_   _|_ _| \| |/ __|   /_\ | _ \_ _|
-    // | _|| |) | |  | |  | || .` | (_ |  / _ \|  _/| |
-    // |___|___/___| |_| |___|_|\_|\___| /_/ \_\_| |___|
-
-
-    public highlightedTactic: Tactic = null;
-    public highlightedTechniques: Set<string> = new Set<string>();
-    public highlightedTechnique: Technique = null; // the Technique that was actually moused over
 
     /**
      * Highlight the given technique under the given tactic
      * @param {Technique} technique to highlight
      * @param {Tactic} tactic wherein the technique occurs
      */
-    public highlightTechnique(technique: Technique, tactic?: Tactic | null) {
+    public highlightTechnique(technique: Technique, tactic?: Tactic | null): void {
         if (this.selectSubtechniquesWithParent && technique.isSubtechnique) this.highlightedTechniques.add(technique.parent.id);
         this.highlightedTechnique = technique;
         this.highlightedTechniques.add(technique.id);
         this.highlightedTactic = tactic;
     }
+
     /**
      * Clear the technique highlight
      */
-    public clearHighlight() {
+    public clearHighlight(): void {
         this.highlightedTactic = null;
         this.highlightedTechnique = null;
         this.highlightedTechniques = new Set<string>();
     }
-
-    /**
-     * currently selected techniques in technique_tactic_id format
-     */
-    private selectedTechniques: Set<string> = new Set<string>();
 
     /**
      * Select the given technique. Depending on selectTechniquesAcrossTactics, either selects in all tactics or in given tactic
@@ -222,7 +191,7 @@ export class ViewModel {
     }
 
     /**
-     * unselect the given technique. Depending on selectTechniquesAcrossTactics, either unselects in all tactics or in given tactic
+     * Unselect the given technique. Depending on selectTechniquesAcrossTactics, either unselects in all tactics or in given tactic
      * @param {Technique} technique to select
      * @param {Tactic} tactic wherein the technique occurs
      */
@@ -232,24 +201,31 @@ export class ViewModel {
     }
 
     /**
-     * select the given technique in the given tactic
+     * Select the given technique in the given tactic
      * @param {Technique} technique to select
      * @param {Tactic} tactic wherein the technique occurs
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
     public selectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren = true): void {
-        if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
-            if (technique.isSubtechnique) { //select from parent
+        if (this.selectSubtechniquesWithParent && walkChildren) {
+            // check parent / children / siblings
+            if (technique.isSubtechnique) {
+                // select from parent
                 this.selectTechniqueInTactic(technique.parent, tactic, true);
                 return;
-            } else { //select subtechniques
+            } else {
+                // select sub-techniques
                 for (let subtechnique of technique.subtechniques) {
                     this.selectTechniqueInTactic(subtechnique, tactic, false);
                 }
             }
         }
+
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
-        if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
+        if (!this.isCurrentlyEditing()) {
+            // first selection
+            this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); 
+        }
         if ((this.selectVisibleTechniques && this.getTechniqueVM_id(technique_tactic_id).isVisible) || (!this.selectVisibleTechniques)) {
             this.selectedTechniques.add(technique_tactic_id);
             this.checkValues(true, technique_tactic_id);
@@ -257,7 +233,7 @@ export class ViewModel {
     }
 
     /**
-     * select all techniques under the given tactic
+     * Select all techniques under the given tactic
      * @param {Tactic} tactic wherein the techniques occur
      */
     public selectAllTechniquesInTactic(tactic: Tactic): void {
@@ -273,17 +249,21 @@ export class ViewModel {
      * @param highlightTechniques, if true, highlight techniques rather than add to selected techniques group
      */
     public selectTechniqueAcrossTactics(technique: Technique, walkChildren = true, highlightTechniques = false): void {
-        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
-            if (technique.isSubtechnique) { //select from parent
+        if (this.selectSubtechniquesWithParent && walkChildren) {
+            // walk to parent / children / siblings
+            if (technique.isSubtechnique) {
+                // select from parent
                 this.selectTechniqueAcrossTactics(technique.parent, true, highlightTechniques);
                 return;
-            } else { //select subtechniques
+            } else {
+                // select sub-techniques
                 for (let subtechnique of technique.subtechniques) {
                     this.selectTechniqueAcrossTactics(subtechnique, false, highlightTechniques);
                 }
             }
         }
         if (highlightTechniques) {
+            // highlight technique
             this.highlightTechnique(technique);
         }
         else {
@@ -298,29 +278,33 @@ export class ViewModel {
     }
 
     /**
-     * unselect the given technique in the given tactic
+     * Unselect the given technique in the given tactic
      * @param {Technique} technique to unselect
      * @param {Tactic} tactic wherein the technique occurs
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
     public unselectTechniqueInTactic(technique: Technique, tactic: Tactic, walkChildren = true): void {
-        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
-            if (technique.isSubtechnique) { //select from parent
+        if (this.selectSubtechniquesWithParent && walkChildren) {
+            // walk to parent / children / siblings
+            if (technique.isSubtechnique) {
+                // select from parent
                 this.unselectTechniqueInTactic(technique.parent, tactic, true);
                 return;
-            } else { //select subtechniques
+            } else {
+                // select sub-techniques
                 for (let subtechnique of technique.subtechniques) {
                     this.unselectTechniqueInTactic(subtechnique, tactic, false);
                 }
             }
         }
+
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
         this.selectedTechniques.delete(technique_tactic_id);
         this.checkValues(false, technique_tactic_id);
     }
 
     /**
-     * unselect all techniques in the given tactic
+     * Unselect all techniques in the given tactic
      * @param {Tactic} tactic wherein the techniques occur
      */
     public unselectAllTechniquesInTactic(tactic: Tactic): void {
@@ -330,56 +314,58 @@ export class ViewModel {
     }
 
     /**
-     * unselect the given technique across all tactics in which it occurs
+     * Unselect the given technique across all tactics in which it occurs
      * @param {Technique} technique to unselect
      * @param {boolean} walkChildren (recursion helper) if true and selectSubtechniquesWithParent is true, walk selection up to parent technique
      */
-    public unselectTechniqueAcrossTactics(technique: Technique, walkChildren = true) {
-        if (this.selectSubtechniquesWithParent && walkChildren) { //walk to parent / children / siblings
-            if (technique.isSubtechnique) { //select from parent
+    public unselectTechniqueAcrossTactics(technique: Technique, walkChildren = true): void {
+        if (this.selectSubtechniquesWithParent && walkChildren) {
+            // walk to parent / children / siblings
+            if (technique.isSubtechnique) {
+                // select from parent
                 this.unselectTechniqueAcrossTactics(technique.parent, true);
                 return;
-            } else { //select subtechniques
+            } else {
+                // select sub-techniques
                 for (let subtechnique of technique.subtechniques) {
                     this.unselectTechniqueAcrossTactics(subtechnique, false);
                 }
             }
         }
+
         for (let id of technique.get_all_technique_tactic_ids()) {
             this.selectedTechniques.delete(id);
             this.checkValues(false, id);
         }
     }
 
-    /**
-     * unselect all techniques
-     */
-    public clearSelectedTechniques() {
+    /* Unselect all techniques */
+    public clearSelectedTechniques(): void {
         this.selectedTechniques.clear();
         this.activeTvm = undefined;
         this.linkMismatches = [];
         this.metadataMismatches = [];
     }
 
-    /**
-     * Select all techniques
-     */
+    /* Select all techniques */
     public selectAllTechniques(): void {
         this.clearSelectedTechniques()
         this.invertSelection();
     }
 
-    /**
-     * Set all selected techniques to deselected, and select all techniques not currently selected
-     */
+    /* Set all selected techniques to deselected, and select all techniques not currently selected */
     public invertSelection(): void {
         let previouslySelected = new Set(this.selectedTechniques);
         this.clearSelectedTechniques();
+
         let self = this;
         this.techniqueVMs.forEach(function (tvm, key) {
             if (!previouslySelected.has(tvm.technique_tactic_union_id)) {
                 if ((self.selectVisibleTechniques && tvm.isVisible) || (!self.selectVisibleTechniques)) {
-                    if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+                    if (!self.isCurrentlyEditing()) {
+                        // first selection
+                        self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id);
+                    }
                     self.selectedTechniques.add(tvm.technique_tactic_union_id);
                     self.checkValues(true, tvm.technique_tactic_union_id);
                 }
@@ -388,8 +374,8 @@ export class ViewModel {
     }
 
     /**
-     * Select all techniques with annotations if nothing is currently selected, or select a subset of
-     * the current selection that has annotations
+     * Select all techniques with annotations if nothing is currently selected, or 
+     * select a subset of the current selection that has annotations
      */
     public selectAnnotated(): void {
         let self = this;
@@ -417,8 +403,8 @@ export class ViewModel {
     }
 
     /**
-     * Select all techniques without annotations if nothing is currently selected, or select a subset of
-     * the current selection that do not have annotations
+     * Select all techniques without annotations if nothing is currently selected, or
+     * select a subset of the current selection that do not have annotations
      */
     public selectUnannotated(): void {
         let self = this;
@@ -516,8 +502,10 @@ export class ViewModel {
      */
     public isTechniqueSelected(technique: Technique, tactic: Tactic, walkChildren = true): boolean {
         if (this.selectTechniquesAcrossTactics) {
-            if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
-                if (technique.isSubtechnique) { //select from parent
+            if (this.selectSubtechniquesWithParent && walkChildren) {
+                // check parent / children / siblings
+                if (technique.isSubtechnique) {
+                    // select from parent
                     return this.isTechniqueSelected(technique.parent, tactic, true);
                 } else {
                     for (let subtechnique of technique.subtechniques) {
@@ -531,8 +519,10 @@ export class ViewModel {
             }
             return false;
         } else {
-            if (this.selectSubtechniquesWithParent && walkChildren) { //check parent / children / siblings
-                if (technique.isSubtechnique) { //select from parent
+            if (this.selectSubtechniquesWithParent && walkChildren) {
+                // check parent / children / siblings
+                if (technique.isSubtechnique) {
+                    // select from parent
                     return this.isTechniqueSelected(technique.parent, tactic, true);
                 } else {
                     for (let subtechnique of technique.subtechniques) {
@@ -545,7 +535,7 @@ export class ViewModel {
     }
 
     /**
-     * return the number of selected techniques
+     * Return the number of selected techniques
      * @return {number} the number of selected techniques
      */
     public getSelectedTechniqueCount(): number {
@@ -604,14 +594,13 @@ export class ViewModel {
      * @param  {Tactic}  tactic to check
      * @return {boolean} true if selected
      */
-    public isTacticSelected(tactic: Tactic) {
+    public isTacticSelected(tactic: Tactic): boolean {
         let self = this;
-        let result = tactic.techniques.every(function (technique) {
+        let isSelected = tactic.techniques.every(function (technique) {
             return self.isTechniqueSelected(technique, tactic)
         });
-        return result;
+        return isSelected;
     }
-
 
     /**
      * Return true if currently editing any techniques, false otherwise
@@ -622,7 +611,7 @@ export class ViewModel {
     }
 
     /**
-     * edit the selected techniques
+     * Edit the selected techniques
      * @param {string} field the field to edit
      * @param {any}    value the value to place in the field
      */
@@ -642,7 +631,7 @@ export class ViewModel {
         this.selectedTechniques.forEach(id => {
             const value_clone = values.map(value => { // deep copy
                 let clone = new fieldToType[field]();
-                clone.deSerialize(value.serialize());
+                clone.deserialize(value.serialize());
                 return clone;
             });
             this.getTechniqueVM_id(id)[field] = value_clone;
@@ -655,7 +644,7 @@ export class ViewModel {
     public resetSelectedTechniques(): void {
         this.selectedTechniques.forEach((id) => {
             this.getTechniqueVM_id(id).resetAnnotations();
-        })
+        });
     }
 
     /**
@@ -670,15 +659,8 @@ export class ViewModel {
         for (let i = 1; i < ids.length; i++) {
             if (this.getTechniqueVM_id(ids[i])[field] != commonValue) return ""
         }
-
         return commonValue;
     }
-
-    activeTvm: TechniqueVM; // first selected techniqueVM
-    linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
-    public get linksMatch(): boolean { return !this.linkMismatches.length; }
-    metadataMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching metadata
-    public get metadataMatch(): boolean { return !this.metadataMismatches.length; }
 
     /**
      * If a technique has been selected, checks whether the link & metadata values of the selected technique match 
@@ -689,11 +671,13 @@ export class ViewModel {
      * @param id the technique_tactic_union_id of the technique
      */
     public checkValues(selected: boolean, id: string): void {
-        if (selected) { // selected technique(s)
+        if (selected) {
+            // selected technique(s)
             let tvm = this.getTechniqueVM_id(id);
             if (this.activeTvm.linkStr !== tvm.linkStr) this.linkMismatches.push(id);
             if (this.activeTvm.metadataStr !== tvm.metadataStr) this.metadataMismatches.push(id);
-        } else { // deselected technique(s)
+        } else {
+            // deselected technique(s)
             if (this.linkMismatches.includes(id)) this.linkMismatches.splice(this.linkMismatches.indexOf(id), 1);
             if (this.metadataMismatches.includes(id)) this.metadataMismatches.splice(this.metadataMismatches.indexOf(id), 1);
 
@@ -713,21 +697,8 @@ export class ViewModel {
         }
     }
 
-    //  oooooooo8                          o8          o88 ooooooooooo o88   o888   o8
-    // 888           ooooooo  oo oooooo  o888oo       o88   888    88  oooo   888 o888oo ooooooooo8 oo oooooo
-    //  888oooooo  888     888 888    888 888       o88     888ooo8     888   888  888  888oooooo8   888    888
-    //         888 888     888 888        888     o88       888         888   888  888  888          888
-    // o88oooo888    88ooo88  o888o        888o o88        o888o       o888o o888o  888o  88oooo888 o888o
-    //                                         o88
-    //    ooooo ooooo            o888
-    //     888   888  ooooooooo8  888 ooooooooo    ooooooooo8 oo oooooo    oooooooo8
-    //     888ooo888 888oooooo8   888  888    888 888oooooo8   888    888 888ooooooo
-    //     888   888 888          888  888    888 888          888                888
-    //    o888o o888o  88oooo888 o888o 888ooo88     88oooo888 o888o       88oooooo88
-    //                                o888
-
     /**
-     * filter tactics according to viewmodel state
+     * Filter tactics according to viewmodel state
      * @param {Tactic[]} tactics to filter
      * @param {Matrix} matrix that the tactics fall under
      * @returns {Tactic[]} filtered tactics
@@ -738,7 +709,7 @@ export class ViewModel {
     }
 
     /**
-     * filter techniques according to viewModel state
+     * Filter techniques according to viewModel state
      * @param {Technique[]} techniques list of techniques to filter
      * @param {Tactic} tactic tactic the techniques fall under
      * @param {Matrix} matrix that the techniques fall under
@@ -781,7 +752,7 @@ export class ViewModel {
                 let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
                 subtechniqueVM.setIsVisible(false)
             })
-            return false; //no platform match
+            return false; // no platform match
         })
     }
 
@@ -799,7 +770,7 @@ export class ViewModel {
     }
 
     /**
-     * sort techniques according to viewModel state
+     * Sort techniques according to viewModel state
      * @param {Technique[]} techniques techniques to sort
      * @param {Tactic} tactic tactic the techniques fall under
      * @returns {Technique[]} sorted techniques
@@ -826,7 +797,7 @@ export class ViewModel {
     }
 
     /**
-     * sort subtechniques according to viewModel state
+     * Sort subtechniques according to viewModel state
      * @param {Technique} technique technique to sort
      * @param {Tactic} tactic tactic the technique falls under
      */
@@ -841,7 +812,7 @@ export class ViewModel {
     }
 
     /**
-     * execute the sorting algorithm for techniques according to the viewModel state
+     * Execute the sorting algorithm for techniques according to the viewModel state
      * @param {Technique} technique1 the first technique in the comparison
      * @param {Technique} technique2 the second technique in the comparison
      * @param {number} score1 the first score in the comparison
@@ -915,32 +886,21 @@ export class ViewModel {
     }
 
     /**
-     * apply sort and filter state to techniques
+     * Apply sort and filter state to techniques
      * @param {Technique[]} techniques techniques to sort and filter
      * @param {Tactic} tactic that the techniques fall under
      * @param {Matrix} matrix that the techniques fall under
      * @returns {Technique[]} sorted and filtered techniques
      */
     public applyControls(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
-        //apply sort and filter
         return this.sortTechniques(this.filterTechniques(techniques, tactic, matrix), tactic);
     }
 
-
-
-
-
-    //  ___ ___ ___ ___   _   _    ___ ____  _ _____ ___ ___  _  _
-    // / __| __| _ \_ _| /_\ | |  |_ _|_  / /_\_   _|_ _/ _ \| \| |
-    // \__ \ _||   /| | / _ \| |__ | | / / / _ \| |  | | (_) | .` |
-    // |___/___|_|_\___/_/ \_\____|___/___/_/ \_\_| |___\___/|_|\_|
-
     /**
      * List of visible technique and subtechnique attack IDs
-     *
      * @returns list of strings of each visible technique and subtechnique attack ID
      */
-    getVisibleTechniquesList(): string[] {
+    public getVisibleTechniquesList(): string[] {
         let techniqueList = []
         let d = this.dataService.getDomain(this.domainVersionID);
         for (let matrix of d.matrices) {
@@ -958,14 +918,14 @@ export class ViewModel {
                 }
             }
         }
-        return techniqueList
+        return techniqueList;
     }
 
     /**
      * Number of modified hidden techniques
      * @returns number of hidden techniques that are annotated
      */
-    modifiedHiddenTechniques(): number {
+    public modifiedHiddenTechniques(): number {
         let modifiedHiddenTechniques = 0
         this.techniqueVMs.forEach(function (value, key) {
             if (value.modified() && value.isVisible === false) {
@@ -976,10 +936,10 @@ export class ViewModel {
     }
 
     /**
-     * stringify this vm
+     * Stringify this ViewModel
      * @return string representation
      */
-    serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
+    public serialize(downloadAnnotationsOnVisibleTechniques: boolean): string {
         let modifiedTechniqueVMs = [];
         this.techniqueVMs.forEach(function (value, key) {
             if (value.modified() && !downloadAnnotationsOnVisibleTechniques) {
@@ -1025,10 +985,10 @@ export class ViewModel {
     }
 
     /**
-     * restore the domain and version from a string
+     * Restore the domain and version from a string
      * @param rep string to restore from
      */
-    deSerializeDomainVersionID(rep: any): void {
+    public deserializeDomainVersionID(rep: any): void {
         let obj = (typeof (rep) == "string") ? JSON.parse(rep) : rep
         this.name = obj.name
         this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
@@ -1058,10 +1018,10 @@ export class ViewModel {
     }
 
     /**
-     * restore this vm from a string
+     * Restore this vm from a string
      * @param  rep string to restore from
      */
-    deSerialize(rep: any): void {
+    public deserialize(rep: any): void {
         let obj = (typeof (rep) == "string") ? JSON.parse(rep) : rep
 
         if ("description" in obj) {
@@ -1227,10 +1187,8 @@ export class ViewModel {
         this.updateGradient();
     }
 
-    /**
-     * Add a color to the end of the gradient
-     */
-    addGradientColor(): void {
+    /* Add a color to the end of the gradient */
+    public addGradientColor(): void {
         this.gradient.addColor();
         this.updateGradient();
     }
@@ -1239,15 +1197,13 @@ export class ViewModel {
      * Remove color at the given index
      * @param index index to remove color at
      */
-    removeGradientColor(index: number): void {
+    public removeGradientColor(index: number): void {
         this.gradient.removeColor(index)
         this.updateGradient();
     }
 
-    /**
-     * Update this vm's gradient
-     */
-    updateGradient(): void {
+    /* Update this vm's gradient */
+    public updateGradient(): void {
         this.gradient.updateGradient();
         let self = this;
         this.techniqueVMs.forEach(function (tvm, key) {
@@ -1261,71 +1217,29 @@ export class ViewModel {
      * score and gradient
      * @param tvm technique VM to update
      */
-    updateScoreColor(tvm: TechniqueVM): void {
+    public updateScoreColor(tvm: TechniqueVM): void {
         tvm.scoreColor = this.gradient.getHexColor(tvm.score);
     }
 
-    legendItems = [
-
-    ];
-
-    addLegendItem(): void {
-        var newObj = {
+    public addLegendItem(): void {
+        let legendItem = {
             label: "NewItem",
             color: '#00ffff'
         }
-        this.legendItems.push(newObj);
+        this.legendItems.push(legendItem);
     }
 
-    deleteLegendItem(index: number): void {
+    public deleteLegendItem(index: number): void {
         this.legendItems.splice(index, 1);
     }
 
-    clearLegend(): void {
+    public clearLegend(): void {
         this.legendItems = [];
     }
 
-    updateLegendColorPresets(): void {
+    public updateLegendColorPresets(): void {
         this.legendColorPresets = [];
         this.backgroundPresets.forEach(preset => this.legendColorPresets.push(preset));
         this.gradient.colors.forEach(color => this.legendColorPresets.push(color.color));
-    }
-
-    /**
-     * return an acronym version of the given string
-     * @param  words the string of words to get the acrnoym of
-     * @return       the acronym string
-     */
-    acronym(words: string): string {
-        let skipWords = ["on", "and", "the", "with", "a", "an", "of", "in", "for", "from"]
-
-        let result = "";
-        let wordSplit = words.split(" ");
-        if (wordSplit.length > 1) {
-            let wordIndex = 0;
-            while (result.length < 4 && wordIndex < wordSplit.length) {
-                if (skipWords.includes(wordSplit[wordIndex].toLowerCase())) {
-                    wordIndex++;
-                    continue;
-                }
-
-                //find first legal char of word
-                for (let charIndex = 0; charIndex < wordSplit[wordIndex].length; charIndex++) {
-                    let code = wordSplit[wordIndex].charCodeAt(charIndex);
-                    if (code < 48 || (code > 57 && code < 65) || (code > 90 && code < 97) || code > 122) { //illegal character
-                        continue;
-                    } else {
-                        result += wordSplit[wordIndex].charAt(charIndex).toUpperCase()
-                        break;
-                    }
-                }
-
-                wordIndex++;
-            }
-
-            return result;
-        } else {
-            return wordSplit[0].charAt(0).toUpperCase();
-        }
     }
 }

@@ -433,7 +433,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
         if (obj) {
             // restore the VM from the given string
-            vm.deSerialize(obj);
+            vm.deserialize(obj);
         }
         vm.loadVMData();
         this.openTab(name, vm, true, true, true, true)
@@ -638,7 +638,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                                 next: () => {
                                     newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
                                     // load vm for uploaded layer
-                                    oldViewModel.deSerialize(serialized);
+                                    oldViewModel.deserialize(serialized);
                                     oldViewModel.loadVMData();
                                     newViewModel.initCopyAnnotations();
                                     resolve(null);
@@ -648,7 +648,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         } else { // did not need to fetch data
                             newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
                             // load vm for uploaded layer
-                            oldViewModel.deSerialize(serialized);
+                            oldViewModel.deserialize(serialized);
                             oldViewModel.loadVMData();
                             newViewModel.initCopyAnnotations();
                             resolve(null);
@@ -657,12 +657,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         this.openTab("new layer", oldViewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
                             this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
-                                oldViewModel.deSerialize(serialized);
+                                oldViewModel.deserialize(serialized);
                                 oldViewModel.loadVMData();
                                 resolve(null);
                             });
                         } else {
-                            oldViewModel.deSerialize(serialized);
+                            oldViewModel.deserialize(serialized);
                             oldViewModel.loadVMData();
                             resolve(null);
                         }
@@ -677,12 +677,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 this.openTab("new layer", oldViewModel, true, replace, true, true);
                 if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
                     this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
-                        oldViewModel.deSerialize(serialized);
+                        oldViewModel.deserialize(serialized);
                         oldViewModel.loadVMData();
                         resolve(null);
                     });
                 } else {
-                    oldViewModel.deSerialize(serialized);
+                    oldViewModel.deserialize(serialized);
                     oldViewModel.loadVMData();
                     resolve(null);
                 }
@@ -715,7 +715,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             let result = String(reader.result);
             try{
                 let obj = (typeof(result) == "string")? JSON.parse(result) : result
-                viewModel.deSerializeDomainVersionID(obj);
+                viewModel.deserializeDomainVersionID(obj);
                 let isCustom = "customDataURL" in obj ? true : false;
                 if (!isCustom) {
                     if (!this.dataService.getDomain(viewModel.domainVersionID)) {
@@ -724,7 +724,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     this.layerUpgrade(viewModel, obj, true);
                 } else {
                     // load custom data
-                    viewModel.deSerialize(obj);
+                    viewModel.deserialize(obj);
                     this.openTab("new layer", viewModel, true, true, true, true);
                     this.newLayerFromURL({
                         'url': obj['customDataURL'],
@@ -756,7 +756,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     try {
-                        viewModel.deSerializeDomainVersionID(res);
+                        viewModel.deserializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
                         }
