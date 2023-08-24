@@ -901,24 +901,13 @@ export class ViewModel {
      * @returns list of strings of each visible technique and subtechnique attack ID
      */
     public getVisibleTechniquesList(): string[] {
-        let techniqueList = []
-        let d = this.dataService.getDomain(this.domainVersionID);
-        for (let matrix of d.matrices) {
-            for (let tactic of this.filterTactics(matrix.tactics, matrix)) {
-                let techniques = this.applyControls(tactic.techniques, tactic, matrix);
-                for (let technique of techniques) {
-                    let technique_tactic_union_id = technique.get_technique_tactic_id(tactic);
-                    techniqueList.push(technique_tactic_union_id);
-                    let subtechniques = this.applyControls(technique.subtechniques, tactic, matrix)
-                        .map(sub => { return sub });
-                    for (let subtechnique of subtechniques) {
-                        let subtechnique_tactic_union_id = subtechnique.get_technique_tactic_id(tactic);
-                        techniqueList.push(subtechnique_tactic_union_id);
-                    }
-                }
+        let visibleTechniques: string[] = [];
+        this.techniqueVMs.forEach(t => {
+            if (t.isVisible) {
+                visibleTechniques.push(t.technique_tactic_union_id)
             }
-        }
-        return techniqueList;
+        });
+        return visibleTechniques;
     }
 
     /**
