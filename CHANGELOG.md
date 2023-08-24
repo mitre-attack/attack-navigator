@@ -48,6 +48,8 @@ Adds support for ATT&CK v13.
 
 ## Layer File Format Changes
 
+Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+
 Layer file format updated to version 4.4. This update adds support for layers created with a custom collection or STIX bundle; the optional `customDataURL` field contains the URL from which custom data was loaded. This update is fully backwards compatible with layer format v4.3 since the added field is optional. See [layers/LAYERFORMATv4_4.md](layers/LAYERFORMATv4_4.md) for the full specification.
 
 # 4.7.1 - 8 November 2022

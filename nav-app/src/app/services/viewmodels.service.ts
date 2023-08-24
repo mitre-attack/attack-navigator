@@ -241,6 +241,7 @@ export class ViewModel {
 
     selectTechniquesAcrossTactics: boolean = true;
     selectSubtechniquesWithParent: boolean = false;
+    selectVisibleTechniques: boolean = false;
 
     needsToConstructTechniqueVMs = false;
     legacyTechniques = [];
@@ -441,8 +442,10 @@ export class ViewModel {
         }
         let technique_tactic_id = technique.get_technique_tactic_id(tactic);
         if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(technique_tactic_id); // first selection
-        this.selectedTechniques.add(technique_tactic_id);
-        this.checkValues(true, technique_tactic_id);
+        if ((this.selectVisibleTechniques && this.getTechniqueVM_id(technique_tactic_id).isVisible) || (!this.selectVisibleTechniques)) {
+            this.selectedTechniques.add(technique_tactic_id);
+            this.checkValues(true, technique_tactic_id);
+        }
     }
 
     /**
@@ -478,8 +481,10 @@ export class ViewModel {
         else {
             for (let id of technique.get_all_technique_tactic_ids()) {
                 if (!this.isCurrentlyEditing()) this.activeTvm = this.getTechniqueVM_id(id); // first selection
-                this.selectedTechniques.add(id);
-                this.checkValues(true, id);
+                if ((this.selectVisibleTechniques && this.getTechniqueVM_id(id).isVisible) || (!this.selectVisibleTechniques)) {
+                    this.selectedTechniques.add(id);
+                    this.checkValues(true, id);
+                }
             }
         }
     }
@@ -565,9 +570,11 @@ export class ViewModel {
         let self = this;
         this.techniqueVMs.forEach(function(tvm, key) {
             if (!previouslySelected.has(tvm.technique_tactic_union_id)) {
-                if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
-                self.selectedTechniques.add(tvm.technique_tactic_union_id);
-                self.checkValues(true, tvm.technique_tactic_union_id);
+                if ((self.selectVisibleTechniques && tvm.isVisible) || (!self.selectVisibleTechniques)) {
+                    if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+                    self.selectedTechniques.add(tvm.technique_tactic_union_id);
+                    self.checkValues(true, tvm.technique_tactic_union_id);
+                }
             }
         });
     }
@@ -591,9 +598,11 @@ export class ViewModel {
             // select all techniques with annotations
             this.techniqueVMs.forEach(function(tvm, key) {
                 if (tvm.annotated()) {
-                    if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
-                    self.selectedTechniques.add(tvm.technique_tactic_union_id);
-                    self.checkValues(true, tvm.technique_tactic_union_id);
+                    if ((self.selectVisibleTechniques && tvm.isVisible) || (!self.selectVisibleTechniques)) {
+                        if (!self.isCurrentlyEditing()) self.activeTvm = self.getTechniqueVM_id(tvm.technique_tactic_union_id); // first selection
+                        self.selectedTechniques.add(tvm.technique_tactic_union_id);
+                        self.checkValues(true, tvm.technique_tactic_union_id);
+                    }
                 }
             });
         }
@@ -933,10 +942,18 @@ export class ViewModel {
             // filter by enabled
             if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
                 techniqueVM.setIsVisible(false);
+                technique.subtechniques.forEach((subtechnique) => {
+                    let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                    subtechniqueVM.setIsVisible(false)
+                })
                 return false;
             }
             if (matrix.name == "PRE-ATT&CK") {
                 techniqueVM.setIsVisible(true);
+                technique.subtechniques.forEach((subtechnique) => {
+                    let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                    subtechniqueVM.setIsVisible(true)
+                })
                 return true; // don't filter by platform if it's pre-attack
             }
             // filter by platform
@@ -944,10 +961,18 @@ export class ViewModel {
             for (let platform of this.filters.platforms.selection) {
                 if (platforms.has(platform)) {
                     techniqueVM.setIsVisible(true);
+                    technique.subtechniques.forEach((subtechnique) => {
+                        let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                        subtechniqueVM.setIsVisible(true)
+                    })
                     return true; //platform match
                 }
             }
             techniqueVM.setIsVisible(false);
+            technique.subtechniques.forEach((subtechnique) => {
+                let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic)
+                subtechniqueVM.setIsVisible(false)
+            })
             return false; //no platform match
         })
     }
@@ -1186,6 +1211,7 @@ export class ViewModel {
         rep.tacticRowBackground = this.tacticRowBackground;
         rep.selectTechniquesAcrossTactics = this.selectTechniquesAcrossTactics;
         rep.selectSubtechniquesWithParent = this.selectSubtechniquesWithParent;
+        rep.selectVisibleTechniques = this.selectVisibleTechniques
 
         return JSON.stringify(rep, null, "\t");
     }
@@ -1296,6 +1322,10 @@ export class ViewModel {
         if ("selectSubtechniquesWithParent" in obj) {
             if (typeof(obj.selectSubtechniquesWithParent) === "boolean") this.selectSubtechniquesWithParent = obj.selectSubtechniquesWithParent
             else console.error("TypeError: selectSubtechniquesWithParent field is not a boolean")
+        }
+        if ("selectVisibleTechniques" in obj) {
+            if (typeof(obj.selectVisibleTechniques) === "boolean") this.selectVisibleTechniques = obj.selectVisibleTechniques
+            else console.error("TypeError: selectVisibleTechniques field is not a boolean")
         }
         if ("techniques" in obj) {
             if(obj.techniques.length > 0) {
