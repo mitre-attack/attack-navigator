@@ -24,7 +24,7 @@ const getCookie = function(key: string): string {
     let ca = decodedCookie.split(';');
 
     for (let c of ca) {
-        while (c.charAt(0) == ' ') {
+        while (c.startsWith(' ')) {
             c = c.substring(1);
         }
         if (c.indexOf(name) == 0) {

@@ -7,11 +7,11 @@ export class Metadata {
         // intentionally left blank
     }
 
-    serialize(): object {
+    public serialize(): object {
         return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
     }
 
-    deSerialize(rep: any): void {
+    public deserialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep;
         if ("name" in obj) { // name & value object
             if (typeof(obj.name) === "string") this.name = obj.name;
@@ -30,7 +30,7 @@ export class Metadata {
         else console.error("Error: Metadata required field 'name' or 'divider' not present");
     }
 
-    valid(): boolean {
+    public valid(): boolean {
         return (this.name && this.name.length > 0 && this.value && this.value.length > 0) || (this.divider !== undefined)
     }
 }

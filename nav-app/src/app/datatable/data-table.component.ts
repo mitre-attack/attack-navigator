@@ -2,7 +2,8 @@ import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestro
 import { DataService } from '../services/data.service';
 import { ConfigService } from '../services/config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModel, ViewModelsService } from "../services/viewmodels.service";
+import { ViewModelsService } from "../services/viewmodels.service";
+import { ViewModel } from '../classes';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/exceljs.min.js';

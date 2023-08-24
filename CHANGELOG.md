@@ -16,9 +16,11 @@
 
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
-
-## Fixes
 - Updated Angular from 11.0.3 to 14.3.0.
+
+## Miscellaneous
+
+- Refactored the codebase to improve maintainability of the application.
 
 ## Layer File Format Changes
 

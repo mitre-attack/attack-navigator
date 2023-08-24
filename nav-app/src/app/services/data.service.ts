@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { TaxiiConnect, Collection } from '../taxii2lib';
+import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
 import { Version, VersionChangelog } from '../classes';
 
@@ -13,7 +13,7 @@ import { Version, VersionChangelog } from '../classes';
 export class DataService {
 
     constructor(private http: HttpClient) {
-        console.log("initializing data service")
+        console.debug("initializing data service")
         let subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config["versions"]);
@@ -254,7 +254,7 @@ export class DataService {
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
 
-        this.lowestSupportedVersion = this.versions[this.versions.length-1];
+        this.lowestSupportedVersion = this.versions[this.versions.length - 1];
     }
 
     /**
@@ -273,7 +273,7 @@ export class DataService {
      */
     getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
-            console.log("fetching data from TAXII server");
+            console.debug("fetching data from TAXII server");
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
             let collectionInfo: any = {
                 'id': domain.taxii_collection,
@@ -286,14 +286,14 @@ export class DataService {
             const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
-            console.log("retrieving data", domain.urls)
+            console.debug("retrieving data", domain.urls)
             let bundleData = [];
             const httpOptions = {
                 headers: undefined
             }
             if (domain.authentication && domain.authentication.enabled) { // include authorization header, if configured (integrations)
                 let token = `${domain.authentication.serviceName}:${domain.authentication.apiKey}`;
-                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64')})
+                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64') })
             }
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url, httpOptions));
