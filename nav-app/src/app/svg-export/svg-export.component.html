@@ -120,6 +120,22 @@
                                 </mat-select>
                             </mat-form-field>
                         </li>
+                        <li>
+                            <input [id]="uid+'autofit'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.autofitTextSize" (change)="buildSVG()">
+                            <label [for]="uid+'autofit'" class="checkbox-custom-label noselect">auto-fit font size</label>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="font size"
+                                       step="1"
+                                       [disabled]="config.autofitTextSize"
+                                       [(ngModel)]="config.fontSize"
+                                       (input)="buildSVG()" />
+                            </mat-form-field>
+                        </li>
                     </ul>
                 </div>
             </div>

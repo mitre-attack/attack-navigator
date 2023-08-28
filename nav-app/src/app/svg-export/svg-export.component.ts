@@ -27,6 +27,8 @@ export class SvgExportComponent implements OnInit {
         "unit": "in",
         "orientation": "landscape",
         "size": "letter",
+        "fontSize": 4,
+        "autofitTextSize": true,
         "theme": "light",
         "showSubtechniques": "expanded",
         "font": "sans-serif",
@@ -426,8 +428,17 @@ export class SvgExportComponent implements OnInit {
             .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
-        techniqueGroups.select("text").attr("font-size", minFontSize);
-        subtechniqueGroups.select("text").attr("font-size", minFontSize);
+        if (this.config.autofitTextSize) {
+            this.config.fontSize = minFontSize.toFixed(2)
+        }
+        if (this.config.autofitTextSize) {
+            techniqueGroups.select("text").attr("font-size", minFontSize)
+            subtechniqueGroups.select("text").attr("font-size", minFontSize)
+        }
+        else {
+            techniqueGroups.select("text").attr("font-size", this.config.fontSize)
+            subtechniqueGroups.select("text").attr("font-size", this.config.fontSize)
+        }
 
         // track the smallest optimal font size for tactics
         let minTacticFontSize = Infinity;
