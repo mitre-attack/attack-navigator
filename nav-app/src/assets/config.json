@@ -238,6 +238,7 @@
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
+            {"name": "metadata_underline", "enabled": false, "description": "Disable to remove the metadata underline effect on techniques."},
             {"name": "links", "enabled": true, "description": "Disable to remove the ability to assign hyperlinks to techniques."},
             {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."},
             {"name": "metadata", "enabled": true, "description": "Disable to remove the ability to add metadata to techniques."},

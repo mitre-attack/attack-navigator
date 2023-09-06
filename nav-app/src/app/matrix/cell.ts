@@ -126,8 +126,11 @@ export abstract class Cell {
     public getTechniqueUnderlineColor() {
         if (this.tactic) {
             let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
-            if (tvm.comment.length > 0 || tvm.metadata.length > 0 || this.hasNotes()) {
+            if (tvm.comment.length > 0 || this.hasNotes()) {
                 if (this.configService.getFeature('comment_underline')) return this.configService.comment_color;
+            }
+            if (tvm.metadata.length > 0) {
+                if (this.configService.getFeature('metadata_underline')) return this.configService.comment_color;
             }
             if (tvm.links.length > 0) {
                 if (this.configService.getFeature('link_underline')) return this.configService.link_color;
