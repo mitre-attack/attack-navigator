@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+  attack-navigator:
+    image: attack-navigator
+    build:
+      context: .
+    ports:
+      - 4200:4200
