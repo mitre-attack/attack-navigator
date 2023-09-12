@@ -175,7 +175,12 @@ Example loading content from local files:
 1. Navigate to the directory where you checked out the git repository
 2. Run `docker build -t yourcustomname .`
 3. Run `docker run -p 4200:4200 yourcustomname`
-4. Navigate to `localhost:4200` in browser
+4. Navigate to `http://localhost:4200` in browser
+
+## Deploy with Docker Compose
+1. Navigate to the directory where you checked out the git repositor
+2. Run `docker compose up -d`
+3. Navigate to `http://localhost:4200` in browser
 
 ## Loading Default Layers Upon Initialization
 
