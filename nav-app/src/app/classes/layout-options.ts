@@ -56,6 +56,18 @@ export class LayoutOptions {
 	public set countUnscored(newval: boolean) { this._countUnscored = newval; }
 	public get countUnscored(): boolean { return (this.aggregateFunction === "average") ? this._countUnscored : false; }
 
+	// how to display subtechniques
+	public expandedSubtechniquesOptions: string[] = ["none", "annotated", "all"];
+	private _expandedSubtechniques = this.expandedSubtechniquesOptions[0];
+	public set expandedSubtechniques(newExpandedSubtechniques) {
+		if (!this.expandedSubtechniquesOptions.includes(newExpandedSubtechniques)) {
+			console.warn("invalid expand subtechnique option", newExpandedSubtechniques);
+			return;
+		}
+		this._expandedSubtechniques = newExpandedSubtechniques;
+	}
+	public get expandedSubtechniques(): string { return this._expandedSubtechniques; }
+
 	public serialize(): object {
 		return {
 			"layout": this.layout,
@@ -63,7 +75,8 @@ export class LayoutOptions {
 			"showID": this.showID,
 			"showName": this.showName,
 			"showAggregateScores": this.showAggregateScores,
-			"countUnscored": this.countUnscored
+			"countUnscored": this.countUnscored,
+			"expandedSubtechniques": this.expandedSubtechniques
 		};
 	}
 
@@ -92,6 +105,10 @@ export class LayoutOptions {
 		if ("countUnscored" in rep) {
 			if (typeof (rep.countUnscored) === "boolean") this.countUnscored = rep.countUnscored;
 			else console.error("TypeError: layout field 'countUnscored' is not a boolean:", rep.countUnscored, "(", typeof (rep.countUnscored), ")");
+		}
+		if ("expandedSubtechniques" in rep) {
+			if (typeof (rep.expandedSubtechniques) === "string") this.expandedSubtechniques = rep.expandedSubtechniques;
+			else console.error("TypeError: layout field 'expandedSubtechniques' is not a string:", rep.expandedSubtechniques, "(", typeof (rep.expandedSubtechniques), ")");
 		}
 	}
 }
