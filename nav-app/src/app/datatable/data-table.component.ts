@@ -111,8 +111,14 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveLayerLocally(): void {
+        let myarr = [];
+        myarr.push(JSON.parse(this.viewModelsService.viewModels[0].serialize(this.downloadAnnotationsOnVisibleTechniques)));
+        myarr.push(JSON.parse(this.viewModelsService.viewModels[1].serialize(this.downloadAnnotationsOnVisibleTechniques)));
+        console.log(JSON.stringify(myarr));
+        console.log(myarr[0]);
+        console.log("bye")
         let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
-        let blob = new Blob([json], {type: "text/json"});
+        let blob = new Blob([JSON.stringify(myarr)], {type: "text/json"});
         let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
         this.saveBlob(blob, filename);
     }
