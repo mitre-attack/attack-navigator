@@ -111,6 +111,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveLayerLocally(): void {
+            let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
+            let blob = new Blob([json], {type: "text/json"});
+            let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
+            this.saveBlob(blob, filename);
+    }
+
+    /**
+     * Stringifies the current view model with all the layers into a JSON string,
+     * stores the string as a blob, and saves the blob as a
+     * JSON file
+     */
+    public saveAllLayersLocally(): void {
         if(this.viewModelsService.viewModels.length > 1){
             let myarr = [];
             for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
@@ -164,7 +176,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    /** Export layer to Excel */
+    /** Export single layer to Excel */
     public saveLayerLocallyExcel(): void {
         // create new excel workbook
         let workbook = new Excel.Workbook();
@@ -280,6 +292,122 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    /** Export all layers to Excel */
+    public saveAllLayersLocallyExcel(): void {
+        // create new excel workbook
+        let workbook = new Excel.Workbook();
+        for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
+            let domain = this.dataService.getDomain(this.viewModelsService.viewModels[i].domainVersionID);
+            
+            // create a worksheet for each matrix in the domain
+            for (let matrix of domain.matrices) {
+                let worksheet = workbook.addWorksheet(matrix.name + " (v" + i + domain.getVersion() + ")");
+    
+                // create tactic columns
+                let columns = this.viewModelsService.viewModels[i].filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+                worksheet.columns = columns;
+    
+                // create cells
+                for (let tactic of this.viewModelsService.viewModels[i].filterTactics(matrix.tactics, matrix)) {
+                    let tacticCol = worksheet.getColumn(tactic.name);
+                    let techniques = this.viewModelsService.viewModels[i].applyControls(tactic.techniques, tactic, matrix);
+                    let techniqueCells = techniques.map(technique => { return technique.name });
+                    let subtechniqueList = [];
+    
+                    // create subtechnique cells, if shown
+                    let subtechniqueCells = [];
+                    for (let technique of techniques) {
+                        let techniqueRow = techniqueCells.indexOf(technique.name);
+                        let tvm = this.viewModelsService.viewModels[i].getTechniqueVM(technique, tactic);
+                        if(tvm.showSubtechniques) {
+                            // retrieve subtechniques
+                            let subtechniques = this.viewModelsService.viewModels[i].applyControls(technique.subtechniques, tactic, matrix)
+                                .map( sub => { return sub.name });
+                            subtechniqueList = subtechniqueList.concat(technique.subtechniques);
+    
+                            // format technique cells for subtechniques
+                            let excelIndex = 0;
+                            for (let subtechnique of subtechniques) {
+                                if(excelIndex !== 0) {
+                                    techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
+                                }
+                                subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
+                            }
+    
+                            // merge technique cells
+                            if (excelIndex > 0) {
+                                worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
+                            }
+                        }
+                    }
+    
+                    if(subtechniqueCells.length > 0) {
+                        // add subtechniques column
+                        let id = columns.findIndex(col => col.key == tactic.name);
+                        columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
+                        worksheet.columns = columns;
+    
+                        // merge subtechniques header
+                        let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
+                        worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
+                        subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
+    
+                        // style subtechnique cells
+                        const seen = [];
+                        subtechniqueCol.eachCell(cell => {
+                            if(cell.row > 1) {
+                                if(cell.value && cell.value !== undefined) {
+                                    let subtechnique = subtechniqueList.find(s => {
+                                        return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
+                                    seen.push(subtechnique.attackID);
+                                    let svm = this.viewModelsService.viewModels[i].getTechniqueVM(subtechnique, tactic);
+                                    this.styleCells(cell, subtechnique, svm);
+                                }
+                            }
+                        });
+                    }
+                    tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
+    
+                    // style technique cells
+                    tacticCol.eachCell(cell => {
+                        if (cell.row > 1) {
+                            if(cell.value && cell.value !== undefined) {
+                                let technique = techniques.find( t => {
+                                    return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
+                                let tvm = this.viewModelsService.viewModels[i].getTechniqueVM(technique, tactic);
+                                this.styleCells(cell, technique, tvm);
+                            }
+                        }
+                    });
+                }
+    
+                // style tactic headers
+                worksheet.columns.forEach(column => {
+                    if (this.viewModelsService.viewModels[i].layout.showID && !this.viewModelsService.viewModels[i].layout.showName) {
+                        column.width = column.header.length < 15 ? 15 : column.header.length;
+                    } else if (!this.viewModelsService.viewModels[i].layout.showID && !this.viewModelsService.viewModels[i].layout.showName) {
+                        column.width = 10;
+                    } else {
+                        column.width = column.header.length < 30 ? 30 : column.header.length;
+                    }
+                });
+    
+                worksheet.getRow(1).alignment = {horizontal: 'center'};
+                worksheet.getRow(1).border = {bottom: {style: 'thin'}};
+                worksheet.getRow(1).font = {bold: true};
+                if (this.viewModelsService.viewModels[i].showTacticRowBackground) {
+                    worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModelsService.viewModels[i].tacticRowBackground.substring(1)}}
+                    worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModelsService.viewModels[i].tacticRowBackground, ["white", "black"]).toHex()}};
+                }
+            }
+        }
+        // save file
+        workbook.xlsx.writeBuffer().then(data => {
+            const blob = new Blob( [data], {type: "application/octet-stream"} );
+            const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
+            this.saveBlob(blob, filename);
+        });
+    }
     /**
      * Get the display name for technique/tactic as shown in layout
      */
