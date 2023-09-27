@@ -1,8 +1,7 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
-import { ViewModel } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
 import { Tactic, Technique } from '../classes/stix';
-import { VersionChangelog } from '../classes';
+import { VersionChangelog, ViewModel } from '../classes';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
@@ -328,7 +327,7 @@ export class LayerUpgradeComponent implements OnInit {
             // copy annotations
             let rep = fromTvm.serialize();
             toTvm.resetAnnotations();
-            toTvm.deSerialize(rep, toTechnique.attackID, toTactic.shortname);
+            toTvm.deserialize(rep, toTechnique.attackID, toTactic.shortname);
             this.viewModel.updateScoreColor(toTvm);
         } else {
             // invalid target

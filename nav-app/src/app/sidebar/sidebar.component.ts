@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { ViewModel } from '../services/viewmodels.service';
+import { ViewModel } from '../classes';
 
 @Component({
     selector: 'sidebar',

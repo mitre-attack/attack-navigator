@@ -8,6 +8,7 @@ import { ContextMenuItem } from '../classes/context-menu-item';
 export class ConfigService {
     public comment_color = "yellow";
     public link_color = "blue";
+    public metadata_color = "purple";
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -16,7 +17,7 @@ export class ConfigService {
     public contextMenuItems: ContextMenuItem[] = [];
 
     constructor(private dataService: DataService) {
-        console.log("initializing config service");
+        console.debug("initializing config service");
         let self = this;
         let subscription = dataService.getConfig().subscribe({
             next: function(config: any) {
@@ -34,6 +35,7 @@ export class ConfigService {
                 dataService.subtechniquesEnabled = self.getFeature("subtechniques");
                 self.featureStructure = config["features"];
                 self.comment_color = config["comment_color"];
+                self.metadata_color = config["metadata_color"];
                 self.link_color = config["link_color"];
                 self.banner = config["banner"];
                 for (let obj of config["custom_context_menu_items"]) {

@@ -3,7 +3,7 @@ import { Domain } from "./stix/domain";
 export class Filter {
     // the data for a specific filter
     private readonly domain: string;
-    platforms: {
+    public platforms: {
         options: string[],
         selection: string[]
     }
@@ -31,8 +31,8 @@ export class Filter {
      * @param {*} filterName the name of the filter
      * @param {*} value the value to toggle
      */
-    toggleInFilter(filterName: string, value: string): void {
-        if (!this[filterName].options.includes(value)) { console.log("not a valid option to toggle", value, this[filterName]); return }
+    public toggleInFilter(filterName: string, value: string): void {
+        if (!this[filterName].options.includes(value)) { console.error("not a valid option to toggle", value, this[filterName]); return }
         if (this[filterName].selection.includes(value)) {
             let index = this[filterName].selection.indexOf(value)
             this[filterName].selection.splice(index, 1);
@@ -47,7 +47,7 @@ export class Filter {
      * @param {*} value the value to determine
      * @returns {boolean} true if value is currently enabled in the filter
      */
-    inFilter(filterName, value): boolean {
+    public inFilter(filterName, value): boolean {
         return this[filterName].selection.includes(value)
     }
 
@@ -55,7 +55,7 @@ export class Filter {
      * Return the string representation of this filter
      * @return stringified filter
      */
-    serialize(): string {
+    public serialize(): string {
         return JSON.stringify({"platforms": this.platforms.selection})
     }
 
@@ -63,7 +63,7 @@ export class Filter {
      * Replace the properties of this object with those of the given serialized filter
      * @param rep filter object
      */
-    deSerialize(rep: any): void {
+    public deserialize(rep: any): void {
         let isStringArray = function(arr): boolean {
             for (let item of arr) {
                 if (typeof(item) !== "string") {

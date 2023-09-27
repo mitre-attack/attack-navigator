@@ -156,6 +156,10 @@
     }
 }
 
+.hide-select .mat-select-value {
+    visibility: hidden !important;
+  }
+
 .mat-expansion-panel {
   @include adaptive-color("background-color", color(light), color(dark-2));
   @include adaptive-color-dark-only("color", on-color(dark-3));

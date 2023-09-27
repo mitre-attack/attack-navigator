@@ -2,18 +2,18 @@
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Domain, Technique } from '../classes/stix';
-import { Version } from '../classes';
+import { Version, ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
-import { ViewModelsService, ViewModel } from "../services/viewmodels.service";
+import { ViewModelsService } from "../services/viewmodels.service";
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from "../changelog/changelog.component";
 import { forkJoin } from 'rxjs';
 import * as is from 'is_js';
-import * as globals from './../globals';
+import * as globals from '../utils/globals';
 
 @Component({
     selector: 'tabs',
@@ -42,7 +42,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     nav_version = globals.nav_version;
 
     constructor(private dialog: MatDialog, private viewModelsService: ViewModelsService, private dataService: DataService, private http: HttpClient, private configService: ConfigService) {
-        console.log("tabs component initializing");
+        console.debug("initializing tabs component");
         this.ds = dataService;
         this.viewModelsService = viewModelsService;
     }
@@ -433,7 +433,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
 
         if (obj) {
             // restore the VM from the given string
-            vm.deSerialize(obj);
+            vm.deserialize(obj);
         }
         vm.loadVMData();
         this.openTab(name, vm, true, true, true, true)
@@ -458,7 +458,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @return      tab index
      */
     charToIndex(char: string): number {
-        // console.log("searching for char", char)
         let realIndex = 0;
         for (let i = 0; i < this.layerTabs.length; i++) {
             if (this.layerTabs[i].dataContext) {
@@ -639,7 +638,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                                 next: () => {
                                     newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
                                     // load vm for uploaded layer
-                                    oldViewModel.deSerialize(serialized);
+                                    oldViewModel.deserialize(serialized);
                                     oldViewModel.loadVMData();
                                     newViewModel.initCopyAnnotations();
                                     resolve(null);
@@ -649,7 +648,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         } else { // did not need to fetch data
                             newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
                             // load vm for uploaded layer
-                            oldViewModel.deSerialize(serialized);
+                            oldViewModel.deserialize(serialized);
                             oldViewModel.loadVMData();
                             newViewModel.initCopyAnnotations();
                             resolve(null);
@@ -658,12 +657,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         this.openTab("new layer", oldViewModel, true, replace, true, true);
                         if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
                             this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
-                                oldViewModel.deSerialize(serialized);
+                                oldViewModel.deserialize(serialized);
                                 oldViewModel.loadVMData();
                                 resolve(null);
                             });
                         } else {
-                            oldViewModel.deSerialize(serialized);
+                            oldViewModel.deserialize(serialized);
                             oldViewModel.loadVMData();
                             resolve(null);
                         }
@@ -678,12 +677,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 this.openTab("new layer", oldViewModel, true, replace, true, true);
                 if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
                     this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
-                        oldViewModel.deSerialize(serialized);
+                        oldViewModel.deserialize(serialized);
                         oldViewModel.loadVMData();
                         resolve(null);
                     });
                 } else {
-                    oldViewModel.deSerialize(serialized);
+                    oldViewModel.deserialize(serialized);
                     oldViewModel.loadVMData();
                     resolve(null);
                 }
@@ -716,7 +715,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             let result = String(reader.result);
             try{
                 let obj = (typeof(result) == "string")? JSON.parse(result) : result
-                viewModel.deSerializeDomainVersionID(obj);
+                viewModel.deserializeDomainVersionID(obj);
                 let isCustom = "customDataURL" in obj ? true : false;
                 if (!isCustom) {
                     if (!this.dataService.getDomain(viewModel.domainVersionID)) {
@@ -725,7 +724,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     this.layerUpgrade(viewModel, obj, true);
                 } else {
                     // load custom data
-                    viewModel.deSerialize(obj);
+                    viewModel.deserialize(obj);
                     this.openTab("new layer", viewModel, true, true, true, true);
                     this.newLayerFromURL({
                         'url': obj['customDataURL'],
@@ -757,12 +756,12 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     try {
-                        viewModel.deSerializeDomainVersionID(res);
+                        viewModel.deserializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
                         }
                         await this.layerUpgrade(viewModel, res, replace, defaultLayers);
-                        console.log("loaded layer from", loadURL);
+                        console.debug("loaded layer from", loadURL);
                         resolve(null); //continue
                     } catch(err) {
                         console.error(err)
@@ -816,11 +815,10 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * @param {number} index the index to remove
      */
     removeLayerLink(index: number): void {
-        console.log("removing index", index)
-        console.log(this.layerLinkURLs);
+        console.debug("removing index", index)
         if (this.layerLinkURLs.length == 1) this.layerLinkURLs = [];
         else this.layerLinkURLs.splice(index, 1);
-        console.log(this.layerLinkURLs);
+        console.debug(this.layerLinkURLs);
     }
 
     /**
@@ -858,8 +856,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      */
     selectLayerLink(): void {
         let copyText = <HTMLInputElement>document.getElementById("layerLink");
-        console.log(copyText)
-        console.log(copyText.value)
+        console.debug('copied', copyText.value)
         copyText.select();
     }
 
@@ -868,7 +865,6 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
      * copy the created layer link to the user's clipboard
      */
     copyLayerLink(): void {
-        console.log("attempting copy")
         this.selectLayerLink();
         document.execCommand("Copy");
         this.copiedRecently = true;

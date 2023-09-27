@@ -1,6 +1,6 @@
 import { Matrix } from "../../classes/stix";
 import { RenderableTactic } from "./renderable-tactic";
-import { ViewModel } from "../../services/viewmodels.service";
+import { ViewModel } from "../../classes";
 
 export class RenderableMatrix {
     public readonly matrix: Matrix;
