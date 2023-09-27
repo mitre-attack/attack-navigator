@@ -83,6 +83,7 @@ export class DataService {
                         break;
                     case "x-mitre-asset":
                         domain.assets.push(new Asset(sdo, this));
+                        break;
                     case "course-of-action":
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
