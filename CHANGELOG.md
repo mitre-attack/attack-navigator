@@ -13,6 +13,7 @@
 
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
+- Extended search interface to support searching for techniques by asset.
 
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
