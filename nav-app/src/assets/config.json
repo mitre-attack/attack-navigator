@@ -7,17 +7,17 @@
                 {   
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json"]
                 },
                 {   
                     "name": "Mobile",
                     "identifier": "mobile-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/mobile-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack.json"]
                 },
                 {
                     "name": "ICS",
                     "identifier": "ics-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/ics-attack/ics-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack.json"]
                 }
             ]
         },
@@ -28,7 +28,7 @@
                 {   
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-12.1.json"]
                 },
                 {   
                     "name": "Mobile",
@@ -49,7 +49,7 @@
                 {   
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v11.3/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-11.2.json"]
                 },
                 {   
                     "name": "Mobile",
@@ -70,7 +70,7 @@
                 {
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v10.1/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-11.2.json"]
                 },
                 {
                     "name": "Mobile",
@@ -91,7 +91,7 @@
                 {
                     "name": "Enterprise",
                     "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v9.0/enterprise-attack/enterprise-attack.json"]
+                    "data": ["https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-11.2.json"]
                 },
                 {
                     "name": "Mobile",
