@@ -13,7 +13,7 @@
 
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
-- Added functionality to download all open layers in JSON or MS Excel format. Also added the functionality to upload file with multiple layers. See issue  [128](https://github.com/mitre-attack/attack-navigator/issues/128)
+- Added functionality to download all open layers in JSON or MS Excel format. Also added the functionality to upload file with multiple layers. See issue  [#128](https://github.com/mitre-attack/attack-navigator/issues/128)
 
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
@@ -27,6 +27,7 @@
 ## Layer File Format Changes
 
 Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+
 This update also adds support for downloading all open layers in JSON or MS Excel (.xlsx) format. The user can now upload a file with multiple layers. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
 
 # 4.8.2 - 9 May 2023
