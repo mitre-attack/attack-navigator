@@ -100,7 +100,7 @@ Note: Divider objects can be used alongside Link objects.
 | showAggregateScores | Boolean | No | false | if true, show the aggregate scores of techniques and its subtechniques in the matrix |
 | countUnscored | Boolean | No | false | if true, count the unscored techniques in the calculation of the aggregate score of techniques in the matrix |
 | aggregateFunction | String | No | "average" | The aggregate function used to calculate aggregate scores for techniques in the matrix. Either "average", "min", "max" or "sum" |
-| expandedSubtechniques | String | No | "none' | How to display the subtechniques. Either "none", "all" or "annotated" |
+| expandedSubtechniques | String | No | "none" | How to display the subtechniques. Either "none", "all" or "annotated" |
 
 ## Example
 The following example illustrates the layer file format:

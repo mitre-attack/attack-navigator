@@ -25,7 +25,8 @@
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+This update also adds support for configuring how to display sub-techniques in the layer file with the help of the `expandedSubtechniques` field. This property can be set to `all`, `none`, or `annotated` to display the sub-techniques. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
 
 # 4.8.2 - 9 May 2023
 
@@ -52,6 +53,7 @@ Adds support for ATT&CK v13.
 
 ## New Features
 - Added the ability to create a layer from a custom [Collection](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/blob/develop/docs/collections.md#collections) or Stix Bundle. Users can specify the URL, version, and domain of a custom bundle in the Create New Layer interface. This will load the base data from the file at the given URL into the Navigator. Layers created from a custom collection/STIX bundle support all of the standard layer features (annotations, filter/sort, download/upload, layer-layer operations, etc.), apart from upgrading the layer to a newer ATT&CK version. See issue [#499](https://github.com/mitre-attack/attack-navigator/issues/499).
+- Users should now be able to configure how to display sub-techniques in the layer file through the `expandedSubtechniques` property - annotated, all, or none. See issue [#560](https://github.com/mitre-attack/attack-navigator/issues/560)
 
 ## Layer File Format Changes
 

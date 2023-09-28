@@ -47,6 +47,7 @@ export class ViewModel {
 
     public metadata: Metadata[] = [];
     public links: Link[] = [];
+    public technique_has_subtechnique = false;
 
     /*
      * 0: ascending alphabetically
@@ -149,13 +150,25 @@ export class ViewModel {
                 }
             }
         }
-        // display none of the subtechniques if "none" option is selected
-        else if(this.layout.expandedSubtechniques=="none"){
-            this.techniqueVMs.forEach(function(tvm) {
-                tvm.showSubtechniques = false;
-            });
+        else{
+            for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
+                if (technique.subtechniques.length > 0) {
+                    for (let id of technique.get_all_technique_tactic_ids()) {
+                        let tvm = this.getTechniqueVM_id(id);
+                            if(tvm.showSubtechniques){
+                                this.technique_has_subtechnique = true;
+                                break;
+                            }
+                    }
+                }
+            }
+            if(this.layout.expandedSubtechniques=="none" && this.technique_has_subtechnique==false){
+                this.techniqueVMs.forEach(function(tvm) {
+                    tvm.showSubtechniques = false;
+                });
+            }
         }
-
+        // display none of the subtechniques if "none" option is selected
     }
 
     public getTechniqueVM(technique: Technique, tactic: Tactic): TechniqueVM {

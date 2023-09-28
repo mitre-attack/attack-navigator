@@ -332,7 +332,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
-        if (showAnnotatedOnly == true){
+        if (showAnnotatedOnly){
             this.viewModel.layout.expandedSubtechniques = "annotated";
         }
         else{
