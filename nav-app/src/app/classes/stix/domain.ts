@@ -9,6 +9,7 @@ import { Software } from "./software";
 import { Tactic } from "./tactic";
 import { Technique } from "./technique";
 import { Version } from "../version";
+import { Asset } from "./asset";
 
 
 export class Domain {
@@ -40,6 +41,7 @@ export class Domain {
     public subtechniques: Technique[] = [];
     public software: Software[] = [];
     public campaigns: Campaign[] = [];
+    public assets: Asset[] = [];
     public dataComponents: DataComponent[] = [];
     public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
@@ -69,7 +71,10 @@ export class Domain {
         mitigates: new Map<string, string[]>(),
         // object is revoked-by object
         // ID of object to ID of revoking object
-        revoked_by: new Map<string, string>()
+        revoked_by: new Map<string, string>(),
+        // technique targets asset
+        // ID of asset to [] of technique IDs
+        targeted_assets: new Map<string, string>()
     }
 
     constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {

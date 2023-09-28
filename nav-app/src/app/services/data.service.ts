@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from "rxjs/Rx";
 import { fromPromise } from 'rxjs/observable/fromPromise';
+import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
-import { Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
 import { Version, VersionChangelog } from '../classes';
 
 @Injectable({
@@ -81,6 +81,9 @@ export class DataService {
                     case "campaign":
                         domain.campaigns.push(new Campaign(sdo, this));
                         break;
+                    case "x-mitre-asset":
+                        domain.assets.push(new Asset(sdo, this));
+                        break;
                     case "course-of-action":
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
@@ -100,7 +103,7 @@ export class DataService {
                                     let ids = domain.relationships["group_uses"].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                    domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref]);
                                 }
                             } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
                                 // record software:technique relationship
@@ -137,11 +140,20 @@ export class DataService {
                                 domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
                             }
                         } else if (sdo.relationship_type == "attributed-to") {
+                            // record campaign:group relationship
                             if (domain.relationships["campaigns_attributed_to"].has(sdo.target_ref)) {
                                 let ids = domain.relationships["campaigns_attributed_to"].get(sdo.target_ref);
                                 ids.push(sdo.source_ref);
                             } else {
                                 domain.relationships["campaigns_attributed_to"].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
+                            }
+                        } else if (sdo.relationship_type == "targets") {
+                            // record technique:asset relationship
+                            if (domain.relationships["targeted_assets"].has(sdo.target_ref)) {
+                                let ids = domain.relationships["targeted_assets"].get(sdo.target_ref);
+                                ids.push(sdo.source_ref);
+                            } else {
+                                domain.relationships["targeted_assets"].set(sdo.target_ref, [sdo.source_ref]); // asset -> [techniques]
                             }
                         }
                         break;
