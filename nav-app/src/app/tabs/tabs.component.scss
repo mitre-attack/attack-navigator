@@ -26,6 +26,10 @@
     }
 }
 
+.scroll {
+  overflow: auto;
+}
+
 .tabs {
     .tab-title { //non-datatable tab names
         @include adaptive-color("color", black, white);
