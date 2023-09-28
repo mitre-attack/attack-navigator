@@ -47,7 +47,7 @@ export class ViewModel {
 
     public metadata: Metadata[] = [];
     public links: Link[] = [];
-    public technique_has_subtechnique = false;
+    public technique_show_subtechnique = false;
 
     /*
      * 0: ascending alphabetically
@@ -156,13 +156,13 @@ export class ViewModel {
                     for (let id of technique.get_all_technique_tactic_ids()) {
                         let tvm = this.getTechniqueVM_id(id);
                             if(tvm.showSubtechniques){
-                                this.technique_has_subtechnique = true;
+                                this.technique_show_subtechnique = true;
                                 break;
                             }
                     }
                 }
             }
-            if(this.layout.expandedSubtechniques=="none" && this.technique_has_subtechnique==false){
+            if(this.layout.expandedSubtechniques=="none" && !this.technique_show_subtechnique){
                 this.techniqueVMs.forEach(function(tvm) {
                     tvm.showSubtechniques = false;
                 });
