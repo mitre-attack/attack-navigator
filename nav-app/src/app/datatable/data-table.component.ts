@@ -301,7 +301,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
-                let worksheet = workbook.addWorksheet(matrix.name + " (v" + i + domain.getVersion() + ")");
+                let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + "-" + i + ")");
     
                 // create tactic columns
                 let columns = this.viewModelsService.viewModels[i].filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
