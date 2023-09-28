@@ -18,7 +18,8 @@
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
 - Updated Angular from 11.0.3 to 14.3.0.
-- Added the ability to be able to select whether or not to display the metadata underline either by changing the config file or by using the customized navigator. See issue [#400](https://github.com/mitre-attack/attack-navigator/issues/400)
+- Added the ability to be able to select whether or not to display the metadata underline either by changing the config file or by using the customized navigator. See issue [#400](https://github.com/mitre-attack/attack-navigator/issues/400).
+- Added functionality to scroll across the open tabs in the navigator. See issue [#581](https://github.com/mitre-attack/attack-navigator/issues/580).
 
 ## Miscellaneous
 
