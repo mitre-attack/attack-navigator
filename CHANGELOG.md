@@ -14,6 +14,7 @@
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
 - Extended search interface to support searching for techniques by asset.
+- Users should now be able to configure how to display sub-techniques in the layer file through the `expandedSubtechniques` property - annotated, all, or none. See issue [#560](https://github.com/mitre-attack/attack-navigator/issues/560) and the `Layer File Format Changes` section.
 
 ## Improvements
 - Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
@@ -26,7 +27,8 @@
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+This update also adds support for configuring how to display sub-techniques in the layer file with the help of the `expandedSubtechniques` field. This property can be set to `all`, `none`, or `annotated` to display the sub-techniques. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
 
 # 4.8.2 - 9 May 2023
 
