@@ -722,7 +722,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                         obj = obj_list[i]
                         viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                         viewModel.deserializeDomainVersionID(obj);
-                        let isCustom = "customDataURL" in obj ? true : false;
+                        let isCustom = "customDataURL" in obj;
                         if (!isCustom) {
                             if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                                 throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};
@@ -744,7 +744,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     obj = (typeof(result) == "string")? JSON.parse(result) : result
                     viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     viewModel.deserializeDomainVersionID(obj);
-                    let isCustom = "customDataURL" in obj ? true : false;
+                    let isCustom = "customDataURL" in obj
                     if (!isCustom) {
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw {message: "Error: '" + viewModel.domain + "' (v" + viewModel.version + ") is an invalid domain."};

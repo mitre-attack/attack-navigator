@@ -180,7 +180,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         // create a worksheet for each matrix in the domain
         for (let matrix of domain.matrices) {
             let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
-            this.saveLayerExcel_helper(matrix, worksheet);
+            this.saveLayerExcel_helper(matrix, worksheet, this.viewModel);
         }
 
         // save file
@@ -200,7 +200,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
                 let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + "-" + i + ")");
-                this.saveLayerExcel_helper(matrix, worksheet);
+                this.saveLayerExcel_helper(matrix, worksheet, this.viewModelsService.viewModels[i]);
             }
         }
         // save file
@@ -212,16 +212,16 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     /** Helper function for saving layer in Excel format */
-    public saveLayerExcel_helper(matrix, worksheet): void{
+    public saveLayerExcel_helper(matrix, worksheet, viewModel): void{
         // create a worksheet for each matrix in the domain
         // create tactic columns
-        let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+        let columns = viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
         worksheet.columns = columns;
 
         // create cells
-        for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
+        for (let tactic of viewModel.filterTactics(matrix.tactics, matrix)) {
             let tacticCol = worksheet.getColumn(tactic.name);
-            let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
+            let techniques = viewModel.applyControls(tactic.techniques, tactic, matrix);
             let techniqueCells = techniques.map(technique => { return technique.name });
             let subtechniqueList = [];
 
@@ -229,10 +229,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             let subtechniqueCells = [];
             for (let technique of techniques) {
                 let techniqueRow = techniqueCells.indexOf(technique.name);
-                let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                let tvm = viewModel.getTechniqueVM(technique, tactic);
                 if(tvm.showSubtechniques) {
                     // retrieve subtechniques
-                    let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
+                    let subtechniques = viewModel.applyControls(technique.subtechniques, tactic, matrix)
                         .map( sub => { return sub.name });
                     subtechniqueList = subtechniqueList.concat(technique.subtechniques);
 
@@ -271,7 +271,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                             let subtechnique = subtechniqueList.find(s => {
                                 return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
                             seen.push(subtechnique.attackID);
-                            let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
+                            let svm = viewModel.getTechniqueVM(subtechnique, tactic);
                             this.styleCells(cell, subtechnique, svm);
                         }
                     }
@@ -285,7 +285,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                     if(cell.value && cell.value !== undefined) {
                         let technique = techniques.find( t => {
                             return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
-                        let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                        let tvm = viewModel.getTechniqueVM(technique, tactic);
                         this.styleCells(cell, technique, tvm);
                     }
                 }
@@ -294,9 +294,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
         // style tactic headers
         worksheet.columns.forEach(column => {
-            if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+            if (viewModel.layout.showID && !viewModel.layout.showName) {
                 column.width = column.header.length < 15 ? 15 : column.header.length;
-            } else if (!this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+            } else if (!viewModel.layout.showID && !viewModel.layout.showName) {
                 column.width = 10;
             } else {
                 column.width = column.header.length < 30 ? 30 : column.header.length;
@@ -306,9 +306,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         worksheet.getRow(1).alignment = {horizontal: 'center'};
         worksheet.getRow(1).border = {bottom: {style: 'thin'}};
         worksheet.getRow(1).font = {bold: true};
-        if (this.viewModel.showTacticRowBackground) {
-            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
-            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+        if (viewModel.showTacticRowBackground) {
+            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + viewModel.tacticRowBackground.substring(1)}}
+            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
         }
     }
     /**
