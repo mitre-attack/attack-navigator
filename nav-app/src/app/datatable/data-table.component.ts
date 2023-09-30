@@ -113,8 +113,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public saveLayerLocally(): void {
             let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
             let blob = new Blob([json], {type: "text/json"});
-            let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
-            this.saveBlob(blob, filename);
+            this.saveLayerJson_helper(blob);
     }
 
     /**
@@ -123,21 +122,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveAllLayersLocally(): void {
-        if(this.viewModelsService.viewModels.length > 1){
-            let myarr = [];
-            for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
-                myarr.push(JSON.parse(this.viewModelsService.viewModels[i].serialize(this.downloadAnnotationsOnVisibleTechniques)));
-            }
-            let blob = new Blob([JSON.stringify(myarr)], {type: "text/json"});
-            let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
-            this.saveBlob(blob, filename);
+        let myarr = [];
+        for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
+            myarr.push(JSON.parse(this.viewModelsService.viewModels[i].serialize(this.downloadAnnotationsOnVisibleTechniques)));
         }
-        else if(this.viewModelsService.viewModels.length == 1){
-            let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
-            let blob = new Blob([json], {type: "text/json"});
-            let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
-            this.saveBlob(blob, filename);
-        }
+        let blob = new Blob([JSON.stringify(myarr)], {type: "text/json"});
+        this.saveLayerJson_helper(blob);
+    }
+
+    /** Helper function for saving layer in JSON format */
+    public saveLayerJson_helper(blob): void {
+        let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
+        this.saveBlob(blob, filename);
     }
 
     /**
@@ -181,107 +177,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         // create new excel workbook
         let workbook = new Excel.Workbook();
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-
         // create a worksheet for each matrix in the domain
         for (let matrix of domain.matrices) {
             let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
-
-            // create tactic columns
-            let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
-            worksheet.columns = columns;
-
-            // create cells
-            for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
-                let tacticCol = worksheet.getColumn(tactic.name);
-                let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
-                let techniqueCells = techniques.map(technique => { return technique.name });
-                let subtechniqueList = [];
-
-                // create subtechnique cells, if shown
-                let subtechniqueCells = [];
-                for (let technique of techniques) {
-                    let techniqueRow = techniqueCells.indexOf(technique.name);
-                    let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-                    if(tvm.showSubtechniques) {
-                        // retrieve subtechniques
-                        let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
-                            .map( sub => { return sub.name });
-                        subtechniqueList = subtechniqueList.concat(technique.subtechniques);
-
-                        // format technique cells for subtechniques
-                        let excelIndex = 0;
-                        for (let subtechnique of subtechniques) {
-                            if(excelIndex !== 0) {
-                                techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
-                            }
-                            subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
-                        }
-
-                        // merge technique cells
-                        if (excelIndex > 0) {
-                            worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
-                        }
-                    }
-                }
-
-                if(subtechniqueCells.length > 0) {
-                    // add subtechniques column
-                    let id = columns.findIndex(col => col.key == tactic.name);
-                    columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
-                    worksheet.columns = columns;
-
-                    // merge subtechniques header
-                    let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
-                    worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
-                    subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
-
-                    // style subtechnique cells
-                    const seen = [];
-                    subtechniqueCol.eachCell(cell => {
-                        if(cell.row > 1) {
-                            if(cell.value && cell.value !== undefined) {
-                                let subtechnique = subtechniqueList.find(s => {
-                                    return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
-                                seen.push(subtechnique.attackID);
-                                let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
-                                this.styleCells(cell, subtechnique, svm);
-                            }
-                        }
-                    });
-                }
-                tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
-
-                // style technique cells
-                tacticCol.eachCell(cell => {
-                    if (cell.row > 1) {
-                        if(cell.value && cell.value !== undefined) {
-                            let technique = techniques.find( t => {
-                                return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
-                            let tvm = this.viewModel.getTechniqueVM(technique, tactic);
-                            this.styleCells(cell, technique, tvm);
-                        }
-                    }
-                });
-            }
-
-            // style tactic headers
-            worksheet.columns.forEach(column => {
-                if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
-                    column.width = column.header.length < 15 ? 15 : column.header.length;
-                } else if (!this.viewModel.layout.showID && !this.viewModel.layout.showName) {
-                    column.width = 10;
-                } else {
-                    column.width = column.header.length < 30 ? 30 : column.header.length;
-                }
-            });
-
-            worksheet.getRow(1).alignment = {horizontal: 'center'};
-            worksheet.getRow(1).border = {bottom: {style: 'thin'}};
-            worksheet.getRow(1).font = {bold: true};
-            if (this.viewModel.showTacticRowBackground) {
-                worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
-                worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
-            }
+            this.saveLayerExcel_helper(matrix, worksheet);
         }
 
         // save file
@@ -298,107 +197,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         let workbook = new Excel.Workbook();
         for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
             let domain = this.dataService.getDomain(this.viewModelsService.viewModels[i].domainVersionID);
-            
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
                 let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + "-" + i + ")");
-    
-                // create tactic columns
-                let columns = this.viewModelsService.viewModels[i].filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
-                worksheet.columns = columns;
-    
-                // create cells
-                for (let tactic of this.viewModelsService.viewModels[i].filterTactics(matrix.tactics, matrix)) {
-                    let tacticCol = worksheet.getColumn(tactic.name);
-                    let techniques = this.viewModelsService.viewModels[i].applyControls(tactic.techniques, tactic, matrix);
-                    let techniqueCells = techniques.map(technique => { return technique.name });
-                    let subtechniqueList = [];
-    
-                    // create subtechnique cells, if shown
-                    let subtechniqueCells = [];
-                    for (let technique of techniques) {
-                        let techniqueRow = techniqueCells.indexOf(technique.name);
-                        let tvm = this.viewModelsService.viewModels[i].getTechniqueVM(technique, tactic);
-                        if(tvm.showSubtechniques) {
-                            // retrieve subtechniques
-                            let subtechniques = this.viewModelsService.viewModels[i].applyControls(technique.subtechniques, tactic, matrix)
-                                .map( sub => { return sub.name });
-                            subtechniqueList = subtechniqueList.concat(technique.subtechniques);
-    
-                            // format technique cells for subtechniques
-                            let excelIndex = 0;
-                            for (let subtechnique of subtechniques) {
-                                if(excelIndex !== 0) {
-                                    techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
-                                }
-                                subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
-                            }
-    
-                            // merge technique cells
-                            if (excelIndex > 0) {
-                                worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
-                            }
-                        }
-                    }
-    
-                    if(subtechniqueCells.length > 0) {
-                        // add subtechniques column
-                        let id = columns.findIndex(col => col.key == tactic.name);
-                        columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
-                        worksheet.columns = columns;
-    
-                        // merge subtechniques header
-                        let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
-                        worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
-                        subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
-    
-                        // style subtechnique cells
-                        const seen = [];
-                        subtechniqueCol.eachCell(cell => {
-                            if(cell.row > 1) {
-                                if(cell.value && cell.value !== undefined) {
-                                    let subtechnique = subtechniqueList.find(s => {
-                                        return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
-                                    seen.push(subtechnique.attackID);
-                                    let svm = this.viewModelsService.viewModels[i].getTechniqueVM(subtechnique, tactic);
-                                    this.styleCells(cell, subtechnique, svm);
-                                }
-                            }
-                        });
-                    }
-                    tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
-    
-                    // style technique cells
-                    tacticCol.eachCell(cell => {
-                        if (cell.row > 1) {
-                            if(cell.value && cell.value !== undefined) {
-                                let technique = techniques.find( t => {
-                                    return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
-                                let tvm = this.viewModelsService.viewModels[i].getTechniqueVM(technique, tactic);
-                                this.styleCells(cell, technique, tvm);
-                            }
-                        }
-                    });
-                }
-    
-                // style tactic headers
-                worksheet.columns.forEach(column => {
-                    if (this.viewModelsService.viewModels[i].layout.showID && !this.viewModelsService.viewModels[i].layout.showName) {
-                        column.width = column.header.length < 15 ? 15 : column.header.length;
-                    } else if (!this.viewModelsService.viewModels[i].layout.showID && !this.viewModelsService.viewModels[i].layout.showName) {
-                        column.width = 10;
-                    } else {
-                        column.width = column.header.length < 30 ? 30 : column.header.length;
-                    }
-                });
-    
-                worksheet.getRow(1).alignment = {horizontal: 'center'};
-                worksheet.getRow(1).border = {bottom: {style: 'thin'}};
-                worksheet.getRow(1).font = {bold: true};
-                if (this.viewModelsService.viewModels[i].showTacticRowBackground) {
-                    worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModelsService.viewModels[i].tacticRowBackground.substring(1)}}
-                    worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModelsService.viewModels[i].tacticRowBackground, ["white", "black"]).toHex()}};
-                }
+                this.saveLayerExcel_helper(matrix, worksheet);
             }
         }
         // save file
@@ -407,6 +209,107 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
             this.saveBlob(blob, filename);
         });
+    }
+
+    /** Helper function for saving layer in Excel format */
+    public saveLayerExcel_helper(matrix, worksheet): void{
+        // create a worksheet for each matrix in the domain
+        // create tactic columns
+        let columns = this.viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+        worksheet.columns = columns;
+
+        // create cells
+        for (let tactic of this.viewModel.filterTactics(matrix.tactics, matrix)) {
+            let tacticCol = worksheet.getColumn(tactic.name);
+            let techniques = this.viewModel.applyControls(tactic.techniques, tactic, matrix);
+            let techniqueCells = techniques.map(technique => { return technique.name });
+            let subtechniqueList = [];
+
+            // create subtechnique cells, if shown
+            let subtechniqueCells = [];
+            for (let technique of techniques) {
+                let techniqueRow = techniqueCells.indexOf(technique.name);
+                let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                if(tvm.showSubtechniques) {
+                    // retrieve subtechniques
+                    let subtechniques = this.viewModel.applyControls(technique.subtechniques, tactic, matrix)
+                        .map( sub => { return sub.name });
+                    subtechniqueList = subtechniqueList.concat(technique.subtechniques);
+
+                    // format technique cells for subtechniques
+                    let excelIndex = 0;
+                    for (let subtechnique of subtechniques) {
+                        if(excelIndex !== 0) {
+                            techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
+                        }
+                        subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
+                    }
+
+                    // merge technique cells
+                    if (excelIndex > 0) {
+                        worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
+                    }
+                }
+            }
+
+            if(subtechniqueCells.length > 0) {
+                // add subtechniques column
+                let id = columns.findIndex(col => col.key == tactic.name);
+                columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
+                worksheet.columns = columns;
+
+                // merge subtechniques header
+                let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
+                worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
+                subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
+
+                // style subtechnique cells
+                const seen = [];
+                subtechniqueCol.eachCell(cell => {
+                    if(cell.row > 1) {
+                        if(cell.value && cell.value !== undefined) {
+                            let subtechnique = subtechniqueList.find(s => {
+                                return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
+                            seen.push(subtechnique.attackID);
+                            let svm = this.viewModel.getTechniqueVM(subtechnique, tactic);
+                            this.styleCells(cell, subtechnique, svm);
+                        }
+                    }
+                });
+            }
+            tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
+
+            // style technique cells
+            tacticCol.eachCell(cell => {
+                if (cell.row > 1) {
+                    if(cell.value && cell.value !== undefined) {
+                        let technique = techniques.find( t => {
+                            return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
+                        let tvm = this.viewModel.getTechniqueVM(technique, tactic);
+                        this.styleCells(cell, technique, tvm);
+                    }
+                }
+            });
+        }
+
+        // style tactic headers
+        worksheet.columns.forEach(column => {
+            if (this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                column.width = column.header.length < 15 ? 15 : column.header.length;
+            } else if (!this.viewModel.layout.showID && !this.viewModel.layout.showName) {
+                column.width = 10;
+            } else {
+                column.width = column.header.length < 30 ? 30 : column.header.length;
+            }
+        });
+
+        worksheet.getRow(1).alignment = {horizontal: 'center'};
+        worksheet.getRow(1).border = {bottom: {style: 'thin'}};
+        worksheet.getRow(1).font = {bold: true};
+        if (this.viewModel.showTacticRowBackground) {
+            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + this.viewModel.tacticRowBackground.substring(1)}}
+            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(this.viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+        }
     }
     /**
      * Get the display name for technique/tactic as shown in layout
