@@ -14,20 +14,22 @@
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
 - Extended search interface to support searching for techniques by asset.
+- Added the ability to configure how sub-techniques are displayed in the layer file through the `expandedSubtechniques` property - annotated, all, or none. See issue [#560](https://github.com/mitre-attack/attack-navigator/issues/560) and the `Layer File Format Changes` section.
 
 ## Improvements
-- Added ability to render SVG export in dark mode. See issue [#564](https://github.com/mitre-attack/attack-navigator/pull/564).
+- Added ability to render SVG export in dark mode. See issue [#556](https://github.com/mitre-attack/attack-navigator/issues/556).
+- Added the ability to configure whether or not to display the metadata underline either by editing `src/assets/config.json` or through the "Create Customized Navigator" interface. See issue [#400](https://github.com/mitre-attack/attack-navigator/issues/400)
 - Updated Angular from 11.0.3 to 14.3.0.
 - Added the ability to be able to select whether or not to display the metadata underline either by changing the config file or by using the customized navigator. See issue [#400](https://github.com/mitre-attack/attack-navigator/issues/400).
 - Added functionality to scroll across the open tabs in the navigator. See issue [#581](https://github.com/mitre-attack/attack-navigator/issues/580).
 
 ## Miscellaneous
-
 - Refactored the codebase to improve maintainability of the application.
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+This update also adds support for configuring how to display sub-techniques in the layer file with the help of the `expandedSubtechniques` field. This property can be set to `all`, `none`, or `annotated` to display the sub-techniques. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
 
 # 4.8.2 - 9 May 2023
 

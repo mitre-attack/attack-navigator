@@ -332,6 +332,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
+        if (showAnnotatedOnly){
+            this.viewModel.layout.expandedSubtechniques = "annotated";
+        }
+        else{
+            this.viewModel.layout.expandedSubtechniques = "all";
+        }
         for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
@@ -359,6 +365,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.viewModel.techniqueVMs.forEach(function(tvm, key) {
             tvm.showSubtechniques = false;
         });
+        this.viewModel.layout.expandedSubtechniques = "none";
     }
 
     /**
