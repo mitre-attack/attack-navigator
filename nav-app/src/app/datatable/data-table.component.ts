@@ -199,7 +199,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             let domain = this.dataService.getDomain(this.viewModelsService.viewModels[i].domainVersionID);
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
-                let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + "-" + i + ")");
+                let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")" + "-" + i);
                 this.saveLayerExcel_helper(matrix, worksheet, this.viewModelsService.viewModels[i]);
             }
         }
@@ -374,6 +374,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
+        if (showAnnotatedOnly){
+            this.viewModel.layout.expandedSubtechniques = "annotated";
+        }
+        else{
+            this.viewModel.layout.expandedSubtechniques = "all";
+        }
         for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
             if (technique.subtechniques.length > 0) {
                 for (let id of technique.get_all_technique_tactic_ids()) {
@@ -401,6 +407,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.viewModel.techniqueVMs.forEach(function(tvm, key) {
             tvm.showSubtechniques = false;
         });
+        this.viewModel.layout.expandedSubtechniques = "none";
     }
 
     /**

@@ -47,6 +47,7 @@ export class ViewModel {
 
     public metadata: Metadata[] = [];
     public links: Link[] = [];
+    public technique_show_subtechnique = false;
 
     /*
      * 0: ascending alphabetically
@@ -122,6 +123,52 @@ export class ViewModel {
                 }
             }
         }
+        // display annotated subtechniques if "annotated" option is selected
+        if(this.layout.expandedSubtechniques=="annotated"){
+            for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
+                if (technique.subtechniques.length > 0) {
+                    for (let id of technique.get_all_technique_tactic_ids()) {
+                        let tvm = this.getTechniqueVM_id(id);
+                        for (let subtechnique of technique.subtechniques) {
+                            tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
+                                let svm = this.getTechniqueVM_id(sid);
+                                return svm.annotated();
+                            })
+                        }
+                    }
+                }
+            }
+        }
+        // display all subtechniques if "all" option is selected
+        else if(this.layout.expandedSubtechniques=="all"){
+            for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
+                if (technique.subtechniques.length > 0) {
+                    for (let id of technique.get_all_technique_tactic_ids()) {
+                        let tvm = this.getTechniqueVM_id(id);
+                            tvm.showSubtechniques = true;
+                    }
+                }
+            }
+        }
+        else{
+            for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
+                if (technique.subtechniques.length > 0) {
+                    for (let id of technique.get_all_technique_tactic_ids()) {
+                        let tvm = this.getTechniqueVM_id(id);
+                            if(tvm.showSubtechniques){
+                                this.technique_show_subtechnique = true;
+                                break;
+                            }
+                    }
+                }
+            }
+            if(this.layout.expandedSubtechniques=="none" && !this.technique_show_subtechnique){
+                this.techniqueVMs.forEach(function(tvm) {
+                    tvm.showSubtechniques = false;
+                });
+            }
+        }
+        // display none of the subtechniques if "none" option is selected
     }
 
     public getTechniqueVM(technique: Technique, tactic: Tactic): TechniqueVM {
