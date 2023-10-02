@@ -28,7 +28,8 @@ export class SvgExportComponent implements OnInit {
         "orientation": "landscape",
         "size": "letter",
         "fontSize": 4,
-        "autofitTextSize": true,
+        "autofitText": true,
+        "maxTextSize": Infinity,
         "theme": "light",
         "showSubtechniques": "expanded",
         "font": "sans-serif",
@@ -428,10 +429,11 @@ export class SvgExportComponent implements OnInit {
             .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
-        if (this.config.autofitTextSize) {
+        this.config.maxTextSize = minFontSize
+        if (this.config.autofitText) {
             this.config.fontSize = minFontSize.toFixed(2)
         }
-        if (this.config.autofitTextSize) {
+        if (this.config.autofitText) {
             techniqueGroups.select("text").attr("font-size", minFontSize)
             subtechniqueGroups.select("text").attr("font-size", minFontSize)
         }
@@ -717,6 +719,9 @@ export class SvgExportComponent implements OnInit {
      */
     private findSize(self: any, words: string[], width: number, height: number, center: boolean, maxFontSize: number = 12): number {
         let padding = 4;
+        if (!this.config.autofitText) {
+            padding = 1
+        }
 
         // break into multiple lines
         let distance = Math.min(height, (maxFontSize + 3) * words.length)
