@@ -18,6 +18,9 @@
             font-weight: bold;
             // height: (($sizeunit + 2) * 3);
             vertical-align: bottom;
+            @media print {
+                font-size: $sizeunit_print - 4px;
+            }
         }
         &.count {
             border-width: 0 0 1px 0;
@@ -26,6 +29,9 @@
             padding-bottom: 5px;
             margin-bottom: 5px;
             @include adaptive-color("border-color", black, white);
+            @media print {
+                font-size: $sizeunit_print - 4px;
+            }
         }
         .techniques-table {
             border-collapse: collapse;
@@ -36,6 +42,10 @@
             tr {
                 height: 1px;
             }
+        }
+        @media print {
+            color: black;
+            background-color: white;
         }
 
         .supertechnique {
@@ -114,6 +124,9 @@
             &.bottom {
                 bottom: 0;
             }
+        }
+        @media print {
+            display: none;
         }
     }
 }

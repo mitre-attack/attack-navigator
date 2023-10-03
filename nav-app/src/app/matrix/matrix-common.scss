@@ -1,8 +1,16 @@
 @import "../../colors.scss";
 
 $sizeunit: 14px;
+$sizeunit_print: 12px;
 
 .matrix {
     border-collapse: collapse;
     line-height: $sizeunit;
 }
+
+@media print {
+    .matrix {
+        border-collapse: collapse;
+        line-height: $sizeunit_print;
+    }
+  }
