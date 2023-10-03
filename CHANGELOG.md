@@ -27,11 +27,11 @@
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.5. This update adds support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+Layer file format updated to version 4.5. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
 
-This update also adds support for configuring how to display sub-techniques in the layer file with the help of the `expandedSubtechniques` field. This property can be set to `all`, `none`, or `annotated` to display the sub-techniques. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
-
-This update also adds support for downloading all open layers in JSON or MS Excel (.xlsx) format. The user can now upload a file with multiple layers. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+- Added support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
+- Added support for configuring how to display sub-techniques in the layer file with the help of the `expandedSubtechniques` field. This property can be set to `all`, `none`, or `annotated` to display the sub-techniques.
+- Added support for downloading all open layers in JSON or MS Excel (.xlsx) format. The user can now upload a file with multiple layers.
 
 # 4.8.2 - 9 May 2023
 

@@ -199,7 +199,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             let domain = this.dataService.getDomain(this.viewModelsService.viewModels[i].domainVersionID);
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
-                let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")" + "-" + i);
+                let worksheet = workbook.addWorksheet(matrix.name + " v" + domain.getVersion() + " (" + this.viewModelsService.viewModels[i].name + "-" + i +")");
                 this.saveLayerExcel_helper(matrix, worksheet, this.viewModelsService.viewModels[i]);
             }
         }
