@@ -5,7 +5,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 888o     oo 888o   o888 88   8888      888      888  88o   888o   o888 888      o         888
  888oooo88    88ooo88  o88o    88     o888o    o888o  88o8   88ooo88  o888ooooo88 o88oooo888
                                                                                               -->
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <div class="controlsContainer">
     <ul class="control-sections">
         <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && configService.getFeature('selecting_techniques')">
@@ -161,25 +161,50 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <b class="filter-label">Export</b>
                     </div>
                     <div>
-                        <!-- save locally as JSON -->
+                        <!-- save single layer locally as JSON -->
                         <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
                             <div class="control-row-button noselect"
                                 (click)="saveLayerLocally()"
                                 matTooltipPosition="below"
-                                matTooltip="download layer as json">
+                                matTooltip="download single layer as json">
                                 <span class="material-icons" alt="save layer">code</span>
                             </div>
                         </div>
 
-                        <!-- export to excel -->
+                        <!-- save all layers locally as JSON -->
+                        <div *ngIf="configService.getFeature('download_layer') && viewModelsService.viewModels.length > 1" class="control-row-item">
+                            <div class="control-row-button noselect"
+                                (click)="saveAllLayersLocally()"
+                                matTooltipPosition="below"
+                                matTooltip="download all layers as json">
+                                <span *ngIf="viewModelsService.viewModels.length > 1" class="material-symbols-outlined" alt="save layer">
+                                    code_blocks
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- export single layer to excel -->
                         <div *ngIf="configService.getFeature('export_excel')" class="control-row-item">
                             <div class="control-row-button noselect"
                                 (click)="saveLayerLocallyExcel()"
                                 matTooltipPosition="below"
-                                matTooltip="export to excel">
+                                matTooltip="export single layer to excel">
                                 <span class="material-icons" alt="save layer">grid_on</span>
                             </div>
                         </div>
+
+                        <!-- export all layers to excel -->
+                        <div *ngIf="configService.getFeature('export_excel') && viewModelsService.viewModels.length > 1" class="control-row-item">
+                            <div class="control-row-button noselect"
+                                (click)="saveAllLayersLocallyExcel()"
+                                matTooltipPosition="below"
+                                matTooltip="export all layers to excel">
+                                <span class="material-symbols-outlined" alt="save layer">
+                                    table_view
+                                </span>
+                            </div>
+                        </div>
+
                         <!-- render layer to SVG -->
                         <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
                             <div class="control-row-button noselect"
