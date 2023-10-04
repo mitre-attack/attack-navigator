@@ -36,12 +36,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public isScrollUp: boolean = true;
     public handleScroll = (e) => {
         const diff = this.scrollRef.nativeElement.scrollTop - this.previousScrollTop;
-        if (!this.isScrollUp && diff < 0) {
-            this.isScrollUp =  diff < 0;
-            this.calculateScrollHeight();
-            this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
-        } else if (this.isScrollUp && diff > 0) {
-            this.isScrollUp =  diff < 0;
+        if ((!this.isScrollUp && diff < 0) || (this.isScrollUp && diff > 0)) {
+            this.isScrollUp = diff < 0;
             this.calculateScrollHeight();
             this.previousScrollTop = this.scrollRef.nativeElement.scrollTop;
         } else if (!this.isScrollUp && this.scrollRef.nativeElement.scrollTop > 0 && diff === 0) {
@@ -123,8 +119,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public saveAllLayersLocally(): void {
         let myarr = [];
-        for (let i = 0; i < this.viewModelsService.viewModels.length; i++) {
-            myarr.push(JSON.parse(this.viewModelsService.viewModels[i].serialize(this.downloadAnnotationsOnVisibleTechniques)));
+        for (let viewModel of this.viewModelsService.viewModels) {
+            myarr.push(JSON.parse(viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques)));
         }
         let blob = new Blob([JSON.stringify(myarr)], {type: "text/json"});
         this.saveLayerJson_helper(blob);
