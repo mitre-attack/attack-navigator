@@ -2,7 +2,7 @@
 import { Component, AfterContentInit, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Domain, Technique } from '../classes/stix';
-import { Version, ViewModel } from '../classes';
+import { Tab, Version, ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
@@ -147,7 +147,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         // create a new tab
         let domain = data? data.domainVersionID : "";
         let tab = new Tab(title, isCloseable, false, domain, dataTable);
-        tab.dataContext = data;
+        tab.viewModel = data;
 
         // select new tab
         if (!replace || this.layerTabs.length === 0) {
@@ -192,7 +192,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         let action = 0; //controls post close-tab behavior
 
         // destroy tab viewmodel
-        this.viewModelsService.destroyViewModel(tab.dataContext);
+        this.viewModelsService.destroyViewModel(tab.viewModel);
 
         for(let i=0; i<this.layerTabs.length;i++) {
             if(this.layerTabs[i] === tab) { //close this tab
@@ -449,7 +449,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     indexToChar(index: number) {
         let realIndex = 0;
         for (let i = 0; i < index; i++) {
-            if (this.layerTabs[i].dataContext) realIndex++;
+            if (this.layerTabs[i].viewModel) realIndex++;
         }
         return String.fromCharCode(97+realIndex);
     }
@@ -462,7 +462,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
     charToIndex(char: string): number {
         let realIndex = 0;
         for (let i = 0; i < this.layerTabs.length; i++) {
-            if (this.layerTabs[i].dataContext) {
+            if (this.layerTabs[i].viewModel) {
                 let charHere = String.fromCharCode(97+realIndex);
                 realIndex++;
                 if (charHere == char) return i;
@@ -493,7 +493,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
             matches.forEach(function(match) {
                 // trim
                 let index = self.charToIndex(match);
-                let vm = self.layerTabs[index].dataContext;
+                let vm = self.layerTabs[index].viewModel;
                 scoreVariables.set(match, vm);
             });
         }
@@ -550,7 +550,7 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
                     // check if letter is too large
                     if (typeof(self.charToIndex(match)) == "undefined") {
                         noMatch = "Variable " + match + " does not match any layers"
-                    } else if (self.domain && self.layerTabs[self.charToIndex(match)].dataContext.domainVersionID !== self.domain) {
+                    } else if (self.domain && self.layerTabs[self.charToIndex(match)].viewModel.domainVersionID !== self.domain) {
                         noMatch = "Layer " + match + " does not match the chosen domain"
                     }
                 });
@@ -932,22 +932,4 @@ export class TabsComponent implements AfterContentInit, AfterViewInit {
         return results
     }
 
-}
-
-export class Tab {
-    title: string;
-    dataContext;
-    domain: string = "";
-    isDataTable: boolean;
-
-    isCloseable: boolean = false;
-    showScoreVariables: boolean = false;
-
-    constructor(title: string, isCloseable: boolean, showScoreVariables: boolean, domain: string, dataTable: boolean) {
-        this.title = title;
-        this.isCloseable = isCloseable;
-        this.showScoreVariables = showScoreVariables;
-        this.domain = domain;
-        this.isDataTable = dataTable;
-    }
 }
