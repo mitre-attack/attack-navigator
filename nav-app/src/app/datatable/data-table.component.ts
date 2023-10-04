@@ -64,7 +64,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                 private sanitizer: DomSanitizer,
                 private viewModelsService: ViewModelsService,
                 public configService: ConfigService) {
-
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
         })
@@ -226,29 +225,24 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             for (let technique of techniques) {
                 let techniqueRow = techniqueCells.indexOf(technique.name);
                 let tvm = viewModel.getTechniqueVM(technique, tactic);
-                if(tvm.showSubtechniques) {
-                    // retrieve subtechniques
-                    let subtechniques = viewModel.applyControls(technique.subtechniques, tactic, matrix)
-                        .map( sub => { return sub.name });
-                    subtechniqueList = subtechniqueList.concat(technique.subtechniques);
 
-                    // format technique cells for subtechniques
-                    let excelIndex = 0;
-                    for (let subtechnique of subtechniques) {
-                        if(excelIndex !== 0) {
-                            techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
-                        }
-                        subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
-                    }
+                if (!tvm.showSubtechniques) continue; // do not show sub-techniques, skip
 
-                    // merge technique cells
-                    if (excelIndex > 0) {
-                        worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
-                    }
+                // retrieve subtechniques
+                let subtechniques = viewModel.applyControls(technique.subtechniques, tactic, matrix)
+                    .map( sub => { return sub.name });
+                subtechniqueList = subtechniqueList.concat(technique.subtechniques);
+
+                // format technique cells for subtechniques
+                let excelIndex = this.addSubtechniqueCells(subtechniqueCells, techniqueCells, subtechniques, technique);
+
+                // merge technique cells
+                if (excelIndex > 0) {
+                    worksheet.mergeCells(techniqueRow + 2, tacticCol.number, techniqueRow + excelIndex + 1, tacticCol.number);
                 }
             }
 
-            if(subtechniqueCells.length > 0) {
+            if (subtechniqueCells.length > 0) {
                 // add subtechniques column
                 let id = columns.findIndex(col => col.key == tactic.name);
                 columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
@@ -260,44 +254,16 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                 subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
 
                 // style subtechnique cells
-                const seen = [];
-                subtechniqueCol.eachCell(cell => {
-                    if(cell.row > 1) {
-                        if(cell.value && cell.value !== undefined) {
-                            let subtechnique = subtechniqueList.find(s => {
-                                return s.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(s.attackID) });
-                            seen.push(subtechnique.attackID);
-                            let svm = viewModel.getTechniqueVM(subtechnique, tactic);
-                            this.styleCells(cell, subtechnique, svm);
-                        }
-                    }
-                });
+                this.styleTechniqueCells(subtechniqueCol, subtechniqueList, viewModel, tactic, true);
             }
             tacticCol.values = [this.getDisplayName(tactic)].concat(techniqueCells);
 
             // style technique cells
-            tacticCol.eachCell(cell => {
-                if (cell.row > 1) {
-                    if(cell.value && cell.value !== undefined) {
-                        let technique = techniques.find( t => {
-                            return t.name === cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value });
-                        let tvm = viewModel.getTechniqueVM(technique, tactic);
-                        this.styleCells(cell, technique, tvm);
-                    }
-                }
-            });
+            this.styleTechniqueCells(tacticCol, techniques, viewModel, tactic);
         }
 
         // style tactic headers
-        worksheet.columns.forEach(column => {
-            if (viewModel.layout.showID && !viewModel.layout.showName) {
-                column.width = column.header.length < 15 ? 15 : column.header.length;
-            } else if (!viewModel.layout.showID && !viewModel.layout.showName) {
-                column.width = 10;
-            } else {
-                column.width = column.header.length < 30 ? 30 : column.header.length;
-            }
-        });
+        this.styleTacticHeaders(worksheet, viewModel);
 
         worksheet.getRow(1).alignment = {horizontal: 'center'};
         worksheet.getRow(1).border = {bottom: {style: 'thin'}};
@@ -307,6 +273,58 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
         }
     }
+
+    /**
+     * Style technique cells for Excel worksheet
+     */
+    public styleTechniqueCells(column, techniqueList, viewModel, tactic, isSubtechnique = false): void {
+        const seen = [];
+
+        column.eachCell(cell => {
+            if (cell.row > 1 && cell.value && cell.value !== undefined) {
+                let technique = techniqueList.find(t => {
+                    if (isSubtechnique) {
+                        return t.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(t.attackID);
+                    }
+                    return t.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() || t.attackID === cell.value;
+                });
+                seen.push(technique.attackID);
+                let tvm = viewModel.getTechniqueVM(technique, tactic);
+                this.styleCells(cell, technique, tvm);
+            }
+        });
+    }
+
+    /**
+     * Style tactic headers for Excel worksheet
+     */
+    public styleTacticHeaders(worksheet, viewModel): void {
+        worksheet.columns.forEach(column => {
+            if (viewModel.layout.showID && !viewModel.layout.showName) {
+                column.width = column.header.length < 15 ? 15 : column.header.length;
+            } else if (!viewModel.layout.showID && !viewModel.layout.showName) {
+                column.width = 10;
+            } else {
+                column.width = column.header.length < 30 ? 30 : column.header.length;
+            }
+        });
+    }
+
+    /**
+     * Format technique cells for sub-technique cells
+     */
+    public addSubtechniqueCells(subtechniqueCells, techniqueCells, subtechniques, technique): number {
+        let techniqueRow = techniqueCells.indexOf(technique.name);
+        let excelIndex = 0;
+        for (let subtechnique of subtechniques) {
+            if(excelIndex !== 0) {
+                techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
+            }
+            subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
+        }
+        return excelIndex;
+    }
+
     /**
      * Get the display name for technique/tactic as shown in layout
      */
@@ -334,17 +352,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
-        /**
+    /**
      * Handle export drop down change
      */
-        public handleExportDropdown(): void {
-            if (this.currentDropdown !== 'export') {
-                this.currentDropdown = 'export';
-            } else {
-                this.currentDropdown = '';
-            }
-            this.dropdownChange.emit(this.currentDropdown);
+    public handleExportDropdown(): void {
+        if (this.currentDropdown !== 'export') {
+            this.currentDropdown = 'export';
+        } else {
+            this.currentDropdown = '';
         }
+        this.dropdownChange.emit(this.currentDropdown);
+    }
 
     /**
      * Triggered on left click of technique
@@ -370,26 +388,25 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public expandSubtechniques(showAnnotatedOnly?: boolean): void {
         if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
-        if (showAnnotatedOnly){
-            this.viewModel.layout.expandedSubtechniques = "annotated";
-        }
-        else{
-            this.viewModel.layout.expandedSubtechniques = "all";
-        }
+        this.viewModel.layout.expandedSubtechniques = showAnnotatedOnly ? "annotated" : "all";
+
         for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
-            if (technique.subtechniques.length > 0) {
-                for (let id of technique.get_all_technique_tactic_ids()) {
-                    let tvm = this.viewModel.getTechniqueVM_id(id);
-                    if (!showAnnotatedOnly) {
-                        tvm.showSubtechniques = true;
-                    } else {
-                        for (let subtechnique of technique.subtechniques) {
-                            tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
-                                let svm = this.viewModel.getTechniqueVM_id(sid);
-                                return svm.annotated();
-                            })
-                        }
-                    }
+            if (!technique.subtechniques?.length) continue; // no sub-techniques
+
+            for (let id of technique.get_all_technique_tactic_ids()) {
+                let tvm = this.viewModel.getTechniqueVM_id(id);
+                if (!showAnnotatedOnly) {
+                    // expand all sub-techniques
+                    tvm.showSubtechniques = true;
+                    continue;
+                }
+
+                // expand only if sub-techniques have annotations
+                for (let subtechnique of technique.subtechniques) {
+                    tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
+                        let svm = this.viewModel.getTechniqueVM_id(sid);
+                        return svm.annotated();
+                    })
                 }
             }
         }
