@@ -39,7 +39,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" [attr.fill]="activeTab === tab ? '#000000' : '#9aa0a6'"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </span>
             <!-- tab enumerator (for layer operations) -->
-            <span class="tabEnumerator" *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+            <span class="tabEnumerator" *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && isAlphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
         </a>
         <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#9aa0a6"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -118,7 +118,7 @@
 
                 <!-- Domain buttons for latest version -->
                 <table class="btn-group" role="group">
-                    <ng-template ngFor let-domain [ngForOf]="filterDomains(ds.versions[0])" let-domainIndex="index">
+                    <ng-template ngFor let-domain [ngForOf]="filterDomains(dataService.versions[0])" let-domainIndex="index">
                         <td>
                             <button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button>
                         </td>
@@ -155,7 +155,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <div>
-                                    <em>* Official ATT&CK Versions prior to {{ds.lowestSupportedVersion.name}} are not supported by Navigator v{{nav_version}}.</em>
+                                    <em>* Official ATT&CK Versions prior to {{dataService.lowestSupportedVersion.name}} are not supported by Navigator v{{navVersion}}.</em>
                                 </div>
                             </td>
 
@@ -245,7 +245,7 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="domain" [(ngModel)]="domain" required>
+                                <mat-select placeholder="domain" [(ngModel)]="opSettings.domain" required>
                                     <mat-option [value]="null">none</mat-option>
                                     <mat-option *ngFor="let domain of this.dataService.domains"
                                                 [value]=domain.id>{{domain.name}} {{domain.version.name}}</mat-option>
@@ -265,20 +265,20 @@
                                 <input type="text"
                                        matInput
                                        placeholder="score expression"
-                                       [disabled]="!domain"
-                                       [(ngModel)]="scoreExpression"
-                                       (keyup)="scoreExpression = scoreExpression.toLowerCase()"
+                                       [disabled]="!opSettings.domain"
+                                       [(ngModel)]="opSettings.scoreExpression"
+                                       (keyup)="opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase()"
                                        style="letter-spacing: 2px"/>
                                 <mat-hint style="color: red" align="start">{{getScoreExpressionError()}}</mat-hint>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Use constants (numbers) and layer variables (yellow, above) to write an expression for the
                             initial value of scores in the new layer. A full list of supported operations can be found
                             <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to
                             initialize scores to 0. Here's a list of available layer variables:
                             <ul *ngFor="let tab of layerTabs; let $i = index">
-                                <li *ngIf="getActiveTab().showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && alphabetical(indexToChar($i))"><span class="tab-enumerator">{{indexToChar($i)}}</span> ({{tab.title}})</li>
+                                <li *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!opSettings.domain || tab.domain === opSettings.domain) && isAlphabetical(indexToChar($i))"><span class="tab-enumerator">{{indexToChar($i)}}</span> ({{tab.title}})</li>
                             </ul>
                         </td>
                     </tr>
@@ -287,13 +287,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="gradient" [(ngModel)]="gradient" [disabled]="!domain">
+                                <mat-select placeholder="gradient" [(ngModel)]="opSettings.gradientVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import the scoring gradient from. Leave blank to initialize with the
                             default scoring gradient.
                         </td>
@@ -303,13 +303,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="coloring" [(ngModel)]="coloring" [disabled]="!domain">
+                                <mat-select placeholder="coloring" [(ngModel)]="opSettings.coloringVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import manually assigned colors from. Leave blank to initialize with
                             no colors.
                         </td>
@@ -319,13 +319,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="comments" [(ngModel)]="comments" [disabled]="!domain">
+                                <mat-select placeholder="comments" [(ngModel)]="opSettings.commentVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import comments from. Leave blank to initialize with no comments.
                         </td>
                     </tr>
@@ -334,13 +334,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="links" [(ngModel)]="links" [disabled]="!domain">
+                                <mat-select placeholder="links" [(ngModel)]="opSettings.linkVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import technique links from. Leave blank to initialize without links.
                         </td>
                     </tr>
@@ -349,13 +349,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="metadata" [(ngModel)]="metadata" [disabled]="!domain">
+                                <mat-select placeholder="metadata" [(ngModel)]="opSettings.metadataVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import technique metadata from. Leave blank to initialize without metadata.
                         </td>
                     </tr>
@@ -364,13 +364,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="states" [(ngModel)]="enabledness" [disabled]="!domain">
+                                <mat-select placeholder="states" [(ngModel)]="opSettings.enabledVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import enabled/disabled states from. Leave blank to initialize all to
                             enabled.
                         </td>
@@ -380,13 +380,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="filters" [(ngModel)]="filters" [disabled]="!domain">
+                                <mat-select placeholder="filters" [(ngModel)]="opSettings.filterVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import filters from. Leave blank to initialize with no filters.
                         </td>
                     </tr>
@@ -395,13 +395,13 @@
                     <tr>
                         <td>
                             <mat-form-field>
-                                <mat-select placeholder="legend" [(ngModel)]="legendItems" [disabled]="!domain">
+                                <mat-select placeholder="legend" [(ngModel)]="opSettings.legendVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of getLayers()" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </td>
-                        <td [ngClass]="{disabled: !domain}">
+                        <td [ngClass]="{disabled: !opSettings.domain}">
                             Choose which layer to import the legend from. Leave blank to initialize with an empty
                             legend.
                         </td>
@@ -409,7 +409,7 @@
                 </table>
 
                 <!-- Create -->
-                <button mat-button [disabled]="getScoreExpressionError() || !domain"
+                <button mat-button [disabled]="getScoreExpressionError() || !opSettings.domain"
                         (click)="layerByOperation(); showScoreVariables = false">Create
                 </button>
             </mat-expansion-panel>

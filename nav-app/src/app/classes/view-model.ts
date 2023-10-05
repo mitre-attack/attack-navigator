@@ -105,7 +105,6 @@ export class ViewModel {
     }
 
     private initTechniqueVMs(): void {
-        console.debug(this.name, "initializing technique VMs");
         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
             // init techniques
             for (let id of technique.get_all_technique_tactic_ids()) {
