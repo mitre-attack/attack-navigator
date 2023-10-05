@@ -59,9 +59,9 @@ export class TabsComponent implements AfterViewInit {
         legendVM: null
     }
 
-    public get filteredVMs(): ViewModel[] {
-        return this.viewModelsService.viewModels.filter((vm) => vm.domainVersionID == this.opSettings.domain);
-    }
+    public get latestDomains(): Domain[] {
+        return this.filterDomains(this.dataService.versions[0]);
+    } 
 
     constructor(private dialog: MatDialog, 
                 private viewModelsService: ViewModelsService, 
@@ -881,5 +881,10 @@ export class TabsComponent implements AfterViewInit {
             match = regex.exec(url);
         }
         return results;
+    }
+
+    /** Get all view models in the same domain/version */
+    public getFilteredVMs(): ViewModel[] {
+        return this.viewModelsService.viewModels.filter((vm) => vm.domainVersionID == this.opSettings.domain);
     }
 }

@@ -39,7 +39,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" [attr.fill]="activeTab === tab ? '#000000' : '#9aa0a6'"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </span>
             <!-- tab enumerator (for layer operations) -->
-            <span class="tabEnumerator" *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && isAlphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
+            <span class="tab-enumerator" *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && isAlphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
         </a>
         <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#9aa0a6"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -117,13 +117,11 @@
                 </mat-expansion-panel-header>
 
                 <!-- Domain buttons for latest version -->
-                <table class="btn-group" role="group">
-                    <ng-template ngFor let-domain [ngForOf]="filterDomains(dataService.versions[0])" let-domainIndex="index">
-                        <td>
-                            <button mat-raised-button (click)="newLayer(domain.id)">{{domain.name}}</button>
-                        </td>
-                    </ng-template>
-                </table>
+                <div class="button-group">
+                    <button *ngFor="let domain of latestDomains" mat-raised-button (click)="newLayer(domain.id)">
+                        {{domain.name}}
+                    </button>
+                </div>
 
                 <!-- More domain/version options -->
                 <mat-expansion-panel>
@@ -133,63 +131,63 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <table class="inputTable">
-                        <tr>
-                            <!-- Load data from different version -->
-                            <td class="width-lg">
-                                <!-- Choose version -->
-                                <mat-form-field>
-                                    <mat-select placeholder="Choose a version" [(ngModel)]="nVersion" required>
-                                        <mat-option [value]="null">none</mat-option>
-                                        <mat-option *ngFor="let nVersion of this.dataService.versions"
-                                                    [value]="nVersion">{{nVersion.name}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <!-- Choose domain -->
-                                <mat-form-field>
-                                    <mat-select placeholder="Choose a domain" [(ngModel)]="nDomain" [disabled]="!nVersion"
-                                                required>
-                                        <mat-option [value]="null">none</mat-option>
-                                        <mat-option *ngFor="let nDomain of filterDomains(nVersion)"
-                                                    [value]=nDomain>{{nDomain.name}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <div>
-                                    <em>* Official ATT&CK Versions prior to {{dataService.lowestSupportedVersion.name}} are not supported by Navigator v{{navVersion}}.</em>
-                                </div>
-                            </td>
+                    <div class="multi-column multi-column-container">
+                        <div class="lg-column">
+                            <!-- select a version -->
+                            <mat-form-field>
+                                <mat-select placeholder="Select a version" [(ngModel)]="nVersion" required>
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let nVersion of this.dataService.versions" [value]="nVersion">
+                                        {{nVersion.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!-- select a domain -->
+                            <mat-form-field>
+                                <mat-select placeholder="Select a domain" [(ngModel)]="nDomain" [disabled]="!nVersion" required>
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let nDomain of filterDomains(nVersion)" [value]=nDomain>
+                                        {{nDomain.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <!-- note -->
+                            <em>*Note: ATT&CK Versions prior to {{dataService.lowestSupportedVersion.name}} are not supported by Navigator v{{navVersion}}.</em>
+                        </div>
+                        <div class="or-column">
+                            <b>OR</b>
+                        </div>
+                        <div class="lg-column">
+                            <!-- bundle URL -->
+                            <mat-form-field>
+                                <input type="url" matInput placeholder="Collection or STIX bundle URL" [(ngModel)]="loadData.url"/>
+                            </mat-form-field>
+                            <!-- bundle version number -->
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="Bundle version number" [(ngModel)]="loadData.version"/>
+                                <mat-hint>ATT&CK version (e.g. 12)</mat-hint>
+                            </mat-form-field>
+                            <!-- bundle domain identifier -->
+                            <mat-form-field>
+                                <input type="text" matInput placeholder="Bundle domain" [(ngModel)]="loadData.identifier"/>
+                                <mat-hint>Domain identifier (e.g. defending-iaas)</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
 
-                            <td class="width-sm"><b style="font-size: 8pt">OR</b></td>
-    
-                            <!-- Load data from collection or STIX bundle URL -->
-                            <td class="width-lg">
-                                <mat-form-field>
-                                    <input type="url" matInput placeholder="Collection or STIX bundle URL" [(ngModel)]="loadData.url"/>
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input type="number" matInput placeholder="Version number" [(ngModel)]="loadData.version"/>
-                                    <mat-hint>ATT&CK version (e.g. 12)</mat-hint>
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input type="text" matInput placeholder="Domain" [(ngModel)]="loadData.identifier"/>
-                                    <mat-hint>Domain identifier (e.g. defending-iaas)</mat-hint>
-                                </mat-form-field>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="width-lg">
-                                <button style="margin-top: 20px" mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">
-                                    Create layer from Version
-                                </button>
-                            </td>
-                            <td class="width-sm"></td>
-                            <td class="width-lg">
-                                <button style="margin-top: 20px" mat-button [disabled]="!loadData.url || !loadData.version || !loadData.identifier" (click)="newLayerFromURL(loadData)">
-                                    Create layer from URL
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="multi-column multi-column-container">
+                        <div class="lg-column">
+                            <button style="margin-top: 20px" mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">
+                                Create layer from version
+                            </button>
+                        </div>
+                        <div class="sm-column"></div>
+                        <div class="lg-column">
+                            <button style="margin-top: 20px" mat-button [disabled]="!loadData.url || !loadData.version || !loadData.identifier" (click)="newLayerFromURL(loadData)">
+                                Create layer from bundle
+                            </button>
+                        </div>
+                    </div>
                 </mat-expansion-panel>
             </mat-expansion-panel>
 
@@ -203,29 +201,24 @@
                         Load a layer from your computer or a URL
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <table class="inputTable">
-                    <tr>
-                        <!-- Upload file from local -->
-                        <td>
-                            <button mat-button (click)="openUploadPrompt()">Upload from local</button>
-                            <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/></td>
 
-                        <td><b style="font-size: 8pt">OR</b></td>
-
-                        <!-- Upload layer via URL -->
-                        <td>
-                            <mat-form-field>
-                                <input type="text"
-                                       matInput
-                                       placeholder="Load from URL"
-                                       [(ngModel)]="loadURL"/>
-                                <button mat-button matSuffix mat-icon-button aria-label="go" *ngIf="loadURL"
-                                        (click)="loadLayerFromURL(loadURL, true)">>
-                                </button>
-                            </mat-form-field>
-                        </td>
-                    </tr>
-                </table>
+                <div class="multi-column multi-column-container">
+                    <div class="lg-column">
+                        <button mat-raised-button (click)="openUploadPrompt()">Upload from local</button>
+                        <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/>
+                    </div>
+                    <div class="or-column">
+                        <b>OR</b>
+                    </div>
+                    <div class="lg-column">
+                        <mat-form-field>
+                            <input type="text" matInput placeholder="Load from URL" [(ngModel)]="loadURL"/>
+                            <button mat-button matSuffix mat-icon-button aria-label="go" [disabled]="!loadURL" (click)="loadLayerFromURL(loadURL, true)">
+                                >
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
             </mat-expansion-panel>
 
             <!-- Create layer from other layers -->
@@ -233,185 +226,188 @@
                                  (closed)="activeTab.showScoreVariables = false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        Create Layer from other layers
+                        Create Layer from Other Layers
                     </mat-panel-title>
                     <mat-panel-description>
-                        Choose layers to inherit properties from
+                        Select layers to inherit properties from
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <table class="layerOpTable">
-                    <!-- Domain -->
-                    <tr>
-                        <td>
+                <div class="multi-column-container">
+                    <!-- domain -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="domain" [(ngModel)]="opSettings.domain" required>
-                                    <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let domain of this.dataService.domains"
-                                                [value]=domain.id>{{domain.name}} {{domain.version.name}}</mat-option>
+                                    <mat-option *ngFor="let domain of this.dataService.domains" [value]=domain.id>
+                                        {{domain.name}} {{domain.version.name}}
+                                    </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td>
-                            Choose the domain and version for the new layer. Only layers of the same domain and version
-                            can be merged.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center">
+                            <span>Select the domain and version for the new layer. Only layers of the same domain and version can be merged.</span>
+                        </div>
+                    </div>
 
-                    <!-- Score expression -->
-                    <tr>
-                        <td>
+                    <!-- score expression -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
-                                <input type="text"
-                                       matInput
-                                       placeholder="score expression"
-                                       [disabled]="!opSettings.domain"
-                                       [(ngModel)]="opSettings.scoreExpression"
-                                       (keyup)="opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase()"
-                                       style="letter-spacing: 2px"/>
+                                <input type="text" matInput placeholder="score expression" [disabled]="!opSettings.domain" [(ngModel)]="opSettings.scoreExpression" (keyup)="opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase()" style="letter-spacing: 2px"/>
                                 <mat-hint style="color: red" align="start">{{getScoreExpressionError()}}</mat-hint>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Use constants (numbers) and layer variables (yellow, above) to write an expression for the
-                            initial value of scores in the new layer. A full list of supported operations can be found
-                            <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>. Leave blank to
-                            initialize scores to 0. Here's a list of available layer variables:
-                            <ul *ngFor="let tab of layerTabs; let $i = index">
-                                <li *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!opSettings.domain || tab.domain === opSettings.domain) && isAlphabetical(indexToChar($i))"><span class="tab-enumerator">{{indexToChar($i)}}</span> ({{tab.title}})</li>
-                            </ul>
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>
+                                Use constants (numbers) and layer variables (yellow, above) to write an expression for the
+                                initial value of scores in the new layer. A full list of supported operations can be found
+                                <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>.
+                                Leave blank to initialize scores to 0. Here's a list of available layer variables:
+                                <ul *ngFor="let tab of layerTabs; let $i = index">
+                                    <li *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!opSettings.domain || tab.domain === opSettings.domain) && isAlphabetical(indexToChar($i))">
+                                        <span class="tab-enumerator-highlight">{{indexToChar($i)}}</span> ({{tab.title}})
+                                    </li>
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
 
-                    <!-- Gradient -->
-                    <tr>
-                        <td>
+                    <!-- gradient -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="gradient" [(ngModel)]="opSettings.gradientVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import the scoring gradient from. Leave blank to initialize with the
-                            default scoring gradient.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.</span>
+                        </div>
+                    </div>
 
-                    <!-- Coloring -->
-                    <tr>
-                        <td>
+                    <!-- coloring -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="coloring" [(ngModel)]="opSettings.coloringVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import manually assigned colors from. Leave blank to initialize with
-                            no colors.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import manually assigned colors from. Leave blank to initialize with no colors.</span>
+                        </div>
+                    </div>
 
-                    <!-- Comments -->
-                    <tr>
-                        <td>
+                    <!-- comments -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="comments" [(ngModel)]="opSettings.commentVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import comments from. Leave blank to initialize with no comments.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import comments from. Leave blank to initialize with no comments.</span>
+                        </div>
+                    </div>
 
-                    <!-- Links -->
-                    <tr>
-                        <td>
+                    <!-- links -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="links" [(ngModel)]="opSettings.linkVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import technique links from. Leave blank to initialize without links.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import technique links from. Leave blank to initialize without links.</span>
+                        </div>
+                    </div>
 
-                    <!-- Metadata -->
-                    <tr>
-                        <td>
+                    <!-- metadata -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="metadata" [(ngModel)]="opSettings.metadataVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import technique metadata from. Leave blank to initialize without metadata.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import technique metadata from. Leave blank to initialize without metadata.</span>
+                        </div>
+                    </div>
 
-                    <!-- States -->
-                    <tr>
-                        <td>
+                    <!-- enabled state -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="states" [(ngModel)]="opSettings.enabledVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import enabled/disabled states from. Leave blank to initialize all to
-                            enabled.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.</span>
+                        </div>
+                    </div>
 
-                    <!-- Filters -->
-                    <tr>
-                        <td>
+                    <!-- filters -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="filters" [(ngModel)]="opSettings.filterVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import filters from. Leave blank to initialize with no filters.
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import filters from. Leave blank to initialize with no filters.</span>
+                        </div>
+                    </div>
 
-                    <!-- Legend -->
-                    <tr>
-                        <td>
+                    <!-- legend -->
+                    <div class="multi-column">
+                        <div class="lg-column">
                             <mat-form-field>
                                 <mat-select placeholder="legend" [(ngModel)]="opSettings.legendVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let vm of filteredVMs" [value]=vm>{{vm.name}}</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]=vm>{{vm.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td [ngClass]="{disabled: !opSettings.domain}">
-                            Choose which layer to import the legend from. Leave blank to initialize with an empty
-                            legend.
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                            <span>Select which layer to import the legend from. Leave blank to initialize with an empty legend.</span>
+                        </div>
+                    </div>
 
-                <!-- Create -->
-                <button mat-button [disabled]="getScoreExpressionError() || !opSettings.domain"
-                        (click)="layerByOperation(); showScoreVariables = false">Create
-                </button>
+                    <!-- create -->
+                    <button mat-button [disabled]="getScoreExpressionError() || !opSettings.domain" (click)="layerByOperation(); showScoreVariables = false">
+                        Create layer
+                    </button>
+                </div>
             </mat-expansion-panel>
 
             <!-- Customized Navigator-->
@@ -425,109 +421,84 @@
                     </mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <table class="inputTable">
-                    <!-- Default layers -->
-                    <tr>
-                        <td><h1>Default Layers</h1></td>
-                        <td></td>
-                    </tr>
-                    <tr class="custom_nav_inputsection">
-                        <td>
-                            <ul class="layerLinks">
-                                <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index trackBy:trackByFunction">
-                                    <mat-form-field>
-                                        <input type="text" matInput
-                                               [placeholder]="'default layer URL ' + (i + 1)"
-                                               [(ngModel)]="layerLinkURLs[i]"/>
-                                        <button mat-button matSuffix mat-icon-button aria-label="remove"
-                                                (click)="removeLayerLink(i)">
-                                            x
+                <div class="multi-column-container">
+                    <div class="section">
+                        <!-- default layers-->
+                        <h2>Default Layers</h2>
+                        <div class="multi-column left-align">
+                            <div class="lg-column">
+                                <ul class="layerLinks">
+                                    <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index trackBy:trackByFunction">
+                                        <mat-form-field>
+                                            <input type="text" matInput [placeholder]="'default layer ' + (i + 1)" [(ngModel)]="layerLinkURLs[i]"/>
+                                            <button mat-button matSuffix mat-icon-button aria-label="remove" (click)="removeLayerLink(i)">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-form-field>
+                                    </li>
+                                    <li>
+                                        <button mat-raised-button (click)="addLayerLink()">
+                                            add {{layerLinkURLs.length > 0 ? "another" : "a"}} default layer
                                         </button>
-                                    </mat-form-field>
-                                </li>
-                                <li>
-                                    <button mat-button (click)="addLayerLink()">
-                                        add {{layerLinkURLs.length > 0 ? "another" : "a"}} layer link
-                                    </button>
-                                </li>
-                            </ul>
-                        </td>
-                        <td>Enter the URLs of layers hosted on the web. The custom navigator will open these layers by
-                            default.
-                        </td>
-                    </tr>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="spacer"></div>
+                            <div class="max-column">
+                                <span>
+                                    Enter the URLs of layers hosted on the web. The custom navigator will open these layers by default.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- Navigator Features -->
-                    <tr>
-                        <td><h1>Navigator Features</h1></td>
-                        <td></td>
-                    </tr>
-                    <ng-template ngFor let-featureItem [ngForOf]="customizedConfig" let-featureItemIndex="index">
-                        <!-- features -->
-                        <tr class="featureRow noselect" *ngIf="!featureItem.subfeatures"
-                            (click)="featureItem.enabled = !featureItem.enabled">
-                            <td class="featureRow-button">
-                                <ng-template [ngIf]="featureItem.enabled">
-                                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                    </svg>
-                                </ng-template>
-                                <ng-template [ngIf]="!featureItem.enabled">
-                                    <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-                                        <path d="M0 0h24v24H0z" fill="none"/>
-                                    </svg>
-                                </ng-template>
-                                {{featureItem.name.split("_").join(" ")}}
-                            </td>
-                            <td>{{featureItem.description}}</td>
-                        </tr>
-                        <!-- sub-featuers -->
-                        <tr *ngIf="featureItem.subfeatures">
-                            <td>
-                                <h2>{{featureItem.name.split("_").join(" ")}}</h2>
-                            </td>
-                            <td></td>
-                        </tr>
-                        <ng-template ngFor let-subfeature [ngForOf]="featureItem.subfeatures"
-                                     let-subfeatureIndex="index" let-last="last">
-                            <tr class="featureRow noselect" (click)="subfeature.enabled = !subfeature.enabled">
-                                <td class="featureRow-button subfeature" [class.last]="last" style="padding-left: 20px">
-                                    <ng-template [ngIf]="subfeature.enabled">
-                                        <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                        </svg>
-                                    </ng-template>
-                                    <ng-template [ngIf]="!subfeature.enabled">
-                                        <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-                                            <path d="M0 0h24v24H0z" fill="none"/>
-                                        </svg>
-                                    </ng-template>
-                                    {{subfeature.name.split("_").join(" ")}}
-                                </td>
-                                <td class="subfeature" [class.last]="last">{{subfeature.description}}</td>
-                            </tr>
-                        </ng-template>
-                    </ng-template>
-                </table>
+                    <div class="section">
+                        <!-- navigator features -->
+                        <h2>Navigator Features</h2>
+                        <ng-container *ngFor="let feature of customizedConfig">
+                            <div *ngIf="!feature.subfeatures" class="multi-column left-align feature-row">
+                                <div class="lg-column align-center">
+                                    <mat-checkbox [(ngModel)]="feature.enabled">
+                                        {{feature.name.split("_").join(" ")}}
+                                    </mat-checkbox>
+                                </div>
+                                <div class="spacer"></div>
+                                <div class="max-column">
+                                    <span>{{feature.description}}</span>
+                                </div>
+                            </div>
+                            <!-- subfeatures -->
+                            <div *ngIf="feature.subfeatures">
+                                <h3 class="capitalize">{{feature.name.split("_").join(" ")}}</h3>
+                                <div class="subfeature-section">
+                                    <ng-container *ngFor="let subfeature of feature.subfeatures">
+                                        <div class="multi-column left-align feature-row">
+                                            <div class="lg-column align-center">
+                                                <mat-checkbox [(ngModel)]="subfeature.enabled">
+                                                    {{subfeature.name.split("_").join(" ")}}
+                                                </mat-checkbox>
+                                            </div>
+                                            <div class="spacer"></div>
+                                            <div class="max-column">
+                                                {{subfeature.description}}
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
 
                 <!-- Custom Navigator URL -->
-                <div style="text-align: center; margin-top: 20px">
+                <div style="text-align: center;">
                     <mat-form-field id="layerlinkfield">
-                        <input id="customNavInput" type="text" matInput placeholder="custom navigator URL" readonly="readonly" (click)="selectLayerLink()" [value]="getLayerLink()"/>
-                        <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy">
-                            <span class="layerLinkCopy" matTooltip="copy" matTooltipPosition="right">
-                                <svg fill="currentColor" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                                </svg>
-                            </span>
+                        <input id="customNavInput" type="text" matInput placeholder="Custom Navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly>
+                        <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy" matTooltip="copy">
+                            <mat-icon class="layerLinkCopy">content_copy</mat-icon>
                         </button>
-                        <mat-hint *ngIf="copiedRecently">copied</mat-hint>
                     </mat-form-field>
+                    <mat-hint *ngIf="copiedRecently">copied</mat-hint>
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
