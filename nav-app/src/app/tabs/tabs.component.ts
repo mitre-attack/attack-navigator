@@ -28,7 +28,7 @@ export class TabsComponent implements AfterViewInit {
 
     public activeTab: Tab = null;
     public dropdownEnabled: string = '';
-    public layerTabs: Tab[] = []; // TODO: rename to 'tabs' or 'allTabs'?
+    public layerTabs: Tab[] = [];
     public adjustedHeaderHeight: number = 0;
     public navVersion = globals.nav_version;
     public safariDialogRef;
@@ -834,7 +834,7 @@ export class TabsComponent implements AfterViewInit {
      * Select the layer link field text
      */
     public selectLayerLink(): void {
-        let copyText = <HTMLInputElement>document.getElementById("layerLink");
+        let copyText = <HTMLInputElement>document.getElementById("customNavInput");
         console.debug('copied', copyText.value)
         copyText.select();
     }
