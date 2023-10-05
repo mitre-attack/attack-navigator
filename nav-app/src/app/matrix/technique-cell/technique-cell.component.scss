@@ -17,8 +17,6 @@
     min-height: $sizeunit;
     @media print {
         font-size: $sizeunit_print - 5px;
-        color: black;
-        background-color: white;
     }
 
     >div {
