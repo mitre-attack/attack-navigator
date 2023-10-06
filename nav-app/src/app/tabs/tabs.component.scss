@@ -446,8 +446,10 @@ input[type=file] {
 
 #layerlinkfield {
 	min-width: 35%;
-	color: rgba(0, 0, 0, .42);
 	#layerLink { cursor: pointer; }
+	.mat-input-element:disabled, .mat-hint {
+		@include adaptive-color-dark-only("color", #ffffffad);
+	}
 	.mat-form-field-underline {
 		background: none;
 		background-image: linear-gradient(to right, rgba(0, 0, 0, .42) 0, rgba(0, 0, 0, .42) 33%, transparent 0);

@@ -485,12 +485,12 @@
                 <!-- Custom Navigator URL -->
                 <div style="text-align: center;">
                     <mat-form-field id="layerlinkfield">
-                        <input id="customNavInput" type="text" matInput placeholder="Custom Navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly>
+                        <input id="customNavInput" type="text" matInput placeholder="Custom Navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly disabled>
                         <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy" matTooltip="copy">
                             <mat-icon>content_copy</mat-icon>
                         </button>
+                        <mat-hint *ngIf="copiedRecently">copied</mat-hint>
                     </mat-form-field>
-                    <mat-hint *ngIf="copiedRecently">copied</mat-hint>
                 </div>
             </mat-expansion-panel>
         </mat-accordion>
