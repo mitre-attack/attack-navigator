@@ -10,7 +10,7 @@ import { ViewModelsService } from "../services/viewmodels.service";
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from "../changelog/changelog.component";
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import * as is from 'is_js';
 import * as globals from '../utils/globals';
 
@@ -610,13 +610,9 @@ export class TabsComponent implements AfterViewInit {
      * @param {boolean}     defaultLayers is this a layer being loaded by default (from the config or query string)?
      *                      if so, will act as if the user decided not to upgrade the layer
      */
-    public upgradeLayer(oldViewModel: ViewModel, serialized: any, replace: boolean, defaultLayers: boolean = false): Promise<any> {
+    private upgradeLayer(oldViewModel: ViewModel, serialized: any, replace: boolean, defaultLayers: boolean = false): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (defaultLayers) {
-                // this is a default layer, do not upgrade
-                this.loadLayerFromVM(oldViewModel, serialized, replace);
-                resolve(null);
-            } else {
+            if (!defaultLayers) {
                 this.versionUpgradeDialog(oldViewModel).then((versions) => {
                     if (versions) {
                         // user upgraded to latest version
@@ -626,57 +622,60 @@ export class TabsComponent implements AfterViewInit {
                         newViewModel.loadVMData();
                         newViewModel.compareTo = oldViewModel;
                         this.openTab("new layer", newViewModel, true, replace, true, true);
-                        newViewModel.sidebarOpened = true;
-                        newViewModel.sidebarContentType = 'layerUpgrade'
+                        newViewModel.openSidebar('layerUpgrade');
                         newViewModel.selectTechniquesAcrossTactics = false;
         
                         // load layer version & latest ATT&CK version
-                        let loads: any = {
-                            old: this.dataService.loadDomainData(versions.oldID, true),
-                            new: this.dataService.loadDomainData(versions.newID, true)
-                        };
-                        let dataSubscription = forkJoin(loads).subscribe({
-                            next: () => {
+                        let loads: any = {};
+                        let dataSubscription: Subscription;
+                        if (!this.dataService.getDomain(versions.oldID).dataLoaded) loads.old = this.dataService.loadDomainData(versions.oldID, true);
+                        if (!this.dataService.getDomain(versions.newID).dataLoaded) loads.new = this.dataService.loadDomainData(versions.newID, true);
+                        dataSubscription = forkJoin(loads).subscribe({
+                            complete: () => {
                                 newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
                                 // load vm for uploaded layer
                                 oldViewModel.deserialize(serialized);
                                 oldViewModel.loadVMData();
                                 newViewModel.initCopyAnnotations();
                                 resolve(null);
-                            },
-                            complete: () => { dataSubscription.unsubscribe(); }
+                                if (dataSubscription) dataSubscription.unsubscribe();
+                            }
                         });
-                    } else {
-                        // user did not upgrade, keep the old version
-                        this.loadLayerFromVM(oldViewModel, serialized, replace);
-                        resolve(null);
+                    } else { // user did not upgrade, keep the old version
+                        this.openTab("new layer", oldViewModel, true, replace, true, true);
+                        if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
+                            this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                                oldViewModel.deserialize(serialized);
+                                oldViewModel.loadVMData();
+                                resolve(null);
+                            });
+                        } else {
+                            oldViewModel.deserialize(serialized);
+                            oldViewModel.loadVMData();
+                            resolve(null);
+                        }
                     }
                 }).catch( (err) => {
                     console.error(err);
                     alert("ERROR parsing file, check the javascript console for more information.");
                     resolve(null);
                 });
+            } else {
+                // default layer, do not upgrade
+                this.openTab("new layer", oldViewModel, true, replace, true, true);
+                if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
+                    this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                        oldViewModel.deserialize(serialized);
+                        oldViewModel.loadVMData();
+                        resolve(null);
+                    });
+                } else {
+                    oldViewModel.deserialize(serialized);
+                    oldViewModel.loadVMData();
+                    resolve(null);
+                }
             }
-        })
-    }
-
-    /**
-     * Load a layer with given view model
-     * @param {ViewModel}   viewModel layer viewmodel
-     * @param {any}         serialized the viewmodel's raw serialized JSON string
-     * @param {boolean}     replace replace if true, replace the current active tab with the layer
-     */
-    public loadLayerFromVM(viewModel: ViewModel, serialized: any, replace: boolean): void {
-        this.openTab("new layer", viewModel, true, replace, true, true);
-        if (!this.dataService.getDomain(viewModel.domainVersionID).dataLoaded) {
-            this.dataService.loadDomainData(viewModel.domainVersionID, true).then( () => {
-                viewModel.deserialize(serialized);
-                viewModel.loadVMData();
-            });
-        } else {
-            viewModel.deserialize(serialized);
-            viewModel.loadVMData();
-        }
+        });
     }
 
     /**

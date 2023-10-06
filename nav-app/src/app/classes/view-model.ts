@@ -85,6 +85,11 @@ export class ViewModel {
         this.legendColorPresets = this.backgroundPresets;
     }
 
+    public openSidebar(contentType: string) {
+        this.sidebarContentType = contentType;
+        this.sidebarOpened = true;
+    }
+
     public loadVMData(): void {
         let domain = this.dataService.getDomain(this.domainVersionID);
         if (domain.isCustom) {
