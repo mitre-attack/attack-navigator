@@ -41,7 +41,7 @@
         </nav>
     </div>
 
-    <div *ngIf="layerTabs.length == 0" class="newTab">
+    <div *ngIf="layerTabs.length == 0" class="new-tab">
         <!-- should never see this, but in case the config fails to load -->
         <button (click)="newBlankTab()">Start</button>
     </div>
@@ -65,7 +65,7 @@
 
 <!-- new tab template -->
 <ng-template [ngIf]="activeTab && !activeTab.isDataTable">
-    <div class="newTab">
+    <div class="new-tab">
         <div class="description">
             <div class="logo">
                 <h1><a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a></h1>
@@ -124,7 +124,7 @@
                     </mat-expansion-panel-header>
 
                     <div class="multi-column multi-column-container">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <!-- select a version -->
                             <mat-form-field>
                                 <mat-select placeholder="Select a version" [(ngModel)]="nVersion" required>
@@ -149,7 +149,7 @@
                         <div class="or-column">
                             <b>OR</b>
                         </div>
-                        <div class="lg-column">
+                        <div class="md-column">
                             <!-- bundle URL -->
                             <mat-form-field>
                                 <input type="url" matInput placeholder="Collection or STIX bundle URL" [(ngModel)]="loadData.url"/>
@@ -168,13 +168,13 @@
                     </div>
 
                     <div class="multi-column multi-column-container">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <button style="margin-top: 20px" mat-button [disabled]="!nVersion || !nDomain" (click)="newLayer(nDomain.id)">
                                 Create layer from version
                             </button>
                         </div>
                         <div class="sm-column"></div>
-                        <div class="lg-column">
+                        <div class="md-column">
                             <button style="margin-top: 20px" mat-button [disabled]="!loadData.url || !loadData.version || !loadData.identifier" (click)="newLayerFromURL(loadData)">
                                 Create layer from bundle
                             </button>
@@ -195,14 +195,14 @@
                 </mat-expansion-panel-header>
 
                 <div class="multi-column multi-column-container">
-                    <div class="lg-column">
+                    <div class="md-column">
                         <button mat-raised-button (click)="openUploadPrompt()">Upload from local</button>
                         <input id="uploader" type="file" style="display: none" (change)="loadLayerFromFile()"/>
                     </div>
                     <div class="or-column">
                         <b>OR</b>
                     </div>
-                    <div class="lg-column">
+                    <div class="md-column">
                         <mat-form-field>
                             <input type="text" matInput placeholder="Load from URL" [(ngModel)]="loadURL"/>
                             <button mat-button matSuffix mat-icon-button aria-label="go" [disabled]="!loadURL" (click)="loadLayerFromURL(loadURL, true)">
@@ -228,7 +228,7 @@
                 <div class="multi-column-container">
                     <!-- domain -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="domain" [(ngModel)]="opSettings.domain" required>
                                     <mat-option *ngFor="let domain of this.dataService.domains" [value]=domain.id>
@@ -238,21 +238,21 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center">
+                        <div class="lg-column align-center">
                             <span>Select the domain and version for the new layer. Only layers of the same domain and version can be merged.</span>
                         </div>
                     </div>
 
                     <!-- score expression -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <input type="text" matInput placeholder="score expression" [disabled]="!opSettings.domain" [(ngModel)]="opSettings.scoreExpression" (keyup)="opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase()" style="letter-spacing: 2px"/>
                                 <mat-hint style="color: red" align="start">{{getScoreExpressionError()}}</mat-hint>
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>
                                 Use constants (numbers) and layer variables (yellow, above) to write an expression for the
                                 initial value of scores in the new layer. A full list of supported operations can be found
@@ -269,7 +269,7 @@
 
                     <!-- gradient -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="gradient" [(ngModel)]="opSettings.gradientVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -278,14 +278,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.</span>
                         </div>
                     </div>
 
                     <!-- coloring -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="coloring" [(ngModel)]="opSettings.coloringVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -294,14 +294,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import manually assigned colors from. Leave blank to initialize with no colors.</span>
                         </div>
                     </div>
 
                     <!-- comments -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="comments" [(ngModel)]="opSettings.commentVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -310,14 +310,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import comments from. Leave blank to initialize with no comments.</span>
                         </div>
                     </div>
 
                     <!-- links -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="links" [(ngModel)]="opSettings.linkVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -326,14 +326,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import technique links from. Leave blank to initialize without links.</span>
                         </div>
                     </div>
 
                     <!-- metadata -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="metadata" [(ngModel)]="opSettings.metadataVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -342,14 +342,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import technique metadata from. Leave blank to initialize without metadata.</span>
                         </div>
                     </div>
 
                     <!-- enabled state -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="states" [(ngModel)]="opSettings.enabledVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -358,14 +358,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.</span>
                         </div>
                     </div>
 
                     <!-- filters -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="filters" [(ngModel)]="opSettings.filterVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -374,14 +374,14 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import filters from. Leave blank to initialize with no filters.</span>
                         </div>
                     </div>
 
                     <!-- legend -->
                     <div class="multi-column">
-                        <div class="lg-column">
+                        <div class="md-column">
                             <mat-form-field>
                                 <mat-select placeholder="legend" [(ngModel)]="opSettings.legendVM" [disabled]="!opSettings.domain">
                                     <mat-option [value]="null">none</mat-option>
@@ -390,7 +390,7 @@
                             </mat-form-field>
                         </div>
                         <div class="spacer"></div>
-                        <div class="max-column align-center" [ngClass]="{disabled: !opSettings.domain}">
+                        <div class="lg-column align-center" [ngClass]="{disabled: !opSettings.domain}">
                             <span>Select which layer to import the legend from. Leave blank to initialize with an empty legend.</span>
                         </div>
                     </div>
@@ -418,8 +418,8 @@
                         <!-- default layers-->
                         <h2>Default Layers</h2>
                         <div class="multi-column left-align">
-                            <div class="lg-column">
-                                <ul class="layerLinks">
+                            <div class="md-column">
+                                <ul class="layer-links">
                                     <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index trackBy:trackByFunction">
                                         <mat-form-field>
                                             <input type="text" matInput [placeholder]="'default layer ' + (i + 1)" [(ngModel)]="layerLinkURLs[i]"/>
@@ -436,7 +436,7 @@
                                 </ul>
                             </div>
                             <div class="spacer"></div>
-                            <div class="max-column">
+                            <div class="lg-column">
                                 <span>
                                     Enter the URLs of layers hosted on the web. The custom navigator will open these layers by default.
                                 </span>
@@ -449,13 +449,13 @@
                         <h2>Navigator Features</h2>
                         <ng-container *ngFor="let feature of customizedConfig">
                             <div *ngIf="!feature.subfeatures" class="multi-column left-align feature-row">
-                                <div class="lg-column align-center">
+                                <div class="md-column align-center">
                                     <mat-checkbox [(ngModel)]="feature.enabled">
                                         {{feature.name.split("_").join(" ")}}
                                     </mat-checkbox>
                                 </div>
                                 <div class="spacer"></div>
-                                <div class="max-column">
+                                <div class="lg-column">
                                     <span>{{feature.description}}</span>
                                 </div>
                             </div>
@@ -465,13 +465,13 @@
                                 <div class="subfeature-section">
                                     <ng-container *ngFor="let subfeature of feature.subfeatures">
                                         <div class="multi-column left-align feature-row">
-                                            <div class="lg-column align-center">
+                                            <div class="md-column align-center">
                                                 <mat-checkbox [(ngModel)]="subfeature.enabled">
                                                     {{subfeature.name.split("_").join(" ")}}
                                                 </mat-checkbox>
                                             </div>
                                             <div class="spacer"></div>
-                                            <div class="max-column">
+                                            <div class="lg-column">
                                                 {{subfeature.description}}
                                             </div>
                                         </div>
@@ -487,7 +487,7 @@
                     <mat-form-field id="layerlinkfield">
                         <input id="customNavInput" type="text" matInput placeholder="Custom Navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly>
                         <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy" matTooltip="copy">
-                            <mat-icon class="layerLinkCopy">content_copy</mat-icon>
+                            <mat-icon>content_copy</mat-icon>
                         </button>
                     </mat-form-field>
                     <mat-hint *ngIf="copiedRecently">copied</mat-hint>

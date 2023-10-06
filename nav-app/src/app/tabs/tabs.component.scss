@@ -6,16 +6,10 @@
 
 .tabs-container {
 	display: flex;
-
-	.mat-ink-bar {
-		display: none;
-	}
-
-	.mat-tab-nav-bar,
-	.mat-tab-header {
+	.mat-ink-bar { display: none; }
+	.mat-tab-nav-bar, .mat-tab-header {
 		border-bottom: none !important;
 	}
-
 	.tabs .tab-title.active {
 		opacity: 1 !important;
 		@include adaptive-color("color", black, on-color(dark));
@@ -23,7 +17,6 @@
 		@include adaptive-color("background-color", color(panel-dark), color(dark-2));
 		@include adaptive-color-dark-only("border", none);
 	}
-
 	.tabs .tab-title:not(.active) {
 		@include adaptive-color("border-color", color(panel-dark), color(dark-4));
 		border-width: 0 1px 0 0;
@@ -38,36 +31,25 @@
 
 .tabs {
 	.tab-title {
-		//non-datatable tab names
+		// non-datatable tab names
 		@include adaptive-color("color", black, white);
 		font-size: 14px;
 		text-decoration: none;
 		display: flex;
 		justify-content: space-around;
 
-		&:hover,
-		&:focus {
-
-			//when the mouse is over a non-selected tab
+		&:hover, &:focus {
+			// when the mouse is over a non-selected tab
 			&:not(.active) {
 				text-decoration: none;
 				@include adaptive-color("color", black, color(dark-link));
 				@include adaptive-color("opacity", 0.6, 0.8);
 				@include adaptive-color("background-color", color(panel-light), color(dark-2));
-
-				&:not(.add-tab) {
-					//add tab should not behave like other tabs
-					border-color: color(panel-dark); //black border bottom when hovered
-				}
-
-				svg {
-					@include adaptive-color("fill", black, color(dark-link));
-				}
+				&:not(.add-tab) { border-color: color(panel-dark); }
 			}
 		}
 
-
-		//tab number that shows up when tab is highlighted
+		// tab number for layer operations
 		.tab-enumerator {
 			@include adaptive-color-dark-only("color", color(dark-1));
 			position: absolute;
@@ -81,33 +63,21 @@
 		&.active {
 			@include adaptive-color("background-color", color(panel-dark), lighten(color(dark), 1%));
 			@include adaptive-color("color", color(tab-text-color), color(panel-dark));
-			cursor: default; //cursor behavior
-			border: 1px solid transparent; //override border highlighting on hover
+			cursor: default;
+			border: 1px solid transparent; // override border highlighting on hover
 		}
 	}
 
 	.add-tab {
 		min-width: fit-content;
-
+		.mat-icon { color: gray; }
 		&:hover {
 			@include adaptive-color("background-color", #f1f1f1, color(dark-2));
 			border-color: #ddd #ddd #f1f1f1 #ddd;
-			.mat-icon {
+			.mat-icon { // override mat icon color on hover
 				@include adaptive-color("color", black, white);
 			}
 		}
-		.mat-icon { color: gray; }
-	}
-
-	&:before {
-		display: table;
-		content: " ";
-	}
-
-	&:after {
-		display: table;
-		clear: both;
-		content: " ";
 	}
 }
 
@@ -124,7 +94,7 @@
 	}
 }
 
-.newTab {
+.new-tab {
 	@include adaptive-color("background-color", color(light), color(dark-1));
 	@include adaptive-color("color", on-color(light), on-color(dark));
 	@include adaptive-color("border-color", color(panel-dark), color(dark-1));
@@ -135,7 +105,6 @@
 	overflow-y: scroll;
 	box-sizing: border-box;
 	position: absolute;
-	// text-align: center;
 	padding: 5% 20%;
 
 	.description {
@@ -151,14 +120,12 @@
 
 	.logo {
 		text-align: center;
-
+		font-size: 1em;
 		a {
 			text-decoration: none;
 			color: rgb(176, 26, 26);
 			font-weight: 500;
 		}
-
-		font-size: 1em;
 	}
 }
 
@@ -181,17 +148,14 @@
 		@include adaptive-color-dark-only("color", on-color(dark-3));
 	}
 
-	.mat-expansion-panel-header,
-	button.mat-raised-button {
+	.mat-expansion-panel-header, button.mat-raised-button {
 		// nested items inside parent expansion panel
 		@include adaptive-color-dark-only("background-color", color(dark-2));
 		@include adaptive-color-dark-only("color", on-color(dark-3));
 	}
 
 	.mat-expansion-panel-content {
-
-		.mat-expansion-panel-header,
-		.mat-raised-button:not([class*=mat-elevation-z]) {
+		.mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
 			@include adaptive-color-dark-only("border-top", 1px solid #ffffff21);
 		}
 	}
@@ -210,7 +174,6 @@
 
 	.mat-form-field {
 		&:not(.mat-form-field-disabled) {
-
 			.mat-form-field-label,
 			.mat-select-arrow,
 			.mat-select-value-text,
@@ -219,11 +182,8 @@
 			}
 		}
 
-		&.mat-form-field-disabled,
-		.layerOpTable td.disabled {
-
-			.mat-form-field-label,
-			.mat-select-arrow {
+		&.mat-form-field-disabled, .layerOpTable td.disabled {
+			.mat-form-field-label, .mat-select-arrow {
 				@include adaptive-color-dark-only("color", darken(on-color(dark-1), 25%));
 			}
 		}
@@ -254,22 +214,16 @@
 		}
 	}
 
-	.inputTable tr.featureRow:hover {
-		@include adaptive-color-dark-only("background-color", color(dark-3));
-	}
-
 	a {
 		@include adaptive-color-dark-only("color", color(dark-link));
 	}
 
-	a:visited,
-	a:active {
+	a:visited, a:active {
 		@include adaptive-color-dark-only("color", color(dark-link-active));
 	}
 }
 
-.headers-align .mat-expansion-panel-header-title,
-.headers-align .mat-expansion-panel-header-description {
+.headers-align .mat-expansion-panel-header-title, .headers-align .mat-expansion-panel-header-description {
 	@include adaptive-color("color", on-color(light), darken(on-color(dark), 10%));
 	flex-basis: 0;
 }
@@ -284,16 +238,14 @@ input[type=file] {
 	padding: 5px;
 	margin: 5px;
 	width: 300px;
-	// border: 1px solid black;
 	background-color: color(panel-light);
 	border-radius: 0px;
-
 	&:hover {
 		background-color: color(panel-dark);
 	}
 }
 
-//button on new tab page
+// help button on new tab page
 .help-links-container {
 	display: flex;
 	justify-content: center;
@@ -301,13 +253,13 @@ input[type=file] {
 	width: 100%;
 }
 
+// theme button on new tab page
 .theme-select-container {
 	.mat-select {
 		position: absolute;
 		margin-left: -85px;
 		top: 20px;
 	}
-
 	.mat-select-arrow-wrapper {
 		display: none;
 	}
@@ -391,7 +343,6 @@ input[type=file] {
 			background-color: transparent;
 			text-align: right;
 			padding-bottom: 5px;
-
 			&:hover {
 				text-decoration: underline;
 				cursor: pointer;
@@ -411,11 +362,7 @@ input[type=file] {
 		font-size: 14px;
 		font-family: Roboto, "Helvetica Neue", sans-serif;
 		cursor: initial;
-
-		.bannerContent {
-			padding-right: 15px;
-		}
-
+		.bannerContent { padding-right: 15px; }
 		.bannerLinks {
 			display: flex;
 			align-items: center;
@@ -423,20 +370,12 @@ input[type=file] {
 			padding-left: 15px;
 			cursor: initial;
 		}
-
-		.helpIcon {
-			height: 18px;
-			padding-left: 15px;
-		}
-
 		a {
 			display: inline;
 			color: on-color(primary);
 			text-decoration-color: on-color(primary);
 		}
-
-		a:hover,
-		.helpIcon:hover {
+		a:hover, .helpIcon:hover {
 			color: color(panel-dark);
 			opacity: 0.8;
 		}
@@ -453,19 +392,18 @@ input[type=file] {
 	}
 }
 
+.multi-column-container { padding: 0 24px; }
 .multi-column {
 	display: flex;
 	&:not(.left-align) {
 		justify-content: center;
 		align-items: center;
 	}
-	div.disabled {
-		color: gray;
-	}
+	div.disabled { color: gray; }
 	.mat-form-field { width: 100%; }
 	.mat-raised-button { width: 100%; }
-	.lg-column { width: 40%; }
-	.max-column { width: 100%; }
+	.md-column { width: 40%; }
+	.lg-column { width: 100%; }
 	.spacer { width: 10%; }
 	.sm-column { width: 20%; }
 	.or-column {
@@ -496,14 +434,8 @@ input[type=file] {
 	display: flex;
 	align-items: center;
 }
-
-.section {
-	padding-bottom: 12px;
-}
-
-.capitalize {
-	text-transform: capitalize;
-}
+.section { padding-bottom: 12px; }
+.capitalize { text-transform: capitalize; }
 
 .subfeature-section {
 	padding-left: 16px;
@@ -512,14 +444,10 @@ input[type=file] {
 	margin-bottom: 5px;
 }
 
-.multi-column-container {
-	padding: 0 24px;
-}
-
 #layerlinkfield {
 	min-width: 35%;
 	color: rgba(0, 0, 0, .42);
-
+	#layerLink { cursor: pointer; }
 	.mat-form-field-underline {
 		background: none;
 		background-image: linear-gradient(to right, rgba(0, 0, 0, .42) 0, rgba(0, 0, 0, .42) 33%, transparent 0);
@@ -528,18 +456,9 @@ input[type=file] {
 		@include adaptive-color-dark-only("background", none);
 		@include adaptive-color-dark-only("border-bottom", white dotted 2px);
 	}
-
-	#layerLink {
-		cursor: pointer;
-	}
 }
 
-.layerLinkCopy svg {
-	@include adaptive-color-dark-only("color", white);
-	width: 14px;
-}
-
-.layerLinks {
+.layer-links {
 	list-style: none;
 	padding-left: 0;
 	margin: 0;
@@ -547,13 +466,5 @@ input[type=file] {
 
 .safari-warning {
 	text-align: center;
-
-	h3 {
-		color: red;
-	}
-}
-
-.theme-selected {
-	text-decoration: underline !important;
-	font-weight: bold;
+	h3 { color: red; }
 }
