@@ -1,53 +1,50 @@
 <div [style.margin-top]="adjustedHeaderHeight+'px'" class="header-wrapper">
-<!-- Banner -->
-<div *ngIf="hasFeature('header') && bannerContent" class="header">
-    <div class="banner">
-        <span class="bannerContent" role="alert" [innerHTML]="bannerContent"></span>
-        <div [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'" class="bannerLinks">
-            <div>
-                <a href="http://attack.mitre.org">MITRE ATT&CK&reg; Navigator</a>
+    <!-- banner -->
+    <div *ngIf="hasFeature('header') && bannerContent" class="header">
+        <div class="banner">
+            <span class="bannerContent" role="alert" [innerHTML]="bannerContent"></span>
+            <div class="bannerLinks">
+                <a href="http://attack.mitre.org">MITRE ATT&CK&reg;</a>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Header/Help -->
-<div *ngIf="hasFeature('header') && !bannerContent" [style.margin-bottom]="hasFeature('tabs') ? '0px' : '15px'"
-     class="header help-header">
-    <div *ngIf="hasFeature('tabs')" class="help-button" [ngClass]="{'help-dropdown-open' : showHelpDropDown}"
-         matTooltip="help" (click)="showHelpDropDown = !showHelpDropDown">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#9aa0a6"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+    <!-- help/changelog -->
+    <div class="header help-header">
+        <div class="help-button" [ngClass]="{'help-dropdown-open' : showHelpDropDown}" matTooltip="help" (click)="showHelpDropDown = !showHelpDropDown">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#9aa0a6"><path d="M0 0h24v24H0z" fill="none"/><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+        </div>
+        <div class="dropdown-container" *ngIf="showHelpDropDown && adjustedHeaderHeight >= 0">
+            <button (click)="openDialog('help')">help</button>
+            <button (click)="openDialog('changelog')">changelog</button>
+        </div>
     </div>
-    <div class="dropdown-container" *ngIf="showHelpDropDown && adjustedHeaderHeight >= 0">
-        <button (click)="openDialog('help')">help</button>
-        <button (click)="openDialog('changelog')">changelog</button>
+
+    <!-- tabs -->
+    <div class="tabs-container scroll">
+        <nav mat-tab-nav-bar class="tabs">
+            <!-- open tabs -->
+            <a *ngFor="let tab of layerTabs; let $i = index" mat-tab-link class="tab-title" [class.active]="activeTab === tab" (click)="handleTabClick(tab)" [active]="activeTab === tab">
+                {{tab.isDataTable ? tab.viewModel.name : tab.title}}
+                <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">
+                    <mat-icon>close</mat-icon>
+                </span>
+                <!-- tab enumerator (for layer operations) -->
+                <span class="tab-enumerator" *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && isAlphabetical(indexToChar($i))">
+                    {{indexToChar($i)}}
+                </span>
+            </a>
+            <!-- create a new tab -->
+            <a mat-tab-link class="add-tab" *ngIf="hasFeature('tabs') && layerTabs.length < 12" (click)="newBlankTab()">
+                <mat-icon>add</mat-icon>
+            </a>
+        </nav>
     </div>
-</div>
 
-
-<!-- Tabs display -->
-<div class="tabs-container scroll">
-    <nav mat-tab-nav-bar class="tabs">
-        <a *ngFor="let tab of layerTabs; let $i = index" mat-tab-link class="tab-title" [class.active]="activeTab === tab" (click)="handleTabClick(tab)" [active]="activeTab === tab">
-            {{tab.isDataTable ? tab.viewModel.name : tab.title}}
-            <span class="tab-close" *ngIf="tab.isCloseable" (click)="closeTab(tab)">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" [attr.fill]="activeTab === tab ? '#000000' : '#9aa0a6'"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </span>
-            <!-- tab enumerator (for layer operations) -->
-            <span class="tab-enumerator" *ngIf="activeTab.showScoreVariables && tab.isDataTable && (!domain || tab.domain === domain) && isAlphabetical(indexToChar($i))">{{indexToChar($i)}}</span>
-        </a>
-        <a mat-tab-link class="addTab" *ngIf="layerTabs.length < 10" (click)="newBlankTab()">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#9aa0a6"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        </a>
-    </nav>
-</div>
-
-
-<div *ngIf="layerTabs.length == 0" class="newTab">
-    <!-- you shouldn't ever see this, but just in case -->
-    <button (click)="newBlankTab()">Start</button>
-</div>
-
+    <div *ngIf="layerTabs.length == 0" class="newTab">
+        <!-- should never see this, but in case the config fails to load -->
+        <button (click)="newBlankTab()">Start</button>
+    </div>
 </div>
 
 
@@ -66,7 +63,7 @@
     </div>
 </ng-template>
 
-<!-- New tab template -->
+<!-- new tab template -->
 <ng-template [ngIf]="activeTab && !activeTab.isDataTable">
     <div class="newTab">
         <div class="description">
@@ -500,6 +497,7 @@
     </div>
 </ng-template>
 
+<!-- data table tab template -->
 <ng-template [ngIf]="activeTab && activeTab.isDataTable">
     <DataTable [viewModel]="activeTab.viewModel" [currentDropdown]="dropdownEnabled" (dropdownChange)="dropdownEnabled = $event" (onScroll)="adjustHeader($event)"></DataTable>
 </ng-template>

@@ -55,7 +55,7 @@
 				@include adaptive-color("opacity", 0.6, 0.8);
 				@include adaptive-color("background-color", color(panel-light), color(dark-2));
 
-				&:not(.addTab) {
+				&:not(.add-tab) {
 					//add tab should not behave like other tabs
 					border-color: color(panel-dark); //black border bottom when hovered
 				}
@@ -86,13 +86,17 @@
 		}
 	}
 
-	.addTab {
+	.add-tab {
 		min-width: fit-content;
 
 		&:hover {
 			@include adaptive-color("background-color", #f1f1f1, color(dark-2));
 			border-color: #ddd #ddd #f1f1f1 #ddd;
+			.mat-icon {
+				@include adaptive-color("color", black, white);
+			}
 		}
+		.mat-icon { color: gray; }
 	}
 
 	&:before {
@@ -105,27 +109,18 @@
 		clear: both;
 		content: " ";
 	}
-
-	svg {
-		@include adaptive-color("fill", black, color(panel-dark));
-		width: 17px;
-	}
-
-	.tab-title:hover svg,
-	.addTab:hover svg {
-		@include adaptive-color("fill", black, color(dark-link));
-	}
 }
 
-// close tab button
 .tab-close {
+	display: flex;
+	align-items: center;
 	margin-left: 10px;
 	color: gray;
 	text-align: right;
 	cursor: pointer;
-
-	&:hover {
-		@include adaptive-color("color", black, white);
+	.mat-icon {
+		transform: scale(.75);
+		&:hover { @include adaptive-color("color", black, white); }
 	}
 }
 
