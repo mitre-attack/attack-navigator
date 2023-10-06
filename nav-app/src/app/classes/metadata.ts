@@ -3,16 +3,13 @@ export class Metadata {
     public value: string;
     public divider: boolean;
 
-    constructor() {
-        // intentionally left blank
-    }
-
     public serialize(): object {
         return this.name && this.value ? {name: this.name, value: this.value} : {divider: this.divider};
     }
 
     public deserialize(rep: any): void {
         let obj = (typeof(rep) == "string")? JSON.parse(rep) : rep;
+
         if ("name" in obj) { // name & value object
             if (typeof(obj.name) === "string") this.name = obj.name;
             else console.error("TypeError: Metadata field 'name' is not a string");

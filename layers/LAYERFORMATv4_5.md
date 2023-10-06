@@ -1,5 +1,5 @@
 # ATT&CK® Navigator Layer File Format Definition
-This document describes **Version 4.5** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
+This document describes **Version 4.5** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file. Users are now able to download all open layers into a single file. These layers will be stored in a list.
 
 ## Property Table
 
@@ -103,7 +103,7 @@ Note: Divider objects can be used alongside Link objects.
 | expandedSubtechniques | String | No | "none" | How to display the subtechniques. Either "none", "all" or "annotated" |
 
 ## Example
-The following example illustrates the layer file format:
+The following example illustrates the layer file format of a single layer:
 ```json
 {
     "name": "example layer",
@@ -224,4 +224,264 @@ The following example illustrates the layer file format:
         }
     ]
 }
+```
+
+The following example illustrates the layer file format of multiple layers. The layers are stored in a list:
+```json
+[
+    {
+        "name": "example layer",
+        "versions": {
+            "attack": "13",
+            "navigator": "4.8.2",
+            "layer": "4.5"
+        },
+        "domain": "enterprise-attack",
+        "description": "hello, world",
+        "filters": {
+            "platforms": [
+                "Windows",
+                "macOS"
+            ]
+        },
+        "sorting": 2,
+        "layout": {
+            "layout": "side",
+            "showName": true,
+            "showID": false,
+            "showAggregateScores": true,
+            "countUnscored": true,
+            "aggregateFunction": "average"
+        },
+        "hideDisabled": false,
+        "techniques": [
+            {
+                "techniqueID": "T1110",
+                "score": 0,
+                "color": "#fd8d3c",
+                "comment": "This is a comment for technique T1110",
+                "showSubtechniques": true
+            },
+            {
+                "techniqueID": "T1110.001",
+                "score": 100,
+                "comment": "This is a comment for T1110.001 - the first subtechnique of technique T1110.001",
+                "links": [
+                    {
+                        "label": "Navigator GitHub",
+                        "url": "https://github.com/mitre-attack/attack-navigator"
+                    }
+                ]
+            },
+            {
+                "techniqueID": "T1134",
+                "tactic": "defense-evasion",
+                "score": 75,
+                "comment": "this is a comment for T1134 which is only applied on the defense-evasion tactic"
+            },
+            {
+                "techniqueID": "T1078",
+                "tactic": "discovery",
+                "enabled": false
+            },
+            {
+                "techniqueID": "T1053",
+                "tactic": "privilege-escalation",
+                "metadata": [
+                    { 
+                        "name": "T1053 metadata1", 
+                        "value": "T1053 metadata1 value" 
+                    },
+                    {
+                        "divider": true
+                    },
+                    { 
+                        "name": "T1053 metadata2", 
+                        "value": "T1053 metadata2 value" 
+                    }
+                ]
+            },
+            {
+                "techniqueID": "T1098",
+                "tactic": "persistence",
+                "score": 80,
+                "links": [
+                    {
+                        "label": "Navigator GitHub",
+                        "url": "https://github.com/mitre-attack/attack-navigator"
+                    }
+                ]
+            }
+        ],
+        "gradient": {
+            "colors": [
+                "#ff6666",
+                "#ffe766",
+                "#8ec843"
+            ],
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "legendItems": [
+            {
+                "label": "Legend Item Label",
+                "color": "#FF00FF"
+            }
+        ],
+        "showTacticRowBackground": true,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": false,
+        "selectSubtechniquesWithParent": false,
+        "selectVisibleTechniques": false,
+        "metadata": [
+            { 
+                "name": "layer metadata 1", 
+                "value": "layer metadata 1 value" 
+            },
+            {
+                "divider": true
+            },
+            { 
+                "name": "layer metadata 2", 
+                "value": "layer metadata 2 value" 
+            }
+        ]
+    },
+    {
+        "name": "example layer",
+        "versions": {
+            "attack": "13",
+            "navigator": "4.8.2",
+            "layer": "4.5"
+        },
+        "domain": "enterprise-attack",
+        "description": "hello, world",
+        "filters": {
+            "platforms": [
+                "Windows",
+                "macOS"
+            ]
+        },
+        "sorting": 2,
+        "layout": {
+            "layout": "side",
+            "aggregateFunction": "average",
+            "showID": false,
+            "showName": true,
+            "showAggregateScores": true,
+            "countUnscored": true
+        },
+        "hideDisabled": false,
+        "techniques": [
+            {
+                "techniqueID": "T1110",
+                "tactic": "credential-access",
+                "score": 0,
+                "color": "#fd8d3c",
+                "comment": "This is a comment for technique T1110",
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1110.001",
+                "tactic": "credential-access",
+                "score": 100,
+                "color": "",
+                "comment": "This is a comment for T1110.001 - the first subtechnique of technique T1110.001",
+                "enabled": true,
+                "metadata": [],
+                "links": [
+                    {
+                        "label": "Navigator GitHub",
+                        "url": "https://github.com/mitre-attack/attack-navigator"
+                    }
+                ],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1134",
+                "tactic": "defense-evasion",
+                "score": 75,
+                "color": "",
+                "comment": "this is a comment for T1134 which is only applied on the defense-evasion tactic",
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1078",
+                "tactic": "discovery",
+                "color": "",
+                "comment": "",
+                "enabled": false,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1098",
+                "tactic": "persistence",
+                "score": 80,
+                "color": "",
+                "comment": "",
+                "enabled": true,
+                "metadata": [],
+                "links": [
+                    {
+                        "label": "Navigator GitHub",
+                        "url": "https://github.com/mitre-attack/attack-navigator"
+                    }
+                ],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1497",
+                "tactic": "discovery",
+                "color": "",
+                "comment": "",
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": true
+            }
+        ],
+        "gradient": {
+            "colors": [
+                "#ff6666ff",
+                "#ffe766ff",
+                "#8ec843ff"
+            ],
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "legendItems": [
+            {
+                "color": "#FF00FF",
+                "label": "Legend Item Label"
+            }
+        ],
+        "metadata": [
+            {
+                "name": "layer metadata 1",
+                "value": "layer metadata 1 value"
+            },
+            {
+                "divider": true
+            },
+            {
+                "name": "layer metadata 2",
+                "value": "layer metadata 2 value"
+            }
+        ],
+        "links": [],
+        "showTacticRowBackground": true,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": false,
+        "selectSubtechniquesWithParent": false,
+        "selectVisibleTechniques": false
+    }
+]
 ```
