@@ -61,37 +61,26 @@ export class ViewModelsService {
 
     /**
      * Layer combination operation
-     * @param  domainVersionID  domain & version ID
-     * @param  scoreExpression  math expression of score expression
      * @param  scoreVariables   variables in math expression, mapping to viewmodel they correspond to
-     * @param  comments         what viewmodel to inherit comments from
-     * @param  links            what viewmodel to inherit links from
-     * @param  metadata         what viewmodel to inherit technique metadata from
-     * @param  gradient         what viewmodel to inherit gradient from
-     * @param  coloring         what viewmodel to inherit manual colors from
-     * @param  enabledness      what viewmodel to inherit state from
-     * @param  layerName        new layer name
-     * @param  filters          viewmodel to inherit filters from
-     * @param  legendItems      viewmodel to inherit legend items from
+     * @param  layerName        the name of the new layer
+     * @param  opSettings       the settings for view model inheritance
+     *      - `domain`: the domain & version
+     *      - `gradientVM`: the view model to inherit gradient from
+     *      - `coloringVM`: the view model to inherit manual colors from
+     *      - `commentVM`: the view model to inherit comments from
+     *      - `linkVM`: the view model to inherit links from
+     *      - `metadataVM`: the view model to inherit metadata from
+     *      - `enabledVM`: the view model to inherit enabled state from
+     *      - `filterVM`: the view model to inherit filters from
+     *      - `scoreExpression`: math equation of score expression
+     *      - `legendVM`: the view model to inherit legend items from
      * @return                  new viewmodel inheriting above properties
      */
-    public layerLayerOperation(
-            domainVersionID: string, 
-            scoreExpression: string, 
-            scoreVariables: Map<string, ViewModel>, 
-            comments: ViewModel, 
-            links: ViewModel, 
-            metadata: ViewModel, 
-            gradient: ViewModel, 
-            coloring: ViewModel, 
-            enabledness: ViewModel, 
-            layerName: string, 
-            filters: ViewModel, 
-            legendItems: ViewModel): ViewModel {
-        let newViewModel = new ViewModel("layer by operation", "vm" + this.getNonce(), domainVersionID, this.dataService);
+    public layerOperation(scoreVariables: Map<string, ViewModel>, layerName: string, opSettings: any): ViewModel {
+        let newViewModel = new ViewModel("layer by operation", "vm" + this.getNonce(), opSettings.domain, this.dataService);
 
-        if (scoreExpression) {
-            scoreExpression = scoreExpression.toLowerCase(); // should be enforced by input, but just in case
+        if (opSettings.scoreExpression) {
+            opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase(); // should be enforced by input, but just in case
             let minScore = Infinity;
             let maxScore = -Infinity;
 
@@ -106,7 +95,7 @@ export class ViewModelsService {
             // attempt to evaluate without a scope to catch the case of a static assignment
             try {
                 // evaluate with an empty scope
-                let result = evaluate(scoreExpression, {});
+                let result = evaluate(opSettings.scoreExpression, {});
 
                 // if it didn't except after this, it evaluated to a single result
                 console.debug("score expression evaluated to single result to be applied to all techniques");
@@ -136,10 +125,7 @@ export class ViewModelsService {
                             misses++;
                         } else { // technique exists
                             let score = vm.getTechniqueVM_id(techniqueID).score;
-                            if (score == "") {
-                                scoreValue = 0;
-                                misses++;
-                            } else if (isNaN(Number(score))) {
+                            if (score == "" || isNaN(Number(score))) {
                                 scoreValue = 0;
                                 misses++;
                             } else {
@@ -151,7 +137,7 @@ export class ViewModelsService {
 
                     // did at least one technique have a score for this technique?
                     if (misses < scoreVariables.size) {
-                        let mathResult = evaluate(scoreExpression, scope);
+                        let mathResult = evaluate(opSettings.scoreExpression, scope);
                         if (is.boolean(mathResult)) {
                             // boolean to binary
                             mathResult = mathResult ? "1" : "0";
@@ -194,27 +180,27 @@ export class ViewModelsService {
             })
         }
 
-        if (comments) inherit(comments, "comment");
-        if (links) inherit(links, "links");
-        if (metadata) inherit(metadata, "metadata");
-        if (coloring) inherit(coloring, "color");
-        if (enabledness) inherit(enabledness, "enabled");
+        if (opSettings.commentVM) inherit(opSettings.commentVM, "comment");
+        if (opSettings.linkVM) inherit(opSettings.linkVM, "links");
+        if (opSettings.metadataVM) inherit(opSettings.metadataVM, "metadata");
+        if (opSettings.coloringVM) inherit(opSettings.coloringVM, "color");
+        if (opSettings.enabledVM) inherit(opSettings.enabledVM, "enabled");
 
-        if (filters) { //copy filter settings
-            newViewModel.filters.deserialize(JSON.parse(filters.filters.serialize()))
+        if (opSettings.filterVM) { //copy filter settings
+            newViewModel.filters.deserialize(JSON.parse(opSettings.filterVM.filters.serialize()));
         }
 
-        if (legendItems) {
-            newViewModel.legendItems = JSON.parse(JSON.stringify(legendItems.legendItems));
+        if (opSettings.legendVM) {
+            newViewModel.legendItems = JSON.parse(JSON.stringify(opSettings.legendVM.legendItems));
         }
 
-        if (gradient) {
+        if (opSettings.gradientVM) {
             newViewModel.gradient = new Gradient();
-            newViewModel.gradient.deserialize(gradient.gradient.serialize());
+            newViewModel.gradient.deserialize(opSettings.gradientVM.gradient.serialize());
         }
 
         newViewModel.name = layerName;
-        this.viewModels.push(newViewModel)
+        this.viewModels.push(newViewModel);
         newViewModel.updateGradient();
         return newViewModel;
     }
