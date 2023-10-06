@@ -52,7 +52,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     public downloadAnnotationsOnVisibleTechniques: boolean = false;
-    public sticky_toolbar: boolean = true;
 
     // edit field bindings
     public commentEditField: string = "";
@@ -82,9 +81,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     public updateStickyToolbar(){
-        this.sticky_toolbar = !this.sticky_toolbar;
-        console.log(this.sticky_toolbar);
-        if (this.sticky_toolbar) {
+        this.viewModel.sticky_toolbar = !this.viewModel.sticky_toolbar
+        if(this.viewModel.sticky_toolbar){
             this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
             this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
             this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);

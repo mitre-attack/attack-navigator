@@ -513,6 +513,10 @@ additional information about the object in question.
 Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
 area. You can use this in conjunction with the search input to select all results which match the given query.
 
+# Toolbar Controls
+
+The stickiness of the toolbar can be changed by clicking on the enable/disable sticky toolbar button (<img src="nav-app/src/assets/icons/ic_push_pin_black_24px.svg">)
+
 # Customizing the Navigator
 
 The ATT&CK Navigator can be customized by modifying the fragment (e.g <code>example.com<b>#fragment</b></code>) of the

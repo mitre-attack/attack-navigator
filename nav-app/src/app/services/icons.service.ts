@@ -27,5 +27,6 @@ export enum Icons {
 	SORT_ALPHABETICAL_DESC = 'ic_sort_alphabetically_descending',
 	SORT_NUMERICAL_ASC = 'ic_sort_numerically_ascending',
 	SORT_NUMERICAL_DESC = 'ic_sort_numerically_descending',
-	UNFOLD_MORE_ALT = 'ic_unfold_more_alt'
+	UNFOLD_MORE_ALT = 'ic_unfold_more_alt',
+	NON_STICKY_TOOLBAR = 'ic_push_pin_gray'
 }

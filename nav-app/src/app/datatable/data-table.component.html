@@ -593,13 +593,16 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             </div>
         </li>
         <li *ngIf="configService.getFeatureGroup('toolbar_controls', 'any')">
-            <div *ngIf="configService.getFeatureGroupCount('toolbar_controls') >= 1" class="section-label">
-                toolbar controls
-            </div>
-            <!-- sticky toolbar -->
+            <!-- enable disable sticky toolbar -->
             <div *ngIf="configService.getFeature('sticky_toolbar')" class="control-row-item">
-                <input id="enable-toolbar" class="checkbox-custom" type="checkbox" [checked]='true' (change)="updateStickyToolbar()">
-                <label for="enable-toolbar" class="checkbox-custom-label checkbox-sticky-toolbar noselect">sticky-toolbar</label>
+                <div class="control-row-button noselect"
+                     (click)="updateStickyToolbar()"
+                     matTooltipPosition="below"
+                     matTooltip="enable/disable sticky toolbar">
+                     <span *ngIf="viewModel.sticky_toolbar" class="material-symbols-outlined"
+                        alt="show disabled">push_pin</span>
+                    <span *ngIf="!viewModel.sticky_toolbar"alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
+                </div>
             </div>
         </li>
     </ul>
