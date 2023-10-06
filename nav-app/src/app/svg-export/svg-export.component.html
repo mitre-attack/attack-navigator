@@ -120,6 +120,26 @@
                                 </mat-select>
                             </mat-form-field>
                         </li>
+                        <li>
+                            <input [id]="uid+'autofit'" type="checkbox" class="checkbox-custom" [(ngModel)]="config.autofitText" (change)="buildSVG()">
+                            <label [for]="uid+'autofit'" class="checkbox-custom-label noselect">auto-fit font size</label>
+                        </li>
+                        <li>
+                            <mat-form-field>
+                                <input matInput
+                                       class="has-suffix"
+                                       type="number"
+                                       placeholder="font size"
+                                       step="1"
+                                       [disabled]="config.autofitText"
+                                       [(ngModel)]="config.fontSize"
+                                       (input)="buildSVG()" />
+                            </mat-form-field>
+                            <div class="warning" *ngIf="!config.autofitText && config.fontSize > config.maxTextSize">
+                                <span class="material-icons" alt="warning" style="padding-right: 5px">warning</span>
+                                <label class="warning-label" style="font-size: 12px">cell text is overflowing</label>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
