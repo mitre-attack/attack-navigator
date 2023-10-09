@@ -631,7 +631,7 @@ techniques.
 
 # Printing the matrix
 
-To get the full view of the matrix on a single page, be sure to disable the sticky toolbar before printing or saving to pdf. See the <a href="#toolbar-controls">Toolbar Controls</a> section.
+To get the full view of the matrix on a single page, be sure to disable the sticky toolbar before printing or saving to pdf. See the <a href="#toolbar-controls">Toolbar Controls</a> section for instructions on how to enable or disable the sticky toolbar.
 
 # Notice
 
