@@ -27,6 +27,9 @@ export class SvgExportComponent implements OnInit {
         "unit": "in",
         "orientation": "landscape",
         "size": "letter",
+        "fontSize": 4,
+        "autofitText": true,
+        "maxTextSize": Infinity,
         "theme": "light",
         "showSubtechniques": "expanded",
         "font": "sans-serif",
@@ -426,8 +429,18 @@ export class SvgExportComponent implements OnInit {
             .each(function() { self.verticalAlignCenter(this); })
     
         // set technique and sub-technique groups to the same font size
-        techniqueGroups.select("text").attr("font-size", minFontSize);
-        subtechniqueGroups.select("text").attr("font-size", minFontSize);
+        this.config.maxTextSize = minFontSize
+        if (this.config.autofitText) {
+            this.config.fontSize = minFontSize.toFixed(2)
+        }
+        if (this.config.autofitText) {
+            techniqueGroups.select("text").attr("font-size", minFontSize)
+            subtechniqueGroups.select("text").attr("font-size", minFontSize)
+        }
+        else {
+            techniqueGroups.select("text").attr("font-size", this.config.fontSize)
+            subtechniqueGroups.select("text").attr("font-size", this.config.fontSize)
+        }
 
         // track the smallest optimal font size for tactics
         let minTacticFontSize = Infinity;
@@ -706,6 +719,9 @@ export class SvgExportComponent implements OnInit {
      */
     private findSize(self: any, words: string[], width: number, height: number, center: boolean, maxFontSize: number = 12): number {
         let padding = 4;
+        if (!this.config.autofitText) {
+            padding = 1
+        }
 
         // break into multiple lines
         let distance = Math.min(height, (maxFontSize + 3) * words.length)

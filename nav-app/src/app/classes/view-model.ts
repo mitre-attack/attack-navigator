@@ -86,6 +86,11 @@ export class ViewModel {
         this.legendColorPresets = this.backgroundPresets;
     }
 
+    public openSidebar(contentType: string) {
+        this.sidebarContentType = contentType;
+        this.sidebarOpened = true;
+    }
+
     public loadVMData(): void {
         let domain = this.dataService.getDomain(this.domainVersionID);
         if (domain.isCustom) {
@@ -106,7 +111,6 @@ export class ViewModel {
     }
 
     private initTechniqueVMs(): void {
-        console.debug(this.name, "initializing technique VMs");
         for (let technique of this.dataService.getDomain(this.domainVersionID).techniques) {
             // init techniques
             for (let id of technique.get_all_technique_tactic_ids()) {
