@@ -4,25 +4,6 @@
 @import "@fontsource/roboto-mono";
 @import "colors.scss";
 
-// @media print {
-// //   @page {
-// //     size: landscape;
-// //     margin: 0;
-// //   }
-// //   page[size="A3"]{
-// //     size: A3;
-// //   }
-// // html
-// //     {
-// //         zoom: 70%;
-// //         size: A3;
-// //     }
-// html {
-//   width: 420mm;
-//   height: 594mm;
-// }
-// }
-
 @media print {
   @page {
     size: A3;

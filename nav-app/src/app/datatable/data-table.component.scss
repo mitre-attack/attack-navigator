@@ -443,6 +443,9 @@ $cellSize: 15px;
   right: 0;
   width: 300px;
   height: 300px;
+  @media print {
+    display:none
+  }
 
   .itemArea {
     @include adaptive-color-dark-only("color", on-color(dark));

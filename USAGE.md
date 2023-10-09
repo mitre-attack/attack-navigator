@@ -629,6 +629,10 @@ These layers contains the annotations from the view -- color (via score or
 manually assigned) and disabled states. The exporter also honors tactic header background, sorting, filtering and hidden
 techniques.
 
+# Printing the matrix
+
+If you want to print the matrix or save it as a pdf, you can set the paper size to `A3` to get the full view of the matrix on a single page. 
+
 # Notice
 
 Copyright 2023 The MITRE Corporation
