@@ -631,7 +631,7 @@ techniques.
 
 # Printing the matrix
 
-If you want to print the matrix or save it as a pdf, you can set the paper size to `A3` to get the full view of the matrix on a single page. 
+To get the full view of the matrix on a single page, be sure to disable the sticky toolbar before printing or saving to pdf. See the <a href="#toolbar-controls">Toolbar Controls section.</a>
 
 # Notice
 
