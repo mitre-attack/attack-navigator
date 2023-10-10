@@ -9,7 +9,9 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# Changes Staged on Develop
+# 4.9.0 - 31 October 2023
+
+Adds support for ATT&CK v14.0.
 
 ## New Features
 - Consolidated the JSON, Excel, and SVG export options into a single dropdown. Added an option to the export interface to only download annotations on visible techniques. See issue [#215](https://github.com/mitre-attack/attack-navigator/issues/215).
