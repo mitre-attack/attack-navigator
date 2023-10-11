@@ -485,7 +485,7 @@
                 <!-- Custom Navigator URL -->
                 <div style="text-align: center;">
                     <mat-form-field id="layerlinkfield">
-                        <input id="customNavInput" type="text" matInput placeholder="Custom Navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly disabled>
+                        <input id="layerLink" type="text" matInput placeholder="custom navigator URL" (click)="selectLayerLink()" [value]="getLayerLink()" readonly/>
                         <button (click)="copyLayerLink()" mat-button matSuffix mat-icon-button aria-label="copy" matTooltip="copy">
                             <mat-icon>content_copy</mat-icon>
                         </button>
