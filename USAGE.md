@@ -513,6 +513,10 @@ additional information about the object in question.
 Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
 area. You can use this in conjunction with the search input to select all results which match the given query.
 
+# Toolbar Controls
+
+The stickiness of the toolbar can be changed by clicking on the enable/disable sticky toolbar button (<img src="nav-app/src/assets/icons/ic_push_pin_black_24px.svg">)
+
 # Customizing the Navigator
 
 The ATT&CK Navigator can be customized by modifying the fragment (e.g <code>example.com<b>#fragment</b></code>) of the
@@ -624,6 +628,10 @@ an .xlsx file which contains all the open layers in different sheets.
 These layers contains the annotations from the view -- color (via score or
 manually assigned) and disabled states. The exporter also honors tactic header background, sorting, filtering and hidden
 techniques.
+
+# Printing the matrix
+
+To get the full view of the matrix on a single page, be sure to disable the sticky toolbar before printing or saving to pdf. See the <a href="#toolbar-controls">Toolbar Controls</a> section for instructions on how to enable or disable the sticky toolbar.
 
 # Notice
 

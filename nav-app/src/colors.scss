@@ -124,7 +124,7 @@ $colors: (
   .theme-use-system & {
     // when the ancestor class shows that the app is configured to use the system theme,
     // use a media query to assign the dark value
-    @media (prefers-color-scheme: dark) { #{$property}: $dark-value; }
+    @media (prefers-color-scheme: dark) { #{$property}: $dark-value;}
   }
   .theme-override-dark & {
     // when the ancestor class shows that the app is configured to use the dark theme,

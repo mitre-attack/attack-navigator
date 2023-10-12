@@ -80,6 +80,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         document.body.removeEventListener('scroll', this.handleScroll);
     }
 
+    public updateStickyToolbar(){
+        this.viewModel.stickyToolbar = !this.viewModel.stickyToolbar
+        if(this.viewModel.stickyToolbar){
+            this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
+            this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
+            this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
+        }
+        else{
+            this.scrollRef.nativeElement.style.height = null;
+            this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
+        }
+    }
     /**
      * Save the given blob
      * @param blob the blob to download

@@ -15,6 +15,9 @@
 
     min-width: $sizeunit;
     min-height: $sizeunit;
+    @media print {
+        font-size: $sizeunit_print - 5px;
+    }
 
     >div {
         padding: math.div($sizeunit, 2) 3px;
@@ -87,4 +90,7 @@
     line-height: 0;
     vertical-align: baseline;
     bottom: -.5em;
+    @media print {
+        display: none;
+    }
 }

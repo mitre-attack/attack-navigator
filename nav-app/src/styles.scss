@@ -4,6 +4,13 @@
 @import "@fontsource/roboto-mono";
 @import "colors.scss";
 
+@media print {
+  @page {
+    size: A3;
+    margin: 0;
+  }
+}
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -99,6 +106,9 @@ body {
   // padding: 0 3px;
   // display: flex;
   display: block;
+  @media print {
+    display:none
+  }
 
   ul {
     margin: 0;
