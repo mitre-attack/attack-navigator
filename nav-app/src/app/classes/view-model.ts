@@ -38,7 +38,7 @@ export class ViewModel {
     public hideDisabled: boolean = false; // are disabled techniques hidden?
     public showTacticRowBackground: boolean = false;
     public tacticRowBackground: string = "#dddddd";
-    public sticky_toolbar = true;
+    public stickyToolbar = true;
 
     public gradient: Gradient = new Gradient(); // scoring gradient
     public legendItems: any[] = [];

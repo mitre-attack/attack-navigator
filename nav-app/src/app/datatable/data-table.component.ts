@@ -81,8 +81,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     public updateStickyToolbar(){
-        this.viewModel.sticky_toolbar = !this.viewModel.sticky_toolbar
-        if(this.viewModel.sticky_toolbar){
+        this.viewModel.stickyToolbar = !this.viewModel.stickyToolbar
+        if(this.viewModel.stickyToolbar){
             this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
             this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
             this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);

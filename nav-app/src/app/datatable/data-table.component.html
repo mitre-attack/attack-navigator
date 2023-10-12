@@ -598,10 +598,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <div class="control-row-button noselect"
                      (click)="updateStickyToolbar()"
                      matTooltipPosition="below"
-                     matTooltip="enable/disable sticky toolbar">
-                     <span *ngIf="viewModel.sticky_toolbar" class="material-symbols-outlined"
+                     [matTooltip]="viewModel.stickyToolbar ? 'disable sticky toolbar' : 'enable sticky toolbar'">
+                     <span *ngIf="viewModel.stickyToolbar" class="material-symbols-outlined"
                         alt="show disabled">push_pin</span>
-                    <span *ngIf="!viewModel.sticky_toolbar"alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
+                    <span *ngIf="!viewModel.stickyToolbar"alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
                 </div>
             </div>
         </li>

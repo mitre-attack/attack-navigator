@@ -246,7 +246,7 @@
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]},
         {"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the sticky toolbar."}
+            {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
         ]}
     ]
 }
