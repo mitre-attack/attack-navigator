@@ -833,8 +833,8 @@ export class TabsComponent implements AfterViewInit {
      * Select the layer link field text
      */
     public selectLayerLink(): void {
-        let copyText = <HTMLInputElement>document.getElementById("customNavInput");
-        console.debug('copied', copyText.value)
+        let copyText = <HTMLInputElement>document.getElementById("layerLink");
+        console.debug('copied', copyText.value);
         copyText.select();
     }
 
@@ -847,8 +847,8 @@ export class TabsComponent implements AfterViewInit {
         this.copiedRecently = true;
         let self = this;
         window.setTimeout(function() {
-            self.copiedRecently = false;
-        }, 2000);
+            self.copiedRecently = false}, 2000
+        );
     }
 
     /**
