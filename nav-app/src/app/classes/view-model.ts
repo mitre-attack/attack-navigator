@@ -1039,13 +1039,17 @@ export class ViewModel {
                 }
                 else console.error("TypeError: attack version field is not a string");
             }
-            if (obj.versions["layer"] !== globals.layer_version) {
+            let global_version_change = globals.layer_version.split(".");
+            let obj_version_change = obj.versions["layer"].split(".");
+            if (obj_version_change[0] !== global_version_change[0]) {
                 alert("WARNING: Uploaded layer version (" + String(obj.versions["layer"]) + ") does not match Navigator's layer version ("
                     + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
         }
         if ("version" in obj) { // backwards compatibility with Layer Format 3
-            if (obj.version !== globals.layer_version) {
+            let global_version_change = globals.layer_version.split(".");
+            let obj_version_change = obj.version.split(".");
+            if (obj_version_change[0] !== global_version_change[0]) {
                 alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
                     + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
             }
