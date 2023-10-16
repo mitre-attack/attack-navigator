@@ -1028,7 +1028,8 @@ export class ViewModel {
      * Restore the domain and version from a string
      * @param rep string to restore from
      */
-    public deserializeDomainVersionID(rep: any): void {
+    public deserializeDomainVersionID(rep: any): string {
+        let version_test_string = "";
         let obj = (typeof (rep) == "string") ? JSON.parse(rep) : rep
         this.name = obj.name
         this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
@@ -1042,16 +1043,20 @@ export class ViewModel {
             let global_version_change = globals.layer_version.split(".");
             let obj_version_change = obj.versions["layer"].split(".");
             if (obj_version_change[0] !== global_version_change[0]) {
-                alert("WARNING: Uploaded layer version (" + String(obj.versions["layer"]) + ") does not match Navigator's layer version ("
-                    + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+                version_test_string = String(obj.versions["layer"])
+            }
+            else{
+                version_test_string = String(obj.versions["layer"])
             }
         }
         if ("version" in obj) { // backwards compatibility with Layer Format 3
             let global_version_change = globals.layer_version.split(".");
             let obj_version_change = obj.version.split(".");
             if (obj_version_change[0] !== global_version_change[0]) {
-                alert("WARNING: Uploaded layer version (" + String(obj.version) + ") does not match Navigator's layer version ("
-                    + String(globals.layer_version) + "). The layer configuration may not be fully restored.");
+                    version_test_string = String(obj.version);
+                }
+            else{
+                version_test_string = String(obj.version);
             }
         }
         // patch for old domain name convention
@@ -1059,6 +1064,7 @@ export class ViewModel {
             this.domain = this.dataService.domain_backwards_compatibility[obj.domain];
         } else { this.domain = obj.domain; }
         this.domainVersionID = this.dataService.getDomainVersionID(this.domain, this.version);
+        return version_test_string;
     }
 
     /**
@@ -1245,6 +1251,11 @@ export class ViewModel {
         this.gradient.removeColor(index)
         this.updateGradient();
     }
+
+    // public openDialogVersion(dialogName: string) {
+    //     const settings = { maxWidth: "75ch" };
+    //     this.dialog.open(VersionMismatchComponent, settings);
+    // }
 
     /* Update this vm's gradient */
     public updateGradient(): void {

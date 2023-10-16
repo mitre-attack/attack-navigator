@@ -63,6 +63,27 @@
     </div>
 </ng-template>
 
+<ng-template #versionWarning let-data>
+    <div class="mat-dialog">
+        <div>
+            <h3 mat-dialog-title>Older layer version</h3>
+            <mat-dialog-content>
+                <p>
+                    WARNING: Uploaded layer version {{data.openVersion}} does not match Navigator's layer version {{data.gVersion}}.
+                </p>
+                <p>
+                    The layer configuration may not be fully restored.
+                </p>
+                <p>
+                    The Layer file format is described <a (click)="openDialog('layers')">here</a>.
+                </p>
+            </mat-dialog-content>
+        </div>
+    
+        <button mat-button (click)="versionDialogRef.close()">Dismiss</button>
+    </div>
+</ng-template>
+
 <!-- new tab template -->
 <ng-template [ngIf]="activeTab && !activeTab.isDataTable">
     <div class="new-tab">

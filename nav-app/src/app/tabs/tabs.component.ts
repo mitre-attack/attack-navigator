@@ -13,6 +13,7 @@ import { ChangelogComponent } from "../changelog/changelog.component";
 import { Subscription, forkJoin } from 'rxjs';
 import * as is from 'is_js';
 import * as globals from '../utils/globals';
+import { LayerInformationComponent } from '../layer-information/layer-information.component';
 
 @Component({
     selector: 'tabs',
@@ -25,6 +26,7 @@ export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;
     @Output() onUserThemeChange = new EventEmitter<string>();
     @ViewChild('safariWarning') safariWarning: TemplateRef<any>;
+    @ViewChild('versionWarning') versionWarning: TemplateRef<any>;
 
     public activeTab: Tab = null;
     public dropdownEnabled: string = '';
@@ -32,11 +34,14 @@ export class TabsComponent implements AfterViewInit {
     public adjustedHeaderHeight: number = 0;
     public navVersion = globals.nav_version;
     public safariDialogRef;
+    public versionDialogRef;
     public showHelpDropDown: boolean = false;
     public loadURL: string = "";
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
+    public versionMic: boolean;
+    public versionMisOccured: boolean;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
 
     public loadData: any = {
@@ -63,7 +68,7 @@ export class TabsComponent implements AfterViewInit {
         return this.filterDomains(this.dataService.versions[0]);
     } 
 
-    constructor(private dialog: MatDialog, 
+    constructor(public dialog: MatDialog,
                 private viewModelsService: ViewModelsService, 
                 public  dataService: DataService, 
                 private http: HttpClient, 
@@ -303,6 +308,9 @@ export class TabsComponent implements AfterViewInit {
         const settings = { maxWidth: "75ch", panelClass: this.userTheme };
         if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
         else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
+        else if(dialogName == 'layers') this.dialog.open(LayerInformationComponent, {
+            maxWidth: "90ch"
+        });
     }
 
     /**
@@ -583,7 +591,12 @@ export class TabsComponent implements AfterViewInit {
                     disableClose: true,
                     width: "25%",
                     panelClass: this.userTheme
-                });
+                })
+                // dialog.afterOpened().subscribe(_ => {
+                //     setTimeout(() => {
+                //        dialog.close();
+                //     }, 3000)
+                // })
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
@@ -701,23 +714,93 @@ export class TabsComponent implements AfterViewInit {
             let result = String(reader.result);
 
             function loadObjAsLayer(self, obj): void {
+                self.versionMic = true;
                 viewModel = self.viewModelsService.newViewModel("loading layer...", undefined);
-                viewModel.deserializeDomainVersionID(obj);
-                let isCustom = "customDataURL" in obj;
-                if (!isCustom) {
-                    if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                        throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
-                    }
-                    self.upgradeLayer(viewModel, obj, true);
-                } else {
+                let obj_version_number = viewModel.deserializeDomainVersionID(obj);
+                let global_version_change = globals.layer_version.split(".");
+                let obj_version_change = obj_version_number.split(".");
+                if (obj_version_change[0] !== global_version_change[0]) {
+                    self.versionMic = false
+                }
+                if (!self.versionMic) {
+                    self.versionDialogRef = self.dialog.open(self.versionWarning, {
+                        width: '350px',
+                        disableClose: true,
+                        panelClass: self.userTheme,
+                        data: {
+                            openVersion: obj_version_number,
+                            gVersion: globals.layer_version
+                        }
+                    });
+                    let isCustom = "customDataURL" in obj;
+                    if (!isCustom) {
+                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                        }
+                        self.upgradeLayer(viewModel, obj, true);
+                    } else {
                     // load as custom data
-                    viewModel.deserialize(obj);
-                    self.openTab("new layer", viewModel, true, true, true, true);
-                    self.newLayerFromURL({
-                        'url': obj['customDataURL'],
-                        'version': viewModel.version,
-                        'identifier': viewModel.domain
-                    }, obj);
+                        viewModel.deserialize(obj);
+                        self.openTab("new layer", viewModel, true, true, true, true);
+                        self.newLayerFromURL({
+                            'url': obj['customDataURL'],
+                            'version': viewModel.version,
+                            'identifier': viewModel.domain
+                        }, obj);
+                    }
+                }
+                else if (obj_version_change[0] === global_version_change[0] && obj_version_change[1] !== global_version_change[1]){
+                    self.versionMisOccured = true;
+                    self.versionDialogRef = self.dialog.open(self.versionWarning, {
+                        width: '350px',
+                        disableClose: true,
+                        panelClass: self.userTheme,
+                        data: {
+                            openVersion: obj_version_number,
+                            gVersion: globals.layer_version
+                        },
+                    });
+                    
+                    setTimeout(() => {
+                        self.versionDialogRef.close();
+                    }, 3000);
+
+                    self.versionDialogRef.afterClosed().subscribe((result) => {
+                        let isCustom = "customDataURL" in obj;
+                        if (!isCustom) {
+                            if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                                throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                            }
+                        self.upgradeLayer(viewModel, obj, true);
+                        } else {
+                        // load as custom data
+                            viewModel.deserialize(obj);
+                            self.openTab("new layer", viewModel, true, true, true, true);
+                            self.newLayerFromURL({
+                                'url': obj['customDataURL'],
+                                'version': viewModel.version,
+                                'identifier': viewModel.domain
+                            }, obj);
+                        }
+                    });
+                }
+                else{
+                    let isCustom = "customDataURL" in obj;
+                    if (!isCustom) {
+                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                        }
+                        self.upgradeLayer(viewModel, obj, true);
+                    } else {
+                    // load as custom data
+                        viewModel.deserialize(obj);
+                        self.openTab("new layer", viewModel, true, true, true, true);
+                        self.newLayerFromURL({
+                            'url': obj['customDataURL'],
+                            'version': viewModel.version,
+                            'identifier': viewModel.domain
+                        }, obj);
+                    }
                 }
             }
 
@@ -755,7 +838,7 @@ export class TabsComponent implements AfterViewInit {
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     try {
-                        viewModel.deserializeDomainVersionID(res);
+                        let obj_version = viewModel.deserializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
