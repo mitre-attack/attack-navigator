@@ -590,11 +590,6 @@ export class TabsComponent implements AfterViewInit {
                     width: "25%",
                     panelClass: this.userTheme
                 })
-                // dialog.afterOpened().subscribe(_ => {
-                //     setTimeout(() => {
-                //        dialog.close();
-                //     }, 3000)
-                // })
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
@@ -817,7 +812,7 @@ export class TabsComponent implements AfterViewInit {
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
                     try {
-                        let obj_version = viewModel.deserializeDomainVersionID(res);
+                        let objVersion = viewModel.deserializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
