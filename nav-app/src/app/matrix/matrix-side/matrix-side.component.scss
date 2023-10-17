@@ -21,6 +21,11 @@
             @media print {
                 font-size: $sizeunit_print - 4px;
             }
+            position: sticky;
+            top: 0.05px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
         &.count {
             border-width: 0 0 1px 0;
@@ -32,6 +37,11 @@
             @media print {
                 font-size: $sizeunit_print - 4px;
             }
+            position: sticky;
+            top: 35px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
         .techniques-table {
             border-collapse: collapse;
