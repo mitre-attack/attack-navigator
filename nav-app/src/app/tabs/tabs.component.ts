@@ -597,7 +597,7 @@ export class TabsComponent implements AfterViewInit {
                     disableClose: true,
                     width: "25%",
                     panelClass: this.userTheme
-                })
+                });
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
