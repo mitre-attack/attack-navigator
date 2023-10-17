@@ -9,6 +9,7 @@ export class ConfigService {
     public comment_color = "yellow";
     public link_color = "blue";
     public metadata_color = "purple";
+    public theme: "system";
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -36,6 +37,7 @@ export class ConfigService {
                 self.featureStructure = config["features"];
                 self.comment_color = config["comment_color"];
                 self.metadata_color = config["metadata_color"];
+                self.theme = config["theme"];
                 self.link_color = config["link_color"];
                 self.banner = config["banner"];
                 for (let obj of config["custom_context_menu_items"]) {
