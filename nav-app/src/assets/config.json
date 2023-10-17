@@ -205,6 +205,8 @@
     "link_color": "blue",
     "metadata_color": "purple",
 
+    "theme": "system",
+
     "banner": "",
 
     "features": [
