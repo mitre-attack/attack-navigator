@@ -46,6 +46,9 @@ $cellSize: 15px;
       white-space: normal;
       // display: inline-block;
       padding: 10px;
+      @media print {
+        padding: 0;
+    }
 
       .matrix-name {
         text-align: center;
@@ -440,6 +443,9 @@ $cellSize: 15px;
   right: 0;
   width: 300px;
   height: 300px;
+  @media print {
+    display:none
+  }
 
   .itemArea {
     @include adaptive-color-dark-only("color", on-color(dark));
@@ -487,6 +493,9 @@ $cellSize: 15px;
   height: 30px;
   transition: 0.3s;
   display: flex;
+  @media print {
+    display:none
+  }
   align-items: center;
 
   .title {

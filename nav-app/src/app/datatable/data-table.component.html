@@ -592,6 +592,19 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
             </div>
         </li>
+        <li *ngIf="configService.getFeatureGroup('toolbar_controls', 'any')">
+            <!-- enable disable sticky toolbar -->
+            <div *ngIf="configService.getFeature('sticky_toolbar')" class="control-row-item">
+                <div class="control-row-button noselect"
+                     (click)="updateStickyToolbar()"
+                     matTooltipPosition="below"
+                     [matTooltip]="viewModel.stickyToolbar ? 'disable sticky toolbar' : 'enable sticky toolbar'">
+                     <span *ngIf="viewModel.stickyToolbar" class="material-symbols-outlined"
+                        alt="show disabled">push_pin</span>
+                    <span *ngIf="!viewModel.stickyToolbar"alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
+                </div>
+            </div>
+        </li>
     </ul>
 </div>
 
