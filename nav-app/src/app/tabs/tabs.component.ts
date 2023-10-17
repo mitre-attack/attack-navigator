@@ -40,8 +40,6 @@ export class TabsComponent implements AfterViewInit {
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
-    public versionMic: boolean;
-    public versionMisOccured: boolean;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
 
     public loadData: any = {
@@ -714,58 +712,27 @@ export class TabsComponent implements AfterViewInit {
             let result = String(reader.result);
 
             function loadObjAsLayer(self, obj): void {
-                self.versionMic = true;
                 viewModel = self.viewModelsService.newViewModel("loading layer...", undefined);
-                let obj_version_number = viewModel.deserializeDomainVersionID(obj);
-                let global_version_change = globals.layer_version.split(".");
-                let obj_version_change = obj_version_number.split(".");
-                if (obj_version_change[0] !== global_version_change[0]) {
-                    self.versionMic = false
-                }
-                if (!self.versionMic) {
+                let objVersionNumber = viewModel.deserializeDomainVersionID(obj);
+                let globalVersionSplit = globals.layer_version.split(".");
+                let objVersionSplit = objVersionNumber.split(".");
+                // if minor version change, close the dialog after 3 secs
+                if (objVersionSplit[0] === globalVersionSplit[0] && objVersionSplit[1] !== globalVersionSplit[1]){
                     self.versionDialogRef = self.dialog.open(self.versionWarning, {
-                        width: '350px',
+                        width: '375px',
                         disableClose: true,
                         panelClass: self.userTheme,
                         data: {
-                            openVersion: obj_version_number,
-                            gVersion: globals.layer_version
-                        }
-                    });
-                    let isCustom = "customDataURL" in obj;
-                    if (!isCustom) {
-                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
-                        }
-                        self.upgradeLayer(viewModel, obj, true);
-                    } else {
-                    // load as custom data
-                        viewModel.deserialize(obj);
-                        self.openTab("new layer", viewModel, true, true, true, true);
-                        self.newLayerFromURL({
-                            'url': obj['customDataURL'],
-                            'version': viewModel.version,
-                            'identifier': viewModel.domain
-                        }, obj);
-                    }
-                }
-                else if (obj_version_change[0] === global_version_change[0] && obj_version_change[1] !== global_version_change[1]){
-                    self.versionMisOccured = true;
-                    self.versionDialogRef = self.dialog.open(self.versionWarning, {
-                        width: '350px',
-                        disableClose: true,
-                        panelClass: self.userTheme,
-                        data: {
-                            openVersion: obj_version_number,
-                            gVersion: globals.layer_version
+                            objVersion: objVersionNumber,
+                            globalVersion: globals.layer_version
                         },
                     });
-                    
+
                     setTimeout(() => {
                         self.versionDialogRef.close();
                     }, 3000);
 
-                    self.versionDialogRef.afterClosed().subscribe((result) => {
+                    self.versionDialogRef.afterClosed().subscribe(() => {
                         let isCustom = "customDataURL" in obj;
                         if (!isCustom) {
                             if (!self.dataService.getDomain(viewModel.domainVersionID)) {
@@ -784,7 +751,19 @@ export class TabsComponent implements AfterViewInit {
                         }
                     });
                 }
+                // if major version change, keep the dialog open until user dismisses it
                 else{
+                    if (objVersionSplit[0] !== globalVersionSplit[0]){
+                        self.versionDialogRef = self.dialog.open(self.versionWarning, {
+                            width: '375px',
+                            disableClose: true,
+                            panelClass: self.userTheme,
+                            data: {
+                                objVersion: objVersionNumber,
+                                globalVersion: globals.layer_version
+                            }
+                        });
+                    }
                     let isCustom = "customDataURL" in obj;
                     if (!isCustom) {
                         if (!self.dataService.getDomain(viewModel.domainVersionID)) {
