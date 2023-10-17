@@ -41,7 +41,7 @@ export class TabsComponent implements AfterViewInit {
     public customizedConfig: any[] = [];
     public bannerContent: string;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
-
+    public dialogOpened: boolean = false;
     public loadData: any = {
         url: undefined,
         version: undefined,
@@ -304,11 +304,19 @@ export class TabsComponent implements AfterViewInit {
      */
     public openDialog(dialogName: string) {
         const settings = { maxWidth: "75ch", panelClass: this.userTheme };
-        if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
-        else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
-        else if(dialogName == 'layers') this.dialog.open(LayerInformationComponent, {
-            maxWidth: "90ch"
-        });
+        if (dialogName == 'changelog') {
+            this.dialog.open(ChangelogComponent, settings);
+            this.dialogOpened = true;
+        }
+        else if (dialogName == 'help') {
+            this.dialog.open(HelpComponent, settings);
+        }
+        else if(dialogName == 'layers') {
+            this.dialog.open(LayerInformationComponent, {
+                maxWidth: "90ch"
+            });
+            this.dialogOpened = true;
+        }
     }
 
     /**
@@ -707,6 +715,7 @@ export class TabsComponent implements AfterViewInit {
             let result = String(reader.result);
 
             function loadObjAsLayer(self, obj): void {
+                self.dialogOpened = false;
                 viewModel = self.viewModelsService.newViewModel("loading layer...", undefined);
                 let objVersionNumber = viewModel.deserializeDomainVersionID(obj);
                 let globalVersionSplit = globals.layer_version.split(".");
@@ -722,11 +731,11 @@ export class TabsComponent implements AfterViewInit {
                             globalVersion: globals.layer_version
                         },
                     });
-
                     setTimeout(() => {
-                        self.versionDialogRef.close();
+                        if(!self.dialogOpened){
+                            self.versionDialogRef.close();
+                        }
                     }, 3000);
-
                     self.versionDialogRef.afterClosed().subscribe(() => {
                         let isCustom = "customDataURL" in obj;
                         if (!isCustom) {
