@@ -58,8 +58,8 @@ export abstract class Cell {
         {
             theclass += " showID"
             //change sticky top position of technique count
-            var elements = document.querySelectorAll<HTMLElement>(".tactic.count");
-            for (var i = 0; i < elements.length; i++) {
+            let elements = document.querySelectorAll<HTMLElement>(".tactic.count");
+            for (let i = 0; i < elements.length; i++) {
                 elements[i].style.top='46px';
             }
         }
