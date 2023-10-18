@@ -24,7 +24,9 @@
 - Added functionality to scroll across the open tabs in the navigator. See issue [#581](https://github.com/mitre-attack/attack-navigator/issues/580).
 - Added functionality to display matrices accurately in print view. See issue [#508](https://github.com/mitre-attack/attack-navigator/issues/508)
 - Added functionality to enable or disable the stickiness of the toolbar.
+- Added preventative measures for reverse tabnabbing. See issue [#527](https://github.com/mitre-attack/attack-navigator/issues/527).
 - Improved the layer version mismatch warning. For a major version change, the latest layer format and the changelog are linked. For a minor version change, warning message disappears in 5 seconds and links to the changlog. See issue [#260](https://github.com/mitre-attack/attack-navigator/issues/260).
+
 
 ## Miscellaneous
 - Refactored the codebase to improve maintainability of the application.
