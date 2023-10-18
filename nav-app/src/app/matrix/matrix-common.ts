@@ -99,6 +99,7 @@ export abstract class MatrixCommon {
     }
 
     public get tacticRowStyle(): any {
+        //change background of sticky tactic header if showTacticRowBackground is enabled
         if(this.viewModel.showTacticRowBackground){
             var elements_name = document.querySelectorAll<HTMLElement>(".tactic.name");
             var elements_count = document.querySelectorAll<HTMLElement>(".tactic.count");
