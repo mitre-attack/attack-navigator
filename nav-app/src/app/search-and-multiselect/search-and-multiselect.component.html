@@ -50,7 +50,7 @@
                                         <span *ngIf="result.isSubtechnique">{{result.parent.name}}
                                             : </span>{{result.name}}
                                     </td>
-                                    <td><a href="{{result.url}}" target="_blank">view</a></td>
+                                    <td><a href="{{result.url}}" target="_blank" rel="noopener noreferrer">view</a></td>
                                     <td>
                                         <button class="button" (click)="select(result)">select</button>
                                     </td>
@@ -90,7 +90,7 @@
                                     (mouseleave)="mouseLeave()">
                                     {{stixObject.name}}
                                 </td>
-                                <td><a href="{{stixObject.url}}" target="_blank">view</a></td>
+                                <td><a href="{{stixObject.url}}" target="_blank" rel="noopener noreferrer">view</a></td>
                                 <td>
                                     <button class="button" (click)="select(stixObject, false)">select</button>
                                 </td>
@@ -129,7 +129,7 @@
                                     (mouseleave)="mouseLeave()">
                                     {{ label }}
                                 </td>
-                                <td><a href="{{stixDataComponents.get(label).url}}" target="_blank">view</a></td>
+                                <td><a href="{{stixDataComponents.get(label).url}}" target="_blank" rel="noopener noreferrer">view</a></td>
                                 <td>
                                     <button class="button" (click)="selectAll(stixDataComponents.get(label).objects, true)">select</button>
                                 </td>
