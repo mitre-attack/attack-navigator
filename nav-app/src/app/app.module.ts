@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -90,6 +91,7 @@ import { ListInputComponent } from './list-input/list-input.component';
         MatMenuModule,
         MatExpansionModule,
         MatDialogModule,
+        MatSnackBarModule,
         ColorPickerModule,
         DndModule,
         MatSidenavModule,
