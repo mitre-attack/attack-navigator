@@ -32,7 +32,7 @@
                         (input)="updateList()">
                 </textarea>
             </mat-form-field>
-            <a *ngIf="includeLinks && item.valid()" class="assigned-link" href="{{item[config.valueField]}}" target="_blank">{{item[config.nameField]}}</a>
+            <a *ngIf="includeLinks && item.valid()" class="assigned-link" href="{{item[config.valueField]}}" target="_blank" rel="noopener noreferrer">{{item[config.nameField]}}</a>
             <div class="remove-button">
                 <button class="button" (click)="remove(i)">remove</button>
             </div>
