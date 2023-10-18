@@ -13,6 +13,11 @@
             cursor: pointer;
             vertical-align: bottom;
             font-weight: bold;
+            position: sticky;
+            top: 0.05px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
 
         &.count {
@@ -20,6 +25,11 @@
             font-size: $sizeunit - 1px;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            position: sticky;
+            top: 35px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
 
         .subtechniques-row.hidden {

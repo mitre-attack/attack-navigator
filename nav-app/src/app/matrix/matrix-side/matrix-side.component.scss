@@ -1,8 +1,9 @@
 @import "../matrix-common.scss";
 .matrix.side {
     // thead {
-    //     background-color: color(matrix-header);
-    //     color: on-color(matrix-header);
+    // //     background-color: color(matrix-header);
+    // //     color: on-color(matrix-header);
+    //     @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
     // }
     // white-space: nowrap;
     .tactic {

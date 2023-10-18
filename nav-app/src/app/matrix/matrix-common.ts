@@ -99,6 +99,14 @@ export abstract class MatrixCommon {
     }
 
     public get tacticRowStyle(): any {
+        if(this.viewModel.showTacticRowBackground){
+            var elements_name = document.querySelectorAll<HTMLElement>(".tactic.name");
+            var elements_count = document.querySelectorAll<HTMLElement>(".tactic.count");
+            for (var i = 0; i < elements_name.length; i++) {
+                elements_name[i].style.backgroundColor=this.viewModel.tacticRowBackground;
+                elements_count[i].style.backgroundColor=this.viewModel.tacticRowBackground;
+            }
+        }
         return this.viewModel.showTacticRowBackground ? { 
             "background": this.viewModel.tacticRowBackground,
             "color": tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
