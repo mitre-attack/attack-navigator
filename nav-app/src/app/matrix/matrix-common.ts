@@ -99,6 +99,15 @@ export abstract class MatrixCommon {
     }
 
     public get tacticRowStyle(): any {
+        //change background of sticky tactic header if showTacticRowBackground is enabled
+        if(this.viewModel.showTacticRowBackground){
+            let elements_name = document.querySelectorAll<HTMLElement>(".tactic.name");
+            let elements_count = document.querySelectorAll<HTMLElement>(".tactic.count");
+            for (let i = 0; i < elements_name.length; i++) {
+                elements_name[i].style.backgroundColor=this.viewModel.tacticRowBackground;
+                elements_count[i].style.backgroundColor=this.viewModel.tacticRowBackground;
+            }
+        }
         return this.viewModel.showTacticRowBackground ? { 
             "background": this.viewModel.tacticRowBackground,
             "color": tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
