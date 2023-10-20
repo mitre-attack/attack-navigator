@@ -1,18 +1,18 @@
-import { Domain } from "./stix/domain";
+import { Domain } from './stix/domain';
 
 export class Filter {
     // the data for a specific filter
     private readonly domain: string;
     public platforms: {
-        options: string[],
-        selection: string[]
-    }
-    
+        options: string[];
+        selection: string[];
+    };
+
     constructor() {
         this.platforms = {
             selection: [],
-            options: []
-        }
+            options: [],
+        };
     }
 
     /**
@@ -21,7 +21,8 @@ export class Filter {
      */
     public initPlatformOptions(domain: Domain): void {
         this.platforms.options = JSON.parse(JSON.stringify(domain.platforms));
-        if (!this.platforms.selection.length) { // prevent overwriting current selection
+        if (!this.platforms.selection.length) {
+            // prevent overwriting current selection
             this.platforms.selection = JSON.parse(JSON.stringify(domain.platforms));
         }
     }
@@ -32,9 +33,12 @@ export class Filter {
      * @param {*} value the value to toggle
      */
     public toggleInFilter(filterName: string, value: string): void {
-        if (!this[filterName].options.includes(value)) { console.error("not a valid option to toggle", value, this[filterName]); return }
+        if (!this[filterName].options.includes(value)) {
+            console.error('not a valid option to toggle', value, this[filterName]);
+            return;
+        }
         if (this[filterName].selection.includes(value)) {
-            let index = this[filterName].selection.indexOf(value)
+            let index = this[filterName].selection.indexOf(value);
             this[filterName].selection.splice(index, 1);
         } else {
             this[filterName].selection.push(value);
@@ -48,7 +52,7 @@ export class Filter {
      * @returns {boolean} true if value is currently enabled in the filter
      */
     public inFilter(filterName, value): boolean {
-        return this[filterName].selection.includes(value)
+        return this[filterName].selection.includes(value);
     }
 
     /**
@@ -56,7 +60,7 @@ export class Filter {
      * @return stringified filter
      */
     public serialize(): string {
-        return JSON.stringify({"platforms": this.platforms.selection})
+        return JSON.stringify({ platforms: this.platforms.selection });
     }
 
     /**
@@ -64,38 +68,38 @@ export class Filter {
      * @param rep filter object
      */
     public deserialize(rep: any): void {
-        let isStringArray = function(arr): boolean {
+        let isStringArray = function (arr): boolean {
             for (let item of arr) {
-                if (typeof(item) !== "string") {
-                    console.error("TypeError:", item, "(",typeof(item),")", "is not a string")
+                if (typeof item !== 'string') {
+                    console.error('TypeError:', item, '(', typeof item, ')', 'is not a string');
                     return false;
                 }
-
             }
             return true;
-        }
+        };
 
         if (rep.platforms) {
             if (isStringArray(rep.platforms)) {
-                let backwards_compatibility_mappings = { //backwards compatibility with older layers
-                    "android": "Android",
-                    "ios": "iOS",
+                let backwards_compatibility_mappings = {
+                    //backwards compatibility with older layers
+                    android: 'Android',
+                    ios: 'iOS',
 
-                    "windows": "Windows",
-                    "linux": "Linux",
-                    "mac": "macOS",
+                    windows: 'Windows',
+                    linux: 'Linux',
+                    mac: 'macOS',
 
-                    "AWS": "IaaS",
-                    "GCP": "IaaS",
-                    "Azure": "IaaS"
-                }
+                    AWS: 'IaaS',
+                    GCP: 'IaaS',
+                    Azure: 'IaaS',
+                };
                 const selection = new Set<string>();
                 rep.platforms.forEach(function (platform) {
                     if (platform in backwards_compatibility_mappings) selection.add(backwards_compatibility_mappings[platform]);
                     else selection.add(platform);
                 });
                 this.platforms.selection = Array.from(selection);
-            } else console.error("TypeError: filter platforms field is not a string[]");
+            } else console.error('TypeError: filter platforms field is not a string[]');
         }
     }
 }

@@ -4,37 +4,33 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { SvgExportComponent } from './svg-export.component';
 
 describe('SvgExportComponent', () => {
-  let component: SvgExportComponent;
-  let fixture: ComponentFixture<SvgExportComponent>;
+    let component: SvgExportComponent;
+    let fixture: ComponentFixture<SvgExportComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        MatDialogModule 
-      ],
-      declarations: [ SvgExportComponent ],
-      providers: [
-        {
-          provide: MatDialogRef,
-          useValue: {}
-        },
-        {
-          provide: MAT_DIALOG_DATA,
-          useValue: {}
-        }
-      ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule, MatDialogModule],
+            declarations: [SvgExportComponent],
+            providers: [
+                {
+                    provide: MatDialogRef,
+                    useValue: {},
+                },
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {},
+                },
+            ],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SvgExportComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SvgExportComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -1,8 +1,12 @@
 @use 'sass:math' as math;
-@import "../matrix-common.scss";
+@import '../matrix-common.scss';
 .matrix.mini {
-    .header { text-align: left; }
-    .tactic { padding: 0 5px; }
+    .header {
+        text-align: left;
+    }
+    .tactic {
+        padding: 0 5px;
+    }
     .tactic.header {
         padding: 5px;
     }
@@ -16,7 +20,9 @@
         .cell-container {
             margin-right: math.div($sizeunit, 6);
             margin-bottom: math.div($sizeunit, 6);
-            &:not(.supertechnique-group) { display: inline-block; }
+            &:not(.supertechnique-group) {
+                display: inline-block;
+            }
             // margin: 0 2px 0 2px;
             &.supertechnique-group {
                 // background: color(panel-light);

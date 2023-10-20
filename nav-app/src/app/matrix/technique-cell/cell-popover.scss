@@ -1,7 +1,9 @@
 @mixin cell-popover($opacity) {
     position: absolute;
     padding: 6px;
-    &:not(.top) { top: 0; }
+    &:not(.top) {
+        top: 0;
+    }
     z-index: 100;
     min-width: 150px;
     max-width: 300px;

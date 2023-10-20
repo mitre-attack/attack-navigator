@@ -8,12 +8,9 @@ describe('ChangelogCellComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-        imports: [
-        HttpClientTestingModule 
-      ],
-            declarations: [ChangelogCellComponent]
-        })
-            .compileComponents();
+            imports: [HttpClientTestingModule],
+            declarations: [ChangelogCellComponent],
+        }).compileComponents();
     });
 
     beforeEach(() => {

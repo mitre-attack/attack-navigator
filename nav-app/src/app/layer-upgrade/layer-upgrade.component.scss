@@ -1,15 +1,19 @@
-@import "../../colors.scss";
+@import '../../colors.scss';
 
 .title {
     h2 {
         display: inline-block;
         margin: 12px 0;
     }
-    .mat-icon { vertical-align: middle; }
+    .mat-icon {
+        vertical-align: middle;
+    }
 }
-h4 { margin: 12px 0; }
+h4 {
+    margin: 12px 0;
+}
 .mat-divider {
-    margin: 1rem 0!important;
+    margin: 1rem 0 !important;
 }
 .changelog-cells {
     padding-bottom: 1rem;
@@ -25,39 +29,43 @@ h4 { margin: 12px 0; }
     line-height: 10px;
     cursor: pointer;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
-    &:hover { background-color: darken(color(panel-dark), 5%); }
+    &:hover {
+        background-color: darken(color(panel-dark), 5%);
+    }
 }
 
 .mat-step .mat-button-base {
-  @include adaptive-color-dark-only("background-color", rgba(0,0,0,0));
-  &.mat-button-disabled {
-    @include adaptive-color-dark-only("color", rgba(255,255,255,0.5));
-  }
+    @include adaptive-color-dark-only('background-color', rgba(0, 0, 0, 0));
+    &.mat-button-disabled {
+        @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.5));
+    }
 }
 
 .mat-step-header .mat-step-label {
-  @include adaptive-color-dark-only("color", on-color(dark));
+    @include adaptive-color-dark-only('color', on-color(dark));
 }
 
 .mat-stepper-vertical-line::before {
-  @include adaptive-color-dark-only("border-left-color", on-color(dark));
+    @include adaptive-color-dark-only('border-left-color', on-color(dark));
 }
 
 .mat-paginator-container {
     min-height: unset;
 }
 
-.mat-stepper-vertical, .mat-paginator {
-  @include adaptive-color-dark-only("background-color", color(dark-3));
-  @include adaptive-color-dark-only("color", on-color(dark));
+.mat-stepper-vertical,
+.mat-paginator {
+    @include adaptive-color-dark-only('background-color', color(dark-3));
+    @include adaptive-color-dark-only('color', on-color(dark));
 }
 
 .stepper-content {
     padding: 6px;
 }
 
-.mat-expansion-panel:first-child .mat-expansion-panel-header, .mat-expansion-panel-header.mat-expanded {
-  @include adaptive-color-dark-only("border-top", 1px solid #ffffff21);
+.mat-expansion-panel:first-child .mat-expansion-panel-header,
+.mat-expansion-panel-header.mat-expanded {
+    @include adaptive-color-dark-only('border-top', 1px solid #ffffff21);
 }
 
 .mat-expansion-panel-header-title span {
@@ -73,14 +81,18 @@ tr td {
     table-layout: fixed;
     width: 100%;
 }
-.narrow { width: 44px; }
+.narrow {
+    width: 44px;
+}
 .button-container .button {
     display: flex;
     align-items: center;
     margin: 4px;
-    .mat-icon { font-size: 16px; }
+    .mat-icon {
+        font-size: 16px;
+    }
     &:disabled {
-        @include adaptive-color("background-color", lighten(color(panel-dark), 5%), color(dark-2));
+        @include adaptive-color('background-color', lighten(color(panel-dark), 5%), color(dark-2));
         cursor: unset;
     }
 }
@@ -94,7 +106,9 @@ tr td {
 .version {
     text-align: center;
     margin-bottom: -1rem;
-    a { text-decoration: none; }
+    a {
+        text-decoration: none;
+    }
 }
 .arrow {
     text-align: center;
@@ -104,14 +118,18 @@ tr td {
     margin-top: 1.5rem;
     height: 100%;
     display: flex;
-    .mat-icon { height: 100%; }
+    .mat-icon {
+        height: 100%;
+    }
 }
 .wide {
     width: 100%;
 }
 .checkbox {
     padding: 6px;
-    &.right { float: right; }
+    &.right {
+        float: right;
+    }
 }
 .checkbox-custom-label {
     display: block;
@@ -122,13 +140,15 @@ tr td {
 .stepper-button {
     float: right;
     padding-bottom: 24px;
-    .mat-stroked-button { margin-left: 12px; }
+    .mat-stroked-button {
+        margin-left: 12px;
+    }
 }
 .reviewed {
-    color: #4BB543;
+    color: #4bb543;
 }
 .disabled {
-    @include adaptive-color("color", rgba(0, 0, 0, 0.15), color(dark-link));
+    @include adaptive-color('color', rgba(0, 0, 0, 0.15), color(dark-link));
 }
 .dndDragover .technique-cell {
     box-shadow: 0 0 0 1px color(cell-highlight-color) inset !important;
@@ -140,8 +160,12 @@ tr td {
     white-space: pre-line;
     padding: 6px;
     text-align: justify;
-    span { font-size: 14px; }
-    &.center { text-align: center; }
+    span {
+        font-size: 14px;
+    }
+    &.center {
+        text-align: center;
+    }
 }
 .spinner {
     display: flex;

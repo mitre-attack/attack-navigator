@@ -7,21 +7,20 @@ describe('ListInputComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ListInputComponent]
-        })
-            .compileComponents();
+            declarations: [ListInputComponent],
+        }).compileComponents();
     });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ListInputComponent);
         component = fixture.componentInstance;
         component.config = {
-            'viewModel': null,
-            'list': null,
-            'level': 'layer',
-            'type': 'metadata',
-            'nameField': 'name',
-            valueField: 'value'
+            viewModel: null,
+            list: null,
+            level: 'layer',
+            type: 'metadata',
+            nameField: 'name',
+            valueField: 'value',
         };
         fixture.detectChanges();
     });

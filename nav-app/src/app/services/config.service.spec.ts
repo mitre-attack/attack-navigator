@@ -3,16 +3,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
 
 describe('ConfigService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [
-        HttpClientTestingModule 
-      ],
-      providers: [ConfigService]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            providers: [ConfigService],
+        });
     });
-  });
 
-  it('should be created', inject([ConfigService], (service: ConfigService) => {
-    expect(service).toBeTruthy();
-  }));
+    it('should be created', inject([ConfigService], (service: ConfigService) => {
+        expect(service).toBeTruthy();
+    }));
 });

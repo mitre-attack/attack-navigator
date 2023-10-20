@@ -4,70 +4,45 @@
     <!-- the actual menu -->
     <div [ngClass]="'menu ' + placement">
         <div class="contextMenu-section">
-            <div class="contextMenu-header">
-                {{technique.name}} ({{technique.attackID}})
-            </div>
+            <div class="contextMenu-header">{{ technique.name }} ({{ technique.attackID }})</div>
         </div>
         <div class="contextMenu-section">
-            <div class="contextMenu-button" (click)="pinCell()">
-                pin/unpin tooltip
-            </div>
+            <div class="contextMenu-button" (click)="pinCell()">pin/unpin tooltip</div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
-            <div class="contextMenu-button" (click)="select()">
-                select
-            </div>
-            <div class="contextMenu-button" (click)="addSelection()">
-                add to selection
-            </div>
-            <div class="contextMenu-button" (click)="removeSelection()">
-                remove from selection
-            </div>
+            <div class="contextMenu-button" (click)="select()">select</div>
+            <div class="contextMenu-button" (click)="addSelection()">add to selection</div>
+            <div class="contextMenu-button" (click)="removeSelection()">remove from selection</div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
-            <div class="contextMenu-button" (click)="selectAll()">
-                select all
-            </div>
-            <div class="contextMenu-button" (click)="deselectAll()">
-                deselect all
-            </div>
-            <div class="contextMenu-button" (click)="invertSelection()">
-                invert selection
-            </div>
+            <div class="contextMenu-button" (click)="selectAll()">select all</div>
+            <div class="contextMenu-button" (click)="deselectAll()">deselect all</div>
+            <div class="contextMenu-button" (click)="invertSelection()">invert selection</div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
-            <div class="contextMenu-button" (click)="selectAnnotated()">
-                select annotated
-            </div>
-            <div class="contextMenu-button" (click)="selectUnannotated()">
-                select unannotated
-            </div>
+            <div class="contextMenu-button" (click)="selectAnnotated()">select annotated</div>
+            <div class="contextMenu-button" (click)="selectUnannotated()">select unannotated</div>
         </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
-            <div class="contextMenu-button" (click)="selectAllInTactic()">
-                select all techniques in tactic
-            </div>
-            <div class="contextMenu-button" (click)="deselectAllInTactic()">
-                deselect all techniques in tactic
-            </div>
+            <div class="contextMenu-button" (click)="selectAllInTactic()">select all techniques in tactic</div>
+            <div class="contextMenu-button" (click)="deselectAllInTactic()">deselect all techniques in tactic</div>
         </div>
         <div class="contextMenu-section">
-            <div class="contextMenu-button" (click)="viewTechnique()">
-                view technique
-            </div>
-            <div class="contextMenu-button" (click)="viewTactic()">
-                view tactic
-            </div>
+            <div class="contextMenu-button" (click)="viewTechnique()">view technique</div>
+            <div class="contextMenu-button" (click)="viewTactic()">view tactic</div>
         </div>
         <div class="contextMenu-section" *ngIf="configService.contextMenuItems.length > 0">
-            <div class="contextMenu-button" *ngFor="let contextMenuItem of configService.contextMenuItems" (click)="openCustomContextMenuItem(contextMenuItem)">
-                {{contextMenuItem.label}}
+            <div
+                class="contextMenu-button"
+                *ngFor="let contextMenuItem of configService.contextMenuItems"
+                (click)="openCustomContextMenuItem(contextMenuItem)">
+                {{ contextMenuItem.label }}
             </div>
         </div>
         <div *ngIf="links.length" class="contextMenu-section">
             <div class="link-container" *ngFor="let link of links">
-                <div *ngIf="!link.divider else divider" class="contextMenu-button" (click)="openLink(link)">
-                    {{link.label}}
+                <div *ngIf="!link.divider; else divider" class="contextMenu-button" (click)="openLink(link)">
+                    {{ link.label }}
                 </div>
                 <ng-template #divider>
                     <div class="divider"></div>

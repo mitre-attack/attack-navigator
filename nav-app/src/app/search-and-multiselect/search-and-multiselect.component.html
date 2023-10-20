@@ -2,7 +2,7 @@
     <mat-form-field appearance="outline">
         <mat-label>Search</mat-label>
         <span matPrefix class="material-icons" alt="search">search</span>
-        <input matInput [(ngModel)]="query" placeholder="Search">
+        <input matInput [(ngModel)]="query" placeholder="Search" />
     </mat-form-field>
 
     <mat-divider></mat-divider>
@@ -14,9 +14,13 @@
                 <mat-card-content>
                     <div class="fields">
                         <div class="field" *ngFor="let field of fields">
-                            <input [id]="field.field" class="checkbox-custom" type="checkbox"
-                                   (click)="toggleFieldEnabled(field.field)" [checked]="field.enabled">
-                            <label [for]="field.field" class="checkbox-custom-label noselect">{{field.label}}</label>
+                            <input
+                                [id]="field.field"
+                                class="checkbox-custom"
+                                type="checkbox"
+                                (click)="toggleFieldEnabled(field.field)"
+                                [checked]="field.enabled" />
+                            <label [for]="field.field" class="checkbox-custom-label noselect">{{ field.label }}</label>
                         </div>
                     </div>
                 </mat-card-content>
@@ -31,10 +35,9 @@
             <mat-expansion-panel [expanded]="expandedPanels[0]" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <h4>Techniques ({{techniqueResults.length}})</h4>
+                        <h4>Techniques ({{ techniqueResults.length }})</h4>
                     </mat-panel-title>
-                    <mat-panel-description>
-                    </mat-panel-description>
+                    <mat-panel-description></mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <ng-template matExpansionPanelContent>
@@ -47,10 +50,10 @@
                             <table class="results" *ngIf="techniqueResults.length > 0; else noTechniquesResults">
                                 <tr *ngFor="let result of techniqueResults">
                                     <td (mouseenter)="mouseEnter(result)" (mouseleave)="mouseLeave()">
-                                        <span *ngIf="result.isSubtechnique">{{result.parent.name}}
-                                            : </span>{{result.name}}
+                                        <span *ngIf="result.isSubtechnique">{{ result.parent.name }} :</span>
+                                        {{ result.name }}
                                     </td>
-                                    <td><a href="{{result.url}}" target="_blank" rel="noopener noreferrer">view</a></td>
+                                    <td><a href="{{ result.url }}" target="_blank" rel="noopener noreferrer">view</a></td>
                                     <td>
                                         <button class="button" (click)="select(result)">select</button>
                                     </td>
@@ -67,15 +70,16 @@
                 </ng-template>
             </mat-expansion-panel>
 
-            <mat-expansion-panel *ngFor="let stixType of stixTypes; let i = index" class="stixType" [expanded]="expandedPanels[i+1]" (click)="userClickedExpand = true">
+            <mat-expansion-panel
+                *ngFor="let stixType of stixTypes; let i = index"
+                class="stixType"
+                [expanded]="expandedPanels[i + 1]"
+                (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <h4>
-                            {{stixType.label | titlecase }} ({{stixType.objects.length}})
-                        </h4>
+                        <h4>{{ stixType.label | titlecase }} ({{ stixType.objects.length }})</h4>
                     </mat-panel-title>
-                    <mat-panel-description>
-                    </mat-panel-description>
+                    <mat-panel-description></mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <ng-template matExpansionPanelContent>
@@ -86,11 +90,10 @@
                     <div class="results objects">
                         <table *ngIf="stixType.objects.length > 0; else noResults">
                             <tr *ngFor="let stixObject of stixType.objects">
-                                <td (mouseenter)="mouseEnter(stixObject, false)"
-                                    (mouseleave)="mouseLeave()">
-                                    {{stixObject.name}}
+                                <td (mouseenter)="mouseEnter(stixObject, false)" (mouseleave)="mouseLeave()">
+                                    {{ stixObject.name }}
                                 </td>
-                                <td><a href="{{stixObject.url}}" target="_blank" rel="noopener noreferrer">view</a></td>
+                                <td><a href="{{ stixObject.url }}" target="_blank" rel="noopener noreferrer">view</a></td>
                                 <td>
                                     <button class="button" (click)="select(stixObject, false)">select</button>
                                 </td>
@@ -100,7 +103,7 @@
                             </tr>
                         </table>
                         <ng-template #noResults>
-                            <div class="no-results">no results for {{stixType.label}}</div>
+                            <div class="no-results">no results for {{ stixType.label }}</div>
                         </ng-template>
                     </div>
                 </ng-template>
@@ -109,12 +112,9 @@
             <mat-expansion-panel [expanded]="expandedPanels[4]" (click)="userClickedExpand = true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        <h4>
-                            Data Sources ({{stixDataComponentLabels.length}})
-                        </h4>
+                        <h4>Data Sources ({{ stixDataComponentLabels.length }})</h4>
                     </mat-panel-title>
-                    <mat-panel-description>
-                    </mat-panel-description>
+                    <mat-panel-description></mat-panel-description>
                 </mat-expansion-panel-header>
 
                 <ng-template matExpansionPanelContent>
@@ -124,12 +124,11 @@
                     </div>
                     <div class="results objects">
                         <table *ngIf="stixDataComponentLabels.length > 0; else noResults">
-                            <tr  *ngFor="let label of stixDataComponentLabels">
-                                <td (mouseenter)="mouseEnterAll(stixDataComponents.get(label).objects)"
-                                    (mouseleave)="mouseLeave()">
+                            <tr *ngFor="let label of stixDataComponentLabels">
+                                <td (mouseenter)="mouseEnterAll(stixDataComponents.get(label).objects)" (mouseleave)="mouseLeave()">
                                     {{ label }}
                                 </td>
-                                <td><a href="{{stixDataComponents.get(label).url}}" target="_blank" rel="noopener noreferrer">view</a></td>
+                                <td><a href="{{ stixDataComponents.get(label).url }}" target="_blank" rel="noopener noreferrer">view</a></td>
                                 <td>
                                     <button class="button" (click)="selectAll(stixDataComponents.get(label).objects, true)">select</button>
                                 </td>

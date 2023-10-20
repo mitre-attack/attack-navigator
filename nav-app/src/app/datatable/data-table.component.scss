@@ -1,5 +1,5 @@
-@import "../../colors.scss";
-@import "../../styles.scss";
+@import '../../colors.scss';
+@import '../../styles.scss';
 
 $cellSize: 15px;
 
@@ -8,260 +8,254 @@ $cellSize: 15px;
 // | __ || | (_ | __ | |__ | | (_ | __ | | |  | || .` | (_ |
 // |_||_|___\___|_||_|____|___\___|_||_| |_| |___|_|\_|\___|
 
-
-
-
- //  __  __   _   ___ _  _   _____ _   ___ _    ___
- // |  \/  | /_\ |_ _| \| | |_   _/_\ | _ ) |  | __|
- // | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
- // |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
+//  __  __   _   ___ _  _   _____ _   ___ _    ___
+// |  \/  | /_\ |_ _| \| | |_   _/_\ | _ ) |  | __|
+// | |\/| |/ _ \ | || .` |   | |/ _ \| _ \ |__| _|
+// |_|  |_/_/ \_\___|_|\_|   |_/_/ \_\___/____|___|
 
 // content of each tab
 .matrices {
-  @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
-  @include adaptive-color-dark-only("color", on-color(dark));
-  @include adaptive-color-dark-only("border", none);
-  overflow-x: scroll;
-  min-height: 50vh;
-  border: 1px solid color(panel-dark);
-  transition: height ease-in-out 0.2s;
+    @include adaptive-color-dark-only('background-color', lighten(color(dark-1), 3%));
+    @include adaptive-color-dark-only('color', on-color(dark));
+    @include adaptive-color-dark-only('border', none);
+    overflow-x: scroll;
+    min-height: 50vh;
+    border: 1px solid color(panel-dark);
+    transition: height ease-in-out 0.2s;
 
-  .spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
+    .spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
 
-    mat-progress-spinner circle {
-      stroke: on-color-deemphasis(body);
-    }
-  }
-
-  .matrices-columns {
-    // white-space: nowrap;
-    display: table;
-
-    .matrix-column {
-      display: table-cell;
-      white-space: normal;
-      // display: inline-block;
-      padding: 10px;
-      @media print {
-        padding: 0;
+        mat-progress-spinner circle {
+            stroke: on-color-deemphasis(body);
+        }
     }
 
-      .matrix-name {
-        text-align: center;
-        padding-bottom: 5px;
-        margin-bottom: 5px;
-        font-size: 16px;
-        border-bottom: 1px solid color(panel-dark);
-      }
+    .matrices-columns {
+        // white-space: nowrap;
+        display: table;
 
-      & + .matrix-column {
-        border-left: 1px solid color(panel-dark);
-      }
+        .matrix-column {
+            display: table-cell;
+            white-space: normal;
+            // display: inline-block;
+            padding: 10px;
+            @media print {
+                padding: 0;
+            }
+
+            .matrix-name {
+                text-align: center;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+                font-size: 16px;
+                border-bottom: 1px solid color(panel-dark);
+            }
+
+            & + .matrix-column {
+                border-left: 1px solid color(panel-dark);
+            }
+        }
     }
-  }
 }
 
 .multiselect-dropdown {
-  display: inline-block;
+    display: inline-block;
 }
 
 .colorpicker {
-  width: ($cellSize + 5 + 2) * 4 !important; //override preset width
-  align-items: center;
-  text-align: center;
+    width: ($cellSize + 5 + 2) * 4 !important; //override preset width
+    align-items: center;
+    text-align: center;
 
-  .color-block {
-    @include adaptive-color("border", 1px solid black, 1px solid color(dark-disabled));
-    cursor: pointer;
-    margin: 2.5px;
+    .color-block {
+        @include adaptive-color('border', 1px solid black, 1px solid color(dark-disabled));
+        cursor: pointer;
+        margin: 2.5px;
 
-    &.square {
-      display: inline-block;
-      width: $cellSize;
-      height: $cellSize;
+        &.square {
+            display: inline-block;
+            width: $cellSize;
+            height: $cellSize;
+        }
+
+        &.wide {
+            @include adaptive-color-dark-only('color', color(dark-disabled));
+            display: block;
+            height: $cellSize;
+            font-size: 10pt;
+            color: darken(white, 50%);
+        }
     }
-
-    &.wide {
-      @include adaptive-color-dark-only("color", color(dark-disabled));
-      display: block;
-      height: $cellSize;
-      font-size: 10pt;
-      color: darken(white, 50%);
-    }
-  }
 }
 
 //color controls
 .colorSetup {
-  font-size: 8pt;
+    font-size: 8pt;
 
-  .colorpicker {
-    width: 10ex;
-  }
-
-  .gradient-section-label {
-    font-weight: bold;
-    padding: 4px;
-    text-align: center;
-  }
-
-  .gradient-section-content {
-    @include adaptive-color("border-color", black, white);
-    border-style: solid;
-    border-width: 1px 0;
-    text-align: left;
-  }
-
-  .display-buttons {
-    // width: 183px;
-    text-align: center;
-
-    .squarebutton {
-      @include adaptive-color("border", 1px solid color(panel-dark), 1px solid color(dark-disabled));
-      padding: 4px 0;
-      cursor: pointer;
-
-      &:hover {
-        @include adaptive-color("background", color(panel-light), color(cell-highlight-dark-color));
-      }
-
-      &.gradient:hover {
-        text-decoration: underline; //since background color won't be seen on gradient buttons
-      }
+    .colorpicker {
+        width: 10ex;
     }
 
-    .presetsmenu {
-      width: 90%;
-      display: inline-block;
-    }
-
-  }
-
-  .gradient-controls {
-    table {
-      padding: 0;
-      margin: 0;
-      border-collapse: collapse;
-
-      td {
-        button {
-          @include adaptive-color-dark-only("background-color", color(dark-1));
-          @include adaptive-color-dark-only("border", 1px solid color(dark-disabled));
-          @include adaptive-color-dark-only("color", white);
-
-          &:hover {
-            @include adaptive-color-dark-only("background-color", black);
-          }
-        }
-
-        input {
-          @include adaptive-color-dark-only("background-color", black);
-          @include adaptive-color-dark-only("color", white);
-        }
-
-        &.buttons > div {
-          // border: 1px solid black;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-
-        }
-
-        .left, .right {
-          display: inline-block;
-        }
-
-        .left {
-          float: left
-        }
-
-        .right {
-          text-align: left;
-
-          select {
-            width: 80px;
-          }
-
-          // width: 100%;
-        }
-
-        &.col2 {
-          width: 45px;
-
-          input[type=number] {
-            // background-color: rgb(104, 60, 213);
-            width: 40px
-          }
-        }
-      }
-
-      .minmax {
-        @include adaptive-color("background-color", color(panel-light), color(dark-4));
+    .gradient-section-label {
+        font-weight: bold;
+        padding: 4px;
         text-align: center;
-        // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
-        // &.bottom { border-top: 1px solid black}
-      }
     }
 
-    // button {background: red;}
-    .addcolor {
-      width: 100%;
-      // background: red;
+    .gradient-section-content {
+        @include adaptive-color('border-color', black, white);
+        border-style: solid;
+        border-width: 1px 0;
+        text-align: left;
     }
-  }
+
+    .display-buttons {
+        // width: 183px;
+        text-align: center;
+
+        .squarebutton {
+            @include adaptive-color('border', 1px solid color(panel-dark), 1px solid color(dark-disabled));
+            padding: 4px 0;
+            cursor: pointer;
+
+            &:hover {
+                @include adaptive-color('background', color(panel-light), color(cell-highlight-dark-color));
+            }
+
+            &.gradient:hover {
+                text-decoration: underline; //since background color won't be seen on gradient buttons
+            }
+        }
+
+        .presetsmenu {
+            width: 90%;
+            display: inline-block;
+        }
+    }
+
+    .gradient-controls {
+        table {
+            padding: 0;
+            margin: 0;
+            border-collapse: collapse;
+
+            td {
+                button {
+                    @include adaptive-color-dark-only('background-color', color(dark-1));
+                    @include adaptive-color-dark-only('border', 1px solid color(dark-disabled));
+                    @include adaptive-color-dark-only('color', white);
+
+                    &:hover {
+                        @include adaptive-color-dark-only('background-color', black);
+                    }
+                }
+
+                input {
+                    @include adaptive-color-dark-only('background-color', black);
+                    @include adaptive-color-dark-only('color', white);
+                }
+
+                &.buttons > div {
+                    // border: 1px solid black;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .left,
+                .right {
+                    display: inline-block;
+                }
+
+                .left {
+                    float: left;
+                }
+
+                .right {
+                    text-align: left;
+
+                    select {
+                        width: 80px;
+                    }
+
+                    // width: 100%;
+                }
+
+                &.col2 {
+                    width: 45px;
+
+                    input[type='number'] {
+                        // background-color: rgb(104, 60, 213);
+                        width: 40px;
+                    }
+                }
+            }
+
+            .minmax {
+                @include adaptive-color('background-color', color(panel-light), color(dark-4));
+                text-align: center;
+                // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
+                // &.bottom { border-top: 1px solid black}
+            }
+        }
+
+        // button {background: red;}
+        .addcolor {
+            width: 100%;
+            // background: red;
+        }
+    }
 }
 
 .select_behavior {
-  padding: 5px;
-  text-align: left;
+    padding: 5px;
+    text-align: left;
 }
 
 .contextMenu-cover {
-  // covers entire page
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  // background: rgba(0, 0, 0, 0.15);
+    // covers entire page
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    // background: rgba(0, 0, 0, 0.15);
 }
 
 .contextMenu-box {
-  position: absolute;
-  // background: white;
-  &.left {
-    right: 0
-  }
-
-  border: 1px solid black;
-  background-color: white;
-  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-  position: absolute;
-  z-index: 100; //draw on top of other controls
-  width: max-content;
-
-  .contextMenu-section {
-    &:not(:first-child) {
-      border-top: 1px solid color(panel-dark);
-      margin-top: 2px;
-      padding-top: 2px;
-
+    position: absolute;
+    // background: white;
+    &.left {
+        right: 0;
     }
 
-    .contextMenu-button {
-      padding: 3px;
-      cursor: pointer;
+    border: 1px solid black;
+    background-color: white;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    z-index: 100; //draw on top of other controls
+    width: max-content;
 
-      &:hover {
-        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-      }
+    .contextMenu-section {
+        &:not(:first-child) {
+            border-top: 1px solid color(panel-dark);
+            margin-top: 2px;
+            padding-top: 2px;
+        }
+
+        .contextMenu-button {
+            padding: 3px;
+            cursor: pointer;
+
+            &:hover {
+                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+            }
+        }
     }
-  }
-
 }
 
 // .tooltip {
@@ -297,267 +291,266 @@ $cellSize: 15px;
 // }
 
 .mat-select {
-  :focus {
-    color: #63961C;
-  }
+    :focus {
+        color: #63961c;
+    }
 }
 
 .filters {
-  padding: 4px;
+    padding: 4px;
 
-  .filter {
-    text-align: left;
+    .filter {
+        text-align: left;
 
-    &:not(:first-child) {
-      margin-top: 4px;
+        &:not(:first-child) {
+            margin-top: 4px;
+        }
+
+        .filter-option {
+            &:hover {
+                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+            }
+        }
     }
-
-    .filter-option {
-      &:hover {
-        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-      }
-    }
-  }
 }
 
 .warning {
-  @include adaptive-color("color", #b30000, #ffab0f);
+    @include adaptive-color('color', #b30000, #ffab0f);
 }
 
 .warning-label {
-  vertical-align: super;
+    vertical-align: super;
 }
 
 .multiselect {
-  // padding: 4px;
-  text-align: center;
+    // padding: 4px;
+    text-align: center;
 
-  .multiselect-grouping {
-    .multiselect-grouping-label {
-      padding: 4px;
-      font-weight: bold;
-      // font-size: 14pt;
+    .multiselect-grouping {
+        .multiselect-grouping-label {
+            padding: 4px;
+            font-weight: bold;
+            // font-size: 14pt;
+        }
+
+        .multiselect-list {
+            text-align: left;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            height: 200px;
+            overflow-y: scroll;
+
+            table {
+                // table-layout:fixed; //fixes width
+                border-collapse: collapse;
+            }
+
+            .multiselect-list-item {
+                &:hover {
+                    @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+                }
+
+                .multiselect-list-item-label {
+                    width: 25ex;
+                }
+
+                &.selected:not(:hover) {
+                    background: color(panel-dark);
+                }
+            }
+        }
     }
-
-    .multiselect-list {
-      text-align: left;
-      border-top: 1px solid black;
-      border-bottom: 1px solid black;
-      height: 200px;
-      overflow-y: scroll;
-
-      table {
-        // table-layout:fixed; //fixes width
-        border-collapse: collapse;
-      }
-
-      .multiselect-list-item {
-        &:hover {
-          @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-        }
-
-        .multiselect-list-item-label {
-          width: 25ex;
-        }
-
-        &.selected:not(:hover) {
-          background: color(panel-dark);
-        }
-      }
-    }
-  }
 }
 
 .search {
-  // padding: 4px;
-  text-align: center;
+    // padding: 4px;
+    text-align: center;
 
-  .search-list {
-    margin-top: 2px;
-    text-align: left;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    height: 300px;
-    overflow-y: scroll;
+    .search-list {
+        margin-top: 2px;
+        text-align: left;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        height: 300px;
+        overflow-y: scroll;
 
-    table {
-      // table-layout:fixed; //fixes width
-      border-collapse: collapse;
-      width: 325px;
+        table {
+            // table-layout:fixed; //fixes width
+            border-collapse: collapse;
+            width: 325px;
+        }
+
+        .search-list-item {
+            &:hover {
+                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+            }
+
+            .search-list-item-label {
+                width: 25ex;
+            }
+
+            &.selected:not(:hover) {
+                background: color(panel-dark);
+            }
+        }
     }
-
-    .search-list-item {
-      &:hover {
-        @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-      }
-
-      .search-list-item-label {
-        width: 25ex;
-      }
-
-      &.selected:not(:hover) {
-        background: color(panel-dark);
-      }
-    }
-  }
 }
 
 .search-button {
-  &:hover {
-    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-  }
+    &:hover {
+        @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+    }
 }
 
 .button {
-  @include adaptive-color("background-color", color(panel-dark), color(dark-4));
-  @include adaptive-color-dark-only("color", on-color(dark));
-  border: none;
-  padding: 4px 10px;
-  text-align: center;
-  //font-size: 16px;
-  margin: 2px 1px;
-  transition: 0.3s;
-  display: inline-block;
-  text-decoration: none;
-  cursor: pointer;
+    @include adaptive-color('background-color', color(panel-dark), color(dark-4));
+    @include adaptive-color-dark-only('color', on-color(dark));
+    border: none;
+    padding: 4px 10px;
+    text-align: center;
+    //font-size: 16px;
+    margin: 2px 1px;
+    transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
 
-  &:hover {
-    @include adaptive-color("background-color", color(button-dark), color(dark-link));
-  }
+    &:hover {
+        @include adaptive-color('background-color', color(button-dark), color(dark-link));
+    }
 }
 
 .deselectNumber {
-  font-size: 5pt;
-  bottom: 2px;
-  right: 4px;
-  position: absolute;
-  text-align: right;
+    font-size: 5pt;
+    bottom: 2px;
+    right: 4px;
+    position: absolute;
+    text-align: right;
 }
 
 .legend {
-  @include adaptive-color("background-color", white, color(dark-3));
-  @include adaptive-color-light-only("border-left", 1px solid color(panel-dark));
-  z-index: 999;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 300px;
-  height: 300px;
-  @media print {
-    display:none
-  }
-
-  .itemArea {
-    @include adaptive-color-dark-only("color", on-color(dark));
-    position: static;
-    overflow-y: scroll;
-    margin-top: 30px;
-    height: 270px;
-    width: 100%;
-    overflow-x: hidden;
-
-    .item {
-      width: 100%;
-      height: 40px;
-      padding-left: 5px;
-
-      .label {
-        margin-left: 10px;
-        width: 150px;
-      }
-
+    @include adaptive-color('background-color', white, color(dark-3));
+    @include adaptive-color-light-only('border-left', 1px solid color(panel-dark));
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    @media print {
+        display: none;
     }
 
-    .even {
-      @include adaptive-color-dark-only("color", black);
-      background-color: color(panel-light);
-      width: 100%;
-      height: 40px;
+    .itemArea {
+        @include adaptive-color-dark-only('color', on-color(dark));
+        position: static;
+        overflow-y: scroll;
+        margin-top: 30px;
+        height: 270px;
+        width: 100%;
+        overflow-x: hidden;
 
-      .label {
-        margin-left: 10px;
-        width: 150px;
-      }
+        .item {
+            width: 100%;
+            height: 40px;
+            padding-left: 5px;
+
+            .label {
+                margin-left: 10px;
+                width: 150px;
+            }
+        }
+
+        .even {
+            @include adaptive-color-dark-only('color', black);
+            background-color: color(panel-light);
+            width: 100%;
+            height: 40px;
+
+            .label {
+                margin-left: 10px;
+                width: 150px;
+            }
+        }
     }
-  }
 }
 
 .legendBar {
-  @include adaptive-color("background-color", color(panel-dark), color(dark-3));
-  @include adaptive-color-dark-only("color", on-color(dark));
-  z-index: 999;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 300px;
-  height: 30px;
-  transition: 0.3s;
-  display: flex;
-  @media print {
-    display:none
-  }
-  align-items: center;
+    @include adaptive-color('background-color', color(panel-dark), color(dark-3));
+    @include adaptive-color-dark-only('color', on-color(dark));
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+    height: 30px;
+    transition: 0.3s;
+    display: flex;
+    @media print {
+        display: none;
+    }
+    align-items: center;
 
-  .title {
-    flex: 1;
-    text-align: center;
-    font-size: 14px;
-  }
+    .title {
+        flex: 1;
+        text-align: center;
+        font-size: 14px;
+    }
 
-  &:hover {
-    @include adaptive-color("background", color(cell-highlight-color), color(cell-highlight-dark-color));
-    cursor: pointer;
-  }
+    &:hover {
+        @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+        cursor: pointer;
+    }
 }
 
 .layer_info {
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  width: 250px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    width: 250px !important;
 
-  .name_desc {
-    padding: 0 10px;
-  }
+    .name_desc {
+        padding: 0 10px;
+    }
 
-  .layer-data {
-      text-align: left;
-      margin: 0 10px;
+    .layer-data {
+        text-align: left;
+        margin: 0 10px;
 
-      .mat-divider.layer-div {
-          margin-bottom: 10px;
-          @include adaptive-color-dark-only("border-top-color", color(dark-4));
-      }
-  }
+        .mat-divider.layer-div {
+            margin-bottom: 10px;
+            @include adaptive-color-dark-only('border-top-color', color(dark-4));
+        }
+    }
 
-  .data-input {
-      overflow-y: auto;
-      max-height: 30vh;
-  }
+    .data-input {
+        overflow-y: auto;
+        max-height: 30vh;
+    }
 }
 
 .layout {
-  width: 100px;
-  text-align: left;
+    width: 100px;
+    text-align: left;
 
-  select {
-    width: 100%;
-  }
-
-  .section {
-    padding: 10px;
-
-    & + .section {
-      border-top: 1px solid color(panel-light);
+    select {
+        width: 100%;
     }
-  }
 
-  .subsection {
-    padding-left: 5px;
+    .section {
+        padding: 10px;
 
-    .inner-dropdown-container {
-      margin: 5px;
+        & + .section {
+            border-top: 1px solid color(panel-light);
+        }
     }
-  }
+
+    .subsection {
+        padding-left: 5px;
+
+        .inner-dropdown-container {
+            margin: 5px;
+        }
+    }
 }
 
 .list-input {

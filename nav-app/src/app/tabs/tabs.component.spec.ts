@@ -4,28 +4,23 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TabsComponent } from './tabs.component';
 
 describe('TabsComponent', () => {
-  let component: TabsComponent;
-  let fixture: ComponentFixture<TabsComponent>;
+    let component: TabsComponent;
+    let fixture: ComponentFixture<TabsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [
-        HttpClientTestingModule,
-        MatDialogModule
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule, MatDialogModule],
+            declarations: [TabsComponent],
+        }).compileComponents();
+    }));
 
-      ],
-      declarations: [ TabsComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TabsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TabsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
