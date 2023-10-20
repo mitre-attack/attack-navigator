@@ -918,9 +918,6 @@ export class ViewModel {
      */
     private sortingAlgorithm(technique1: Technique, technique2: Technique, score1: number, score2: number) {
         switch (this.sorting) {
-            default:
-            case 0: // A-Z
-                return technique1.name.localeCompare(technique2.name);
             case 1: // Z-A
                 return technique2.name.localeCompare(technique1.name);
             case 2: // 1-2
@@ -935,6 +932,9 @@ export class ViewModel {
                 } else {
                     return score2 - score1;
                 }
+            case 0: // A-Z
+            default:
+                return technique1.name.localeCompare(technique2.name);
         }
     }
 
@@ -958,13 +958,6 @@ export class ViewModel {
         let aggScore: any = 0;
 
         switch (this.layout.aggregateFunction) {
-            default:
-            case 'average':
-                // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
-                // Otherwise, divide by count of all scored only
-                score = scores.reduce((a, b) => a + b);
-                aggScore = score / (this.layout.countUnscored ? technique.subtechniques.length + 1 : validTechniquesCount);
-                break;
             case 'min':
                 if (scores.length > 0) aggScore = Math.min(...scores);
                 break;
@@ -973,6 +966,13 @@ export class ViewModel {
                 break;
             case 'sum':
                 aggScore = scores.reduce((a, b) => a + b);
+                break;
+            case 'average':
+            default:
+                // Divide by count of all subtechniques + 1 (for parent technique) if counting unscored is enabled
+                // Otherwise, divide by count of all scored only
+                score = scores.reduce((a, b) => a + b);
+                aggScore = score / (this.layout.countUnscored ? technique.subtechniques.length + 1 : validTechniquesCount);
                 break;
         }
 
@@ -1272,9 +1272,6 @@ export class ViewModel {
              */
             if (typeof obj.viewMode === 'number') {
                 switch (obj.viewMode) {
-                    default:
-                    case 0:
-                        break; //default matrix layout already initialized
                     case 1:
                         this.layout.layout = 'side';
                         this.layout.showName = false;
@@ -1284,6 +1281,10 @@ export class ViewModel {
                         this.layout.layout = 'mini';
                         this.layout.showName = false;
                         this.layout.showID = false;
+                        break;
+                    case 0:
+                    default:
+                        break; //default matrix layout already initialized
                 }
             } else console.error('TypeError: viewMode field is not a number');
         }
