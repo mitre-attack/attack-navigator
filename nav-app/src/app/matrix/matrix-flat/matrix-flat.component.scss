@@ -13,6 +13,14 @@
             cursor: pointer;
             vertical-align: bottom;
             font-weight: bold;
+            @media print {
+                font-size: $sizeunit_print - 4px;
+            }
+            position: sticky;
+            top: 0.05px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
 
         &.count {
@@ -20,6 +28,14 @@
             font-size: $sizeunit - 1px;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            @media print {
+                font-size: $sizeunit_print - 4px;
+            }
+            position: sticky;
+            top: 32px;
+            z-index: 9999;
+            @include adaptive-color-dark-only("background-color", lighten(color(dark-1), 3%));
+            @include adaptive-color-light-only("background-color", white);
         }
 
         .subtechniques-row.hidden {
@@ -61,6 +77,9 @@
                 }
                 &.sidebar {
                     border-right: 2px solid on-color-deemphasis(body);
+                    @media print {
+                        display: none;
+                    }
                 }
                 &.technique {
                     box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;

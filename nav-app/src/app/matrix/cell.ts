@@ -55,7 +55,14 @@ export abstract class Cell {
 
         // classes added by layout config
         if (this.viewModel.layout.showID)
+        {
             theclass += " showID"
+            //change sticky top position of technique count
+            let elements = document.querySelectorAll<HTMLElement>(".tactic.count");
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.top='46px';
+            }
+        }
         if (this.viewModel.layout.showName)
             theclass += " showName"
         theclass += " " + this.viewModel.layout.layout;
