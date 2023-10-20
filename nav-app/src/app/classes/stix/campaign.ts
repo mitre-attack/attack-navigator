@@ -1,4 +1,4 @@
-import { StixObject } from "./stix-object";
+import { StixObject } from './stix-object';
 
 export class Campaign extends StixObject {
     /**
@@ -10,7 +10,9 @@ export class Campaign extends StixObject {
         let relationships = this.dataService.getDomain(domainVersionID).relationships.campaign_uses;
         if (relationships.has(this.id)) {
             return relationships.get(this.id);
-        } else { return []; }
+        } else {
+            return [];
+        }
     }
 
     /**

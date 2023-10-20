@@ -5,13 +5,13 @@ import { evaluate } from 'mathjs';
 import * as is from 'is_js';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ViewModelsService {
     @Output() onSelectionChange = new EventEmitter<any>();
 
     public viewModels: ViewModel[] = [];
-    public pinnedCell: string = "";
+    public pinnedCell: string = '';
 
     private nonce: number = 0;
 
@@ -31,7 +31,7 @@ export class ViewModelsService {
      * @return {ViewModel} the created ViewModel
      */
     public newViewModel(name: string, domainVersionID: string): ViewModel {
-        let vm = new ViewModel(name, "vm" + this.getNonce(), domainVersionID, this.dataService);
+        let vm = new ViewModel(name, 'vm' + this.getNonce(), domainVersionID, this.dataService);
         this.viewModels.push(vm);
         return vm;
     }
@@ -53,7 +53,7 @@ export class ViewModelsService {
     public destroyViewModel(vm: ViewModel): void {
         for (let i = 0; i < this.viewModels.length; i++) {
             if (this.viewModels[i] == vm) {
-                this.viewModels.splice(i, 1)
+                this.viewModels.splice(i, 1);
                 return;
             }
         }
@@ -77,7 +77,7 @@ export class ViewModelsService {
      * @return                  new viewmodel inheriting above properties
      */
     public layerOperation(scoreVariables: Map<string, ViewModel>, layerName: string, opSettings: any): ViewModel {
-        let newViewModel = new ViewModel("layer by operation", "vm" + this.getNonce(), opSettings.domain, this.dataService);
+        let newViewModel = new ViewModel('layer by operation', 'vm' + this.getNonce(), opSettings.domain, this.dataService);
 
         if (opSettings.scoreExpression) {
             opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase(); // should be enforced by input, but just in case
@@ -86,11 +86,11 @@ export class ViewModelsService {
 
             // get list of all technique IDs used in the VMs
             let techniqueIDs = new Set<string>();
-            scoreVariables.forEach(vm => {
+            scoreVariables.forEach((vm) => {
                 vm.techniqueVMs.forEach(function (techniqueVM, techniqueID) {
                     techniqueIDs.add(techniqueID);
                 });
-            })
+            });
 
             // attempt to evaluate without a scope to catch the case of a static assignment
             try {
@@ -98,22 +98,23 @@ export class ViewModelsService {
                 let result = evaluate(opSettings.scoreExpression, {});
 
                 // if it didn't except after this, it evaluated to a single result
-                console.debug("score expression evaluated to single result to be applied to all techniques");
+                console.debug('score expression evaluated to single result to be applied to all techniques');
                 if (is.boolean(result)) {
                     // boolean to binary
-                    result = result ? "1" : "0";
+                    result = result ? '1' : '0';
                 } else if (is.not.number(result)) {
                     // unexpected user input
-                    throw Error("math result ( " + result + " ) is not a number");
+                    throw Error('math result ( ' + result + ' ) is not a number');
                 }
 
                 // apply result to all techniques
                 newViewModel.initializeScoresTo = String(result);
                 minScore = result;
                 maxScore = result;
-            } catch (err) { //couldn't evaluate with empty scope, build scope for each technique
+            } catch (err) {
+                //couldn't evaluate with empty scope, build scope for each technique
                 // compute the score of each techniqueID
-                techniqueIDs.forEach(techniqueID => {
+                techniqueIDs.forEach((techniqueID) => {
                     let newTechniqueVM = new TechniqueVM(techniqueID);
                     let scope = {};
                     let misses = 0; // number of times a VM is missing the value
@@ -123,9 +124,10 @@ export class ViewModelsService {
                             // missing technique
                             scoreValue = 0;
                             misses++;
-                        } else { // technique exists
+                        } else {
+                            // technique exists
                             let score = vm.getTechniqueVM_id(techniqueID).score;
-                            if (score == "" || isNaN(Number(score))) {
+                            if (score == '' || isNaN(Number(score))) {
                                 scoreValue = 0;
                                 misses++;
                             } else {
@@ -140,10 +142,10 @@ export class ViewModelsService {
                         let mathResult = evaluate(opSettings.scoreExpression, scope);
                         if (is.boolean(mathResult)) {
                             // boolean to binary
-                            mathResult = mathResult ? "1" : "0";
+                            mathResult = mathResult ? '1' : '0';
                         } else if (is.not.number(mathResult)) {
                             // unexpected user input
-                            throw Error("math result ( " + mathResult + " ) is not a number");
+                            throw Error('math result ( ' + mathResult + ' ) is not a number');
                         }
 
                         newTechniqueVM.score = String(mathResult);
@@ -162,10 +164,9 @@ export class ViewModelsService {
                 if (maxScore != -Infinity) newViewModel.gradient.maxValue = maxScore;
 
                 // if binary range, set to transparentblue gradient
-                if (minScore == 0 && maxScore == 1) newViewModel.gradient.setGradientPreset("transparentblue");
+                if (minScore == 0 && maxScore == 1) newViewModel.gradient.setGradientPreset('transparentblue');
             }
         }
-
 
         /**
          * Inherit a field from a vm
@@ -173,20 +174,23 @@ export class ViewModelsService {
          * @param  {string}    fieldName  the field to inherit from the viewmodel
          */
         function inherit(inheritVM: ViewModel, fieldName: string) {
-            inheritVM.techniqueVMs.forEach(techniqueVM => {
-                let tvm = newViewModel.hasTechniqueVM_id(techniqueVM.technique_tactic_union_id) ? newViewModel.getTechniqueVM_id(techniqueVM.technique_tactic_union_id) : new TechniqueVM(techniqueVM.technique_tactic_union_id)
+            inheritVM.techniqueVMs.forEach((techniqueVM) => {
+                let tvm = newViewModel.hasTechniqueVM_id(techniqueVM.technique_tactic_union_id)
+                    ? newViewModel.getTechniqueVM_id(techniqueVM.technique_tactic_union_id)
+                    : new TechniqueVM(techniqueVM.technique_tactic_union_id);
                 tvm[fieldName] = techniqueVM[fieldName];
                 newViewModel.techniqueVMs.set(techniqueVM.technique_tactic_union_id, tvm);
-            })
+            });
         }
 
-        if (opSettings.commentVM) inherit(opSettings.commentVM, "comment");
-        if (opSettings.linkVM) inherit(opSettings.linkVM, "links");
-        if (opSettings.metadataVM) inherit(opSettings.metadataVM, "metadata");
-        if (opSettings.coloringVM) inherit(opSettings.coloringVM, "color");
-        if (opSettings.enabledVM) inherit(opSettings.enabledVM, "enabled");
+        if (opSettings.commentVM) inherit(opSettings.commentVM, 'comment');
+        if (opSettings.linkVM) inherit(opSettings.linkVM, 'links');
+        if (opSettings.metadataVM) inherit(opSettings.metadataVM, 'metadata');
+        if (opSettings.coloringVM) inherit(opSettings.coloringVM, 'color');
+        if (opSettings.enabledVM) inherit(opSettings.enabledVM, 'enabled');
 
-        if (opSettings.filterVM) { //copy filter settings
+        if (opSettings.filterVM) {
+            //copy filter settings
             newViewModel.filters.deserialize(JSON.parse(opSettings.filterVM.filters.serialize()));
         }
 

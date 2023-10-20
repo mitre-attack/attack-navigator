@@ -6,10 +6,10 @@ import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
-import { ViewModelsService } from "../services/viewmodels.service";
+import { ViewModelsService } from '../services/viewmodels.service';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { ChangelogComponent } from "../changelog/changelog.component";
+import { ChangelogComponent } from '../changelog/changelog.component';
 import { Subscription, forkJoin } from 'rxjs';
 import * as is from 'is_js';
 import * as globals from '../utils/globals';
@@ -19,7 +19,7 @@ import * as globals from '../utils/globals';
     templateUrl: './tabs.component.html',
     styleUrls: ['./tabs.component.scss'],
     providers: [ViewModelsService],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;
@@ -30,10 +30,10 @@ export class TabsComponent implements AfterViewInit {
     public dropdownEnabled: string = '';
     public layerTabs: Tab[] = [];
     public adjustedHeaderHeight: number = 0;
-    public navVersion = globals.nav_version;
+    public navVersion = globals.navVersion;
     public safariDialogRef;
     public showHelpDropDown: boolean = false;
-    public loadURL: string = "";
+    public loadURL: string = '';
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
@@ -42,12 +42,12 @@ export class TabsComponent implements AfterViewInit {
     public loadData: any = {
         url: undefined,
         version: undefined,
-        identifier: undefined
-    }
+        identifier: undefined,
+    };
 
     // user input for layer-layer operations
     public opSettings: any = {
-        domain: "",
+        domain: '',
         gradientVM: null,
         coloringVM: null,
         commentVM: null,
@@ -55,34 +55,38 @@ export class TabsComponent implements AfterViewInit {
         metadataVM: null,
         enabledVM: null,
         filterVM: null,
-        scoreExpression: "",
-        legendVM: null
-    }
+        scoreExpression: '',
+        legendVM: null,
+    };
 
     public get latestDomains(): Domain[] {
         return this.filterDomains(this.dataService.versions[0]);
-    } 
+    }
 
-    constructor(private dialog: MatDialog, 
-                private viewModelsService: ViewModelsService, 
-                public  dataService: DataService, 
-                private http: HttpClient, 
-                private configService: ConfigService) {
-        console.debug("initializing tabs component");
+    constructor(
+        private dialog: MatDialog,
+        private viewModelsService: ViewModelsService,
+        public dataService: DataService,
+        private http: HttpClient,
+        private configService: ConfigService
+    ) {
+        console.debug('initializing tabs component');
         let subscription = dataService.getConfig().subscribe({
             next: (config: Object) => {
                 this.newBlankTab();
-                this.loadTabs(config["default_layers"]).then( () => {
+                this.loadTabs(config['default_layers']).then(() => {
                     // if failed to load from url, create a new blank layer
                     if (this.layerTabs.length == 0) this.newLayer(this.dataService.domains[0].id);
 
                     // if there is no active tab set, activate the first
                     if (!this.activeTab) this.selectTab(this.layerTabs[0]);
                 });
-                this.customizedConfig = this.configService.getFeatureList()
+                this.customizedConfig = this.configService.getFeatureList();
                 this.bannerContent = this.configService.banner;
             },
-            complete: () => { if (subscription) subscription.unsubscribe(); } // prevent memory leaks
+            complete: () => {
+                if (subscription) subscription.unsubscribe();
+            }, // prevent memory leaks
         });
     }
 
@@ -92,7 +96,7 @@ export class TabsComponent implements AfterViewInit {
             this.safariDialogRef = this.dialog.open(this.safariWarning, {
                 width: '350px',
                 disableClose: true,
-                panelClass: this.userTheme
+                panelClass: this.userTheme,
             });
         }
     }
@@ -109,18 +113,18 @@ export class TabsComponent implements AfterViewInit {
      * @param defaultLayers any default layers defined in the config file
      */
     private async loadTabs(defaultLayers) {
-        let bundleURL = this.getNamedFragmentValue("bundleURL")[0];
-        let bundleVersion = this.getNamedFragmentValue("version")[0];
-        let bundleDomain = this.getNamedFragmentValue("domain")[0];
-        let layerURLs = this.getNamedFragmentValue("layerURL");
+        let bundleURL = this.getNamedFragmentValue('bundleURL')[0];
+        let bundleVersion = this.getNamedFragmentValue('version')[0];
+        let bundleDomain = this.getNamedFragmentValue('domain')[0];
+        let layerURLs = this.getNamedFragmentValue('layerURL');
 
         let self = this;
         if (bundleURL?.length && bundleVersion && bundleDomain?.length) {
             // load base data from URL
             self.newLayerFromURL({
-                'url': bundleURL,
-                'version': bundleVersion,
-                'identifier': bundleDomain
+                url: bundleURL,
+                version: bundleVersion,
+                identifier: bundleDomain,
             });
         } else if (layerURLs?.length) {
             // load layer from URL
@@ -129,10 +133,10 @@ export class TabsComponent implements AfterViewInit {
                 await self.loadLayerFromURL(url, first, true);
                 first = false;
             }
-        } else if (defaultLayers["enabled"]) {
+        } else if (defaultLayers['enabled']) {
             // load default layers from config file
             let first = true;
-            for (let url of defaultLayers["urls"]) {
+            for (let url of defaultLayers['urls']) {
                 await self.loadLayerFromURL(url, first, true);
                 first = false;
             }
@@ -151,13 +155,13 @@ export class TabsComponent implements AfterViewInit {
     private openTab(title: string, viewModel: ViewModel, isCloseable = false, replace = true, forceNew = false, isDataTable = false): void {
         if (!forceNew) {
             // if tab is already open, change to that tab
-            let tab: Tab = this.layerTabs.find(t => t.title === title);
+            let tab: Tab = this.layerTabs.find((t) => t.title === title);
             this.selectTab(tab);
             return;
         }
 
         // create a new tab
-        let domain = viewModel ? viewModel.domainVersionID : "";
+        let domain = viewModel ? viewModel.domainVersionID : '';
         let tab = new Tab(title, isCloseable, false, domain, isDataTable);
         tab.viewModel = viewModel;
 
@@ -169,7 +173,7 @@ export class TabsComponent implements AfterViewInit {
             // find active tab index
             for (let i = 0; i < this.layerTabs.length; i++) {
                 if (this.layerTabs[i] == this.activeTab) {
-                    if(this.layerTabs[i].title == "new tab") {
+                    if (this.layerTabs[i].title == 'new tab') {
                         // close current and don't let it create a replacement tab
                         this.closeActiveTab(true);
                     }
@@ -199,10 +203,10 @@ export class TabsComponent implements AfterViewInit {
         this.activeTab = tab;
 
         // close search sidebar
-        this.viewModelsService.viewModels.forEach(viewModel => {
+        this.viewModelsService.viewModels.forEach((viewModel) => {
             if (viewModel.sidebarContentType === 'search') {
                 viewModel.sidebarOpened = false;
-                viewModel.sidebarContentType = "";
+                viewModel.sidebarContentType = '';
             }
         });
     }
@@ -219,7 +223,7 @@ export class TabsComponent implements AfterViewInit {
         this.viewModelsService.destroyViewModel(tab.viewModel);
 
         // check if the tab we're closing is the active tab
-        let i = this.layerTabs.findIndex(t => t === tab);
+        let i = this.layerTabs.findIndex((t) => t === tab);
         if (tab == this.activeTab) {
             if (i == 0 && this.layerTabs.length > 1) action = 1; // closing first tab, first tab is active, and more tabs exist
             else if (i > 0) action = 2; // not closing first tab, implicitly more tabs exist
@@ -236,16 +240,16 @@ export class TabsComponent implements AfterViewInit {
             case 0: // should only occur if the active tab is not closed, don't select another tab
                 break;
             case 1: // closing the first tab and more tabs exist
-                this.selectTab(this.layerTabs[0]) // select first tab
+                this.selectTab(this.layerTabs[0]); // select first tab
                 break;
             case 2: // closing any tab other than the first
                 this.selectTab(this.layerTabs[0]); // select first tab
                 break;
-            case 3:// closing first tab and no other tab exist
+            case 3: // closing first tab and no other tab exist
                 this.newBlankTab(); // create a new blank tab, automatically opens this tab
                 break;
             default: // should never occur
-                console.error("post closetab action not specified (this should never happen)");
+                console.error('post closetab action not specified (this should never happen)');
         }
     }
 
@@ -265,8 +269,7 @@ export class TabsComponent implements AfterViewInit {
         if (this.activeTab !== tab) {
             this.activeTab = tab;
             this.dropdownEnabled = '';
-        }
-        else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
+        } else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
     /**
@@ -300,7 +303,7 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} dialogName {"changelog"|"help"} the dialog to open
      */
     public openDialog(dialogName: string) {
-        const settings = { maxWidth: "75ch", panelClass: this.userTheme };
+        const settings = { maxWidth: '75ch', panelClass: this.userTheme };
         if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
         else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
     }
@@ -311,8 +314,8 @@ export class TabsComponent implements AfterViewInit {
      */
     public openSVGDialog(viewModel: ViewModel) {
         this.dialog.open(SvgExportComponent, {
-            data: {vm: viewModel},
-            panelClass: ['dialog-custom', this.userTheme]
+            data: { vm: viewModel },
+            panelClass: ['dialog-custom', this.userTheme],
         });
     }
 
@@ -331,7 +334,8 @@ export class TabsComponent implements AfterViewInit {
 
         for (let viewModel of this.viewModelsService.viewModels) {
             if (!viewModel.name.startsWith(root)) continue;
-            if (viewModel.name === root) { // case where it's "layer" aka "layer0"
+            if (viewModel.name === root) {
+                // case where it's "layer" aka "layer0"
                 id = Math.max(id, 1);
                 continue;
             }
@@ -344,7 +348,7 @@ export class TabsComponent implements AfterViewInit {
         }
 
         // if no layers of this name exist (id == 0) just return root
-        if (id != 0) root = root + id
+        if (id != 0) root = root + id;
         return root;
     }
 
@@ -364,28 +368,30 @@ export class TabsComponent implements AfterViewInit {
         let subscription = this.http.get(url).subscribe({
             next: (res) => {
                 // check for custom domain
-                let exists = this.dataService.domains.find(d => d.isCustom && d.id === domainVersionID);
+                let exists = this.dataService.domains.find((d) => d.isCustom && d.id === domainVersionID);
                 if (!exists) {
                     // create or retrieve version
-                    let v: Version = this.dataService.versions.find(v => v.number == loadData.version);
+                    let v: Version = this.dataService.versions.find((v) => v.number == loadData.version);
                     if (!v) {
                         v = new Version(`ATT&CK v${loadData.version}`, String(loadData.version));
                         this.dataService.versions.push(v);
                     }
-        
+
                     // create new custom domain object
                     let domainObject = new Domain(domainID, domainID, v, [url]);
                     domainObject.isCustom = true;
                     this.dataService.domains.push(domainObject);
-                } 
+                }
 
                 this.newLayer(domainVersionID, obj);
             },
             error: (err) => {
                 console.error(err);
-                alert("ERROR retrieving data from " + url + ", check the javascript console for more information.")
+                alert('ERROR retrieving data from ' + url + ', check the javascript console for more information.');
             },
-            complete: () => { if (subscription) subscription.unsubscribe(); } // prevent memory leaks
+            complete: () => {
+                if (subscription) subscription.unsubscribe();
+            }, // prevent memory leaks
         });
     }
 
@@ -402,11 +408,11 @@ export class TabsComponent implements AfterViewInit {
 
             // validate version
             if (isNaN(loadData.version)) {
-                throw Error("version is not a number");
+                throw Error('version is not a number');
             }
 
             // validate domainVersionID is unique
-            let exists = this.dataService.domains.find(d => d.id == domainVersionID);
+            let exists = this.dataService.domains.find((d) => d.id == domainVersionID);
             // Note: if a user inputs the same domain, version, AND url, do not check for collisions, just reload the custom dataset
             if (exists && !(exists.isCustom && exists.urls[0] == url.toString())) {
                 throw Error(`the domain and version specified conflict with an existing set of ATT&CK data (${exists.name} ${exists.version.name})`);
@@ -416,9 +422,9 @@ export class TabsComponent implements AfterViewInit {
         } catch (err) {
             console.error(err);
             if (err instanceof TypeError) {
-                alert("ERROR: invalid url, check the javascript console for more information.");
+                alert('ERROR: invalid url, check the javascript console for more information.');
             } else {
-                alert("ERROR " + err.message);
+                alert('ERROR ' + err.message);
             }
             return false; // failed validation
         }
@@ -438,7 +444,7 @@ export class TabsComponent implements AfterViewInit {
         let name;
         if (obj && 'name' in obj && obj['name']) {
             name = obj['name'];
-        } else name = this.getUniqueLayerName("layer");
+        } else name = this.getUniqueLayerName('layer');
 
         // create and open the view model
         let viewModel = this.viewModelsService.newViewModel(name, domainVersionID);
@@ -461,7 +467,7 @@ export class TabsComponent implements AfterViewInit {
             // check if tab has a view model
             if (this.layerTabs[i].viewModel) viewModelIndex++;
         }
-        return String.fromCharCode(97+viewModelIndex);
+        return String.fromCharCode(97 + viewModelIndex);
     }
 
     /**
@@ -473,7 +479,7 @@ export class TabsComponent implements AfterViewInit {
         let viewModelIndex = 0;
         for (let i = 0; i < this.layerTabs.length; i++) {
             if (this.layerTabs[i].viewModel) {
-                let currChar = String.fromCharCode(97+viewModelIndex);
+                let currChar = String.fromCharCode(97 + viewModelIndex);
                 viewModelIndex++;
                 if (currChar == char) return i;
             }
@@ -486,24 +492,24 @@ export class TabsComponent implements AfterViewInit {
     public layerByOperation(): void {
         // build score expression map, mapping inline variables to their actual VMs
         let scoreVariables = new Map<string, ViewModel>();
-        let regex = /\b[a-z]\b/g // \b matches word boundary
+        let regex = /\b[a-z]\b/g; // \b matches word boundary
         let matches = this.opSettings.scoreExpression.match(regex);
 
         let self = this;
         if (matches) {
-            matches.forEach(function(match) {
+            matches.forEach(function (match) {
                 let index = self.charToIndex(match);
                 let vm = self.layerTabs[index].viewModel;
                 scoreVariables.set(match, vm);
             });
         }
 
-        let layerName = this.getUniqueLayerName("layer by operation");
+        let layerName = this.getUniqueLayerName('layer by operation');
         try {
             // all layers must be of the same domain/version
             let vms = Array.from(scoreVariables.values());
             if (vms && !vms.every((vm) => vm.domainVersionID === vms[0].domainVersionID)) {
-                throw Error("cannot apply operations to layers of different domains");
+                throw Error('cannot apply operations to layers of different domains');
             }
 
             // execute the layer operation
@@ -511,11 +517,11 @@ export class TabsComponent implements AfterViewInit {
 
             // load domain data and open new layer operation tab
             if (!this.dataService.getDomain(this.opSettings.domain).dataLoaded) {
-                this.dataService.loadDomainData(this.opSettings.domain, true).then( () => {
+                this.dataService.loadDomainData(this.opSettings.domain, true).then(() => {
                     vm.loadVMData();
                     vm.updateGradient();
                     this.openTab(layerName, vm, true, true, true, true);
-                })
+                });
             } else {
                 vm.loadVMData();
                 vm.updateGradient();
@@ -523,7 +529,7 @@ export class TabsComponent implements AfterViewInit {
             }
         } catch (err) {
             console.error(err);
-            alert("Layer Layer operation error: " + err.message);
+            alert('Layer Layer operation error: ' + err.message);
         }
     }
 
@@ -535,26 +541,29 @@ export class TabsComponent implements AfterViewInit {
         let self = this;
         try {
             // build fake scope
-            let regex = /\b[a-z]\b/g // \b matches word boundary
+            let regex = /\b[a-z]\b/g; // \b matches word boundary
             let scope = {};
             let matches = self.opSettings.scoreExpression.match(regex);
 
             if (matches) {
-                let noMatch = ""
-                matches.forEach(function(match) {
+                let noMatch = '';
+                matches.forEach(function (match) {
                     scope[match] = 0;
 
                     // check if letter is too large
-                    if (typeof(self.charToIndex(match)) == "undefined") {
-                        noMatch = "Variable " + match + " does not match any layers"
-                    } else if (self.opSettings.domain && self.layerTabs[self.charToIndex(match)].viewModel.domainVersionID !== self.opSettings.domain) {
-                        noMatch = "Layer " + match + " does not match the chosen domain"
+                    if (typeof self.charToIndex(match) == 'undefined') {
+                        noMatch = 'Variable ' + match + ' does not match any layers';
+                    } else if (
+                        self.opSettings.domain &&
+                        self.layerTabs[self.charToIndex(match)].viewModel.domainVersionID !== self.opSettings.domain
+                    ) {
+                        noMatch = 'Layer ' + match + ' does not match the chosen domain';
                     }
                 });
                 if (noMatch.length > 0) return noMatch;
             }
             return null;
-        } catch(err) {
+        } catch (err) {
             return err.message;
         }
     }
@@ -563,7 +572,7 @@ export class TabsComponent implements AfterViewInit {
      * Open prompt to upload a layer
      */
     public openUploadPrompt(): void {
-        let input = (<HTMLInputElement>document.getElementById("uploader"));
+        let input = <HTMLInputElement>document.getElementById('uploader');
         input.click();
     }
 
@@ -573,29 +582,34 @@ export class TabsComponent implements AfterViewInit {
     private versionUpgradeDialog(viewModel: ViewModel): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let currVersion = this.dataService.getCurrentVersion().number;
-            if (viewModel.version !== currVersion) { // ask to upgrade
+            if (viewModel.version !== currVersion) {
+                // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
                     data: {
                         layerName: viewModel.name,
                         vmVersion: viewModel.version,
-                        currVersion: currVersion
+                        currVersion: currVersion,
                     },
                     disableClose: true,
-                    width: "25%",
-                    panelClass: this.userTheme
+                    width: '25%',
+                    panelClass: this.userTheme,
                 });
                 let subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
-                            reject(new Error(`Uploaded layer version (${String(viewModel.version)}) is not supported by Navigator v${this.navVersion}`));
+                            reject(
+                                new Error(`Uploaded layer version (${String(viewModel.version)}) is not supported by Navigator v${this.navVersion}`)
+                            );
                         }
                         if (result.upgrade) {
                             let newDomainVersionID = this.dataService.getDomainVersionID(viewModel.domain, currVersion);
-                            resolve({oldID: viewModel.domainVersionID, newID: newDomainVersionID});
+                            resolve({ oldID: viewModel.domainVersionID, newID: newDomainVersionID });
                         }
                         resolve(null);
                     },
-                    complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
+                    complete: () => {
+                        if (subscription) subscription.unsubscribe();
+                    }, //prevent memory leaks
                 });
             } else resolve(null); // layer is already current version
         });
@@ -613,58 +627,63 @@ export class TabsComponent implements AfterViewInit {
     private upgradeLayer(oldViewModel: ViewModel, serialized: any, replace: boolean, defaultLayers: boolean = false): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!defaultLayers) {
-                this.versionUpgradeDialog(oldViewModel).then((versions) => {
-                    if (versions) {
-                        // user upgraded to latest version
-                        // create and open the latest version
-                        let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
-                        newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
-                        newViewModel.loadVMData();
-                        newViewModel.compareTo = oldViewModel;
-                        this.openTab("new layer", newViewModel, true, replace, true, true);
-                        newViewModel.openSidebar('layerUpgrade');
-                        newViewModel.selectTechniquesAcrossTactics = false;
-        
-                        // load layer version & latest ATT&CK version
-                        let loads: any = {};
-                        let dataSubscription: Subscription;
-                        if (!this.dataService.getDomain(versions.oldID).dataLoaded) loads.old = this.dataService.loadDomainData(versions.oldID, true);
-                        if (!this.dataService.getDomain(versions.newID).dataLoaded) loads.new = this.dataService.loadDomainData(versions.newID, true);
-                        dataSubscription = forkJoin(loads).subscribe({
-                            complete: () => {
-                                newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
-                                // load vm for uploaded layer
-                                oldViewModel.deserialize(serialized);
-                                oldViewModel.loadVMData();
-                                newViewModel.initCopyAnnotations();
-                                resolve(null);
-                                if (dataSubscription) dataSubscription.unsubscribe();
-                            }
-                        });
-                    } else { // user did not upgrade, keep the old version
-                        this.openTab("new layer", oldViewModel, true, replace, true, true);
-                        if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
-                            this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
-                                oldViewModel.deserialize(serialized);
-                                oldViewModel.loadVMData();
-                                resolve(null);
+                this.versionUpgradeDialog(oldViewModel)
+                    .then((versions) => {
+                        if (versions) {
+                            // user upgraded to latest version
+                            // create and open the latest version
+                            let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
+                            newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
+                            newViewModel.loadVMData();
+                            newViewModel.compareTo = oldViewModel;
+                            this.openTab('new layer', newViewModel, true, replace, true, true);
+                            newViewModel.openSidebar('layerUpgrade');
+                            newViewModel.selectTechniquesAcrossTactics = false;
+
+                            // load layer version & latest ATT&CK version
+                            let loads: any = {};
+                            let dataSubscription: Subscription;
+                            if (!this.dataService.getDomain(versions.oldID).dataLoaded)
+                                loads.old = this.dataService.loadDomainData(versions.oldID, true);
+                            if (!this.dataService.getDomain(versions.newID).dataLoaded)
+                                loads.new = this.dataService.loadDomainData(versions.newID, true);
+                            dataSubscription = forkJoin(loads).subscribe({
+                                complete: () => {
+                                    newViewModel.versionChangelog = this.dataService.compareVersions(versions.oldID, versions.newID);
+                                    // load vm for uploaded layer
+                                    oldViewModel.deserialize(serialized);
+                                    oldViewModel.loadVMData();
+                                    newViewModel.initCopyAnnotations();
+                                    resolve(null);
+                                    if (dataSubscription) dataSubscription.unsubscribe();
+                                },
                             });
                         } else {
-                            oldViewModel.deserialize(serialized);
-                            oldViewModel.loadVMData();
-                            resolve(null);
+                            // user did not upgrade, keep the old version
+                            this.openTab('new layer', oldViewModel, true, replace, true, true);
+                            if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
+                                this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then(() => {
+                                    oldViewModel.deserialize(serialized);
+                                    oldViewModel.loadVMData();
+                                    resolve(null);
+                                });
+                            } else {
+                                oldViewModel.deserialize(serialized);
+                                oldViewModel.loadVMData();
+                                resolve(null);
+                            }
                         }
-                    }
-                }).catch( (err) => {
-                    console.error(err);
-                    alert("ERROR parsing file, check the javascript console for more information.");
-                    resolve(null);
-                });
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        alert('ERROR parsing file, check the javascript console for more information.');
+                        resolve(null);
+                    });
             } else {
                 // default layer, do not upgrade
-                this.openTab("new layer", oldViewModel, true, replace, true, true);
+                this.openTab('new layer', oldViewModel, true, replace, true, true);
                 if (!this.dataService.getDomain(oldViewModel.domainVersionID).dataLoaded) {
-                    this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then( () => {
+                    this.dataService.loadDomainData(oldViewModel.domainVersionID, true).then(() => {
                         oldViewModel.deserialize(serialized);
                         oldViewModel.loadVMData();
                         resolve(null);
@@ -682,9 +701,9 @@ export class TabsComponent implements AfterViewInit {
      * Load a layer from file
      */
     public loadLayerFromFile(): void {
-        let input = (<HTMLInputElement>document.getElementById("uploader"));
+        let input = <HTMLInputElement>document.getElementById('uploader');
         if (input.files.length < 1) {
-            alert("You must select a file to upload!");
+            alert('You must select a file to upload!');
             return;
         }
         this.readJSONFile(input.files[0]);
@@ -701,9 +720,9 @@ export class TabsComponent implements AfterViewInit {
             let result = String(reader.result);
 
             function loadObjAsLayer(self, obj): void {
-                viewModel = self.viewModelsService.newViewModel("loading layer...", undefined);
+                viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                 viewModel.deserializeDomainVersionID(obj);
-                let isCustom = "customDataURL" in obj;
+                let isCustom = 'customDataURL' in obj;
                 if (!isCustom) {
                     if (!self.dataService.getDomain(viewModel.domainVersionID)) {
                         throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
@@ -712,33 +731,35 @@ export class TabsComponent implements AfterViewInit {
                 } else {
                     // load as custom data
                     viewModel.deserialize(obj);
-                    self.openTab("new layer", viewModel, true, true, true, true);
-                    self.newLayerFromURL({
-                        'url': obj['customDataURL'],
-                        'version': viewModel.version,
-                        'identifier': viewModel.domain
-                    }, obj);
+                    self.openTab('new layer', viewModel, true, true, true, true);
+                    self.newLayerFromURL(
+                        {
+                            url: obj['customDataURL'],
+                            version: viewModel.version,
+                            identifier: viewModel.domain,
+                        },
+                        obj
+                    );
                 }
             }
 
             try {
-                let objList = (typeof(result) == "string") ? JSON.parse(result) : result;
+                let objList = typeof result == 'string' ? JSON.parse(result) : result;
                 if ('length' in objList) {
                     for (let obj of objList) {
                         loadObjAsLayer(this, obj);
                     }
                 } else {
-                    let obj = (typeof(result) == "string") ? JSON.parse(result) : result;
+                    let obj = typeof result == 'string' ? JSON.parse(result) : result;
                     loadObjAsLayer(this, obj);
                 }
-            }
-            catch (err) {
-                viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
-                console.error("ERROR: Either the file is not JSON formatted, or the file structure is invalid.", err);
-                alert("ERROR: Either the file is not JSON formatted, or the file structure is invalid.");
+            } catch (err) {
+                viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
+                console.error('ERROR: Either the file is not JSON formatted, or the file structure is invalid.', err);
+                alert('ERROR: Either the file is not JSON formatted, or the file structure is invalid.');
                 this.viewModelsService.destroyViewModel(viewModel);
             }
-        }
+        };
         reader.readAsText(file);
     }
 
@@ -747,22 +768,22 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} loadURL the url to load
      * @param {boolean} replace replace the current active with the loaded layer?
      * @param {boolean} defaultLayers is this loading reflecting a set of default layers (from the config file or from the query string)?
-     * 
+     *
      */
     public async loadLayerFromURL(loadURL: string, replace: boolean, defaultLayers: boolean = false): Promise<any> {
-        return new Promise(async(resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             let subscription = this.http.get(loadURL).subscribe({
                 next: async (res) => {
-                    let viewModel = this.viewModelsService.newViewModel("loading layer...", undefined);
+                    let viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         viewModel.deserializeDomainVersionID(res);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
                         await this.upgradeLayer(viewModel, res, replace, defaultLayers);
-                        console.debug("loaded layer from", loadURL);
+                        console.debug('loaded layer from', loadURL);
                         resolve(null); //continue
-                    } catch(err) {
+                    } catch (err) {
                         console.error(err);
                         this.viewModelsService.destroyViewModel(viewModel);
                         alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
@@ -774,7 +795,9 @@ export class TabsComponent implements AfterViewInit {
                     alert(`ERROR retrieving layer from ${loadURL}, check the javascript console for more information.`);
                     resolve(null); // continue
                 },
-                complete: () => { if (subscription) subscription.unsubscribe(); } // prevent memory leaks
+                complete: () => {
+                    if (subscription) subscription.unsubscribe();
+                }, // prevent memory leaks
             });
         });
     }
@@ -790,7 +813,7 @@ export class TabsComponent implements AfterViewInit {
      * Add a new empty layer link to the layerLinkURLs array
      */
     public addLayerLink(): void {
-        this.layerLinkURLs.push("");
+        this.layerLinkURLs.push('');
     }
 
     /**
@@ -807,23 +830,23 @@ export class TabsComponent implements AfterViewInit {
      *         specifying layerLinkURL as the URL to fetch the default layer from
      */
     public getLayerLink(): string {
-        let str = window.location.href.split("#")[0];
-        let join = "#"; // hash first, then ampersand
+        let str = window.location.href.split('#')[0];
+        let join = '#'; // hash first, then ampersand
         for (let layerLinkURL of this.layerLinkURLs) {
-            str += join + "layerURL=" + encodeURIComponent(layerLinkURL);
-            join = "&";
+            str += join + 'layerURL=' + encodeURIComponent(layerLinkURL);
+            join = '&';
         }
         for (let feature of this.customizedConfig) {
             if (feature.subfeatures) {
                 for (let subfeature of feature.subfeatures) {
                     if (!subfeature.enabled) {
-                        str += join + subfeature.name + "=false";
-                        join = "&";
+                        str += join + subfeature.name + '=false';
+                        join = '&';
                     }
                 }
             } else if (!feature.enabled) {
-                str += join + feature.name + "=false";
-                join = "&";
+                str += join + feature.name + '=false';
+                join = '&';
             }
         }
         return str;
@@ -833,8 +856,8 @@ export class TabsComponent implements AfterViewInit {
      * Select the layer link field text
      */
     public selectLayerLink(): void {
-        let copyText = <HTMLInputElement>document.getElementById("customNavInput");
-        console.debug('copied', copyText.value)
+        let copyText = <HTMLInputElement>document.getElementById('layerLink');
+        console.debug('copied', copyText.value);
         copyText.select();
     }
 
@@ -843,10 +866,10 @@ export class TabsComponent implements AfterViewInit {
      */
     public copyLayerLink(): void {
         this.selectLayerLink();
-        document.execCommand("Copy");
+        document.execCommand('Copy');
         this.copiedRecently = true;
         let self = this;
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             self.copiedRecently = false;
         }, 2000);
     }
@@ -869,14 +892,14 @@ export class TabsComponent implements AfterViewInit {
     private getNamedFragmentValue(name: string, url?: string): any {
         if (!url) url = window.location.href;
 
-        name = name.replace(/[[\]]/g, "\\$&");
-        let regex = new RegExp("[#&]" + name + "(?:=([^&#]*)|&|#|$)", "g");
-        
+        name = name.replace(/[[\]]/g, '\\$&');
+        let regex = new RegExp('[#&]' + name + '(?:=([^&#]*)|&|#|$)', 'g');
+
         // match as many results as exist under the name
         let results = [];
         let match = regex.exec(url);
         while (match != null) {
-            results.push(decodeURIComponent(match[1].replace(/\+/g, " ")));
+            results.push(decodeURIComponent(match[1].replace(/\+/g, ' ')));
             match = regex.exec(url);
         }
         return results;

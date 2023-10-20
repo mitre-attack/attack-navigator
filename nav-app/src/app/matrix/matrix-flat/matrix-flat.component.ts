@@ -4,18 +4,17 @@ import { ConfigService } from '../../services/config.service';
 import { ViewModelsService } from '../../services/viewmodels.service';
 
 @Component({
-  selector: 'matrix-flat',
-  templateUrl: './matrix-flat.component.html',
-  styleUrls: ['./matrix-flat.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'matrix-flat',
+    templateUrl: './matrix-flat.component.html',
+    styleUrls: ['./matrix-flat.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class MatrixFlatComponent extends MatrixCommon implements OnInit {
+    constructor(configService: ConfigService, viewModelsService: ViewModelsService) {
+        super(configService, viewModelsService);
+    }
 
-  constructor(configService: ConfigService, viewModelsService: ViewModelsService) {
-    super(configService, viewModelsService);
-  }
-
-  ngOnInit(): void {
-    // intentionally left blank
-  }
+    ngOnInit(): void {
+        // intentionally left blank
+    }
 }

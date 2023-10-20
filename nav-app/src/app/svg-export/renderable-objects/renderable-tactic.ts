@@ -1,6 +1,6 @@
-import { Matrix, Tactic } from "../../classes/stix";
-import { RenderableTechnique } from "./renderable-technique";
-import { ViewModel } from "../../classes";
+import { Matrix, Tactic } from '../../classes/stix';
+import { RenderableTechnique } from './renderable-technique';
+import { ViewModel } from '../../classes';
 
 export class RenderableTactic {
     public readonly tactic: Tactic;
@@ -15,8 +15,9 @@ export class RenderableTactic {
         for (let technique of filteredTechniques) {
             let techniqueVM = viewModel.getTechniqueVM(technique, tactic);
             let filteredSubtechniques = viewModel.filterTechniques(technique.subtechniques, tactic, matrix);
-            
-            let showSubtechniques = renderConfig.showSubtechniques == "all" || (renderConfig.showSubtechniques == "expanded" && techniqueVM.showSubtechniques)
+
+            let showSubtechniques =
+                renderConfig.showSubtechniques == 'all' || (renderConfig.showSubtechniques == 'expanded' && techniqueVM.showSubtechniques);
 
             this.techniques.push(new RenderableTechnique(yPosition++, technique, tactic, matrix, viewModel, showSubtechniques));
 

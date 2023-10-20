@@ -1,13 +1,15 @@
-import { Matrix } from "../../classes/stix";
-import { RenderableTactic } from "./renderable-tactic";
-import { ViewModel } from "../../classes";
+import { Matrix } from '../../classes/stix';
+import { RenderableTactic } from './renderable-tactic';
+import { ViewModel } from '../../classes';
 
 export class RenderableMatrix {
     public readonly matrix: Matrix;
     public readonly tactics: RenderableTactic[] = [];
 
     public get height() {
-        let heights = this.tactics.map(function(tactic: RenderableTactic) { return tactic.height; })
+        let heights = this.tactics.map(function (tactic: RenderableTactic) {
+            return tactic.height;
+        });
         return Math.max(...heights);
     }
 

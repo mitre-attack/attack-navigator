@@ -5,16 +5,16 @@ import { ViewModel } from '../classes';
 @Component({
     selector: 'sidebar',
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.scss']
+    styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnChanges {
     @Input() viewModel: ViewModel;
     public reloadToggle: boolean = true;
 
-    constructor(public dataService: DataService) { }
+    constructor(public dataService: DataService) {}
 
     ngOnChanges(): void {
         this.reloadToggle = false;
-        setTimeout(() => this.reloadToggle = true);
+        setTimeout(() => (this.reloadToggle = true));
     }
 }

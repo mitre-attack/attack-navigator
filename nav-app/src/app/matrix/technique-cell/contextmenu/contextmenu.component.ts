@@ -6,10 +6,10 @@ import { ConfigService } from '../../../services/config.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
-  selector: 'app-contextmenu',
-  templateUrl: './contextmenu.component.html',
-  styleUrls: ['./contextmenu.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-contextmenu',
+    templateUrl: './contextmenu.component.html',
+    styleUrls: ['./contextmenu.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
@@ -26,7 +26,11 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         return this.techniqueVM.links;
     }
 
-    constructor(private element: ElementRef, public configService: ConfigService, public viewModelsService: ViewModelsService) {
+    constructor(
+        private element: ElementRef,
+        public configService: ConfigService,
+        public viewModelsService: ViewModelsService
+    ) {
         super(element);
     }
 
@@ -79,33 +83,34 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.closeContextmenu();
     }
 
-    public selectAllInTactic(){
+    public selectAllInTactic() {
         this.viewModel.selectAllTechniquesInTactic(this.tactic);
         this.closeContextmenu();
     }
 
-    public deselectAllInTactic(){
+    public deselectAllInTactic() {
         this.viewModel.unselectAllTechniquesInTactic(this.tactic);
         this.closeContextmenu();
     }
 
     public viewTechnique() {
-        window.open(this.technique.url, "_blank");
+        window.open(this.technique.url, '_blank');
         this.closeContextmenu();
     }
 
     public viewTactic() {
-        window.open(this.tactic.url, "_blank");
+        window.open(this.tactic.url, '_blank');
         this.closeContextmenu();
     }
 
     public pinCell() {
-        this.viewModelsService.pinnedCell = (this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id) ? "" : this.techniqueVM.technique_tactic_union_id;
+        this.viewModelsService.pinnedCell =
+            this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id ? '' : this.techniqueVM.technique_tactic_union_id;
         this.closeContextmenu();
     }
 
     public openCustomContextMenuItem(customItem: ContextMenuItem) {
-        window.open(customItem.getReplacedURL(this.technique, this.tactic), "_blank");
+        window.open(customItem.getReplacedURL(this.technique, this.tactic), '_blank');
         this.closeContextmenu();
     }
 

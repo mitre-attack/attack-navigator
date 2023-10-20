@@ -4,27 +4,23 @@ import { MatrixSideComponent } from './matrix-side.component';
 import { MatDialogModule } from '@angular/material/dialog';
 
 describe('MatrixSideComponent', () => {
-  let component: MatrixSideComponent;
-  let fixture: ComponentFixture<MatrixSideComponent>;
+    let component: MatrixSideComponent;
+    let fixture: ComponentFixture<MatrixSideComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    imports: [
-        HttpClientTestingModule,
-        MatDialogModule 
-      ],
-      declarations: [ MatrixSideComponent ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule, MatDialogModule],
+            declarations: [MatrixSideComponent],
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MatrixSideComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(MatrixSideComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

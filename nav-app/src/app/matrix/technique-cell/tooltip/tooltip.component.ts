@@ -6,10 +6,10 @@ import { ViewModelsService } from '../../../services/viewmodels.service';
 import { CellPopover } from '../cell-popover';
 
 @Component({
-  selector: 'app-tooltip',
-  templateUrl: './tooltip.component.html',
-  styleUrls: ['./tooltip.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-tooltip',
+    templateUrl: './tooltip.component.html',
+    styleUrls: ['./tooltip.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;
@@ -19,26 +19,30 @@ export class TooltipComponent extends CellPopover implements OnInit {
     public notes: Note[];
 
     public get isCellPinned(): boolean {
-        return this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id
+        return this.viewModelsService.pinnedCell === this.techniqueVM.technique_tactic_union_id;
     }
 
     public get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 
-    constructor(private element: ElementRef, private dataService: DataService, private viewModelsService: ViewModelsService) {
+    constructor(
+        private element: ElementRef,
+        private dataService: DataService,
+        private viewModelsService: ViewModelsService
+    ) {
         super(element);
     }
 
     ngOnInit() {
         this.placement = this.getPosition();
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-        this.notes = domain.notes.filter(note => {
+        this.notes = domain.notes.filter((note) => {
             return note.object_refs.includes(this.technique.id);
         });
     }
 
     public unpin(): void {
-        this.viewModelsService.pinnedCell = "";
+        this.viewModelsService.pinnedCell = '';
     }
 }

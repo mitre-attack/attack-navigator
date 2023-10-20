@@ -2,13 +2,13 @@ import { Component, Input, ViewChild, AfterViewInit, ViewEncapsulation, OnDestro
 import { DataService } from '../services/data.service';
 import { ConfigService } from '../services/config.service';
 import { TabsComponent } from '../tabs/tabs.component';
-import { ViewModelsService } from "../services/viewmodels.service";
+import { ViewModelsService } from '../services/viewmodels.service';
 import { ViewModel } from '../classes';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/exceljs.min.js';
 import * as is from 'is_js';
-import tinycolor from "tinycolor2";
+import tinycolor from 'tinycolor2';
 
 @Component({
     selector: 'DataTable',
@@ -20,7 +20,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     @ViewChild('scrollRef') private scrollRef: ElementRef;
 
     @Input() viewModel: ViewModel; // ViewModel being used by this data-table
-    @Input() currentDropdown: string = ""; // current dropdown menu
+    @Input() currentDropdown: string = ''; // current dropdown menu
 
     @Output() dropdownChange = new EventEmitter<any>();
     @Output() onScroll = new EventEmitter<any>();
@@ -43,30 +43,32 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         } else if (!this.isScrollUp && this.scrollRef.nativeElement.scrollTop > 0 && diff === 0) {
             this.calculateScrollHeight();
         }
-    }
+    };
     public calculateScrollHeight = () => {
         const tabOffset = this.isScrollUp ? 0 : this.headerHeight;
         this.onScroll.emit(-1 * tabOffset);
         const scrollWindowHeight = this.isScrollUp ? this.headerHeight + this.controlsHeight + this.footerHeight : this.controlsHeight;
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
-    }
+    };
 
     public downloadAnnotationsOnVisibleTechniques: boolean = false;
 
     // edit field bindings
-    public commentEditField: string = "";
-    public scoreEditField: string = "";
+    public commentEditField: string = '';
+    public scoreEditField: string = '';
 
     private selectionChangeSubscription: Subscription;
-    
-    constructor(public dataService: DataService,
-                private tabs: TabsComponent,
-                private sanitizer: DomSanitizer,
-                private viewModelsService: ViewModelsService,
-                public configService: ConfigService) {
+
+    constructor(
+        public dataService: DataService,
+        private tabs: TabsComponent,
+        private sanitizer: DomSanitizer,
+        private viewModelsService: ViewModelsService,
+        public configService: ConfigService
+    ) {
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
-        })
+        });
     }
 
     ngAfterViewInit(): void {
@@ -80,20 +82,32 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         document.body.removeEventListener('scroll', this.handleScroll);
     }
 
+    public updateStickyToolbar() {
+        this.viewModel.stickyToolbar = !this.viewModel.stickyToolbar;
+        if (this.viewModel.stickyToolbar) {
+            this.headerHeight = document.querySelector<HTMLElement>('.header-wrapper')?.offsetHeight;
+            this.scrollRef.nativeElement.style.height = `calc(100vh - ${this.headerHeight + this.controlsHeight + this.footerHeight}px)`;
+            this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
+        } else {
+            this.scrollRef.nativeElement.style.height = null;
+            this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
+        }
+    }
     /**
      * Save the given blob
      * @param blob the blob to download
      * @param filename save as filename
      */
     public saveBlob(blob, filename): void {
-        if (is.ie()) { // internet explorer
-            const nav = (window.navigator as any);
+        if (is.ie()) {
+            // internet explorer
+            const nav = window.navigator as any;
             nav.msSaveOrOpenBlob(blob, filename);
         } else {
             let svgUrl = URL.createObjectURL(blob);
-            let downloadLink = document.createElement("a");
+            let downloadLink = document.createElement('a');
             downloadLink.href = svgUrl;
-            downloadLink.download = filename
+            downloadLink.download = filename;
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
@@ -106,9 +120,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * JSON file
      */
     public saveLayerLocally(): void {
-            let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
-            let blob = new Blob([json], {type: "text/json"});
-            this.saveLayerJson_helper(blob);
+        let json = this.viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques);
+        let blob = new Blob([json], { type: 'text/json' });
+        this.saveLayerJson_helper(blob);
     }
 
     /**
@@ -121,13 +135,13 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         for (let viewModel of this.viewModelsService.viewModels) {
             myarr.push(JSON.parse(viewModel.serialize(this.downloadAnnotationsOnVisibleTechniques)));
         }
-        let blob = new Blob([JSON.stringify(myarr)], {type: "text/json"});
+        let blob = new Blob([JSON.stringify(myarr)], { type: 'text/json' });
         this.saveLayerJson_helper(blob);
     }
 
     /** Helper function for saving layer in JSON format */
     public saveLayerJson_helper(blob): void {
-        let filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".json";
+        let filename = this.viewModel.name.toLowerCase().replace(/ /g, '_') + '.json';
         this.saveBlob(blob, filename);
     }
 
@@ -138,32 +152,34 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         cell.value = this.getDisplayName(technique);
 
         // cell format
-        cell.alignment = {vertical: 'top', horizontal: 'left'};
-        if(tvm.enabled) {
-            if (tvm.color) { //manually assigned
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.color.substring(1)}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.color, ["white", "black"]).toHex()}};
+        cell.alignment = { vertical: 'top', horizontal: 'left' };
+        if (tvm.enabled) {
+            if (tvm.color) {
+                //manually assigned
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.color.substring(1) } };
+                cell.font = { color: { argb: 'FF' + tinycolor.mostReadable(tvm.color, ['white', 'black']).toHex() } };
+            } else if (this.viewModel.layout._showAggregateScores && tvm.aggregateScoreColor) {
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.aggregateScoreColor.substring(1) } };
+                cell.font = { color: { argb: 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ['white', 'black']).toHex() } };
+            } else if (tvm.score) {
+                //score assigned
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + tvm.scoreColor.substring(1) } };
+                cell.font = { color: { argb: 'FF' + tinycolor.mostReadable(tvm.scoreColor, ['white', 'black']).toHex() } };
             }
-            else if (this.viewModel.layout._showAggregateScores && tvm.aggregateScoreColor) {
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.aggregateScoreColor.substring(1)}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.aggregateScoreColor, ["white", "black"]).toHex()}};
-            }
-            else if (tvm.score) { //score assigned
-                cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FF' + tvm.scoreColor.substring(1)}};
-                cell.font = {color: {'argb': 'FF' + tinycolor.mostReadable(tvm.scoreColor, ["white", "black"]).toHex()}};
-            }
-            if (tvm.comment) { //comment present on technique
+            if (tvm.comment) {
+                //comment present on technique
                 cell.note = tvm.comment;
             }
-        } else { //disabled
-            cell.font = {color: {'argb': 'FFBCBCBC'}}
+        } else {
+            //disabled
+            cell.font = { color: { argb: 'FFBCBCBC' } };
         }
 
         // subtechniques border
         if (tvm.showSubtechniques) {
-            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, left: {style: 'thin'}}
+            cell.border = { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' } };
         } else if (technique.isSubtechnique) {
-            cell.border = {top: {style: 'thin'}, bottom:{style: 'thin'}, right: {style: 'thin'}}
+            cell.border = { top: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
         }
     }
 
@@ -174,14 +190,14 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
         // create a worksheet for each matrix in the domain
         for (let matrix of domain.matrices) {
-            let worksheet = workbook.addWorksheet(matrix.name + " (v" + domain.getVersion() + ")");
+            let worksheet = workbook.addWorksheet(matrix.name + ' (v' + domain.getVersion() + ')');
             this.saveLayerExcel_helper(matrix, worksheet, this.viewModel);
         }
 
         // save file
-        workbook.xlsx.writeBuffer().then(data => {
-            const blob = new Blob( [data], {type: "application/octet-stream"} );
-            const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
+        workbook.xlsx.writeBuffer().then((data) => {
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            const filename = this.viewModel.name.toLowerCase().replace(/ /g, '_') + '.xlsx';
             this.saveBlob(blob, filename);
         });
     }
@@ -194,30 +210,36 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             let domain = this.dataService.getDomain(this.viewModelsService.viewModels[i].domainVersionID);
             // create a worksheet for each matrix in the domain
             for (let matrix of domain.matrices) {
-                let worksheet = workbook.addWorksheet(matrix.name + " v" + domain.getVersion() + " (" + this.viewModelsService.viewModels[i].name + "-" + i +")");
+                let worksheet = workbook.addWorksheet(
+                    matrix.name + ' v' + domain.getVersion() + ' (' + this.viewModelsService.viewModels[i].name + '-' + i + ')'
+                );
                 this.saveLayerExcel_helper(matrix, worksheet, this.viewModelsService.viewModels[i]);
             }
         }
         // save file
-        workbook.xlsx.writeBuffer().then(data => {
-            const blob = new Blob( [data], {type: "application/octet-stream"} );
-            const filename = this.viewModel.name.toLowerCase().replace(/ /g, "_") + ".xlsx";
+        workbook.xlsx.writeBuffer().then((data) => {
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            const filename = this.viewModel.name.toLowerCase().replace(/ /g, '_') + '.xlsx';
             this.saveBlob(blob, filename);
         });
     }
 
     /** Helper function for saving layer in Excel format */
-    public saveLayerExcel_helper(matrix, worksheet, viewModel): void{
+    public saveLayerExcel_helper(matrix, worksheet, viewModel): void {
         // create a worksheet for each matrix in the domain
         // create tactic columns
-        let columns = viewModel.filterTactics(matrix.tactics, matrix).map(tactic => { return {header: this.getDisplayName(tactic), key: tactic.name} });
+        let columns = viewModel.filterTactics(matrix.tactics, matrix).map((tactic) => {
+            return { header: this.getDisplayName(tactic), key: tactic.name };
+        });
         worksheet.columns = columns;
 
         // create cells
         for (let tactic of viewModel.filterTactics(matrix.tactics, matrix)) {
             let tacticCol = worksheet.getColumn(tactic.name);
             let techniques = viewModel.applyControls(tactic.techniques, tactic, matrix);
-            let techniqueCells = techniques.map(technique => { return technique.name });
+            let techniqueCells = techniques.map((technique) => {
+                return technique.name;
+            });
             let subtechniqueList = [];
 
             // create subtechnique cells, if shown
@@ -229,8 +251,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                 if (!tvm.showSubtechniques) continue; // do not show sub-techniques, skip
 
                 // retrieve subtechniques
-                let subtechniques = viewModel.applyControls(technique.subtechniques, tactic, matrix)
-                    .map( sub => { return sub.name });
+                let subtechniques = viewModel.applyControls(technique.subtechniques, tactic, matrix).map((sub) => {
+                    return sub.name;
+                });
                 subtechniqueList = subtechniqueList.concat(technique.subtechniques);
 
                 // format technique cells for subtechniques
@@ -244,14 +267,14 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
             if (subtechniqueCells.length > 0) {
                 // add subtechniques column
-                let id = columns.findIndex(col => col.key == tactic.name);
-                columns.splice(id + 1, 0, {header: this.getDisplayName(tactic), key: tactic.name + "Subtechniques"});
+                let id = columns.findIndex((col) => col.key == tactic.name);
+                columns.splice(id + 1, 0, { header: this.getDisplayName(tactic), key: tactic.name + 'Subtechniques' });
                 worksheet.columns = columns;
 
                 // merge subtechniques header
-                let subtechniqueCol = worksheet.getColumn(tactic.name + "Subtechniques");
+                let subtechniqueCol = worksheet.getColumn(tactic.name + 'Subtechniques');
                 worksheet.mergeCells(tacticCol.letter + '1:' + subtechniqueCol.letter + '1');
-                subtechniqueCol.values = [tactic.name.toString() + "Subtechniques"].concat(subtechniqueCells);
+                subtechniqueCol.values = [tactic.name.toString() + 'Subtechniques'].concat(subtechniqueCells);
 
                 // style subtechnique cells
                 this.styleTechniqueCells(subtechniqueCol, subtechniqueList, viewModel, tactic, true);
@@ -265,12 +288,15 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         // style tactic headers
         this.styleTacticHeaders(worksheet, viewModel);
 
-        worksheet.getRow(1).alignment = {horizontal: 'center'};
-        worksheet.getRow(1).border = {bottom: {style: 'thin'}};
-        worksheet.getRow(1).font = {bold: true};
+        worksheet.getRow(1).alignment = { horizontal: 'center' };
+        worksheet.getRow(1).border = { bottom: { style: 'thin' } };
+        worksheet.getRow(1).font = { bold: true };
         if (viewModel.showTacticRowBackground) {
-            worksheet.getRow(1).fill = {type: 'pattern', pattern: 'solid', fgColor: {'argb': 'FF' + viewModel.tacticRowBackground.substring(1)}}
-            worksheet.getRow(1).font = {bold: true, color: {"argb": 'FF' + tinycolor.mostReadable(viewModel.tacticRowBackground, ["white", "black"]).toHex()}};
+            worksheet.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + viewModel.tacticRowBackground.substring(1) } };
+            worksheet.getRow(1).font = {
+                bold: true,
+                color: { argb: 'FF' + tinycolor.mostReadable(viewModel.tacticRowBackground, ['white', 'black']).toHex() },
+            };
         }
     }
 
@@ -280,9 +306,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public styleTechniqueCells(column, techniqueList, viewModel, tactic, isSubtechnique = false): void {
         const seen = [];
 
-        column.eachCell(cell => {
+        column.eachCell((cell) => {
             if (cell.row > 1 && cell.value && cell.value !== undefined) {
-                let technique = techniqueList.find(t => {
+                let technique = techniqueList.find((t) => {
                     if (isSubtechnique) {
                         return t.name == cell.value.substring(cell.value.indexOf(':') + 1).trim() && !seen.includes(t.attackID);
                     }
@@ -299,7 +325,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Style tactic headers for Excel worksheet
      */
     public styleTacticHeaders(worksheet, viewModel): void {
-        worksheet.columns.forEach(column => {
+        worksheet.columns.forEach((column) => {
             if (viewModel.layout.showID && !viewModel.layout.showName) {
                 column.width = column.header.length < 15 ? 15 : column.header.length;
             } else if (!viewModel.layout.showID && !viewModel.layout.showName) {
@@ -317,7 +343,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         let techniqueRow = techniqueCells.indexOf(technique.name);
         let excelIndex = 0;
         for (let subtechnique of subtechniques) {
-            if(excelIndex !== 0) {
+            if (excelIndex !== 0) {
                 techniqueCells.splice(techniqueRow + excelIndex, 0, technique.name);
             }
             subtechniqueCells[techniqueRow + excelIndex++] = subtechnique;
@@ -369,14 +395,14 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public onTechniqueSelect(): void {
         if (!this.viewModel.isCurrentlyEditing()) {
-            if (["comment", "score", "colorpicker", "link", "metadata"].includes(this.currentDropdown)) {
+            if (['comment', 'score', 'colorpicker', 'link', 'metadata'].includes(this.currentDropdown)) {
                 //remove technique control dropdowns, because everything was deselected
-                this.currentDropdown = "";
+                this.currentDropdown = '';
             }
             return;
         }
-        if (this.currentDropdown == "link" || this.currentDropdown == "metadata") {
-            this.currentDropdown = "";
+        if (this.currentDropdown == 'link' || this.currentDropdown == 'metadata') {
+            this.currentDropdown = '';
             return;
         }
         //else populate editing controls
@@ -387,8 +413,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Show all sub-techniques in layout view
      */
     public expandSubtechniques(showAnnotatedOnly?: boolean): void {
-        if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
-        this.viewModel.layout.expandedSubtechniques = showAnnotatedOnly ? "annotated" : "all";
+        if (this.viewModel.layout.layout == 'mini') return; // control disabled in mini layout
+        this.viewModel.layout.expandedSubtechniques = showAnnotatedOnly ? 'annotated' : 'all';
 
         for (let technique of this.dataService.getDomain(this.viewModel.domainVersionID).techniques) {
             if (!technique.subtechniques?.length) continue; // no sub-techniques
@@ -403,10 +429,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
                 // expand only if sub-techniques have annotations
                 for (let subtechnique of technique.subtechniques) {
-                    tvm.showSubtechniques = tvm.showSubtechniques || subtechnique.get_all_technique_tactic_ids().some((sid) => {
-                        let svm = this.viewModel.getTechniqueVM_id(sid);
-                        return svm.annotated();
-                    })
+                    tvm.showSubtechniques =
+                        tvm.showSubtechniques ||
+                        subtechnique.get_all_technique_tactic_ids().some((sid) => {
+                            let svm = this.viewModel.getTechniqueVM_id(sid);
+                            return svm.annotated();
+                        });
                 }
             }
         }
@@ -416,28 +444,28 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Hide all sub-techniques in layout view
      */
     public collapseSubtechniques(): void {
-        if (this.viewModel.layout.layout == "mini") return; // control disabled in mini layout
-        this.viewModel.techniqueVMs.forEach(function(tvm, key) {
+        if (this.viewModel.layout.layout == 'mini') return; // control disabled in mini layout
+        this.viewModel.techniqueVMs.forEach(function (tvm, key) {
             tvm.showSubtechniques = false;
         });
-        this.viewModel.layout.expandedSubtechniques = "none";
+        this.viewModel.layout.expandedSubtechniques = 'none';
     }
 
     /**
      * Populate edit fields. Gets common values if common values exist for all editing values.
      */
     public populateEditFields(): void {
-        this.commentEditField = this.viewModel.getEditingCommonValue("comment");
-        this.scoreEditField = this.viewModel.getEditingCommonValue("score");
+        this.commentEditField = this.viewModel.getEditingCommonValue('comment');
+        this.scoreEditField = this.viewModel.getEditingCommonValue('score');
     }
 
     /**
      * Set the state (enabled/disabled) of the selected features
      */
     public setSelectedState(): void {
-        let currentState = this.viewModel.getEditingCommonValue('enabled')
-        if (currentState === '') this.viewModel.editSelectedTechniques('enabled', false)
-        else                     this.viewModel.editSelectedTechniques('enabled', !currentState)
+        let currentState = this.viewModel.getEditingCommonValue('enabled');
+        if (currentState === '') this.viewModel.editSelectedTechniques('enabled', false);
+        else this.viewModel.editSelectedTechniques('enabled', !currentState);
     }
 
     /**
@@ -453,8 +481,8 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * @return       true if valid number
      */
     public validateScoreInput(event): boolean {
-        let result: boolean = isNaN(Number(this.scoreEditField))
-        return result
+        let result: boolean = isNaN(Number(this.scoreEditField));
+        return result;
     }
 
     /**
@@ -479,7 +507,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      */
     public openSearch(): void {
         if (this.viewModel.sidebarContentType !== 'layerUpgrade') {
-            this.viewModel.sidebarOpened = (this.viewModel.sidebarContentType !== 'search') ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'search' ? true : !this.viewModel.sidebarOpened;
             this.viewModel.sidebarContentType = 'search';
         }
     }

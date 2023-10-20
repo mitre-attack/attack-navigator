@@ -8,14 +8,18 @@ import { Cell } from '../../matrix/cell';
     selector: 'changelog-cell',
     templateUrl: './changelog-cell.component.html',
     styleUrls: ['./changelog-cell.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class ChangelogCellComponent extends Cell {
     @Input() isCurrentVersion?: boolean = true;
     @Input() isDraggable?: boolean = false;
     @Input() section: string;
 
-    constructor(public configService: ConfigService, public dataService: DataService, public viewModelsService: ViewModelsService) {
+    constructor(
+        public configService: ConfigService,
+        public dataService: DataService,
+        public viewModelsService: ViewModelsService
+    ) {
         super(dataService, configService);
     }
 
@@ -24,7 +28,7 @@ export class ChangelogCellComponent extends Cell {
      */
     public highlight(): void {
         if (this.isCurrentVersion) {
-            this.viewModel.highlightTechnique(this.technique, this.tactic)
+            this.viewModel.highlightTechnique(this.technique, this.tactic);
         }
     }
 
@@ -59,10 +63,10 @@ export class ChangelogCellComponent extends Cell {
     public getClass(): string {
         let theclass = super.getClass();
         if (!this.isCurrentVersion && !this.isDraggable) {
-            theclass += " nopointer";
+            theclass += ' nopointer';
         }
         if (this.section == 'additions' || this.section == 'deprecations') {
-            theclass += " setwidth";
+            theclass += ' setwidth';
         }
         return theclass;
     }

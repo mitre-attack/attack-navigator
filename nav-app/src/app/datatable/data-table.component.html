@@ -9,161 +9,177 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 <div class="controlsContainer">
     <ul class="control-sections">
         <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && configService.getFeature('selecting_techniques')">
-            <div *ngIf="configService.getFeatureGroupCount('selection_controls') >= 3" class="section-label">
-                selection controls
-            </div>
-
+            <div *ngIf="configService.getFeatureGroupCount('selection_controls') >= 3" class="section-label">selection controls</div>
 
             <!-- lock selection locks -->
             <div *ngIf="configService.getFeature('selecting_techniques')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'selection_behavior' ? 'selection_behavior' : null;"
-                     matTooltipPosition="below"
-                     matTooltip="selection behavior">
+                <div
+                    class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'selection_behavior' ? 'selection_behavior' : null"
+                    matTooltipPosition="below"
+                    matTooltip="selection behavior">
                     <span class="material-icons">lock</span>
                 </div>
-                <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_behavior'" #dropdown [class.left]="checkalign(dropdown)">
+                <div
+                    class="dropdown-container select_behavior"
+                    *ngIf="currentDropdown === 'selection_behavior'"
+                    #dropdown
+                    [class.left]="checkalign(dropdown)">
                     <!-- selectTechniquesAcrossTactics -->
                     <div>
-                        <input id="select_behavior_tactic" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.selectTechniquesAcrossTactics">
+                        <input
+                            id="select_behavior_tactic"
+                            class="checkbox-custom"
+                            type="checkbox"
+                            [(ngModel)]="viewModel.selectTechniquesAcrossTactics" />
                         <label for="select_behavior_tactic" class="checkbox-custom-label noselect">select techniques across tactics</label>
                     </div>
                     <!-- selectSubtechniquesWithParent -->
                     <div *ngIf="configService.getFeature('subtechniques')">
-                        <input id="select_behavior_subtechnique" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.selectSubtechniquesWithParent">
+                        <input
+                            id="select_behavior_subtechnique"
+                            class="checkbox-custom"
+                            type="checkbox"
+                            [(ngModel)]="viewModel.selectSubtechniquesWithParent" />
                         <label for="select_behavior_subtechnique" class="checkbox-custom-label noselect">select sub-techniques with parent</label>
                     </div>
                     <!-- selectVisibleTechniques -->
                     <div>
-                        <input id="select_behavior_visible" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.selectVisibleTechniques">
+                        <input id="select_behavior_visible" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.selectVisibleTechniques" />
                         <label for="select_behavior_visible" class="checkbox-custom-label noselect">select only visible techniques</label>
                     </div>
-
                 </div>
             </div>
 
-
             <!-- Search -->
             <div *ngIf="configService.getFeature('search')" class="control-row-item">
-
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': viewModel.sidebarContentType === 'layerUpgrade'}"
-                     (click)="openSearch()"
-                     matTooltipPosition="below"
-                     matTooltip="search & multiselect">
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: viewModel.sidebarContentType === 'layerUpgrade' }"
+                    (click)="openSearch()"
+                    matTooltipPosition="below"
+                    matTooltip="search & multiselect">
                     <span class="material-icons" alt="search">search</span>
                 </div>
             </div>
 
             <!-- deselect all -->
             <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="viewModel.clearSelectedTechniques(); currentDropdown = null;"
-                     matTooltipPosition="below"
-                     matTooltip="deselect {{this.viewModel.getSelectedTechniqueCount()}} techniques">
+                <div
+                    class="control-row-button noselect"
+                    (click)="viewModel.clearSelectedTechniques(); currentDropdown = null"
+                    matTooltipPosition="below"
+                    matTooltip="deselect {{ this.viewModel.getSelectedTechniqueCount() }} techniques">
                     <span class="material-icons" alt="deselect all">clear</span>
-                    <span class="deselectNumber">{{this.viewModel.getSelectedTechniqueCount()}}</span>
+                    <span class="deselectNumber">{{ this.viewModel.getSelectedTechniqueCount() }}</span>
                 </div>
             </div>
-
-
         </li>
         <li *ngIf="configService.getFeatureGroup('layer_controls', 'any')">
-            <div *ngIf="configService.getFeatureGroupCount('layer_controls') >= 2" class="section-label">
-                layer controls
-            </div>
+            <div *ngIf="configService.getFeatureGroupCount('layer_controls') >= 2" class="section-label">layer controls</div>
 
             <!-- layer name, description, metadata, and links -->
             <div *ngIf="configService.getFeature('layer_info')" class="control-row-item">
-
-                <div class="control-row-button dropdown noselect"
-                     (click)="handleDescriptionDropdown()"
-                     matTooltipPosition="below"
-                     matTooltip="layer information">
+                <div
+                    class="control-row-button dropdown noselect"
+                    (click)="handleDescriptionDropdown()"
+                    matTooltipPosition="below"
+                    matTooltip="layer information">
                     <span class="material-icons" alt="layer information">description</span>
                 </div>
 
                 <!-- description input (invisible, absolute) -->
-                <div class="dropdown-container inputfield layer_info" #dropdown [class.left]="checkalign(dropdown)"
-                     *ngIf="currentDropdown === 'description'">
-
+                <div
+                    class="dropdown-container inputfield layer_info"
+                    #dropdown
+                    [class.left]="checkalign(dropdown)"
+                    *ngIf="currentDropdown === 'description'">
                     <!-- layer name field -->
                     <div class="name_desc">
                         <mat-form-field>
-                                <input matInput
-                                        type="text"
-                                        placeholder="name"
-                                        [(ngModel)]="viewModel.name" />
-                            </mat-form-field>
+                            <input matInput type="text" placeholder="name" [(ngModel)]="viewModel.name" />
+                        </mat-form-field>
 
-                            <!-- layer description field -->
-                            <mat-form-field>
-                                <textarea matInput
-                                            matTextareaAutosize
-                                            placeholder="description"
-                                            [(ngModel)]="viewModel.description">
-                                </textarea>
-                            </mat-form-field>
+                        <!-- layer description field -->
+                        <mat-form-field>
+                            <textarea matInput matTextareaAutosize placeholder="description" [(ngModel)]="viewModel.description"></textarea>
+                        </mat-form-field>
 
-                            <!-- layer domain (uneditable) -->
-                            <mat-form-field>
-                                <input matInput readonly disabled
-                                    type="text"
-                                    placeholder="domain"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
-                            </mat-form-field>
+                        <!-- layer domain (uneditable) -->
+                        <mat-form-field>
+                            <input
+                                matInput
+                                readonly
+                                disabled
+                                type="text"
+                                placeholder="domain"
+                                [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
+                        </mat-form-field>
 
-                            <!-- layer version (uneditable) -->
-                            <mat-form-field>
-                                <input matInput readonly disabled
-                                    type="text"
-                                    placeholder="version"
-                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
-                            </mat-form-field>
+                        <!-- layer version (uneditable) -->
+                        <mat-form-field>
+                            <input
+                                matInput
+                                readonly
+                                disabled
+                                type="text"
+                                placeholder="version"
+                                [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
+                        </mat-form-field>
 
-                            <!-- bundle URL (uneditable) -->
-                            <mat-form-field *ngIf="viewModel.bundleURL">
-                                <input matInput readonly disabled
-                                    type="text"
-                                    placeholder="collection/bundle url"
-                                    [(ngModel)]="viewModel.bundleURL" />
-                            </mat-form-field>
+                        <!-- bundle URL (uneditable) -->
+                        <mat-form-field *ngIf="viewModel.bundleURL">
+                            <input matInput readonly disabled type="text" placeholder="collection/bundle url" [(ngModel)]="viewModel.bundleURL" />
+                        </mat-form-field>
                     </div>
                     <div class="layer-data">
                         <!-- layer metadata -->
                         <b>Metadata</b>
                         <div class="data-input">
-                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.metadata, 'level': 'layer', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+                            <app-list-input
+                                [config]="{
+                                    viewModel: viewModel,
+                                    list: viewModel.metadata,
+                                    level: 'layer',
+                                    type: 'metadata',
+                                    nameField: 'name',
+                                    valueField: 'value'
+                                }"></app-list-input>
                         </div>
 
                         <mat-divider class="layer-div"></mat-divider>
-                        
+
                         <!-- layer links -->
                         <b>Links</b>
                         <div class="data-input">
-                            <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.links, 'level': 'layer', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                            <app-list-input
+                                [config]="{
+                                    viewModel: viewModel,
+                                    list: viewModel.links,
+                                    level: 'layer',
+                                    type: 'links',
+                                    nameField: 'label',
+                                    valueField: 'url'
+                                }"></app-list-input>
                         </div>
                     </div>
-                 </div>
-             </div>
+                </div>
+            </div>
 
-             <!-- export, save, and render features -->
-             <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                    (click)="handleExportDropdown()"
-                    matTooltipPosition="below"
-                    matTooltip="export">
+            <!-- export, save, and render features -->
+            <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
+                <div class="control-row-button dropdown noselect" (click)="handleExportDropdown()" matTooltipPosition="below" matTooltip="export">
                     <span class="material-icons" alt="export">file_download</span>
                 </div>
-                <div class="dropdown-container select_behavior" #dropdown [class.left]="checkalign(dropdown)"
-                *ngIf="currentDropdown === 'export'">
+                <div class="dropdown-container select_behavior" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'export'">
                     <div>
                         <b class="filter-label">Export</b>
                     </div>
                     <div>
                         <!-- save single layer locally as JSON -->
                         <div *ngIf="configService.getFeature('download_layer')" class="control-row-item">
-                            <div class="control-row-button noselect"
+                            <div
+                                class="control-row-button noselect"
                                 (click)="saveLayerLocally()"
                                 matTooltipPosition="below"
                                 matTooltip="download single layer as json">
@@ -173,7 +189,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
                         <!-- save all layers locally as JSON -->
                         <div *ngIf="configService.getFeature('download_layer') && viewModelsService.viewModels.length > 1" class="control-row-item">
-                            <div class="control-row-button noselect"
+                            <div
+                                class="control-row-button noselect"
                                 (click)="saveAllLayersLocally()"
                                 matTooltipPosition="below"
                                 matTooltip="download all layers as json">
@@ -185,7 +202,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
                         <!-- export single layer to excel -->
                         <div *ngIf="configService.getFeature('export_excel')" class="control-row-item">
-                            <div class="control-row-button noselect"
+                            <div
+                                class="control-row-button noselect"
                                 (click)="saveLayerLocallyExcel()"
                                 matTooltipPosition="below"
                                 matTooltip="export single layer to excel">
@@ -195,19 +213,19 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
                         <!-- export all layers to excel -->
                         <div *ngIf="configService.getFeature('export_excel') && viewModelsService.viewModels.length > 1" class="control-row-item">
-                            <div class="control-row-button noselect"
+                            <div
+                                class="control-row-button noselect"
                                 (click)="saveAllLayersLocallyExcel()"
                                 matTooltipPosition="below"
                                 matTooltip="export all layers to excel">
-                                <span class="material-symbols-outlined" alt="save layer">
-                                    table_view
-                                </span>
+                                <span class="material-symbols-outlined" alt="save layer">table_view</span>
                             </div>
                         </div>
 
                         <!-- render layer to SVG -->
                         <div *ngIf="configService.getFeature('export_render')" class="control-row-item">
-                            <div class="control-row-button noselect"
+                            <div
+                                class="control-row-button noselect"
                                 (click)="exportRender()"
                                 matTooltipPosition="below"
                                 matTooltip="render layer to SVG">
@@ -220,126 +238,218 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     </div>
                     <!-- Additional Export Options -->
                     <div>
-                        <input id="select_download_annotations" class="checkbox-custom" type="checkbox" [(ngModel)]="downloadAnnotationsOnVisibleTechniques">
-                        <label for="select_download_annotations" class="checkbox-custom-label noselect">Only download annotations on visible techniques</label>
+                        <input
+                            id="select_download_annotations"
+                            class="checkbox-custom"
+                            type="checkbox"
+                            [(ngModel)]="downloadAnnotationsOnVisibleTechniques" />
+                        <label for="select_download_annotations" class="checkbox-custom-label noselect">
+                            Only download annotations on visible techniques
+                        </label>
                     </div>
                     <div class="warning" *ngIf="downloadAnnotationsOnVisibleTechniques && this.viewModel.modifiedHiddenTechniques() == 1">
                         <span class="material-icons" alt="warning">warning</span>
-                        <label class="warning-label"> {{this.viewModel.modifiedHiddenTechniques()}} hidden technique has annotations</label>
+                        <label class="warning-label">{{ this.viewModel.modifiedHiddenTechniques() }} hidden technique has annotations</label>
                     </div>
                     <div class="warning" *ngIf="downloadAnnotationsOnVisibleTechniques && this.viewModel.modifiedHiddenTechniques() > 1">
                         <span class="material-icons" alt="warning">warning</span>
-                        <label class="warning-label"> {{this.viewModel.modifiedHiddenTechniques()}} hidden techniques have annotations</label>
+                        <label class="warning-label">{{ this.viewModel.modifiedHiddenTechniques() }} hidden techniques have annotations</label>
                     </div>
                 </div>
             </div>
 
             <!-- Filters -->
             <div *ngIf="configService.getFeature('filters')" class="control-row-item">
-
-                <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null;"
-                     matTooltipPosition="below"
-                     matTooltip="filters">
+                <div
+                    class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null"
+                    matTooltipPosition="below"
+                    matTooltip="filters">
                     <span class="material-icons">filter_list</span>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="filter" *ngFor="let filter of ['platforms']">
-                        <b class="filter-label">{{filter}}</b>
+                        <b class="filter-label">{{ filter }}</b>
                         <div *ngIf="viewModel.filters[filter].options.length !== 0">
                             <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options">
-                                <input [id]="filterOption" class="checkbox-custom" type="checkbox" (click)="viewModel.filters.toggleInFilter(filter, filterOption);" [checked]="viewModel.filters.inFilter(filter, filterOption)">
-                                <label [for]="filterOption" class="checkbox-custom-label noselect">{{filterOption}}</label>
+                                <input
+                                    [id]="filterOption"
+                                    class="checkbox-custom"
+                                    type="checkbox"
+                                    (click)="viewModel.filters.toggleInFilter(filter, filterOption)"
+                                    [checked]="viewModel.filters.inFilter(filter, filterOption)" />
+                                <label [for]="filterOption" class="checkbox-custom-label noselect">{{ filterOption }}</label>
                             </div>
                         </div>
-                        <div *ngIf="viewModel.filters[filter].options.length == 0">
-                            Data does not include {{filter}}
-                        </div>
+                        <div *ngIf="viewModel.filters[filter].options.length == 0">Data does not include {{ filter }}</div>
                     </div>
                 </div>
             </div>
 
             <!-- sorting -->
             <div *ngIf="configService.getFeature('sorting')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="viewModel.sorting = (viewModel.sorting + 1) % 4;"
-                     matTooltipPosition="below"
-                     [matTooltip]="['sorting alphabetically ascending', 'sorting alphabetically descending', 'sorting by score ascending', 'sorting by score descending'][viewModel.sorting]">
+                <div
+                    class="control-row-button noselect"
+                    (click)="viewModel.sorting = (viewModel.sorting + 1) % 4"
+                    matTooltipPosition="below"
+                    [matTooltip]="
+                        [
+                            'sorting alphabetically ascending',
+                            'sorting alphabetically descending',
+                            'sorting by score ascending',
+                            'sorting by score descending'
+                        ][viewModel.sorting]
+                    ">
                     <span [ngSwitch]="['alpha_asc', 'alpha_desc', 'numeric_asc', 'numeric_desc'][viewModel.sorting]">
-                        <ng-container *ngSwitchCase="'alpha_asc'"><mat-icon
-                                svgIcon="ic_sort_alphabetically_ascending"></mat-icon></ng-container>
-                        <ng-container *ngSwitchCase="'alpha_desc'"><mat-icon
-                                svgIcon="ic_sort_alphabetically_descending"></mat-icon></ng-container>
-                        <ng-container *ngSwitchCase="'numeric_asc'"><mat-icon
-                                svgIcon="ic_sort_numerically_ascending"></mat-icon></ng-container>
-                        <ng-container *ngSwitchCase="'numeric_desc'"><mat-icon
-                                svgIcon="ic_sort_numerically_descending"></mat-icon></ng-container>
+                        <ng-container *ngSwitchCase="'alpha_asc'"><mat-icon svgIcon="ic_sort_alphabetically_ascending"></mat-icon></ng-container>
+                        <ng-container *ngSwitchCase="'alpha_desc'"><mat-icon svgIcon="ic_sort_alphabetically_descending"></mat-icon></ng-container>
+                        <ng-container *ngSwitchCase="'numeric_asc'"><mat-icon svgIcon="ic_sort_numerically_ascending"></mat-icon></ng-container>
+                        <ng-container *ngSwitchCase="'numeric_desc'"><mat-icon svgIcon="ic_sort_numerically_descending"></mat-icon></ng-container>
                     </span>
                 </div>
             </div>
 
             <!-- color setup -->
             <div *ngIf="configService.getFeature('color_setup')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'colorSetup' ? 'colorSetup' : null; viewModel.updateGradient()"
-                     matTooltipPosition="below"
-                     matTooltip="color setup">
+                <div
+                    class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'colorSetup' ? 'colorSetup' : null; viewModel.updateGradient()"
+                    matTooltipPosition="below"
+                    matTooltip="color setup">
                     <span class="material-icons">palette</span>
                 </div>
                 <div class="dropdown-container colorSetup" *ngIf="currentDropdown === 'colorSetup'" #dropdown [class.left]="checkalign(dropdown)">
-
                     <div class="tacticRowColor">
-                        <div class="gradient-section-label">
-                            Tactic Row Background
-                        </div>
+                        <div class="gradient-section-label">Tactic Row Background</div>
                         <div class="gradient-section-content">
-                            <input id="showTacticRowBackground" type="checkbox" class="checkbox-custom" [(ngModel)]=viewModel.showTacticRowBackground>
+                            <input
+                                id="showTacticRowBackground"
+                                type="checkbox"
+                                class="checkbox-custom"
+                                [(ngModel)]="viewModel.showTacticRowBackground" />
                             <label for="showTacticRowBackground" class="checkbox-custom-label noselect">show</label>
-                            <input class="colorpicker" [(colorPicker)]="viewModel.tacticRowBackground" [(ngModel)]="viewModel.tacticRowBackground" [style.background]="viewModel.tacticRowBackground" cpPosition="bottom" [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D']">
+                            <input
+                                class="colorpicker"
+                                [(colorPicker)]="viewModel.tacticRowBackground"
+                                [(ngModel)]="viewModel.tacticRowBackground"
+                                [style.background]="viewModel.tacticRowBackground"
+                                cpPosition="bottom"
+                                [cpPresetColors]="['#ddd', '#aaaaaa', '#205B8F', '#B9482D']" />
                         </div>
                     </div>
                     <div class="gradient">
-                        <div class="gradient-section-label">
-                            Scoring Gradient
-                        </div>
+                        <div class="gradient-section-label">Scoring Gradient</div>
                         <div class="gradient-controls gradient-section-content">
                             <table>
                                 <tr class="minmax top">
                                     <td>Low value:</td>
-                                    <td class="col2"><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.minValue" [max]=viewModel.gradient.maxValue></td>
+                                    <td class="col2">
+                                        <input
+                                            type="number"
+                                            (input)="viewModel.updateGradient()"
+                                            [(ngModel)]="viewModel.gradient.minValue"
+                                            [max]="viewModel.gradient.maxValue" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="buttons">
                                         <div *ngFor="let gradientStep of viewModel.gradient.colors; let $i = index">
                                             <div class="left">
-                                                <button (click)="viewModel.removeGradientColor($i)" [disabled]="viewModel.gradient.colors.length == 2">remove</button>
+                                                <button
+                                                    (click)="viewModel.removeGradientColor($i)"
+                                                    [disabled]="viewModel.gradient.colors.length == 2">
+                                                    remove
+                                                </button>
                                             </div>
                                             <div class="right">
-                                                <input class="colorpicker" (colorPickerChange)="viewModel.updateGradient()" (cpPresetColorsChange)="viewModel.updateGradient()" (cpSliderChange)="viewModel.updateGradient()" (cpInputChange)="viewModel.updateGradient()" [(colorPicker)]="gradientStep.color" [(ngModel)]="gradientStep.color" [style.background]="gradientStep.color" cpPosition="bottom" [cpPresetColors]="viewModel.gradient.options">
+                                                <input
+                                                    class="colorpicker"
+                                                    (colorPickerChange)="viewModel.updateGradient()"
+                                                    (cpPresetColorsChange)="viewModel.updateGradient()"
+                                                    (cpSliderChange)="viewModel.updateGradient()"
+                                                    (cpInputChange)="viewModel.updateGradient()"
+                                                    [(colorPicker)]="gradientStep.color"
+                                                    [(ngModel)]="gradientStep.color"
+                                                    [style.background]="gradientStep.color"
+                                                    cpPosition="bottom"
+                                                    [cpPresetColors]="viewModel.gradient.options" />
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="col2" [style.background-image]="sanitize(viewModel.gradient.gradient.css('linear', 'to bottom'))"> </td>
+                                    <td class="col2" [style.background-image]="sanitize(viewModel.gradient.gradient.css('linear', 'to bottom'))"></td>
                                 </tr>
                                 <tr>
-                                    <td><button class="addcolor" (click)="viewModel.addGradientColor();">add another color</button></td>
+                                    <td><button class="addcolor" (click)="viewModel.addGradientColor()">add another color</button></td>
                                 </tr>
                                 <tr class="minmax bottom">
-                                    <td>High value: </td>
-                                    <td class="col2 "><input type="number" (input)="viewModel.updateGradient()" [(ngModel)]="viewModel.gradient.maxValue" [min]=viewModel.gradient.minValue></td>
+                                    <td>High value:</td>
+                                    <td class="col2">
+                                        <input
+                                            type="number"
+                                            (input)="viewModel.updateGradient()"
+                                            [(ngModel)]="viewModel.gradient.maxValue"
+                                            [min]="viewModel.gradient.minValue" />
+                                    </td>
                                 </tr>
                             </table>
                             <div class="display-buttons">
                                 <div class="squarebutton dropdown noselect" (click)="presetsMenuVisible = !presetsMenuVisible">
-                                    presets <span style="font-size:5pt">▼</span>
-                                </div >
+                                    presets
+                                    <span style="font-size: 5pt">▼</span>
+                                </div>
                                 <div class="dropdown-container presetsmenu" *ngIf="presetsMenuVisible">
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redgreen'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redgreen'))">red to green</div>
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('greenred'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('greenred'))">green to red</div>
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('bluered'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('bluered'))">blue to red</div>
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('redblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redblue'))">red to blue</div>
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('transparentblue'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('transparentblue'))">transparent to blue</div>
-                                    <div class="squarebutton noselect gradient" (click)="viewModel.gradient.setGradientPreset('transparentred'); presetsMenuVisible = false; viewModel.updateGradient()" [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('transparentred'))">transparent to red</div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('redgreen'); presetsMenuVisible = false; viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redgreen'))">
+                                        red to green
+                                    </div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('greenred'); presetsMenuVisible = false; viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('greenred'))">
+                                        green to red
+                                    </div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('bluered'); presetsMenuVisible = false; viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('bluered'))">
+                                        blue to red
+                                    </div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('redblue'); presetsMenuVisible = false; viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('redblue'))">
+                                        red to blue
+                                    </div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('transparentblue');
+                                            presetsMenuVisible = false;
+                                            viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('transparentblue'))">
+                                        transparent to blue
+                                    </div>
+                                    <div
+                                        class="squarebutton noselect gradient"
+                                        (click)="
+                                            viewModel.gradient.setGradientPreset('transparentred');
+                                            presetsMenuVisible = false;
+                                            viewModel.updateGradient()
+                                        "
+                                        [style.background-image]="sanitize(viewModel.gradient.presetToTinyColor('transparentred'))">
+                                        transparent to red
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -349,246 +459,311 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
             <!-- show or hide disabled techniques -->
             <div *ngIf="configService.getFeature('toggle_hide_disabled')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     (click)="viewModel.hideDisabled = !viewModel.hideDisabled;"
-                     matTooltipPosition="below"
-                     matTooltip="show/hide disabled">
-                    <span *ngIf="viewModel.hideDisabled" class="material-icons"
-                          alt="show disabled">visibility_off</span>
+                <div
+                    class="control-row-button noselect"
+                    (click)="viewModel.hideDisabled = !viewModel.hideDisabled"
+                    matTooltipPosition="below"
+                    matTooltip="show/hide disabled">
+                    <span *ngIf="viewModel.hideDisabled" class="material-icons" alt="show disabled">visibility_off</span>
                     <span *ngIf="!viewModel.hideDisabled" class="material-icons" alt="hide disabled">visibility</span>
                 </div>
             </div>
 
             <!-- expand all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': viewModel.layout.layout === 'mini'}"
-                     (click)="expandSubtechniques()"
-                     matTooltipPosition="below"
-                     matTooltip="expand sub-techniques">
-                    <span class="material-icons"
-                          alt="expand sub-techniques">unfold_more</span>
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
+                    (click)="expandSubtechniques()"
+                    matTooltipPosition="below"
+                    matTooltip="expand sub-techniques">
+                    <span class="material-icons" alt="expand sub-techniques">unfold_more</span>
                 </div>
             </div>
 
             <!-- expand only annotated sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': viewModel.layout.layout === 'mini'}"
-                     (click)="expandSubtechniques(true)"
-                     matTooltipPosition="below"
-                     matTooltip="expand annotated sub-techniques">
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
+                    (click)="expandSubtechniques(true)"
+                    matTooltipPosition="below"
+                    matTooltip="expand annotated sub-techniques">
                     <mat-icon svgIcon="ic_unfold_more_alt"></mat-icon>
                 </div>
             </div>
 
             <!-- collapse all sub-techniques -->
             <div *ngIf="configService.getFeature('subtechniques')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': viewModel.layout.layout === 'mini'}"
-                     (click)="collapseSubtechniques()"
-                     matTooltipPosition="below"
-                     matTooltip="collapse sub-techniques">
-                    <span class="material-icons"
-                          alt="collapse sub-techniques">unfold_less</span>
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
+                    (click)="collapseSubtechniques()"
+                    matTooltipPosition="below"
+                    matTooltip="collapse sub-techniques">
+                    <span class="material-icons" alt="collapse sub-techniques">unfold_less</span>
                 </div>
             </div>
 
             <!-- layout -->
             <div *ngIf="configService.getFeature('layout_controls')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     (click)="currentDropdown = currentDropdown !== 'layout' ? 'layout' : null;"
-                     matTooltipPosition="below"
-                     matTooltip="matrix configuration">
+                <div
+                    class="control-row-button dropdown noselect"
+                    (click)="currentDropdown = currentDropdown !== 'layout' ? 'layout' : null"
+                    matTooltipPosition="below"
+                    matTooltip="matrix configuration">
                     <span class="material-icons">view_module</span>
                 </div>
                 <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown [class.left]="checkalign(dropdown)">
                     <div class="section">
                         <select [(ngModel)]="viewModel.layout.layout" placeholder="layout">
-                            <option *ngFor="let option of viewModel.layout.layoutOptions" [value]="option">{{option}} layout</option>
+                            <option *ngFor="let option of viewModel.layout.layoutOptions" [value]="option">{{ option }} layout</option>
                         </select>
                     </div>
                     <div class="section">
                         <b class="filter-label">labels</b>
                         <div>
-                             <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showID">
-                             <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option" class="checkbox-custom-label noselect">show IDs</label>
-
+                            <input
+                                [disabled]="viewModel.layout.layout == 'mini'"
+                                id="showID-option"
+                                class="checkbox-custom"
+                                type="checkbox"
+                                [(ngModel)]="viewModel.layout.showID" />
+                            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option" class="checkbox-custom-label noselect">
+                                show IDs
+                            </label>
                         </div>
                         <div>
-                            <input [disabled]="viewModel.layout.layout == 'mini'" id="showName-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showName">
-                            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option" class="checkbox-custom-label noselect">show names</label>
+                            <input
+                                [disabled]="viewModel.layout.layout == 'mini'"
+                                id="showName-option"
+                                class="checkbox-custom"
+                                type="checkbox"
+                                [(ngModel)]="viewModel.layout.showName" />
+                            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option" class="checkbox-custom-label noselect">
+                                show names
+                            </label>
                         </div>
                     </div>
                     <div class="section">
                         <b class="filter-label">aggregate scores</b>
                         <div>
-                            <input id="showAggregateScores-option" class="checkbox-custom" type="checkbox"  [(ngModel)]="viewModel.layout.showAggregateScores">
+                            <input
+                                id="showAggregateScores-option"
+                                class="checkbox-custom"
+                                type="checkbox"
+                                [(ngModel)]="viewModel.layout.showAggregateScores" />
                             <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
                         </div>
                         <div>
-                            <input [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
-                                id="countUnscored-option" class="checkbox-custom" type="checkbox"
-                                [(ngModel)]="viewModel.layout.countUnscored">
-                            <label [class.disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                            <input
+                                [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                                id="countUnscored-option"
+                                class="checkbox-custom"
+                                type="checkbox"
+                                [(ngModel)]="viewModel.layout.countUnscored" />
+                            <label
+                                [class.disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
                                 for="countUnscored-option"
-                                class="checkbox-custom-label noselect">count unscored techniques as 0</label>
+                                class="checkbox-custom-label noselect">
+                                count unscored techniques as 0
+                            </label>
                         </div>
                         <div class="subsection">
-                            <label for="aggregateFunctionDropdown">aggregate function: </label>
+                            <label for="aggregateFunctionDropdown">aggregate function:</label>
                             <div class="inner-dropdown-container">
                                 <select
                                     [disabled]="!viewModel.layout.showAggregateScores"
                                     id="aggregateFunctionDropdown"
-                                    [(ngModel)]="viewModel.layout.aggregateFunction" placeholder="function">
-                                    <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions"
-                                            [value]="option">{{option}}</option>
+                                    [(ngModel)]="viewModel.layout.aggregateFunction"
+                                    placeholder="function">
+                                    <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions" [value]="option">{{ option }}</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </li>
         <li *ngIf="configService.getFeatureGroup('technique_controls', 'any') && configService.getFeature('selecting_techniques')">
-            <div *ngIf="configService.getFeatureGroupCount('technique_controls') >= 3" class="section-label">
-                technique controls
-            </div>
+            <div *ngIf="configService.getFeatureGroupCount('technique_controls') >= 3" class="section-label">technique controls</div>
             <!-- TECHNIQUE CONTROLS -->
             <!-- enable/disable technique -->
             <div *ngIf="configService.getFeature('disable_techniques')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
-                     (click)="setSelectedState()"
-                     matTooltipPosition="below"
-                     matTooltip="toggle state"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"
+                    (click)="setSelectedState()"
+                    matTooltipPosition="below"
+                    matTooltip="toggle state"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
                     <span class="material-icons" alt="toggle state">texture</span>
                 </div>
             </div>
 
             <!-- background color -->
             <div *ngIf="configService.getFeature('manual_color')" class="control-row-item">
-
-                <div class="control-row-button dropdown noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
-                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null : continue"
-                     matTooltipPosition="below"
-                     matTooltip="background color"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                <div
+                    class="control-row-button dropdown noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"
+                    (click)="viewModel.isCurrentlyEditing() ? (currentDropdown = currentDropdown !== 'colorpicker' ? 'colorpicker' : null) : continue"
+                    matTooltipPosition="below"
+                    matTooltip="background color"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
                     <span class="material-icons" alt="edit background color">format_color_fill</span>
                 </div>
                 <!-- color picker (invisible, absolute)-->
-                <div class="colorpicker dropdown-container" #dropdown [class.left]="checkalign(dropdown)"
-                     *ngIf="currentDropdown === 'colorpicker'">
-
-                    <div class="color-block wide noselect dropdown"
-                         (click)="viewModel.editSelectedTechniques('color', '')">
-                        no color
-                    </div>
-                    <div class="color-block square"
-                         *ngFor="let color of viewModel.backgroundPresets"
-                         [style.background]="color"
-                         (click)="viewModel.editSelectedTechniques('color', color)"></div>
+                <div class="colorpicker dropdown-container" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'colorpicker'">
+                    <div class="color-block wide noselect dropdown" (click)="viewModel.editSelectedTechniques('color', '')">no color</div>
+                    <div
+                        class="color-block square"
+                        *ngFor="let color of viewModel.backgroundPresets"
+                        [style.background]="color"
+                        (click)="viewModel.editSelectedTechniques('color', color)"></div>
                 </div>
             </div>
-
 
             <!-- score -->
             <div *ngIf="configService.getFeature('scoring')" class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
-                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'score' ? 'score' : null : continue"
-                     matTooltipPosition="below"
-                     matTooltip="scoring"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                <div
+                    class="control-row-button dropdown noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"
+                    (click)="viewModel.isCurrentlyEditing() ? (currentDropdown = currentDropdown !== 'score' ? 'score' : null) : continue"
+                    matTooltipPosition="below"
+                    matTooltip="scoring"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
                     <span class="material-icons" alt="score">insert_chart</span>
                 </div>
-                <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)"
-                     *ngIf="currentDropdown === 'score'">
-                     <mat-form-field>
-                         <!-- update data whenever it is typed in -->
-                         <input matInput
-                                type="number"
-                                [(ngModel)]="scoreEditField"
-                                placeholder="score"
-                                (input)="viewModel.editSelectedTechniques('score', $event.target.value); viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getHexColor($event.target.value));">
-                         <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
-                     </mat-form-field>
+                <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'score'">
+                    <mat-form-field>
+                        <!-- update data whenever it is typed in -->
+                        <input
+                            matInput
+                            type="number"
+                            [(ngModel)]="scoreEditField"
+                            placeholder="score"
+                            (input)="
+                                viewModel.editSelectedTechniques('score', $event.target.value);
+                                viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getHexColor($event.target.value))
+                            " />
+                        <mat-hint style="color: red" align="start" *ngIf="validateScoreInput()">not a number</mat-hint>
+                    </mat-form-field>
                 </div>
             </div>
 
-
             <!-- comment -->
             <div *ngIf="configService.getFeature('comments')" class="control-row-item">
-
-                <div class="control-row-button dropdown noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
-                     (click)="viewModel.isCurrentlyEditing() ? currentDropdown = currentDropdown !== 'comment' ? 'comment' : null : continue"
-                     matTooltipPosition="below"
-                     matTooltip="comment"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                <div
+                    class="control-row-button dropdown noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"
+                    (click)="viewModel.isCurrentlyEditing() ? (currentDropdown = currentDropdown !== 'comment' ? 'comment' : null) : continue"
+                    matTooltipPosition="below"
+                    matTooltip="comment"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
                     <span class="material-icons" alt="comment">insert_comment</span>
                 </div>
                 <!-- comment input (invisible, absolute) -->
-                <div class="dropdown-container inputfield left" #dropdown [class.left]="checkalign(dropdown)"
-                     *ngIf="currentDropdown === 'comment'">
-
+                <div class="dropdown-container inputfield left" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'comment'">
                     <mat-form-field>
-                        <textarea matInput
-                                  matTextareaAutosize
-                                  placeholder="comment"
-                                  [(ngModel)]="commentEditField"
-                                  (input)="viewModel.editSelectedTechniques('comment', $event.target.value)">
-                        </textarea>
+                        <textarea
+                            matInput
+                            matTextareaAutosize
+                            placeholder="comment"
+                            [(ngModel)]="commentEditField"
+                            (input)="viewModel.editSelectedTechniques('comment', $event.target.value)"></textarea>
                     </mat-form-field>
-                 </div>
-             </div>
+                </div>
+            </div>
 
             <!-- links -->
-            <div *ngIf="configService.getFeature('links')"  class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing() || !viewModel.linksMatch}"
-                     (click)="viewModel.isCurrentlyEditing() && viewModel.linksMatch ? currentDropdown = currentDropdown !== 'link' ? 'link' : null : continue"
-                     matTooltipPosition="below"
-                     [matTooltip]="viewModel.linksMatch ? 'link' : 'cannot edit links on selected techniques with differing links'"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                     <span class="material-icons" alt="add a link">link</span>
+            <div *ngIf="configService.getFeature('links')" class="control-row-item">
+                <div
+                    class="control-row-button dropdown noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() || !viewModel.linksMatch }"
+                    (click)="
+                        viewModel.isCurrentlyEditing() && viewModel.linksMatch
+                            ? (currentDropdown = currentDropdown !== 'link' ? 'link' : null)
+                            : continue
+                    "
+                    matTooltipPosition="below"
+                    [matTooltip]="viewModel.linksMatch ? 'link' : 'cannot edit links on selected techniques with differing links'"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                    <span class="material-icons" alt="add a link">link</span>
                 </div>
                 <!-- link input -->
-                <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'link'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.links, 'level': 'technique', 'type': 'links', 'nameField': 'label', valueField: 'url'}"></app-list-input>
+                <div
+                    class="dropdown-container inputfield left list-input"
+                    #dropdown
+                    *ngIf="currentDropdown === 'link'"
+                    [class.left]="checkalign(dropdown)">
+                    <app-list-input
+                        [config]="{
+                            viewModel: viewModel,
+                            list: viewModel.activeTvm.links,
+                            level: 'technique',
+                            type: 'links',
+                            nameField: 'label',
+                            valueField: 'url'
+                        }"></app-list-input>
                 </div>
-             </div>
-
+            </div>
 
             <!-- technique metadata -->
-            <div *ngIf="configService.getFeature('metadata')"  class="control-row-item">
-                <div class="control-row-button dropdown noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing() || !viewModel.metadataMatch}"
-                     (click)="viewModel.isCurrentlyEditing() && viewModel.metadataMatch ? currentDropdown = currentDropdown !== 'metadata' ? 'metadata' : null : continue"
-                     matTooltipPosition="below"
-                     [matTooltip]="viewModel.metadataMatch ? 'metadata' : 'cannot edit metadata on selected techniques with differing metadata'"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                     <span class="material-icons" alt="add metadata">list</span>
-                 </div>
-                 <!-- metadata input -->
-                 <div class="dropdown-container inputfield left list-input" #dropdown *ngIf="currentDropdown === 'metadata'" [class.left]="checkalign(dropdown)">
-                    <app-list-input [config]="{'viewModel': viewModel, 'list': viewModel.activeTvm.metadata, 'level': 'technique', 'type': 'metadata', 'nameField': 'name', valueField: 'value'}"></app-list-input>
+            <div *ngIf="configService.getFeature('metadata')" class="control-row-item">
+                <div
+                    class="control-row-button dropdown noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() || !viewModel.metadataMatch }"
+                    (click)="
+                        viewModel.isCurrentlyEditing() && viewModel.metadataMatch
+                            ? (currentDropdown = currentDropdown !== 'metadata' ? 'metadata' : null)
+                            : continue
+                    "
+                    matTooltipPosition="below"
+                    [matTooltip]="viewModel.metadataMatch ? 'metadata' : 'cannot edit metadata on selected techniques with differing metadata'"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                    <span class="material-icons" alt="add metadata">list</span>
                 </div>
-             </div>
+                <!-- metadata input -->
+                <div
+                    class="dropdown-container inputfield left list-input"
+                    #dropdown
+                    *ngIf="currentDropdown === 'metadata'"
+                    [class.left]="checkalign(dropdown)">
+                    <app-list-input
+                        [config]="{
+                            viewModel: viewModel,
+                            list: viewModel.activeTvm.metadata,
+                            level: 'technique',
+                            type: 'metadata',
+                            nameField: 'name',
+                            valueField: 'value'
+                        }"></app-list-input>
+                </div>
+            </div>
 
             <!-- remove all annotations -->
             <div *ngIf="configService.getFeature('clear_annotations')" class="control-row-item">
-                <div class="control-row-button noselect"
-                     [ngClass]="{'disabled': !viewModel.isCurrentlyEditing()}"
-                     (click)="viewModel.resetSelectedTechniques(); populateEditFields()"
-                     matTooltipPosition="below"
-                     matTooltip="clear annotations on selected"
-                     [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
+                <div
+                    class="control-row-button noselect"
+                    [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"
+                    (click)="viewModel.resetSelectedTechniques(); populateEditFields()"
+                    matTooltipPosition="below"
+                    matTooltip="clear annotations on selected"
+                    [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
                     <span class="material-icons" alt="remove all annotations">layers_clear</span>
+                </div>
+            </div>
+        </li>
+        <li *ngIf="configService.getFeatureGroup('toolbar_controls', 'any')">
+            <!-- enable disable sticky toolbar -->
+            <div *ngIf="configService.getFeature('sticky_toolbar')" class="control-row-item">
+                <div
+                    class="control-row-button noselect"
+                    (click)="updateStickyToolbar()"
+                    matTooltipPosition="below"
+                    [matTooltip]="viewModel.stickyToolbar ? 'disable sticky toolbar' : 'enable sticky toolbar'">
+                    <span *ngIf="viewModel.stickyToolbar" class="material-symbols-outlined" alt="show disabled">push_pin</span>
+                    <span *ngIf="!viewModel.stickyToolbar" alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
                 </div>
             </div>
         </li>
@@ -606,13 +781,20 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
     <mat-drawer-content>
         <div class="matrices" #scrollRef>
             <div oncontextmenu="return false">
-                <div class="spinner" *ngIf="!dataService.getDomain(viewModel.domainVersionID) || !dataService.getDomain(viewModel.domainVersionID).dataLoaded; else loadMatrices">
+                <div
+                    class="spinner"
+                    *ngIf="
+                        !dataService.getDomain(viewModel.domainVersionID) || !dataService.getDomain(viewModel.domainVersionID).dataLoaded;
+                        else loadMatrices
+                    ">
                     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
                 </div>
                 <ng-template #loadMatrices>
                     <div class="matrices-columns">
                         <div class="matrix-column" *ngFor="let matrix of dataService.getDomain(viewModel.domainVersionID).matrices">
-                            <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">{{matrix.name}}</div>
+                            <div *ngIf="dataService.getDomain(viewModel.domainVersionID).matrices.length > 1" class="matrix-name">
+                                {{ matrix.name }}
+                            </div>
                             <div *ngIf="viewModel.layout.layout == 'side'">
                                 <matrix-side [matrix]="matrix" [viewModel]="viewModel"></matrix-side>
                             </div>
@@ -633,7 +815,6 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
     </mat-drawer>
 </mat-drawer-container>
 
-
 <!--
 ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo
  888         888    88 o888    88  888    88   8888o  88   888    88o
@@ -642,33 +823,31 @@ ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo
 o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
                                                                       -->
 
-<div class="legendBar" (click)="showingLegend = !showingLegend"
-     *ngIf="!showingLegend && configService.getFeature('legend')">
+<div class="legendBar" (click)="showingLegend = !showingLegend" *ngIf="!showingLegend && configService.getFeature('legend')">
     <span class="material-icons">keyboard_arrow_up</span>
-    <div class="noselect" style="padding:4px; font-size:14px; position: absolute; width: 100%; text-align:center">
-        legend
-    </div>
+    <div class="noselect" style="padding: 4px; font-size: 14px; position: absolute; width: 100%; text-align: center">legend</div>
 </div>
 
 <div class="legend" *ngIf="showingLegend && configService.getFeature('legend')">
-    <div class="legendBar" (click)="showingLegend = !showingLegend" style="position: absolute; top:0px; left:0px;">
+    <div class="legendBar" (click)="showingLegend = !showingLegend" style="position: absolute; top: 0px; left: 0px">
         <span class="material-icons">keyboard_arrow_down</span>
-        <div class="noselect title">
-            legend
-        </div>
+        <div class="noselect title">legend</div>
     </div>
     <div class="itemArea">
-        <div class="item" *ngFor="let item of viewModel.legendItems; let Even=even; let i=index" [class.even]="!Even">
-            <input [(colorPicker)]="item.color" [(ngModel)]="item.color" [style.background]="item.color" [cpPosition]="'top'" [cpPresetColors]="viewModel.legendColorPresets" style="width:75px;"/>
+        <div class="item" *ngFor="let item of viewModel.legendItems; let Even = even; let i = index" [class.even]="!Even">
+            <input
+                [(colorPicker)]="item.color"
+                [(ngModel)]="item.color"
+                [style.background]="item.color"
+                [cpPosition]="'top'"
+                [cpPresetColors]="viewModel.legendColorPresets"
+                style="width: 75px" />
             <mat-form-field class="label">
-                    <input matInput
-
-                    [(ngModel)]="item.label">
-
+                <input matInput [(ngModel)]="item.label" />
             </mat-form-field>
-            <span class="material-icons" (click)="viewModel.deleteLegendItem(i);">clear</span>
+            <span class="material-icons" (click)="viewModel.deleteLegendItem(i)">clear</span>
         </div>
-        <button style="margin-left:75px; margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.addLegendItem();">Add Item</button>
-        <button style="margin-top:10px; margin-bottom:10px;" class="button" (click)="viewModel.clearLegend();">Clear</button>
+        <button style="margin-left: 75px; margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.addLegendItem()">Add Item</button>
+        <button style="margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.clearLegend()">Clear</button>
     </div>
 </div>
