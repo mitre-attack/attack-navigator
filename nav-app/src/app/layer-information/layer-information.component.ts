@@ -9,6 +9,6 @@ import * as globals from '../utils/globals';
 })
 export class LayerInformationComponent {
     public get layerFormatLink(): string {
-        return `../layers/LAYERFORMATv${globals.layer_version.replace('.', '_')}.md`;
+        return `../layers/LAYERFORMATv${globals.layerVersion.replace('.', '_')}.md`;
     }
 }

@@ -30,7 +30,7 @@ export class TabsComponent implements AfterViewInit {
     public dropdownEnabled: string = '';
     public layerTabs: Tab[] = [];
     public adjustedHeaderHeight: number = 0;
-    public navVersion = globals.nav_version;
+    public navVersion = globals.navVersion;
     public safariDialogRef;
     public showHelpDropDown: boolean = false;
     public loadURL: string = '';

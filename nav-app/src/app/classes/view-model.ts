@@ -1039,8 +1039,8 @@ export class ViewModel {
 
         rep.versions = {
             attack: this.dataService.getDomain(this.domainVersionID).getVersion(),
-            navigator: globals.nav_version,
-            layer: globals.layer_version,
+            navigator: globals.navVersion,
+            layer: globals.layerVersion,
         };
 
         let domain = this.dataService.getDomain(this.domainVersionID);
@@ -1083,24 +1083,24 @@ export class ViewModel {
                     if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/\d+/g)[0];
                 } else console.error('TypeError: attack version field is not a string');
             }
-            if (obj.versions['layer'] !== globals.layer_version) {
+            if (obj.versions['layer'] !== globals.layerVersion) {
                 alert(
                     'WARNING: Uploaded layer version (' +
                         String(obj.versions['layer']) +
                         ") does not match Navigator's layer version (" +
-                        String(globals.layer_version) +
+                        String(globals.layerVersion) +
                         '). The layer configuration may not be fully restored.'
                 );
             }
         }
         if ('version' in obj) {
             // backwards compatibility with Layer Format 3
-            if (obj.version !== globals.layer_version) {
+            if (obj.version !== globals.layerVersion) {
                 alert(
                     'WARNING: Uploaded layer version (' +
                         String(obj.version) +
                         ") does not match Navigator's layer version (" +
-                        String(globals.layer_version) +
+                        String(globals.layerVersion) +
                         '). The layer configuration may not be fully restored.'
                 );
             }

@@ -14,7 +14,7 @@ import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
 export class AppComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;
 
-    nav_version: string = globals.nav_version;
+    navVersion: string = globals.navVersion;
     public user_theme: string;
     title = 'ATT&CK® Navigator';
 

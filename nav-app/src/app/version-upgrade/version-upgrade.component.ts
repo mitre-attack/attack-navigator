@@ -11,7 +11,7 @@ import * as globals from '../utils/globals';
     providers: [ViewModelsService],
 })
 export class VersionUpgradeComponent implements OnInit {
-    nav_version = globals.nav_version;
+    navVersion = globals.navVersion;
     currVersion: string;
     vmVersion: string;
     layerName: string;
