@@ -82,23 +82,25 @@
 <ng-template #versionWarning let-data>
     <div class="version-warning">
         <div>
-            <h3 mat-dialog-title><u>WARNING:</u> Outdated Layer</h3>
+            <h3 mat-dialog-title>
+                <u>WARNING:</u>
+                Outdated Layer
+            </h3>
             <mat-dialog-content>
                 <p>
-                    The uploaded layer version ({{data.objVersion}}) does not match Navigator's layer version ({{data.globalVersion}}). The layer configuration may not be fully restored.
+                    The uploaded layer version ({{ data.objVersion }}) does not match Navigator's layer version ({{ data.globalVersion }}). The layer
+                    configuration may not be fully restored.
                 </p>
+                <p>View the latest Layer File Format specification and the changelog for more information:</p>
                 <p>
-                    View the latest Layer File Format specification and the changelog for more information:
-                </p>
-                <p>
-                    <a (click)="openDialog('layers')">Layer File Format v{{data.globalVersion}}</a>
+                    <a (click)="openDialog('layers')">Layer File Format v{{ data.globalVersion }}</a>
                 </p>
                 <p>
                     <a (click)="openDialog('changelog')">Changelog</a>
                 </p>
             </mat-dialog-content>
         </div>
-    
+
         <button mat-button mat-dialog-close (click)="versionDialogRef.close()">Dismiss</button>
     </div>
 </ng-template>

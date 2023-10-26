@@ -67,13 +67,15 @@ export class TabsComponent implements AfterViewInit {
         return this.filterDomains(this.dataService.versions[0]);
     }
 
-    constructor(public dialog: MatDialog,
-                private viewModelsService: ViewModelsService, 
-                public  dataService: DataService, 
-                private http: HttpClient, 
-                private configService: ConfigService,
-                public snackBar: MatSnackBar) {
-        console.debug("initializing tabs component");
+    constructor(
+        public dialog: MatDialog,
+        private viewModelsService: ViewModelsService,
+        public dataService: DataService,
+        private http: HttpClient,
+        private configService: ConfigService,
+        public snackBar: MatSnackBar
+    ) {
+        console.debug('initializing tabs component');
         let subscription = dataService.getConfig().subscribe({
             next: (config: Object) => {
                 this.newBlankTab();
@@ -306,16 +308,14 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} dialogName {"changelog"|"help"} the dialog to open
      */
     public openDialog(dialogName: string) {
-        const settings = { maxWidth: "75ch", panelClass: this.userTheme };
+        const settings = { maxWidth: '75ch', panelClass: this.userTheme };
         if (dialogName == 'changelog') {
             this.dialog.open(ChangelogComponent, settings);
-        }
-        else if (dialogName == 'help') {
+        } else if (dialogName == 'help') {
             this.dialog.open(HelpComponent, settings);
-        }
-        else if(dialogName == 'layers') {
+        } else if (dialogName == 'layers') {
             this.dialog.open(LayerInformationComponent, {
-                maxWidth: "90ch"
+                maxWidth: '90ch',
             });
         }
     }
@@ -731,17 +731,17 @@ export class TabsComponent implements AfterViewInit {
         reader.onload = (e) => {
             let result = String(reader.result);
             function loadObjAsLayer(self, obj): void {
-                viewModel = self.viewModelsService.newViewModel("loading layer...", undefined);
+                viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                 let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
                 self.versionMismatchWarning(layerVersionStr).then((res) => {
-                    let isCustom = "customDataURL" in obj;
+                    let isCustom = 'customDataURL' in obj;
                     if (!isCustom) {
                         if (!self.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
                         self.upgradeLayer(viewModel, obj, true);
                     } else {
-                    // load as custom data
+                        // load as custom data
                         viewModel.deserialize(obj);
                         self.openTab('new layer', viewModel, true, true, true, true);
                         self.newLayerFromURL(
@@ -753,7 +753,7 @@ export class TabsComponent implements AfterViewInit {
                             obj
                         );
                     }
-                })
+                });
             }
             try {
                 let objList = typeof result == 'string' ? JSON.parse(result) : result;
@@ -783,13 +783,13 @@ export class TabsComponent implements AfterViewInit {
      */
     private async versionMismatchWarning(layerVersionStr: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            let globalVersionSplit = globals.layerVersion.split(".");
-            let layerVersion = layerVersionStr.split(".");
+            let globalVersionSplit = globals.layerVersion.split('.');
+            let layerVersion = layerVersionStr.split('.');
             // if minor version change, snackbar will be displayed
-            if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]){
+            if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]) {
                 let snackMessage = `Uploaded layer version (${layerVersionStr}) is out of date. Please update to v${globals.layerVersion} for optimal compatibility.`;
-                this.versionMinorSnackbarRef = this.snackBar.open(snackMessage, 'CHANGELOG',{
-                    duration: 6500
+                this.versionMinorSnackbarRef = this.snackBar.open(snackMessage, 'CHANGELOG', {
+                    duration: 6500,
                 });
                 this.versionMinorSnackbarRef.onAction().subscribe(() => {
                     this.openDialog('changelog');
@@ -797,21 +797,21 @@ export class TabsComponent implements AfterViewInit {
                 resolve(true);
             }
             // if major version change, keep the dialog open until user dismisses it
-            else if (layerVersion[0] !== globalVersionSplit[0]){
+            else if (layerVersion[0] !== globalVersionSplit[0]) {
                 this.versionDialogRef = this.dialog.open(this.versionWarning, {
                     width: '30em',
                     disableClose: true,
                     panelClass: this.userTheme,
                     data: {
                         objVersion: layerVersionStr,
-                        globalVersion: globals.layerVersion
-                    }
+                        globalVersion: globals.layerVersion,
+                    },
                 });
-                this.versionDialogRef.afterClosed().subscribe(_ => {
+                this.versionDialogRef.afterClosed().subscribe((_) => {
                     resolve(true);
-                })
+                });
             }
-        })
+        });
     }
 
     /**

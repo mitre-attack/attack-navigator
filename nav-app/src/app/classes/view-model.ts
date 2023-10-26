@@ -1076,7 +1076,7 @@ export class ViewModel {
      */
     public deserializeDomainVersionID(rep: any): string {
         let versionNumber = '';
-        let obj = typeof (rep) == 'string' ? JSON.parse(rep) : rep;
+        let obj = typeof rep == 'string' ? JSON.parse(rep) : rep;
         this.name = obj.name;
         this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
         if ('versions' in obj) {
@@ -1085,9 +1085,10 @@ export class ViewModel {
                     if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/\d+/g)[0];
                 } else console.error('TypeError: attack version field is not a string');
             }
-            versionNumber = String(obj.versions["layer"])
+            versionNumber = String(obj.versions['layer']);
         }
-        if ("version" in obj) { // backwards compatibility with Layer Format 3
+        if ('version' in obj) {
+            // backwards compatibility with Layer Format 3
             versionNumber = String(obj.version);
         }
         // patch for old domain name convention
