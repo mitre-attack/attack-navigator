@@ -3,8 +3,8 @@
         <div class="col toc">
             <h1>Table of Contents</h1>
             <ul class="table-of-contents" *ngIf="headingAnchors.length > 0">
-                <li *ngFor="let heading of headingAnchors" class="toc-heading level-{{heading.level}}">
-                    <a (click)="scrollTo(heading.anchor)">{{heading.label}}</a>
+                <li *ngFor="let heading of headingAnchors" class="toc-heading level-{{ heading.level }}">
+                    <a (click)="scrollTo(heading.anchor)">{{ heading.label }}</a>
                 </li>
             </ul>
         </div>

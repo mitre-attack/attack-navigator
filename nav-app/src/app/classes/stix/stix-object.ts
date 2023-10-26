@@ -1,16 +1,16 @@
-import { DataService } from "../../services/data.service";
+import { DataService } from '../../services/data.service';
 
 export abstract class StixObject {
-    public readonly id: string;          // STIX ID
-    public readonly attackID: string;    // ATT&CK ID
-    public readonly name: string;        // name of object
+    public readonly id: string; // STIX ID
+    public readonly attackID: string; // ATT&CK ID
+    public readonly name: string; // name of object
     public readonly description: string; // description of object
-    public readonly url: string;         // URL of object on the ATT&CK website
-    public readonly created: string;     // date object was created
-    public readonly modified: string;    // date object was last modified
-    public readonly revoked: boolean;    // is the object revoked?
+    public readonly url: string; // URL of object on the ATT&CK website
+    public readonly created: string; // date object was created
+    public readonly modified: string; // date object was last modified
+    public readonly revoked: boolean; // is the object revoked?
     public readonly deprecated: boolean; // is the object deprecated?
-    public readonly version: string;     // object version
+    public readonly version: string; // object version
     protected readonly dataService: DataService;
 
     constructor(stixSDO: any, dataService: DataService, supportsAttackID = true) {
@@ -28,18 +28,20 @@ export abstract class StixObject {
         // ATT&CK ID
         if (supportsAttackID) {
             if (stixSDO.external_references && stixSDO.external_references[0] && stixSDO.external_references[0].external_id) {
-                this.attackID = stixSDO.external_references[0].external_id; 
+                this.attackID = stixSDO.external_references[0].external_id;
             } else {
                 alert('Error: external_references has invalid format in imported StixObject (ID: ' + stixSDO.id + ')');
-                throw new Error('Error: external_references has invalid format in imported StixObject. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx');
+                throw new Error(
+                    'Error: external_references has invalid format in imported StixObject. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx'
+                );
             }
         }
 
         // URL
-        if ("external_references" in stixSDO && stixSDO.external_references.length > 0) {
+        if ('external_references' in stixSDO && stixSDO.external_references.length > 0) {
             this.url = stixSDO.external_references[0].url;
         } else {
-            this.url = "";
+            this.url = '';
         }
     }
 

@@ -1,7 +1,7 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 
 // material
 import { MatInputModule } from '@angular/material/input';
@@ -39,18 +39,16 @@ import { VersionUpgradeComponent } from './version-upgrade/version-upgrade.compo
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LayerUpgradeComponent } from './layer-upgrade/layer-upgrade.component';
 import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog-cell.component';
-import { MatCardModule } from "@angular/material/card";
-import { MatDividerModule } from "@angular/material/divider";
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
-
-import { MarkdownModule } from "ngx-markdown";
+import { MarkdownModule } from 'ngx-markdown';
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
-import { MatTabsModule } from "@angular/material/tabs";
+import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
-
 
 @NgModule({
     declarations: [
@@ -101,21 +99,10 @@ import { ListInputComponent } from './list-input/list-input.component';
         MatPaginatorModule,
         MarkdownModule.forRoot(),
         PopoverModule,
-        MatTabsModule
-    ],
-    exports: [
-        MatSelectModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatTooltipModule,
-        MatMenuModule,
-        MatExpansionModule,
         MatTabsModule,
     ],
-    providers: [
-        Title
-    ],
-    bootstrap: [AppComponent]
+    exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
+    providers: [Title],
+    bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

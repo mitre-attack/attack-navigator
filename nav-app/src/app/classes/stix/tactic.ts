@@ -1,10 +1,10 @@
-import { DataService } from "../../services/data.service";
-import { StixObject } from "./stix-object";
-import { Technique } from "./technique";
+import { DataService } from '../../services/data.service';
+import { StixObject } from './stix-object';
+import { Technique } from './technique';
 
 export class Tactic extends StixObject {
-    public readonly techniques: Technique[];  // techniques found under this tactic
-    public readonly shortname: string;        // shortname property, AKA phase-name for techniques' kill-chain phases
+    public readonly techniques: Technique[]; // techniques found under this tactic
+    public readonly shortname: string; // shortname property, AKA phase-name for techniques' kill-chain phases
 
     /**
      * Creates an instance of Tactic.
@@ -15,8 +15,7 @@ export class Tactic extends StixObject {
         super(stixSDO, dataService);
         this.shortname = stixSDO.x_mitre_shortname;
         this.techniques = techniques.filter((technique: Technique) => {
-            if (!technique.revoked && !technique.deprecated)
-                return technique.tactics.includes(this.shortname)
+            if (!technique.revoked && !technique.deprecated) return technique.tactics.includes(this.shortname);
         });
     }
 }

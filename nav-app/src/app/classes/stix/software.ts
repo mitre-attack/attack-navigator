@@ -1,5 +1,5 @@
-import { DataService } from "../../services/data.service";
-import { StixObject } from "./stix-object";
+import { DataService } from '../../services/data.service';
+import { StixObject } from './stix-object';
 
 export class Software extends StixObject {
     public readonly platforms: string[] = []; //platforms for this software
@@ -8,10 +8,10 @@ export class Software extends StixObject {
      * Creates an instance of Software.
      * @param {any} stixSDO for the software
      * @param {DataService} DataService the software occurs within
-    */
+     */
     constructor(stixSDO: any, dataService: DataService) {
         super(stixSDO, dataService);
-        this.platforms = stixSDO.x_mitre_platforms ? stixSDO.x_mitre_platforms.map(platform => platform.trim()) : undefined;
+        this.platforms = stixSDO.x_mitre_platforms ? stixSDO.x_mitre_platforms.map((platform) => platform.trim()) : undefined;
     }
 
     /**
@@ -23,7 +23,9 @@ export class Software extends StixObject {
         let rels = this.dataService.getDomain(domainVersionID).relationships.software_uses;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } else { return []; }
+        } else {
+            return [];
+        }
     }
     /**
      * Get all techniques related to the software

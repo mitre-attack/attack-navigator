@@ -7,7 +7,12 @@
                 <button mat-icon-button class="icon">-</button>
                 <mat-divider></mat-divider>
             </div>
-            <div *ngIf="!item.divider && canAddDivider(i)" class="divider-option" (click)="addDivider(i)" matTooltipPosition="below" matTooltip="add a divider">
+            <div
+                *ngIf="!item.divider && canAddDivider(i)"
+                class="divider-option"
+                (click)="addDivider(i)"
+                matTooltipPosition="below"
+                matTooltip="add a divider">
                 <mat-divider></mat-divider>
                 <button mat-icon-button class="icon">+</button>
                 <mat-divider></mat-divider>
@@ -17,22 +22,29 @@
         <!-- list item -->
         <div class="item-container" *ngIf="!item.divider">
             <mat-form-field>
-                <textarea matInput
-                        matTextareaAutosize
-                        [placeholder]="config.nameField"
-                        [(ngModel)]="item[config.nameField]"
-                        (input)="updateList()">
-                </textarea>
+                <textarea
+                    matInput
+                    matTextareaAutosize
+                    [placeholder]="config.nameField"
+                    [(ngModel)]="item[config.nameField]"
+                    (input)="updateList()"></textarea>
             </mat-form-field>
             <mat-form-field>
-                <textarea matInput
-                        matTextareaAutosize
-                        [placeholder]="config.valueField"
-                        [(ngModel)]="item[config.valueField]"
-                        (input)="updateList()">
-                </textarea>
+                <textarea
+                    matInput
+                    matTextareaAutosize
+                    [placeholder]="config.valueField"
+                    [(ngModel)]="item[config.valueField]"
+                    (input)="updateList()"></textarea>
             </mat-form-field>
-            <a *ngIf="includeLinks && item.valid()" class="assigned-link" href="{{item[config.valueField]}}" target="_blank" rel="noopener noreferrer">{{item[config.nameField]}}</a>
+            <a
+                *ngIf="includeLinks && item.valid()"
+                class="assigned-link"
+                href="{{ item[config.valueField] }}"
+                target="_blank"
+                rel="noopener noreferrer">
+                {{ item[config.nameField] }}
+            </a>
             <div class="remove-button">
                 <button class="button" (click)="remove(i)">remove</button>
             </div>
@@ -40,5 +52,5 @@
     </div>
 </div>
 <div class="add-more">
-    <button class="button" (click)="add()">add {{config.type}}</button>
+    <button class="button" (click)="add()">add {{ config.type }}</button>
 </div>

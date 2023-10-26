@@ -18,11 +18,13 @@ export class VersionChangelog {
 
     /** Get the length of the version changelog */
     public length(): number {
-        return this.additions.length
-            + this.changes.length
-            + this.minor_changes.length
-            + this.deprecations.length
-            + this.revocations.length
-            + this.unchanged.length;
+        return (
+            this.additions.length +
+            this.changes.length +
+            this.minor_changes.length +
+            this.deprecations.length +
+            this.revocations.length +
+            this.unchanged.length
+        );
     }
 }

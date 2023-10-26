@@ -1,9 +1,9 @@
-import { ViewModel } from "./view-model";
+import { ViewModel } from './view-model';
 
 export class Tab {
     public title: string;
     public viewModel: ViewModel;
-    public domain: string = "";
+    public domain: string = '';
     public isDataTable: boolean;
     public isCloseable: boolean = false;
     public showScoreVariables: boolean = false;

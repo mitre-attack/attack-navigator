@@ -8,9 +8,8 @@ import { ViewModel } from '../classes';
     selector: 'app-search-and-multiselect',
     templateUrl: './search-and-multiselect.component.html',
     styleUrls: ['./search-and-multiselect.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
-
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
 
@@ -34,30 +33,30 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     public fields = [
         {
-            "label": "name",
-            "field": "name",
-            "enabled": true
+            label: 'name',
+            field: 'name',
+            enabled: true,
         },
         {
-            "label": "ATT&CK ID",
-            "field": "attackID",
-            "enabled": true
+            label: 'ATT&CK ID',
+            field: 'attackID',
+            enabled: true,
         },
         {
-            "label": "description",
-            "field": "description",
-            "enabled": true
+            label: 'description',
+            field: 'description',
+            enabled: true,
         },
         {
-            "label": "data sources",
-            "field": "datasources",
-            "enabled": true
-        }
-    ]
+            label: 'data sources',
+            field: 'datasources',
+            enabled: true,
+        },
+    ];
 
     private debounceFunction;
-    private previousQuery: string = "";
-    private _query: string = "";
+    private previousQuery: string = '';
+    private _query: string = '';
 
     // query setter
     public set query(newQuery: string) {
@@ -85,7 +84,10 @@ export class SearchAndMultiselectComponent implements OnInit {
         return results;
     }
 
-    constructor(private dataService: DataService, private viewModelsService: ViewModelsService) {
+    constructor(
+        private dataService: DataService,
+        private viewModelsService: ViewModelsService
+    ) {
         // intentionally left blank
     }
 
@@ -104,17 +106,17 @@ export class SearchAndMultiselectComponent implements OnInit {
      *                                       to sort techniques and all its subtechniques,
      *                                       otherwise just sort StixObject items by name
      */
-    public filterAndSort(items: StixObject[], query: string = "", sortTechniquesAndSubtechniques = false): any[] {
+    public filterAndSort(items: StixObject[], query: string = '', sortTechniquesAndSubtechniques = false): any[] {
         let self = this;
-        let results = items.filter(t => !t.deprecated && !t.revoked);
+        let results = items.filter((t) => !t.deprecated && !t.revoked);
 
-        if (query.trim() === "") {
+        if (query.trim() === '') {
             // sort the array
             if (sortTechniquesAndSubtechniques) {
                 results.sort((tA: Technique, tB: Technique) => {
                     let c1 = tA.isSubtechnique ? tA.parent.name : tA.name;
                     let c2 = tB.isSubtechnique ? tB.parent.name : tB.name;
-                    return c1.localeCompare(c2)
+                    return c1.localeCompare(c2);
                 });
             } else {
                 results.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
@@ -146,23 +148,22 @@ export class SearchAndMultiselectComponent implements OnInit {
      */
     public filterAndSortLabels(labels: string[], query: string): string[] {
         let results: string[] = labels;
-        if (query.trim() === "") {
+        if (query.trim() === '') {
             return results.sort();
         } else {
             return results.filter((r) => r.toLowerCase().includes(query.trim().toLowerCase()));
         }
     }
 
-
     /**
      * Checks if the query is:
      *       1) valid, and
      *       2) part of last query, otherwise call getTechniques() and getStixData() to search all objects again
-    **/
-    public getResults(query: string = "", fieldToggled = false) {
-        if (query.trim() != "" && query.includes(this.previousQuery) && !fieldToggled) {
+     **/
+    public getResults(query: string = '', fieldToggled = false) {
+        if (query.trim() != '' && query.includes(this.previousQuery) && !fieldToggled) {
             this.techniqueResults = this.filterAndSort(this.techniqueResults, query, true);
-            this.stixTypes.forEach(item => item['objects'] = this.filterAndSort(item['objects'], query));
+            this.stixTypes.forEach((item) => (item['objects'] = this.filterAndSort(item['objects'], query)));
         } else {
             this.getTechniques();
             this.getStixData();
@@ -184,7 +185,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                     isPrevExpanded = s.isExpanded;
                 });
             }
-            this.expandedPanels[4] = (!isPrevExpanded && this.stixDataComponentLabels.length > 0);
+            this.expandedPanels[4] = !isPrevExpanded && this.stixDataComponentLabels.length > 0;
         } else {
             let isAllCollapsed = false;
             for (const isPanelExpanded in this.expandedPanels) {
@@ -214,30 +215,36 @@ export class SearchAndMultiselectComponent implements OnInit {
     public getStixData(): void {
         let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
 
-        this.stixTypes = [{
-            "label": "threat groups",
-            "objects": this.filterAndSort(domain.groups, this._query)
-        }, {
-            "label": "software",
-            "objects": this.filterAndSort(domain.software, this._query)
-        }, {
-            "label": "mitigations",
-            "objects": this.filterAndSort(domain.mitigations, this._query)
-        }, {
-            "label": "campaigns",
-            "objects": this.filterAndSort(domain.campaigns, this._query)
-        }, {
-            "label": "assets",
-            "objects": this.filterAndSort(domain.assets, this._query)
-        }];
+        this.stixTypes = [
+            {
+                label: 'threat groups',
+                objects: this.filterAndSort(domain.groups, this._query),
+            },
+            {
+                label: 'software',
+                objects: this.filterAndSort(domain.software, this._query),
+            },
+            {
+                label: 'mitigations',
+                objects: this.filterAndSort(domain.mitigations, this._query),
+            },
+            {
+                label: 'campaigns',
+                objects: this.filterAndSort(domain.campaigns, this._query),
+            },
+            {
+                label: 'assets',
+                objects: this.filterAndSort(domain.assets, this._query),
+            },
+        ];
 
         domain.dataComponents.forEach((c) => {
             const source = c.source(this.viewModel.domainVersionID);
             const label = `${source.name}: ${c.name}`;
             const obj = {
-                "objects": c.techniques(this.viewModel.domainVersionID),
-                "url": source.url
-            }
+                objects: c.techniques(this.viewModel.domainVersionID),
+                url: source.url,
+            };
             this.stixDataComponents.set(label, obj);
         });
         this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
@@ -250,7 +257,7 @@ export class SearchAndMultiselectComponent implements OnInit {
                 // set query to empty string to trigger getResults() in the case that:
                 // 1) a field was toggled, and
                 // 2) the query did not change
-                this.getResults("", true);
+                this.getResults('', true);
                 break;
             }
         }
@@ -277,8 +284,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     public select(stixObject: any, isTechnique = true): void {
         if (isTechnique) {
             this.viewModel.selectTechniqueAcrossTactics(stixObject);
-        }
-        else if (!isTechnique) {
+        } else if (!isTechnique) {
             for (let technique of this.getRelated(stixObject)) {
                 this.viewModel.selectTechniqueAcrossTactics(technique);
             }
@@ -289,8 +295,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     public deselect(stixObject: any, isTechnique = true): void {
         if (isTechnique) {
             this.viewModel.unselectTechniqueAcrossTactics(stixObject);
-        }
-        else if (!isTechnique) {
+        } else if (!isTechnique) {
             for (let technique of this.getRelated(stixObject)) {
                 this.viewModel.unselectTechniqueAcrossTactics(technique);
             }
@@ -301,8 +306,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     public selectAll(items: any[], isTechniqueArray = true): void {
         if (isTechniqueArray) {
             for (let result of items) this.select(result, isTechniqueArray);
-        }
-        else if (!isTechniqueArray) {
+        } else if (!isTechniqueArray) {
             for (let stixObject of items) this.select(stixObject, isTechniqueArray);
         }
         this.viewModelsService.onSelectionChange.emit(); // emit selection change
@@ -311,8 +315,7 @@ export class SearchAndMultiselectComponent implements OnInit {
     public deselectAll(items: any[], isTechniqueArray = true): void {
         if (isTechniqueArray) {
             for (let result of items) this.deselect(result, isTechniqueArray);
-        }
-        else if (!isTechniqueArray) {
+        } else if (!isTechniqueArray) {
             for (let stixObject of items) this.deselect(stixObject, isTechniqueArray);
         }
         this.viewModelsService.onSelectionChange.emit(); // emit selection change
@@ -329,7 +332,9 @@ export class SearchAndMultiselectComponent implements OnInit {
         } else if (stixObject instanceof Software) {
             return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Mitigation) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id));
+            return allTechniques.filter((technique: Technique) =>
+                (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id)
+            );
         } else if (stixObject instanceof Campaign) {
             return allTechniques.filter((technique: Technique) => (stixObject as Campaign).relatedTechniques(domainVersionID).includes(technique.id));
         } else if (stixObject instanceof Asset) {

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
-import { Observable } from "rxjs/Rx";
+import { Observable } from 'rxjs/Rx';
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from "../classes/stix";
+import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Version, VersionChangelog } from '../classes';
 
@@ -11,21 +11,22 @@ import { Version, VersionChangelog } from '../classes';
     providedIn: 'root',
 })
 export class DataService {
-
     constructor(private http: HttpClient) {
-        console.debug("initializing data service")
+        console.debug('initializing data service');
         let subscription = this.getConfig().subscribe({
             next: (config) => {
-                this.setUpURLs(config["versions"]);
+                this.setUpURLs(config['versions']);
             },
-            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
-        })
+            complete: () => {
+                if (subscription) subscription.unsubscribe();
+            }, //prevent memory leaks
+        });
     }
 
     public domain_backwards_compatibility = {
-        "mitre-enterprise": "enterprise-attack",
-        "mitre-mobile": "mobile-attack"
-    }
+        'mitre-enterprise': 'enterprise-attack',
+        'mitre-mobile': 'mobile-attack',
+    };
     public domains: Domain[] = [];
     public versions: Version[] = [];
 
@@ -53,123 +54,128 @@ export class DataService {
             let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
-            for (let sdo of bundle.objects) { //iterate through stix domain objects in the bundle
+            for (let sdo of bundle.objects) {
+                //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
-                    if ("x_mitre_domains" in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier)) continue;
+                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier))
+                        continue;
                 }
 
                 // filter out duplicates
-                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id)
+                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
                 else continue;
 
                 // parse according to type
                 switch (sdo.type) {
-                    case "x-mitre-data-component":
+                    case 'x-mitre-data-component':
                         domain.dataComponents.push(new DataComponent(sdo, this));
                         break;
-                    case "x-mitre-data-source":
+                    case 'x-mitre-data-source':
                         domain.dataSources.set(sdo.id, { name: sdo.name, external_references: sdo.external_references });
                         break;
-                    case "intrusion-set":
+                    case 'intrusion-set':
                         domain.groups.push(new Group(sdo, this));
                         break;
-                    case "malware":
-                    case "tool":
+                    case 'malware':
+                    case 'tool':
                         domain.software.push(new Software(sdo, this));
                         break;
-                    case "campaign":
+                    case 'campaign':
                         domain.campaigns.push(new Campaign(sdo, this));
                         break;
-                    case "x-mitre-asset":
+                    case 'x-mitre-asset':
                         domain.assets.push(new Asset(sdo, this));
                         break;
-                    case "course-of-action":
+                    case 'course-of-action':
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
-                    case "relationship":
-                        if (sdo.relationship_type == "subtechnique-of" && this.subtechniquesEnabled) {
+                    case 'relationship':
+                        if (sdo.relationship_type == 'subtechnique-of' && this.subtechniquesEnabled) {
                             // record subtechnique:technique relationship
-                            if (domain.relationships["subtechniques_of"].has(sdo.target_ref)) {
-                                let ids = domain.relationships["subtechniques_of"].get(sdo.target_ref);
+                            if (domain.relationships['subtechniques_of'].has(sdo.target_ref)) {
+                                let ids = domain.relationships['subtechniques_of'].get(sdo.target_ref);
                                 ids.push(sdo.source_ref);
                             } else {
-                                domain.relationships["subtechniques_of"].set(sdo.target_ref, [sdo.source_ref])
+                                domain.relationships['subtechniques_of'].set(sdo.target_ref, [sdo.source_ref]);
                             }
-                        } else if (sdo.relationship_type == "uses") {
-                            if (sdo.source_ref.startsWith("intrusion-set") && sdo.target_ref.startsWith("attack-pattern")) {
+                        } else if (sdo.relationship_type == 'uses') {
+                            if (sdo.source_ref.startsWith('intrusion-set') && sdo.target_ref.startsWith('attack-pattern')) {
                                 // record group:technique relationship
-                                if (domain.relationships["group_uses"].has(sdo.source_ref)) {
-                                    let ids = domain.relationships["group_uses"].get(sdo.source_ref);
+                                if (domain.relationships['group_uses'].has(sdo.source_ref)) {
+                                    let ids = domain.relationships['group_uses'].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    domain.relationships["group_uses"].set(sdo.source_ref, [sdo.target_ref]);
+                                    domain.relationships['group_uses'].set(sdo.source_ref, [sdo.target_ref]);
                                 }
-                            } else if ((sdo.source_ref.startsWith("malware") || sdo.source_ref.startsWith("tool")) && sdo.target_ref.startsWith("attack-pattern")) {
+                            } else if (
+                                (sdo.source_ref.startsWith('malware') || sdo.source_ref.startsWith('tool')) &&
+                                sdo.target_ref.startsWith('attack-pattern')
+                            ) {
                                 // record software:technique relationship
-                                if (domain.relationships["software_uses"].has(sdo.source_ref)) {
-                                    let ids = domain.relationships["software_uses"].get(sdo.source_ref);
+                                if (domain.relationships['software_uses'].has(sdo.source_ref)) {
+                                    let ids = domain.relationships['software_uses'].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    domain.relationships["software_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                    domain.relationships['software_uses'].set(sdo.source_ref, [sdo.target_ref]);
                                 }
-                            } else if (sdo.source_ref.startsWith("campaign") && sdo.target_ref.startsWith("attack-pattern")) {
+                            } else if (sdo.source_ref.startsWith('campaign') && sdo.target_ref.startsWith('attack-pattern')) {
                                 // record campaign:technique relationship
-                                if (domain.relationships["campaign_uses"].has(sdo.source_ref)) {
-                                    let ids = domain.relationships["campaign_uses"].get(sdo.source_ref);
+                                if (domain.relationships['campaign_uses'].has(sdo.source_ref)) {
+                                    let ids = domain.relationships['campaign_uses'].get(sdo.source_ref);
                                     ids.push(sdo.target_ref);
                                 } else {
-                                    domain.relationships["campaign_uses"].set(sdo.source_ref, [sdo.target_ref])
+                                    domain.relationships['campaign_uses'].set(sdo.source_ref, [sdo.target_ref]);
                                 }
                             }
-                        } else if (sdo.relationship_type == "mitigates") {
-                            if (domain.relationships["mitigates"].has(sdo.source_ref)) {
-                                let ids = domain.relationships["mitigates"].get(sdo.source_ref);
+                        } else if (sdo.relationship_type == 'mitigates') {
+                            if (domain.relationships['mitigates'].has(sdo.source_ref)) {
+                                let ids = domain.relationships['mitigates'].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
                             } else {
-                                domain.relationships["mitigates"].set(sdo.source_ref, [sdo.target_ref])
+                                domain.relationships['mitigates'].set(sdo.source_ref, [sdo.target_ref]);
                             }
                         } else if (sdo.relationship_type == 'revoked-by') {
                             // record stix object: stix object relationship
-                            domain.relationships["revoked_by"].set(sdo.source_ref, sdo.target_ref)
+                            domain.relationships['revoked_by'].set(sdo.source_ref, sdo.target_ref);
                         } else if (sdo.relationship_type === 'detects') {
-                            if (domain.relationships["component_rel"].has(sdo.source_ref)) {
-                                let ids = domain.relationships["component_rel"].get(sdo.source_ref);
+                            if (domain.relationships['component_rel'].has(sdo.source_ref)) {
+                                let ids = domain.relationships['component_rel'].get(sdo.source_ref);
                                 ids.push(sdo.target_ref);
                             } else {
-                                domain.relationships["component_rel"].set(sdo.source_ref, [sdo.target_ref])
+                                domain.relationships['component_rel'].set(sdo.source_ref, [sdo.target_ref]);
                             }
-                        } else if (sdo.relationship_type == "attributed-to") {
+                        } else if (sdo.relationship_type == 'attributed-to') {
                             // record campaign:group relationship
-                            if (domain.relationships["campaigns_attributed_to"].has(sdo.target_ref)) {
-                                let ids = domain.relationships["campaigns_attributed_to"].get(sdo.target_ref);
+                            if (domain.relationships['campaigns_attributed_to'].has(sdo.target_ref)) {
+                                let ids = domain.relationships['campaigns_attributed_to'].get(sdo.target_ref);
                                 ids.push(sdo.source_ref);
                             } else {
-                                domain.relationships["campaigns_attributed_to"].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
+                                domain.relationships['campaigns_attributed_to'].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
                             }
-                        } else if (sdo.relationship_type == "targets") {
+                        } else if (sdo.relationship_type == 'targets') {
                             // record technique:asset relationship
-                            if (domain.relationships["targeted_assets"].has(sdo.target_ref)) {
-                                let ids = domain.relationships["targeted_assets"].get(sdo.target_ref);
+                            if (domain.relationships['targeted_assets'].has(sdo.target_ref)) {
+                                let ids = domain.relationships['targeted_assets'].get(sdo.target_ref);
                                 ids.push(sdo.source_ref);
                             } else {
-                                domain.relationships["targeted_assets"].set(sdo.target_ref, [sdo.source_ref]); // asset -> [techniques]
+                                domain.relationships['targeted_assets'].set(sdo.target_ref, [sdo.source_ref]); // asset -> [techniques]
                             }
                         }
                         break;
-                    case "attack-pattern":
+                    case 'attack-pattern':
                         idToTechniqueSDO.set(sdo.id, sdo);
                         if (!sdo.x_mitre_is_subtechnique) {
                             techniqueSDOs.push(sdo);
                         }
                         break;
-                    case "x-mitre-tactic":
+                    case 'x-mitre-tactic':
                         idToTacticSDO.set(sdo.id, sdo);
                         break;
-                    case "x-mitre-matrix":
+                    case 'x-mitre-matrix':
                         matrixSDOs.push(sdo);
                         break;
-                    case "note":
+                    case 'note':
                         domain.notes.push(new Note(sdo));
                         break;
                 }
@@ -187,7 +193,7 @@ export class DataService {
                                 domain.subtechniques.push(subtechnique);
                             }
                             // else the target was revoked or deprecated and we can skip honoring the relationship
-                        })
+                        });
                     }
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
@@ -203,13 +209,13 @@ export class DataService {
             for (let technique of domain.techniques) {
                 if (technique.platforms) {
                     for (let platform of technique.platforms) {
-                        platforms.add(platform)
+                        platforms.add(platform);
                     }
                 }
             }
             for (let subtechnique of domain.subtechniques) {
                 for (let platform of subtechnique.platforms) {
-                    platforms.add(platform)
+                    platforms.add(platform);
                 }
             }
         }
@@ -229,11 +235,11 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = { name: "ATT&CK v13", number: "13" };
+    private latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
     private lowestSupportedVersion: Version;
-    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
-    private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
+    private enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
+    private mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
+    private icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
 
     /**
      * Set up the URLs for data
@@ -242,27 +248,28 @@ export class DataService {
      */
     setUpURLs(versions: []) {
         versions.forEach((version: any) => {
-            let v: Version = new Version(version["name"], version["version"].match(/\d+/g)[0]);
+            let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
             this.versions.push(v);
-            version["domains"].forEach((domain: any) => {
-                let identifier = domain["identifier"];
-                let domainObject = new Domain(identifier, domain["name"], v);
-                if (version["authentication"]) domainObject.authentication = version["authentication"];
-                if (domain["taxii_url"] && domain["taxii_collection"]) {
-                    domainObject.taxii_url = domain["taxii_url"];
-                    domainObject.taxii_collection = domain["taxii_collection"];
+            version['domains'].forEach((domain: any) => {
+                let identifier = domain['identifier'];
+                let domainObject = new Domain(identifier, domain['name'], v);
+                if (version['authentication']) domainObject.authentication = version['authentication'];
+                if (domain['taxii_url'] && domain['taxii_collection']) {
+                    domainObject.taxii_url = domain['taxii_url'];
+                    domainObject.taxii_collection = domain['taxii_collection'];
                 } else {
-                    domainObject.urls = domain["data"];
+                    domainObject.urls = domain['data'];
                 }
                 this.domains.push(domainObject);
             });
         });
 
-        if (this.domains.length == 0) { // issue loading config
+        if (this.domains.length == 0) {
+            // issue loading config
             this.versions.push(this.latestVersion);
-            let enterpriseDomain = new Domain("enterprise-attack", "Enterprise", this.latestVersion, [this.enterpriseAttackURL]);
-            let mobileDomain = new Domain("mobile-attack", "Mobile", this.latestVersion, [this.mobileAttackURL]);
-            let icsDomain = new Domain("ics-attack", "ICS", this.latestVersion, [this.icsAttackURL]);
+            let enterpriseDomain = new Domain('enterprise-attack', 'Enterprise', this.latestVersion, [this.enterpriseAttackURL]);
+            let mobileDomain = new Domain('mobile-attack', 'Mobile', this.latestVersion, [this.mobileAttackURL]);
+            let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
 
@@ -275,7 +282,7 @@ export class DataService {
      */
     getConfig(refresh: boolean = false) {
         if (refresh || !this.configData$) {
-            this.configData$ = this.http.get("./assets/config.json");
+            this.configData$ = this.http.get('./assets/config.json');
         }
         return this.configData$;
     }
@@ -285,27 +292,28 @@ export class DataService {
      */
     getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
-            console.debug("fetching data from TAXII server");
+            console.debug('fetching data from TAXII server');
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
             let collectionInfo: any = {
-                'id': domain.taxii_collection,
-                'title': domain.name,
-                'description': '',
-                'can_read': true,
-                'can_write': false,
-                'media_types': ['application/vnd.oasis.stix+json']
-            }
+                id: domain.taxii_collection,
+                title: domain.name,
+                description: '',
+                can_read: true,
+                can_write: false,
+                media_types: ['application/vnd.oasis.stix+json'],
+            };
             const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
-            console.debug("retrieving data", domain.urls)
+            console.debug('retrieving data', domain.urls);
             let bundleData = [];
             const httpOptions = {
-                headers: undefined
-            }
-            if (domain.authentication && domain.authentication.enabled) { // include authorization header, if configured (integrations)
+                headers: undefined,
+            };
+            if (domain.authentication && domain.authentication.enabled) {
+                // include authorization header, if configured (integrations)
                 let token = `${domain.authentication.serviceName}:${domain.authentication.apiKey}`;
-                httpOptions.headers = new HttpHeaders({ 'Authorization': 'Basic ' + Buffer.from(token).toString('base64') })
+                httpOptions.headers = new HttpHeaders({ Authorization: 'Basic ' + Buffer.from(token).toString('base64') });
             }
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url, httpOptions));
@@ -328,10 +336,13 @@ export class DataService {
                         this.parseBundle(domain, data);
                         resolve(null);
                     },
-                    complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks
+                    complete: () => {
+                        if (subscription) subscription.unsubscribe();
+                    }, //prevent memory leaks
                 });
-            } else if (!domain) { // domain not defined in config
-                reject("'" + domainVersionID + "' is not a valid domain & version.")
+            } else if (!domain) {
+                // domain not defined in config
+                reject("'" + domainVersionID + "' is not a valid domain & version.");
             }
         });
         return dataPromise;
@@ -348,7 +359,8 @@ export class DataService {
      * Get the ID from domain name & version
      */
     getDomainVersionID(domain: string, versionNumber: string): string {
-        if (!versionNumber) { // layer with no specified version defaults to current version
+        if (!versionNumber) {
+            // layer with no specified version defaults to current version
             versionNumber = this.versions[0].number;
         }
         return domain + '-' + versionNumber;
@@ -360,7 +372,7 @@ export class DataService {
     getTechnique(attackID: string, domainVersionID: string) {
         let domain = this.getDomain(domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
-        return all_techniques.find(t => t.attackID == attackID);
+        return all_techniques.find((t) => t.attackID == attackID);
     }
 
     /**
@@ -374,7 +386,7 @@ export class DataService {
      * Is the given version supported?
      */
     isSupported(version: string) {
-        let supported = this.versions.map(v => v.number);
+        let supported = this.versions.map((v) => v.number);
         let match = version.match(/\d+/g)[0];
         return supported.includes(match);
     }
@@ -394,7 +406,7 @@ export class DataService {
 
         // object lookup to increase efficiency
         let objectLookup = new Map<string, Technique>(
-            latestTechniques.map(technique => [technique.id, previousTechniques.find(p => p.id == technique.id)])
+            latestTechniques.map((technique) => [technique.id, previousTechniques.find((p) => p.id == technique.id)])
         );
 
         for (let latestTechnique of latestTechniques) {
@@ -404,8 +416,7 @@ export class DataService {
             if (!prevTechnique) {
                 // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique.attackID);
-            }
-            else if (latestTechnique.modified == prevTechnique.modified) {
+            } else if (latestTechnique.modified == prevTechnique.modified) {
                 if (prevTechnique.revoked || prevTechnique.deprecated) {
                     // object is revoked or deprecated, ignore
                     continue;
@@ -430,7 +441,8 @@ export class DataService {
                 } else if (latestTechnique.compareVersion(prevTechnique) != 0) {
                     // version number changed
                     changelog.changes.push(latestTechnique.attackID);
-                } else { // minor change
+                } else {
+                    // minor change
                     changelog.minor_changes.push(latestTechnique.attackID);
                 }
             }

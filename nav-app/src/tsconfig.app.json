@@ -1,16 +1,11 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "allowJs": true,
-    "outDir": "../out-tsc/app",
-    "baseUrl": "./",
-    "types": []
-  },
-  "files": [
-    "main.ts",
-    "polyfills.ts"
-  ],
-  "include": [
-    "src/**/*.d.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "../out-tsc/app",
+        "baseUrl": "./",
+        "types": []
+    },
+    "files": ["main.ts", "polyfills.ts"],
+    "include": ["src/**/*.d.ts"]
 }

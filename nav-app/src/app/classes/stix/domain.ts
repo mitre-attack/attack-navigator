@@ -1,26 +1,25 @@
-import { ServiceAuth } from "../../services/data.service";
-import { Campaign } from "./campaign";
-import { DataComponent } from "./data-component";
-import { Group } from "./group";
-import { Matrix } from "./matrix";
-import { Mitigation } from "./mitigation";
-import { Note } from "./note";
-import { Software } from "./software";
-import { Tactic } from "./tactic";
-import { Technique } from "./technique";
-import { Version } from "../version";
-import { Asset } from "./asset";
-
+import { ServiceAuth } from '../../services/data.service';
+import { Campaign } from './campaign';
+import { DataComponent } from './data-component';
+import { Group } from './group';
+import { Matrix } from './matrix';
+import { Mitigation } from './mitigation';
+import { Note } from './note';
+import { Software } from './software';
+import { Tactic } from './tactic';
+import { Technique } from './technique';
+import { Version } from '../version';
+import { Asset } from './asset';
 
 export class Domain {
     public readonly id: string; // domain ID
-    public readonly domain_identifier: string //domain ID without the version suffix
+    public readonly domain_identifier: string; //domain ID without the version suffix
     public readonly name: string; // domain display name
     public readonly version: Version; // ATT&CK version
 
     public urls: string[] = [];
-    public taxii_url: string = "";
-    public taxii_collection: string = "";
+    public taxii_url: string = '';
+    public taxii_collection: string = '';
     public authentication: ServiceAuth;
     public dataLoaded: boolean = false;
     public dataLoadedCallbacks: any[] = [];
@@ -43,7 +42,7 @@ export class Domain {
     public campaigns: Campaign[] = [];
     public assets: Asset[] = [];
     public dataComponents: DataComponent[] = [];
-    public dataSources = new Map<string, { name: string, external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
+    public dataSources = new Map<string, { name: string; external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
     public notes: Note[] = [];
@@ -74,8 +73,8 @@ export class Domain {
         revoked_by: new Map<string, string>(),
         // technique targets asset
         // ID of asset to [] of technique IDs
-        targeted_assets: new Map<string, string>()
-    }
+        targeted_assets: new Map<string, string>(),
+    };
 
     constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
         this.id = `${domain_identifier}-${version.number}`;

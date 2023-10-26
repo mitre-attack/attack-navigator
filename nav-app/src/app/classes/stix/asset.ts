@@ -1,4 +1,4 @@
-import { StixObject } from "./stix-object";
+import { StixObject } from './stix-object';
 
 export class Asset extends StixObject {
     /**
@@ -9,7 +9,9 @@ export class Asset extends StixObject {
         let rels = this.dataService.getDomain(domainVersionID).relationships.targeted_assets;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } else { return []; }
+        } else {
+            return [];
+        }
     }
 
     /**
