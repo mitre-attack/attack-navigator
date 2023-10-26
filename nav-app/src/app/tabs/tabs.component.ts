@@ -8,11 +8,13 @@ import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { ViewModelsService } from '../services/viewmodels.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { Subscription, forkJoin } from 'rxjs';
 import * as is from 'is_js';
 import * as globals from '../utils/globals';
+import { LayerInformationComponent } from '../layer-information/layer-information.component';
 
 @Component({
     selector: 'tabs',
@@ -25,6 +27,7 @@ export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;
     @Output() onUserThemeChange = new EventEmitter<string>();
     @ViewChild('safariWarning') safariWarning: TemplateRef<any>;
+    @ViewChild('versionWarning') versionWarning: TemplateRef<any>;
 
     public activeTab: Tab = null;
     public dropdownEnabled: string = '';
@@ -32,13 +35,14 @@ export class TabsComponent implements AfterViewInit {
     public adjustedHeaderHeight: number = 0;
     public navVersion = globals.navVersion;
     public safariDialogRef;
+    public versionDialogRef;
+    public versionMinorSnackbarRef;
     public showHelpDropDown: boolean = false;
     public loadURL: string = '';
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
-
     public loadData: any = {
         url: undefined,
         version: undefined,
@@ -64,11 +68,12 @@ export class TabsComponent implements AfterViewInit {
     }
 
     constructor(
-        private dialog: MatDialog,
+        public dialog: MatDialog,
         private viewModelsService: ViewModelsService,
         public dataService: DataService,
         private http: HttpClient,
-        private configService: ConfigService
+        private configService: ConfigService,
+        public snackBar: MatSnackBar
     ) {
         console.debug('initializing tabs component');
         let subscription = dataService.getConfig().subscribe({
@@ -304,8 +309,15 @@ export class TabsComponent implements AfterViewInit {
      */
     public openDialog(dialogName: string) {
         const settings = { maxWidth: '75ch', panelClass: this.userTheme };
-        if (dialogName == 'changelog') this.dialog.open(ChangelogComponent, settings);
-        else if (dialogName == 'help') this.dialog.open(HelpComponent, settings);
+        if (dialogName == 'changelog') {
+            this.dialog.open(ChangelogComponent, settings);
+        } else if (dialogName == 'help') {
+            this.dialog.open(HelpComponent, settings);
+        } else if (dialogName == 'layers') {
+            this.dialog.open(LayerInformationComponent, {
+                maxWidth: '90ch',
+            });
+        }
     }
 
     /**
@@ -718,31 +730,31 @@ export class TabsComponent implements AfterViewInit {
         let viewModel: ViewModel;
         reader.onload = (e) => {
             let result = String(reader.result);
-
             function loadObjAsLayer(self, obj): void {
                 viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-                viewModel.deserializeDomainVersionID(obj);
-                let isCustom = 'customDataURL' in obj;
-                if (!isCustom) {
-                    if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                        throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
+                self.versionMismatchWarning(layerVersionStr).then((res) => {
+                    let isCustom = 'customDataURL' in obj;
+                    if (!isCustom) {
+                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                        }
+                        self.upgradeLayer(viewModel, obj, true);
+                    } else {
+                        // load as custom data
+                        viewModel.deserialize(obj);
+                        self.openTab('new layer', viewModel, true, true, true, true);
+                        self.newLayerFromURL(
+                            {
+                                url: obj['customDataURL'],
+                                version: viewModel.version,
+                                identifier: viewModel.domain,
+                            },
+                            obj
+                        );
                     }
-                    self.upgradeLayer(viewModel, obj, true);
-                } else {
-                    // load as custom data
-                    viewModel.deserialize(obj);
-                    self.openTab('new layer', viewModel, true, true, true, true);
-                    self.newLayerFromURL(
-                        {
-                            url: obj['customDataURL'],
-                            version: viewModel.version,
-                            identifier: viewModel.domain,
-                        },
-                        obj
-                    );
-                }
+                });
             }
-
             try {
                 let objList = typeof result == 'string' ? JSON.parse(result) : result;
                 if ('length' in objList) {
@@ -764,6 +776,45 @@ export class TabsComponent implements AfterViewInit {
     }
 
     /**
+     * Check if uploaded layer version is out of date and display
+     * a snackbar warning message (for minor mismatches) or a dialog warning
+     * (for major mismatches)
+     * @param {string} layerVersionStr the uploaded layer version
+     */
+    private async versionMismatchWarning(layerVersionStr: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            let globalVersionSplit = globals.layerVersion.split('.');
+            let layerVersion = layerVersionStr.split('.');
+            // if minor version change, snackbar will be displayed
+            if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]) {
+                let snackMessage = `Uploaded layer version (${layerVersionStr}) is out of date. Please update to v${globals.layerVersion} for optimal compatibility.`;
+                this.versionMinorSnackbarRef = this.snackBar.open(snackMessage, 'CHANGELOG', {
+                    duration: 6500,
+                });
+                this.versionMinorSnackbarRef.onAction().subscribe(() => {
+                    this.openDialog('changelog');
+                });
+                resolve(true);
+            }
+            // if major version change, keep the dialog open until user dismisses it
+            else if (layerVersion[0] !== globalVersionSplit[0]) {
+                this.versionDialogRef = this.dialog.open(this.versionWarning, {
+                    width: '30em',
+                    disableClose: true,
+                    panelClass: this.userTheme,
+                    data: {
+                        objVersion: layerVersionStr,
+                        globalVersion: globals.layerVersion,
+                    },
+                });
+                this.versionDialogRef.afterClosed().subscribe((_) => {
+                    resolve(true);
+                });
+            }
+        });
+    }
+
+    /**
      * Load layer from URL
      * @param {string} loadURL the url to load
      * @param {boolean} replace replace the current active with the loaded layer?
@@ -776,7 +827,8 @@ export class TabsComponent implements AfterViewInit {
                 next: async (res) => {
                     let viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
-                        viewModel.deserializeDomainVersionID(res);
+                        let layerVersionStr = viewModel.deserializeDomainVersionID(res);
+                        await this.versionMismatchWarning(layerVersionStr);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }

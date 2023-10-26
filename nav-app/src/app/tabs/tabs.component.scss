@@ -517,3 +517,16 @@ input[type='file'] {
         color: red;
     }
 }
+
+.version-warning {
+    text-align: center;
+    a {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+}
+
+.cdk-overlay-backdrop-showing {
+    z-index: unset;
+}
