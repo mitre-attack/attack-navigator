@@ -38,6 +38,10 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         this.close.emit();
     }
 
+    public comment() {
+        this.closeContextmenu();
+    }
+
     public select() {
         this.viewModel.clearSelectedTechniques();
         this.viewModel.selectTechnique(this.technique, this.tactic);

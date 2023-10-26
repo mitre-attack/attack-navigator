@@ -13,6 +13,11 @@
                 pin/unpin tooltip
             </div>
         </div>
+        <div class="contextMenu-section">
+            <div class="contextMenu-button" (click)="comment()">
+                comment
+            </div>
+        </div>
         <div *ngIf="configService.getFeature('selecting_techniques')" class="contextMenu-section">
             <div class="contextMenu-button" (click)="select()">
                 select
