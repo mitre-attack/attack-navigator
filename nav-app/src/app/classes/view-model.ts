@@ -1072,8 +1072,10 @@ export class ViewModel {
     /**
      * Restore the domain and version from a string
      * @param rep string to restore from
+     * @return string representation of the obj version
      */
-    public deserializeDomainVersionID(rep: any): void {
+    public deserializeDomainVersionID(rep: any): string {
+        let versionNumber = '';
         let obj = typeof rep == 'string' ? JSON.parse(rep) : rep;
         this.name = obj.name;
         this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
@@ -1083,27 +1085,11 @@ export class ViewModel {
                     if (obj.versions.attack.length > 0) this.version = obj.versions.attack.match(/\d+/g)[0];
                 } else console.error('TypeError: attack version field is not a string');
             }
-            if (obj.versions['layer'] !== globals.layerVersion) {
-                alert(
-                    'WARNING: Uploaded layer version (' +
-                        String(obj.versions['layer']) +
-                        ") does not match Navigator's layer version (" +
-                        String(globals.layerVersion) +
-                        '). The layer configuration may not be fully restored.'
-                );
-            }
+            versionNumber = String(obj.versions['layer']);
         }
         if ('version' in obj) {
             // backwards compatibility with Layer Format 3
-            if (obj.version !== globals.layerVersion) {
-                alert(
-                    'WARNING: Uploaded layer version (' +
-                        String(obj.version) +
-                        ") does not match Navigator's layer version (" +
-                        String(globals.layerVersion) +
-                        '). The layer configuration may not be fully restored.'
-                );
-            }
+            versionNumber = String(obj.version);
         }
         // patch for old domain name convention
         if (obj.domain in this.dataService.domain_backwards_compatibility) {
@@ -1112,6 +1098,7 @@ export class ViewModel {
             this.domain = obj.domain;
         }
         this.domainVersionID = this.dataService.getDomainVersionID(this.domain, this.version);
+        return versionNumber;
     }
 
     /**
