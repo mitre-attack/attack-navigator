@@ -811,6 +811,9 @@ export class TabsComponent implements AfterViewInit {
                     resolve(true);
                 });
             }
+            else{
+                resolve(true);
+            }
         });
     }
 
