@@ -646,6 +646,7 @@ export class TabsComponent implements AfterViewInit {
                             // create and open the latest version
                             let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
                             newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
+                            newViewModel.deserialize(serialized, false); // restore layer data, except for technique annotations
                             newViewModel.loadVMData();
                             newViewModel.compareTo = oldViewModel;
                             this.openTab('new layer', newViewModel, true, replace, true, true);

@@ -1105,7 +1105,7 @@ export class ViewModel {
      * Restore this vm from a string
      * @param  rep string to restore from
      */
-    public deserialize(rep: any): void {
+    public deserialize(rep: any, restoreTechniques: boolean = true): void {
         let obj = typeof rep == 'string' ? JSON.parse(rep) : rep;
 
         if ('description' in obj) {
@@ -1189,7 +1189,7 @@ export class ViewModel {
             if (typeof obj.selectVisibleTechniques === 'boolean') this.selectVisibleTechniques = obj.selectVisibleTechniques;
             else console.error('TypeError: selectVisibleTechniques field is not a boolean');
         }
-        if ('techniques' in obj) {
+        if ('techniques' in obj && restoreTechniques) {
             if (obj.techniques.length > 0) {
                 for (let objTechnique of obj.techniques) {
                     if ('tactic' in objTechnique) {
