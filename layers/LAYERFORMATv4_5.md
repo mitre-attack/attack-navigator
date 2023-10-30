@@ -232,8 +232,8 @@ The following example illustrates the layer file format of multiple layers. The 
     {
         "name": "example layer",
         "versions": {
-            "attack": "13",
-            "navigator": "4.8.2",
+            "attack": "14",
+            "navigator": "4.9.0",
             "layer": "4.5"
         },
         "domain": "enterprise-attack",
@@ -350,8 +350,8 @@ The following example illustrates the layer file format of multiple layers. The 
     {
         "name": "example layer",
         "versions": {
-            "attack": "13",
-            "navigator": "4.8.2",
+            "attack": "14",
+            "navigator": "4.9.0",
             "layer": "4.5"
         },
         "domain": "enterprise-attack",
