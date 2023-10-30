@@ -646,6 +646,7 @@ export class TabsComponent implements AfterViewInit {
                             // create and open the latest version
                             let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
                             newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
+                            newViewModel.deserialize(serialized, false); // restore layer data, except for technique annotations
                             newViewModel.loadVMData();
                             newViewModel.compareTo = oldViewModel;
                             this.openTab('new layer', newViewModel, true, replace, true, true);
@@ -730,40 +731,15 @@ export class TabsComponent implements AfterViewInit {
         let viewModel: ViewModel;
         reader.onload = (e) => {
             let result = String(reader.result);
-            function loadObjAsLayer(self, obj): void {
-                viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-                let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-                self.versionMismatchWarning(layerVersionStr).then((res) => {
-                    let isCustom = 'customDataURL' in obj;
-                    if (!isCustom) {
-                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
-                        }
-                        self.upgradeLayer(viewModel, obj, true);
-                    } else {
-                        // load as custom data
-                        viewModel.deserialize(obj);
-                        self.openTab('new layer', viewModel, true, true, true, true);
-                        self.newLayerFromURL(
-                            {
-                                url: obj['customDataURL'],
-                                version: viewModel.version,
-                                identifier: viewModel.domain,
-                            },
-                            obj
-                        );
-                    }
-                });
-            }
             try {
                 let objList = typeof result == 'string' ? JSON.parse(result) : result;
                 if ('length' in objList) {
                     for (let obj of objList) {
-                        loadObjAsLayer(this, obj);
+                        this.loadObjAsLayer(this, obj);
                     }
                 } else {
                     let obj = typeof result == 'string' ? JSON.parse(result) : result;
-                    loadObjAsLayer(this, obj);
+                    this.loadObjAsLayer(this, obj);
                 }
             } catch (err) {
                 viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
@@ -775,6 +751,32 @@ export class TabsComponent implements AfterViewInit {
         reader.readAsText(file);
     }
 
+    private loadObjAsLayer(self, obj): void {
+        let viewModel: ViewModel;
+            viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
+            let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
+            self.versionMismatchWarning(layerVersionStr).then((res) => {
+                let isCustom = 'customDataURL' in obj;
+                if (!isCustom) {
+                    if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                        throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                    }
+                    self.upgradeLayer(viewModel, obj, true);
+                } else {
+                    // load as custom data
+                    viewModel.deserialize(obj);
+                    self.openTab('new layer', viewModel, true, true, true, true);
+                    self.newLayerFromURL(
+                        {
+                            url: obj['customDataURL'],
+                            version: viewModel.version,
+                            identifier: viewModel.domain,
+                        },
+                        obj
+                    );
+                }
+            });
+        }
     /**
      * Check if uploaded layer version is out of date and display
      * a snackbar warning message (for minor mismatches) or a dialog warning
@@ -810,6 +812,9 @@ export class TabsComponent implements AfterViewInit {
                 this.versionDialogRef.afterClosed().subscribe((_) => {
                     resolve(true);
                 });
+            }
+            else{
+                resolve(true);
             }
         });
     }

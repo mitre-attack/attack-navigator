@@ -30,6 +30,9 @@ Adds support for ATT&CK v14.0.
 - Added functionality to scroll down with the Tactics header frozen to the top. See issue [#404](https://github.com/mitre-attack/attack-navigator/issues/404).
 - Improved the Dockerfile for faster builds. See issue [#411](https://github.com/mitre-attack/attack-navigator/pull/411).
 
+## Fixes
+- Fixed an issue where certain layer settings were not restored when upgrading the layer ATT&CK version. See issue [#597](https://github.com/mitre-attack/attack-navigator/issues/597).
+
 ## Miscellaneous
 - Refactored the codebase to improve maintainability of the application.
 
