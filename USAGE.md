@@ -64,14 +64,21 @@ time.
 ## Saving and Loading Layers
 
 Layers can be saved by clicking the "save layer"
-button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">). This will open a dialog to save a layer
-configuration file to your local computer. This contains the configuration for the techniques that have been customized
+button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">).
+This will open a dropdown menu where you can choose how to save the layer.
+Layers can be exported as json. You can either export a single layer or all open layers.
+
+To export a single layer click on the "download single layer as json" button (<img src="nav-app/src/assets/icons/ic_exportJson_black_24px.svg">).
+
+To export all open layers click on the "download all layers as json" button (<img src="nav-app/src/assets/icons/ic_exportAllJson_black_24px.svg">).
+
+Once the save option is selected, a dialog to save a layer configuration file to your local computer will open. This contains the configuration for the techniques that have been customized
 (commented, colored, disabled, or assigned a score, links, or metadata) as well as the scoring gradient setup, filter selection,
 layer name, layer description, view configuration.
 
-Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer you've worked on previously. To
+Saved layer configuration files can be opened in the ATT&CK Navigator to restore a layer or layers you've worked on previously. To
 do so, open a new tab and open the "Open Existing Layer" panel. Then click "Upload from local", and select your saved
-configuration file. Doing so will restore your saved layer to the ATT&CK Navigator. Layers generated from a custom collection 
+configuration file. Doing so will restore your saved layer or layers to the ATT&CK Navigator. Layers generated from a custom collection
 or STIX bundle will be restored from the URL the layer was created with. This interface also has a "load from
 URL" input allowing you to open a layer json from a remote source.
 
@@ -506,6 +513,10 @@ additional information about the object in question.
 Buttons labelled 'select all' and 'deselect all' are provided to quickly select/deselect all techniques in the results
 area. You can use this in conjunction with the search input to select all results which match the given query.
 
+# Toolbar Controls
+
+The stickiness of the toolbar can be changed by clicking on the enable/disable sticky toolbar button (<img src="nav-app/src/assets/icons/ic_push_pin_black_24px.svg">)
+
 # Customizing the Navigator
 
 The ATT&CK Navigator can be customized by modifying the fragment (e.g <code>example.com<b>#fragment</b></code>) of the
@@ -606,12 +617,21 @@ table cell borders can also be edited.
 - <b>Cell border</b> controls the border of cells in the body of the table. The borders in the header are not modified
   by this control. Note that you must click "apply" in the color picker for your change to take effect.
 
-# ![Exporting Layers to MS Excel](nav-app/src/assets/icons/baseline-grid_on-24px.svg)Exporting Layers to MS Excel
+# Exporting Layers to MS Excel
 
-Layers can be exported to MS excel (.xlsx) format. Clicking on the "export to excel" button in the toolbar will download
-an .xlsx file which contains the current layer. This layer contains the annotations from the view -- color (via score or
+Layers can be exported to MS excel (.xlsx) format. Clicking on the "export single layer to excel" button <img src="nav-app/src/assets/icons/baseline-grid_on-24px.svg"> in the toolbar will download
+an .xlsx file which contains the current layer.
+
+Clicking on the "export all layers to excel" button <img src="nav-app/src/assets/icons/ic_exportAllExcel_black_24px.svg"> in the toolbar will download
+an .xlsx file which contains all the open layers in different sheets.
+
+These layers contains the annotations from the view -- color (via score or
 manually assigned) and disabled states. The exporter also honors tactic header background, sorting, filtering and hidden
 techniques.
+
+# Printing the matrix
+
+To get the full view of the matrix on a single page, be sure to disable the sticky toolbar before printing or saving to pdf. See the <a href="#toolbar-controls">Toolbar Controls</a> section for instructions on how to enable or disable the sticky toolbar.
 
 # Notice
 
