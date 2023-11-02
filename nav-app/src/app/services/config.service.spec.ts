@@ -10,11 +10,6 @@ describe('ConfigService', () => {
         });
     });
 
-    // it('should be', inject([ConfigService], (service: ConfigService) => {
-    //     let gg = service.getFeature("leave_site_dialog")
-    //     expect(service).toBe("0");
-    // }));
-
     it('should be created', inject([ConfigService], (service: ConfigService) => {
         expect(service).toBeTruthy();
     }));
@@ -33,7 +28,7 @@ describe('ConfigService', () => {
     }));
 
     it('should get feature', inject([ConfigService], (service: ConfigService) => {
-        let cs = service.setFeature("sticky_toolbar", true)
+        service.setFeature("sticky_toolbar", true)
         expect(service.getFeature("sticky_toolbar")).toBeTruthy();
     }));
 
