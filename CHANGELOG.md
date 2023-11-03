@@ -8,6 +8,10 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
+# Staged Changes
+
+## Fixes
+- Fixed an issue with the Dockerfile which was preventing the docker image from building. See issue [#598](https://github.com/mitre-attack/attack-navigator/pull/598).
 
 # 4.9.0 - 31 October 2023
 
