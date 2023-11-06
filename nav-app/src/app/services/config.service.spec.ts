@@ -23,8 +23,8 @@ describe('ConfigService', () => {
         expect(service.setFeature_object(feature_object)).toEqual([ 'disable_techniques', 'manual_color', 'background_color' ]);
     }));
 
-    it('should set feature', inject([ConfigService], (service: ConfigService) => {
-        expect(service.setFeature("sticky_toolbar", true)).toBeTruthy();
+    it('should set single feature to given value', inject([ConfigService], (service: ConfigService) => {
+        expect(service.setFeature("sticky_toolbar", true)).toEqual(["sticky_toolbar"]);
     }));
 
     it('should get feature', inject([ConfigService], (service: ConfigService) => {
@@ -88,5 +88,33 @@ describe('ConfigService', () => {
             ]}
         service.setFeature_object(feature_group_one)
         expect(service.isFeatureGroup("technique_controls")).toBeTruthy();
+    }));
+
+    it('should get feature list', inject([ConfigService], (service: ConfigService) => {
+        service.featureStructure = [
+            {"name": "sticky_toolbar", "enabled": true}
+            ]
+        expect(service.getFeatureList()).toEqual([{"name": "sticky_toolbar", "enabled": true}]);
+    }));
+
+    it('should set features of the given group to provided value', inject([ConfigService], (service: ConfigService) => {
+        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+            {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
+            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
+            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
+            ]}
+        service.setFeature_object(feature_object)
+        expect(service.setFeature("technique_controls",true)).toEqual(["technique_controls"]);
+    }));
+
+    it('should set features of the given group to the value object', inject([ConfigService], (service: ConfigService) => {
+        let value_object = {"scoring": true,"comments": false}
+        expect(service.setFeature("technique_controls",value_object)).toEqual(['scoring', 'comments'])
+    }));
+
+    it('should get all url fragments', inject([ConfigService], (service: ConfigService) => {
+        let fragments = new Map<string, string>();
+        fragments.set("comments","false")
+        expect(service.getAllFragments('https://mitre-attack.github.io/attack-navigator/#comments=false')).toEqual(fragments);
     }));
 });

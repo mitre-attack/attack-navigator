@@ -2,10 +2,13 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Tab, Version, ViewModel } from '../classes';
-import { Dialog } from '@angular/cdk/dialog';
+import {  ViewModel } from '../classes';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '../services/data.service';
+import { HelpComponent } from '../help/help.component';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MarkdownService } from 'ngx-markdown';
+import { SvgExportComponent } from '../svg-export/svg-export.component';
 
 describe('TabsComponent', () => {
     let component: TabsComponent;
@@ -28,7 +31,8 @@ describe('TabsComponent', () => {
                     provide: MAT_DIALOG_DATA,
                     useValue: {},
                 },
-                DataService
+                DataService,
+                MarkdownService
             ],
         }).compileComponents();
     }));
@@ -120,42 +124,6 @@ describe('TabsComponent', () => {
         expect(app.layerTabs.length).toEqual(1);
     });
 
-    // it('should load tabs', waitForAsync(() => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     let versions = [
-    //         {
-    //             "name": "ATT&CK v13",
-    //             "version": "13",
-    //             "domains": [
-    //                 {
-    //                     "name": "Enterprise",
-    //                     "identifier": "enterprise-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-    //                 },
-    //                 {
-    //                     "name": "Mobile",
-    //                     "identifier": "mobile-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/mobile-attack.json"]
-    //                 },
-    //                 {
-    //                     "name": "ICS",
-    //                     "identifier": "ics-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/ics-attack/ics-attack.json"]
-    //                 }
-    //             ]
-    //         }]
-    //     let default_layers =  {
-    //             "enabled": true,
-    //             "urls": ["https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
-    //     }
-    //     //app.dataService.setUpURLs(versions);
-    //     let viewModel: ViewModel;
-    //     //app.openTab('new layer1', viewModel, true, true, true, true)
-    //     app.loadTabs(default_layers);
-    //     expect(app.layerTabs.length).toEqual(1);
-    // }));
-
     it('should check if feature is defined in config file', () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
@@ -166,5 +134,27 @@ describe('TabsComponent', () => {
             ]}
         app.configService.setFeature_object(feature_object)
         expect(app.hasFeature("manual_color")).toBeTrue();
+    });
+
+    it('should open dialog', () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        const openDialogSpy = spyOn(app.dialog, 'open');
+        app.openDialog("help");
+        const settings = { maxWidth: '75ch', panelClass: app.userTheme};
+        expect(openDialogSpy).toHaveBeenCalledWith(HelpComponent, settings);
+    });
+
+    it('should open svg dialog', () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        const openDialogSpy = spyOn(app.dialog, 'open');
+        let vm: ViewModel;
+        app.openSVGDialog(vm);
+        const settings = {
+            data: { vm: vm },
+            panelClass: ['dialog-custom', app.userTheme],
+        };
+        expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
     });
 });

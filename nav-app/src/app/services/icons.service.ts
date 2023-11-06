@@ -20,6 +20,10 @@ export class IconsService {
             this.matIconRegistry.addSvgIcon(key, this.domSanitizer.bypassSecurityTrustResourceUrl(`${iconUrl}/${key}.svg`));
         });
     }
+
+    public getIcons(): object{
+        return Icons;
+    }
 }
 
 export enum Icons {
