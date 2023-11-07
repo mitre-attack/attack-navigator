@@ -3,23 +3,18 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ContextmenuComponent } from './contextmenu.component';
 
 describe('ContextmenuComponent', () => {
-    let component: ContextmenuComponent;
-    let fixture: ComponentFixture<ContextmenuComponent>;
+    let contextMenu: ContextmenuComponent;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             declarations: [ContextmenuComponent],
         }).compileComponents();
+        let fixture = TestBed.createComponent(ContextmenuComponent);
+        contextMenu = fixture.componentInstance;
     }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(ContextmenuComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    it('should create the app', (() => {
+        expect(contextMenu).toBeTruthy();
+    }));
 });
