@@ -235,7 +235,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
+    public readonly latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
     private lowestSupportedVersion: Version;
     private enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
     private mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
@@ -246,7 +246,7 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(versions: []) {
+    setUpURLs(versions: any[]) {
         versions.forEach((version: any) => {
             let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
             this.versions.push(v);
