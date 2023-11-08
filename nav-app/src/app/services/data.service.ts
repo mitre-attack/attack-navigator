@@ -12,8 +12,9 @@ import { Version, VersionChangelog } from '../classes';
 })
 export class DataService {
     constructor(private http: HttpClient) {
+        let subscription;
         console.debug('initializing data service');
-        let subscription = this.getConfig().subscribe({
+        subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config['versions']);
             },
@@ -329,9 +330,10 @@ export class DataService {
     loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
+            let subscription;
             if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
-                let subscription = this.getDomainData(domain, refresh).subscribe({
+                subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);

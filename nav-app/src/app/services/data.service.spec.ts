@@ -3,6 +3,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 import { Version, VersionChangelog } from '../classes';
 import { Asset, Campaign, DataComponent, Domain, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
+import { of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 describe('DataService', () => {
     let configVersions: any[] = [{
@@ -65,6 +67,21 @@ describe('DataService', () => {
             "external_id": "T0000"
         }],
     }
+    let technique2 = {
+        ...template,
+        "id": "attack-pattern-3",
+        "external_references": [{
+            "external_id": "T0001"
+        }],
+    }
+    let technique3 = {
+        ...template,
+        "id": "attack-pattern-4",
+        "x_mitre_deprecated": true,
+        "external_references": [{
+            "external_id": "T0002"
+        }],
+    }
     let subtechnique = {
         ...template,
         "id": "attack-pattern-1",
@@ -109,7 +126,7 @@ describe('DataService', () => {
         "id": "bundle--0",
         "spec_version": "2.0",
         "objects": [
-            technique, subtechnique, subtechnique2, asset, campaign, component, source, group, matrix, mitigation, note, group, malware, tool, tactic,
+            technique, technique2, technique3, subtechnique, subtechnique2, asset, campaign, component, source, group, matrix, mitigation, note, group, malware, tool, tactic,
             groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique, campaignAttr, mitigationMitigates, subtechniqueOf, subtechniqueOf2, detects, targets, revokedby,
         ]
     }]
@@ -123,6 +140,15 @@ describe('DataService', () => {
 
     it('should be created', inject([DataService], (service: DataService) => {
         expect(service).toBeTruthy();
+    }));
+
+    it('should set up data in constructor', inject([HttpClient], (http: HttpClient) => {
+        let return$ = {versions: configVersions};
+        let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
+        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
+        const mockService = new DataService(http);
+        expect(mockService).toBeTruthy();
+        expect(functionSpy).toHaveBeenCalledOnceWith(return$.versions)
     }));
 
     it('should set up data', inject([DataService], (service: DataService) => {
@@ -228,10 +254,20 @@ describe('DataService', () => {
         await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
     }));
 
+    it('should resolve after data loaded', inject([DataService], async (service: DataService) => {
+        service.setUpURLs(configVersions); // set up data
+        let domain = service.domains[0];
+        let functionSpy = spyOn(service, 'getDomainData').and.returnValue(of(bundles));
+        await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
+        expect(functionSpy).toHaveBeenCalledOnceWith(domain, false);
+    }));
+
     it('should reject with invalid domain', inject([DataService], async (service: DataService) => {
         service.setUpURLs(configVersions);
-        let domainVersionID = '';
-        await expectAsync(service.loadDomainData(domainVersionID)).toBeRejected();
+        let functionSpy = spyOn(service, 'getDomain').and.returnValue(undefined);
+        let domainId = 'enterprise-attack-4';
+        await expectAsync(service.loadDomainData(domainId)).toBeRejected();
+        expect(functionSpy).toHaveBeenCalledOnceWith(domainId);
     }));
 
     it('should not get technique in domain', inject([DataService], (service: DataService) => {
@@ -262,7 +298,7 @@ describe('DataService', () => {
         let domain = service.domains[0];
         service.parseBundle(domain, bundles);
         expect(domain.platforms).toEqual(technique.x_mitre_platforms);
-        testDomainData(domain.techniques, 1, Technique);
+        testDomainData(domain.techniques, 3, Technique);
         testDomainData(domain.subtechniques, 2, Technique);
         testDomainData(domain.assets, 1, Asset);
         testDomainData(domain.campaigns, 1, Campaign);
@@ -293,6 +329,68 @@ describe('DataService', () => {
         expect(result).toBeInstanceOf(VersionChangelog);
         expect(result.newDomainVersionID).toEqual(domain.id);
         expect(result.oldDomainVersionID).toEqual(domain.id);
-        expect(result.unchanged.length).toEqual(2);
+        expect(result.unchanged.length).toEqual(3);
+    }));
+
+    it('should compare versions', inject([DataService], (service: DataService) => {
+        let newVersion = {
+            "name": "ATT&CK v14",
+            "version": "14",
+            "domains": configVersions[0].domains
+        };
+        let multipleVersions = [configVersions[0], newVersion];
+        service.setUpURLs(multipleVersions);
+        expect(service.domains.length).toEqual(2);
+
+        let [oldDomain, newDomain] = service.domains;
+        service.parseBundle(oldDomain, bundles);
+        expect(oldDomain.dataLoaded).toBeTrue();
+    
+        // deprecation
+        let depSubtechnique = {...subtechnique};
+        depSubtechnique["x_mitre_deprecated"] = true;
+        depSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // new object added
+        let newTechnique = {...technique};
+        newTechnique["id"] = "attack-pattern-6";
+        newTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        newTechnique["external_references"] = [{
+            "external_id": "T0004"
+        }]
+        // minor version change
+        let minorTechnique = {...technique};
+        minorTechnique["version"] = "1.1";
+        minorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // update deprecated object
+        let depTechnique = {...technique3};
+        depTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // update revoked object
+        let revSubtechnique = {...subtechnique2};
+        revSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // revocation
+        let revTechnique = {...technique2};
+        revTechnique["revoked"] = true;
+        revTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        let newBundle = [{
+            "type": "bundle",
+            "id": "bundle--1",
+            "spec_version": "2.0",
+            "objects": [
+                minorTechnique, revTechnique, depTechnique, newTechnique, depSubtechnique, revSubtechnique, asset, campaign, component, source, group, matrix, mitigation, note, group, malware, tool, tactic,
+                groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique, campaignAttr, mitigationMitigates, subtechniqueOf, subtechniqueOf2, detects, targets, revokedby,
+            ]
+        }]
+        newBundle[0].objects.push(newTechnique);
+        service.parseBundle(newDomain, newBundle);
+
+        let result = service.compareVersions(oldDomain.id, newDomain.id);
+        expect(result).toBeInstanceOf(VersionChangelog);
+        expect(result.newDomainVersionID).toEqual(newDomain.id);
+        expect(result.oldDomainVersionID).toEqual(oldDomain.id);
+        expect(result.additions.length).toEqual(1);
+        expect(result.deprecations.length).toEqual(1);
+        expect(result.minor_changes.length).toEqual(1);
+        expect(result.revocations.length).toEqual(1);
+        expect(result.unchanged.length).toEqual(0);
     }));
 });
