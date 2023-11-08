@@ -2,12 +2,23 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
+import { TabsComponent } from './tabs/tabs.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('AppComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [AppComponent],
+            imports: [
+                HttpClientTestingModule,
+                MatDialogModule,
+                MatSnackBarModule
+            ],
+            declarations: [
+                AppComponent,
+                TabsComponent,
+            ],
         }).compileComponents();
     }));
 
