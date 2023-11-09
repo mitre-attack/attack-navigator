@@ -12,7 +12,7 @@ export class ConfigService {
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-    private featureStructure: object[];
+    public featureStructure: object[];
 
     public contextMenuItems: ContextMenuItem[] = [];
 

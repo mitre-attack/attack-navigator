@@ -2,6 +2,8 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { TechniqueCellComponent } from './technique-cell.component';
 import { ViewModelsService } from '../../services/viewmodels.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+// import { Tab, Version, TechniqueVM, ViewModel } from '../../classes';
+// import { Technique, Tactic } from '../../classes/stix';
 
 describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
@@ -26,7 +28,8 @@ describe('TechniqueCellComponent', () => {
             declarations: [TechniqueCellComponent],
         });
         fixture = TestBed.createComponent(TechniqueCellComponent);
-        component = fixture.componentInstance;
+        component = fixture.debugElement.componentInstance;
+        component.ngOnInit();
     });
 
     it('can create an instance of TechniqueCellComponent', () => {
@@ -42,6 +45,17 @@ describe('TechniqueCellComponent', () => {
 
         expect(component.unhighlight).withContext('mouse was released').toBeDefined();
     });
+
+    // it('cell pinned', () => {
+    //     component.viewModel = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
+    //     let tvm_1 = new TechniqueVM("T1583");
+    //     component.technique = new Technique(null,null,null);
+    //     let tech: Technique [];
+    //     tech.push(component.technique)
+    //     component.tactic = new Tactic(null, tech, null)
+    //     component.viewModel.setTechniqueVM(tvm_1);
+    //     expect(component.isCellPinned).toEqual(false);
+    // });
 
     /**
      * TODO Figure out why the following test won't work.
