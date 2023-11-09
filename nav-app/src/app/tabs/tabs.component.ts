@@ -48,6 +48,7 @@ export class TabsComponent implements AfterViewInit {
         version: undefined,
         identifier: undefined,
     };
+    public glayerVersion = globals.layerVersion;
 
     // user input for layer-layer operations
     public opSettings: any = {
@@ -755,7 +756,7 @@ export class TabsComponent implements AfterViewInit {
         let viewModel: ViewModel;
             viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
             let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-            self.versionMismatchWarning(layerVersionStr).then((res) => {
+            self.versionMismatchWarning(layerVersionStr, this.glayerVersion).then((res) => {
                 let isCustom = 'customDataURL' in obj;
                 if (!isCustom) {
                     if (!self.dataService.getDomain(viewModel.domainVersionID)) {
@@ -783,9 +784,9 @@ export class TabsComponent implements AfterViewInit {
      * (for major mismatches)
      * @param {string} layerVersionStr the uploaded layer version
      */
-    private async versionMismatchWarning(layerVersionStr: string): Promise<boolean> {
+    private async versionMismatchWarning(layerVersionStr: string, glayerVersion: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            let globalVersionSplit = globals.layerVersion.split('.');
+            let globalVersionSplit = glayerVersion.split('.');
             let layerVersion = layerVersionStr.split('.');
             // if minor version change, snackbar will be displayed
             if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]) {
@@ -833,7 +834,7 @@ export class TabsComponent implements AfterViewInit {
                     let viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await this.versionMismatchWarning(layerVersionStr);
+                        await this.versionMismatchWarning(layerVersionStr, this.glayerVersion);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }

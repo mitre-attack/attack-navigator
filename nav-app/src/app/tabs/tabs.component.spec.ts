@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -12,11 +12,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
+import * as globals from '../utils/globals';
+import { of } from 'rxjs';
 
 describe('TabsComponent', () => {
     let comp: TabsComponent;
+    const flushPromises = () => new Promise(setImmediate);
     let fixture: ComponentFixture<TabsComponent>;
-
+    const jsonData = require('../../assets/layer-2.json');
     let bundles: any[] = [{
         "type": "bundle",
         "id": "bundle--0",
@@ -24,6 +27,70 @@ describe('TabsComponent', () => {
         "objects": [
         ]
     }];
+
+    let temp_file = {
+        "name": "layer",
+        "versions": {
+            "attack": "13",
+            "navigator": "4.9.0",
+            "layer": "4.5"
+        },
+        "domain": "enterprise-attack",
+        "description": "",
+        "filters": {
+            "platforms": [
+                "None",
+                "Windows",
+                "Human-Machine Interface",
+                "Control Server",
+                "Data Historian",
+                "Field Controller/RTU/PLC/IED",
+                "Input/Output Server",
+                "Safety Instrumented System/Protection Relay",
+                "Engineering Workstation"
+            ]
+        },
+        "sorting": 0,
+        "layout": {
+            "layout": "side",
+            "aggregateFunction": "average",
+            "showID": false,
+            "showName": true,
+            "showAggregateScores": false,
+            "countUnscored": false,
+            "expandedSubtechniques": "none"
+        },
+        "hideDisabled": false,
+        "techniques": [
+            {
+                "techniqueID": "T0889",
+                "tactic": "persistence",
+                "color": "#e60d0d",
+                "comment": "",
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            }
+        ],
+        "gradient": {
+            "colors": [
+                "#ff6666ff",
+                "#ffe766ff",
+                "#8ec843ff"
+            ],
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "legendItems": [],
+        "metadata": [],
+        "links": [],
+        "showTacticRowBackground": false,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": true,
+        "selectSubtechniquesWithParent": false,
+        "selectVisibleTechniques": false
+    }
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -226,30 +293,33 @@ describe('TabsComponent', () => {
         app.opSettings.scoreExpression = "a+b";
         app.getScoreExpressionError();
         let scoreVariables = new Map<string, ViewModel>();
-        let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
-		let vm2 = app.viewModelsService.newViewModel("layer1","enterprise-attack-13");
-        scoreVariables.set("a",vm1);
-		scoreVariables.set("b",vm2);
+        let vm1 = app.viewModelsService.newViewModel("layer","ics-attack-13");
+		let vm2 = app.viewModelsService.newViewModel("layer1","ics-attack-13");
         app.openTab('layer', vm1, true, true, true, true);
         app.openTab('layer1', vm2, true, true, true, true);
+        let vm1_name = app.indexToChar(0);
+        let vm2_name = app.indexToChar(1);
+        scoreVariables.set(vm1_name,vm1);
+		scoreVariables.set(vm2_name,vm2);
         let versions = [
             {
                 "name": "ATT&CK v13",
                 "version": "13",
                 "domains": [
                     {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                        "name": "ICS",
+                        "identifier": "ics-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/ics-attack/ics-attack.json"]
                     }
                 ]
             }]
         app.dataService.setUpURLs(versions); // set up data
-        app.opSettings.domain = "enterprise-attack-13";
+        app.opSettings.domain = "ics-attack-13";
         expect(app.getFilteredVMs()).toEqual(app.viewModelsService.viewModels);
         spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.dataService.getDomain(app.opSettings.domain).dataLoaded = false;
         await app.layerByOperation();
-        expect(app.layerTabs.length).toEqual(3);       
+        expect(app.layerTabs.length).toEqual(3);  
     });
 
     it('should create new layer by operation based on user input else', async () => {
@@ -273,12 +343,12 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-            app.dataService.setUpURLs(versions); // set up data
-            app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
-            app.opSettings.domain = "enterprise-attack-13";
-            spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-            await app.layerByOperation();
-            expect(app.layerTabs.length).toEqual(2);      
+        app.dataService.setUpURLs(versions); // set up data
+        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        app.opSettings.domain = "enterprise-attack-13";
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        await app.layerByOperation();
+        expect(app.layerTabs.length).toEqual(2);      
     });
 
     it('should emit on theme change', (() => {
@@ -302,4 +372,73 @@ describe('TabsComponent', () => {
         flush();
         expect(logSpy).toHaveBeenCalledWith('copied', mockedDocElement.value);
     })));
+
+    it('should open upload prompt', (fakeAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        var mockedDocElement = document.createElement('input');
+        mockedDocElement.id = 'uploader';
+        mockedDocElement.value = 'test1';
+        mockedDocElement.type = "text";
+        document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+        const logSpy = spyOn(mockedDocElement, 'click');
+        app.openUploadPrompt();
+        flush();
+        expect(logSpy).toHaveBeenCalled();
+    })));
+
+    it('should layer', (fakeAsync (async () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        var mockedDocElement = document.createElement('input');
+        mockedDocElement.id = 'uploader';
+        mockedDocElement.value = 'test1';
+        mockedDocElement.type = "text";
+        document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+        const logSpy = spyOn(mockedDocElement, 'click');
+        app.openUploadPrompt();
+        expect(logSpy).toHaveBeenCalled();
+        let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
+        let file = new File([blob], "layer-2.json");
+        spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve());
+        spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve(null));
+        let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
+        await app.readJSONFile(file);
+    })));
+
+    // it('should load layer', (fakeAsync (() => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     const dt = () => new DataTransfer();
+    //     var mockedDocElement = document.createElement('input');
+    //     mockedDocElement.id = 'uploader';
+    //     mockedDocElement.type = 'file';
+    //     let gg = new File([jsonData], "layer-2.json");
+    //     // let dt1 = dt();
+    //     // dt1.items.add(file);
+    //     // mockedDocElement.files = dt.files;
+    //     // //mockedDocElement.files.item = jsonData;
+    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+    //     // document.getElementById.files = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+    //     const dataTransfer = new DataTransfer()
+    //     dataTransfer.items.add();
+    //     mockedDocElement.files = dataTransfer.files;
+    //     app.openUploadPrompt();
+    //     flush();
+    //     app.loadLayerFromFile();
+    // })));
 });
