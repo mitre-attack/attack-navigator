@@ -49,11 +49,10 @@ describe('ViewmodelsService', () => {
 		}
 		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
 		let tvm_new = vm_new.getTechniqueVM_id("T1583");
-		console.log(tvm_new.comment);
 		expect(tvm_new.score).toBe("3");
 	}));
 
-	it('should create viewmodel by inheriting the score settings from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
+	it('should create viewmodel by inheriting the comments from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
 		let vm1 = service.newViewModel("layer","enterprise-attack-13");
 		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
 		let scoreVariables = new Map<string, ViewModel>();
@@ -79,11 +78,10 @@ describe('ViewmodelsService', () => {
 		}
 		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
 		let tvm_new = vm_new.getTechniqueVM_id("T1583");
-		console.log(tvm_new.comment);
 		expect(tvm_new.comment).toBe("completed");
 	}));
 
-	it('viewmodel by inheriting opsettings from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
+	it('viewmodel by inheriting opsettings and setting the score to 1 for all', inject([ViewModelsService], (service: ViewModelsService) => {
 		let vm1 = service.newViewModel("layer","enterprise-attack-13");
 		//let vm2 = service.newViewModel("layer1","enterprise-attack-13");
 		let scoreVariables = new Map<string, ViewModel>();
