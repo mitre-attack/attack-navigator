@@ -272,11 +272,19 @@ describe('ContextmenuComponent', () => {
         expect(viewModelSpy).toHaveBeenCalledOnceWith(contextMenu.tactic);
     }));
 
-    it('should xxx', inject([DataService], (service: DataService) => {
+    it('should pin cell and close', inject([DataService], (service: DataService) => {
         let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
         let functionSpy = spyOn(contextMenu, 'closeContextmenu');
         contextMenu.pinCell();
         expect(contextMenu.viewModelsService.pinnedCell).toBe(ttid);
         expect(functionSpy).toHaveBeenCalled();
+    }));
+
+    it('should unpin cell', inject([DataService], (service: DataService) => {
+        let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
+        contextMenu.pinCell();
+        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttid);
+        contextMenu.pinCell();
+        expect(contextMenu.viewModelsService.pinnedCell).toBe('');
     }));
 });
