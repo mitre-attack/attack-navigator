@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 describe('DataService', () => {
-    let configVersions: any[] = [{
+    let configData: any[] = [{
         "name": "ATT&CK v13",
         "version": "13",
         "domains": [{
@@ -17,7 +17,7 @@ describe('DataService', () => {
         }]
     }];
 
-    let taxiiVersions = [{
+    let taxiiData = [{
         "name": "ATT&CK v13",
         "version": "13",
         "domains": [{
@@ -28,19 +28,13 @@ describe('DataService', () => {
         }]
     }];
 
-    let workbenchVersions = [{
-        "name": "Workbench Data",
-        "version": "13",
+    let workbenchData = [{
+        ...configData[0],
         "authentication": {
             "enabled": true,
             "serviceName": "navigator",
             "apiKey": "sample-navigator-apikey"
         },
-        "domains": [{
-            "name": "Enterprise",
-            "identifier": "enterprise-attack",
-            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-        }]
     }];
 
     let stixSDO = {
@@ -48,10 +42,10 @@ describe('DataService', () => {
         "description": "Description",
         "created": "2001-01-01T01:01:00.000Z",
         "modified": "2001-01-01T01:01:00.000Z",
-        "version": "1.0",
+        "x_mitre_version": "1.0",
     }
 
-    let template = {
+    let techniqueSDO = {
         ...stixSDO,
         "type": "attack-pattern",
         "x_mitre_platforms": ["platform"],
@@ -60,74 +54,196 @@ describe('DataService', () => {
             "phase_name": "tactic-name"
         }],
     }
-    let technique = {
-        ...template,
+
+    // ATT&CK objects
+    let t0000 = {
+        ...techniqueSDO,
         "id": "attack-pattern-0",
-        "external_references": [{
-            "external_id": "T0000"
-        }],
+        "external_references": [{"external_id": "T0000"}],
     }
-    let technique2 = {
-        ...template,
-        "id": "attack-pattern-3",
-        "external_references": [{
-            "external_id": "T0001"
-        }],
-    }
-    let technique3 = {
-        ...template,
-        "id": "attack-pattern-4",
-        "x_mitre_deprecated": true,
-        "external_references": [{
-            "external_id": "T0002"
-        }],
-    }
-    let subtechnique = {
-        ...template,
+    let t0000_000 = {
+        ...techniqueSDO,
         "id": "attack-pattern-1",
         "x_mitre_is_subtechnique": true,
-        "external_references": [{
-            "external_id": "T0000.000"
-        }],
+        "external_references": [{"external_id": "T0000.000"}],
     }
-    let subtechnique2 = {
-        ...template,
+    let t0000_001 = {
+        ...techniqueSDO,
         "id": "attack-pattern-2",
         "x_mitre_is_subtechnique": true,
         "revoked": true,
-        "external_references": [{
-            "external_id": "T0000.001"
-        }],
+        "external_references": [{"external_id": "T0000.001"}],
     }
-    let asset = { "id": "asset--0", ...stixSDO, "type": "x-mitre-asset", "external_references": [{"external_id": "A0000"}] }
-    let campaign = { "id": "campaign-0", ...stixSDO, "type": "campaign", "external_references": [{"external_id": "C0000"}] }
-    let component = { "id": "component-0", ...stixSDO, "type": "x-mitre-data-component", "x_mitre_data_source_ref": "ds-0", "external_references": [{"external_id": "DC0000"}] }
-    let source = {"id": "ds-0", "type": "x-mitre-data-source", "external_references": [{"external_id": "DS0000"}] }
-    let group = { "id": "intrusion-set-0", ...stixSDO, "type": "intrusion-set", "external_references": [{"external_id": "G0000"}] }
-    let matrix = { "id": "matrix-0", ...stixSDO, "type": "x-mitre-matrix", "tactic_refs": ["tactic-0"], "external_references": [{"external_id": "test-matrix"}] }
-    let mitigation = { "id": "mitigation-0", ...stixSDO, "type": "course-of-action", "external_references": [{"external_id": "M0000"}] }
-    let note = { "id": "note-0", ...stixSDO, "type": "note" }
-    let malware = { "id": "malware-0", ...stixSDO, "type": "malware", "x_mitre_platforms": ["platform"], "external_references": [{"external_id": "S0000"}] }
-    let tool = { "id": "tool-0", ...stixSDO, "type": "tool", "x_mitre_platforms": ["platform"], "external_references": [{"external_id": "S0001"}] }
-    let tactic = { "id": "tactic-0", ...stixSDO, "type": "x-mitre-tactic", "x_mitre_shortname": "tactic-name", "external_references": [{"external_id": "TA0000"}] }
-    let groupUsesTechnique = {"id": "rel-1", "type": "relationship", "source_ref": "intrusion-set-0", "relationship_type": "uses", "target_ref": "attack-pattern-0"}
-    let softwareUsesTechnique = {"id": "rel-2", "type": "relationship", "source_ref": "malware-0", "relationship_type": "uses", "target_ref": "attack-pattern-0"}
-    let campaignUsesTechnique = {"id": "rel-4", "type": "relationship", "source_ref": "campaign-0", "relationship_type": "uses", "target_ref": "attack-pattern-0"}
-    let campaignAttr = {"id": "rel-5", "type": "relationship", "source_ref": "campaign-0", "relationship_type": "attributed-to", "target_ref": "intrusion-set-0"}
-    let mitigationMitigates = {"id": "rel-6", "type": "relationship", "source_ref": "mitigation-0", "relationship_type": "mitigates", "target_ref": "attack-pattern-0"}
-    let subtechniqueOf = {"id": "rel-7", "type": "relationship", "source_ref": "attack-pattern-1", "relationship_type": "subtechnique-of", "target_ref": "attack-pattern-0"}
-    let detects = {"id": "rel-8", "type": "relationship", "source_ref": "component-0", "relationship_type": "detects", "target_ref": "attack-pattern-0"}
-    let targets = {"id": "rel-9", "type": "relationship", "source_ref": "attack-pattern-0", "relationship_type": "targets", "target_ref": "asset-0"}
-    let subtechniqueOf2 = {"id": "rel-10", "type": "relationship", "source_ref": "attack-pattern-2", "relationship_type": "subtechnique-of", "target_ref": "attack-pattern-0"}
-    let revokedby = {"id": "rel-11", "type": "relationship", "source_ref": "attack-pattern-2", "relationship_type": "revoked-by", "target_ref": "attack-pattern-1"}
+    let t0001 = {
+        ...techniqueSDO,
+        "id": "attack-pattern-3",
+        "external_references": [{"external_id": "T0001"}],
+    }
+    let t0002 = {
+        ...techniqueSDO,
+        "id": "attack-pattern-4",
+        "x_mitre_deprecated": true,
+        "external_references": [{"external_id": "T0002"}],
+    }
+    let t0003 = {
+        ...techniqueSDO,
+        "id": "attack-pattern-5",
+        "external_references": [{"external_id": "T0003"}],
+    }
+    let asset = {
+        ...stixSDO,
+        "id": "asset-0",
+        "type": "x-mitre-asset",
+        "external_references": [{"external_id": "A0000"}]
+    }
+    let campaign = {
+        ...stixSDO,
+        "id": "campaign-0",
+        "type": "campaign",
+        "external_references": [{"external_id": "C0000"}]
+    }
+    let dataComponent = {
+        ...stixSDO,
+        "id": "data-component-0",
+        "type": "x-mitre-data-component",
+        "x_mitre_data_source_ref": "data-source-0",
+        "external_references": [{"external_id": "DC0000"}]
+    }
+    let dataSource = {
+        ...stixSDO,
+        "id": "data-source-0",
+        "type": "x-mitre-data-source",
+        "external_references": [{"external_id": "DS0000"}]
+    }
+    let group = {
+        ...stixSDO,
+        "id": "intrusion-set-0",
+        "type": "intrusion-set",
+        "external_references": [{"external_id": "G0000"}]
+    }
+    let matrix = {
+        ...stixSDO,
+        "id": "matrix-0",
+        "type": "x-mitre-matrix",
+        "tactic_refs": ["tactic-0"],
+        "external_references": [{"external_id": "test-matrix"}]
+    }
+    let mitigation = {
+        ...stixSDO,
+        "id": "mitigation-0",
+        "type": "course-of-action",
+        "external_references": [{"external_id": "M0000"}]
+    }
+    let note = {
+        ...stixSDO,
+        "id": "note-0",
+        "type": "note"
+    }
+    let malware = {
+        ...stixSDO,
+        "id": "malware-0",
+        "type": "malware",
+        "x_mitre_platforms": ["platform"],
+        "external_references": [{"external_id": "S0000"}]
+    }
+    let tool = {
+        ...stixSDO,
+        "id": "tool-0",
+        "type": "tool",
+        "x_mitre_platforms": ["platform"],
+        "external_references": [{"external_id": "S0001"}]
+    }
+    let tactic = {
+        ...stixSDO,
+        "id": "tactic-0",
+        "type": "x-mitre-tactic",
+        "x_mitre_shortname": "tactic-name",
+        "external_references": [{"external_id": "TA0000"}]
+    }
+    // Relationships
+    let groupUsesTechnique = {
+        "id": "relationship-0",
+        "type": "relationship",
+        "source_ref": "intrusion-set-0",
+        "relationship_type": "uses",
+        "target_ref": "attack-pattern-0"
+    }
+    let softwareUsesTechnique = {
+        "id": "relationship-1",
+        "type": "relationship",
+        "source_ref": "malware-0",
+        "relationship_type": "uses",
+        "target_ref": "attack-pattern-0"
+    }
+    let campaignUsesTechnique = {
+        "id": "relationship-2",
+        "type": "relationship",
+        "source_ref": "campaign-0",
+        "relationship_type": "uses",
+        "target_ref": "attack-pattern-0"
+    }
+    let campaignAttributedToGroup = {
+        "id": "relationship-3",
+        "type": "relationship",
+        "source_ref": "campaign-0",
+        "relationship_type": "attributed-to",
+        "target_ref": "intrusion-set-0"
+    }
+    let mitigationMitigates = {
+        "id": "relationship-4",
+        "type": "relationship",
+        "source_ref": "mitigation-0",
+        "relationship_type": "mitigates",
+        "target_ref": "attack-pattern-0"
+    }
+    let subtechniqueOf_000 = {
+        "id": "relationship-5",
+        "type": "relationship",
+        "source_ref": "attack-pattern-1",
+        "relationship_type": "subtechnique-of",
+        "target_ref": "attack-pattern-0"
+    }
+    let componentDetectsTechnique = {
+        "id": "relationship-6",
+        "type": "relationship",
+        "source_ref": "data-component-0",
+        "relationship_type": "detects",
+        "target_ref": "attack-pattern-0"
+    }
+    let techniqueTargetsAsset = {
+        "id": "relationship-7",
+        "type": "relationship",
+        "source_ref": "attack-pattern-0",
+        "relationship_type": "targets",
+        "target_ref": "asset-0"
+    }
+    let subtechniqueOf_001 = {
+        "id": "relationship-8",
+        "type": "relationship",
+        "source_ref": "attack-pattern-2",
+        "relationship_type": "subtechnique-of",
+        "target_ref": "attack-pattern-0"
+    }
+    let techniqueRevokedBy = {
+        "id": "relationship-9",
+        "type": "relationship",
+        "source_ref": "attack-pattern-2",
+        "relationship_type": "revoked-by",
+        "target_ref": "attack-pattern-1"
+    }
 
-    let bundles: any[] = [{
+    let stixBundles: any[] = [{
         "type": "bundle",
-        "id": "bundle--0",
+        "id": "bundle-0",
         "spec_version": "2.0",
         "objects": [
-            technique, technique2, technique3, subtechnique, subtechnique2, asset, campaign, component, source, group, matrix, mitigation, note, group, malware, tool, tactic,
-            groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique, campaignAttr, mitigationMitigates, subtechniqueOf, subtechniqueOf2, detects, targets, revokedby,
+            t0000, t0001, t0002, t0000_000, t0000_001, t0003,
+            asset, campaign, dataComponent, dataSource, group, matrix,
+            mitigation, note, group, malware, tool, tactic,
+            groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique,
+            campaignAttributedToGroup, mitigationMitigates, subtechniqueOf_000,
+            subtechniqueOf_001, componentDetectsTechnique, techniqueTargetsAsset,
+            techniqueRevokedBy,
         ]
     }]
 
@@ -143,7 +259,7 @@ describe('DataService', () => {
     }));
 
     it('should set up data in constructor', inject([HttpClient], (http: HttpClient) => {
-        let return$ = {versions: configVersions};
+        let return$ = {versions: configData};
         let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
         const mockService = new DataService(http);
@@ -152,7 +268,7 @@ describe('DataService', () => {
     }));
 
     it('should set up data', inject([DataService], (service: DataService) => {
-        service.setUpURLs(configVersions);
+        service.setUpURLs(configData);
         expect(service.versions).toBeTruthy();
         expect(service.versions.length).toEqual(1);
         let version = service.versions[0];
@@ -171,27 +287,27 @@ describe('DataService', () => {
     }));
 
     it('should define Workbench authentication', inject([DataService], (service: DataService) => {
-        service.setUpURLs(workbenchVersions);
+        service.setUpURLs(workbenchData);
         let domain = service.domains[0];
         expect(service.versions.length).toEqual(1);
         expect(domain).toBeInstanceOf(Domain);
         expect(domain.authentication).toBeTruthy();
-        expect(domain.authentication).toEqual(workbenchVersions[0].authentication);
+        expect(domain.authentication).toEqual(workbenchData[0].authentication);
     }));
 
     it('should define TAXII connection', inject([DataService], (service: DataService) => {
-        service.setUpURLs(taxiiVersions);
+        service.setUpURLs(taxiiData);
         let domain = service.domains[0];
         expect(service.versions.length).toEqual(1);
         expect(domain).toBeInstanceOf(Domain);
         expect(domain.taxii_url).toBeTruthy();
-        expect(domain.taxii_url).toEqual(taxiiVersions[0].domains[0].taxii_url);
+        expect(domain.taxii_url).toEqual(taxiiData[0].domains[0].taxii_url);
         expect(domain.taxii_collection).toBeTruthy();
-        expect(domain.taxii_collection).toEqual(taxiiVersions[0].domains[0].taxii_collection);
+        expect(domain.taxii_collection).toEqual(taxiiData[0].domains[0].taxii_collection);
     }));
 
     it('should get domainVersionID with latest version', inject([DataService], (service: DataService) => {
-        service.setUpURLs([]); // set up data
+        service.setUpURLs([]);
         let domainIdentifier = 'enterprise-attack';
         let result = service.getDomainVersionID(domainIdentifier, '');
         let latestVersion = service.versions[0].number;
@@ -199,7 +315,7 @@ describe('DataService', () => {
     }));
 
     it('should get domainVersionID', inject([DataService], (service: DataService) => {
-        service.setUpURLs([]); // set up data
+        service.setUpURLs([]);
         let domainIdentifier = 'enterprise-attack';
         let version = '13';
         let result = service.getDomainVersionID(domainIdentifier, version);
@@ -207,63 +323,63 @@ describe('DataService', () => {
     }));
 
     it('should get current version', inject([DataService], (service: DataService) => {
-        service.setUpURLs([]); // set up data
+        service.setUpURLs([]);
         let result = service.getCurrentVersion();
         expect(result.name).toEqual(service.latestVersion.name);
         expect(result.number).toEqual(service.latestVersion.number);
     }));
 
     it('should not be supported version', inject([DataService], (service: DataService) => {
-        service.setUpURLs([]); // set up data
+        service.setUpURLs([]);
         let result = service.isSupported('3');
         expect(result).toBeFalse();
     }));
 
     it('should be a supported version', inject([DataService], (service: DataService) => {
-        service.setUpURLs([]); // set up data
+        service.setUpURLs([]);
         let version = service.latestVersion.number;
         let result = service.isSupported(version);
         expect(result).toBeTrue();
     }));
 
     it('should fetch domain data via URL', inject([DataService], (service: DataService) => {
-        service.setUpURLs(configVersions); // set up data
+        service.setUpURLs(configData);
         let domain = service.domains[0];
         let result$ = service.getDomainData(domain);
         expect(result$).toBeTruthy();
     }));
 
     // it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
-    //     service.setUpURLs(taxiiVersions); // set up data
+    //     service.setUpURLs(taxiiData);
     //     let domain = service.domains[0];
     //     let result$ = service.getDomainData(domain);
     //     expect(result$).toBeTruthy();
     // }));
 
     it('should fetch domain data via Workbench', inject([DataService], (service: DataService) => {
-        service.setUpURLs(workbenchVersions); // set up data
+        service.setUpURLs(workbenchData);
         let domain = service.domains[0];
         let result$ = service.getDomainData(domain);
         expect(result$).toBeTruthy();
     }));
 
     it('should resolve with data loaded', inject([DataService], async (service: DataService) => {
-        service.setUpURLs(configVersions); // set up data
+        service.setUpURLs(configData);
         let domain = service.domains[0];
         domain.dataLoaded = true;
         await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
     }));
 
     it('should resolve after data loaded', inject([DataService], async (service: DataService) => {
-        service.setUpURLs(configVersions); // set up data
+        service.setUpURLs(configData);
         let domain = service.domains[0];
-        let functionSpy = spyOn(service, 'getDomainData').and.returnValue(of(bundles));
+        let functionSpy = spyOn(service, 'getDomainData').and.returnValue(of(stixBundles));
         await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
         expect(functionSpy).toHaveBeenCalledOnceWith(domain, false);
     }));
 
     it('should reject with invalid domain', inject([DataService], async (service: DataService) => {
-        service.setUpURLs(configVersions);
+        service.setUpURLs(configData);
         let functionSpy = spyOn(service, 'getDomain').and.returnValue(undefined);
         let domainId = 'enterprise-attack-4';
         await expectAsync(service.loadDomainData(domainId)).toBeRejected();
@@ -271,14 +387,14 @@ describe('DataService', () => {
     }));
 
     it('should not get technique in domain', inject([DataService], (service: DataService) => {
-        service.setUpURLs(configVersions);
+        service.setUpURLs(configData);
         let result = service.getTechnique('T0000', service.domains[0].id);
         expect(result).toBeFalsy();
     }));
 
     it('should get technique in domain', inject([DataService], (service: DataService) => {
-        service.setUpURLs(configVersions);
-        service.domains[0].techniques = [new Technique(technique, [], service)];
+        service.setUpURLs(configData);
+        service.domains[0].techniques = [new Technique(t0000, [], service)];
         let result = service.getTechnique('T0000', service.domains[0].id);
         expect(result).toBeTruthy();
         expect(result).toBeInstanceOf(Technique);
@@ -286,108 +402,127 @@ describe('DataService', () => {
     }));
 
     it('should parse stix bundle', inject([DataService], (service: DataService) => {
-        let testDomainData = function(testArr, quantity, instance) {
+        service.subtechniquesEnabled = true; // enable to parse subs
+        service.setUpURLs(configData);
+        let domain = service.domains[0];
+        service.parseBundle(domain, stixBundles);
+
+        // check data loaded
+        expect(domain.dataLoaded).toBeTrue();
+        expect(domain.platforms).toEqual(t0000.x_mitre_platforms);
+
+        // check objects parsed
+        let testObjectType = function(testArr, quantity, instance) {
             expect(testArr.length).toEqual(quantity);
             expect(testArr[0]).toBeInstanceOf(instance);
         }
-        let testDomainRelationships = function(relType, quantity) {
-            expect(domain.relationships[relType].size).toEqual(quantity);
-        }
-        service.subtechniquesEnabled = true; // enable to parse subs
-        service.setUpURLs(configVersions);
-        let domain = service.domains[0];
-        service.parseBundle(domain, bundles);
-        expect(domain.platforms).toEqual(technique.x_mitre_platforms);
-        testDomainData(domain.techniques, 3, Technique);
-        testDomainData(domain.subtechniques, 2, Technique);
-        testDomainData(domain.assets, 1, Asset);
-        testDomainData(domain.campaigns, 1, Campaign);
-        testDomainData(domain.dataComponents, 1, DataComponent);
-        testDomainData(domain.groups, 1, Group);
-        testDomainData(domain.matrices, 1, Matrix);
-        testDomainData(domain.mitigations, 1, Mitigation);
-        testDomainData(domain.notes, 1, Note);
-        testDomainData(domain.software, 2, Software);
-        testDomainData(domain.tactics, 1, Tactic);
-        expect(domain.dataLoaded).toBeTrue();
-        testDomainRelationships('campaign_uses', 1);
-        testDomainRelationships('campaigns_attributed_to', 1);
-        testDomainRelationships('component_rel', 1);
-        testDomainRelationships('group_uses', 1);
-        testDomainRelationships('mitigates', 1);
-        testDomainRelationships('revoked_by', 1);
-        testDomainRelationships('software_uses', 1);
-        testDomainRelationships('subtechniques_of', 1);
-        testDomainRelationships('targeted_assets', 1);
+        testObjectType(domain.techniques, 4, Technique);
+        testObjectType(domain.subtechniques, 2, Technique);
+        testObjectType(domain.assets, 1, Asset);
+        testObjectType(domain.campaigns, 1, Campaign);
+        testObjectType(domain.dataComponents, 1, DataComponent);
+        testObjectType(domain.groups, 1, Group);
+        testObjectType(domain.matrices, 1, Matrix);
+        testObjectType(domain.mitigations, 1, Mitigation);
+        testObjectType(domain.notes, 1, Note);
+        testObjectType(domain.software, 2, Software);
+        testObjectType(domain.tactics, 1, Tactic);
+
+        // check relationships parsed
+        let relationships = domain.relationships;
+        expect(relationships['campaign_uses'].size).toEqual(1);
+        expect(relationships['campaigns_attributed_to'].size).toEqual(1);
+        expect(relationships['component_rel'].size).toEqual(1);
+        expect(relationships['group_uses'].size).toEqual(1);
+        expect(relationships['mitigates'].size).toEqual(1);
+        expect(relationships['revoked_by'].size).toEqual(1);
+        expect(relationships['software_uses'].size).toEqual(1);
+        expect(relationships['subtechniques_of'].size).toEqual(1);
+        expect(relationships['targeted_assets'].size).toEqual(1);
     }));
 
     it('should compare the same version as unchanged', inject([DataService], (service: DataService) => {
         service.setUpURLs([]);
         let domain = service.domains[0];
-        service.parseBundle(domain, bundles);
+        service.parseBundle(domain, stixBundles);
+
         let result = service.compareVersions(domain.id, domain.id);
         expect(result).toBeInstanceOf(VersionChangelog);
         expect(result.newDomainVersionID).toEqual(domain.id);
         expect(result.oldDomainVersionID).toEqual(domain.id);
-        expect(result.unchanged.length).toEqual(3);
+        expect(result.unchanged.length).toEqual(4);
     }));
 
     it('should compare versions', inject([DataService], (service: DataService) => {
         let newVersion = {
             "name": "ATT&CK v14",
             "version": "14",
-            "domains": configVersions[0].domains
+            "domains": configData[0].domains
         };
-        let multipleVersions = [configVersions[0], newVersion];
-        service.setUpURLs(multipleVersions);
+        service.setUpURLs([configData[0], newVersion]);
+
+        // should have two domains/versions
         expect(service.domains.length).toEqual(2);
 
+        // parse stix bundles into old domain
         let [oldDomain, newDomain] = service.domains;
-        service.parseBundle(oldDomain, bundles);
+        service.parseBundle(oldDomain, stixBundles);
         expect(oldDomain.dataLoaded).toBeTrue();
     
         // deprecation
-        let depSubtechnique = {...subtechnique};
-        depSubtechnique["x_mitre_deprecated"] = true;
-        depSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
-        // new object added
-        let newTechnique = {...technique};
-        newTechnique["id"] = "attack-pattern-6";
-        newTechnique["modified"] = "2002-01-01T01:01:00.000Z";
-        newTechnique["external_references"] = [{
-            "external_id": "T0004"
-        }]
-        // minor version change
-        let minorTechnique = {...technique};
-        minorTechnique["version"] = "1.1";
-        minorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
-        // update deprecated object
-        let depTechnique = {...technique3};
-        depTechnique["modified"] = "2002-01-01T01:01:00.000Z";
-        // update revoked object
-        let revSubtechnique = {...subtechnique2};
-        revSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        let deprecateSubtechnique = { ...t0000_000 };
+        deprecateSubtechnique["x_mitre_deprecated"] = true;
+        deprecateSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
         // revocation
-        let revTechnique = {...technique2};
-        revTechnique["revoked"] = true;
-        revTechnique["modified"] = "2002-01-01T01:01:00.000Z";
-        let newBundle = [{
+        let revokeTechnique = { ...t0001 };
+        revokeTechnique["revoked"] = true;
+        revokeTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // new object added
+        let t0004 = {
+            ...techniqueSDO,
+            "id": "attack-pattern-6",
+            "modified": "2002-01-01T01:01:00.000Z",
+            "external_references": [{"external_id": "T0004"}],
+        }
+        // minor change
+        let minorTechnique = { ...t0000 };
+        minorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // major change
+        let majorTechnique = { ...t0003 };
+        majorTechnique["x_mitre_version"] = "2.0";
+        majorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // update deprecated object
+        let deprecatedTechnique = { ...t0002 };
+        deprecatedTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // update revoked object
+        let revokedSubtechnique = { ...t0000_001 };
+        revokedSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        // parse stix bundle into new domain
+        service.parseBundle(newDomain, [{
             "type": "bundle",
             "id": "bundle--1",
             "spec_version": "2.0",
             "objects": [
-                minorTechnique, revTechnique, depTechnique, newTechnique, depSubtechnique, revSubtechnique, asset, campaign, component, source, group, matrix, mitigation, note, group, malware, tool, tactic,
-                groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique, campaignAttr, mitigationMitigates, subtechniqueOf, subtechniqueOf2, detects, targets, revokedby,
+                t0004, minorTechnique, revokeTechnique, deprecatedTechnique,
+                deprecateSubtechnique,revokedSubtechnique, majorTechnique,
+                asset, campaign, dataComponent, dataSource, group, matrix,
+                mitigation, note, group, malware, tool, tactic,
+                groupUsesTechnique, softwareUsesTechnique, campaignUsesTechnique,
+                campaignAttributedToGroup, mitigationMitigates, subtechniqueOf_000,
+                subtechniqueOf_001, componentDetectsTechnique, techniqueTargetsAsset,
+                techniqueRevokedBy,
             ]
-        }]
-        newBundle[0].objects.push(newTechnique);
-        service.parseBundle(newDomain, newBundle);
-
+        }]);
+        // compare versions
         let result = service.compareVersions(oldDomain.id, newDomain.id);
+        console.log(result)
+        // validate comparison result
         expect(result).toBeInstanceOf(VersionChangelog);
         expect(result.newDomainVersionID).toEqual(newDomain.id);
         expect(result.oldDomainVersionID).toEqual(oldDomain.id);
+        // validate parsed changes
         expect(result.additions.length).toEqual(1);
+        expect(result.changes.length).toEqual(1);
         expect(result.deprecations.length).toEqual(1);
         expect(result.minor_changes.length).toEqual(1);
         expect(result.revocations.length).toEqual(1);
