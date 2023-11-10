@@ -727,8 +727,9 @@ export class TabsComponent implements AfterViewInit {
      * Reads the JSON file, adds the properties to a view model, and
      * loads the view model into a new layer
      */
-    private readJSONFile(file: File) {
-        let reader = new FileReader();
+    private async readJSONFile(file: File): Promise<void>{
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
         let viewModel: ViewModel;
         reader.onload = (e) => {
             let result = String(reader.result);
@@ -750,10 +751,11 @@ export class TabsComponent implements AfterViewInit {
             }
         };
         reader.readAsText(file);
+        });
     }
 
     private loadObjAsLayer(self, obj): void {
-        let viewModel: ViewModel;
+            let viewModel: ViewModel;
             viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
             let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
             self.versionMismatchWarning(layerVersionStr, this.glayerVersion).then((res) => {
@@ -777,7 +779,9 @@ export class TabsComponent implements AfterViewInit {
                     );
                 }
             });
-        }
+    }
+
+        
     /**
      * Check if uploaded layer version is out of date and display
      * a snackbar warning message (for minor mismatches) or a dialog warning

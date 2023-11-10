@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
-import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
@@ -14,10 +14,11 @@ import { LayerInformationComponent } from '../layer-information/layer-informatio
 import * as is from 'is_js';
 import * as globals from '../utils/globals';
 import { of } from 'rxjs';
+import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
+
 
 describe('TabsComponent', () => {
     let comp: TabsComponent;
-    const flushPromises = () => new Promise(setImmediate);
     let fixture: ComponentFixture<TabsComponent>;
     const jsonData = require('../../assets/layer-2.json');
     let bundles: any[] = [{
@@ -96,6 +97,7 @@ describe('TabsComponent', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule],
             declarations: [TabsComponent],
+            //teardown: {destroyAfterEach: false},
             providers: [
                 {
                     provide: MatSnackBar,
@@ -319,7 +321,7 @@ describe('TabsComponent', () => {
         spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         app.dataService.getDomain(app.opSettings.domain).dataLoaded = false;
         await app.layerByOperation();
-        expect(app.layerTabs.length).toEqual(3);  
+        expect(app.layerTabs.length).toEqual(3);       
     });
 
     it('should create new layer by operation based on user input else', async () => {
@@ -387,7 +389,7 @@ describe('TabsComponent', () => {
         expect(logSpy).toHaveBeenCalled();
     })));
 
-    it('should layer', (fakeAsync (async () => {
+    it('should layer', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -411,14 +413,103 @@ describe('TabsComponent', () => {
         const logSpy = spyOn(mockedDocElement, 'click');
         app.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
+        //temp_file.versions.layer = '3.2';
         let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
+
         let file = new File([blob], "layer-2.json");
         spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve());
-        spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve(null));
-        let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
-        await app.readJSONFile(file);
+        //spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
+        //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
+        // await app.readJSONFile(file).subscribe({
+        //     next: async (res) => {
+        //         expect(app.layerTabs.length).toEqual(1);
+        //     }
+        // });
+        // const openDialogSpy = spyOn(app.dialog, 'open');
+        //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.readJSONFile(file).then(() => {
+            //expect(openDialogSpy).toHaveBeenCalled();
+            expect(app.layerTabs.length).toEqual(1)
+        });
+        // expect(await app.readJSONFile(file)).toBeDefined();
+
+        // (async function(){ 
+        //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
+        //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
+        //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
+        //         await expect(app.layerTabs.length).toEqual(1);
+
+        // })();
+        // await expect(app.layerTabs.length).toEqual(1);
     })));
+
+    // it('should layer 3.4', (waitForAsync ( () => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     app.versionUpgradeDialog()
+    // })));
+
+    // it('should layer 3.4', (waitForAsync ( () => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     let versions = [
+    //         {
+    //             "name": "ATT&CK v13",
+    //             "version": "13",
+    //             "domains": [
+    //                 {
+    //                     "name": "Enterprise",
+    //                     "identifier": "enterprise-attack",
+    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+    //                 }
+    //             ]
+    //         }]
+    //     app.dataService.setUpURLs(versions);
+    //     var mockedDocElement = document.createElement('input');
+    //     mockedDocElement.id = 'uploader';
+    //     mockedDocElement.value = 'test1';
+    //     mockedDocElement.type = "text";
+    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+    //     const logSpy = spyOn(mockedDocElement, 'click');
+    //     app.openUploadPrompt();
+    //     expect(logSpy).toHaveBeenCalled();
+    //     temp_file.versions.layer = '3.4';
+    //     let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
+    //     let file = new File([blob], "layer-2.json");
+    //     spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve(true));
+    //     spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(true));
+    //     const openDialogSpy = spyOn(app.dialog, 'open');
+    //     //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
+    //     // await app.readJSONFile(file).subscribe({
+    //     //     next: async (res) => {
+    //     //         expect(app.layerTabs.length).toEqual(1);
+    //     //     }
+    //     // });
+    //     //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+    //     app.readJSONFile(file).then(() => {
+    //         expect(openDialogSpy).to(VersionUpgradeComponent, {
+    //             data: {
+    //                 layerName: app.viewModel.name,
+    //                 vmVersion: app.viewModel.version,
+    //                 currVersion: app.dataService.getCurrentVersion().number,
+    //             },
+    //             disableClose: true,
+    //             width: '25%',
+    //             panelClass: app.userTheme,
+    //         });
+    //         expect(app.layerTabs.length).toEqual(1)
+    //     });
+    //     // expect(await app.readJSONFile(file)).toBeDefined();
+
+    //     // (async function(){ 
+    //     //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
+    //     //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
+    //     //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
+    //     //         await expect(app.layerTabs.length).toEqual(1);
+
+    //     // })();
+    //     // await expect(app.layerTabs.length).toEqual(1);
+    // })));
 
     // it('should load layer', (fakeAsync (() => {
     //     let fixture = TestBed.createComponent(TabsComponent);
