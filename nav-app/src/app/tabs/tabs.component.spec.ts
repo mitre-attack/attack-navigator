@@ -15,7 +15,19 @@ import * as is from 'is_js';
 import * as globals from '../utils/globals';
 import { of } from 'rxjs';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+class MatSnackBarStub{
+    open(){
+      return {
+        onAction: () => of({})
+      };
+    }
+  
+  }
+
+//   const mockSnackbarMock = jasmine.createSpyObj(['open']);
+//   mockSnackbarMock.open
 
 describe('TabsComponent', () => {
     let comp: TabsComponent;
@@ -62,6 +74,71 @@ describe('TabsComponent', () => {
             "expandedSubtechniques": "none"
         },
         "hideDisabled": false,
+        "techniques": [
+            {
+                "techniqueID": "T0889",
+                "tactic": "persistence",
+                "color": "#e60d0d",
+                "comment": "",
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            }
+        ],
+        "gradient": {
+            "colors": [
+                "#ff6666ff",
+                "#ffe766ff",
+                "#8ec843ff"
+            ],
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "legendItems": [],
+        "metadata": [],
+        "links": [],
+        "showTacticRowBackground": false,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": true,
+        "selectSubtechniquesWithParent": false,
+        "selectVisibleTechniques": false
+    }
+
+    let temp_file2 = {
+        "name": "layer",
+        "versions": {
+            "attack": "13",
+            "navigator": "4.9.0",
+            "layer": "4.5"
+        },
+        "domain": "enterprise-attack",
+        "description": "",
+        "filters": {
+            "platforms": [
+                "None",
+                "Windows",
+                "Human-Machine Interface",
+                "Control Server",
+                "Data Historian",
+                "Field Controller/RTU/PLC/IED",
+                "Input/Output Server",
+                "Safety Instrumented System/Protection Relay",
+                "Engineering Workstation"
+            ]
+        },
+        "sorting": 0,
+        "layout": {
+            "layout": "side",
+            "aggregateFunction": "average",
+            "showID": false,
+            "showName": true,
+            "showAggregateScores": false,
+            "countUnscored": false,
+            "expandedSubtechniques": "none"
+        },
+        "hideDisabled": false,
+        "customDataURL": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
         "techniques": [
             {
                 "techniqueID": "T0889",
@@ -417,7 +494,6 @@ describe('TabsComponent', () => {
         let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
 
         let file = new File([blob], "layer-2.json");
-        spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve());
         //spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
         //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
         // await app.readJSONFile(file).subscribe({
@@ -425,10 +501,8 @@ describe('TabsComponent', () => {
         //         expect(app.layerTabs.length).toEqual(1);
         //     }
         // });
-        // const openDialogSpy = spyOn(app.dialog, 'open');
         //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         app.readJSONFile(file).then(() => {
-            //expect(openDialogSpy).toHaveBeenCalled();
             expect(app.layerTabs.length).toEqual(1)
         });
         // expect(await app.readJSONFile(file)).toBeDefined();
@@ -532,4 +606,146 @@ describe('TabsComponent', () => {
     //     flush();
     //     app.loadLayerFromFile();
     // })));
+    it('should display warning dialog for major version mismatches', (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        const jj = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
+        app.versionMismatchWarning("3.4", "4.4");
+        expect(jj).toHaveBeenCalled();
+    }));
+
+    // it('should display warning dialog version upgrade', (() => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     let viewModel: ViewModel;
+    //     let versions = [
+    //         {
+    //             "name": "ATT&CK v13",
+    //             "version": "13",
+    //             "domains": [
+    //                 {
+    //                     "name": "Enterprise",
+    //                     "identifier": "enterprise-attack",
+    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+    //                 }
+    //             ]
+    //         }]
+    //     app.dataService.setUpURLs(versions);
+    //     expect(app.latestDomains.length).toEqual(1);
+    //     app.newLayer("enterprise-attack-13");
+    //     app.newLayer("enterprise-attack-13");
+    //     let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+    //     vm1.version = '13.1';
+    // //     const ll = spyOn(app.dialog, 'open').and.returnValue({
+    // //     afterClosed: () => of(true)
+    // // } as MatDialogRef<typeof app>);
+    //     const jj = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
+    //     app.versionUpgradeDialog(vm1);
+    //     expect(jj).toHaveBeenCalled();
+    // }));
+
+    // it('should display warning snackbar for minor version mismatches', (() => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     // //const jj = spyOn(app.snackBar,"open").and.returnValue({onAction: () => of(true)});
+    //     // let snackMessage = `Uploaded layer version (4.2) is out of date. Please update to v4.5 for optimal compatibility.`;
+    //     app.versionMismatchWarning("4.2", "4.5");
+    //     // expect(mockSnackbarMock.open).toHaveBeenCalledWith(snackMessage, 'CHANGELOG', {
+    //     //     duration: 6500,
+    //     // });
+    //     // const mockSnackbarMockAction = jasmine.createSpyObj(['onAction']);
+    //     // expect(app.snackBa).toHaveBeenCalled();
+    //     const jj = spyOn(app.snackBar, 'open').and.returnValue(true);
+    //     //expect(app.snackBar.open).toHaveBeenCalled();        
+    //     expect(jj).toHaveBeenCalled();
+    // }));
+
+    it('should layer', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        var mockedDocElement = document.createElement('input');
+        mockedDocElement.id = 'uploader';
+        mockedDocElement.value = 'test1';
+        mockedDocElement.type = "text";
+        document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+        const logSpy = spyOn(mockedDocElement, 'click');
+        app.openUploadPrompt();
+        expect(logSpy).toHaveBeenCalled();
+        //temp_file.versions.layer = '3.2';
+        let blob = new Blob([JSON.stringify(temp_file2)], { type: 'text/json' });
+
+        let file = new File([blob], "layer-2.json");
+        //spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
+        //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
+        // await app.readJSONFile(file).subscribe({
+        //     next: async (res) => {
+        //         expect(app.layerTabs.length).toEqual(1);
+        //     }
+        // });
+        //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.readJSONFile(file).then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        });
+        // expect(await app.readJSONFile(file)).toBeDefined();
+
+        // (async function(){ 
+        //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
+        //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
+        //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
+        //         await expect(app.layerTabs.length).toEqual(1);
+
+        // })();
+        // await expect(app.layerTabs.length).toEqual(1);
+    })));
+
+    it('should get unique layer names', () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let viewModel: ViewModel;
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        expect(app.latestDomains.length).toEqual(1);
+        app.newLayer("enterprise-attack-13");
+        app.newLayer("enterprise-attack-13");
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let vm1_name = app.getUniqueLayerName("layer");
+        app.openTab(vm1_name, vm1, true, true, true, true);
+        //let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        // let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        // let vm2_name = app.getUniqueLayerName("layer")
+        // let vm2 = app.viewModelsService.newViewModel(vm2_name,"enterprise-attack-13");
+        // vm1.sidebarContentType = "search";
+        // app.openTab('new layer 1', vm1, true, true, true, true);
+        // app.openTab('new tab', viewModel, true, true, true, true);
+        // app.openTab('new tab', viewModel, true, true, true, true);
+        // app.openTab('new layer 1', viewModel, true, true, false, true);
+        // app.closeTab(app.layerTabs[0]);
+        // app.closeTab(app.layerTabs[0]);
+        expect(app.layerTabs.length).toEqual(3);
+    });
+
 });
