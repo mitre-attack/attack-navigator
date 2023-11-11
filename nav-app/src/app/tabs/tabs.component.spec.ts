@@ -3,15 +3,17 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MarkdownService } from 'ngx-markdown';
+import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
 import { ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+
 import * as globals from '../utils/globals';
 import { of } from 'rxjs';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
@@ -26,13 +28,14 @@ class MatSnackBarStub{
   
   }
 
-//   const mockSnackbarMock = jasmine.createSpyObj(['open']);
-//   mockSnackbarMock.open
+  const mockSnackbarMock = jasmine.createSpyObj(['open']);
+  mockSnackbarMock.open
 
 describe('TabsComponent', () => {
     let comp: TabsComponent;
     let fixture: ComponentFixture<TabsComponent>;
     const jsonData = require('../../assets/layer-2.json');
+    let snackBar: MatSnackBar;
     let bundles: any[] = [{
         "type": "bundle",
         "id": "bundle--0",
@@ -172,13 +175,17 @@ describe('TabsComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
+            imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, MarkdownModule.forRoot({ loader: HttpClient })],
             declarations: [TabsComponent],
             //teardown: {destroyAfterEach: false},
             providers: [
                 {
                     provide: MatSnackBar,
-                    useValue: {},
+                    useValue: { open(){
+                        return {
+                          onAction: () => of({})
+                        };
+                      } } ,
                 },
                 {
                     provide: MatDialogRef,
@@ -188,10 +195,23 @@ describe('TabsComponent', () => {
                     provide: MAT_DIALOG_DATA,
                     useValue: {},
                 },
+                { 
+                    provide: MAT_SNACK_BAR_DATA, 
+                    useValue: {} 
+                }, 
+                { 
+                    provide: MatSnackBarRef, 
+                    useValue: { open(){
+                        return {
+                          onAction: () => of({})
+                        };
+                      } } , 
+                },
                 DataService,
                 MarkdownService
             ],
         }).compileComponents();
+        snackBar = TestBed.inject(MatSnackBar);
     }));
 
     beforeEach(waitForAsync(() => {
@@ -644,23 +664,15 @@ describe('TabsComponent', () => {
     //     expect(jj).toHaveBeenCalled();
     // }));
 
-    // it('should display warning snackbar for minor version mismatches', (() => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     // //const jj = spyOn(app.snackBar,"open").and.returnValue({onAction: () => of(true)});
-    //     // let snackMessage = `Uploaded layer version (4.2) is out of date. Please update to v4.5 for optimal compatibility.`;
-    //     app.versionMismatchWarning("4.2", "4.5");
-    //     // expect(mockSnackbarMock.open).toHaveBeenCalledWith(snackMessage, 'CHANGELOG', {
-    //     //     duration: 6500,
-    //     // });
-    //     // const mockSnackbarMockAction = jasmine.createSpyObj(['onAction']);
-    //     // expect(app.snackBa).toHaveBeenCalled();
-    //     const jj = spyOn(app.snackBar, 'open').and.returnValue(true);
-    //     //expect(app.snackBar.open).toHaveBeenCalled();        
-    //     expect(jj).toHaveBeenCalled();
-    // }));
+    it('should display warning snackbar for minor version mismatches', (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        spyOn(snackBar, 'open').and.callThrough();
+        app.versionMismatchWarning("4.2", "4.5");        
+        expect(snackBar.open).toHaveBeenCalled();
+    }));
 
-    it('should layer', (waitForAsync ( () => {
+    it('should open layer with same version', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -734,18 +746,6 @@ describe('TabsComponent', () => {
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let vm1_name = app.getUniqueLayerName("layer");
         app.openTab(vm1_name, vm1, true, true, true, true);
-        //let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
-        // let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
-        // let vm2_name = app.getUniqueLayerName("layer")
-        // let vm2 = app.viewModelsService.newViewModel(vm2_name,"enterprise-attack-13");
-        // vm1.sidebarContentType = "search";
-        // app.openTab('new layer 1', vm1, true, true, true, true);
-        // app.openTab('new tab', viewModel, true, true, true, true);
-        // app.openTab('new tab', viewModel, true, true, true, true);
-        // app.openTab('new layer 1', viewModel, true, true, false, true);
-        // app.closeTab(app.layerTabs[0]);
-        // app.closeTab(app.layerTabs[0]);
         expect(app.layerTabs.length).toEqual(3);
     });
-
 });
