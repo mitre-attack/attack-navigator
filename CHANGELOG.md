@@ -8,6 +8,12 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
+# 4.9.1 - 14 November 2023
+
+Adds support for ATT&CK v14.1.
+
+## Fixes
+- Fixed an issue with the Dockerfile which was preventing the docker image from building. See issue [#598](https://github.com/mitre-attack/attack-navigator/pull/598).
 
 # 4.9.0 - 31 October 2023
 
