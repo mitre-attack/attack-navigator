@@ -42,6 +42,7 @@ export class TabsComponent implements AfterViewInit {
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
+    public subscription = new Subscription();
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
     public loadData: any = {
         url: undefined,
@@ -607,7 +608,7 @@ export class TabsComponent implements AfterViewInit {
                     width: '25%',
                     panelClass: this.userTheme,
                 });
-                let subscription = dialog.afterClosed().subscribe({
+                this.subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
                             reject(
@@ -621,7 +622,7 @@ export class TabsComponent implements AfterViewInit {
                         resolve(null);
                     },
                     complete: () => {
-                        if (subscription) subscription.unsubscribe();
+                        if (this.subscription) this.subscription.unsubscribe();
                     }, //prevent memory leaks
                 });
             } else resolve(null); // layer is already current version

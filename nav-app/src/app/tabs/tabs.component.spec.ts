@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
 import { ViewModel } from '../classes';
@@ -12,29 +11,16 @@ import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/materi
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
-import * as globals from '../utils/globals';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-class MatSnackBarStub{
-    open(){
-      return {
-        onAction: () => of({})
-      };
-    }
-  
-  }
-
-  const mockSnackbarMock = jasmine.createSpyObj(['open']);
-  mockSnackbarMock.open
+const mockSnackbarMock = jasmine.createSpyObj(['open']);
+mockSnackbarMock.open
 
 describe('TabsComponent', () => {
     let comp: TabsComponent;
     let fixture: ComponentFixture<TabsComponent>;
-    const jsonData = require('../../assets/layer-2.json');
     let snackBar: MatSnackBar;
     let bundles: any[] = [{
         "type": "bundle",
@@ -44,7 +30,7 @@ describe('TabsComponent', () => {
         ]
     }];
 
-    let temp_file = {
+    let layer_file1 = {
         "name": "layer",
         "versions": {
             "attack": "13",
@@ -108,7 +94,7 @@ describe('TabsComponent', () => {
         "selectVisibleTechniques": false
     }
 
-    let temp_file2 = {
+    let layer_file2 = {
         "name": "layer",
         "versions": {
             "attack": "13",
@@ -308,7 +294,7 @@ describe('TabsComponent', () => {
             {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
             {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
             {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
+        ]}
         app.configService.setFeature_object(feature_object)
         expect(app.hasFeature("manual_color")).toBeTrue();
     });
@@ -421,7 +407,7 @@ describe('TabsComponent', () => {
         expect(app.layerTabs.length).toEqual(3);       
     });
 
-    it('should create new layer by operation based on user input else', async () => {
+    it('should create new layer by operation based on user input when data is loaded', async () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         app.opSettings.scoreExpression = "a+2";
@@ -443,7 +429,7 @@ describe('TabsComponent', () => {
                 ]
             }]
         app.dataService.setUpURLs(versions); // set up data
-        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
         app.opSettings.domain = "enterprise-attack-13";
         spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         await app.layerByOperation();
@@ -486,7 +472,7 @@ describe('TabsComponent', () => {
         expect(logSpy).toHaveBeenCalled();
     })));
 
-    it('should layer', (waitForAsync ( () => {
+    it('should read and open json file', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -510,159 +496,20 @@ describe('TabsComponent', () => {
         const logSpy = spyOn(mockedDocElement, 'click');
         app.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
-        //temp_file.versions.layer = '3.2';
-        let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
-
+        let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
-        //spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
-        //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
-        // await app.readJSONFile(file).subscribe({
-        //     next: async (res) => {
-        //         expect(app.layerTabs.length).toEqual(1);
-        //     }
-        // });
-        //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         app.readJSONFile(file).then(() => {
             expect(app.layerTabs.length).toEqual(1)
         });
-        // expect(await app.readJSONFile(file)).toBeDefined();
-
-        // (async function(){ 
-        //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
-        //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
-        //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
-        //         await expect(app.layerTabs.length).toEqual(1);
-
-        // })();
-        // await expect(app.layerTabs.length).toEqual(1);
     })));
 
-    // it('should layer 3.4', (waitForAsync ( () => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     app.versionUpgradeDialog()
-    // })));
-
-    // it('should layer 3.4', (waitForAsync ( () => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     let versions = [
-    //         {
-    //             "name": "ATT&CK v13",
-    //             "version": "13",
-    //             "domains": [
-    //                 {
-    //                     "name": "Enterprise",
-    //                     "identifier": "enterprise-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-    //                 }
-    //             ]
-    //         }]
-    //     app.dataService.setUpURLs(versions);
-    //     var mockedDocElement = document.createElement('input');
-    //     mockedDocElement.id = 'uploader';
-    //     mockedDocElement.value = 'test1';
-    //     mockedDocElement.type = "text";
-    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
-    //     const logSpy = spyOn(mockedDocElement, 'click');
-    //     app.openUploadPrompt();
-    //     expect(logSpy).toHaveBeenCalled();
-    //     temp_file.versions.layer = '3.4';
-    //     let blob = new Blob([JSON.stringify(temp_file)], { type: 'text/json' });
-    //     let file = new File([blob], "layer-2.json");
-    //     spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve(true));
-    //     spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(true));
-    //     const openDialogSpy = spyOn(app.dialog, 'open');
-    //     //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
-    //     // await app.readJSONFile(file).subscribe({
-    //     //     next: async (res) => {
-    //     //         expect(app.layerTabs.length).toEqual(1);
-    //     //     }
-    //     // });
-    //     //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-    //     app.readJSONFile(file).then(() => {
-    //         expect(openDialogSpy).to(VersionUpgradeComponent, {
-    //             data: {
-    //                 layerName: app.viewModel.name,
-    //                 vmVersion: app.viewModel.version,
-    //                 currVersion: app.dataService.getCurrentVersion().number,
-    //             },
-    //             disableClose: true,
-    //             width: '25%',
-    //             panelClass: app.userTheme,
-    //         });
-    //         expect(app.layerTabs.length).toEqual(1)
-    //     });
-    //     // expect(await app.readJSONFile(file)).toBeDefined();
-
-    //     // (async function(){ 
-    //     //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
-    //     //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
-    //     //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
-    //     //         await expect(app.layerTabs.length).toEqual(1);
-
-    //     // })();
-    //     // await expect(app.layerTabs.length).toEqual(1);
-    // })));
-
-    // it('should load layer', (fakeAsync (() => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     const dt = () => new DataTransfer();
-    //     var mockedDocElement = document.createElement('input');
-    //     mockedDocElement.id = 'uploader';
-    //     mockedDocElement.type = 'file';
-    //     let gg = new File([jsonData], "layer-2.json");
-    //     // let dt1 = dt();
-    //     // dt1.items.add(file);
-    //     // mockedDocElement.files = dt.files;
-    //     // //mockedDocElement.files.item = jsonData;
-    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
-    //     // document.getElementById.files = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
-    //     const dataTransfer = new DataTransfer()
-    //     dataTransfer.items.add();
-    //     mockedDocElement.files = dataTransfer.files;
-    //     app.openUploadPrompt();
-    //     flush();
-    //     app.loadLayerFromFile();
-    // })));
     it('should display warning dialog for major version mismatches', (() => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        const jj = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
+        const dialogSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
         app.versionMismatchWarning("3.4", "4.4");
-        expect(jj).toHaveBeenCalled();
+        expect(dialogSpy).toHaveBeenCalled();
     }));
-
-    // it('should display warning dialog version upgrade', (() => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     let viewModel: ViewModel;
-    //     let versions = [
-    //         {
-    //             "name": "ATT&CK v13",
-    //             "version": "13",
-    //             "domains": [
-    //                 {
-    //                     "name": "Enterprise",
-    //                     "identifier": "enterprise-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-    //                 }
-    //             ]
-    //         }]
-    //     app.dataService.setUpURLs(versions);
-    //     expect(app.latestDomains.length).toEqual(1);
-    //     app.newLayer("enterprise-attack-13");
-    //     app.newLayer("enterprise-attack-13");
-    //     let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-    //     vm1.version = '13.1';
-    // //     const ll = spyOn(app.dialog, 'open').and.returnValue({
-    // //     afterClosed: () => of(true)
-    // // } as MatDialogRef<typeof app>);
-    //     const jj = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
-    //     app.versionUpgradeDialog(vm1);
-    //     expect(jj).toHaveBeenCalled();
-    // }));
 
     it('should display warning snackbar for minor version mismatches', (() => {
         let fixture = TestBed.createComponent(TabsComponent);
@@ -672,7 +519,7 @@ describe('TabsComponent', () => {
         expect(snackBar.open).toHaveBeenCalled();
     }));
 
-    it('should open layer with same version', (waitForAsync ( () => {
+    it('should read and open json file with custom data url', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -696,36 +543,15 @@ describe('TabsComponent', () => {
         const logSpy = spyOn(mockedDocElement, 'click');
         app.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
-        //temp_file.versions.layer = '3.2';
-        let blob = new Blob([JSON.stringify(temp_file2)], { type: 'text/json' });
-
+        let blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
-        //spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve());
-        //let functionSpy = spyOn(app.dataService, 'getDomainData').and.returnValue(of(bundles));
-        // await app.readJSONFile(file).subscribe({
-        //     next: async (res) => {
-        //         expect(app.layerTabs.length).toEqual(1);
-        //     }
-        // });
-        //spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         app.readJSONFile(file).then(() => {
             expect(app.layerTabs.length).toEqual(1)
         });
-        // expect(await app.readJSONFile(file)).toBeDefined();
-
-        // (async function(){ 
-        //         //await expectAsync(app.dataService.loadDomainData(domain.id, false)).toBeResolved();
-        //          spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve());
-        //          expectAsync(app.upgradeLayer(app.viewModel, null, true)).toBeResolved();
-        //         await expect(app.layerTabs.length).toEqual(1);
-
-        // })();
-        // await expect(app.layerTabs.length).toEqual(1);
     })));
 
     it('should get unique layer names', () => {
         let fixture = TestBed.createComponent(TabsComponent);
-        let viewModel: ViewModel;
         let app = fixture.debugElement.componentInstance;
         let versions = [
             {
@@ -748,4 +574,284 @@ describe('TabsComponent', () => {
         app.openTab(vm1_name, vm1, true, true, true, true);
         expect(app.layerTabs.length).toEqual(3);
     });
+
+    it('should get named fragment values', () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        app.customizedConfig = [
+            {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+                {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
+            ]},
+            {"name": "sticky_toolbar", "enabled": false}
+        ]
+        expect(app.getNamedFragmentValue("sticky_toolbar")).toEqual([]);
+        expect(app.getNamedFragmentValue("sticky_toolbar", "https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false")).toEqual(['false']);
+    });
+
+    it('should upgrade layer', (waitForAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve({oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13'}));
+        app.upgradeLayer(vm1, layer, false, false).then(() => {
+            expect(versionUpgradeSpy).toHaveBeenCalled();
+        });
+        fixture.whenStable().then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        })
+    })));
+
+    it('should not upgrade layer', (waitForAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.upgradeLayer(vm1, layer, false, false).then(() => {
+            expect(versionUpgradeSpy).toHaveBeenCalled();
+        });
+        fixture.whenStable().then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        })
+    })));
+
+    it('should not upgrade layer with default layer enabled', (waitForAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.upgradeLayer(vm1, layer, false, true);
+        fixture.whenStable().then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        })
+    })));
+
+    it('should not upgrade layer with default layer enabled and domain data loaded', (waitForAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        let bb = JSON.parse(JSON.stringify(layer_file1))
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.upgradeLayer(vm1, bb, false, true);
+        fixture.whenStable().then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        })
+    })));
+
+    it('should not upgrade layer with domain data loaded', (waitForAsync (() => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.upgradeLayer(vm1, layer, false, false).then(() => {
+            expect(versionUpgradeSpy).toHaveBeenCalled();
+        });
+        fixture.whenStable().then(() => {
+            expect(app.layerTabs.length).toEqual(1)
+        })
+    })));
+
+     it('should open version upgrade dialog with upgrade', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        vm1.version = '12';
+        const versionUpgradeSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:true})});
+        app.versionUpgradeDialog(vm1).then(() => {
+            expect(versionUpgradeSpy).toHaveBeenCalled();
+        });
+    })));
+
+    it('should open version upgrade dialog with no upgrade', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        vm1.version = '12';
+        const versionUpgradeSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:false})});
+        app.versionUpgradeDialog(vm1).then(() => {
+            expect(versionUpgradeSpy).toHaveBeenCalled();
+        });
+    })));
 });
