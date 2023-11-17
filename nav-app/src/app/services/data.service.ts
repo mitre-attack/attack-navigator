@@ -12,8 +12,9 @@ import { Version, VersionChangelog } from '../classes';
 })
 export class DataService {
     constructor(private http: HttpClient) {
+        let subscription;
         console.debug('initializing data service');
-        let subscription = this.getConfig().subscribe({
+        subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config['versions']);
             },
@@ -235,7 +236,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
+    public readonly latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
     private lowestSupportedVersion: Version;
     private enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
     private mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
@@ -246,7 +247,7 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(versions: []) {
+    setUpURLs(versions: any[]) {
         versions.forEach((version: any) => {
             let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
             this.versions.push(v);
@@ -329,9 +330,10 @@ export class DataService {
     loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
+            let subscription;
             if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
-                let subscription = this.getDomainData(domain, refresh).subscribe({
+                subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);
