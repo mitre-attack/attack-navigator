@@ -28,7 +28,7 @@ export class TooltipComponent extends CellPopover implements OnInit {
 
     constructor(
         private element: ElementRef,
-        private dataService: DataService,
+        public dataService: DataService,
         private viewModelsService: ViewModelsService
     ) {
         super(element);

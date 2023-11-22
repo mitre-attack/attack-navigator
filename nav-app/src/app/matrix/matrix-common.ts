@@ -11,7 +11,7 @@ export abstract class MatrixCommon {
     @Input() viewModel: ViewModel;
 
     constructor(
-        private configService: ConfigService,
+        public configService: ConfigService,
         private viewModelsService: ViewModelsService
     ) {
         this.configService = configService;

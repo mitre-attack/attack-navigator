@@ -26,6 +26,9 @@ describe('VersionUpgradeComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(VersionUpgradeComponent);
         component = fixture.componentInstance;
+        component.data.currVersion = '4.9';
+        component.data.vmVersion = '4.8';
+        component.data.layerName = 'test1';
         fixture.detectChanges();
     });
 
