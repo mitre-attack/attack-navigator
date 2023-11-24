@@ -9,10 +9,10 @@ import tinycolor from 'tinycolor2';
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
     @Input() viewModel: ViewModel;
-
+    
     constructor(
         public configService: ConfigService,
-        private viewModelsService: ViewModelsService
+        public viewModelsService: ViewModelsService
     ) {
         this.configService = configService;
     }
@@ -68,7 +68,7 @@ export abstract class MatrixCommon {
         } else {
             // replace selection
             if (this.viewModel.getSelectedTechniqueCount() > 1) {
-                if (this.viewModel.isTechniqueSelected) this.viewModel.clearSelectedTechniques();
+                if (this.viewModel.isTechniqueSelected(technique, tactic)) this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(technique, tactic);
             } else if (this.viewModel.isTechniqueSelected(technique, tactic)) {
                 //unselect currently selected

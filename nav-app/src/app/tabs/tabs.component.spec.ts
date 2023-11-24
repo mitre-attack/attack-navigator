@@ -69,9 +69,26 @@ describe('TabsComponent', () => {
                 "tactic": "persistence",
                 "color": "#e60d0d",
                 "comment": "",
+                "score": 3,
                 "enabled": true,
-                "metadata": [],
-                "links": [],
+                "metadata": [
+                    {
+                        "name":"test1",
+                        "value":"t1"
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
+                "links": [
+                    {
+                        "label":"test1",
+                        "url":"t1",
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
                 "showSubtechniques": false
             }
         ],
