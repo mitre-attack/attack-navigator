@@ -16,11 +16,8 @@ describe('ViewmodelsService', () => {
 		expect(service).toBeTruthy();
 	}));
 
-	it('selectionChanged should be defined', inject([ViewModelsService], (service: ViewModelsService) => {
-		expect(service.selectionChanged).toBeDefined();
-	}));
-
 	it('should create viewmodel by inheriting the score from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
+		service.selectionChanged();
 		let vm1 = service.newViewModel("layer","enterprise-attack-13");
 		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
 		let scoreVariables = new Map<string, ViewModel>();

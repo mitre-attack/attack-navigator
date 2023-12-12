@@ -13,14 +13,14 @@ export class ConfigService {
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
     public featureStructure: object[];
-
     public contextMenuItems: ContextMenuItem[] = [];
+    public subscription;
 
-    constructor(private dataService: DataService) {
+    constructor(public dataService: DataService) {
         console.debug('initializing config service');
         let self = this;
-        let subscription = dataService.getConfig().subscribe({
-            next: function (config: any) {
+        this.subscription = dataService.getConfig().subscribe({
+            next: (config) => {
                 //parse feature preferences from config json
                 config['features'].forEach(function (featureObject: any) {
                     self.setFeature_object(featureObject);
@@ -43,7 +43,7 @@ export class ConfigService {
                 }
             },
             complete: () => {
-                if (subscription) subscription.unsubscribe();
+                if (this.subscription) this.subscription.unsubscribe();
             }, //prevent memory leaks
         });
     }

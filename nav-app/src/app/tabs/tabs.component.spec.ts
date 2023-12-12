@@ -712,12 +712,12 @@ describe('TabsComponent', () => {
             }
         ]
         app.dataService.setUpURLs(versions);
-        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let layer = JSON.parse(JSON.stringify(layer_file1));
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         app.upgradeLayer(vm1, layer, false, true);
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+            expect(app.layerTabs.length).toEqual(1);
         })
     })));
 

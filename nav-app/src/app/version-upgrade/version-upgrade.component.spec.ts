@@ -13,7 +13,12 @@ describe('VersionUpgradeComponent', () => {
             providers: [
                 {
                     provide: MatDialogRef,
-                    useValue: {},
+                    useValue: {
+                        close(){
+                            return {
+                            };
+                          }
+                    },
                 },
                 {
                     provide: MAT_DIALOG_DATA,
@@ -34,5 +39,13 @@ describe('VersionUpgradeComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should upgrade version', () => {
+        const openDialogSpy = spyOn(component.dialogRef, 'close');
+        component.upgradeVersion(true);
+        expect(openDialogSpy).toHaveBeenCalledWith({
+            upgrade: true
+        })
     });
 });
