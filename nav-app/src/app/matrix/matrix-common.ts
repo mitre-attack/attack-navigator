@@ -100,6 +100,14 @@ export abstract class MatrixCommon {
         else this.viewModel.selectAllTechniquesInTactic(tactic);
     }
 
+    public getTacticBackground(): any {
+        if (this.viewModel.showTacticRowBackground)
+            return {background: this.viewModel.tacticRowBackground }
+        else {
+            return {background: 'white'}
+        }
+    }
+
     public get tacticRowStyle(): any {
         //change background of sticky tactic header if showTacticRowBackground is enabled
         if (this.viewModel.showTacticRowBackground) {
