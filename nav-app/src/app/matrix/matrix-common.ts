@@ -12,7 +12,7 @@ export abstract class MatrixCommon {
     
     constructor(
         public configService: ConfigService,
-        public viewModelsService: ViewModelsService
+        public viewModelsService: ViewModelsService,
     ) {
         this.configService = configService;
     }

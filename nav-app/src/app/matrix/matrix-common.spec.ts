@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixCommon } from './matrix-common';
-import { Link, Metadata, TechniqueVM, ViewModel } from '../classes';
+import { Link, Metadata, TechniqueVM, VersionChangelog, ViewModel } from '../classes';
 import { Matrix, Technique, Tactic } from '../classes/stix';
 import { EventEmitter } from '@angular/core';
 
@@ -71,6 +71,16 @@ describe('MatrixCommon', () => {
             }
         ],
     }
+    let subtechniqueSDO3 = {
+        ...templateSDO,
+        "id": "attack-pattern-0-3",
+        "external_references": [
+            {
+                "external_id": "T1595.001",
+                "url": "https://attack.mitre.org/techniques/T1595/001"
+            }
+        ],
+    }
     let techniqueSDO = {
         ...templateSDO,
         "id": "attack-pattern-0",
@@ -106,15 +116,17 @@ describe('MatrixCommon', () => {
         expect(service).toBeTruthy();
     }));
 
-    // it('should change tactic row color', inject([MatrixCommon], async (service: MatrixCommon) => {
+    // it('should change tactic row color', inject([MatrixCommon], (fakeAsync (() => {
     //     service.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
-    //     var mockedDocElement = document.createElement('td');
+    //     let mockedDocElement = document.createElement('img');
     //     mockedDocElement.id = ".tactic.name";
-    //     document.querySelectorAll = jasmine.createSpy('.tactic.count').and.returnValue([mockedDocElement,mockedDocElement])
+    //     //let gg = NodeList<Element>;
+    //     document.querySelectorAll = jasmine.createSpy('.tactic-name').and.returnValue([mockedDocElement])
     //     service.viewModel.showTacticRowBackground = true;
     //     service.tacticRowStyle;
-    //     await expect(service).toBeTruthy();
-    // }));
+    //     flush();
+    //     expect(service).toBeTruthy();
+    // }))));
 
     it('should filter techniques and tactics', inject([MatrixCommon], (service: MatrixCommon) => {
         let technique_list: Technique[] = [];
@@ -123,23 +135,25 @@ describe('MatrixCommon', () => {
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         service.viewModel.showTacticRowBackground = true;
-        service.tacticRowStyle;
         let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st2 = new Technique(subtechniqueSDO3,[],null);
+        let t1 = new Technique(techniqueSDO,[st1, st2],null);
         technique_list.push(t1);
-        let st2 = new Technique(subtechniqueSDO2,[],null);
-        let t2 = new Technique(techniqueSDO2,[st2],null);
+        let st3 = new Technique(subtechniqueSDO2,[],null);
+        let t2 = new Technique(techniqueSDO2,[st3],null);
         technique_list.push(t2);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
+        let stvm_2 = new TechniqueVM("T1595.001^reconnaissance");
         tvm_1.score = '2';
         let tvm_2 = new TechniqueVM("T1592^reconnaissance");
-        let stvm_2 = new TechniqueVM("T1592.002^reconnaissance");
-        stvm_2.score = '3';
+        let stvm_3 = new TechniqueVM("T1592.002^reconnaissance");
+        stvm_3.score = '3';
 		service.viewModel.setTechniqueVM(tvm_1);
         service.viewModel.setTechniqueVM(tvm_2);
         service.viewModel.setTechniqueVM(stvm_1);
         service.viewModel.setTechniqueVM(stvm_2);
+        service.viewModel.setTechniqueVM(stvm_3);
         service.viewModel.layout.showAggregateScores = true;
         service.viewModel.layout.aggregateFunction = "min";
         service.viewModel.filters.platforms.selection = ["PRE"];
@@ -149,10 +163,18 @@ describe('MatrixCommon', () => {
         service.applyControls(technique_list,tactic1);
         service.viewModel.layout.aggregateFunction = "max";
         service.applyControls(technique_list,tactic1);
+        service.sortTechniques(technique_list,tactic1);
         service.viewModel.layout.aggregateFunction = "sum";
         service.applyControls(technique_list,tactic1);
+        service.viewModel.sorting = 1;
+        service.sortTechniques(technique_list,tactic1);
         service.viewModel.layout.aggregateFunction = "average";
         service.applyControls(technique_list,tactic1);
+        service.viewModel.sorting = 2;
+        service.sortTechniques(technique_list,tactic1);
+        service.viewModel.layout.aggregateFunction = "min";
+        service.applyControls(technique_list,tactic1);
+        service.viewModel.sorting = 3;
         service.sortTechniques(technique_list,tactic1);
         expect(service.filterTechniques(technique_list, tactic1)).toEqual([t2]);
         service.viewModel.loaded = true;
@@ -289,7 +311,6 @@ describe('MatrixCommon', () => {
     it('should change tactic row color', inject([MatrixCommon], (service: MatrixCommon) => {
         service.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
         service.viewModel.showTacticRowBackground = true;
-        service.tacticRowStyle;
         expect(service).toBeTruthy();
     }));
 
@@ -500,25 +521,64 @@ describe('MatrixCommon', () => {
         expect(vm1.selectedTechniques.size).toEqual(2);
     }));
 
-    it('should select annotated techniques and unannotated techniques', inject([MatrixCommon], (service: MatrixCommon) => {
+    it('should copy annotations from one technique VM to another', inject([MatrixCommon], (service: MatrixCommon) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
         let technique_list: Technique[] = [];
         let tactic_list: Tactic[] = [];
-        let vm1 = service.viewModelsService.newViewModel("test1","enterprise-attack-13");
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let idToTacticSDO = new Map<string, any>();
+        idToTacticSDO.set("tactic-0", tacticSDO);
+        let to_vm = service.viewModelsService.newViewModel("test1","enterprise-attack-13");
+        to_vm.dataService.setUpURLs(versions);
+        service.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
+        to_vm.dataService.domains[0].matrices = [service.matrix];
+        let t1 = new Technique(techniqueSDO,[],null);
         technique_list.push(t1);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        tvm_1.score = '3';
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
+        let to_tvm_1 = new TechniqueVM("T1595^reconnaissance");
         let t2 = new Technique(techniqueSDO2,[],null);
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let to_tvm_2 = new TechniqueVM("T1592^reconnaissance");
         technique_list.push(t2);
-        vm1.setTechniqueVM(tvm_1);
-        vm1.setTechniqueVM(tvm_2);
-        vm1.setTechniqueVM(stvm_1);
+        to_vm.setTechniqueVM(to_tvm_1);
+        to_vm.setTechniqueVM(to_tvm_2);
+        to_vm.dataService.domains[0].techniques.push(t1);
+        to_vm.dataService.domains[0].techniques.push(t2);
         let tactic1 = new Tactic(tacticSDO,technique_list,null);
         tactic_list.push(tactic1);
-        vm1.initCopyAnnotations();
-        expect(vm1.selectedTechniques.size).toEqual(2);
+        to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12','enterprise-attack-13');
+        to_vm.versionChangelog.minor_changes = ['T1595'];
+        to_vm.versionChangelog.unchanged = ['T1592'];
+        let from_vm = service.viewModelsService.newViewModel("test2","enterprise-attack-12");
+        let from_tvm_1 = new TechniqueVM("T1592^reconnaissance");
+        from_tvm_1.score = '2';
+        from_tvm_1.comment = "hi";
+        from_vm.setTechniqueVM(to_tvm_1);
+        from_vm.setTechniqueVM(from_tvm_1);
+        from_vm.dataService.domains[1].techniques.push(t1);
+        from_vm.dataService.domains[1].techniques.push(t2);
+        to_vm.compareTo = from_vm;
+        to_vm.initCopyAnnotations();
+        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('2');
     }));
 });

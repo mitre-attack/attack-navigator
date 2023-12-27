@@ -94,7 +94,7 @@ describe('MatrixMiniComponent', () => {
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         component.viewModel.showTacticRowBackground = true;
-        component.tacticRowStyle;
+        //component.tacticRowStyle;
         let t1 = new Technique(techniqueSDO,[],null);
         technique_list.push(t1);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");

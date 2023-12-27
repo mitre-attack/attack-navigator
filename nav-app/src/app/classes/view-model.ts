@@ -120,7 +120,7 @@ export class ViewModel {
         name: string,
         uid: string,
         domainVersionID: string,
-        private dataService: DataService
+        public dataService: DataService
     ) {
         console.debug("initializing ViewModel '" + name + "'");
         this.domainVersionID = domainVersionID;
