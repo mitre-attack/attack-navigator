@@ -116,18 +116,6 @@ describe('MatrixCommon', () => {
         expect(service).toBeTruthy();
     }));
 
-    // it('should change tactic row color', inject([MatrixCommon], (fakeAsync (() => {
-    //     service.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
-    //     let mockedDocElement = document.createElement('img');
-    //     mockedDocElement.id = ".tactic.name";
-    //     //let gg = NodeList<Element>;
-    //     document.querySelectorAll = jasmine.createSpy('.tactic-name').and.returnValue([mockedDocElement])
-    //     service.viewModel.showTacticRowBackground = true;
-    //     service.tacticRowStyle;
-    //     flush();
-    //     expect(service).toBeTruthy();
-    // }))));
-
     it('should filter techniques and tactics', inject([MatrixCommon], (service: MatrixCommon) => {
         let technique_list: Technique[] = [];
         let tactic_list: Tactic[] = [];
