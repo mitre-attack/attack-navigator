@@ -116,6 +116,15 @@ describe('MatrixCommon', () => {
         expect(service).toBeTruthy();
     }));
 
+    it('should change tactic row color', inject([MatrixCommon], (service: MatrixCommon) => {
+        service.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
+        service.viewModel.showTacticRowBackground = true;
+        service.getTacticBackground();
+        service.viewModel.showTacticRowBackground = false;
+        service.getTacticBackground();
+        expect(service).toBeTruthy();
+    }));
+
     it('should filter techniques and tactics', inject([MatrixCommon], (service: MatrixCommon) => {
         let technique_list: Technique[] = [];
         let tactic_list: Tactic[] = [];
