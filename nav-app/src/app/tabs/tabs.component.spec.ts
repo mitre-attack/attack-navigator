@@ -4,7 +4,7 @@ import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
-import { TechniqueVM, ViewModel } from '../classes';
+import { Link, Metadata, TechniqueVM, ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -248,6 +248,24 @@ describe('TabsComponent', () => {
         "sorting": 0,
         "viewMode": 1,
         "hideDisabled": false,
+        "metadata": [
+            {
+                "name":"test1",
+                "value":"t1"
+            },
+            {
+                "divider":true
+            }
+        ],
+        "links": [
+            {
+                "label":"test1",
+                "url":"t1",
+            },
+            {
+                "divider":true
+            }
+        ],
         "customDataURL": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
         "techniques": [
             {
@@ -271,8 +289,6 @@ describe('TabsComponent', () => {
             "maxValue": 100
         },
         "legendItems": [],
-        "metadata": [],
-        "links": [],
         "showTacticRowBackground": false,
         "tacticRowBackground": "#dddddd",
         "selectTechniquesAcrossTactics": true,
@@ -1050,6 +1066,15 @@ describe('TabsComponent', () => {
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(stvm_1);
         app.dataService.domains[0].techniques.push(t1);
+        let m2 = new Metadata();
+        m2.name = "test1";
+        m2.value = "t1";
+        m2.divider = true;
+        vm1.metadata = [m2];
+        let l1 = new Link();
+        l1.label = "test1";
+        l1.url = "t1";
+        vm1.links = [l1];
         vm1.serialize();
         const versionUpgradeSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:false})});
         app.versionUpgradeDialog(vm1).then(() => {

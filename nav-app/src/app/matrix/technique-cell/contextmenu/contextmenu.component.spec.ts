@@ -194,6 +194,12 @@ describe('ContextmenuComponent', () => {
         contextMenu.addSelection();
         expect(contextMenu.viewModel.activeTvm).toBe(contextMenu.techniqueVM);
         expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectSubtechniquesWithParent = true;
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectTechniquesAcrossTactics = false;
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectSubtechniquesWithParent = false;
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
         expect(functionSpy).toHaveBeenCalled();
     }));
 
