@@ -4,6 +4,7 @@ import { MatrixCommon } from './matrix-common';
 import { Link, Metadata, TechniqueVM, VersionChangelog, ViewModel } from '../classes';
 import { Matrix, Technique, Tactic } from '../classes/stix';
 import { EventEmitter } from '@angular/core';
+import tinygradient from 'tinygradient';
 
 describe('MatrixCommon', () => {
     let service: MatrixCommon;
@@ -353,6 +354,12 @@ describe('MatrixCommon', () => {
         tactic_list.push(tactic1);
         vm1.removeGradientColor(0);
         vm1.addGradientColor();
+        let colorarray = ['#66b1ff', '#ff66f4', '#ff6666'];
+        expect(vm1.gradient.presetToTinyColor("bluered")).toEqual(tinygradient(colorarray).css('linear', 'to right'));
+        expect(vm1.gradient.getHexColor("7")).toEqual("#efe361");
+        expect(vm1.gradient.getHexColor("200")).toEqual("#8ec843");
+        vm1.gradient.gradient = false;
+        vm1.gradient.getHexColor("200");
         expect(vm1.gradient.colors.length).toEqual(3);
         vm1.addLegendItem();
         vm1.deleteLegendItem(0);
@@ -548,6 +555,7 @@ describe('MatrixCommon', () => {
         let tactic1 = new Tactic(tacticSDO,technique_list,null);
         tactic_list.push(tactic1);
         to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12','enterprise-attack-13');
+        expect(to_vm.versionChangelog.length()).toEqual(0);
         to_vm.versionChangelog.minor_changes = ['T1595'];
         to_vm.versionChangelog.unchanged = ['T1592'];
         let from_vm = service.viewModelsService.newViewModel("test2","enterprise-attack-12");

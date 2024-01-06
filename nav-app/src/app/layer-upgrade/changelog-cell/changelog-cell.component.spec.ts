@@ -80,4 +80,28 @@ describe('ChangelogCellComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should highlight and unhighlight technique', () => {
+        component.highlight();
+        expect(component.viewModel.highlightedTechnique).toEqual(component.technique);
+        component.unhighlight();
+        expect(component.viewModel.highlightedTechnique).toEqual(null);
+    });
+
+    it('should select and unselect technique', () => {
+        component.onClick();
+        let selected_techniques = new Set();
+        selected_techniques.add('T1595^reconnaissance');
+        expect(component.viewModel.selectedTechniques).toEqual(selected_techniques);
+        component.onClick();
+        selected_techniques = new Set();
+        expect(component.viewModel.selectedTechniques).toEqual(selected_techniques);
+    });
+
+    it('should get css for the technique', () => {
+        component.isCurrentVersion = false;
+        component.isDraggable = false;
+        component.section = "deprecations";
+        expect(component.getClass()).toEqual('link noselect cell showName side nopointer setwidth');
+    });
 });
