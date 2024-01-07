@@ -4,7 +4,7 @@ import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
-import { Link, Metadata, TechniqueVM, ViewModel } from '../classes';
+import { Filter, Link, Metadata, TechniqueVM, ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -108,6 +108,7 @@ describe('TabsComponent', () => {
         "filters": {
             "platforms": [
                 "None",
+                "mac",
                 "Windows",
                 "Human-Machine Interface",
                 "Control Server",
@@ -644,6 +645,15 @@ describe('TabsComponent', () => {
         const logSpy = spyOn(mockedDocElement, 'click');
         app.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
+        let filter = new Filter();
+        filter.platforms.options = ['Linux', 'macOS', 'Windows'];
+        filter.platforms.selection = ['Linux'];
+        expect(filter.inFilter("platforms","Linux")).toEqual(true);
+        filter.toggleInFilter("platforms","Linux");
+        expect(filter.platforms.selection).toEqual([]);
+        filter.toggleInFilter("platforms","macOS");
+        expect(filter.platforms.selection).toEqual(["macOS"]);
+        filter.deserialize(JSON.stringify(layer_file1.filters.platforms));
         let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
         app.readJSONFile(file).then(() => {

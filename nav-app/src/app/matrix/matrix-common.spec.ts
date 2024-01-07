@@ -343,6 +343,9 @@ describe('MatrixCommon', () => {
         l1.label = "test1";
         l1.url = "t1";
         tvm_1.links.push(l1);
+        let l2 = new Link();
+        l2.divider = true;
+        tvm_1.links.push(l2);
         tvm_1.serialize();
         vm1.layout.layout = "mini";
         vm1.layout.layout;

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TooltipComponent } from './tooltip.component';
 import { TechniqueVM, ViewModel } from '../../../classes';
-import { Tactic, Technique } from '../../../classes/stix';
+import { Note, Tactic, Technique } from '../../../classes/stix';
 
 describe('TooltipComponent', () => {
     let component: TooltipComponent;
@@ -15,6 +15,7 @@ describe('TooltipComponent', () => {
         "description": "Description",
         "created": "2001-01-01T01:01:00.000Z",
         "modified": "2001-01-01T01:01:00.000Z",
+        "object_refs": "attack-pattern-0",
         "x_mitre_version": "1.0",
     }
     let tacticSDO = {
@@ -76,6 +77,7 @@ describe('TooltipComponent', () => {
             }
         ]
         component.dataService.setUpURLs(versions);
+        component.dataService.domains[0].notes = [new Note(stixSDO)];
         component.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
         component.viewModel.domainVersionID = "enterprise-attack-13";
         component.technique = new Technique(techniqueSDO,[],null);
@@ -89,5 +91,10 @@ describe('TooltipComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should create', () => {
+        component.unpin();
+        expect(component.viewModelsService.pinnedCell).toEqual('');
     });
 });
