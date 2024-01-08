@@ -233,12 +233,12 @@ describe('DataService', () => {
         expect(result$).toBeTruthy();
     }));
 
-    // it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
-    //     service.setUpURLs(taxiiVersions); // set up data
-    //     let domain = service.domains[0];
-    //     let result$ = service.getDomainData(domain);
-    //     expect(result$).toBeTruthy();
-    // }));
+    it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
+        service.setUpURLs(configVersions); // set up data
+        let domain = service.domains[0];
+        let result$ = service.getDomainData(domain);
+        expect(result$).toBeTruthy();
+    }));
 
     it('should fetch domain data via Workbench', inject([DataService], (service: DataService) => {
         service.setUpURLs(workbenchVersions); // set up data
@@ -295,6 +295,13 @@ describe('DataService', () => {
         }
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(configVersions);
+        service.domains[0].relationships['group_uses'].set('intrusion-set-0',['attack-pattern-0']);
+        service.domains[0].relationships['software_uses'].set('malware-0',['attack-pattern-0']);
+        service.domains[0].relationships['campaign_uses'].set('campaign-0',['attack-pattern-0']);
+        service.domains[0].relationships['mitigates'].set('mitigation-0',['attack-pattern-0']);
+        service.domains[0].relationships['component_rel'].set('component-0',['attack-pattern-0']);
+        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0',['attack-pattern-0']);
+        service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
         let domain = service.domains[0];
         service.parseBundle(domain, bundles);
         expect(domain.platforms).toEqual(technique.x_mitre_platforms);
