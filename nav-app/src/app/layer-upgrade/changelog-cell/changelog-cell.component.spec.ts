@@ -17,6 +17,7 @@ describe('ChangelogCellComponent', () => {
         "modified": "2001-01-01T01:01:00.000Z",
         "object_refs": "attack-pattern-0",
         "x_mitre_version": "1.0",
+        "abstract": "test"
     }
     let tacticSDO = {
         "id": "tactic-0",

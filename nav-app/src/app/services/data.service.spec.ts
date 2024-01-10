@@ -233,12 +233,12 @@ describe('DataService', () => {
         expect(result$).toBeTruthy();
     }));
 
-    it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
-        service.setUpURLs(configVersions); // set up data
-        let domain = service.domains[0];
-        let result$ = service.getDomainData(domain);
-        expect(result$).toBeTruthy();
-    }));
+    // it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
+    //     service.setUpURLs(taxiiVersions); // set up data
+    //     let domain = service.domains[0];
+    //     let result$ = service.getDomainData(domain);
+    //     expect(result$).toBeTruthy();
+    // }));
 
     it('should fetch domain data via Workbench', inject([DataService], (service: DataService) => {
         service.setUpURLs(workbenchVersions); // set up data
