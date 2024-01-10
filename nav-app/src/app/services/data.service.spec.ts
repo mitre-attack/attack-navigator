@@ -523,7 +523,7 @@ describe('DataService', () => {
         let relationships = domain.relationships;
         expect(relationships['campaign_uses'].size).toEqual(1);
         expect(relationships['campaigns_attributed_to'].size).toEqual(1);
-        expect(relationships['component_rel'].size).toEqual(1);
+        expect(relationships['component_rel'].size).toEqual(2);
         expect(relationships['group_uses'].size).toEqual(1);
         expect(relationships['mitigates'].size).toEqual(1);
         expect(relationships['revoked_by'].size).toEqual(1);
