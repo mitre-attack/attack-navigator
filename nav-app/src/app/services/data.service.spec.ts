@@ -435,7 +435,6 @@ describe('DataService', () => {
         let result$ = service.getDomainData(domain);
         expect(result$).toBeTruthy();
         expect(functionSpy).toHaveBeenCalled();
-        console.log(result$)
     }));
 
     it('should fetch domain data via Workbench', inject([DataService], (service: DataService) => {
@@ -486,6 +485,13 @@ describe('DataService', () => {
     it('should parse stix bundle', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(configData);
+        service.domains[0].relationships['group_uses'].set('intrusion-set-0',['attack-pattern-0']);
+        service.domains[0].relationships['software_uses'].set('malware-0',['attack-pattern-0']);
+        service.domains[0].relationships['campaign_uses'].set('campaign-0',['attack-pattern-0']);
+        service.domains[0].relationships['mitigates'].set('mitigation-0',['attack-pattern-0']);
+        service.domains[0].relationships['component_rel'].set('component-0',['attack-pattern-0']);
+        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0',['attack-pattern-0']);
+        service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
         let domain = service.domains[0];
         service.parseBundle(domain, stixBundles);
         console.log('domain', domain)

@@ -42,12 +42,14 @@ export class TabsComponent implements AfterViewInit {
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
+    public subscription = new Subscription();
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
     public loadData: any = {
         url: undefined,
         version: undefined,
         identifier: undefined,
     };
+    public glayerVersion = globals.layerVersion;
 
     // user input for layer-layer operations
     public opSettings: any = {
@@ -606,7 +608,7 @@ export class TabsComponent implements AfterViewInit {
                     width: '25%',
                     panelClass: this.userTheme,
                 });
-                let subscription = dialog.afterClosed().subscribe({
+                this.subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
                         if (!result.upgrade && !this.dataService.isSupported(viewModel.version)) {
                             reject(
@@ -620,7 +622,7 @@ export class TabsComponent implements AfterViewInit {
                         resolve(null);
                     },
                     complete: () => {
-                        if (subscription) subscription.unsubscribe();
+                        if (this.subscription) this.subscription.unsubscribe();
                     }, //prevent memory leaks
                 });
             } else resolve(null); // layer is already current version
@@ -726,8 +728,9 @@ export class TabsComponent implements AfterViewInit {
      * Reads the JSON file, adds the properties to a view model, and
      * loads the view model into a new layer
      */
-    private readJSONFile(file: File) {
-        let reader = new FileReader();
+    private async readJSONFile(file: File): Promise<void>{
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
         let viewModel: ViewModel;
         reader.onload = (e) => {
             let result = String(reader.result);
@@ -749,13 +752,14 @@ export class TabsComponent implements AfterViewInit {
             }
         };
         reader.readAsText(file);
+        });
     }
 
     private loadObjAsLayer(self, obj): void {
-        let viewModel: ViewModel;
+            let viewModel: ViewModel;
             viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
             let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-            self.versionMismatchWarning(layerVersionStr).then((res) => {
+            self.versionMismatchWarning(layerVersionStr, this.glayerVersion).then((res) => {
                 let isCustom = 'customDataURL' in obj;
                 if (!isCustom) {
                     if (!self.dataService.getDomain(viewModel.domainVersionID)) {
@@ -776,16 +780,18 @@ export class TabsComponent implements AfterViewInit {
                     );
                 }
             });
-        }
+    }
+
+        
     /**
      * Check if uploaded layer version is out of date and display
      * a snackbar warning message (for minor mismatches) or a dialog warning
      * (for major mismatches)
      * @param {string} layerVersionStr the uploaded layer version
      */
-    private async versionMismatchWarning(layerVersionStr: string): Promise<boolean> {
+    private async versionMismatchWarning(layerVersionStr: string, glayerVersion: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            let globalVersionSplit = globals.layerVersion.split('.');
+            let globalVersionSplit = glayerVersion.split('.');
             let layerVersion = layerVersionStr.split('.');
             // if minor version change, snackbar will be displayed
             if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]) {
@@ -833,7 +839,7 @@ export class TabsComponent implements AfterViewInit {
                     let viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await this.versionMismatchWarning(layerVersionStr);
+                        await this.versionMismatchWarning(layerVersionStr, this.glayerVersion);
                         if (!this.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }

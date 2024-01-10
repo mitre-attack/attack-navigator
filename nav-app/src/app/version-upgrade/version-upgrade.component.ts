@@ -17,7 +17,7 @@ export class VersionUpgradeComponent implements OnInit {
     layerName: string;
 
     constructor(
-        private dialogRef: MatDialogRef<VersionUpgradeComponent>,
+        public dialogRef: MatDialogRef<VersionUpgradeComponent>,
         public dataService: DataService,
         private viewModelsService: ViewModelsService,
         @Inject(MAT_DIALOG_DATA) public data

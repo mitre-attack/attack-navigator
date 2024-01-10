@@ -88,7 +88,7 @@ export abstract class Cell {
      * @param color color with alpha channel
      * @returns color without an alpha channel which has been mixed with the proper background color as if it is transparent
      */
-    private emulate_alpha(color: any) {
+    public emulate_alpha(color: any) {
         /* note: constructing a tinycolor of a tinycolor makes them aliases. E.g:
          *
          *    x = tinycolor("#ffffff")

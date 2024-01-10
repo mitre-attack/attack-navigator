@@ -1,14 +1,74 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
+import { DataService } from './data.service';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { prototype } from 'events';
 
 describe('ConfigService', () => {
+    let configVersions: any[] = [{
+        "name": "ATT&CK v13",
+        "version": "13",
+        "domains": [{
+            "name": "Enterprise",
+            "identifier": "enterprise-attack",
+            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+        }]
+    }];
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [ConfigService],
         });
     });
+
+    beforeEach(inject([ConfigService], (service: ConfigService) => {
+            let config = {
+            "banner":"",
+            "comment_color":"yellow",
+            "custom_context_menu_items": [
+                {
+                    "label": "view technique on ATT&CK website",
+                    "url": "https://attack.mitre.org/techniques/{{technique_attackID}}",
+                    "subtechnique_url": "https://attack.mitre.org/techniques/{{parent_technique_attackID}}/{{subtechnique_attackID_suffix}}"
+                }
+            ],
+            "features": [{"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."}],
+            "link_color": "blue",
+            "metadata_color":"purple",
+            "versions": [{"name": 'ATT&CK v13', "version": '13', "domains": ["Enterprise"]}]
+            }
+            let versions = [
+                {
+                    "name": "ATT&CK v13",
+                    "version": "13",
+                    "domains": [
+                        {
+                            "name": "Enterprise",
+                            "identifier": "enterprise-attack",
+                            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                        }
+                    ]
+                },
+                {
+                    "name": "ATT&CK v12",
+                    "version": "12",
+                    "domains": [
+                        {
+                            "name": "Enterprise",
+                            "identifier": "enterprise-attack",
+                            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                        }
+                    ]
+                }
+            ]
+        service.dataService.setUpURLs(versions);
+        let return$ = {versions: configVersions};
+        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(config));
+        let cs = new ConfigService(service.dataService);
+
+    }));
 
     it('should be created', inject([ConfigService], (service: ConfigService) => {
         expect(service).toBeTruthy();
@@ -116,5 +176,9 @@ describe('ConfigService', () => {
         let fragments = new Map<string, string>();
         fragments.set("comments","false")
         expect(service.getAllFragments('https://mitre-attack.github.io/attack-navigator/#comments=false')).toEqual(fragments);
+    }));
+
+    it('should set up data in constructor', inject([ConfigService], (service: ConfigService) => {
+        expect(service).toBeTruthy();
     }));
 });

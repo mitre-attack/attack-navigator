@@ -16,11 +16,8 @@ describe('ViewmodelsService', () => {
 		expect(service).toBeTruthy();
 	}));
 
-	it('selectionChanged should be defined', inject([ViewModelsService], (service: ViewModelsService) => {
-		expect(service.selectionChanged).toBeDefined();
-	}));
-
 	it('should create viewmodel by inheriting the score from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
+		service.selectionChanged();
 		let vm1 = service.newViewModel("layer","enterprise-attack-13");
 		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
 		let scoreVariables = new Map<string, ViewModel>();
@@ -61,9 +58,6 @@ describe('ViewmodelsService', () => {
 		let tvm_1 = new TechniqueVM("T1583");
 		tvm_1.comment = "completed";
 		vm1.setTechniqueVM(tvm_1);
-		// let tvm_2 = new TechniqueVM("T1583");
-		// tvm_2.score = "1";
-		// vm2.setTechniqueVM(tvm_2);
 		let opSettings: any = {
 			domain: "Enterprise ATT&CK v13",
 			gradientVM: vm1,
@@ -83,16 +77,11 @@ describe('ViewmodelsService', () => {
 
 	it('viewmodel by inheriting opsettings and setting the score to 1 for all', inject([ViewModelsService], (service: ViewModelsService) => {
 		let vm1 = service.newViewModel("layer","enterprise-attack-13");
-		//let vm2 = service.newViewModel("layer1","enterprise-attack-13");
 		let scoreVariables = new Map<string, ViewModel>();
         scoreVariables.set("a",vm1);
 		let tvm = new TechniqueVM("T1583");
-		//scoreVariables.set("b",vm2);
 		tvm.score = "2";
 		vm1.setTechniqueVM(tvm);
-		// let tvm_2 = new TechniqueVM("T1584");
-		// tvm_2.score = "1";
-		// vm2.setTechniqueVM(tvm_2);
 		let opSettings: any = {
 			domain: "Enterprise ATT&CK v13",
 			gradientVM: vm1,
@@ -107,6 +96,32 @@ describe('ViewmodelsService', () => {
 		}
 		let vm = service.layerOperation(scoreVariables, "test1", opSettings);
 		expect(vm.domainVersionID).toBe("Enterprise ATT&CK v13");
+	}));
+
+	it('should create viewmodel when score expression is a+b', inject([ViewModelsService], (service: ViewModelsService) => {
+		let vm1 = service.newViewModel("layer","enterprise-attack-13");
+		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
+		let scoreVariables = new Map<string, ViewModel>();
+        scoreVariables.set("a",vm1);
+		scoreVariables.set("b",vm2);
+		let tvm_1 = new TechniqueVM("T1583");
+		tvm_1.comment = "completed";
+		vm1.setTechniqueVM(tvm_1);
+		let opSettings: any = {
+			domain: "Enterprise ATT&CK v13",
+			gradientVM: vm1,
+			coloringVM: vm1,
+			commentVM: vm1,
+			linkVM: vm1,
+			metadataVM: vm1,
+			enabledVM: vm1,
+			filterVM: vm1,
+			scoreExpression: "a+b",
+			legendVM: vm1
+		}
+		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
+		let tvm_new = vm_new.getTechniqueVM_id("T1583");
+		expect(tvm_new.comment).toBe("completed");
 	}));
 
 	it('viewmodel is created', inject([ViewModelsService], (service: ViewModelsService) => {

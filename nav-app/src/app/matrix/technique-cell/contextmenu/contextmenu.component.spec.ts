@@ -40,6 +40,17 @@ describe('ContextmenuComponent', () => {
             "url": "https://attack.mitre.org/technique/T0000"
         }]
     }
+    let subtechniqueSDO = {
+        ...templateSDO,
+        "id": "attack-pattern-0-1",
+        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
+        "external_references": [
+            {
+                "external_id": "T0000.001",
+                "url": "https://attack.mitre.org/technique/T0000/001"
+            }
+        ],
+    }
     let techniqueSDO2 = {
         ...templateSDO,
         "id": "attack-pattern-1",
@@ -131,11 +142,19 @@ describe('ContextmenuComponent', () => {
     it('should open custom url and close', inject([DataService], (service: DataService) => {
         let windowSpy = spyOn(window, 'open');
         let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-
+        let technique_list: Technique[] = [];
+        let st1 = new Technique(subtechniqueSDO,[],null);
+        let t1 = new Technique(techniqueSDO,[st1],null);
+        technique_list.push(t1);
+        technique_list.push(st1);
+        let tactic = new Tactic(tacticSDO, technique_list, service);
         let url = 'https://attack.mitre.org/{{tactic_attackID}}/{{technique_attackID}}';
+        let subtechnique_url = 'https://attack.mitre.org/{{tactic_attackID}}/{{technique_attackID}}/{{subtechnique_attackID}}';
         let replacedUrl = 'https://attack.mitre.org/TA0000/T0000';
         buildContextMenuViewModel(contextMenu, service);
-        let customItem = new ContextMenuItem('label', url);
+        let customItem = new ContextMenuItem('label', url, subtechnique_url);
+        customItem.getReplacedURL(st1,tactic)
+        customItem = new ContextMenuItem('label', url);
         contextMenu.openCustomContextMenuItem(customItem);
 
         expect(windowSpy).toHaveBeenCalledOnceWith(replacedUrl, '_blank');
@@ -193,6 +212,12 @@ describe('ContextmenuComponent', () => {
         let functionSpy = spyOn(contextMenu, 'closeContextmenu');
         contextMenu.addSelection();
         expect(contextMenu.viewModel.activeTvm).toBe(contextMenu.techniqueVM);
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectSubtechniquesWithParent = true;
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectTechniquesAcrossTactics = false;
+        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
+        contextMenu.viewModel.selectSubtechniquesWithParent = false;
         expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
         expect(functionSpy).toHaveBeenCalled();
     }));
