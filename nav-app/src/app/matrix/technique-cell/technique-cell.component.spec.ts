@@ -4,6 +4,7 @@ import { ViewModelsService } from '../../services/viewmodels.service';
 import { TechniqueVM, ViewModel } from '../../classes';
 import { Matrix, Tactic, Technique } from '../../classes/stix';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConfigService } from 'src/app/services/config.service';
 
 describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
@@ -127,12 +128,26 @@ describe('TechniqueCellComponent', () => {
         expect(component.showTooltip).toBeFalse();
     });
 
-    it('should unpin other cells on right click', () => {
+    it('should unpin other cells on click', () => {
         component.viewModelsService.pinnedCell = "T0001^tactic-name";
-        component.onRightClick(null);
         expect(component.isCellPinned).toBeFalse();
+        component.onRightClick(null);
+        expect(component.viewModelsService.pinnedCell).toEqual('');
+
+        component.viewModelsService.pinnedCell = "T0001^tactic-name";
+        expect(component.isCellPinned).toBeFalse();
+        component.onLeftClick(null);
         expect(component.viewModelsService.pinnedCell).toEqual('');
     });
+
+    // it('should emit event on left click + select', () => {
+    //     component.configService.setFeature('selecting_techniques', true);
+    //     console.log(component.configService.getFeature('selecting_techniques'));
+    //     let clickSpy = spyOn(component.leftclick, 'emit');
+    //     component.onLeftClick({shiftKey: 'ENTER', ctrlKey: 'CTRL', metaKey: 'META', pageX: 0, pageY: 0});
+    //     expect(clickSpy).toHaveBeenCalled();
+    //     component.configService.setFeature('selecting_techniques', false);
+    // });
 
     it('should highlight on mouse enter', () => {
         let highlightSpy = spyOn(component.highlight, 'emit');
@@ -146,13 +161,7 @@ describe('TechniqueCellComponent', () => {
         expect(unhighlightSpy).toHaveBeenCalled();
     });
 
-    // it('should count annotated subtechniques', () => {
-    //     expect(component.annotatedSubtechniques()).toEqual(0);
-
-    //     let tvm = component.viewModel.getTechniqueVM(component.technique.subtechniques[0], component.tactic);
-    //     tvm.score = "1";
-    //     console.log(component.technique.subtechniques)
-    //     console.log(component.viewModel.techniqueVMs)
-    //     expect(component.annotatedSubtechniques()).toEqual(1);
-    // });
+    it('should count annotated subtechniques', () => {
+        expect(component.annotatedSubtechniques()).toEqual(0);
+    });
 });
