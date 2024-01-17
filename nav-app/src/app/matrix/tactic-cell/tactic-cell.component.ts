@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Tactic } from '../../classes/stix';
-import { ViewModel } from '../../services/viewmodels.service';
+import { ViewModel } from '../../classes';
 
 @Component({
     selector: 'tactic-cell',
     templateUrl: './tactic-cell.component.html',
     styleUrls: ['./tactic-cell.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TacticCellComponent implements OnInit {
     @Input() tactic: Tactic;

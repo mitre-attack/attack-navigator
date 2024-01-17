@@ -1,6 +1,27 @@
 {
     "versions": [
         {
+            "name": "ATT&CK v14",
+            "version": "14",
+            "domains": [
+                {   
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "identifier": "ics-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
+        {
             "name": "ATT&CK v13",
             "version": "13",
             "domains": [
@@ -203,6 +224,7 @@
 
     "comment_color": "yellow",
     "link_color": "blue",
+    "metadata_color": "purple",
 
     "banner": "",
 
@@ -210,7 +232,7 @@
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
-        {"name": "header", "enabled": true, "description": "Disable to remove the header containing 'MITRE ATT&CK Navigator' and the link to the help page. The help page can still be accessed from the new tab menu."},
+        {"name": "header", "enabled": true, "description": "Disable to remove the header containing banner."},
         {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
             {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},
@@ -238,10 +260,14 @@
             {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
             {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
             {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
+            {"name": "metadata_underline", "enabled": true, "description": "Disable to remove the metadata underline effect on techniques."},
             {"name": "links", "enabled": true, "description": "Disable to remove the ability to assign hyperlinks to techniques."},
             {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."},
             {"name": "metadata", "enabled": true, "description": "Disable to remove the ability to add metadata to techniques."},
             {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
+        ]},
+        {"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+            {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
         ]}
     ]
 }

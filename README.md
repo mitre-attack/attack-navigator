@@ -1,5 +1,3 @@
-[![build status](https://github.com/mitre-attack/attack-navigator/workflows/Build/badge.svg)](https://github.com/mitre-attack/attack-navigator/actions)
-
 # ATT&CK® Navigator
 
 The ATT&CK Navigator is designed to provide basic navigation and annotation of [ATT&CK](https://attack.mitre.org) matrices, something that people are already doing today in tools like Excel.  We've designed it to be simple and generic - you can use the Navigator to visualize your defensive coverage, your red/blue team planning, the frequency of detected techniques or anything else you want to do.  The Navigator doesn't care - it just allows you to manipulate the cells in the matrix (color coding, adding a comment, assigning a numerical value, etc.).  We thought having a simple tool that everyone could use to visualize the matrix would help make it easy to use ATT&CK.
@@ -30,7 +28,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 
 ## Requirements
 
-* [Node.js](https://nodejs.org) version 16 or greater
+* [Node.js v16](https://nodejs.org)
 * [AngularCLI](https://cli.angular.io)
 
 ## Supported Browsers
@@ -63,7 +61,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 1. Run `ng build` within the **nav-app** directory
 2. Copy files from `nav-app/dist/` directory
 
-_Note: `ng build --prod` does not currently work for ATT&CK Navigator without additional flags. To build the production environment instead use `ng build --prod --aot=false --build-optimizer=false`._
+_Note: `ng build --configuration production` does not currently work for ATT&CK Navigator without additional flags. To build the production environment instead use `ng build --configuration production --aot=false --build-optimizer=false`._
 
 ### Running the Navigator offline
 

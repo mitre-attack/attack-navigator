@@ -6,8 +6,9 @@ import { ContextMenuItem } from '../classes/context-menu-item';
     providedIn: 'root',
 })
 export class ConfigService {
-    public comment_color = "yellow";
-    public link_color = "blue";
+    public comment_color = 'yellow';
+    public link_color = 'blue';
+    public metadata_color = 'purple';
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -16,36 +17,39 @@ export class ConfigService {
     public contextMenuItems: ContextMenuItem[] = [];
 
     constructor(private dataService: DataService) {
-        console.log("initializing config service");
+        console.debug('initializing config service');
         let self = this;
         let subscription = dataService.getConfig().subscribe({
-            next: function(config: any) {
+            next: function (config: any) {
                 //parse feature preferences from config json
-                config["features"].forEach(function(featureObject: any) {
+                config['features'].forEach(function (featureObject: any) {
                     self.setFeature_object(featureObject);
-                })
+                });
                 //override json preferences with preferences from URL fragment
-                self.getAllFragments().forEach(function(value: string, key: string) {
-                    let valueBool = (value == 'true');
+                self.getAllFragments().forEach(function (value: string, key: string) {
+                    let valueBool = value == 'true';
                     if (self.isFeature(key) || self.isFeatureGroup(key)) {
                         self.setFeature(key, valueBool);
                     }
-                })
-                dataService.subtechniquesEnabled = self.getFeature("subtechniques");
-                self.featureStructure = config["features"];
-                self.comment_color = config["comment_color"];
-                self.link_color = config["link_color"];
-                self.banner = config["banner"];
-                for (let obj of config["custom_context_menu_items"]) {
-                    self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url))
+                });
+                dataService.subtechniquesEnabled = self.getFeature('subtechniques');
+                self.featureStructure = config['features'];
+                self.comment_color = config['comment_color'];
+                self.metadata_color = config['metadata_color'];
+                self.link_color = config['link_color'];
+                self.banner = config['banner'];
+                for (let obj of config['custom_context_menu_items']) {
+                    self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url));
                 }
-            }, 
-            complete: () => { if (subscription) subscription.unsubscribe(); } //prevent memory leaks 
+            },
+            complete: () => {
+                if (subscription) subscription.unsubscribe();
+            }, //prevent memory leaks
         });
     }
 
     public getFeatureList(): object[] {
-        if (!this.featureStructure) return []
+        if (!this.featureStructure) return [];
         return this.featureStructure;
     }
 
@@ -62,9 +66,9 @@ export class ConfigService {
     public getFeatureGroup(featureGroup: string, type?: string): boolean {
         if (!this.featureGroups.has(featureGroup)) return true;
 
-        let subFeatures = this.featureGroups.get(featureGroup)
+        let subFeatures = this.featureGroups.get(featureGroup);
         let count = this.getFeatureGroupCount(featureGroup);
-        return type == "any" ? count > 0 : count === subFeatures.length;
+        return type == 'any' ? count > 0 : count === subFeatures.length;
     }
 
     /**
@@ -75,8 +79,8 @@ export class ConfigService {
      */
     public getFeatureGroupCount(featureGroup: string): number {
         if (!this.featureGroups.has(featureGroup)) return -1;
-        let count = 0
-        let subFeatures = this.featureGroups.get(featureGroup)
+        let count = 0;
+        let subFeatures = this.featureGroups.get(featureGroup);
         for (let subFeature of subFeatures) {
             if (this.getFeature(subFeature)) count += 1;
         }
@@ -98,24 +102,28 @@ export class ConfigService {
      *                     sets feature[featureName] = value, otherwise walks recursively
      */
     public setFeature(featureName: string, value: any): string[] {
-        let self = this
+        let self = this;
 
-        if (typeof(value) == "boolean") { //base case
-            if (this.featureGroups.has(featureName)) { //feature group, assign to all subfeatures
-                this.featureGroups.get(featureName).forEach(function(subFeatureName: string) {
+        if (typeof value == 'boolean') {
+            //base case
+            if (this.featureGroups.has(featureName)) {
+                //feature group, assign to all subfeatures
+                this.featureGroups.get(featureName).forEach(function (subFeatureName: string) {
                     self.setFeature(subFeatureName, value);
-                })
-            } else { //single feature
+                });
+            } else {
+                //single feature
                 this.features.set(featureName, value);
             }
             return [featureName];
         }
 
-        if (typeof(value) == "object") { //keep walking
+        if (typeof value == 'object') {
+            //keep walking
             let subfeatures = [];
-            Object.keys(value).forEach(function(fieldname: string) {
+            Object.keys(value).forEach(function (fieldname: string) {
                 subfeatures = Array.prototype.concat(subfeatures, self.setFeature(fieldname, value[fieldname]));
-            })
+            });
             this.featureGroups.set(featureName, subfeatures);
             return subfeatures;
         }
@@ -129,26 +137,24 @@ export class ConfigService {
      * @param  override      Set all subfeatures, and their subfeatures, values to
      *                       this value
      */
-    public setFeature_object(featureObject: any, override=null):string[] {
-        let self = this
+    public setFeature_object(featureObject: any, override = null): string[] {
+        let self = this;
 
         // base case
-        if (!featureObject.hasOwnProperty("subfeatures")) {
-
-            let enabled = override !== null? override : featureObject.enabled
-            this.features.set(featureObject.name, enabled)
-            return [featureObject.name]
-        } else { //has subfeatures
+        if (!featureObject.hasOwnProperty('subfeatures')) {
+            let enabled = override !== null ? override : featureObject.enabled;
+            this.features.set(featureObject.name, enabled);
+            return [featureObject.name];
+        } else {
+            //has subfeatures
             override = override ? override : !featureObject.enabled ? false : null;
             let subfeatures = [];
-            featureObject.subfeatures.forEach(function(subfeature) {
-                subfeatures = Array.prototype.concat(subfeatures, self.setFeature_object(subfeature, override))
-            })
-            this.featureGroups.set(featureObject.name, subfeatures)
+            featureObject.subfeatures.forEach(function (subfeature) {
+                subfeatures = Array.prototype.concat(subfeatures, self.setFeature_object(subfeature, override));
+            });
+            this.featureGroups.set(featureObject.name, subfeatures);
             return subfeatures;
         }
-
-
     }
 
     /**
@@ -157,7 +163,7 @@ export class ConfigService {
      * @return             true if the feature exists, false otherwise
      */
     public isFeature(featureName: string): boolean {
-        return this.features.has(featureName)
+        return this.features.has(featureName);
     }
     /**
      * return if the given string corresponds to a defined feature group
@@ -170,13 +176,17 @@ export class ConfigService {
 
     public getFeatureGroups(): string[] {
         let keys = [];
-        this.featureGroups.forEach(function(value, key) { keys.push(key) })
+        this.featureGroups.forEach(function (value, key) {
+            keys.push(key);
+        });
         return keys;
     }
 
     public getFeatures(): string[] {
         let keys = [];
-        this.features.forEach(function(value, key) { keys.push(key) })
+        this.features.forEach(function (value, key) {
+            keys.push(key);
+        });
         return keys;
     }
 
@@ -188,11 +198,11 @@ export class ConfigService {
     public getAllFragments(url?: string): Map<string, string> {
         if (!url) url = window.location.href;
         let fragments = new Map<string, string>();
-        let regex = /[#&](\w+)=(\w+)/g
+        let regex = /[#&](\w+)=(\w+)/g;
 
         let match;
-        while (match = regex.exec(url)) {
-            fragments.set(match[1], match[2])
+        while ((match = regex.exec(url))) {
+            fragments.set(match[1], match[2]);
         }
 
         return fragments;

@@ -1,5 +1,5 @@
-import { DataService } from "../../services/data.service";
-import { StixObject } from "./stix-object";
+import { DataService } from '../../services/data.service';
+import { StixObject } from './stix-object';
 
 export class DataComponent extends StixObject {
     public readonly url: string;
@@ -24,7 +24,7 @@ export class DataComponent extends StixObject {
             relationships.get(this.id).forEach((targetID) => {
                 const technique = domain.techniques.find((t) => t.id === targetID);
                 if (technique) techniques.push(technique);
-            })
+            });
         }
         return techniques;
     }
@@ -37,11 +37,10 @@ export class DataComponent extends StixObject {
         const dataSources = this.dataService.getDomain(domainVersionID).dataSources;
         if (dataSources.has(this.dataSource)) {
             const source = dataSources.get(this.dataSource);
-            let url = "";
+            let url = '';
             if (source.external_references && source.external_references[0] && source.external_references[0].url)
                 url = source.external_references[0].url;
             return { name: source.name, url: url };
-        }
-        else return { name: '', url: '' };
+        } else return { name: '', url: '' };
     }
 }

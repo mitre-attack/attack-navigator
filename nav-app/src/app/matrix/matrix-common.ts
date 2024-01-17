@@ -1,18 +1,21 @@
 import { Input, Directive } from '@angular/core';
 import { Matrix, Technique, Tactic } from '../classes/stix';
-import { ViewModel, ViewModelsService } from '../services/viewmodels.service';
+import { ViewModelsService } from '../services/viewmodels.service';
 import { ConfigService } from '../services/config.service';
-import * as tinycolor from 'tinycolor2';
+import { ViewModel } from '../classes';
+import tinycolor from 'tinycolor2';
 
 @Directive()
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
     @Input() viewModel: ViewModel;
 
-    constructor(private configService: ConfigService, private viewModelsService: ViewModelsService) {
+    constructor(
+        private configService: ConfigService,
+        private viewModelsService: ViewModelsService
+    ) {
         this.configService = configService;
     }
-
 
     /**
      * filter tactics according to viewmodel state
@@ -53,7 +56,6 @@ export abstract class MatrixCommon {
         return this.viewModel.applyControls(techniques, tactic, this.matrix);
     }
 
-
     public onTechniqueLeftClick(event: any, technique: Technique, tactic: Tactic) {
         if (!this.configService.getFeature('selecting_techniques')) {
             //if selecting is disabled, same behavior as right click. Shouldn't ever get to this point because it should be handled in technique-cell
@@ -62,16 +64,17 @@ export abstract class MatrixCommon {
         if (event.shift || event.ctrl || event.meta) {
             // add to selection
             if (this.viewModel.isTechniqueSelected(technique, tactic)) this.viewModel.unselectTechnique(technique, tactic);
-            else this.viewModel.selectTechnique(technique, tactic)
+            else this.viewModel.selectTechnique(technique, tactic);
         } else {
             // replace selection
             if (this.viewModel.getSelectedTechniqueCount() > 1) {
-                if (this.viewModel.isTechniqueSelected)
-                this.viewModel.clearSelectedTechniques();
+                if (this.viewModel.isTechniqueSelected) this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(technique, tactic);
-            } else if (this.viewModel.isTechniqueSelected(technique, tactic))  { //unselect currently selected
+            } else if (this.viewModel.isTechniqueSelected(technique, tactic)) {
+                //unselect currently selected
                 this.viewModel.clearSelectedTechniques();
-            } else { //replace
+            } else {
+                //replace
                 this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(technique, tactic);
             }
@@ -98,9 +101,20 @@ export abstract class MatrixCommon {
     }
 
     public get tacticRowStyle(): any {
-        return this.viewModel.showTacticRowBackground ? { 
-            "background": this.viewModel.tacticRowBackground,
-            "color": tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
-         } : {}
+        //change background of sticky tactic header if showTacticRowBackground is enabled
+        if (this.viewModel.showTacticRowBackground) {
+            let elements_name = document.querySelectorAll<HTMLElement>('.tactic.name');
+            let elements_count = document.querySelectorAll<HTMLElement>('.tactic.count');
+            for (let i = 0; i < elements_name.length; i++) {
+                elements_name[i].style.backgroundColor = this.viewModel.tacticRowBackground;
+                elements_count[i].style.backgroundColor = this.viewModel.tacticRowBackground;
+            }
+        }
+        return this.viewModel.showTacticRowBackground
+            ? {
+                  background: this.viewModel.tacticRowBackground,
+                  color: tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black']),
+              }
+            : {};
     }
 }

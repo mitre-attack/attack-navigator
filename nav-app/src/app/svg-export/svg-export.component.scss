@@ -1,4 +1,4 @@
-@import "../../colors.scss";
+@import '../../colors.scss';
 
 .svgcontainer {
     overflow-x: auto;
@@ -7,7 +7,11 @@
     max-height: 60vh;
     min-width: 75vw;
     max-width: 75vw;
-    padding:25px;
+    padding: 25px;
+
+    &.dark-mode {
+        background-color: color(dark-1) !important;
+    }
 }
 
 .close-button {
@@ -28,7 +32,7 @@
                 text-align: right;
                 &::-webkit-inner-spin-button,
                 &::-webkit-outer-spin-button {
-                    display: none
+                    display: none;
                 }
                 -moz-appearance: textfield;
             }

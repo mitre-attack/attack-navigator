@@ -1,32 +1,32 @@
-@import "../../colors.scss";
+@import '../../colors.scss';
 
 .help-dialog {
-  .table-of-contents {
-    list-style: none;
-    margin: 0;
-    padding: 0 25px 0 0;
-    li.toc-heading {
-      margin-bottom: 0;
-      a {
-        cursor: pointer;
-        color: blue;
-        text-decoration: underline;
-      }
-      @for $level from 1 through 6 {
-        &.level-#{$level} {
-          padding-inline-start: #{40 * ($level)}px;
+    .table-of-contents {
+        list-style: none;
+        margin: 0;
+        padding: 0 25px 0 0;
+        li.toc-heading {
+            margin-bottom: 0;
+            a {
+                cursor: pointer;
+                color: blue;
+                text-decoration: underline;
+            }
+            @for $level from 1 through 6 {
+                &.level-#{$level} {
+                    padding-inline-start: #{40 * ($level)}px;
+                }
+            }
         }
-      }
     }
-  }
-  h1 {
-    text-align: center;
-    border-bottom: 1px solid black;
-  }
+    h1 {
+        text-align: center;
+        border-bottom: 1px solid black;
+    }
 
-  .content {
-    code {
-      border: 1px solid color(panel-dark);
+    .content {
+        code {
+            border: 1px solid color(panel-dark);
+        }
     }
-  }
 }

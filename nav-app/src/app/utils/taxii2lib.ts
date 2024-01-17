@@ -34,40 +34,39 @@ export class TaxiiConnect {
         this.baseURL = TaxiiConnect.withoutLastSlash(url);
         this.user = user;
         this.password = password;
-        this.hash = btoa(this.user + ":" + this.password);
+        this.hash = btoa(this.user + ':' + this.password);
         this.timeout = timeout ? timeout : 10000; // default timeout
 
         this.version = '2.0';
 
         // default headers configurations
         this.getConfig = {
-            'method': 'get',
-            'headers': new Headers({
-                'Accept': 'application/vnd.oasis.taxii+json',
-                'version': this.version,
-                'Authorization': 'Basic ' + this.hash
-            })
+            method: 'get',
+            headers: new Headers({
+                Accept: 'application/vnd.oasis.taxii+json',
+                version: this.version,
+                Authorization: 'Basic ' + this.hash,
+            }),
         };
 
         this.postConfig = {
-            'method': 'post',
-            'headers': new Headers({
-                'Accept': 'application/vnd.oasis.taxii+json',
+            method: 'post',
+            headers: new Headers({
+                Accept: 'application/vnd.oasis.taxii+json',
                 'Content-Type': 'application/vnd.oasis.stix+json',
-                'version': this.version,
-                'Authorization': 'Basic ' + this.hash
-            })
+                version: this.version,
+                Authorization: 'Basic ' + this.hash,
+            }),
         };
 
         this.getStixConfig = {
-            'method': 'get',
-            'headers': new Headers({
-                'Accept': 'application/vnd.oasis.stix+json',
-                'version': this.version,
-                'Authorization': 'Basic ' + this.hash
-            })
+            method: 'get',
+            headers: new Headers({
+                Accept: 'application/vnd.oasis.stix+json',
+                version: this.version,
+                Authorization: 'Basic ' + this.hash,
+            }),
         };
-
     }
 
     // original code from: https://github.com/jkomyno/fetch-timeout
@@ -93,12 +92,14 @@ export class TaxiiConnect {
      * @param {Object} filter - the filter object describing the filtering requested, this is added to the path as a query string
      * @returns {Promise} the server response in json.
      */
-    async asyncFetch(path, config, filter?) { //CHANGED
-        let fullPath = (filter === undefined) ? path : path + "?" + TaxiiConnect.asQueryString(filter);
-        return await (await (
-            this.fetchTimeout(fullPath, config, this.timeout, 'connection timeout')
-                .then((res: Response) => res.json())
-                .catch(err => { throw new Error("fetch error: " + err); } ) ));
+    async asyncFetch(path, config, filter?) {
+        //CHANGED
+        let fullPath = filter === undefined ? path : path + '?' + TaxiiConnect.asQueryString(filter);
+        return await await this.fetchTimeout(fullPath, config, this.timeout, 'connection timeout')
+            .then((res: Response) => res.json())
+            .catch((err) => {
+                throw new Error('fetch error: ' + err);
+            });
     }
 
     /**
@@ -116,10 +117,11 @@ export class TaxiiConnect {
      * @param {Object} config - the request configuration
      * @returns {Promise} the server response object
      */
-    async fetchThis(path, options, filter?, config?) { //CHANGED
+    async fetchThis(path, options, filter?, config?) {
+        //CHANGED
         let conf = config === undefined ? this.getConfig : config;
         if (!options.flag) {
-            options.cache = await (this.asyncFetch(path, conf, filter));
+            options.cache = await this.asyncFetch(path, conf, filter);
             options.flag = true;
         }
         return options.cache;
@@ -131,7 +133,7 @@ export class TaxiiConnect {
      * @returns {String} the url without the last slash.
      */
     static withoutLastSlash(url) {
-        return (url.substr(-1) === '/') ? url.substr(0, url.length - 1) : url;
+        return url.substr(-1) === '/' ? url.substr(0, url.length - 1) : url;
     }
 
     /**
@@ -140,7 +142,7 @@ export class TaxiiConnect {
      * @returns {String} the url with a terminating slash.
      */
     static withLastSlash(url) {
-        return (url.substr(-1) === '/') ? url : url + "/";
+        return url.substr(-1) === '/' ? url : url + '/';
     }
 
     /**
@@ -149,10 +151,12 @@ export class TaxiiConnect {
      * @returns {String} the query string corresponding to the filter object.
      */
     static asQueryString(filter) {
-        return Object.keys(filter).map(k => {
-            let value = (k === "added_after") ? k : "match[" + k + "]";
-            return encodeURIComponent(value) + '=' + encodeURIComponent(filter[k]);
-        }).join('&');
+        return Object.keys(filter)
+            .map((k) => {
+                let value = k === 'added_after' ? k : 'match[' + k + ']';
+                return encodeURIComponent(value) + '=' + encodeURIComponent(filter[k]);
+            })
+            .join('&');
     }
 }
 
@@ -174,8 +178,8 @@ export class Server {
         this.path = TaxiiConnect.withLastSlash(path);
         this.conn = conn;
         // cache represents the cached results and flag determines if it needs a re-fetch
-        this.disOptions = {"cache": {}, "flag": false};
-        this.apiOptions = {"cache": [], "flag": false};
+        this.disOptions = { cache: {}, flag: false };
+        this.apiOptions = { cache: [], flag: false };
     }
 
     /**
@@ -214,7 +218,7 @@ export class Server {
      * @returns {Promise} the Array of api roots information objects
      */
     async api_roots() {
-        return this.discovery().then(discovery => this._getApiRoots(discovery));
+        return this.discovery().then((discovery) => this._getApiRoots(discovery));
     }
 
     /**
@@ -226,7 +230,7 @@ export class Server {
      */
     async api_rootsMap() {
         let apiRootMap = new Map();
-        await this.discovery().then(discovery => this._getApiRoots(discovery, apiRootMap));
+        await this.discovery().then((discovery) => this._getApiRoots(discovery, apiRootMap));
         return apiRootMap;
     }
 
@@ -236,27 +240,29 @@ export class Server {
      * @param {Map} apiRootMap - a map of key=url, value=api root object
      * @returns {Promise} the Array of api roots information objects
      */
-    async _getApiRoots(discovery, apiRootMap?) { //CHANGED
+    async _getApiRoots(discovery, apiRootMap?) {
+        //CHANGED
         if (!this.apiOptions.flag) {
             // clear the cache
             this.apiOptions.cache = [];
             // fetch all the api_roots in parallel
-            await Promise.all(discovery.api_roots.map(async url => {
-                let apiroot = await this.conn.asyncFetch(url, this.conn.getConfig);
-                // add to the map
-                if (apiRootMap !== undefined) {
-                    apiRootMap.set(url, apiroot);
-                }
-                // add to the array of results
-                this.apiOptions.cache.push(apiroot);
-            }));
+            await Promise.all(
+                discovery.api_roots.map(async (url) => {
+                    let apiroot = await this.conn.asyncFetch(url, this.conn.getConfig);
+                    // add to the map
+                    if (apiRootMap !== undefined) {
+                        apiRootMap.set(url, apiroot);
+                    }
+                    // add to the array of results
+                    this.apiOptions.cache.push(apiroot);
+                })
+            );
             // remove the undefined and empty elements, that is those we could not connect to.
-            this.apiOptions.cache = this.apiOptions.cache.filter(element => (element !== undefined && !Server.isEmpty(element)));
+            this.apiOptions.cache = this.apiOptions.cache.filter((element) => element !== undefined && !Server.isEmpty(element));
             this.apiOptions.flag = true;
         }
         return this.apiOptions.cache;
     }
-
 }
 
 /**
@@ -284,7 +290,7 @@ export class Collections {
         this.api_root_path = TaxiiConnect.withLastSlash(api_root_path);
         this.conn = conn;
         // cache represents the cached results and flag determines if it needs a re-fetch
-        this.options = {"cache": {}, "flag": false};
+        this.options = { cache: {}, flag: false };
     }
 
     /**
@@ -305,22 +311,22 @@ export class Collections {
         if (Number.isInteger(index) && index >= 0) {
             // return a specific collection info
             if (!this.collectionsFlag) {
-                return this.collections().then(cols => {
+                return this.collections().then((cols) => {
                     if (index < this.options.cache.collections.length) {
                         return this.options.cache.collections[index];
                     } else {
-                        console.log("----> in Collections get(index) invalid index value: " + index);
+                        console.log('----> in Collections get(index) invalid index value: ' + index);
                     }
                 });
             } else {
                 if (index < this.options.cache.collections.length) {
                     return this.options.cache.collections[index];
                 } else {
-                    console.log("----> in Collections get(index) invalid index value: " + index);
+                    console.log('----> in Collections get(index) invalid index value: ' + index);
                 }
             }
         } else {
-            console.log("----> in Collections get(index) invalid index value: " + index);
+            console.log('----> in Collections get(index) invalid index value: ' + index);
         }
     }
 
@@ -330,24 +336,24 @@ export class Collections {
      * @param {String} range - a pagination range string, for example "0-10"
      * @returns {Array} an array of collection objects
      */
-    async collections(range?) { //CHANGED
+    async collections(range?) {
+        //CHANGED
         let theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
-                'method': 'get',
-                'headers': new Headers({
-                    'Accept': 'application/vnd.oasis.taxii+json',
-                    'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
-                    'Range': 'items=' + range
-                })
+                method: 'get',
+                headers: new Headers({
+                    Accept: 'application/vnd.oasis.taxii+json',
+                    version: this.conn.version,
+                    Authorization: 'Basic ' + this.conn.hash, //CHANGED
+                    Range: 'items=' + range,
+                }),
             };
         }
         // return a list of collection info
-        await this.conn.fetchThis(this.api_root_path + "collections/", this.options, "", theConfig);
+        await this.conn.fetchThis(this.api_root_path + 'collections/', this.options, '', theConfig);
         return this.options.cache.collections;
     }
-
 }
 
 /**
@@ -374,12 +380,12 @@ export class Collection {
         this.api_root_path = TaxiiConnect.withLastSlash(api_root_path);
         this.conn = conn;
         // construct the path
-        this.path = this.api_root_path + "collections/" + collectionInfo.id + "/";
+        this.path = this.api_root_path + 'collections/' + collectionInfo.id + '/';
         // cache represents the cached results and flag determines if it needs a re-fetch
-        this.colOptions = {"cache": {}, "flag": false};
-        this.objsOptions = {"cache": {}, "flag": false};
-        this.objOptions = {"cache": {}, "flag": false};
-        this.manOptions = {"cache": {}, "flag": false};
+        this.colOptions = { cache: {}, flag: false };
+        this.objsOptions = { cache: {}, flag: false };
+        this.objOptions = { cache: {}, flag: false };
+        this.manOptions = { cache: {}, flag: false };
     }
 
     /**
@@ -403,7 +409,7 @@ export class Collection {
         if (this.collectionInfo.can_read) {
             return func;
         } else {
-            console.log("this collection does not allow reading: \n" + JSON.stringify(this.collectionInfo));
+            console.log('this collection does not allow reading: \n' + JSON.stringify(this.collectionInfo));
         }
     }
 
@@ -416,7 +422,7 @@ export class Collection {
         if (this.collectionInfo.can_write) {
             return func;
         } else {
-            console.log("this collection does not allow writing: \n" + JSON.stringify(this.collectionInfo));
+            console.log('this collection does not allow writing: \n' + JSON.stringify(this.collectionInfo));
         }
     }
 
@@ -441,16 +447,16 @@ export class Collection {
         let theConfig = this.conn.getStixConfig;
         if (range !== undefined) {
             theConfig = {
-                'method': 'get',
-                'headers': new Headers({
-                    'Accept': 'application/vnd.oasis.stix+json',
-                    'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
-                    'Range': 'items=' + range
-                })
+                method: 'get',
+                headers: new Headers({
+                    Accept: 'application/vnd.oasis.stix+json',
+                    version: this.conn.version,
+                    Authorization: 'Basic ' + this.conn.hash, //CHANGED
+                    Range: 'items=' + range,
+                }),
             };
         }
-        return this.ifCanRead(this.conn.fetchThis(this.path + "objects/", this.objsOptions, filter, theConfig));
+        return this.ifCanRead(this.conn.fetchThis(this.path + 'objects/', this.objsOptions, filter, theConfig));
     }
 
     /**
@@ -461,8 +467,11 @@ export class Collection {
      * For example: {"version": "2016-01-01T01:01:01.000Z"}
      */
     async getObject(obj_id, filter) {
-        return await (await (this.ifCanRead(this.conn.fetchThis(this.path + "objects/" + obj_id + "/", this.objOptions, filter, this.conn.getStixConfig)
-        .then(bundle => bundle.objects.find(obj => obj.id === obj_id) ))));
+        return await await this.ifCanRead(
+            this.conn
+                .fetchThis(this.path + 'objects/' + obj_id + '/', this.objOptions, filter, this.conn.getStixConfig)
+                .then((bundle) => bundle.objects.find((obj) => obj.id === obj_id))
+        );
     }
 
     /**
@@ -471,7 +480,7 @@ export class Collection {
      * @return {Status} a status object
      */
     async addObject(bundle) {
-        return this.ifCanWrite(this.conn.asyncFetch(this.path + "objects/", this.conn.postConfig));
+        return this.ifCanWrite(this.conn.asyncFetch(this.path + 'objects/', this.conn.postConfig));
     }
 
     /**
@@ -486,16 +495,16 @@ export class Collection {
         let theConfig = this.conn.getConfig;
         if (range !== undefined) {
             theConfig = {
-                'method': 'get',
-                'headers': new Headers({
-                    'Accept': 'application/vnd.oasis.taxii+json',
-                    'version': this.conn.version,
-                    'Authorization': 'Basic ' + this.conn.hash, //CHANGED
-                    'Range': 'items=' + range
-                })
+                method: 'get',
+                headers: new Headers({
+                    Accept: 'application/vnd.oasis.taxii+json',
+                    version: this.conn.version,
+                    Authorization: 'Basic ' + this.conn.hash, //CHANGED
+                    Range: 'items=' + range,
+                }),
             };
         }
-        this.ifCanRead(await this.conn.fetchThis(this.path + "manifest/", this.manOptions, filter, theConfig));
+        this.ifCanRead(await this.conn.fetchThis(this.path + 'manifest/', this.manOptions, filter, theConfig));
         return this.manOptions.cache.objects;
     }
 
@@ -508,9 +517,8 @@ export class Collection {
      * @return {Object} a manifest entry of the desired STIX-2 object.
      */
     async getManifest(obj_id, filter) {
-        return await (this.getManifests(filter).then(objects => objects.find(obj => obj.id === obj_id)));
+        return await this.getManifests(filter).then((objects) => objects.find((obj) => obj.id === obj_id));
     }
-
 }
 
 /**
@@ -533,7 +541,7 @@ export class Status {
         this.api_root_path = TaxiiConnect.withLastSlash(api_root_path);
         this.status_id = status_id;
         this.conn = conn;
-        this.path = this.api_root_path + "status/" + status_id + "/";
+        this.path = this.api_root_path + 'status/' + status_id + '/';
     }
 
     /**
@@ -543,5 +551,4 @@ export class Status {
     async get() {
         return this.conn.asyncFetch(this.path, this.conn.getConfig);
     }
-
 }

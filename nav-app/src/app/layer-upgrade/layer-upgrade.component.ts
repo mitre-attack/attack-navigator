@@ -1,8 +1,7 @@
 import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
-import { ViewModel } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
 import { Tactic, Technique } from '../classes/stix';
-import { VersionChangelog } from '../classes';
+import { VersionChangelog, ViewModel } from '../classes';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,7 +11,7 @@ import { MatStepper } from '@angular/material/stepper';
     selector: 'layer-upgrade',
     templateUrl: './layer-upgrade.component.html',
     styleUrls: ['./layer-upgrade.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
@@ -24,20 +23,17 @@ export class LayerUpgradeComponent implements OnInit {
 
     public changelog: VersionChangelog;
     public compareTo: ViewModel; // view model of old version
-    public sections: string[] = [
-        "additions", "changes", "minor_changes",
-        "revocations", "deprecations", "unchanged"
-    ];
+    public sections: string[] = ['additions', 'changes', 'minor_changes', 'revocations', 'deprecations', 'unchanged'];
     public filter: any = {
-        "changes": false,
-        "minor_changes": false,
-        "revocations": false,
-        "deprecations": false,
-        "unchanged": false
-    }
+        changes: false,
+        minor_changes: false,
+        revocations: false,
+        deprecations: false,
+        unchanged: false,
+    };
     public loading: boolean = false;
-    
-    constructor(public dataService: DataService) { }
+
+    constructor(public dataService: DataService) {}
 
     ngOnInit(): void {
         this.changelog = this.viewModel.versionChangelog;
@@ -53,7 +49,7 @@ export class LayerUpgradeComponent implements OnInit {
 
     wait(): void {
         this.loading = true;
-        setTimeout(() => this.loading = false, 1000);
+        setTimeout(() => (this.loading = false), 1000);
     }
 
     /**
@@ -62,7 +58,10 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns {string} readable section header text
      */
     public getHeader(section: string): string {
-        return section.split(/[_-]+/).map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+        return section
+            .split(/[_-]+/)
+            .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+            .join(' ');
     }
 
     /**
@@ -82,7 +81,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns true if there are no annotated techniques in the given section, false otherwise
      */
     public disableFilter(section: string): boolean {
-        return !this.changelog[section].filter(id => this.anyAnnotated(id)).length
+        return !this.changelog[section].filter((id) => this.anyAnnotated(id)).length;
     }
 
     /**
@@ -91,15 +90,15 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public applyFilters(section: string): void {
         let sectionIDs = this.changelog[section];
-        if (this.filter[section]) sectionIDs = sectionIDs.filter(id => this.anyAnnotated(id));
+        if (this.filter[section]) sectionIDs = sectionIDs.filter((id) => this.anyAnnotated(id));
 
         let i = this.paginator_map.get(section);
         let paginator = this.paginators.toArray()[i];
-        if (paginator && (paginator.pageIndex * paginator.pageSize > sectionIDs.length)) {
+        if (paginator && paginator.pageIndex * paginator.pageSize > sectionIDs.length) {
             paginator.pageIndex = 0;
         }
-        let start = paginator? paginator.pageIndex * paginator.pageSize : 0;
-        let end = paginator? start + paginator.pageSize : 10;
+        let start = paginator ? paginator.pageIndex * paginator.pageSize : 0;
+        let end = paginator ? start + paginator.pageSize : 10;
         this.filteredIDs = sectionIDs.slice(start, end);
     }
 
@@ -109,7 +108,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param offset -1 if moving to the previous step, 1 if moving to the next step
      */
     public onStepChange(section: string, offset: number): void {
-        let i = this.sections.findIndex(s => s === section);
+        let i = this.sections.findIndex((s) => s === section);
         if (i + offset < this.sections.length) {
             let nextSection = this.sections[i + offset];
             this.applyFilters(nextSection);
@@ -127,18 +126,18 @@ export class LayerUpgradeComponent implements OnInit {
     public getTechnique(attackID: string, vm: ViewModel, section?: string): Technique {
         let domain = this.dataService.getDomain(vm.domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
-        let technique = all_techniques.find(t => t.attackID == attackID);
+        let technique = all_techniques.find((t) => t.attackID == attackID);
 
         if (section == 'revocations' && this.viewModel.version == vm.version) {
             // get revoking object
             let revokedByID = technique.revoked_by(vm.domainVersionID);
-            let revokingObject = all_techniques.find(t => t.id == revokedByID);
+            let revokingObject = all_techniques.find((t) => t.id == revokedByID);
             return revokingObject;
         } else return technique;
     }
 
     /**
-     * Get the list of tactic objects the given technique is found under 
+     * Get the list of tactic objects the given technique is found under
      * @param attackID the ATT&CK ID of the object
      * @param vm the view model used to identify the domain
      * @param section name of the changelog section
@@ -148,7 +147,7 @@ export class LayerUpgradeComponent implements OnInit {
         if (section == 'additions') vm = this.viewModel;
         let technique = this.getTechnique(attackID, vm, section);
         let domain = this.dataService.getDomain(vm.domainVersionID);
-        return technique.tactics.map(shortname => domain.tactics.find(t => t.shortname == shortname));
+        return technique.tactics.map((shortname) => domain.tactics.find((t) => t.shortname == shortname));
     }
 
     /**
@@ -160,7 +159,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public tacticsChanged(attackID: string, section: string): boolean {
         if (section == 'deprecations' || section == 'additions') return false;
-        
+
         let oldTechnique = this.getTechnique(attackID, this.compareTo);
         let newTechnique = this.getTechnique(attackID, this.viewModel, section);
 
@@ -208,19 +207,25 @@ export class LayerUpgradeComponent implements OnInit {
      * @returns number of reviewed techniques
      */
     public countReviewed(section: string): number {
-        return this.changelog[section].filter(attackID => this.changelog.reviewed.has(attackID)).length;
+        return this.changelog[section].filter((attackID) => this.changelog.reviewed.has(attackID)).length;
     }
 
     // changelog section descriptions
     private descriptions: any = {
-        "additions": "The following techniques have been added to the dataset since the layer was created. You can review the techniques below to identify which may require annotations. Annotations may be added using the 'technique controls' in the toolbar.",
-        "changes": "The following techniques have undergone major changes since the layer was created such as changes to scope or technique name. You can view the annotations you had previously added, map them to the current ATT&CK version, and adjust them as needed. You can also review the previous and current technique definitions by clicking the version numbers in each row.",
-        "minor_changes": "The following techniques have had minor revisions since the layer was created such as typo corrections. The annotations have automatically been copied for these techniques, but you can review them if desired. You can also view the previous and current technique definitions by clicking the version numbers under the technique.",
-        "revocations": "These are techniques which have been replaced by other techniques since the layer was created. You can view the replacing techniques and transfer annotations from the replaced techniques, adjusting them as nessecary. You can also review the replaced and replacing technique definitions by clicking the version numbers under the technique.",
-        "deprecations": "These are techniques which have been removed from the dataset. You can view any annotations you had previously added to these techniques.",
-        "unchanged": "These are techniques which have not changed since the uploaded layer's ATT&CK version. The annotations have automatically been copied for these techniques, but you can review them if desired.",
-        "finish": "The overview below indicates either the number of techniques you have reviewed in a section, if you have skipped a section, or if there are no techniques to review in that section. Annotations mapped to the current version have been saved to the new layer.\n\nVerify your changes and click 'Done' to complete the layer upgrade workflow. Once completed you cannot return to this workflow."
-    }
+        additions:
+            "The following techniques have been added to the dataset since the layer was created. You can review the techniques below to identify which may require annotations. Annotations may be added using the 'technique controls' in the toolbar.",
+        changes:
+            'The following techniques have undergone major changes since the layer was created such as changes to scope or technique name. You can view the annotations you had previously added, map them to the current ATT&CK version, and adjust them as needed. You can also review the previous and current technique definitions by clicking the version numbers in each row.',
+        minor_changes:
+            'The following techniques have had minor revisions since the layer was created such as typo corrections. The annotations have automatically been copied for these techniques, but you can review them if desired. You can also view the previous and current technique definitions by clicking the version numbers under the technique.',
+        revocations:
+            'These are techniques which have been replaced by other techniques since the layer was created. You can view the replacing techniques and transfer annotations from the replaced techniques, adjusting them as nessecary. You can also review the replaced and replacing technique definitions by clicking the version numbers under the technique.',
+        deprecations:
+            'These are techniques which have been removed from the dataset. You can view any annotations you had previously added to these techniques.',
+        unchanged:
+            "These are techniques which have not changed since the uploaded layer's ATT&CK version. The annotations have automatically been copied for these techniques, but you can review them if desired.",
+        finish: "The overview below indicates either the number of techniques you have reviewed in a section, if you have skipped a section, or if there are no techniques to review in that section. Annotations mapped to the current version have been saved to the new layer.\n\nVerify your changes and click 'Done' to complete the layer upgrade workflow. Once completed you cannot return to this workflow.",
+    };
 
     /**
      * Get the changelog section description
@@ -237,7 +242,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param attackID the ATT&CK ID of the technique
      * @returns {boolean} true if any TechniqueVM for this technique is annotated
      */
-     public anyAnnotated(attackID: string): boolean {
+    public anyAnnotated(attackID: string): boolean {
         let oldTechnique = this.getTechnique(attackID, this.compareTo);
         if (oldTechnique) {
             let technique_tactic_ids = oldTechnique.get_all_technique_tactic_ids();
@@ -267,7 +272,7 @@ export class LayerUpgradeComponent implements OnInit {
      * otherwise the total number of techniques in the seciton
      */
     public sectionLength(section: string): number {
-        if (this.filter[section]) return this.changelog[section].filter(attackID => this.anyAnnotated(attackID)).length;
+        if (this.filter[section]) return this.changelog[section].filter((attackID) => this.anyAnnotated(attackID)).length;
         else return this.changelog[section].length;
     }
 
@@ -317,10 +322,11 @@ export class LayerUpgradeComponent implements OnInit {
      * @param section the name of the changelog section
      */
     public onDrop(event: DndDropEvent, toTechnique: Technique, toTactic: Tactic, section: string): void {
-        let attackID = event.data.split("^")[0];
+        let attackID = event.data.split('^')[0];
         let validTechnique = this.getTechnique(attackID, this.viewModel, section);
 
-        if (validTechnique.id === toTechnique.id) { // copying annotations to a valid target?
+        if (validTechnique.id === toTechnique.id) {
+            // copying annotations to a valid target?
             // retrieve relevant technique VMs
             let fromTvm = this.compareTo.getTechniqueVM_id(event.data);
             let toTvm = this.viewModel.getTechniqueVM(toTechnique, toTactic);
@@ -328,7 +334,7 @@ export class LayerUpgradeComponent implements OnInit {
             // copy annotations
             let rep = fromTvm.serialize();
             toTvm.resetAnnotations();
-            toTvm.deSerialize(rep, toTechnique.attackID, toTactic.shortname);
+            toTvm.deserialize(rep, toTechnique.attackID, toTactic.shortname);
             this.viewModel.updateScoreColor(toTvm);
         } else {
             // invalid target

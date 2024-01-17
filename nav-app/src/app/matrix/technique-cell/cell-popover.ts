@@ -1,4 +1,4 @@
-import { ElementRef } from "@angular/core";
+import { ElementRef } from '@angular/core';
 
 export abstract class CellPopover {
     private theElement: any;
@@ -7,7 +7,7 @@ export abstract class CellPopover {
     }
 
     /**
-     * Get the location of the tooltip according to the location on the screen. 
+     * Get the location of the tooltip according to the location on the screen.
      * Returns one of the following:
      * "top left":
      * ------------------
@@ -42,10 +42,10 @@ export abstract class CellPopover {
         let halfWidth = window.innerWidth / 2;
         let halfHeight = window.innerHeight / 2;
         let position = [];
-        if (boundingRect.right > halfWidth) position.push("left");
-        else                               position.push("right");
-        if (boundingRect.bottom > halfHeight) position.push("top");
-        else                               position.push("bottom");
-        return position.join(" ");
+        if (boundingRect.right > halfWidth) position.push('left');
+        else position.push('right');
+        if (boundingRect.bottom > halfHeight) position.push('top');
+        else position.push('bottom');
+        return position.join(' ');
     }
 }

@@ -1,4 +1,4 @@
-import { StixObject } from "./stix-object";
+import { StixObject } from './stix-object';
 
 export class Group extends StixObject {
     /**
@@ -10,7 +10,9 @@ export class Group extends StixObject {
         let rels = this.dataService.getDomain(domainVersionID).relationships.group_uses;
         if (rels.has(this.id)) {
             return rels.get(this.id);
-        } else { return []; }
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -26,12 +28,11 @@ export class Group extends StixObject {
         if (attributedCampaigns.has(this.id)) {
             // get set of techniques used by attributed campaigns
             let techniques = [];
-            attributedCampaigns.get(this.id).forEach(campaign_id => {
-                if (rels.has(campaign_id)) techniques = techniques.concat(rels.get(campaign_id))
+            attributedCampaigns.get(this.id).forEach((campaign_id) => {
+                if (rels.has(campaign_id)) techniques = techniques.concat(rels.get(campaign_id));
             });
             return techniques;
         } else return []; // no attributed campaigns
-
     }
 
     /**

@@ -1,7 +1,12 @@
-@import "../../colors.scss";
+@import '../../colors.scss';
 
 .header-wrapper {
-    transition: margin-top 300ms 0ms cubic-bezier(0.4, 0, 0.6, 1), opacity 0s 300ms
+    transition:
+        margin-top 300ms 0ms cubic-bezier(0.4, 0, 0.6, 1),
+        opacity 0s 300ms;
+    @media print {
+        display: none;
+    }
 }
 
 .tabs-container {
@@ -9,51 +14,55 @@
     .mat-ink-bar {
         display: none;
     }
-    .mat-tab-nav-bar, .mat-tab-header {
+    .mat-tab-nav-bar,
+    .mat-tab-header {
         border-bottom: none !important;
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
-        @include adaptive-color("color", black, on-color(dark));
-        @include adaptive-color("border-color", color(panel-dark), color(dark-1));
-        @include adaptive-color("background-color", color(panel-dark), color(dark-2));
-        @include adaptive-color-dark-only("border", none);
+        @include adaptive-color('color', black, on-color(dark));
+        @include adaptive-color('border-color', color(panel-dark), color(dark-1));
+        @include adaptive-color('background-color', color(panel-dark), color(dark-2));
+        @include adaptive-color-dark-only('border', none);
     }
     .tabs .tab-title:not(.active) {
-      @include adaptive-color("border-color", color(panel-dark), color(dark-4));
-      border-width: 0 1px 0 0;
-      border-style: solid;
+        @include adaptive-color('border-color', color(panel-dark), color(dark-4));
+        border-width: 0 1px 0 0;
+        border-style: solid;
     }
 }
 
+.scroll {
+    overflow: auto;
+    width: 95.5vw;
+}
+
 .tabs {
-    .tab-title { //non-datatable tab names
-        @include adaptive-color("color", black, white);
+    .tab-title {
+        // non-datatable tab names
+        @include adaptive-color('color', black, white);
         font-size: 14px;
         text-decoration: none;
         display: flex;
         justify-content: space-around;
 
-        &:hover, &:focus { //when the mouse is over a non-selected tab
+        &:hover,
+        &:focus {
+            // when the mouse is over a non-selected tab
             &:not(.active) {
                 text-decoration: none;
-                @include adaptive-color("color", black, color(dark-link));
-                @include adaptive-color("opacity", 0.6, 0.8);
-                @include adaptive-color("background-color", color(panel-light), color(dark-2));
-
-                &:not(.addTab) { //add tab should not behave like other tabs
-                    border-color: color(panel-dark); //black border bottom when hovered
-                }
-                svg {
-                  @include adaptive-color("fill", black, color(dark-link));
+                @include adaptive-color('color', black, color(dark-link));
+                @include adaptive-color('opacity', 0.6, 0.8);
+                @include adaptive-color('background-color', color(panel-light), color(dark-2));
+                &:not(.add-tab) {
+                    border-color: color(panel-dark);
                 }
             }
         }
 
-
-        //tab number that shows up when tab is highlighted
-        .tabEnumerator {
-            @include adaptive-color-dark-only("color", color(dark-1));
+        // tab number for layer operations
+        .tab-enumerator {
+            @include adaptive-color-dark-only('color', color(dark-1));
             position: absolute;
             top: 2px;
             right: 7px;
@@ -63,54 +72,48 @@
         }
 
         &.active {
-            @include adaptive-color("background-color", color(panel-dark), lighten(color(dark), 1%));
-            @include adaptive-color("color", color(tab-text-color), color(panel-dark));
-            cursor: default; //cursor behavior
-            border: 1px solid transparent; //override border highlighting on hover
+            @include adaptive-color('background-color', color(panel-dark), lighten(color(dark), 1%));
+            @include adaptive-color('color', color(tab-text-color), color(panel-dark));
+            cursor: default;
+            border: 1px solid transparent; // override border highlighting on hover
         }
     }
 
-    .addTab {
+    .add-tab {
         min-width: fit-content;
-        &:hover {
-            @include adaptive-color("background-color", #f1f1f1, color(dark-2));
-            border-color: #ddd #ddd #f1f1f1 #ddd;
+        .mat-icon {
+            color: gray;
         }
-    }
-
-    &:before {
-        display: table;
-        content: " ";
-    }
-    &:after {
-        display: table;
-        clear: both;
-        content: " ";
-    }
-    svg {
-        @include adaptive-color("fill", black, color(panel-dark));
-        width: 17px;
-    }
-    .tab-title:hover svg, .addTab:hover svg {
-        @include adaptive-color("fill", black, color(dark-link));
+        &:hover {
+            @include adaptive-color('background-color', #f1f1f1, color(dark-2));
+            border-color: #ddd #ddd #f1f1f1 #ddd;
+            .mat-icon {
+                // override mat icon color on hover
+                @include adaptive-color('color', black, white);
+            }
+        }
     }
 }
 
-// close tab button
 .tab-close {
+    display: flex;
+    align-items: center;
     margin-left: 10px;
     color: gray;
     text-align: right;
     cursor: pointer;
-    &:hover {
-        @include adaptive-color("color", black, white);
+    .mat-icon {
+        transform: scale(0.75);
+        &:hover {
+            @include adaptive-color('color', black, white);
+        }
     }
 }
 
-.newTab {
-    @include adaptive-color("background-color", color(light), color(dark-1));
-    @include adaptive-color("color", on-color(light), on-color(dark));
-    @include adaptive-color("border-color", color(panel-dark), color(dark-1));
+.new-tab {
+    @include adaptive-color('background-color', color(light), color(dark-1));
+    @include adaptive-color('color', on-color(light), on-color(dark));
+    @include adaptive-color('border-color', color(panel-dark), color(dark-1));
     border-width: 1px;
     border-style: solid;
     height: 90%;
@@ -118,130 +121,145 @@
     overflow-y: scroll;
     box-sizing: border-box;
     position: absolute;
-    // text-align: center;
     padding: 5% 20%;
+
     .description {
         display: flex;
         flex-flow: column wrap;
         align-items: center;
     }
+
     .description div p {
         max-width: 75ch;
         font-size: 1.2em;
     }
+
     .logo {
         text-align: center;
+        font-size: 1em;
         a {
             text-decoration: none;
             color: rgb(176, 26, 26);
-            font-weight:500;
+            font-weight: 500;
         }
-        font-size: 1em;
     }
 }
 
-.layerOpTable {
-    td {
-        @include adaptive-color-dark-only("color", on-color(dark));
-        padding: 5px;
-        &.disabled {
-            color: gray;
-        }
-    }
-    .tab-enumerator {
-        @include adaptive-color-dark-only("color", color(dark-1));
-        padding: 2px 4px;
-        background: rgb(255, 255, 0);
-        border-radius: 5px;
-    }
+.tab-enumerator-highlight {
+    @include adaptive-color-dark-only('color', color(dark-1));
+    padding: 2px 4px;
+    background: rgb(255, 255, 0);
+    border-radius: 5px;
+}
+
+.hide-select .mat-select-value {
+    visibility: hidden !important;
 }
 
 .mat-expansion-panel {
-  @include adaptive-color("background-color", color(light), color(dark-2));
-  @include adaptive-color-dark-only("color", on-color(dark-3));
-  .mat-expansion-indicator::after {
-    @include adaptive-color-dark-only("color", on-color(dark-3));
-  }
-  .mat-expansion-panel-header, button.mat-raised-button { // nested items inside parent expansion panel
-    @include adaptive-color-dark-only("background-color", color(dark-2));
-    @include adaptive-color-dark-only("color", on-color(dark-3));
-  }
-  .mat-expansion-panel-content {
-    .mat-expansion-panel-header, .mat-raised-button:not([class*=mat-elevation-z]) {
-      @include adaptive-color-dark-only("border-top", 1px solid #ffffff21);
-    }
-  }
-  .mat-expansion-panel-header:hover:not([aria-disabled=true]):not(.mat-expanded) {
-    @include adaptive-color-dark-only("background-color", color(dark-link));
-  }
+    @include adaptive-color('background-color', color(light), color(dark-2));
+    @include adaptive-color-dark-only('color', on-color(dark-3));
 
-  .mat-expansion-panel-body {
-    @include adaptive-color-dark-only("color", on-color(dark-3));
-  }
-  .mat-expansion-panel-body button:not(:disabled):hover {
-    @include adaptive-color("background", color(cell-highlight-color), color(dark-link));
-  }
+    .mat-expansion-indicator::after {
+        @include adaptive-color-dark-only('color', on-color(dark-3));
+    }
 
-  .mat-form-field {
-    &:not(.mat-form-field-disabled) {
-      .mat-form-field-label, .mat-select-arrow, .mat-select-value-text, .mat-input-element {
-        @include adaptive-color-dark-only("color", on-color(dark));
-      }
+    .mat-expansion-panel-header,
+    button.mat-raised-button {
+        // nested items inside parent expansion panel
+        @include adaptive-color-dark-only('background-color', color(dark-2));
+        @include adaptive-color-dark-only('color', on-color(dark-3));
     }
-    &.mat-form-field-disabled, .layerOpTable td.disabled {
-      .mat-form-field-label, .mat-select-arrow {
-        @include adaptive-color-dark-only("color", darken(on-color(dark-1), 25%));
-      }
+
+    .mat-expansion-panel-content {
+        .mat-expansion-panel-header,
+        .mat-raised-button:not([class*='mat-elevation-z']) {
+            @include adaptive-color-dark-only('border-top', 1px solid #ffffff21);
+        }
     }
-    &.mat-form-field-disabled .mat-form-field-underline {
-      @include adaptive-color-dark-only("background-color", darken(on-color(dark-1), 25%));
+
+    .mat-expansion-panel-header:hover:not([aria-disabled='true']):not(.mat-expanded) {
+        @include adaptive-color-dark-only('background-color', color(dark-link));
     }
-    &:not(.mat-form-field-disabled) .mat-form-field-underline {
-      @include adaptive-color-dark-only("background-color", on-color(dark-3));
+
+    .mat-expansion-panel-body {
+        @include adaptive-color-dark-only('color', on-color(dark-3));
     }
-    .mat-hint {
-        @include adaptive-color-dark-only("color", on-color(dark));
+
+    .mat-expansion-panel-body button:not(:disabled):hover {
+        @include adaptive-color('background', color(cell-highlight-color), color(dark-link));
     }
-  }
-  .mat-button {
-    &:not(.mat-button-disabled) {
-      @include adaptive-color-dark-only("background-color", color(dark-3));
-      @include adaptive-color-dark-only("color", on-color(dark-3));
+
+    .mat-form-field {
+        &:not(.mat-form-field-disabled) {
+            .mat-form-field-label,
+            .mat-select-arrow,
+            .mat-select-value-text,
+            .mat-input-element {
+                @include adaptive-color-dark-only('color', on-color(dark));
+            }
+        }
+
+        &.mat-form-field-disabled,
+        .layerOpTable td.disabled {
+            .mat-form-field-label,
+            .mat-select-arrow {
+                @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
+            }
+        }
+
+        &.mat-form-field-disabled .mat-form-field-underline {
+            @include adaptive-color-dark-only('background-color', darken(on-color(dark-1), 25%));
+        }
+
+        &:not(.mat-form-field-disabled) .mat-form-field-underline {
+            @include adaptive-color-dark-only('background-color', on-color(dark-3));
+        }
+
+        .mat-hint {
+            @include adaptive-color-dark-only('color', on-color(dark));
+        }
     }
-    &.mat-button-disabled {
-      @include adaptive-color-dark-only("background-color", color(dark-1));
-      @include adaptive-color-dark-only("border", color(dark-2) 2px solid);
-      @include adaptive-color-dark-only("color", darken(on-color(dark-1), 50%));
+
+    .mat-button {
+        &:not(.mat-button-disabled) {
+            @include adaptive-color-dark-only('background-color', color(dark-3));
+            @include adaptive-color-dark-only('color', on-color(dark-3));
+        }
+
+        &.mat-button-disabled {
+            @include adaptive-color-dark-only('background-color', color(dark-1));
+            @include adaptive-color-dark-only('border', color(dark-2) 2px solid);
+            @include adaptive-color-dark-only('color', darken(on-color(dark-1), 50%));
+        }
     }
-  }
-  .inputTable tr.featureRow:hover {
-    @include adaptive-color-dark-only("background-color", color(dark-3));
-  }
-  a {
-    @include adaptive-color-dark-only("color", color(dark-link));
-  }
-  a:visited, a:active {
-    @include adaptive-color-dark-only("color", color(dark-link-active));
-  }
+
+    a {
+        @include adaptive-color-dark-only('color', color(dark-link));
+    }
+
+    a:visited,
+    a:active {
+        @include adaptive-color-dark-only('color', color(dark-link-active));
+    }
 }
 
 .headers-align .mat-expansion-panel-header-title,
 .headers-align .mat-expansion-panel-header-description {
-  @include adaptive-color("color", on-color(light), darken(on-color(dark), 10%));
-  flex-basis: 0;
+    @include adaptive-color('color', on-color(light), darken(on-color(dark), 10%));
+    flex-basis: 0;
 }
 
 .headers-align .mat-expansion-panel-header-description {
-  @include adaptive-color-dark-only("color", darken(on-color(dark), 15%));
-  justify-content: space-between;
-  align-items: center;
+    @include adaptive-color-dark-only('color', darken(on-color(dark), 15%));
+    justify-content: space-between;
+    align-items: center;
 }
 
-input[type=file]{
+input[type='file'] {
     padding: 5px;
     margin: 5px;
     width: 300px;
-    // border: 1px solid black;
     background-color: color(panel-light);
     border-radius: 0px;
     &:hover {
@@ -249,7 +267,7 @@ input[type=file]{
     }
 }
 
-//button on new tab page
+// help button on new tab page
 .help-links-container {
     display: flex;
     justify-content: center;
@@ -257,22 +275,27 @@ input[type=file]{
     width: 100%;
 }
 
+// theme button on new tab page
 .theme-select-container {
-  .mat-select {
-    position: absolute;
-    margin-left: -85px;
-    top: 20px;
-  }
-  .mat-select-arrow-wrapper {
-    display: none;
-  }
+    .mat-select {
+        position: absolute;
+        margin-left: -85px;
+        top: 20px;
+    }
+    .mat-select-arrow-wrapper {
+        display: none;
+    }
 }
 
 .header {
     text-align: right;
     right: 0;
     z-index: 10 !important;
-    div { display: inline-block; cursor: pointer; }
+
+    div {
+        display: inline-block;
+        cursor: pointer;
+    }
 
     &.help-header {
         position: absolute;
@@ -287,37 +310,40 @@ input[type=file]{
         height: 3ex;
         padding: 5px;
         z-index: 10;
+
         svg {
-          @include adaptive-color-dark-only("fill", on-color(dark));
+            @include adaptive-color-dark-only('fill', on-color(dark));
         }
+
         &:hover svg {
-          @include adaptive-color-dark-only("fill", on-color(dark));
-          fill: #505050;
+            @include adaptive-color-dark-only('fill', on-color(dark));
+            fill: #505050;
         }
     }
 
     .help-dropdown-open {
-        @include adaptive-color-dark-only("background", color(dark-3));
-        @include adaptive-color-dark-only("border", solid color(dark-2) 1px);
-        @include adaptive-color-dark-only("box-shadow", 1px 2px color(dark-2));
-        @include adaptive-color-dark-only("z-index", 1);
-        @include adaptive-color-dark-only("border-bottom", color(dark-3));
-        @include adaptive-color-dark-only("color", color(dark-link));
+        @include adaptive-color-dark-only('background', color(dark-3));
+        @include adaptive-color-dark-only('border', solid color(dark-2) 1px);
+        @include adaptive-color-dark-only('box-shadow', 1px 2px color(dark-2));
+        @include adaptive-color-dark-only('z-index', 1);
+        @include adaptive-color-dark-only('border-bottom', color(dark-3));
+        @include adaptive-color-dark-only('color', color(dark-link));
         border-radius: 50% 50% 0 0;
         border: solid color(panel-dark) 1px;
         border-bottom: solid 1px white;
         background: white;
+
         svg {
-          @include adaptive-color-dark-only("fill", on-color(dark));
-          fill: #505050;
+            @include adaptive-color-dark-only('fill', on-color(dark));
+            fill: #505050;
         }
     }
 
     .dropdown-container {
-        @include adaptive-color-dark-only("background", color(dark-3));
-        @include adaptive-color-dark-only("border-color", color(dark-3));
-        @include adaptive-color-dark-only("box-shadow", 2px 1px 1px color(dark-2));
-        @include adaptive-color-dark-only("color", color(dark-link));
+        @include adaptive-color-dark-only('background', color(dark-3));
+        @include adaptive-color-dark-only('border-color', color(dark-3));
+        @include adaptive-color-dark-only('box-shadow', 2px 1px 1px color(dark-2));
+        @include adaptive-color-dark-only('color', color(dark-link));
         position: absolute;
         right: 16px;
         display: flex;
@@ -332,8 +358,9 @@ input[type=file]{
         padding: 10px;
         top: 40px;
         z-index: 9;
+
         button {
-            @include adaptive-color-dark-only("color", on-color(dark));
+            @include adaptive-color-dark-only('color', on-color(dark));
             border: none;
             background-color: transparent;
             text-align: right;
@@ -355,7 +382,7 @@ input[type=file]{
         text-align: left;
         color: on-color(primary);
         font-size: 14px;
-        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-family: Roboto, 'Helvetica Neue', sans-serif;
         cursor: initial;
         .bannerContent {
             padding-right: 15px;
@@ -367,96 +394,118 @@ input[type=file]{
             padding-left: 15px;
             cursor: initial;
         }
-        .helpIcon {
-            height: 18px;
-            padding-left: 15px;
-        }
         a {
             display: inline;
             color: on-color(primary);
             text-decoration-color: on-color(primary);
         }
-        a:hover, .helpIcon:hover {
+        a:hover,
+        .helpIcon:hover {
             color: color(panel-dark);
             opacity: 0.8;
         }
     }
 }
 
-.btn-group {
-    width: 100%;
-    table-layout: fixed;
+.button-group {
+    display: flex;
+    justify-content: center;
     padding: 0 24px;
-    margin-bottom: 5px;
-
-    button {
+    .mat-raised-button {
         width: 100%;
+        margin: 0 6px 12px;
     }
 }
 
-.inputTable {
-    width: 100%;
-    border-collapse: collapse;
-    tr {
-        &.featureRow:hover {
-            background: darken(white, 5%)
-        }
-        transition: ease 0.2s;
-
+.multi-column-container {
+    padding: 0 24px;
+}
+.multi-column {
+    display: flex;
+    &:not(.left-align) {
+        justify-content: center;
+        align-items: center;
+    }
+    div.disabled {
+        color: gray;
+    }
+    .mat-form-field {
         width: 100%;
-        // background: darken(white, 5%);
-        margin-top: 5px;
-        border-radius: 5px;
-
-        td {
-            text-align: left;
-            width: 1%;
-            padding: 5px;
-            &.featureRow-button {
-                svg {height: 16px; vertical-align: middle; margin-bottom: 2px;}
-            }
-            &.subfeature {
-                &:first-child {
-                    border-left: 1px solid color(panel-dark);
-                }
-                &.last {
-                    @include adaptive-color-dark-only("border-bottom", none);
-                    border-bottom: 1px solid color(panel-dark);
-                }
-            }
-        }
     }
-    .width-lg {
+    .mat-raised-button {
+        width: 100%;
+    }
+    .md-column {
         width: 40%;
-        .mat-form-field {
-            width: 100%;
+    }
+    .lg-column {
+        width: 100%;
+    }
+    .spacer {
+        width: 10%;
+    }
+    .sm-column {
+        width: 20%;
+    }
+    .or-column {
+        display: flex;
+        width: 20%;
+        font-size: 8pt;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.feature-row {
+    margin-bottom: 4px;
+    &:hover {
+        @include adaptive-color('background-color', darken(white, 5%), color(dark-3));
+    }
+    mat-checkbox.mat-checkbox-checked {
+        .mat-checkbox-background {
+            background-color: color(primary) !important;
         }
     }
-    .width-sm {
-        width: 20%;
-        text-align: center;
+    mat-checkbox .mat-checkbox-frame {
+        @include adaptive-color('border-color', color(dark-1), color(body));
     }
+}
+
+.align-center {
+    display: flex;
+    align-items: center;
+}
+.section {
+    padding-bottom: 12px;
+}
+.capitalize {
+    text-transform: capitalize;
+}
+
+.subfeature-section {
+    padding-left: 16px;
+    border-left: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 5px;
 }
 
 #layerlinkfield {
-    color: rgba(0,0,0,.42);
-    .mat-form-field-underline {
-        background: none;
-        background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 33%,transparent 0);
-        background-size: 4px 1px;
-        background-repeat: repeat-x;
-        @include adaptive-color-dark-only("background", none);
-        @include adaptive-color-dark-only("border-bottom", white dotted 2px);
-    }
+    min-width: 35%;
+    color: rgba(0, 0, 0, 0.42);
     #layerLink {
         cursor: pointer;
     }
+    .mat-form-field-underline {
+        background: none;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0, rgba(0, 0, 0, 0.42) 33%, transparent 0);
+        background-size: 4px 1px;
+        background-repeat: repeat-x;
+        @include adaptive-color-dark-only('background', none);
+        @include adaptive-color-dark-only('border-bottom', white dotted 2px);
+    }
 }
-.layerLinkCopy svg {
-    @include adaptive-color-dark-only("color", white);
-    width: 14px;
-}
-.layerLinks {
+
+.layer-links {
     list-style: none;
     padding-left: 0;
     margin: 0;
@@ -464,10 +513,20 @@ input[type=file]{
 
 .safari-warning {
     text-align: center;
-    h3 { color: red; }
+    h3 {
+        color: red;
+    }
 }
 
-.theme-selected {
-  text-decoration: underline !important;
-  font-weight: bold;
+.version-warning {
+    text-align: center;
+    a {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+}
+
+.cdk-overlay-backdrop-showing {
+    z-index: unset;
 }
