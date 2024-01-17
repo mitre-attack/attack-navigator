@@ -1,6 +1,6 @@
 # Build stage
 
-FROM node:18
+FROM node:21.5.0-slim
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
