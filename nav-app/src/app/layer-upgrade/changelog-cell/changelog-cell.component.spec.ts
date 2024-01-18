@@ -163,6 +163,10 @@ describe('ChangelogCellComponent', () => {
         component.viewModel.highlightedTechniques.add("attack-pattern-0");
         component.viewModel.selectTechnique(component.technique, component.tactic);
         expect(component.getTechniqueBackground()).toEqual(null);
+        let tactic = component.tactic;
+        component.tactic = null;
+        expect(component.getTechniqueBackground()).toEqual(null);
+        component.tactic = tactic;
     });
 
     it('should get the underline color for the given technique', () => {
@@ -181,6 +185,9 @@ describe('ChangelogCellComponent', () => {
         component.isDarkTheme = false;
         component.viewModel.getTechniqueVM(component.technique, component.tactic).score = '';
         expect(component.getTechniqueTextColor()).toEqual('black');
+        component.isDarkTheme = true;
+        expect(component.getTechniqueTextColor()).toEqual('white');
+        component.isDarkTheme = false;
         component.viewModel.layout._showAggregateScores = true;
         expect(component.getTechniqueTextColor()).toEqual(tinycolor.mostReadable(component.emulate_alpha("black"), ['white', 'black']));
         component.configService.setFeature("background_color", true);
@@ -189,6 +196,12 @@ describe('ChangelogCellComponent', () => {
         expect(component.getTechniqueTextColor()).toEqual('#aaaaaa');
         component.isDarkTheme = true;
         expect(component.getTechniqueTextColor()).toEqual('rgb(255 255 255 / 25%)');
+        let tactic = component.tactic;
+        component.tactic = null;
+        expect(component.getTechniqueTextColor()).toEqual('white');
+        component.isDarkTheme = false;
+        expect(component.getTechniqueTextColor()).toEqual('black');
+        component.tactic = tactic;
     });
 });
 

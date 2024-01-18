@@ -267,4 +267,10 @@ describe('TechniqueCellComponent', () => {
         expect(Cell.prototype.getClass).toHaveBeenCalled();
         expect(result).toBe('base-class editing');
     });
+
+    it('should return empty value if color is not defined', () => {
+        const color = undefined;
+        const result = component.emulate_alpha(color);
+        expect(result).toBe('');
+    });
 });
