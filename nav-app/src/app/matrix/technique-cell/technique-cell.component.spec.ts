@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TechniqueCellComponent } from './technique-cell.component';
 import { ViewModelsService } from '../../services/viewmodels.service';
-import { TechniqueVM, ViewModel } from '../../classes';
+import { TechniqueVM } from '../../classes';
 import { Matrix, Tactic, Technique } from '../../classes/stix';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConfigService } from 'src/app/services/config.service';
+import { Cell } from '../cell';
 
 describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
@@ -50,6 +50,13 @@ describe('TechniqueCellComponent', () => {
         "x_mitre_shortname": "tactic-name",
         "external_references": [{"external_id": "TA0000"}]
     }
+    let tacticSDO2 = {
+        ...stixSDO,
+        "id": "tactic-1",
+        "type": "x-mitre-tactic",
+        "x_mitre_shortname": "tactic-name",
+        "external_references": [{"external_id": "TA0001"}]
+    }
     let matrixSDO = {
         ...stixSDO,
         "id": "matrix-0",
@@ -59,7 +66,7 @@ describe('TechniqueCellComponent', () => {
     }
     let techniqueTacticUnionId = "T0000^tactic-name";
 
-    beforeAll(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [ViewModelsService],
@@ -92,13 +99,10 @@ describe('TechniqueCellComponent', () => {
         component.viewModel.setTechniqueVM(new TechniqueVM(techniqueTacticUnionId));
         component.viewModel.setTechniqueVM(new TechniqueVM("T0000.000^tactic-name"));
         component.viewModel.setTechniqueVM(new TechniqueVM("T0000.001^tactic-name"));
-        fixture.detectChanges();
-    });
-
-    beforeEach(() => {
         component.viewModelsService.pinnedCell = "";
         component.showContextmenu = false;
         component.viewModel.techniqueVMs.forEach(tvm => tvm.score = '');
+        fixture.detectChanges();
     });
 
     it('should create an instance of TechniqueCellComponent', () => {
@@ -114,13 +118,46 @@ describe('TechniqueCellComponent', () => {
         expect(component.isCellPinned).toBeTrue();
     });
 
-    it('should show the tooltip', () => {
-        component.viewModelsService.pinnedCell = techniqueTacticUnionId;
-        expect(component.showTooltip).toBeTrue();
+    it('showTooltip should show the tooltip if isCellPinned is true', () => {
+        Object.defineProperty(component, 'isCellPinned', {get: () => true});
+        expect(component.showTooltip).toBe(true);
 
         component.viewModel.highlightTechnique(component.technique, component.tactic);
         expect(component.showTooltip).toBeTrue();
         component.viewModel.clearHighlight();
+    });
+
+    it('showTooltip should return false if showMenu is true', () => {
+        component.showContextmenu = true;
+        expect(component.showTooltip).toBe(false);
+    });
+
+    it('showTooltip should return false if highlightedTechniques size is 0', () => {
+        component.viewModel.highlightedTechniques = new Set();
+        expect(component.showTooltip).toBe(false);
+    });
+
+    it('showTooltip should return true when all conditions are met', () => {
+        const ttid = component.technique.get_technique_tactic_id(component.tactic);
+        component.viewModel.highlightedTechniques = new Set([ttid]);
+        component.viewModel.highlightedTechnique = component.technique;
+        component.viewModel.highlightedTactic = component.tactic;
+        expect(component.showTooltip).toBe(true);
+    });
+
+    it('showTooltip should return false when highlightedTechnique is different', () => {
+        const subttid = component.technique.subtechniques[0].get_technique_tactic_id(component.tactic);
+        component.viewModel.highlightedTechniques = new Set([subttid]);
+        component.viewModel.highlightedTechnique = component.technique.subtechniques[0];
+        expect(component.showTooltip).toBe(false);
+    });
+
+    it('showTooltip should return false when highlightedTactic is different', () => {
+        const ttid = component.technique.get_technique_tactic_id(component.tactic);
+        component.viewModel.highlightedTechniques = new Set([ttid]);
+        component.viewModel.highlightedTechnique = component.technique;
+        component.viewModel.highlightedTactic = new Tactic(tacticSDO2, [component.technique], null);
+        expect(component.showTooltip).toBe(false);
     });
 
     it('should not show the tooltip with context menu', () => {
@@ -140,14 +177,31 @@ describe('TechniqueCellComponent', () => {
         expect(component.viewModelsService.pinnedCell).toEqual('');
     });
 
-    // it('should emit event on left click + select', () => {
-    //     component.configService.setFeature('selecting_techniques', true);
-    //     console.log(component.configService.getFeature('selecting_techniques'));
-    //     let clickSpy = spyOn(component.leftclick, 'emit');
-    //     component.onLeftClick({shiftKey: 'ENTER', ctrlKey: 'CTRL', metaKey: 'META', pageX: 0, pageY: 0});
-    //     expect(clickSpy).toHaveBeenCalled();
-    //     component.configService.setFeature('selecting_techniques', false);
-    // });
+    it('should call onRightClick when selecting_techniques is false', () => {
+        spyOn(component, 'onRightClick');
+        spyOn(component.configService, 'getFeature').and.returnValue(false);
+        const event = {shiftKey: false, ctrlKey: false, metaKey: false, pageX: 0, pageY: 0};
+        component.onLeftClick(event);
+        expect(component.onRightClick).toHaveBeenCalledWith(event);
+    })
+
+    it('should emit leftclick event when selecting_techniques is true', () => {
+        spyOn(component, 'onRightClick');
+        spyOn(component.configService, 'getFeature').and.returnValue(true);
+        const emitSpy = spyOn(component.leftclick, 'emit');
+        const event = {shiftKey: true, ctrlKey: true, metaKey: true, pageX: 0, pageY: 0};
+        component.onLeftClick(event);
+        expect(component.viewModelsService.pinnedCell).toEqual('');
+        expect(emitSpy).toHaveBeenCalledOnceWith({
+            technique: component.technique,
+            shift: event.shiftKey,
+            ctrl: event.ctrlKey,
+            meta: event.metaKey,
+            x: event.pageX,
+            y: event.pageY
+        });
+        expect(component.onRightClick).not.toHaveBeenCalled();
+    });
 
     it('should highlight on mouse enter', () => {
         let highlightSpy = spyOn(component.highlight, 'emit');
@@ -161,7 +215,56 @@ describe('TechniqueCellComponent', () => {
         expect(unhighlightSpy).toHaveBeenCalled();
     });
 
-    it('should count annotated subtechniques', () => {
-        expect(component.annotatedSubtechniques()).toEqual(0);
+    it('should return the number of annotated subtechniques', () => {
+        component.viewModel.getTechniqueVM = jasmine.createSpy('getTechniqueVM').and.callFake((subtechnique, tactic) => {
+            return {
+                ...jasmine.createSpyObj('TechniqueVM', ['annotated', 'setIsVisible']),
+                annotated: jasmine.createSpy('annotated').and.returnValue(true)
+            }
+        })
+        const result = component.annotatedSubtechniques();
+        expect(component.viewModel.getTechniqueVM).toHaveBeenCalledTimes(2);
+        expect(component.viewModel.getTechniqueVM).toHaveBeenCalledWith(jasmine.any(Object), component.tactic);
+        expect(result).toEqual(component.applyControls([], component.tactic).length);
+    });
+
+    it('should return the correct class when not annotated and not editing', () => {
+        spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
+        spyOn(component, 'annotatedSubtechniques').and.returnValue(0);
+        Object.defineProperty(component, 'isCellPinned', {get: () => false});
+        
+        const result = component.getClass();
+        expect(Cell.prototype.getClass).toHaveBeenCalled();
+        expect(result).toBe('base-class unannotated');
+    });
+
+    it('should return the correct class when annotated and not editing', () => {
+        spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
+        spyOn(component, 'annotatedSubtechniques').and.returnValue(1);
+        Object.defineProperty(component, 'isCellPinned', {get: () => false});
+        
+        const result = component.getClass();
+        expect(Cell.prototype.getClass).toHaveBeenCalled();
+        expect(result).toBe('base-class');
+    });
+
+    it('should return the correct class when not annotated and editing', () => {
+        spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
+        spyOn(component, 'annotatedSubtechniques').and.returnValue(0);
+        Object.defineProperty(component, 'isCellPinned', {get: () => true});
+        
+        const result = component.getClass();
+        expect(Cell.prototype.getClass).toHaveBeenCalled();
+        expect(result).toBe('base-class unannotated editing');
+    });
+
+    it('should return the correct class when annotated and editing', () => {
+        spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
+        spyOn(component, 'annotatedSubtechniques').and.returnValue(1);
+        Object.defineProperty(component, 'isCellPinned', {get: () => true});
+        
+        const result = component.getClass();
+        expect(Cell.prototype.getClass).toHaveBeenCalled();
+        expect(result).toBe('base-class editing');
     });
 });
