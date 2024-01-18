@@ -31,7 +31,7 @@
         "@fontsource/roboto-mono": "^5.0.7",
         "@types/file-saver": "^2.0.1",
         "classlist.js": "^1.1.20150312",
-        "core-js": "^3.31.1",
+        "core-js": "^3.34.0",
         "d3": "^7.8.5",
         "d3-svg-legend": "^2.25.6",
         "file-saver": "^2.0.5",
