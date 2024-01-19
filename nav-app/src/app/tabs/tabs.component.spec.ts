@@ -4,7 +4,7 @@ import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
-import { Filter, Link, Metadata, TechniqueVM, ViewModel } from '../classes';
+import { Filter, Gradient, Link, Metadata, TechniqueVM, ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -621,30 +621,38 @@ describe('TabsComponent', () => {
         expect(logSpy).toHaveBeenCalled();
     })));
 
-    it('should read and open json file', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }]
-        app.dataService.setUpURLs(versions);
-        var mockedDocElement = document.createElement('input');
-        mockedDocElement.id = 'uploader';
-        mockedDocElement.value = 'test1';
-        mockedDocElement.type = "text";
-        document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
-        const logSpy = spyOn(mockedDocElement, 'click');
-        app.openUploadPrompt();
-        expect(logSpy).toHaveBeenCalled();
+    // it('should read and open json file', (waitForAsync ( () => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     let versions = [
+    //         {
+    //             "name": "ATT&CK v13",
+    //             "version": "13",
+    //             "domains": [
+    //                 {
+    //                     "name": "Enterprise",
+    //                     "identifier": "enterprise-attack",
+    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+    //                 }
+    //             ]
+    //         }]
+    //     app.dataService.setUpURLs(versions);
+    //     var mockedDocElement = document.createElement('input');
+    //     mockedDocElement.id = 'uploader';
+    //     mockedDocElement.value = 'test1';
+    //     mockedDocElement.type = "text";
+    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
+    //     const logSpy = spyOn(mockedDocElement, 'click');
+    //     app.openUploadPrompt();
+    //     expect(logSpy).toHaveBeenCalled();
+    //     let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
+    //     let file = new File([blob], "layer-2.json");
+    //     app.readJSONFile(file).then(() => {
+    //         expect(app.layerTabs.length).toEqual(1)
+    //     });
+    // })));
+
+    it('should test toggle in filter', () => {
         let filter = new Filter();
         filter.platforms.options = ['Linux', 'macOS', 'Windows'];
         filter.platforms.selection = ['Linux'];
@@ -654,12 +662,30 @@ describe('TabsComponent', () => {
         filter.toggleInFilter("platforms","macOS");
         expect(filter.platforms.selection).toEqual(["macOS"]);
         filter.deserialize(JSON.stringify(layer_file1.filters.platforms));
-        let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
-        let file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(1)
-        });
-    })));
+        let consoleSpy = spyOn(console, 'error');
+        filter.toggleInFilter("platforms","PRE");
+        expect(consoleSpy).toHaveBeenCalledWith('not a valid option to toggle', 'PRE', Object({ selection: [ 'macOS' ], options: [ 'Linux', 'macOS', 'Windows' ] }));
+    });
+
+    it('should throw errors for filters', () => {
+        let filter = new Filter();
+        let filter_error_file1 = {
+            "platforms": [3,4]
+        }
+        let consoleSpy = spyOn(console, 'error');
+        filter.deserialize(filter_error_file1);
+        expect(consoleSpy).toHaveBeenCalledWith('TypeError:', 3, '(', 'number', ')', 'is not a string');
+    });
+
+    it('should throw errors for gradient', () => {
+        let filter = new Gradient();
+        let filter_error_file1 = {
+            "colors": [3,4]
+        }
+        let consoleSpy = spyOn(console, 'error');
+        filter.deserialize(JSON.stringify(filter_error_file1));
+        expect(consoleSpy).toHaveBeenCalledWith('TypeError:', 3, '(', 'number', ')', 'is not a color-string');
+    });
 
     it('should display warning dialog for major version mismatches', (() => {
         let fixture = TestBed.createComponent(TabsComponent);
@@ -677,7 +703,7 @@ describe('TabsComponent', () => {
         expect(snackBar.open).toHaveBeenCalled();
     }));
 
-    it('should read and open json file with custom data url', (waitForAsync ( () => {
+    it('should read and open json file', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -955,8 +981,6 @@ describe('TabsComponent', () => {
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
         let tactic1 = new Tactic(tacticSDO,technique_list,null);
         tactic_list.push(tactic1);
-        let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
-        let file = new File([blob], "layer-2.json");
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(stvm_1);
         app.dataService.domains[0].techniques.push(t1);
