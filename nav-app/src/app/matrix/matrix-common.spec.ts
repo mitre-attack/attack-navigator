@@ -215,7 +215,7 @@ describe('MatrixCommon', () => {
         service.viewModel.layout.aggregateFunction = "min";
         service.applyControls(technique_list,tactic1);
         service.viewModel.sorting = 3;
-        service.applyControls(technique_list,tactic1);
+        service.sortTechniques(technique_list,tactic1);
         expect(service).toBeTruthy();
     }));
 
