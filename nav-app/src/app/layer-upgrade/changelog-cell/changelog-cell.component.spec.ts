@@ -4,6 +4,7 @@ import { ChangelogCellComponent } from './changelog-cell.component';
 import { Link, Metadata, TechniqueVM, ViewModel } from '../../classes';
 import { Note, Tactic, Technique } from '../../classes/stix';
 import tinycolor from 'tinycolor2';
+import { deleteCookie, hasCookie } from '../../utils/cookies';
 
 describe('ChangelogCellComponent', () => {
     let component: ChangelogCellComponent;
@@ -88,7 +89,6 @@ describe('ChangelogCellComponent', () => {
         component.technique = new Technique(techniqueSDO,[st1],null);
         technique_list.push(component.technique);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
         component.dataService.domains[0].notes = [new Note(stixSDO)];
         let m1 = new Metadata();
         m1.name = "test1";
@@ -190,6 +190,9 @@ describe('ChangelogCellComponent', () => {
         component.isDarkTheme = true;
         expect(component.getTechniqueTextColor()).toEqual('rgb(255 255 255 / 25%)');
     });
-});
 
-//
+    it('should delete cookie', () => {
+        deleteCookie('is_user_theme_dark');
+        expect(hasCookie('is_user_theme_dark')).toBeFalse();
+    });
+});

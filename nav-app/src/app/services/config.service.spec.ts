@@ -2,9 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
 import { DataService } from './data.service';
-import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { prototype } from 'events';
 
 describe('ConfigService', () => {
     let configVersions: any[] = [{
@@ -66,7 +64,7 @@ describe('ConfigService', () => {
         service.dataService.setUpURLs(versions);
         let return$ = {versions: configVersions};
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(config));
-        let cs = new ConfigService(service.dataService);
+        let cs = new ConfigService(service.dataService); // do not delete
 
     }));
 
