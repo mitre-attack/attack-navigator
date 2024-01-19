@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixCommon } from './matrix-common';
-import { TechniqueVM, VersionChangelog, ViewModel } from '../classes';
+import { TechniqueVM, ViewModel } from '../classes';
 import { Matrix, Technique, Tactic } from '../classes/stix';
 import { EventEmitter } from '@angular/core';
 
@@ -215,7 +215,7 @@ describe('MatrixCommon', () => {
         service.viewModel.layout.aggregateFunction = "min";
         service.applyControls(technique_list,tactic1);
         service.viewModel.sorting = 3;
-        service.sortTechniques(technique_list,tactic1);
+        service.applyControls(technique_list,tactic1);
         expect(service).toBeTruthy();
     }));
 
@@ -330,69 +330,5 @@ describe('MatrixCommon', () => {
         spyOn(service.viewModel, 'isTacticSelected').and.returnValue(true);
         service.onTacticClick(tactic1);
         expect(service.viewModel.selectedTechniques.size).toEqual(0);
-    }));
-
-    it('should copy annotations from one technique VM to another', inject([MatrixCommon], (service: MatrixCommon) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        let technique_list: Technique[] = [];
-        let tactic_list: Tactic[] = [];
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
-        let to_vm = service.viewModelsService.newViewModel("test1","enterprise-attack-13");
-        to_vm.dataService.setUpURLs(versions);
-        service.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
-        to_vm.dataService.domains[0].matrices = [service.matrix];
-        let t1 = new Technique(techniqueSDO,[],null);
-        technique_list.push(t1);
-        let to_tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let t2 = new Technique(techniqueSDO2,[],null);
-        let to_tvm_2 = new TechniqueVM("T1592^reconnaissance");
-        technique_list.push(t2);
-        to_vm.setTechniqueVM(to_tvm_1);
-        to_vm.setTechniqueVM(to_tvm_2);
-        to_vm.dataService.domains[0].techniques.push(t1);
-        to_vm.dataService.domains[0].techniques.push(t2);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
-        to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12','enterprise-attack-13');
-        expect(to_vm.versionChangelog.length()).toEqual(0);
-        to_vm.versionChangelog.minor_changes = ['T1595'];
-        to_vm.versionChangelog.unchanged = ['T1592'];
-        let from_vm = service.viewModelsService.newViewModel("test2","enterprise-attack-12");
-        let from_tvm_1 = new TechniqueVM("T1592^reconnaissance");
-        from_tvm_1.score = '2';
-        from_tvm_1.comment = "hi";
-        from_vm.setTechniqueVM(to_tvm_1);
-        from_vm.setTechniqueVM(from_tvm_1);
-        from_vm.dataService.domains[1].techniques.push(t1);
-        from_vm.dataService.domains[1].techniques.push(t2);
-        to_vm.compareTo = from_vm;
-        to_vm.initCopyAnnotations();
-        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('2');
-        to_vm.revertCopy(t1,t2,tactic1);
-        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('');
     }));
 });

@@ -2,8 +2,8 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ViewModelsService } from './viewmodels.service';
-import { TechniqueVM, Metadata, ViewModel, Link } from '../classes';
-import { Technique, Tactic } from '../classes/stix';
+import { TechniqueVM, Metadata, ViewModel, Link, VersionChangelog } from '../classes';
+import { Technique, Tactic, Matrix } from '../classes/stix';
 import tinygradient from 'tinygradient';
 
 describe('ViewmodelsService', () => {
@@ -49,15 +49,17 @@ describe('ViewmodelsService', () => {
             }
         ],
     }
-	let subtechniqueSDO2 = {
-        ...templateSDO,
-        "id": "attack-pattern-0-2",
+	let matrixSDO = {
         "external_references": [
             {
-                "external_id": "T1592.002",
-                "url": "https://attack.mitre.org/techniques/T1592/002"
+                "external_id": "enterprise-attack",
+                "source_name": "mitre-attack",
+                "url": "https://attack.mitre.org/matrices/enterprise"
             }
         ],
+        "id": "x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc",
+        "name":"Enterprise ATT&CK",
+        "tactic_refs": ["tactic-0"]
     }
     let techniqueSDO = {
         ...templateSDO,
@@ -422,5 +424,67 @@ describe('ViewmodelsService', () => {
         tvm_1.links.push(l2);
         tvm_1.serialize();
 		expect(service).toBeTruthy();
+    }));
+
+    it('should copy annotations from one technique VM to another', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let technique_list: Technique[] = [];
+        let idToTacticSDO = new Map<string, any>();
+        idToTacticSDO.set("tactic-0", tacticSDO);
+        let to_vm = service.newViewModel("test1","enterprise-attack-13");
+        to_vm.dataService.setUpURLs(versions);
+        let matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
+        to_vm.dataService.domains[0].matrices = [matrix];
+        let t1 = new Technique(techniqueSDO,[],null);
+        technique_list.push(t1);
+        let to_tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let t2 = new Technique(techniqueSDO2,[],null);
+        let to_tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        technique_list.push(t2);
+        to_vm.setTechniqueVM(to_tvm_1);
+        to_vm.setTechniqueVM(to_tvm_2);
+        to_vm.dataService.domains[0].techniques.push(t1);
+        to_vm.dataService.domains[0].techniques.push(t2);
+        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12','enterprise-attack-13');
+        expect(to_vm.versionChangelog.length()).toEqual(0);
+        to_vm.versionChangelog.minor_changes = ['T1595'];
+        to_vm.versionChangelog.unchanged = ['T1592'];
+        let from_vm = service.newViewModel("test2","enterprise-attack-12");
+        let from_tvm_1 = new TechniqueVM("T1592^reconnaissance");
+        from_tvm_1.score = '2';
+        from_tvm_1.comment = "test";
+        from_vm.setTechniqueVM(to_tvm_1);
+        from_vm.setTechniqueVM(from_tvm_1);
+        from_vm.dataService.domains[1].techniques.push(t1);
+        from_vm.dataService.domains[1].techniques.push(t2);
+        to_vm.compareTo = from_vm;
+        to_vm.initCopyAnnotations();
+        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('2');
+        to_vm.revertCopy(t1,t2,tactic1);
+        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('');
     }));
 });

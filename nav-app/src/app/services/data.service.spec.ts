@@ -404,7 +404,7 @@ describe('DataService', () => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(configVersions);
         let technique_test = new Technique(technique3,[],service);
-        technique_test.get_all_technique_tactic_ids();
+        expect(technique_test.get_all_technique_tactic_ids()).toEqual([]);
     }));
 
     it('should throw error if tactic does not exist', inject([DataService], (service: DataService) => {

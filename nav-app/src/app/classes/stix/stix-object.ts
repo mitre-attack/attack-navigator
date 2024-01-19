@@ -59,7 +59,6 @@ export abstract class StixObject {
         let thatVersion = that.version.split('.');
 
         for (let i = 0; i < Math.max(thisVersion.length, thatVersion.length); i++) {
-            if (thisVersion.length == thatVersion.length && thisVersion.length < i) return 0;
             if (thisVersion.length < i) return -1;
             if (thatVersion.length < i) return 1;
             if (+thisVersion[i] == +thatVersion[i]) continue;
