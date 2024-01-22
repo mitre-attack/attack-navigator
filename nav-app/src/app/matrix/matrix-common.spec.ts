@@ -173,7 +173,6 @@ describe('MatrixCommon', () => {
 
     it('should sort techniques and tactics', inject([MatrixCommon], (service: MatrixCommon) => {
         let technique_list: Technique[] = [];
-        let tactic_list: Tactic[] = [];
         service.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
@@ -201,7 +200,6 @@ describe('MatrixCommon', () => {
         service.viewModel.layout.aggregateFunction = "min";
         service.viewModel.filters.platforms.selection = ["PRE"];
         let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
         service.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
         service.applyControls(technique_list,tactic1);
         service.sortTechniques(technique_list,tactic1);

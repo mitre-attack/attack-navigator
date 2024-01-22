@@ -88,6 +88,7 @@
                     "options": {
                         "main": "src/test.ts",
                         "karmaConfig": "./karma.conf.js",
+                        "codeCoverageExclude": ["src/polyfills.ts","src/app/utils/taxii2lib.ts"],
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "src/tsconfig.spec.json",
                         "scripts": [
