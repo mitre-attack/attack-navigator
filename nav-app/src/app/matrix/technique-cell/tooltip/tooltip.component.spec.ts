@@ -8,7 +8,6 @@ describe('TooltipComponent', () => {
     let component: TooltipComponent;
     let fixture: ComponentFixture<TooltipComponent>;
     let technique_list: Technique[] = [];
-    let tactic_list: Tactic[] = [];
 
     let stixSDO = {
         "name": "Name",
@@ -61,6 +60,10 @@ describe('TooltipComponent', () => {
     }));
 
     beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            declarations: [TooltipComponent],
+        }).compileComponents();
         fixture = TestBed.createComponent(TooltipComponent);
         component = fixture.debugElement.componentInstance;
         let versions = [
@@ -76,6 +79,10 @@ describe('TooltipComponent', () => {
                 ]
             }
         ]
+        Object.defineProperties(window, {
+            'innerWidth': {get: () => 100},
+            'innerHeight': {get: () => 100}
+        });
         component.dataService.setUpURLs(versions);
         component.dataService.domains[0].notes = [new Note(stixSDO)];
         component.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
@@ -85,7 +92,6 @@ describe('TooltipComponent', () => {
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
 		component.viewModel.setTechniqueVM(tvm_1);
         component.tactic = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(component.tactic);
         fixture.detectChanges();
     });
 
@@ -93,8 +99,48 @@ describe('TooltipComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should create', () => {
+    it('should unpin cell', () => {
         component.unpin();
         expect(component.viewModelsService.pinnedCell).toEqual('');
+    });
+
+    it('should return correct placement when element is on the right and bottom', () => {
+        spyOn(component.element.nativeElement, 'getBoundingClientRect').and.returnValue({
+            right: 0,
+            bottom: 100
+        });
+        console.log(window.innerWidth, window.innerHeight)
+        const result = component.getPlacement();
+        expect(result).toBe('right top');
+    });
+
+    it('should return correct placement when element is on the right and top', () => {
+        spyOn(component.element.nativeElement, 'getBoundingClientRect').and.returnValue({
+            right: 0,
+            bottom: 0
+        });
+        console.log(window.innerWidth, window.innerHeight)
+        const result = component.getPlacement();
+        expect(result).toBe('right bottom');
+    });
+
+    it('should return correct placement when element is on the left and bottom', () => {
+        spyOn(component.element.nativeElement, 'getBoundingClientRect').and.returnValue({
+            right: 100,
+            bottom: 100
+        });
+        console.log(window.innerWidth, window.innerHeight)
+        const result = component.getPlacement();
+        expect(result).toBe('left top');
+    });
+
+    it('should return correct placement when element is on the left and top', () => {
+        spyOn(component.element.nativeElement, 'getBoundingClientRect').and.returnValue({
+            right: 100,
+            bottom: 0
+        });
+        console.log(window.innerWidth, window.innerHeight)
+        const result = component.getPlacement();
+        expect(result).toBe('left bottom');
     });
 });

@@ -13,7 +13,7 @@ export abstract class Cell {
     @Input() tactic: Tactic;
 
     public showContextmenu: boolean = false;
-    isDarkTheme: boolean;
+    public isDarkTheme: boolean;
 
     constructor(
         public dataService: DataService,

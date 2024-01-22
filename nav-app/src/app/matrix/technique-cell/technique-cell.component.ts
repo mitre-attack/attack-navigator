@@ -46,7 +46,7 @@ export class TechniqueCellComponent extends Cell implements OnInit {
     }
 
     // count number of annotated sub-techniques on this technique
-    public annotatedSubtechniques() {
+    public annotatedSubtechniques(): number {
         let annotatedSubs: Technique[] = [];
         for (let s of this.technique.subtechniques) {
             let subVM = this.viewModel.getTechniqueVM(s, this.tactic);
@@ -97,14 +97,5 @@ export class TechniqueCellComponent extends Cell implements OnInit {
         if (this.isCellPinned) theclass += ' editing';
 
         return theclass;
-    }
-}
-
-export class TechniqueEvent {
-    public readonly event: Event;
-    public readonly technique: Technique;
-    constructor(event, technique) {
-        this.technique = technique;
-        this.event = event;
     }
 }

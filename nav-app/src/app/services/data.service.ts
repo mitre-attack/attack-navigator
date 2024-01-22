@@ -331,8 +331,8 @@ export class DataService {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
             let subscription;
-            if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
+                if (domain.dataLoaded && !refresh) resolve(null);
                 subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
