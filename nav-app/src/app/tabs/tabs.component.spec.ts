@@ -14,7 +14,7 @@ import * as is from 'is_js';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Tactic, Technique } from '../classes/stix';
+import { Technique } from '../classes/stix';
 
 const mockSnackbarMock = jasmine.createSpyObj(['open']);
 mockSnackbarMock.open
@@ -621,37 +621,6 @@ describe('TabsComponent', () => {
         expect(logSpy).toHaveBeenCalled();
     })));
 
-    // it('should read and open json file', (waitForAsync ( () => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     let versions = [
-    //         {
-    //             "name": "ATT&CK v13",
-    //             "version": "13",
-    //             "domains": [
-    //                 {
-    //                     "name": "Enterprise",
-    //                     "identifier": "enterprise-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-    //                 }
-    //             ]
-    //         }]
-    //     app.dataService.setUpURLs(versions);
-    //     var mockedDocElement = document.createElement('input');
-    //     mockedDocElement.id = 'uploader';
-    //     mockedDocElement.value = 'test1';
-    //     mockedDocElement.type = "text";
-    //     document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
-    //     const logSpy = spyOn(mockedDocElement, 'click');
-    //     app.openUploadPrompt();
-    //     expect(logSpy).toHaveBeenCalled();
-    //     let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
-    //     let file = new File([blob], "layer-2.json");
-    //     app.readJSONFile(file).then(() => {
-    //         expect(app.layerTabs.length).toEqual(1)
-    //     });
-    // })));
-
     it('should test toggle in filter', () => {
         let filter = new Filter();
         filter.platforms.options = ['Linux', 'macOS', 'Windows'];
@@ -969,18 +938,13 @@ describe('TabsComponent', () => {
         app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
         let layer = JSON.parse(JSON.stringify(layer_file1))
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let technique_list: Technique[] = [];
-        let tactic_list: Tactic[] = [];
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         let st1 = new Technique(subtechniqueSDO1,[],null);
         let t1 = new Technique(techniqueSDO,[st1],null);
-        technique_list.push(t1);
         let tvm_1 = new TechniqueVM("T1592^reconnaissance");
         tvm_1.showSubtechniques = true;
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(stvm_1);
         app.dataService.domains[0].techniques.push(t1);
@@ -1085,21 +1049,15 @@ describe('TabsComponent', () => {
         app.dataService.setUpURLs(versions);
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
-        let technique_list: Technique[] = [];
-        let tactic_list: Tactic[] = [];
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         let st1 = new Technique(subtechniqueSDO1,[],null);
         let t1 = new Technique(techniqueSDO,[st1],null);
         let t2 = new Technique(techniqueSDO2,[],null);
-        technique_list.push(t1);
-        technique_list.push(t2);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         tvm_1.score = '3';
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
         let tvm_2 = new TechniqueVM("T1592^reconnaissance");
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);

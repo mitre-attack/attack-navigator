@@ -1,11 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixFlatComponent } from './matrix-flat.component';
-import { Matrix, Tactic, Technique } from '../../classes/stix';
+import { Matrix, Technique } from '../../classes/stix';
 import { TechniqueVM, ViewModel } from '../../classes';
-
-let technique_list: Technique[] = [];
-let tactic_list: Tactic[] = [];
 
 let stixSDO = {
     "name": "Name",
@@ -87,6 +84,7 @@ describe('MatrixFlatComponent', () => {
     }));
 
     beforeEach(() => {
+        let technique_list: Technique[] = [];
         fixture = TestBed.createComponent(MatrixFlatComponent);
         component = fixture.componentInstance;
         component.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
@@ -97,8 +95,6 @@ describe('MatrixFlatComponent', () => {
         technique_list.push(t1);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         component.viewModel.setTechniqueVM(tvm_1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
         component.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
         fixture.detectChanges();
     });

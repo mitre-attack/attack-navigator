@@ -2,11 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixMiniComponent } from './matrix-mini.component';
 import { TechniqueVM, ViewModel } from '../../classes';
-import { Matrix, Tactic, Technique } from '../../classes/stix';
-
-
-let technique_list: Technique[] = [];
-let tactic_list: Tactic[] = [];
+import { Matrix, Technique } from '../../classes/stix';
 
 let stixSDO = {
     "name": "Name",
@@ -88,6 +84,7 @@ describe('MatrixMiniComponent', () => {
     }));
 
     beforeEach(() => {
+        let technique_list: Technique[] = [];
         fixture = TestBed.createComponent(MatrixMiniComponent);
         component = fixture.componentInstance;
         component.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
@@ -98,8 +95,6 @@ describe('MatrixMiniComponent', () => {
         technique_list.push(t1);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
 		component.viewModel.setTechniqueVM(tvm_1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(tactic1);
         component.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
         fixture.detectChanges();
     });

@@ -528,10 +528,12 @@ describe('ViewmodelsService', () => {
         let tvm = new TechniqueVM(ttid);
         tvm.techniqueID = undefined;
         tvm.tactic = undefined;
+		spyOn(window, 'alert');
         spyOn(console, 'error');
         spyOn(TechniqueVM.prototype, 'deserialize').and.callThrough();
         tvm.deserialize(validTechniqueVMRep, undefined, undefined);
         expect(console.error).toHaveBeenCalledTimes(3);
+		expect(window.alert).toHaveBeenCalled();
     });
 
     it('should handle non-string comment field', () => {

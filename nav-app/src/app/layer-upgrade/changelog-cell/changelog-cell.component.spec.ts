@@ -10,7 +10,6 @@ describe('ChangelogCellComponent', () => {
     let component: ChangelogCellComponent;
     let fixture: ComponentFixture<ChangelogCellComponent>;
     let technique_list: Technique[] = [];
-    let tactic_list: Tactic[] = [];
     let stixSDO = {
         "name": "Name",
         "description": "Description",
@@ -105,7 +104,6 @@ describe('ChangelogCellComponent', () => {
         tvm_1.aggregateScoreColor = "black";
 		component.viewModel.setTechniqueVM(tvm_1);
         component.tactic = new Tactic(tacticSDO,technique_list,null);
-        tactic_list.push(component.tactic);
         fixture.detectChanges();
     });
 
