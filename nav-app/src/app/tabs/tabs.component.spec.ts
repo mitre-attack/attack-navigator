@@ -96,6 +96,23 @@ describe('TabsComponent', () => {
         ]
     }
 
+    let techniqueSDO3 = {
+        ...techniqueSDO,
+        "id": "attack-pattern-4",
+        "x_mitre_data_sources": [
+            "Network Traffic: Network Traffic Content"
+        ],
+        "x_mitre_deprecated": true,
+        "external_references": [{"external_id": "T0002"}],
+    }
+    let t1592_001 = {
+        ...techniqueSDO,
+        "id": "attack-pattern-2",
+        "x_mitre_is_subtechnique": true,
+        "revoked": true,
+        "external_references": [{"external_id": "T1592.001"}],
+    }
+
     let layer_file1 = {
         "name": "layer",
         "versions": {
@@ -1082,5 +1099,97 @@ describe('TabsComponent', () => {
         vm1.layout.expandedSubtechniques = "all";
         vm1.initTechniqueVMs();
         expect(app).toBeTruthy();
+    })));
+
+    it('should throw errors for deserializing viewmodel', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let viewmodel_error_file1 = {
+            "description":3,
+            "sorting": "3",
+            "hideDisabled": "true",
+            "showTacticRowBackground": "false",
+            "selectTechniquesAcrossTactics": "true",
+            "selectSubtechniquesWithParent": "true",
+            "selectVisibleTechniques": "false",
+            "viewMode": "4",
+            "legendItems": [
+                {
+                    label: true
+                },
+                {
+                    color: true
+                },
+                {
+                    label: true,
+                    color:"#FF00FF"
+                },
+                {
+                    label: "Legend Item Label",
+                    color:true
+                }
+            ],
+            "tacticRowBackground": false,
+            "techniques": [
+                {
+                    "techniqueID": "T0002",
+                    "color": "#e60d0d",
+                    "comment": "",
+                    "score": 3,
+                    "enabled": true,
+                    "metadata": [
+                        {
+                            "name":"test1",
+                            "value":"t1"
+                        },
+                        {
+                            "divider":true
+                        }
+                    ],
+                    "links": [
+                        {
+                            "label":"test1",
+                            "url":"t1",
+                        },
+                        {
+                            "divider":true
+                        }
+                    ],
+                    "showSubtechniques": false,
+                },
+                {
+                    "techniqueID": "T1592.001",
+                    "color": "#e60d0d",
+                    "comment": "",
+                    "score": 3,
+                    "enabled": true,
+                    "metadata": [],
+                    "links": [],
+                    "showSubtechniques": false,
+                }
+            ],
+        }
+        let consoleSpy = spyOn(console, 'error');
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let st1 = new Technique(t1592_001, [], null);
+        vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO2,[st1],null));
+        vm1.dataService.domains[0].techniques[0].subtechniques.push(st1);
+        vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO3,[],null));
+        vm1.deserialize(JSON.stringify(viewmodel_error_file1));
+        expect(consoleSpy).toHaveBeenCalled();
     })));
 });

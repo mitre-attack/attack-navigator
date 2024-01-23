@@ -514,6 +514,20 @@ describe('ViewmodelsService', () => {
         expect(console.error).toHaveBeenCalled();
     });
 
+    it('should handle missing techniqueVM', inject([ViewModelsService], (service: ViewModelsService) => {
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        let technique_list: Technique[] = [];
+        let t1 = new Technique(techniqueSDO,[],null);
+        technique_list.push(t1);
+        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        expect(() => {
+            vm1.getTechniqueVM(t1,tactic1);
+        }).toThrow(new Error('technique VM not found: T1595, TA0043'));
+        expect(() => {
+            vm1.getTechniqueVM_id("T1595^reconnaissance");
+        }).toThrow(new Error('technique VM not found: T1595^reconnaissance'));
+    }));
+
     it('should handle missing tactic field', () => {
         let tvm = new TechniqueVM(ttid);
         spyOn(console, 'error');
@@ -721,4 +735,119 @@ describe('ViewmodelsService', () => {
         expect(options.expandedSubtechniques).toBe('none');
         expect(console.error).toHaveBeenCalled();
     });
+
+    it('should throw errors for deserializing domain version', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        vm1.dataService.setUpURLs(versions);
+        let viewmodel_error_file1 = {
+            "versions": {
+                "attack": 6
+            }
+        }
+        let consoleSpy = spyOn(console, 'error');
+        vm1.deserializeDomainVersionID(JSON.stringify(viewmodel_error_file1));
+        expect(consoleSpy).toHaveBeenCalled();
+    }));
+
+    it('should test versions for layer format 3', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        vm1.dataService.setUpURLs(versions);
+        let viewmodel_version_file1 = {
+            "version": 6
+        }
+        expect(vm1.deserializeDomainVersionID(JSON.stringify(viewmodel_version_file1))).toEqual("6")
+    }));
+
+    it('should test patch for old domain name convention', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        vm1.dataService.setUpURLs(versions);
+        let viewmodel_version_file1 = {
+            "domain": 'mitre-enterprise'
+        }
+        vm1.deserializeDomainVersionID(JSON.stringify(viewmodel_version_file1));
+        expect(vm1.domainVersionID).toEqual("enterprise-attack-13");
+    }));
+
+    it('should check values', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        vm1.dataService.setUpURLs(versions);
+        let idToTacticSDO = new Map<string, any>();
+        idToTacticSDO.set("tactic-0", tacticSDO);
+        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let l1 = new Link();
+        l1.label = "test1";
+        l1.url = "t1";
+        let l2 = new Link();
+        tvm_1.links = [l1,l2];
+        let m2 = new Metadata();
+        m2.name = "test1";
+        m2.value = "t1";
+        m2.divider = true;
+        tvm_1.metadata = [m2];
+        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+		vm1.setTechniqueVM(tvm_1);
+        vm1.setTechniqueVM(tvm_2);
+        vm1.activeTvm = tvm_2;
+        vm1.checkValues(true,"T1595^reconnaissance");
+        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T1595^reconnaissance"]
+        vm1.activeTvm = tvm_1;
+        vm1.checkValues(false,"T1595^reconnaissance");
+        expect(vm1.linksMatch).toEqual(true); // linkMismatches = []
+        vm1.activeTvm = tvm_1;
+        vm1.selectAllTechniques(); // select all techniques
+        vm1.checkValues(false,"T1595^reconnaissance");
+        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T1595^reconnaissance"]
+    }));
 });
