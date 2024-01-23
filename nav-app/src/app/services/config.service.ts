@@ -151,22 +151,6 @@ export class ConfigService {
         return this.featureGroups.has(featureGroupName);
     }
 
-    public getFeatureGroups(): string[] {
-        let keys = [];
-        this.featureGroups.forEach(function (value, key) {
-            keys.push(key);
-        });
-        return keys;
-    }
-
-    public getFeatures(): string[] {
-        let keys = [];
-        this.features.forEach(function (value, key) {
-            keys.push(key);
-        });
-        return keys;
-    }
-
     /**
      * Get all url fragments
      * @param  url optional, url to parse instead of window location href
