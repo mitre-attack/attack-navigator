@@ -6,7 +6,7 @@ import { Matrix, Technique, Tactic } from '../classes/stix';
 import { EventEmitter } from '@angular/core';
 
 describe('MatrixCommon', () => {
-    let service: MatrixCommon;
+    let matrixCommon: MatrixCommon;
     let stixSDO = {
         "name": "Name",
         "description": "Description",
@@ -108,7 +108,7 @@ describe('MatrixCommon', () => {
             imports: [HttpClientTestingModule],
             providers: [MatrixCommon]
         });
-        service = TestBed.inject(MatrixCommon);
+        matrixCommon = TestBed.inject(MatrixCommon);
     });
 
     it('should be created', inject([MatrixCommon], (service: MatrixCommon) => {
@@ -267,11 +267,98 @@ describe('MatrixCommon', () => {
         expect(service.viewModel.highlightedTactic).toEqual(null);
     }));
 
-    it('should left click on technique', inject([MatrixCommon], (service: MatrixCommon) => {
+
+    // onTechniqueLeftClick tests
+    // ------------------------------------------------------------
+
+    it('should not modify technique selection if selecting_techniques is disabled', () => {
+        let technique = new Technique(techniqueSDO, [], null);
+        let tactic = new Tactic(tacticSDO, [technique], null);
+        matrixCommon.viewModel = new ViewModel("vm", "1", "enterprise-attack-13", null);
+
+        spyOn(matrixCommon.configService, 'getFeature').and.returnValue(false);
+        spyOn(matrixCommon.viewModel, 'isTechniqueSelected');
+        spyOn(matrixCommon.viewModel, 'unselectTechnique');
+        spyOn(matrixCommon.viewModel, 'selectTechnique');
+        spyOn(matrixCommon.viewModel, 'clearSelectedTechniques');
+        let emitterSpy = spyOn(matrixCommon.viewModelsService.onSelectionChange, 'emit');
+
+        matrixCommon.onTechniqueLeftClick({}, technique, tactic);
+
+        expect(matrixCommon.viewModel.isTechniqueSelected).not.toHaveBeenCalled();
+        expect(matrixCommon.viewModel.unselectTechnique).not.toHaveBeenCalled();
+        expect(matrixCommon.viewModel.selectTechnique).not.toHaveBeenCalled();
+        expect(matrixCommon.viewModel.clearSelectedTechniques).not.toHaveBeenCalled();
+        expect(emitterSpy).not.toHaveBeenCalled();
+    });
+
+    it('should remove technique from selection based on event modifiers', () => {
+        let technique = new Technique(techniqueSDO, [], null);
+        let tactic = new Tactic(tacticSDO, [technique], null);
+        matrixCommon.viewModel = new ViewModel("vm", "1", "enterprise-attack-13", null);
+
+        spyOn(matrixCommon.viewModel, 'isTechniqueSelected').and.returnValue(true); // technique is selected
+        spyOn(matrixCommon.configService, 'getFeature').and.returnValue(true);
+        let unselectSpy = spyOn(matrixCommon.viewModel, 'unselectTechnique');
+        let selectSpy = spyOn(matrixCommon.viewModel, 'selectTechnique');
+        let emitterSpy = spyOn(matrixCommon.viewModelsService.onSelectionChange, 'emit');
+
+        // case: shift key
+        matrixCommon.onTechniqueLeftClick({shift: true}, technique, tactic);
+        expect(matrixCommon.viewModel.isTechniqueSelected).toHaveBeenCalledWith(technique, tactic);
+        expect(unselectSpy).toHaveBeenCalledWith(technique, tactic);
+        expect(selectSpy).not.toHaveBeenCalled();
+        expect(emitterSpy).toHaveBeenCalled();
+
+        unselectSpy.calls.reset();
+        selectSpy.calls.reset();
+        emitterSpy.calls.reset();
+
+        // case: ctrl key
+        matrixCommon.onTechniqueLeftClick({ctrl: true}, technique, tactic);
+        expect(matrixCommon.viewModel.isTechniqueSelected).toHaveBeenCalledWith(technique, tactic);
+        expect(unselectSpy).toHaveBeenCalledWith(technique, tactic);
+        expect(selectSpy).not.toHaveBeenCalled();
+        expect(emitterSpy).toHaveBeenCalled();
+
+        unselectSpy.calls.reset();
+        selectSpy.calls.reset();
+        emitterSpy.calls.reset();
+
+        // case: meta key
+        matrixCommon.onTechniqueLeftClick({meta: true}, technique, tactic);
+        expect(matrixCommon.viewModel.isTechniqueSelected).toHaveBeenCalledWith(technique, tactic);
+        expect(unselectSpy).toHaveBeenCalledWith(technique, tactic);
+        expect(selectSpy).not.toHaveBeenCalled();
+        expect(emitterSpy).toHaveBeenCalled();
+    });
+
+    it('should add technique to selection based on event modifiers', () => {
+        let technique = new Technique(techniqueSDO, [], null);
+        let tactic = new Tactic(tacticSDO, [technique], null);
+        matrixCommon.viewModel = new ViewModel("vm", "1", "enterprise-attack-13", null);
+
+        spyOn(matrixCommon.viewModel, 'isTechniqueSelected').and.returnValue(false); // technique is not selected
+        spyOn(matrixCommon.configService, 'getFeature').and.returnValue(true);
+        let unselectSpy = spyOn(matrixCommon.viewModel, 'unselectTechnique');
+        let selectSpy = spyOn(matrixCommon.viewModel, 'selectTechnique');
+        let emitterSpy = spyOn(matrixCommon.viewModelsService.onSelectionChange, 'emit');
+
+        matrixCommon.onTechniqueLeftClick({shift: true}, technique, tactic);
+
+        expect(matrixCommon.viewModel.isTechniqueSelected).toHaveBeenCalledWith(technique, tactic);
+        expect(unselectSpy).not.toHaveBeenCalled();
+        expect(selectSpy).toHaveBeenCalledWith(technique, tactic);
+        expect(emitterSpy).toHaveBeenCalled();
+    });
+
+    // ------------------------------------------------------------
+
+    it('should left click on technique', () => {
         let technique_list: Technique[] = [];
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
-        let vm1 = service.viewModelsService.newViewModel("test1","enterprise-attack-13");
+        let vm1 = matrixCommon.viewModelsService.newViewModel("test1","enterprise-attack-13");
         let st1 = new Technique(subtechniqueSDO1,[],null);
         let t1 = new Technique(techniqueSDO,[st1],null);
         technique_list.push(t1);
@@ -287,31 +374,31 @@ describe('MatrixCommon', () => {
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_2);
         let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        service.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
+        matrixCommon.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
         let e1 = new EventEmitter<any>();
         let event = {"shift":true};
-        service.viewModel = vm1;
-        let emitSpy = spyOn(service.viewModelsService.onSelectionChange, 'emit');
-        service.configService.setFeature("selecting_techniques", true);
-        service.onTechniqueLeftClick(e1,t1,tactic1);
+        matrixCommon.viewModel = vm1;
+        let emitSpy = spyOn(matrixCommon.viewModelsService.onSelectionChange, 'emit');
+        matrixCommon.configService.setFeature("selecting_techniques", true);
+        matrixCommon.onTechniqueLeftClick(e1,t1,tactic1);
         expect(emitSpy).toHaveBeenCalled();
-        expect(service.viewModel.selectedTechniques.size).toEqual(1); // T1595
-        service.onTechniqueLeftClick(event,t1,tactic1); 
+        expect(matrixCommon.viewModel.selectedTechniques.size).toEqual(1); // T1595
+        matrixCommon.onTechniqueLeftClick(event,t1,tactic1); 
         expect(emitSpy).toHaveBeenCalled();
-        expect(service.viewModel.selectedTechniques.size).toEqual(0);
-        service.onTechniqueLeftClick(event,t1,tactic1);
+        expect(matrixCommon.viewModel.selectedTechniques.size).toEqual(0);
+        matrixCommon.onTechniqueLeftClick(event,t1,tactic1);
         expect(emitSpy).toHaveBeenCalled();
-        expect(service.viewModel.selectedTechniques.size).toEqual(1); // T1595
-        service.onTechniqueLeftClick(e1,t1,tactic1);
+        expect(matrixCommon.viewModel.selectedTechniques.size).toEqual(1); // T1595
+        matrixCommon.onTechniqueLeftClick(e1,t1,tactic1);
         expect(emitSpy).toHaveBeenCalled();
-        expect(service.viewModel.selectedTechniques.size).toEqual(0);
-        spyOn(service.viewModel, 'isTechniqueSelected').and.returnValues(false);
-        spyOn(service.viewModel, 'getSelectedTechniqueCount').and.returnValue(2);
+        expect(matrixCommon.viewModel.selectedTechniques.size).toEqual(0);
+        spyOn(matrixCommon.viewModel, 'isTechniqueSelected').and.returnValues(false);
+        spyOn(matrixCommon.viewModel, 'getSelectedTechniqueCount').and.returnValue(2);
         vm1.activeTvm = tvm_2;
-        service.viewModel = vm1;
-        service.onTechniqueLeftClick(e1,t1,tactic1);
+        matrixCommon.viewModel = vm1;
+        matrixCommon.onTechniqueLeftClick(e1,t1,tactic1);
         expect(emitSpy).toHaveBeenCalled();
-    }));
+    });
 
     it('on tactic click', inject([MatrixCommon], (service: MatrixCommon) => {
         let technique_list: Technique[] = [];
