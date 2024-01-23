@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
 import { ContextMenuItem } from '../classes/context-menu-item';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConfigService {
+    public versions: any[];
+    public contextMenuItems: ContextMenuItem[] = [];
+    public defaultLayers: any;
     public comment_color = 'yellow';
     public link_color = 'blue';
     public metadata_color = 'purple';
@@ -14,38 +17,12 @@ export class ConfigService {
     private featureGroups = new Map<string, string[]>();
     private featureStructure: object[];
 
-    public contextMenuItems: ContextMenuItem[] = [];
+    public get subtechniquesEnabled(): boolean {
+        return this.getFeature('subtechniques');
+    }
 
-    constructor(private dataService: DataService) {
-        console.debug('initializing config service');
-        let self = this;
-        let subscription = dataService.getConfig().subscribe({
-            next: function (config: any) {
-                //parse feature preferences from config json
-                config['features'].forEach(function (featureObject: any) {
-                    self.setFeature_object(featureObject);
-                });
-                //override json preferences with preferences from URL fragment
-                self.getAllFragments().forEach(function (value: string, key: string) {
-                    let valueBool = value == 'true';
-                    if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                        self.setFeature(key, valueBool);
-                    }
-                });
-                dataService.subtechniquesEnabled = self.getFeature('subtechniques');
-                self.featureStructure = config['features'];
-                self.comment_color = config['comment_color'];
-                self.metadata_color = config['metadata_color'];
-                self.link_color = config['link_color'];
-                self.banner = config['banner'];
-                for (let obj of config['custom_context_menu_items']) {
-                    self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url));
-                }
-            },
-            complete: () => {
-                if (subscription) subscription.unsubscribe();
-            }, //prevent memory leaks
-        });
+    constructor(private http: HttpClient) {
+        // intentionally left blank
     }
 
     public getFeatureList(): object[] {
@@ -206,5 +183,40 @@ export class ConfigService {
         }
 
         return fragments;
+    }
+
+    /**
+     * Load the configuration file
+     * Note: this is done at startup
+     */
+    public loadConfig() {
+        return this.http.get('./assets/config.json')
+            .toPromise()
+            .then(config => {
+                console.debug(`loaded app configuration settings`);
+
+                this.versions = config['versions'];
+                config['custom_context_menu_items'].forEach(item => {
+                    this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
+                });
+                this.defaultLayers = config['default_layers'];
+                this.comment_color = config['comment_color'];
+                this.link_color = config['link_color'];
+                this.metadata_color = config['metadata_color'];
+                this.banner = config['banner'];
+
+                // parse feature preferences
+                this.featureStructure = config['features'];
+                config['features'].forEach(feature => {
+                    this.setFeature_object(feature);
+                });
+
+                // override preferences with preferences from URL fragments
+                this.getAllFragments().forEach((value: string, key: string) => {
+                    if (this.isFeature(key) || this.isFeatureGroup(key)) {
+                        this.setFeature(key, value == 'true');
+                    }
+                });
+            })
     }
 }

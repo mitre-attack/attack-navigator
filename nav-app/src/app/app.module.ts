@@ -1,6 +1,6 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import 'rxjs/add/operator/map';
 
 // material
@@ -49,6 +49,7 @@ import { LayerInformationComponent } from './layer-information/layer-information
 import { ChangelogComponent } from './changelog/changelog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
+import { ConfigService } from './services/config.service';
 
 @NgModule({
     declarations: [
@@ -102,7 +103,18 @@ import { ListInputComponent } from './list-input/list-input.component';
         MatTabsModule,
     ],
     exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
-    providers: [Title],
+    providers: [
+        Title,
+        ConfigService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (configService: ConfigService) => {
+                return () => configService.loadConfig();
+            },
+            deps: [ConfigService],
+            multi: true
+        }
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

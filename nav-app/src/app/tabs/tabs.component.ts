@@ -76,23 +76,16 @@ export class TabsComponent implements AfterViewInit {
         public snackBar: MatSnackBar
     ) {
         console.debug('initializing tabs component');
-        let subscription = dataService.getConfig().subscribe({
-            next: (config: Object) => {
-                this.newBlankTab();
-                this.loadTabs(config['default_layers']).then(() => {
-                    // if failed to load from url, create a new blank layer
-                    if (this.layerTabs.length == 0) this.newLayer(this.dataService.domains[0].id);
+        this.newBlankTab();
+        this.loadTabs(configService.defaultLayers).then(() => {
+            // failed to load from URL, create a new blank layer
+            if (this.layerTabs.length == 0) this.newLayer(this.dataService.domains[0].id);
 
-                    // if there is no active tab set, activate the first
-                    if (!this.activeTab) this.selectTab(this.layerTabs[0]);
-                });
-                this.customizedConfig = this.configService.getFeatureList();
-                this.bannerContent = this.configService.banner;
-            },
-            complete: () => {
-                if (subscription) subscription.unsubscribe();
-            }, // prevent memory leaks
+            // if there is no active tab set, activate the first
+            if (!this.activeTab) this.selectTab(this.layerTabs[0]);
         });
+        this.customizedConfig = this.configService.getFeatureList();
+        this.bannerContent = this.configService.banner;
     }
 
     ngAfterViewInit(): void {
