@@ -9,9 +9,9 @@ export class ConfigService {
     public versions: any[];
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;
-    public comment_color = 'yellow';
-    public link_color = 'blue';
-    public metadata_color = 'purple';
+    public commentColor = 'yellow';
+    public linkColor = 'blue';
+    public metadataColor = 'purple';
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -200,9 +200,9 @@ export class ConfigService {
                     this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
                 });
                 this.defaultLayers = config['default_layers'];
-                this.comment_color = config['comment_color'];
-                this.link_color = config['link_color'];
-                this.metadata_color = config['metadata_color'];
+                this.commentColor = config['comment_color'];
+                this.linkColor = config['link_color'];
+                this.metadataColor = config['metadata_color'];
                 this.banner = config['banner'];
 
                 // parse feature preferences

@@ -144,13 +144,13 @@ export abstract class Cell {
         if (this.tactic) {
             let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
             if (tvm.comment.length > 0 || this.hasNotes()) {
-                if (this.configService.getFeature('comment_underline')) return this.configService.comment_color;
+                if (this.configService.getFeature('comment_underline')) return this.configService.commentColor;
             }
             if (tvm.metadata.length > 0) {
-                if (this.configService.getFeature('metadata_underline')) return this.configService.metadata_color;
+                if (this.configService.getFeature('metadata_underline')) return this.configService.metadataColor;
             }
             if (tvm.links.length > 0) {
-                if (this.configService.getFeature('link_underline')) return this.configService.link_color;
+                if (this.configService.getFeature('link_underline')) return this.configService.linkColor;
             }
         }
         return '';
