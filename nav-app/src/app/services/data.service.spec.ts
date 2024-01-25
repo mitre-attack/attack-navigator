@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 import { Version, VersionChangelog } from '../classes';
 import { Asset, Campaign, DataComponent, Domain, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
-import { of } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Collection } from '../utils/taxii2lib';
 
@@ -381,9 +381,12 @@ describe('DataService', () => {
         let return$ = {versions: configData};
         let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
+        DataService.prototype.subscription = new Subscription;
+        const unsubscribeSpy = spyOn(DataService.prototype.subscription, 'unsubscribe');
         const mockService = new DataService(http);
         expect(mockService).toBeTruthy();
         expect(functionSpy).toHaveBeenCalledOnceWith(return$.versions)
+        expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
     it('should set up data', inject([DataService], (service: DataService) => {
@@ -495,6 +498,8 @@ describe('DataService', () => {
         service.setUpURLs(configData);
         let domain = service.domains[0];
         let functionSpy = spyOn(service, 'getDomainData').and.returnValue(of(stixBundles));
+        DataService.prototype.subscription = new Subscription;
+        spyOn(DataService.prototype.subscription, 'unsubscribe');
         await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
         expect(functionSpy).toHaveBeenCalledOnceWith(domain, false);
     }));

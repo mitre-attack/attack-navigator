@@ -1047,7 +1047,7 @@ describe('TabsComponent', () => {
         });
     })));
 
-    it('should serialize viewmodel', (waitForAsync ( () => {
+    it('should serialize viewmodel and only save techniqueVMs which have been modified', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         let versions = [
@@ -1098,6 +1098,42 @@ describe('TabsComponent', () => {
         vm1.initTechniqueVMs();
         vm1.layout.expandedSubtechniques = "all";
         vm1.initTechniqueVMs();
+        expect(app).toBeTruthy();
+    })));
+
+    it('should serialize viewmodel and only save techniqueVMs which have been modified and are visible', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions);
+        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let idToTacticSDO = new Map<string, any>();
+        idToTacticSDO.set("tactic-0", tacticSDO);
+        let t1 = new Technique(techniqueSDO,[],null);
+        let t2 = new Technique(techniqueSDO2,[],null);
+        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        tvm_1.isVisible = true;
+        tvm_1.score = '3';
+        vm1.setTechniqueVM(tvm_1);
+        vm1.setTechniqueVM(tvm_2);
+        app.dataService.domains[0].techniques.push(t1);
+        app.dataService.domains[0].techniques.push(t2);
+        vm1.dataService.domains[0].urls = ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"];
+        vm1.dataService.domains[0].isCustom = true;
+        vm1.serialize(true);
         expect(app).toBeTruthy();
     })));
 

@@ -28,7 +28,7 @@ export class ConfigService {
                 //override json preferences with preferences from URL fragment
                 self.getAllFragments().forEach(function (value: string, key: string) {
                     let valueBool = value == 'true';
-                    if (self.isFeature(key) || self.isFeatureGroup(key)) {
+                    if (self.isFeatureGroup(key) || self.isFeature(key)) {
                         self.setFeature(key, valueBool);
                     }
                 });

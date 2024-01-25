@@ -2,7 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
 import { DataService } from './data.service';
-import { of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 
 describe('ConfigService', () => {
     let configVersions: any[] = [{
@@ -14,6 +14,51 @@ describe('ConfigService', () => {
             "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
         }]
     }];
+
+    let versions = [
+        {
+            "name": "ATT&CK v13",
+            "version": "13",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                }
+            ]
+        },
+        {
+            "name": "ATT&CK v12",
+            "version": "12",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                }
+            ]
+        }
+    ]
+
+    let config = {
+        "banner":"",
+        "comment_color":"yellow",
+        "custom_context_menu_items": [
+            {
+                "label": "view technique on ATT&CK website",
+                "url": "https://attack.mitre.org/techniques/{{technique_attackID}}",
+                "subtechnique_url": "https://attack.mitre.org/techniques/{{parent_technique_attackID}}/{{subtechnique_attackID_suffix}}"
+            }
+        ],
+        "features": [
+            {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
+            {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
+        ],
+        "link_color": "blue",
+        "metadata_color":"purple",
+        "versions": [{"name": 'ATT&CK v13', "version": '13', "domains": ["Enterprise"]}]
+        }
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
@@ -21,55 +66,20 @@ describe('ConfigService', () => {
         });
     });
 
-    beforeEach(inject([ConfigService], (service: ConfigService) => {
-            let config = {
-            "banner":"",
-            "comment_color":"yellow",
-            "custom_context_menu_items": [
-                {
-                    "label": "view technique on ATT&CK website",
-                    "url": "https://attack.mitre.org/techniques/{{technique_attackID}}",
-                    "subtechnique_url": "https://attack.mitre.org/techniques/{{parent_technique_attackID}}/{{subtechnique_attackID_suffix}}"
-                }
-            ],
-            "features": [{"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."}],
-            "link_color": "blue",
-            "metadata_color":"purple",
-            "versions": [{"name": 'ATT&CK v13', "version": '13', "domains": ["Enterprise"]}]
-            }
-            let versions = [
-                {
-                    "name": "ATT&CK v13",
-                    "version": "13",
-                    "domains": [
-                        {
-                            "name": "Enterprise",
-                            "identifier": "enterprise-attack",
-                            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                        }
-                    ]
-                },
-                {
-                    "name": "ATT&CK v12",
-                    "version": "12",
-                    "domains": [
-                        {
-                            "name": "Enterprise",
-                            "identifier": "enterprise-attack",
-                            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                        }
-                    ]
-                }
-            ]
-        service.dataService.setUpURLs(versions);
-        let return$ = {versions: configVersions};
-        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(config));
-        let cs = new ConfigService(service.dataService); // do not delete
-
-    }));
-
     it('should be created', inject([ConfigService], (service: ConfigService) => {
         expect(service).toBeTruthy();
+    }));
+
+    it('should set up data in constructor', inject([ConfigService], (service: ConfigService) => {
+        service.dataService.setUpURLs(versions);
+        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(config));
+        let fragments = new Map<string, string>();
+        fragments.set("comments", "false"); //'https://mitre-attack.github.io/attack-navigator/#comments=false'
+        spyOn(ConfigService.prototype, "getAllFragments").and.returnValue(fragments);
+        ConfigService.prototype.subscription = new Subscription;
+        const unsubscribeSpy = spyOn(ConfigService.prototype.subscription, 'unsubscribe');
+        let cs = new ConfigService(service.dataService);
+        expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
     it('should set feature object', inject([ConfigService], (service: ConfigService) => {
@@ -91,6 +101,7 @@ describe('ConfigService', () => {
     }));
 
     it('should get feature group', inject([ConfigService], (service: ConfigService) => {
+        expect(service.getFeatureGroup("technique_controls")).toBeTruthy();
         let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
             {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
@@ -98,6 +109,17 @@ describe('ConfigService', () => {
             ]}
         service.setFeature_object(feature_object)
         expect(service.getFeatureGroup("technique_controls")).toBeTruthy();
+    }));
+
+    it('should get feature group count', inject([ConfigService], (service: ConfigService) => {
+        expect(service.getFeatureGroupCount("technique_controls")).toEqual(-1);
+        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
+            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
+            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
+            ]}
+        service.setFeature_object(feature_object)
+        expect(service.getFeatureGroupCount("technique_controls")).toEqual(3);
     }));
 
     it('should get all features', inject([ConfigService], (service: ConfigService) => {
@@ -149,6 +171,7 @@ describe('ConfigService', () => {
     }));
 
     it('should get feature list', inject([ConfigService], (service: ConfigService) => {
+        expect(service.getFeatureList()).toEqual([]);
         service.featureStructure = [
             {"name": "sticky_toolbar", "enabled": true}
             ]
@@ -172,6 +195,7 @@ describe('ConfigService', () => {
 
     it('should get all url fragments', inject([ConfigService], (service: ConfigService) => {
         let fragments = new Map<string, string>();
+        expect(service.getAllFragments()).toEqual(fragments);
         fragments.set("comments","false")
         expect(service.getAllFragments('https://mitre-attack.github.io/attack-navigator/#comments=false')).toEqual(fragments);
     }));

@@ -291,6 +291,12 @@ describe('ViewmodelsService', () => {
 
 	it('should get common value from selected techniques', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        let technique_list: Technique[] = [];
+        let t1 = new Technique(techniqueSDO,[],null);
+        let t2 = new Technique(techniqueSDO2,[],null);
+        technique_list.push(t1);
+        technique_list.push(t2);
+        let tactic1 = new Tactic(tacticSDO,technique_list,null);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         tvm_1.score = '3';
         let tvm_2 = new TechniqueVM("T1592^reconnaissance");
@@ -301,6 +307,8 @@ describe('ViewmodelsService', () => {
         vm1.selectAllTechniques();
         expect(vm1.getEditingCommonValue("score")).toEqual('3'); // common score value of 3
         expect(vm1.getEditingCommonValue("comment")).toEqual(''); // no common value for comment
+        vm1.unselectAllTechniquesInTactic(tactic1);
+        expect(vm1.getEditingCommonValue("score")).toEqual('');
     }));
 
 	it('should select annotated techniques and unannotated techniques', inject([ViewModelsService], (service: ViewModelsService) => {
@@ -849,5 +857,26 @@ describe('ViewmodelsService', () => {
         vm1.selectAllTechniques(); // select all techniques
         vm1.checkValues(false,"T1595^reconnaissance");
         expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T1595^reconnaissance"]
+    }));
+
+    it('should load vm data with custom url', inject([ViewModelsService], (service: ViewModelsService) => {
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        let vm1 = service.newViewModel("test1","enterprise-attack-13");
+        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.domains[0].urls = ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"];
+        vm1.dataService.domains[0].isCustom = true;
+        expect(vm1.loadVMData()).toBeUndefined();
     }));
 });

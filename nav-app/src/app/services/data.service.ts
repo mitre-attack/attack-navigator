@@ -11,15 +11,16 @@ import { Version, VersionChangelog } from '../classes';
     providedIn: 'root',
 })
 export class DataService {
+    public subscription;
     constructor(private http: HttpClient) {
-        let subscription;
+        //let subscription;
         console.debug('initializing data service');
-        subscription = this.getConfig().subscribe({
+        this.subscription = this.getConfig().subscribe({
             next: (config) => {
                 this.setUpURLs(config['versions']);
             },
             complete: () => {
-                if (subscription) subscription.unsubscribe();
+                if (this.subscription) this.subscription.unsubscribe();
             }, //prevent memory leaks
         });
     }
@@ -330,16 +331,15 @@ export class DataService {
     loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
-            let subscription;
             if (domain) {
                 if (domain.dataLoaded && !refresh) resolve(null);
-                subscription = this.getDomainData(domain, refresh).subscribe({
+                this.subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);
                     },
                     complete: () => {
-                        if (subscription) subscription.unsubscribe();
+                        if (this.subscription) this.subscription.unsubscribe();
                     }, //prevent memory leaks
                 });
             } else if (!domain) {
