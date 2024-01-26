@@ -32,4 +32,4 @@ jobs:
       if: always()
       with:
         name: code-coverage-report
-        path: ./angular.json
+        path: nav-app/coverage/chrome/index.html
