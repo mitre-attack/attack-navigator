@@ -99,7 +99,7 @@
                         ],
                         "styles": ["src/styles.scss"],
                         "assets": ["src/assets", "src/favicon.ico"],
-                        "codeCoverage": true,
+                        "codeCoverage": true
                     }
                 },
                 "lint": {
