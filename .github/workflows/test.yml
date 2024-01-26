@@ -5,6 +5,7 @@ on:
     branches: [ "develop" ]
   pull_request:
     branches: [ "master", "develop" ]
+    types: [synchronize]
 
 jobs:
   run-jasmine-tests:
