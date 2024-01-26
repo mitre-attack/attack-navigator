@@ -9,6 +9,9 @@ on:
 jobs:
   run-jasmine-tests:
     runs-on: ubuntu-latest
+    defaults:
+       run:
+         working-directory: ./nav-app/
     strategy:
       matrix:
         node-version: [16.x]
