@@ -45,6 +45,8 @@ module.exports = function (config) {
         coverageReporter: {
             type: 'html',
             dir: 'coverage/',
+          	subdir: 'chrome',
+			      file: 'index.html'
         },
     });
 };
