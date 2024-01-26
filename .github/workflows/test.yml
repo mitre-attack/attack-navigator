@@ -20,5 +20,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: nav-app/package-lock.json
-    - run: npm ci
+    - run: npm install
     - run: npm test
