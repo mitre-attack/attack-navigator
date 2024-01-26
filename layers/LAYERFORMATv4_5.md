@@ -37,7 +37,7 @@ This document describes **Version 4.5** of the MITRE ATT&CK Navigator Layer file
 | Name     | Type     | Required? | Default Value (if not present) | Description |
 | :------------- | :------------- | :------------- | :------------- | :------------- |
 | attack | String | No | Current version of ATT&CK | ATT&CK version of this layer |
-| navigator | String | Yes | | Must be at least "4.8.0" |
+| navigator | String | Yes | | Must be at least "4.9.0" |
 | layer | String | Yes | | Must be "4.5" |
 
 ## Technique Object properties
@@ -109,7 +109,7 @@ The following example illustrates the layer file format of a single layer:
     "name": "example layer",
     "versions": {
         "attack": "13",
-        "navigator": "4.8.2",
+        "navigator": "4.9.1",
         "layer": "4.5"
     },
     "domain": "enterprise-attack",
@@ -232,8 +232,8 @@ The following example illustrates the layer file format of multiple layers. The 
     {
         "name": "example layer",
         "versions": {
-            "attack": "13",
-            "navigator": "4.8.2",
+            "attack": "14",
+            "navigator": "4.9.1",
             "layer": "4.5"
         },
         "domain": "enterprise-attack",
@@ -350,8 +350,8 @@ The following example illustrates the layer file format of multiple layers. The 
     {
         "name": "example layer",
         "versions": {
-            "attack": "13",
-            "navigator": "4.8.2",
+            "attack": "14",
+            "navigator": "4.9.1",
             "layer": "4.5"
         },
         "domain": "enterprise-attack",
