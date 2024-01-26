@@ -24,4 +24,4 @@ jobs:
         cache: 'npm'
         cache-dependency-path: nav-app/package-lock.json
     - run: npm ci
-    - run: npm run test -- --no-watch --browsers ChromeHeadlessCI
+    - run: npm run test -- --single-run --browsers ChromeHeadlessCI
