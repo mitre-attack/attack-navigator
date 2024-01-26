@@ -13,7 +13,6 @@ import { Version, VersionChangelog } from '../classes';
 export class DataService {
     public subscription;
     constructor(private http: HttpClient) {
-        //let subscription;
         console.debug('initializing data service');
         this.subscription = this.getConfig().subscribe({
             next: (config) => {
