@@ -24,7 +24,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: nav-app/package-lock.json
     - run: npm ci
-    - run: npm run test -- --coverage --no-watch --browsers ChromeHeadlessCI
+    - run: npm run test -- --code-coverage --no-watch --browsers ChromeHeadlessCI
     - name: Archive code coverage results
       uses: actions/upload-artifact@v4
       with:
