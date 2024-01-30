@@ -12,7 +12,7 @@ import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Technique } from '../classes/stix';
 
@@ -23,6 +23,7 @@ describe('TabsComponent', () => {
     let comp: TabsComponent;
     let fixture: ComponentFixture<TabsComponent>;
     let snackBar: MatSnackBar;
+    let httpClient: HttpClient;
     let bundles: any[] = [{
         "type": "bundle",
         "id": "bundle--0",
@@ -325,6 +326,159 @@ describe('TabsComponent', () => {
         "selectVisibleTechniques": false
     }
 
+    let layer_file3 = {
+        "name": "layer",
+        "versions": {
+            "attack": "13",
+            "navigator": "4.9.0",
+            "layer": "4.5"
+        },
+        "domain": "mobile-attack",
+        "description": "",
+        "filters": {
+            "platforms": [
+                "None",
+                "mac",
+                "Windows",
+                "Human-Machine Interface",
+                "Control Server",
+                "Data Historian",
+                "Field Controller/RTU/PLC/IED",
+                "Input/Output Server",
+                "Safety Instrumented System/Protection Relay",
+                "Engineering Workstation"
+            ]
+        },
+        "sorting": 0,
+        "layout": {
+            "layout": "side",
+            "aggregateFunction": "average",
+            "showID": false,
+            "showName": true,
+            "showAggregateScores": false,
+            "countUnscored": false,
+            "expandedSubtechniques": "none"
+        },
+        "hideDisabled": false,
+        "metadata": [
+            {
+                "name":"test1",
+                "value":"t1"
+            },
+            {
+                "divider":true
+            }
+        ],
+        "links": [
+            {
+                "label":"test1",
+                "url":"t1",
+            },
+            {
+                "divider":true
+            }
+        ],
+        "techniques": [
+            {
+                "techniqueID": "T0889",
+                "tactic": "persistence",
+                "color": "#e60d0d",
+                "comment": "",
+                "score": 3,
+                "enabled": true,
+                "metadata": [
+                    {
+                        "name":"test1",
+                        "value":"t1"
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
+                "links": [
+                    {
+                        "label":"test1",
+                        "url":"t1",
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
+                "showSubtechniques": false,
+            },
+            {
+                "techniqueID": "T1595",
+                "color": "#e60d0d",
+                "comment": "",
+                "score": 3,
+                "enabled": true,
+                "metadata": [
+                    {
+                        "name":"test1",
+                        "value":"t1"
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
+                "links": [
+                    {
+                        "label":"test1",
+                        "url":"t1",
+                    },
+                    {
+                        "divider":true
+                    }
+                ],
+                "showSubtechniques": false
+            },
+            {
+                "techniqueID": "T1595.002",
+                "color": "#e60d0d",
+                "comment": "",
+                "score": 3,
+                "enabled": true,
+                "metadata": [],
+                "links": [],
+                "showSubtechniques": false
+            }
+        ],
+        "gradient": {
+            "colors": [
+                "#ff6666ff",
+                "#ffe766ff",
+                "#8ec843ff"
+            ],
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "legendItems": [
+            {
+                color: "#FF00FF",
+                label: "Legend Item Label"
+            }
+        ],
+        "showTacticRowBackground": false,
+        "tacticRowBackground": "#dddddd",
+        "selectTechniquesAcrossTactics": true,
+        "selectSubtechniquesWithParent": false,
+        "selectVisibleTechniques": false
+    }
+
+    let versions = [
+        {
+            "name": "ATT&CK v13",
+            "version": "13",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                }
+            ]
+        }
+    ];
+
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, MarkdownModule.forRoot({ loader: HttpClient })],
@@ -370,10 +524,22 @@ describe('TabsComponent', () => {
         fixture = TestBed.createComponent(TabsComponent);
         comp = fixture.componentInstance;
         fixture.detectChanges();
+        httpClient = TestBed.inject(HttpClient);
     }));
 
     it('should create component', () => {
         expect(comp).toBeTruthy();
+    });
+
+    it('should set up data in constructor', () => {
+        let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
+        let return$ = {versions: versions};
+        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
+        TabsComponent.prototype.subscription = new Subscription;
+        const unsubscribeSpy = spyOn(TabsComponent.prototype.subscription, 'unsubscribe');
+        //spyOn(TabsComponent.prototype, 'loadTabs');
+        fixture = TestBed.createComponent(TabsComponent);
+        comp = fixture.componentInstance;
     });
 
     it('should create new tab', () => {
@@ -435,22 +601,12 @@ describe('TabsComponent', () => {
     it('should create new layer', () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }]
         app.dataService.setUpURLs(versions);
         expect(app.latestDomains.length).toEqual(1);
         app.newLayer("enterprise-attack-13");
         expect(app.layerTabs.length).toEqual(1);
+        app.newLayer("enterprise-attack-13", JSON.parse(JSON.stringify(layer_file1)));
+        expect(app.layerTabs.length).toEqual(2);
     });
 
     it('should check if feature is defined in config file', () => {
@@ -542,12 +698,13 @@ describe('TabsComponent', () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         app.opSettings.scoreExpression = "a+b";
-        app.getScoreExpressionError();
+        app.opSettings.domain = "enterprise-atack-13";
         let scoreVariables = new Map<string, ViewModel>();
         let vm1 = app.viewModelsService.newViewModel("layer","ics-attack-13");
 		let vm2 = app.viewModelsService.newViewModel("layer1","ics-attack-13");
         app.openTab('layer', vm1, true, true, true, true);
         app.openTab('layer1', vm2, true, true, true, true);
+        expect(app.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
         let vm1_name = app.indexToChar(0);
         let vm2_name = app.indexToChar(1);
         scoreVariables.set(vm1_name,vm1);
@@ -577,23 +734,11 @@ describe('TabsComponent', () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
         app.opSettings.scoreExpression = "a+2";
-        app.getScoreExpressionError();
         let scoreVariables = new Map<string, ViewModel>();
         let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
         scoreVariables.set("a",vm1);
         app.openTab('layer', vm1, true, true, true, true);
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }]
+        expect(app.getScoreExpressionError()).toEqual(null);
         app.dataService.setUpURLs(versions); // set up data
         app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
         app.opSettings.domain = "enterprise-attack-13";
@@ -735,18 +880,6 @@ describe('TabsComponent', () => {
     it('should get unique layer names', () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }]
         app.dataService.setUpURLs(versions);
         expect(app.latestDomains.length).toEqual(1);
         app.newLayer("enterprise-attack-13");
@@ -1050,19 +1183,6 @@ describe('TabsComponent', () => {
     it('should serialize viewmodel and only save techniqueVMs which have been modified', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         app.dataService.setUpURLs(versions);
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
@@ -1104,19 +1224,6 @@ describe('TabsComponent', () => {
     it('should serialize viewmodel and only save techniqueVMs which have been modified and are visible', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         app.dataService.setUpURLs(versions);
         let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let idToTacticSDO = new Map<string, any>();
@@ -1140,19 +1247,6 @@ describe('TabsComponent', () => {
     it('should throw errors for deserializing viewmodel', (waitForAsync ( () => {
         let fixture = TestBed.createComponent(TabsComponent);
         let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         app.dataService.setUpURLs(versions);
         let viewmodel_error_file1 = {
             "description":3,
@@ -1227,5 +1321,267 @@ describe('TabsComponent', () => {
         vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO3,[],null));
         vm1.deserialize(JSON.stringify(viewmodel_error_file1));
         expect(consoleSpy).toHaveBeenCalled();
+    })));
+
+    it('should validate input and throw errors', (waitForAsync (() => {
+        let validate_input_error_file1 = {
+            'url': 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+            'version': '100F',
+            'identifier': 'enterprise-attack'
+        }
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        app.dataService.setUpURLs(versions);
+        let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
+        let alertSpy = spyOn(window, "alert");
+        let consoleSpy = spyOn(console, 'error');
+        app.validateInput(layer,'enterprise-attack-13');
+        expect(consoleSpy).toHaveBeenCalled();
+        expect(alertSpy).toHaveBeenCalled();
+    })));
+
+    it('should validate if the domainVersionID is unique', (waitForAsync ( () => {
+        let validate_input_error_file1 = {
+            'url': 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
+            'version': '13',
+            'identifier': 'enterprise-attack'
+        }
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        app.dataService.setUpURLs(versions);
+        let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
+        let alertSpy = spyOn(window, "alert");
+        let consoleSpy = spyOn(console, 'error');
+        app.validateInput(layer,'enterprise-attack-13');
+        expect(consoleSpy).toHaveBeenCalled();
+        expect(alertSpy).toHaveBeenCalled();
+
+        validate_input_error_file1 = {
+            'url': '13',
+            'version': '13',
+            'identifier': 'enterprise-attack'
+        }
+        layer = JSON.parse(JSON.stringify(validate_input_error_file1));
+        app.validateInput(layer,'enterprise-attack-13');
+        expect(consoleSpy).toHaveBeenCalled();
+        expect(alertSpy).toHaveBeenCalled();
+    })));
+
+    it('should through error for invalid domain', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        let consoleSpy = spyOn(console, 'error');
+        let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
+        let file = new File([blob], "layer-2.json");
+        app.readJSONFile(file).then(() => {
+            expect(consoleSpy).toHaveBeenCalled();
+        });
+    })));
+
+    it('should read and open json file with 2 layers', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        let combined_layer = [layer_file3,layer_file3]
+        let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
+        let file = new File([blob], "layer-2.json");
+        app.readJSONFile(file).then(() => {
+            expect(app.layerTabs.length).toEqual(2)
+        });
+    })));
+
+    // it('should throw errors when reading from file', (done) => {
+    //     let fixture = TestBed.createComponent(TabsComponent);
+    //     let app = fixture.debugElement.componentInstance;
+    //     let alertSpy = spyOn(window, "alert");
+    //     let versions = [
+    //         {
+    //             "name": "ATT&CK v13",
+    //             "version": "13",
+    //             "domains": [
+    //                 {
+    //                     "name": "Enterprise",
+    //                     "identifier": "enterprise-attack",
+    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    //     app.dataService.setUpURLs(versions);
+    //     let combined_layer = [layer_file1,layer_file2];
+    //     let consoleSpy = spyOn(console, 'error');
+    //     let blob = new Blob([JSON.parse(JSON.stringify(combined_layer))], { type: 'text/json' });
+    //     let file = new File([blob], "layer-2.json");
+    //     app.readJSONFile(file).then(() => {
+    //         expect(alertSpy).toHaveBeenCalled();
+    //         expect(consoleSpy).toHaveBeenCalled();
+    //         done();
+    //     })
+    // });
+
+    it('should create new layer by operation based on user input when data is loaded errors', async () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        app.opSettings.scoreExpression = "a+b+2";
+        expect(app.getScoreExpressionError()).toEqual('Variable b does not match any layers');
+        let scoreVariables = new Map<string, ViewModel>();
+        let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        let vm2 = app.viewModelsService.newViewModel("layer","enterprise-attack-12");
+        scoreVariables.set("a",vm1);
+        app.openTab('layer', vm1, true, true, true, true);
+        app.openTab('layer2', vm2, true, true, true, true);
+
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            },
+            {
+                "name": "ATT&CK v12",
+                "version": "12",
+                "domains": [
+                    {
+                        "name": "Enterprise",
+                        "identifier": "enterprise-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+                    }
+                ]
+            }
+        ]
+        app.dataService.setUpURLs(versions); // set up data
+        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
+        app.opSettings.domain = "enterprise-attack-13";
+        let alertSpy = spyOn(window, "alert");
+        let consoleSpy = spyOn(console, 'error');
+        app.layerByOperation();
+        expect(consoleSpy).toHaveBeenCalled();
+        expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('should read and open json file with 2 layers', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        let combined_layer = [layer_file3,layer_file3]
+        let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
+        let file = new File([blob], "layer-2.json");
+        app.readJSONFile(file).then(() => {
+            expect(app.layerTabs.length).toEqual(2)
+        });
+    })));
+
+    it('should load from url', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        app.dataService.setUpURLs(versions);
+        app.http = httpClient;
+        spyOn(app.http,'get').and.returnValue(of(layer_file1));
+        let versionMismatchSpy = spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        let upgradeLayerSpy = spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve([]));
+        app.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
+            expect(versionMismatchSpy).toHaveBeenCalled();
+            expect(upgradeLayerSpy).toHaveBeenCalled();
+        });
+    })));
+
+    it('should throw errors when loading from url', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        app.http = httpClient;
+        spyOn(app.http,'get').and.returnValue(of(layer_file1));
+        let versionMismatchSpy = spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        let alertSpy = spyOn(window, "alert");
+        let consoleSpy = spyOn(console, 'error');
+        app.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
+            expect(consoleSpy).toHaveBeenCalled();
+            expect(alertSpy).toHaveBeenCalled();
+            expect(versionMismatchSpy).toHaveBeenCalled();
+        });
+    })));
+
+    it('should create new layer from url', (waitForAsync ( () => {
+        let fixture = TestBed.createComponent(TabsComponent);
+        let app = fixture.debugElement.componentInstance;
+        let loadData = {
+            'url': 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
+            'version': '12',
+            'identifier': 'enterprise-attack'
+        }
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+            }]
+        app.dataService.setUpURLs(versions);
+        app.dataService.domains[0].dataLoaded = true;
+        app.http = httpClient;
+        spyOn(app.http,'get').and.returnValue(of(layer_file1));
+        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        app.newLayerFromURL(loadData, JSON.parse(JSON.stringify(layer_file1)));
+        expect(app.dataService.domains.length).toEqual(2); // mobile-attack-13, enterprise-attack-12
     })));
 });

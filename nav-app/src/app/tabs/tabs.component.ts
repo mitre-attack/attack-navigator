@@ -78,7 +78,7 @@ export class TabsComponent implements AfterViewInit {
         public snackBar: MatSnackBar
     ) {
         console.debug('initializing tabs component');
-        let subscription = dataService.getConfig().subscribe({
+        this.subscription = dataService.getConfig().subscribe({
             next: (config: Object) => {
                 this.newBlankTab();
                 this.loadTabs(config['default_layers']).then(() => {
@@ -92,7 +92,7 @@ export class TabsComponent implements AfterViewInit {
                 this.bannerContent = this.configService.banner;
             },
             complete: () => {
-                if (subscription) subscription.unsubscribe();
+                if (this.subscription) this.subscription.unsubscribe();
             }, // prevent memory leaks
         });
     }
@@ -119,7 +119,7 @@ export class TabsComponent implements AfterViewInit {
      * Open initial tabs on application load
      * @param defaultLayers any default layers defined in the config file
      */
-    private async loadTabs(defaultLayers) {
+    public async loadTabs(defaultLayers) {
         let bundleURL = this.getNamedFragmentValue('bundleURL')[0];
         let bundleVersion = this.getNamedFragmentValue('version')[0];
         let bundleDomain = this.getNamedFragmentValue('domain')[0];
@@ -379,7 +379,8 @@ export class TabsComponent implements AfterViewInit {
 
         // load from URL
         let url = new URL(loadData.url).toString();
-        let subscription = this.http.get(url).subscribe({
+        let subscription;
+        subscription = this.http.get(url).subscribe({
             next: (res) => {
                 // check for custom domain
                 let exists = this.dataService.domains.find((d) => d.isCustom && d.id === domainVersionID);
@@ -415,7 +416,7 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} domainVersionID the domain and version
      * @returns true if user input is valid, false otherwise
      */
-    private validateInput(loadData: any, domainVersionID: string): boolean {
+    public validateInput(loadData: any, domainVersionID: string): boolean {
         try {
             // validate URL
             let url = new URL(loadData.url);
@@ -779,7 +780,10 @@ export class TabsComponent implements AfterViewInit {
                         obj
                     );
                 }
-            });
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
         
@@ -834,16 +838,18 @@ export class TabsComponent implements AfterViewInit {
      */
     public async loadLayerFromURL(loadURL: string, replace: boolean, defaultLayers: boolean = false): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            let subscription = this.http.get(loadURL).subscribe({
+            let subscription;
+            let self = this;
+            subscription = self.http.get(loadURL).subscribe({
                 next: async (res) => {
-                    let viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
+                    let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await this.versionMismatchWarning(layerVersionStr, this.glayerVersion);
-                        if (!this.dataService.getDomain(viewModel.domainVersionID)) {
+                        await self.versionMismatchWarning(layerVersionStr, this.glayerVersion);
+                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
-                        await this.upgradeLayer(viewModel, res, replace, defaultLayers);
+                        await self.upgradeLayer(viewModel, res, replace, defaultLayers);
                         console.debug('loaded layer from', loadURL);
                         resolve(null); //continue
                     } catch (err) {
