@@ -18,10 +18,6 @@ export class ListInputComponent implements OnInit {
         return this.config.type == 'links';
     }
 
-    constructor() {
-        // intentionally left blank
-    }
-
     ngOnInit(): void {
         if (this.config.level == 'technique') {
             this.list = this.config.list.map((item) => {
@@ -52,7 +48,7 @@ export class ListInputComponent implements OnInit {
             this.list.splice(i, 1);
         }
 
-        if (this.list[0] && this.list[0].divider) this.removeDivider(0);
+        if (this.list[0]?.divider) this.removeDivider(0);
         if (this.list[this.list.length - 1] && this.list[this.list.length - 1].divider) this.removeDivider(this.list.length - 1);
 
         this.updateList();
@@ -82,12 +78,10 @@ export class ListInputComponent implements OnInit {
     public canAddDivider(i: number): boolean {
         if (i < 1) return false; // cannot add divider before the first item
         if (
-            this.list[i] &&
-            this.list[i].valid() &&
-            !this.list[i].divider &&
-            this.list[i - 1] &&
-            this.list[i - 1].valid() &&
-            !this.list[i - 1].divider
+            this.list[i]?.valid() &&
+            !this.list[i]?.divider &&
+            this.list[i - 1]?.valid() &&
+            !this.list[i - 1]?.divider
         ) {
             return true;
         }

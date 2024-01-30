@@ -99,7 +99,8 @@
                             "node_modules/tinygradient/browser.js"
                         ],
                         "styles": ["src/styles.scss"],
-                        "assets": ["src/assets", "src/favicon.ico"]
+                        "assets": ["src/assets", "src/favicon.ico"],
+                        "codeCoverage": true
                     }
                 },
                 "lint": {

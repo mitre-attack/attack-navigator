@@ -13,7 +13,6 @@ import { Version, VersionChangelog } from '../classes';
 export class DataService {
     public subscription;
     constructor(private http: HttpClient) {
-        //let subscription;
         console.debug('initializing data service');
         this.subscription = this.getConfig().subscribe({
             next: (config) => {
@@ -237,11 +236,11 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    public readonly latestVersion: Version = { name: 'ATT&CK v13', number: '13' };
-    private lowestSupportedVersion: Version;
-    private enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
-    private mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
-    private icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
+    public latestVersion: Version = { name: "ATT&CK v14", number: "14" };
+    public lowestSupportedVersion: Version; // used by tabs component
+    public enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
+    public mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
+    public icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
 
     /**
      * Set up the URLs for data
