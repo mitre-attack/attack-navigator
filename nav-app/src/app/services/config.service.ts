@@ -13,32 +13,33 @@ export class ConfigService {
     public linkColor = 'blue';
     public metadataColor = 'purple';
     public banner: string;
+    public featureList: any[] = [];
+
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-    private featureStructure: object[];
 
     public get subtechniquesEnabled(): boolean {
-        return this.getFeature('subtechniques');
+        return this.features.get('subtechniques');
     }
 
     constructor(private http: HttpClient) {
         // intentionally left blank
     }
 
-    public getFeatureList(): object[] {
-        if (!this.featureStructure) return [];
-        return this.featureStructure;
-    }
-
+	/**
+	 * Checks if the feature is enabled
+	 * @param featureName feature name
+	 * @returns true if the feature is enabled, false otherwise
+	 */
     public getFeature(featureName: string): boolean {
         return this.features.get(featureName);
     }
 
     /**
-     * Return true if any/all features in the group are enabled
+     * Checks if any/all features in the group are enabled
      * @param  featureGroup feature group name
-     * @param  type         'any' or 'all' for logical or/and
-     * @return              true iffany/all are enabled, false otherwise
+     * @param  type	'any' or 'all' for logical or/and
+     * @returns true iff any/all are enabled, false otherwise
      */
     public getFeatureGroup(featureGroup: string, type?: string): boolean {
         if (!this.featureGroups.has(featureGroup)) return true;
@@ -49,19 +50,16 @@ export class ConfigService {
     }
 
     /**
-     * Return the number of enabled features in the group
+     * Get the number of enabled features in the group
      * @param  featureGroup feature group name
-     * @return              the number of enabled features in the group, or -1 if
-     *                      the group does not exist
+     * @returns the number of enabled features in the group, or -1 if
+     * the group does not exist
      */
     public getFeatureGroupCount(featureGroup: string): number {
         if (!this.featureGroups.has(featureGroup)) return -1;
-        let count = 0;
         let subFeatures = this.featureGroups.get(featureGroup);
-        for (let subFeature of subFeatures) {
-            if (this.getFeature(subFeature)) count += 1;
-        }
-        return count;
+		let enabled = subFeatures.filter(f => this.getFeature(f));
+        return enabled.length;
     }
 
     /**
@@ -153,11 +151,10 @@ export class ConfigService {
 
     /**
      * Get all url fragments
-     * @param  url optional, url to parse instead of window location href
      * @return     all fragments as key-value pairs
      */
-    public getAllFragments(url?: string): Map<string, string> {
-        if (!url) url = window.location.href;
+    public getAllFragments(): Map<string, string> {
+        let url = window.location.href;
         let fragments = new Map<string, string>();
         let regex = /[#&](\w+)=(\w+)/g;
 
@@ -190,7 +187,7 @@ export class ConfigService {
                 this.banner = config['banner'];
 
                 // parse feature preferences
-                this.featureStructure = config['features'];
+                this.featureList = config['features'];
                 config['features'].forEach(feature => {
                     this.setFeature_object(feature);
                 });

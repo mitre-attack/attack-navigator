@@ -40,7 +40,6 @@ export class TabsComponent implements AfterViewInit {
     public showHelpDropDown: boolean = false;
     public loadURL: string = '';
     public layerLinkURLs: string[] = [];
-    public customizedConfig: any[] = [];
     public bannerContent: string;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
     public loadData: any = {
@@ -84,7 +83,6 @@ export class TabsComponent implements AfterViewInit {
             // if there is no active tab set, activate the first
             if (!this.activeTab) this.selectTab(this.layerTabs[0]);
         });
-        this.customizedConfig = this.configService.getFeatureList();
         this.bannerContent = this.configService.banner;
     }
 
@@ -886,7 +884,7 @@ export class TabsComponent implements AfterViewInit {
             str += join + 'layerURL=' + encodeURIComponent(layerLinkURL);
             join = '&';
         }
-        for (let feature of this.customizedConfig) {
+        for (let feature of this.configService.featureList) {
             if (feature.subfeatures) {
                 for (let subfeature of feature.subfeatures) {
                     if (!subfeature.enabled) {
