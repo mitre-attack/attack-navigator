@@ -24,8 +24,6 @@ describe('SidebarComponent', () => {
     });
 
     it('should set reloadToggle to false', () => {
-        fixture = TestBed.createComponent(SidebarComponent);
-        component = fixture.debugElement.componentInstance;
         component.ngOnChanges();
         expect(component.reloadToggle).toEqual(false);
     });

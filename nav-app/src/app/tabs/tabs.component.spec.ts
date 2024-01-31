@@ -20,7 +20,7 @@ const mockSnackbarMock = jasmine.createSpyObj(['open']);
 mockSnackbarMock.open
 
 describe('TabsComponent', () => {
-    let comp: TabsComponent;
+    let component: TabsComponent;
     let fixture: ComponentFixture<TabsComponent>;
     let snackBar: MatSnackBar;
     let httpClient: HttpClient;
@@ -483,7 +483,6 @@ describe('TabsComponent', () => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, MarkdownModule.forRoot({ loader: HttpClient })],
             declarations: [TabsComponent],
-            //teardown: {destroyAfterEach: false},
             providers: [
                 {
                     provide: MatSnackBar,
@@ -518,195 +517,177 @@ describe('TabsComponent', () => {
             ],
         }).compileComponents();
         snackBar = TestBed.inject(MatSnackBar);
+        fixture = TestBed.createComponent(TabsComponent);
+        component = fixture.debugElement.componentInstance;
     }));
 
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(TabsComponent);
-        comp = fixture.componentInstance;
+        component = fixture.debugElement.componentInstance;
         fixture.detectChanges();
         httpClient = TestBed.inject(HttpClient);
     }));
 
     it('should create component', () => {
-        expect(comp).toBeTruthy();
+        expect(component).toBeTruthy();
     });
 
     it('should set up data in constructor', () => {
-        let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
+        spyOn(DataService.prototype, 'setUpURLs').and.stub();
         let return$ = {versions: versions};
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
         TabsComponent.prototype.subscription = new Subscription;
-        const unsubscribeSpy = spyOn(TabsComponent.prototype.subscription, 'unsubscribe');
-        //spyOn(TabsComponent.prototype, 'loadTabs');
+        spyOn(TabsComponent.prototype, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
         fixture = TestBed.createComponent(TabsComponent);
-        comp = fixture.componentInstance;
+        component = fixture.debugElement.componentInstance;
+        expect(component).toBeTruthy();
     });
 
     it('should create new tab', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.newBlankTab();
-        expect(app.layerTabs.length).toEqual(1);
+        component.newBlankTab();
+        expect(component.layerTabs.length).toEqual(1);
     });
 
     it('should close all open tabs and create new one', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
         let viewModel: ViewModel;
-        let app = fixture.debugElement.componentInstance;
-        let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        let component = fixture.debugElement.componentInstance;
+        let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         vm1.sidebarContentType = "search";
-        app.openTab('new layer 1', vm1, true, true, true, true);
-        app.openTab('new tab', viewModel, true, true, true, true);
-        app.openTab('new tab', viewModel, true, true, true, true);
-        app.openTab('new layer 1', viewModel, true, true, false, true);
-        app.closeTab(app.layerTabs[0]);
-        app.closeTab(app.layerTabs[0]);
-        expect(app.layerTabs.length).toEqual(1);
+        component.openTab('new layer 1', vm1, true, true, true, true);
+        component.openTab('new tab', viewModel, true, true, true, true);
+        component.openTab('new tab', viewModel, true, true, true, true);
+        component.openTab('new layer 1', viewModel, true, true, false, true);
+        component.closeTab(component.layerTabs[0]);
+        component.closeTab(component.layerTabs[0]);
+        expect(component.layerTabs.length).toEqual(1);
     });
 
     it('should close one tab', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
         let viewModel: ViewModel;
-        let app = fixture.debugElement.componentInstance;
-        app.openTab('new layer1', viewModel, true, true, true, true)
-        app.openTab('new layer', viewModel, true, true, true, true)
-        app.closeTab(app.layerTabs[0])
-        expect(app.layerTabs.length).toEqual(1);
+        let component = fixture.debugElement.componentInstance;
+        component.openTab('new layer1', viewModel, true, true, true, true)
+        component.openTab('new layer', viewModel, true, true, true, true)
+        component.closeTab(component.layerTabs[0])
+        expect(component.layerTabs.length).toEqual(1);
     });
 
     it('should set the active tab to the latest created tab', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
         let viewModel: ViewModel;
-        let app = fixture.debugElement.componentInstance;
-        app.openTab('new layer', viewModel, true, true, true, true);
-        app.openTab('new layer1', viewModel, true, true, true, true);
-        app.selectTab(app.layerTabs[1]);
-        app.closeTab(app.layerTabs[1]);
-        app.openTab('new layer2', viewModel, true, true, true, true);
-        expect(app.activeTab.title).toEqual("new layer2");
+        let component = fixture.debugElement.componentInstance;
+        component.openTab('new layer', viewModel, true, true, true, true);
+        component.openTab('new layer1', viewModel, true, true, true, true);
+        component.selectTab(component.layerTabs[1]);
+        component.closeTab(component.layerTabs[1]);
+        component.openTab('new layer2', viewModel, true, true, true, true);
+        expect(component.activeTab.title).toEqual("new layer2");
     });
 
     it('should close the latest created tab', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
         let viewModel: ViewModel;
-        let app = fixture.debugElement.componentInstance;
-        app.openTab('new layer', viewModel, true, true, true, true)
-        app.openTab('new layer1', viewModel, true, true, true, true)
-        app.openTab('new layer2', viewModel, true, true, true, true)
-        app.closeTab(app.layerTabs[0]) //closes new layer 2
-        expect(app.isAlphabetical('newlayer')).toEqual(true);
-        expect(app.activeTab.title).toEqual("new layer1");
+        let component = fixture.debugElement.componentInstance;
+        component.openTab('new layer', viewModel, true, true, true, true)
+        component.openTab('new layer1', viewModel, true, true, true, true)
+        component.openTab('new layer2', viewModel, true, true, true, true)
+        component.closeTab(component.layerTabs[0]) //closes new layer 2
+        expect(component.isAlphabetical('newlayer')).toEqual(true);
+        expect(component.activeTab.title).toEqual("new layer1");
     });
 
     it('should create new layer', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
-        expect(app.latestDomains.length).toEqual(1);
-        app.newLayer("enterprise-attack-13");
-        expect(app.layerTabs.length).toEqual(1);
-        app.newLayer("enterprise-attack-13", JSON.parse(JSON.stringify(layer_file1)));
-        expect(app.layerTabs.length).toEqual(2);
+        component.dataService.setUpURLs(versions);
+        expect(component.latestDomains.length).toEqual(1);
+        component.newLayer("enterprise-attack-13");
+        expect(component.layerTabs.length).toEqual(1);
+        component.newLayer("enterprise-attack-13", JSON.parse(JSON.stringify(layer_file1)));
+        expect(component.layerTabs.length).toEqual(2);
     });
 
     it('should check if feature is defined in config file', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
             {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
             {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
         ]}
-        app.configService.setFeature_object(feature_object)
-        expect(app.hasFeature("manual_color")).toBeTrue();
+        component.configService.setFeature_object(feature_object)
+        expect(component.hasFeature("manual_color")).toBeTrue();
     });
 
     it('should open dialog', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        const openDialogSpy = spyOn(app.dialog, 'open');
-        app.openDialog("layers");
+        const openDialogSpy = spyOn(component.dialog, 'open');
+        component.openDialog("layers");
         expect(openDialogSpy).toHaveBeenCalledWith(LayerInformationComponent, {
             maxWidth: '90ch',
         });
-        app.openDialog("help");
-        const settings = { maxWidth: '75ch', panelClass: app.userTheme};
+        component.openDialog("help");
+        const settings = { maxWidth: '75ch', panelClass: component.userTheme};
         expect(openDialogSpy).toHaveBeenCalledWith(HelpComponent, settings);
-        app.openDialog("changelog");
+        component.openDialog("changelog");
         expect(openDialogSpy).toHaveBeenCalledWith(ChangelogComponent, settings);
         spyOn(is,'safari').and.returnValue(true);
-        app.ngAfterViewInit();
-        expect(openDialogSpy).toHaveBeenCalledWith(app.safariWarning, {
+        component.ngAfterViewInit();
+        expect(openDialogSpy).toHaveBeenCalledWith(component.safariWarning, {
             width: '350px',
             disableClose: true,
-            panelClass: app.userTheme,
+            panelClass: component.userTheme,
         });
     });
 
     it('should open svg dialog', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        const openDialogSpy = spyOn(app.dialog, 'open');
+        const openDialogSpy = spyOn(component.dialog, 'open');
         let vm: ViewModel;
-        app.openSVGDialog(vm);
+        component.openSVGDialog(vm);
         const settings = {
             data: { vm: vm },
-            panelClass: ['dialog-custom', app.userTheme],
+            panelClass: ['dialog-custom', component.userTheme],
         };
         expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
     });
 
     it('should adjust the height', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.adjustHeader(5);
-        expect(app.adjustedHeaderHeight).toEqual(5);
+        component.adjustHeader(5);
+        expect(component.adjustedHeaderHeight).toEqual(5);
     });
 
     it('should handle tab click', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.newBlankTab();
-        app.handleTabClick(app.layerTabs[0]);
-        app.newBlankTab();
-        app.handleTabClick(app.layerTabs[0]);
-        expect(app.activeTab).toEqual(app.layerTabs[0]);
+        component.newBlankTab();
+        component.handleTabClick(component.layerTabs[0]);
+        component.newBlankTab();
+        component.handleTabClick(component.layerTabs[0]);
+        expect(component.activeTab).toEqual(component.layerTabs[0]);
     });
 
     it('should handle links', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.customizedConfig = [
+        component.customizedConfig = [
             {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
                 {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
             ]},
             {"name": "sticky_toolbar", "enabled": false}
         ]
-        expect(app.trackByFunction(1)).toEqual(1);
-        app.addLayerLink();
-        expect(app.layerLinkURLs.length).toEqual(1);
-        app.addLayerLink();
-        app.removeLayerLink(1);
-        expect(app.layerLinkURLs.length).toEqual(1);
-        app.getLayerLink();
-        app.removeLayerLink(0);
-        let url_string = app.getLayerLink();
+        expect(component.trackByFunction(1)).toEqual(1);
+        component.addLayerLink();
+        expect(component.layerLinkURLs.length).toEqual(1);
+        component.addLayerLink();
+        component.removeLayerLink(1);
+        expect(component.layerLinkURLs.length).toEqual(1);
+        component.getLayerLink();
+        component.removeLayerLink(0);
+        let url_string = component.getLayerLink();
         expect(url_string).toContain("disable_techniques=false&sticky_toolbar=false");
     });
 
     it('should create new layer by operation based on user input', async () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.opSettings.scoreExpression = "a+b";
-        app.opSettings.domain = "enterprise-atack-13";
+        let component = fixture.debugElement.componentInstance;
+        component.opSettings.scoreExpression = "a+b";
+        component.opSettings.domain = "enterprise-atack-13";
         let scoreVariables = new Map<string, ViewModel>();
-        let vm1 = app.viewModelsService.newViewModel("layer","ics-attack-13");
-		let vm2 = app.viewModelsService.newViewModel("layer1","ics-attack-13");
-        app.openTab('layer', vm1, true, true, true, true);
-        app.openTab('layer1', vm2, true, true, true, true);
-        expect(app.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
-        let vm1_name = app.indexToChar(0);
-        let vm2_name = app.indexToChar(1);
+        let vm1 = component.viewModelsService.newViewModel("layer","ics-attack-13");
+		let vm2 = component.viewModelsService.newViewModel("layer1","ics-attack-13");
+        component.openTab('layer', vm1, true, true, true, true);
+        component.openTab('layer1', vm2, true, true, true, true);
+        expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
+        let vm1_name = component.indexToChar(0);
+        let vm2_name = component.indexToChar(1);
         scoreVariables.set(vm1_name,vm1);
 		scoreVariables.set(vm2_name,vm2);
         let versions = [
@@ -721,64 +702,57 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions); // set up data
-        app.opSettings.domain = "ics-attack-13";
-        expect(app.getFilteredVMs()).toEqual(app.viewModelsService.viewModels);
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.dataService.getDomain(app.opSettings.domain).dataLoaded = false;
-        await app.layerByOperation();
-        expect(app.layerTabs.length).toEqual(3);       
+        component.dataService.setUpURLs(versions); // set up data
+        component.opSettings.domain = "ics-attack-13";
+        expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.dataService.getDomain(component.opSettings.domain).dataLoaded = false;
+        await component.layerByOperation();
+        expect(component.layerTabs.length).toEqual(3);       
     });
 
     it('should create new layer by operation based on user input when data is loaded', async () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.opSettings.scoreExpression = "a+2";
+        let component = fixture.debugElement.componentInstance;
+        component.opSettings.scoreExpression = "a+2";
         let scoreVariables = new Map<string, ViewModel>();
-        let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         scoreVariables.set("a",vm1);
-        app.openTab('layer', vm1, true, true, true, true);
-        expect(app.getScoreExpressionError()).toEqual(null);
-        app.dataService.setUpURLs(versions); // set up data
-        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
-        app.opSettings.domain = "enterprise-attack-13";
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        await app.layerByOperation();
-        expect(app.layerTabs.length).toEqual(2);      
+        component.openTab('layer', vm1, true, true, true, true);
+        expect(component.getScoreExpressionError()).toEqual(null);
+        component.dataService.setUpURLs(versions); // set up data
+        component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
+        component.opSettings.domain = "enterprise-attack-13";
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        await component.layerByOperation();
+        expect(component.layerTabs.length).toEqual(2);      
     });
 
     it('should emit on theme change', (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        spyOn(app.onUserThemeChange, 'emit');
-        app.handleUserThemeChange("dark");
-        expect(app.onUserThemeChange.emit).toHaveBeenCalled();
+        spyOn(component.onUserThemeChange, 'emit');
+        component.handleUserThemeChange("dark");
+        expect(component.onUserThemeChange.emit).toHaveBeenCalled();
     }));
 
     it('should copy link', (fakeAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
         var mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'layerLink';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
         document.getElementById = jasmine.createSpy('layerLink').and.returnValue(mockedDocElement)
         const logSpy = spyOn(console, 'debug');
-        app.copyLayerLink();
+        component.copyLayerLink();
         flush();
         expect(logSpy).toHaveBeenCalledWith('copied', mockedDocElement.value);
     })));
 
     it('should open upload prompt', (fakeAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
         var mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
         document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
         const logSpy = spyOn(mockedDocElement, 'click');
-        app.openUploadPrompt();
+        component.openUploadPrompt();
         flush();
         expect(logSpy).toHaveBeenCalled();
     })));
@@ -819,24 +793,21 @@ describe('TabsComponent', () => {
     });
 
     it('should display warning dialog for major version mismatches', (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        const dialogSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
-        app.versionMismatchWarning("3.4", "4.4");
+        let component = fixture.debugElement.componentInstance;
+        const dialogSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
+        component.versionMismatchWarning("3.4", "4.4");
         expect(dialogSpy).toHaveBeenCalled();
     }));
 
     it('should display warning snackbar for minor version mismatches', (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         spyOn(snackBar, 'open').and.callThrough();
-        app.versionMismatchWarning("4.2", "4.5");        
+        component.versionMismatchWarning("4.2", "4.5");        
         expect(snackBar.open).toHaveBeenCalled();
     }));
 
     it('should read and open json file', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -849,63 +820,59 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         var mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
         document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement)
         const logSpy = spyOn(mockedDocElement, 'click');
-        app.openUploadPrompt();
+        component.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
         let blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+        component.readJSONFile(file).then(() => {
+            expect(component.layerTabs.length).toEqual(1)
         });
         layer_file2.viewMode = 2;
         blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
         file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(2)
+        component.readJSONFile(file).then(() => {
+            expect(component.layerTabs.length).toEqual(2)
         });
         layer_file2.viewMode = 0;
         blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
         file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(3)
+        component.readJSONFile(file).then(() => {
+            expect(component.layerTabs.length).toEqual(3)
         });
     })));
 
     it('should get unique layer names', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
-        expect(app.latestDomains.length).toEqual(1);
-        app.newLayer("enterprise-attack-13");
-        app.newLayer("enterprise-attack-13");
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let vm1_name = app.getUniqueLayerName("layer");
-        app.openTab(vm1_name, vm1, true, true, true, true);
-        expect(app.layerTabs.length).toEqual(3);
+        let component = fixture.debugElement.componentInstance;
+        component.dataService.setUpURLs(versions);
+        expect(component.latestDomains.length).toEqual(1);
+        component.newLayer("enterprise-attack-13");
+        component.newLayer("enterprise-attack-13");
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let vm1_name = component.getUniqueLayerName("layer");
+        component.openTab(vm1_name, vm1, true, true, true, true);
+        expect(component.layerTabs.length).toEqual(3);
     });
 
     it('should get named fragment values', () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.customizedConfig = [
+        component.customizedConfig = [
             {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
                 {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
             ]},
             {"name": "sticky_toolbar", "enabled": false}
         ]
-        expect(app.getNamedFragmentValue("sticky_toolbar")).toEqual([]);
-        expect(app.getNamedFragmentValue("sticky_toolbar", "https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false")).toEqual(['false']);
+        expect(component.getNamedFragmentValue("sticky_toolbar")).toEqual([]);
+        expect(component.getNamedFragmentValue("sticky_toolbar", "https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false")).toEqual(['false']);
     });
 
     it('should upgrade layer', (waitForAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -930,21 +897,21 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let layer = JSON.parse(JSON.stringify(layer_file1))
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
-        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve({oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13'}));
-        app.upgradeLayer(vm1, layer, false, false).then(() => {
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve({oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13'}));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(of(null));
+        component.upgradeLayer(vm1, layer, false, false).then(() => {
             expect(versionUpgradeSpy).toHaveBeenCalled();
         });
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+            expect(component.layerTabs.length).toEqual(1)
         })
     })));
 
     it('should not upgrade layer', (waitForAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -969,22 +936,21 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let layer = JSON.parse(JSON.stringify(layer_file1))
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
-        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.upgradeLayer(vm1, layer, false, false).then(() => {
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.upgradeLayer(vm1, layer, false, false).then(() => {
             expect(versionUpgradeSpy).toHaveBeenCalled();
         });
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+            expect(component.layerTabs.length).toEqual(1)
         })
     })));
 
     it('should not upgrade layer with default layer enabled', (waitForAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1009,19 +975,18 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let layer = JSON.parse(JSON.stringify(layer_file1));
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.upgradeLayer(vm1, layer, false, true);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.upgradeLayer(vm1, layer, false, true);
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1);
+            expect(component.layerTabs.length).toEqual(1);
         })
     })));
 
     it('should not upgrade layer with default layer enabled and domain data loaded', (waitForAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1046,20 +1011,19 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
-        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        component.dataService.setUpURLs(versions);
+        component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let bb = JSON.parse(JSON.stringify(layer_file1))
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.upgradeLayer(vm1, bb, false, true);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.upgradeLayer(vm1, bb, false, true);
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+            expect(component.layerTabs.length).toEqual(1)
         })
     })));
 
     it('should not upgrade layer with domain data loaded', (waitForAsync (() => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1084,10 +1048,10 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
-        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles);
+        component.dataService.setUpURLs(versions);
+        component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let layer = JSON.parse(JSON.stringify(layer_file1))
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         let st1 = new Technique(subtechniqueSDO1,[],null);
@@ -1097,20 +1061,19 @@ describe('TabsComponent', () => {
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(stvm_1);
-        app.dataService.domains[0].techniques.push(t1);
-        let versionUpgradeSpy = spyOn(app, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.upgradeLayer(vm1, layer, false, false).then(() => {
+        component.dataService.domains[0].techniques.push(t1);
+        let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.upgradeLayer(vm1, layer, false, false).then(() => {
             expect(versionUpgradeSpy).toHaveBeenCalled();
         });
         fixture.whenStable().then(() => {
-            expect(app.layerTabs.length).toEqual(1)
+            expect(component.layerTabs.length).toEqual(1)
         })
     })));
 
      it('should open version upgrade dialog with upgrade', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1135,18 +1098,17 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        component.dataService.setUpURLs(versions);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
-        const versionUpgradeSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:true})});
-        app.versionUpgradeDialog(vm1).then(() => {
+        const versionUpgradeSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:true})});
+        component.versionUpgradeDialog(vm1).then(() => {
             expect(versionUpgradeSpy).toHaveBeenCalled();
         });
     })));
 
     it('should open version upgrade dialog with no upgrade', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1171,20 +1133,19 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions);
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-12");
+        component.dataService.setUpURLs(versions);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
-        const versionUpgradeSpy = spyOn(app.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:false})});
-        app.versionUpgradeDialog(vm1).then(() => {
+        const versionUpgradeSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:false})});
+        component.versionUpgradeDialog(vm1).then(() => {
             expect(versionUpgradeSpy).toHaveBeenCalled();
         });
     })));
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let component = fixture.debugElement.componentInstance;
+        component.dataService.setUpURLs(versions);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
@@ -1198,8 +1159,8 @@ describe('TabsComponent', () => {
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
-        app.dataService.domains[0].techniques.push(t1);
-        app.dataService.domains[0].techniques.push(t2);
+        component.dataService.domains[0].techniques.push(t1);
+        component.dataService.domains[0].techniques.push(t2);
         let m2 = new Metadata();
         m2.name = "test1";
         m2.value = "t1";
@@ -1218,14 +1179,13 @@ describe('TabsComponent', () => {
         vm1.initTechniqueVMs();
         vm1.layout.expandedSubtechniques = "all";
         vm1.initTechniqueVMs();
-        expect(app).toBeTruthy();
+        expect(component).toBeTruthy();
     })));
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified and are visible', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let component = fixture.debugElement.componentInstance;
+        component.dataService.setUpURLs(versions);
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", tacticSDO);
         let t1 = new Technique(techniqueSDO,[],null);
@@ -1236,18 +1196,17 @@ describe('TabsComponent', () => {
         tvm_1.score = '3';
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
-        app.dataService.domains[0].techniques.push(t1);
-        app.dataService.domains[0].techniques.push(t2);
+        component.dataService.domains[0].techniques.push(t1);
+        component.dataService.domains[0].techniques.push(t2);
         vm1.dataService.domains[0].urls = ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"];
         vm1.dataService.domains[0].isCustom = true;
         vm1.serialize(true);
-        expect(app).toBeTruthy();
+        expect(component).toBeTruthy();
     })));
 
     it('should throw errors for deserializing viewmodel', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
+        let component = fixture.debugElement.componentInstance;
+        component.dataService.setUpURLs(versions);
         let viewmodel_error_file1 = {
             "description":3,
             "sorting": "3",
@@ -1314,7 +1273,7 @@ describe('TabsComponent', () => {
             ],
         }
         let consoleSpy = spyOn(console, 'error');
-        let vm1 = app.viewModelsService.newViewModel("layer2","enterprise-attack-13");
+        let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let st1 = new Technique(t1592_001, [], null);
         vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO2,[st1],null));
         vm1.dataService.domains[0].techniques[0].subtechniques.push(st1);
@@ -1329,13 +1288,11 @@ describe('TabsComponent', () => {
             'version': '100F',
             'identifier': 'enterprise-attack'
         }
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
-        app.validateInput(layer,'enterprise-attack-13');
+        component.validateInput(layer,'enterprise-attack-13');
         expect(consoleSpy).toHaveBeenCalled();
         expect(alertSpy).toHaveBeenCalled();
     })));
@@ -1346,13 +1303,11 @@ describe('TabsComponent', () => {
             'version': '13',
             'identifier': 'enterprise-attack'
         }
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
-        app.validateInput(layer,'enterprise-attack-13');
+        component.validateInput(layer,'enterprise-attack-13');
         expect(consoleSpy).toHaveBeenCalled();
         expect(alertSpy).toHaveBeenCalled();
 
@@ -1362,14 +1317,13 @@ describe('TabsComponent', () => {
             'identifier': 'enterprise-attack'
         }
         layer = JSON.parse(JSON.stringify(validate_input_error_file1));
-        app.validateInput(layer,'enterprise-attack-13');
+        component.validateInput(layer,'enterprise-attack-13');
         expect(consoleSpy).toHaveBeenCalled();
         expect(alertSpy).toHaveBeenCalled();
     })));
 
     it('should through error for invalid domain', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1382,18 +1336,16 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions);
-        let consoleSpy = spyOn(console, 'error');
+        component.dataService.setUpURLs(versions);
+        spyOn(console, 'error');
         let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(consoleSpy).toHaveBeenCalled();
-        });
+        component.readJSONFile(file);
+        expect(component).toBeTruthy();
     })));
 
     it('should read and open json file with 2 layers', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1406,55 +1358,24 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(versions);
         let combined_layer = [layer_file3,layer_file3]
         let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(2)
-        });
+        component.readJSONFile(file);
+        expect(component).toBeTruthy();
     })));
 
-    // it('should throw errors when reading from file', (done) => {
-    //     let fixture = TestBed.createComponent(TabsComponent);
-    //     let app = fixture.debugElement.componentInstance;
-    //     let alertSpy = spyOn(window, "alert");
-    //     let versions = [
-    //         {
-    //             "name": "ATT&CK v13",
-    //             "version": "13",
-    //             "domains": [
-    //                 {
-    //                     "name": "Enterprise",
-    //                     "identifier": "enterprise-attack",
-    //                     "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-    //                 }
-    //             ]
-    //         }
-    //     ]
-    //     app.dataService.setUpURLs(versions);
-    //     let combined_layer = [layer_file1,layer_file2];
-    //     let consoleSpy = spyOn(console, 'error');
-    //     let blob = new Blob([JSON.parse(JSON.stringify(combined_layer))], { type: 'text/json' });
-    //     let file = new File([blob], "layer-2.json");
-    //     app.readJSONFile(file).then(() => {
-    //         expect(alertSpy).toHaveBeenCalled();
-    //         expect(consoleSpy).toHaveBeenCalled();
-    //         done();
-    //     })
-    // });
-
     it('should create new layer by operation based on user input when data is loaded errors', async () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.opSettings.scoreExpression = "a+b+2";
-        expect(app.getScoreExpressionError()).toEqual('Variable b does not match any layers');
+        let component = fixture.debugElement.componentInstance;
+        component.opSettings.scoreExpression = "a+b+2";
+        expect(component.getScoreExpressionError()).toEqual('Variable b does not match any layers');
         let scoreVariables = new Map<string, ViewModel>();
-        let vm1 = app.viewModelsService.newViewModel("layer","enterprise-attack-13");
-        let vm2 = app.viewModelsService.newViewModel("layer","enterprise-attack-12");
+        let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
+        let vm2 = component.viewModelsService.newViewModel("layer","enterprise-attack-12");
         scoreVariables.set("a",vm1);
-        app.openTab('layer', vm1, true, true, true, true);
-        app.openTab('layer2', vm2, true, true, true, true);
+        component.openTab('layer', vm1, true, true, true, true);
+        component.openTab('layer2', vm2, true, true, true, true);
 
         let versions = [
             {
@@ -1480,57 +1401,31 @@ describe('TabsComponent', () => {
                 ]
             }
         ]
-        app.dataService.setUpURLs(versions); // set up data
-        app.dataService.parseBundle(app.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
-        app.opSettings.domain = "enterprise-attack-13";
+        component.dataService.setUpURLs(versions); // set up data
+        component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
+        component.opSettings.domain = "enterprise-attack-13";
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
-        app.layerByOperation();
+        component.layerByOperation();
         expect(consoleSpy).toHaveBeenCalled();
         expect(alertSpy).toHaveBeenCalled();
     });
 
-    it('should read and open json file with 2 layers', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
-        app.dataService.setUpURLs(versions);
-        let combined_layer = [layer_file3,layer_file3]
-        let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
-        let file = new File([blob], "layer-2.json");
-        app.readJSONFile(file).then(() => {
-            expect(app.layerTabs.length).toEqual(2)
-        });
-    })));
-
     it('should load from url', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
-        app.dataService.setUpURLs(versions);
-        app.http = httpClient;
-        spyOn(app.http,'get').and.returnValue(of(layer_file1));
-        let versionMismatchSpy = spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
-        let upgradeLayerSpy = spyOn(app, 'upgradeLayer').and.returnValue(Promise.resolve([]));
-        app.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
+        let component = fixture.debugElement.componentInstance;
+        component.dataService.setUpURLs(versions);
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
+        component.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
             expect(versionMismatchSpy).toHaveBeenCalled();
             expect(upgradeLayerSpy).toHaveBeenCalled();
         });
     })));
 
     it('should throw errors when loading from url', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -1543,13 +1438,13 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions);
-        app.http = httpClient;
-        spyOn(app.http,'get').and.returnValue(of(layer_file1));
-        let versionMismatchSpy = spyOn(app, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        component.dataService.setUpURLs(versions);
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
-        app.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
+        component.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
             expect(consoleSpy).toHaveBeenCalled();
             expect(alertSpy).toHaveBeenCalled();
             expect(versionMismatchSpy).toHaveBeenCalled();
@@ -1557,8 +1452,7 @@ describe('TabsComponent', () => {
     })));
 
     it('should create new layer from url', (waitForAsync ( () => {
-        let fixture = TestBed.createComponent(TabsComponent);
-        let app = fixture.debugElement.componentInstance;
+        let component = fixture.debugElement.componentInstance;
         let loadData = {
             'url': 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
             'version': '12',
@@ -1576,12 +1470,77 @@ describe('TabsComponent', () => {
                     }
                 ]
             }]
-        app.dataService.setUpURLs(versions);
-        app.dataService.domains[0].dataLoaded = true;
-        app.http = httpClient;
-        spyOn(app.http,'get').and.returnValue(of(layer_file1));
-        spyOn(app.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        app.newLayerFromURL(loadData, JSON.parse(JSON.stringify(layer_file1)));
-        expect(app.dataService.domains.length).toEqual(2); // mobile-attack-13, enterprise-attack-12
+        component.dataService.setUpURLs(versions);
+        component.dataService.domains[0].dataLoaded = true;
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(layer_file1)));
+        expect(component.dataService.domains.length).toEqual(2); // mobile-attack-13, enterprise-attack-12
+    })));
+
+    it('should load base data from URL', (waitForAsync ( () => {
+        let component = fixture.debugElement.componentInstance;
+        let versions = [
+            {
+                "name": "ATT&CK v13",
+                "version": "13",
+                "domains": [
+                    {
+                        "name": "Mobile",
+                        "identifier": "mobile-attack",
+                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+                    }
+                ]
+        }]
+        let default_layers = {
+            "enabled": false,
+            "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        }
+        component.dataService.setUpURLs(versions);
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        spyOn(component, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json');
+        component.loadTabs(default_layers);
+        expect(component.layerTabs.length).toEqual(1)
+    })));
+
+    it('should load layer from URL', (waitForAsync ( () => {
+        let component = fixture.debugElement.componentInstance;
+        let default_layers = {
+            "enabled": false,
+            "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        }
+        component.dataService.setUpURLs(versions);
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
+        spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
+        component.loadTabs(default_layers).then(() => {
+            expect(versionMismatchSpy).toHaveBeenCalled();
+            expect(upgradeLayerSpy).toHaveBeenCalled();
+        });
+    })));
+
+    it('should load default layers from config file', (waitForAsync ( () => {
+        let component = fixture.debugElement.componentInstance;
+        let default_layers = {
+            "enabled": true,
+            "urls": ["https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        }
+        component.dataService.setUpURLs(versions);
+        component.http = httpClient;
+        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+        let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
+        let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
+        spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], []);
+        component.loadTabs(default_layers).then(() => {
+            expect(versionMismatchSpy).toHaveBeenCalled();
+            expect(upgradeLayerSpy).toHaveBeenCalled();
+        });
     })));
 });

@@ -958,7 +958,7 @@ export class TabsComponent implements AfterViewInit {
      * @param  {string} url  optional, if unspecified searches in current window location. Otherwise searches this string
      * @return {string}      fragment param value
      */
-    private getNamedFragmentValue(name: string, url?: string): any {
+    public getNamedFragmentValue(name: string, url?: string): any {
         if (!url) url = window.location.href;
 
         name = name.replace(/[[\]]/g, '\\$&');
