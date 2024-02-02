@@ -380,7 +380,6 @@ describe('ViewmodelsService', () => {
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
         let tvm_2 = new TechniqueVM("T1592^reconnaissance");
         tvm_1.score = "3";
-        vm1.sidebarOpened;
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
@@ -831,8 +830,6 @@ describe('ViewmodelsService', () => {
         ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
         vm1.dataService.setUpURLs(versions);
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         let l1 = new Link();
         l1.label = "test1";

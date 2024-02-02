@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -15,9 +15,6 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription, of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Technique } from '../classes/stix';
-
-const mockSnackbarMock = jasmine.createSpyObj(['open']);
-mockSnackbarMock.open
 
 describe('TabsComponent', () => {
     let component: TabsComponent;
@@ -680,16 +677,11 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+b";
         component.opSettings.domain = "enterprise-atack-13";
-        let scoreVariables = new Map<string, ViewModel>();
         let vm1 = component.viewModelsService.newViewModel("layer","ics-attack-13");
 		let vm2 = component.viewModelsService.newViewModel("layer1","ics-attack-13");
         component.openTab('layer', vm1, true, true, true, true);
         component.openTab('layer1', vm2, true, true, true, true);
         expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
-        let vm1_name = component.indexToChar(0);
-        let vm2_name = component.indexToChar(1);
-        scoreVariables.set(vm1_name,vm1);
-		scoreVariables.set(vm2_name,vm2);
         let versions = [
             {
                 "name": "ATT&CK v13",
@@ -714,9 +706,7 @@ describe('TabsComponent', () => {
     it('should create new layer by operation based on user input when data is loaded', async () => {
         let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+2";
-        let scoreVariables = new Map<string, ViewModel>();
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
-        scoreVariables.set("a",vm1);
         component.openTab('layer', vm1, true, true, true, true);
         expect(component.getScoreExpressionError()).toEqual(null);
         component.dataService.setUpURLs(versions); // set up data
@@ -734,7 +724,7 @@ describe('TabsComponent', () => {
     }));
 
     it('should copy link', (fakeAsync (() => {
-        var mockedDocElement = document.createElement('input');
+        let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'layerLink';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
@@ -746,7 +736,7 @@ describe('TabsComponent', () => {
     })));
 
     it('should open upload prompt', (fakeAsync (() => {
-        var mockedDocElement = document.createElement('input');
+        let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
@@ -821,7 +811,7 @@ describe('TabsComponent', () => {
                 ]
             }]
         component.dataService.setUpURLs(versions);
-        var mockedDocElement = document.createElement('input');
+        let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
         mockedDocElement.type = "text";
@@ -1052,8 +1042,6 @@ describe('TabsComponent', () => {
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let layer = JSON.parse(JSON.stringify(layer_file1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
         let st1 = new Technique(subtechniqueSDO1,[],null);
         let t1 = new Technique(techniqueSDO,[st1],null);
         let tvm_1 = new TechniqueVM("T1592^reconnaissance");
@@ -1147,8 +1135,6 @@ describe('TabsComponent', () => {
         component.dataService.setUpURLs(versions);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
         let st1 = new Technique(subtechniqueSDO1,[],null);
         let t1 = new Technique(techniqueSDO,[st1],null);
         let t2 = new Technique(techniqueSDO2,[],null);
@@ -1186,8 +1172,6 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(versions);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
         let t1 = new Technique(techniqueSDO,[],null);
         let t2 = new Technique(techniqueSDO2,[],null);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
@@ -1370,10 +1354,8 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+b+2";
         expect(component.getScoreExpressionError()).toEqual('Variable b does not match any layers');
-        let scoreVariables = new Map<string, ViewModel>();
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         let vm2 = component.viewModelsService.newViewModel("layer","enterprise-attack-12");
-        scoreVariables.set("a",vm1);
         component.openTab('layer', vm1, true, true, true, true);
         component.openTab('layer2', vm2, true, true, true, true);
 

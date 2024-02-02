@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SvgExportComponent } from './svg-export.component';
@@ -412,6 +412,7 @@ describe('SvgExportComponent', () => {
 
         it('should handle negative values gracefully', () => {
             const spacing = component['getSpacing'](-100, -4);
+			expect(spacing.length).toEqual(0);
         });
 
     });
