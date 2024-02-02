@@ -36,19 +36,6 @@ describe('TabsComponent', () => {
         "modified": "2001-01-01T01:01:00.000Z",
         "x_mitre_version": "1.0",
     }
-    let tacticSDO = {
-        "id": "tactic-0",
-        ...stixSDO,
-        "name": "Reconnaissance",
-        "type": "x-mitre-tactic",
-        "x_mitre_shortname": "reconnaissance",
-        "external_references": [
-            {
-                "external_id": "TA0043",
-                "url": "https://attack.mitre.org/tactics/TA0043"
-            }
-        ]
-    }
     let templateSDO = {
         ...stixSDO,
         "type": "attack-pattern",

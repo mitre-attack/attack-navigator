@@ -106,47 +106,6 @@ export class ViewModelsService {
                     // unexpected user input
                     throw Error('math result ( ' + result + ' ) is not a number');
                 }
-                techniqueIDs.forEach((techniqueID) => {
-                    let newTechniqueVM = new TechniqueVM(techniqueID);
-                    let scope = {};
-                    let misses = 0; // number of times a VM is missing the value
-                    scoreVariables.forEach(function (vm, key) {
-                        let scoreValue: number;
-                        if (!vm.hasTechniqueVM_id(techniqueID)) {
-                            // missing technique
-                            scoreValue = 0;
-                            misses++;
-                        } else {
-                            // technique exists
-                            let score = vm.getTechniqueVM_id(techniqueID).score;
-                            if (score == '' || isNaN(Number(score))) {
-                                scoreValue = 0;
-                                misses++;
-                            } else {
-                                scoreValue = Number(score);
-                            }
-                        }
-                        scope[key] = scoreValue;
-                    });
-
-                    // did at least one technique have a score for this technique?
-                    if (misses < scoreVariables.size) {
-                        let mathResult = evaluate(opSettings.scoreExpression, scope);
-                        if (is.boolean(mathResult)) {
-                            // boolean to binary
-                            mathResult = mathResult ? '1' : '0';
-                        } else if (is.not.number(mathResult)) {
-                            // unexpected user input
-                            throw Error('math result ( ' + mathResult + ' ) is not a number');
-                        }
-
-                        newTechniqueVM.score = String(mathResult);
-                        newViewModel.techniqueVMs.set(techniqueID, newTechniqueVM);
-                        minScore = Math.min(minScore, mathResult);
-                        maxScore = Math.max(maxScore, mathResult);
-                    }
-                    // don't record a result if none of VMs had a score for this technique
-                });
 
                 // apply result to all techniques
                 newViewModel.initializeScoresTo = String(result);
