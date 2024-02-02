@@ -109,7 +109,6 @@ describe('TooltipComponent', () => {
             right: 0,
             bottom: 100
         });
-        console.log(window.innerWidth, window.innerHeight)
         const result = component.getPlacement();
         expect(result).toBe('right top');
     });
@@ -119,7 +118,6 @@ describe('TooltipComponent', () => {
             right: 0,
             bottom: 0
         });
-        console.log(window.innerWidth, window.innerHeight)
         const result = component.getPlacement();
         expect(result).toBe('right bottom');
     });
@@ -129,7 +127,6 @@ describe('TooltipComponent', () => {
             right: 100,
             bottom: 100
         });
-        console.log(window.innerWidth, window.innerHeight)
         const result = component.getPlacement();
         expect(result).toBe('left top');
     });
@@ -139,7 +136,6 @@ describe('TooltipComponent', () => {
             right: 100,
             bottom: 0
         });
-        console.log(window.innerWidth, window.innerHeight)
         const result = component.getPlacement();
         expect(result).toBe('left bottom');
     });
