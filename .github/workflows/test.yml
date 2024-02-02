@@ -1,13 +1,14 @@
-name: Jasmine Testing
+name: Jasmine Tests
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: ["master", "develop"]
+    types: [synchronize]
 
 jobs:
-  run-jasmine-tests:
+  run-tests:
     runs-on: ubuntu-latest
     defaults:
        run:
