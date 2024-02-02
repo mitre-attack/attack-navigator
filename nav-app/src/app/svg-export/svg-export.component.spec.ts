@@ -2,7 +2,9 @@ import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/t
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SvgExportComponent } from './svg-export.component';
-import { ViewModel } from '../classes';
+import { TechniqueVM, ViewModel } from '../classes';
+import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
+import { Matrix, Tactic, Technique } from '../classes/stix';
 
 describe('SvgExportComponent', () => {
     let component: SvgExportComponent;
@@ -37,6 +39,188 @@ describe('SvgExportComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+	describe('Renderable Objects', () => {
+		// mock data
+		let stixSDO = {"name": "Example Name", "description": "Description", "created": "2001-01-01T01:01:00.000Z", "modified": "2001-01-01T01:01:00.000Z", "version": "1.0", "x_mitre_version": "1.0"}
+		let matrixSDO = {"id": "matrix-0", ...stixSDO, "type": "x-mitre-matrix", "tactic_refs": ["tactic-0"], "external_references": [{ "external_id": "enterprise-matrix" }]}
+		let tacticSDO = {"id": "tactic-0", ...stixSDO, "name": "Reconnaissance", "type": "x-mitre-tactic", "x_mitre_shortname": "tactic-name", "external_references": [{ "external_id": "TA0043" }]}
+		let techniqueSDO = {...stixSDO, "type": "attack-pattern", "x_mitre_platforms": ["platform"], "kill_chain_phases": [{"kill_chain_name": "mitre-attack", "phase_name": "tactic-name"}]}
+		let t0000 = {...techniqueSDO, "id": "attack-pattern-0", "external_references": [{"external_id": "T0000"}]}
+		let t0000_000 = {...techniqueSDO, "id": "attack-pattern-1", "x_mitre_is_subtechnique": true, "external_references": [{"external_id": "T0000.000"}]}
+
+		// mock objects
+		let renderableMatrix: RenderableMatrix;
+		let renderableTactic: RenderableTactic;
+		let renderableTechnique: RenderableTechnique;
+		let matrix: Matrix;
+		let tactic: Tactic;
+		let technique: Technique;
+		let subtechnique: Technique;
+		let techniqueVM: TechniqueVM;
+		let viewModel: ViewModel;
+		let idToTacticSDO = new Map<string, any>();
+
+		beforeEach(() => {
+			idToTacticSDO.set("tactic-0", tacticSDO);
+			matrix = new Matrix(matrixSDO, idToTacticSDO, [], null);
+			tactic = matrix.tactics[0];
+			subtechnique = new Technique(t0000_000, [], null);
+			technique = new Technique(t0000, [subtechnique], null);
+			viewModel = new ViewModel("layer", "1", "enterprise-attack-13", null);
+			techniqueVM = new TechniqueVM('T0000^tactic-name');
+			viewModel.setTechniqueVM(techniqueVM);
+			
+			spyOn(viewModel, 'filterTactics').and.returnValue(matrix.tactics);
+
+			renderableMatrix = new RenderableMatrix(matrix, viewModel, {});
+			renderableMatrix.tactics.forEach(tactic => {
+				tactic.height = 20;
+			});
+			renderableTactic = new RenderableTactic(tactic, matrix, viewModel, {});
+			renderableTechnique = new RenderableTechnique(1, technique, tactic, matrix, viewModel);
+		});
+
+		it('should initialize RenderableMatrix object correctly', () => {
+			expect(renderableMatrix.matrix).toBe(matrix);
+			expect(viewModel.filterTactics).toHaveBeenCalledWith(matrix.tactics, matrix);
+			expect(renderableMatrix.tactics.length).toBe(matrix.tactics.length);
+			expect(renderableMatrix.tactics.every(tactic => tactic instanceof RenderableTactic)).toBeTrue();
+		});
+
+		it('should calculate RenderableMatrix height correctly when tactics are set', () => {
+			expect(renderableMatrix.height).toBe(20);
+		});
+
+		it('should initialize RenderableTactic object correctly', () => {
+			expect(renderableTactic.tactic).toBe(tactic);
+			expect(renderableTactic.techniques).toEqual([]);
+			expect(renderableTactic.subtechniques).toEqual([]);
+			expect(renderableTactic.height).toBe(1);
+		});
+
+		it('should create RenderableTechniques when techniques are set', () => {
+			matrix = new Matrix(matrixSDO, idToTacticSDO, [technique, subtechnique], null);
+			techniqueVM.showSubtechniques = true;
+
+			spyOn(viewModel, 'filterTechniques')
+				.withArgs(tactic.techniques, tactic, matrix).and.returnValue([technique])
+				.withArgs(technique.subtechniques, tactic, matrix).and.returnValue([subtechnique])
+			spyOn(viewModel, 'sortTechniques').and.returnValue([technique]);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+
+			renderableTactic = new RenderableTactic(tactic, matrix, viewModel, {showSubtechniques: 'all'});
+
+			expect(renderableTactic.techniques.length).toBe(1);
+			expect(renderableTactic.subtechniques.length).toBe(1);
+			expect(viewModel.getTechniqueVM).toHaveBeenCalledTimes(1);
+			expect(renderableTactic.techniques.every(t => t instanceof RenderableTechnique)).toBeTrue();
+			expect(renderableTactic.subtechniques.every(t => t instanceof RenderableTechnique)).toBeTrue();
+		});
+
+		it('should initialize RenderableTechnique correctly with defaults', () => {
+			expect(renderableTechnique.yPosition).toBe(1);
+			expect(renderableTechnique.technique).toBe(technique);
+			expect(renderableTechnique.tactic).toBe(tactic);
+			expect(renderableTechnique.matrix).toBe(matrix);
+			expect(renderableTechnique.viewModel).toBe(viewModel);
+			expect(renderableTechnique.showSubtechniques).toBeFalse();
+		});
+
+		it('should initialize RenderableTechnique correctly with given params', () => {
+			renderableTechnique = new RenderableTechnique(1, technique, tactic, matrix, viewModel, true);
+
+			expect(renderableTechnique.yPosition).toBe(1);
+			expect(renderableTechnique.technique).toBe(technique);
+			expect(renderableTechnique.tactic).toBe(tactic);
+			expect(renderableTechnique.matrix).toBe(matrix);
+			expect(renderableTechnique.viewModel).toBe(viewModel);
+			expect(renderableTechnique.showSubtechniques).toBeTrue();
+		});
+
+		it('should return "null" fill color if no technique VM is found', () => {
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(false);
+			expect(renderableTechnique.fill).toBeNull();
+		});
+
+		it('should return "white" fill color when the technique VM is disabled', () => {
+			techniqueVM.enabled = false;
+
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(true);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+			expect(renderableTechnique.fill).toBe('white');
+		});
+
+		it('should return color from technique VM when enabled', () => {
+			techniqueVM.enabled = true;
+			techniqueVM.color = "#ffffff";
+
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(true);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+			expect(renderableTechnique.fill).toBe("#ffffff");
+		});
+
+		it('should return aggregateScoreColor if aggregate scores are enabled and color is not set', () => {
+			techniqueVM.enabled = true;
+			techniqueVM.aggregateScoreColor = "#dddddd";
+			viewModel.layout.showAggregateScores = true;
+
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(true);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+			expect(renderableTechnique.fill).toBe("#dddddd");
+		});
+
+		it('should return scoreColor if technique VM has a score', () => {
+			techniqueVM.enabled = true;
+			techniqueVM.score = "10";
+			techniqueVM.scoreColor = "#aaaaaa";
+
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(true);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+			expect(renderableTechnique.fill).toBe("#aaaaaa");
+		});
+
+		it('should return "null" text color if no technique VM is found and a fill color is not', () => {
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(false);
+			expect(renderableTechnique.textColor).toBeNull();
+		});
+
+		it('should return "black" text color if fill color is "white"', () => {
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(false);
+			Object.defineProperty(renderableTechnique, 'fill', {get: () => 'white'});
+			expect(renderableTechnique.textColor.toString()).toBe('black');
+		});
+
+		it('should return "white" text color if fill color is "black"', () => {
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(false);
+			Object.defineProperty(renderableTechnique, 'fill', {get: () => 'black'});
+			expect(renderableTechnique.textColor.toString()).toBe('white');
+		});
+
+		it('should return gray color if technique VM is disabled', () => {
+			techniqueVM.enabled = false;
+			spyOn(viewModel, 'hasTechniqueVM').withArgs(technique, tactic).and.returnValue(true);
+			spyOn(viewModel, 'getTechniqueVM').withArgs(technique, tactic).and.returnValue(techniqueVM);
+			expect(renderableTechnique.textColor).toBe("#aaaaaa");
+		});
+
+		it('should return the correct text to display', () => {
+			// case: showID & showName are enabled
+			viewModel.layout.showID = true;
+			viewModel.layout.showName = true;
+			expect(renderableTechnique.text).toBe('T0000: Example Name');
+			// case: showID is disabled, showName is enabled
+			viewModel.layout.showID = false;
+			expect(renderableTechnique.text).toBe('Example Name');
+			// case: showID is enabled, showName is disabled
+			viewModel.layout.showID = true;
+			viewModel.layout.showName = false;
+			expect(renderableTechnique.text).toBe('T0000');
+			// case: show ID & showName are disabled
+			viewModel.layout.showID = false;
+			expect(renderableTechnique.text).toBe('');
+		})
+	});
 
     describe("getters", () => {
         it('should return true if getName is true', () => {
