@@ -173,11 +173,11 @@ describe('ContextmenuComponent', () => {
     }));
 
     it('should get technique vm', inject([DataService], (service: DataService) => {
-        let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
+        let ttids = buildContextMenuViewModel(contextMenu, service);
         let tvm = contextMenu.techniqueVM;
         expect(tvm).toBeTruthy();
         expect(tvm).toBeInstanceOf(TechniqueVM);
-        expect(tvm.technique_tactic_union_id).toEqual(ttid);
+        expect(tvm.technique_tactic_union_id).toEqual(ttids[0]);
     }));
 
     it('should get links', inject([DataService], (service: DataService) => {
@@ -298,17 +298,17 @@ describe('ContextmenuComponent', () => {
     }));
 
     it('should pin cell and close', inject([DataService], (service: DataService) => {
-        let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
+        let ttids = buildContextMenuViewModel(contextMenu, service);
         let functionSpy = spyOn(contextMenu, 'closeContextmenu');
         contextMenu.pinCell();
-        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttid);
+        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttids[0]);
         expect(functionSpy).toHaveBeenCalled();
     }));
 
     it('should unpin cell', inject([DataService], (service: DataService) => {
-        let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
+        let ttids = buildContextMenuViewModel(contextMenu, service);
         contextMenu.pinCell();
-        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttid);
+        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttids[0]);
         contextMenu.pinCell();
         expect(contextMenu.viewModelsService.pinnedCell).toBe('');
     }));

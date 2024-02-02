@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataService } from './data.service';
 import { Version, VersionChangelog } from '../classes';
 import { Asset, Campaign, DataComponent, Domain, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
-import { Observable, Subscription, of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Collection } from '../utils/taxii2lib';
 
@@ -607,7 +607,6 @@ describe('DataService', () => {
         expect(campaign_test.compareVersion(group_test)).toEqual(-1);
         let asset_test = new Asset(asset2, service, false);
         expect(campaign_test.compareVersion(asset_test)).toEqual(0);
-        let alertSpy = spyOn(window, "alert");
         expect(() => {
             new Asset(asset2, service)
         }).toThrow(new Error('Error: external_references has invalid format in imported StixObject. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx'));

@@ -5,16 +5,6 @@ import { DataService } from './data.service';
 import { Subscription, of } from 'rxjs';
 
 describe('ConfigService', () => {
-    let configVersions: any[] = [{
-        "name": "ATT&CK v13",
-        "version": "13",
-        "domains": [{
-            "name": "Enterprise",
-            "identifier": "enterprise-attack",
-            "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-        }]
-    }];
-
     let versions = [
         {
             "name": "ATT&CK v13",
@@ -79,6 +69,7 @@ describe('ConfigService', () => {
         ConfigService.prototype.subscription = new Subscription;
         const unsubscribeSpy = spyOn(ConfigService.prototype.subscription, 'unsubscribe');
         let cs = new ConfigService(service.dataService);
+		expect(cs).toBeTruthy();
         expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
