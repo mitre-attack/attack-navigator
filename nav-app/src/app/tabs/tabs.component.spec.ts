@@ -15,6 +15,8 @@ import { HttpClient } from '@angular/common/http';
 import { Subscription, of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Technique } from '../classes/stix';
+import * as MockLayers from '../../tests/utils/mock-layers';
+import * as MockData from '../../tests/utils/mock-data';
 
 describe('TabsComponent', () => {
     let component: TabsComponent;
@@ -28,426 +30,6 @@ describe('TabsComponent', () => {
         "objects": [
         ]
     }];
-
-    let stixSDO = {
-        "name": "Name",
-        "description": "Description",
-        "created": "2001-01-01T01:01:00.000Z",
-        "modified": "2001-01-01T01:01:00.000Z",
-        "x_mitre_version": "1.0",
-    }
-    let templateSDO = {
-        ...stixSDO,
-        "type": "attack-pattern",
-        "x_mitre_platforms": ['PRE'],
-        "kill_chain_phases": [
-            {
-                "kill_chain_name": "mitre-attack",
-                "phase_name": "reconnaissance"
-            }
-        ],
-    }
-    let subtechniqueSDO1 = {
-        ...templateSDO,
-        "id": "attack-pattern-0-1",
-        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
-        "external_references": [
-            {
-                "external_id": "T1595.002",
-                "url": "https://attack.mitre.org/techniques/T1595/002"
-            }
-        ],
-    }
-    let techniqueSDO = {
-        ...templateSDO,
-        "id": "attack-pattern-0",
-        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
-        "external_references": [
-            {
-                "external_id": "T1595",
-                "url": "https://attack.mitre.org/techniques/T1595"
-            }
-        ]
-    }
-
-    let techniqueSDO2 = {
-        ...templateSDO,
-        "id": "attack-pattern-1",
-        "external_references": [
-            {
-                "external_id": "T1592",
-                "url": "https://attack.mitre.org/techniques/T1592"
-            }
-        ]
-    }
-
-    let techniqueSDO3 = {
-        ...techniqueSDO,
-        "id": "attack-pattern-4",
-        "x_mitre_data_sources": [
-            "Network Traffic: Network Traffic Content"
-        ],
-        "x_mitre_deprecated": true,
-        "external_references": [{"external_id": "T0002"}],
-    }
-    let t1592_001 = {
-        ...techniqueSDO,
-        "id": "attack-pattern-2",
-        "x_mitre_is_subtechnique": true,
-        "revoked": true,
-        "external_references": [{"external_id": "T1592.001"}],
-    }
-
-    let layer_file1 = {
-        "name": "layer",
-        "versions": {
-            "attack": "13",
-            "navigator": "4.9.0",
-            "layer": "4.5"
-        },
-        "domain": "enterprise-attack",
-        "description": "",
-        "filters": {
-            "platforms": [
-                "None",
-                "mac",
-                "Windows",
-                "Human-Machine Interface",
-                "Control Server",
-                "Data Historian",
-                "Field Controller/RTU/PLC/IED",
-                "Input/Output Server",
-                "Safety Instrumented System/Protection Relay",
-                "Engineering Workstation"
-            ]
-        },
-        "sorting": 0,
-        "layout": {
-            "layout": "side",
-            "aggregateFunction": "average",
-            "showID": false,
-            "showName": true,
-            "showAggregateScores": false,
-            "countUnscored": false,
-            "expandedSubtechniques": "none"
-        },
-        "hideDisabled": false,
-        "metadata": [
-            {
-                "name":"test1",
-                "value":"t1"
-            },
-            {
-                "divider":true
-            }
-        ],
-        "links": [
-            {
-                "label":"test1",
-                "url":"t1",
-            },
-            {
-                "divider":true
-            }
-        ],
-        "techniques": [
-            {
-                "techniqueID": "T0889",
-                "tactic": "persistence",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [
-                    {
-                        "name":"test1",
-                        "value":"t1"
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "links": [
-                    {
-                        "label":"test1",
-                        "url":"t1",
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "showSubtechniques": false,
-            },
-            {
-                "techniqueID": "T1595",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [
-                    {
-                        "name":"test1",
-                        "value":"t1"
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "links": [
-                    {
-                        "label":"test1",
-                        "url":"t1",
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "showSubtechniques": false
-            },
-            {
-                "techniqueID": "T1595.002",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [],
-                "links": [],
-                "showSubtechniques": false
-            }
-        ],
-        "gradient": {
-            "colors": [
-                "#ff6666ff",
-                "#ffe766ff",
-                "#8ec843ff"
-            ],
-            "minValue": 0,
-            "maxValue": 100
-        },
-        "legendItems": [
-            {
-                color: "#FF00FF",
-                label: "Legend Item Label"
-            }
-        ],
-        "showTacticRowBackground": false,
-        "tacticRowBackground": "#dddddd",
-        "selectTechniquesAcrossTactics": true,
-        "selectSubtechniquesWithParent": false,
-        "selectVisibleTechniques": false
-    }
-
-    let layer_file2 = {
-        "name": "layer",
-        "versions": {
-            "attack": "13",
-            "navigator": "4.9.0",
-            "layer": "4.5"
-        },
-        "domain": "enterprise-attack",
-        "description": "",
-        "filters": {
-            "platforms": [
-                "None",
-                "Windows",
-                "Human-Machine Interface",
-                "Control Server",
-                "Data Historian",
-                "Field Controller/RTU/PLC/IED",
-                "Input/Output Server",
-                "Safety Instrumented System/Protection Relay",
-                "Engineering Workstation"
-            ]
-        },
-        "sorting": 0,
-        "viewMode": 1,
-        "hideDisabled": false,
-        "metadata": [
-            {
-                "name":"test1",
-                "value":"t1"
-            },
-            {
-                "divider":true
-            }
-        ],
-        "links": [
-            {
-                "label":"test1",
-                "url":"t1",
-            },
-            {
-                "divider":true
-            }
-        ],
-        "customDataURL": "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
-        "techniques": [
-            {
-                "techniqueID": "T0889",
-                "tactic": "persistence",
-                "color": "#e60d0d",
-                "comment": "",
-                "enabled": true,
-                "metadata": [],
-                "links": [],
-                "showSubtechniques": false
-            }
-        ],
-        "gradient": {
-            "colors": [
-                "#ff6666ff",
-                "#ffe766ff",
-                "#8ec843ff"
-            ],
-            "minValue": 0,
-            "maxValue": 100
-        },
-        "legendItems": [],
-        "showTacticRowBackground": false,
-        "tacticRowBackground": "#dddddd",
-        "selectTechniquesAcrossTactics": true,
-        "selectSubtechniquesWithParent": false,
-        "selectVisibleTechniques": false
-    }
-
-    let layer_file3 = {
-        "name": "layer",
-        "versions": {
-            "attack": "13",
-            "navigator": "4.9.0",
-            "layer": "4.5"
-        },
-        "domain": "mobile-attack",
-        "description": "",
-        "filters": {
-            "platforms": [
-                "None",
-                "mac",
-                "Windows",
-                "Human-Machine Interface",
-                "Control Server",
-                "Data Historian",
-                "Field Controller/RTU/PLC/IED",
-                "Input/Output Server",
-                "Safety Instrumented System/Protection Relay",
-                "Engineering Workstation"
-            ]
-        },
-        "sorting": 0,
-        "layout": {
-            "layout": "side",
-            "aggregateFunction": "average",
-            "showID": false,
-            "showName": true,
-            "showAggregateScores": false,
-            "countUnscored": false,
-            "expandedSubtechniques": "none"
-        },
-        "hideDisabled": false,
-        "metadata": [
-            {
-                "name":"test1",
-                "value":"t1"
-            },
-            {
-                "divider":true
-            }
-        ],
-        "links": [
-            {
-                "label":"test1",
-                "url":"t1",
-            },
-            {
-                "divider":true
-            }
-        ],
-        "techniques": [
-            {
-                "techniqueID": "T0889",
-                "tactic": "persistence",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [
-                    {
-                        "name":"test1",
-                        "value":"t1"
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "links": [
-                    {
-                        "label":"test1",
-                        "url":"t1",
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "showSubtechniques": false,
-            },
-            {
-                "techniqueID": "T1595",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [
-                    {
-                        "name":"test1",
-                        "value":"t1"
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "links": [
-                    {
-                        "label":"test1",
-                        "url":"t1",
-                    },
-                    {
-                        "divider":true
-                    }
-                ],
-                "showSubtechniques": false
-            },
-            {
-                "techniqueID": "T1595.002",
-                "color": "#e60d0d",
-                "comment": "",
-                "score": 3,
-                "enabled": true,
-                "metadata": [],
-                "links": [],
-                "showSubtechniques": false
-            }
-        ],
-        "gradient": {
-            "colors": [
-                "#ff6666ff",
-                "#ffe766ff",
-                "#8ec843ff"
-            ],
-            "minValue": 0,
-            "maxValue": 100
-        },
-        "legendItems": [
-            {
-                color: "#FF00FF",
-                label: "Legend Item Label"
-            }
-        ],
-        "showTacticRowBackground": false,
-        "tacticRowBackground": "#dddddd",
-        "selectTechniquesAcrossTactics": true,
-        "selectSubtechniquesWithParent": false,
-        "selectVisibleTechniques": false
-    }
 
     let versions = [
         {
@@ -582,7 +164,7 @@ describe('TabsComponent', () => {
         expect(component.latestDomains.length).toEqual(1);
         component.newLayer("enterprise-attack-13");
         expect(component.layerTabs.length).toEqual(1);
-        component.newLayer("enterprise-attack-13", JSON.parse(JSON.stringify(layer_file1)));
+        component.newLayer("enterprise-attack-13", JSON.parse(JSON.stringify(MockLayers.layerFile1)));
         expect(component.layerTabs.length).toEqual(2);
     });
 
@@ -743,7 +325,7 @@ describe('TabsComponent', () => {
         expect(filter.platforms.selection).toEqual([]);
         filter.toggleInFilter("platforms","macOS");
         expect(filter.platforms.selection).toEqual(["macOS"]);
-        filter.deserialize(JSON.stringify(layer_file1.filters.platforms));
+        filter.deserialize(JSON.stringify(MockLayers.layerFile1.filters.platforms));
         let consoleSpy = spyOn(console, 'error');
         filter.toggleInFilter("platforms","PRE");
         expect(consoleSpy).toHaveBeenCalledWith('not a valid option to toggle', 'PRE', Object({ selection: [ 'macOS' ], options: [ 'Linux', 'macOS', 'Windows' ] }));
@@ -806,19 +388,20 @@ describe('TabsComponent', () => {
         const logSpy = spyOn(mockedDocElement, 'click');
         component.openUploadPrompt();
         expect(logSpy).toHaveBeenCalled();
-        let blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
+        let blob = new Blob([JSON.stringify(MockLayers.layerFile2)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
         component.readJSONFile(file).then(() => {
             expect(component.layerTabs.length).toEqual(1)
         });
-        layer_file2.viewMode = 2;
-        blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
+		let layer = MockLayers.layerFile2;
+        layer.viewMode = 2;
+        blob = new Blob([JSON.stringify(layer)], { type: 'text/json' });
         file = new File([blob], "layer-2.json");
         component.readJSONFile(file).then(() => {
             expect(component.layerTabs.length).toEqual(2)
         });
-        layer_file2.viewMode = 0;
-        blob = new Blob([JSON.stringify(layer_file2)], { type: 'text/json' });
+        layer.viewMode = 0;
+        blob = new Blob([JSON.stringify(layer)], { type: 'text/json' });
         file = new File([blob], "layer-2.json");
         component.readJSONFile(file).then(() => {
             expect(component.layerTabs.length).toEqual(3)
@@ -875,7 +458,7 @@ describe('TabsComponent', () => {
             }
         ]
         component.dataService.setUpURLs(versions);
-        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve({oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13'}));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(of(null));
@@ -914,7 +497,7 @@ describe('TabsComponent', () => {
             }
         ]
         component.dataService.setUpURLs(versions);
-        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -953,7 +536,7 @@ describe('TabsComponent', () => {
             }
         ]
         component.dataService.setUpURLs(versions);
-        let layer = JSON.parse(JSON.stringify(layer_file1));
+        let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         component.upgradeLayer(vm1, layer, false, true);
@@ -990,7 +573,7 @@ describe('TabsComponent', () => {
         ]
         component.dataService.setUpURLs(versions);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
-        let bb = JSON.parse(JSON.stringify(layer_file1))
+        let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         component.upgradeLayer(vm1, bb, false, true);
@@ -1027,10 +610,10 @@ describe('TabsComponent', () => {
         ]
         component.dataService.setUpURLs(versions);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
-        let layer = JSON.parse(JSON.stringify(layer_file1))
+        let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st1 = new Technique(MockData.T0000_000, [], null);
+        let t1 = new Technique(MockData.T0000, [st1], null);
         let tvm_1 = new TechniqueVM("T1592^reconnaissance");
         tvm_1.showSubtechniques = true;
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
@@ -1122,9 +705,9 @@ describe('TabsComponent', () => {
         component.dataService.setUpURLs(versions);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
-        let t2 = new Technique(techniqueSDO2,[],null);
+        let st1 = new Technique(MockData.T0000_000, [], null);
+        let t1 = new Technique(MockData.T0000, [st1], null);
+        let t2 = new Technique(MockData.T0001, [], null);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         tvm_1.score = '3';
         let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
@@ -1159,8 +742,8 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(versions);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let t1 = new Technique(techniqueSDO,[],null);
-        let t2 = new Technique(techniqueSDO2,[],null);
+        let t1 = new Technique(MockData.T0000, [], null);
+        let t2 = new Technique(MockData.T0001, [], null);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
         let tvm_2 = new TechniqueVM("T1592^reconnaissance");
         tvm_1.isVisible = true;
@@ -1245,10 +828,10 @@ describe('TabsComponent', () => {
         }
         let consoleSpy = spyOn(console, 'error');
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
-        let st1 = new Technique(t1592_001, [], null);
-        vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO2,[st1],null));
+        let st1 = new Technique(MockData.T0000_001, [], null);
+        vm1.dataService.domains[0].techniques.push(new Technique(MockData.T0000, [st1], null));
         vm1.dataService.domains[0].techniques[0].subtechniques.push(st1);
-        vm1.dataService.domains[0].techniques.push(new Technique(techniqueSDO3,[],null));
+        vm1.dataService.domains[0].techniques.push(new Technique(MockData.T0002, [], null));
         vm1.deserialize(JSON.stringify(viewmodel_error_file1));
         expect(consoleSpy).toHaveBeenCalled();
     })));
@@ -1309,7 +892,7 @@ describe('TabsComponent', () => {
             }]
         component.dataService.setUpURLs(versions);
         spyOn(console, 'error');
-        let blob = new Blob([JSON.stringify(layer_file1)], { type: 'text/json' });
+        let blob = new Blob([JSON.stringify(MockLayers.layerFile1)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
         component.readJSONFile(file);
         expect(component).toBeTruthy();
@@ -1330,7 +913,7 @@ describe('TabsComponent', () => {
                 ]
             }]
         component.dataService.setUpURLs(versions);
-        let combined_layer = [layer_file3,layer_file3]
+        let combined_layer = [MockLayers.layerFile3, MockLayers.layerFile3]
         let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
         component.readJSONFile(file);
@@ -1384,7 +967,7 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
         component.loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json').then(() => {
@@ -1409,7 +992,7 @@ describe('TabsComponent', () => {
             }]
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
@@ -1442,9 +1025,9 @@ describe('TabsComponent', () => {
         component.dataService.setUpURLs(versions);
         component.dataService.domains[0].dataLoaded = true;
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(layer_file1)));
+        component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(MockLayers.layerFile1)));
         expect(component.dataService.domains.length).toEqual(2); // mobile-attack-13, enterprise-attack-12
     })));
 
@@ -1468,7 +1051,7 @@ describe('TabsComponent', () => {
         }
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         spyOn(component, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json');
         component.loadTabs(default_layers);
@@ -1483,7 +1066,7 @@ describe('TabsComponent', () => {
         }
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
@@ -1502,7 +1085,7 @@ describe('TabsComponent', () => {
         }
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(layer_file1));
+        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));

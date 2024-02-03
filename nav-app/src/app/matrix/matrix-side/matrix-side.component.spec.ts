@@ -4,74 +4,7 @@ import { MatrixSideComponent } from './matrix-side.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TechniqueVM, ViewModel } from '../../classes';
 import { Matrix, Technique } from '../../classes/stix';
-
-let stixSDO = {
-    "name": "Name",
-    "description": "Description",
-    "created": "2001-01-01T01:01:00.000Z",
-    "modified": "2001-01-01T01:01:00.000Z",
-    "x_mitre_version": "1.0",
-}
-let tacticSDO = {
-    "id": "tactic-0",
-    ...stixSDO,
-    "name": "Reconnaissance",
-    "type": "x-mitre-tactic",
-    "x_mitre_shortname": "reconnaissance",
-    "external_references": [
-        {
-            "external_id": "TA0043",
-            "url": "https://attack.mitre.org/tactics/TA0043"
-        }
-    ]
-}
-let matrixSDO = {
-    "external_references": [
-        {
-            "external_id": "enterprise-attack",
-            "source_name": "mitre-attack",
-            "url": "https://attack.mitre.org/matrices/enterprise"
-        }
-    ],
-    "id": "x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc",
-    "name":"Enterprise ATT&CK",
-    "tactic_refs": ["tactic-0"],
-    "tactics": [
-        {
-            "id": "tactic-0",
-            "name": "Reconnaissance",
-            "type": "x-mitre-tactic",
-            "x_mitre_shortname": "reconnaissance",
-            "external_references": [
-                {
-                    "external_id": "TA0043",
-                    "url": "https://attack.mitre.org/tactics/TA0043"
-                }
-            ]
-        }
-    ]
-}
-let templateSDO = {
-    ...stixSDO,
-    "type": "attack-pattern",
-    "x_mitre_platforms": ['PRE'],
-    "kill_chain_phases": [
-        {
-            "kill_chain_name": "mitre-attack",
-            "phase_name": "reconnaissance"
-        }
-    ],
-}
-let techniqueSDO = {
-    ...templateSDO,
-    "id": "attack-pattern-0",
-    "external_references": [
-        {
-            "external_id": "T1595",
-            "url": "https://attack.mitre.org/techniques/T1595"
-        }
-    ]
-}
+import * as MockData from '../../../tests/utils/mock-data';
 
 describe('MatrixSideComponent', () => {
     let component: MatrixSideComponent;
@@ -90,13 +23,13 @@ describe('MatrixSideComponent', () => {
         component = fixture.componentInstance;
         component.viewModel = new ViewModel("layer","33","enterprise-attack-13",null);
         let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
+        idToTacticSDO.set("tactic-0", MockData.TA0000);
         component.viewModel.showTacticRowBackground = true;
-        let t1 = new Technique(techniqueSDO,[],null);
+        let t1 = new Technique(MockData.T0000, [], null);
         technique_list.push(t1);
         let tvm_1 = new TechniqueVM("T1595^reconnaissance");
 		component.viewModel.setTechniqueVM(tvm_1);
-        component.matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,null);
+        component.matrix = new Matrix(MockData.matrixSDO, idToTacticSDO, technique_list,null);
         fixture.detectChanges();
     });
 
