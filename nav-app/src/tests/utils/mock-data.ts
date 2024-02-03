@@ -89,7 +89,7 @@ export const stixSDO_v1_1 = {
 export const baseTechniqueSDO = {
 	...stixSDO,
 	"type": "attack-pattern",
-	"x_mitre_platforms": ["platform"],
+	"x_mitre_platforms": ["PRE"],
 	"kill_chain_phases": [{
 		"kill_chain_name": "mitre-attack",
 		"phase_name": "tactic-name"
@@ -100,7 +100,7 @@ export const T0000 = {
 	"id": "attack-pattern-0",
 	"external_references": [{"external_id": "T0000"}],
 }
-export const T0001_Duplicate = {
+export const T0000_Duplicate = {
 	...baseTechniqueSDO,
 	"id": "attack-pattern-0",
 	"external_references": [{"external_id": "T0000"}],
@@ -117,6 +117,12 @@ export const T0000_001 = {
 	"x_mitre_is_subtechnique": true,
 	"revoked": true,
 	"external_references": [{"external_id": "T0000.001"}],
+}
+export const T0000_002 = {
+	...baseTechniqueSDO,
+	"id": "attack-pattern-7",
+	"x_mitre_is_subtechnique": true,
+	"external_references": [{"external_id": "T0000.002"}],
 }
 export const T0001 = {
 	...baseTechniqueSDO,
@@ -416,6 +422,28 @@ export const stixBundleSDO = [{
 		T0000_001revokedByT0000_000, filteredM0001, deprecatedMatrixSDO,
 		G0000usesT0000_000, S0000usesT0000_000, C0000usesT0000_000,
 		M0000mitigatesT0000_000, DC0000detectsT0000_000,
-		C0001attributedToG0000, C0001, T0001targetsA0000, T0001_Duplicate,
+		C0001attributedToG0000, C0001, T0001targetsA0000, T0000_Duplicate,
 	]
 }]
+
+// mock invalid link and metadata values
+export const invalidDivider = {
+	"divider": "invalid"
+}
+export const invalidValue = {
+	"value": "invalid"
+}
+export const invalidName = {
+	"name": 3
+}
+export const invalidUrl = {
+	"url": 3
+}
+export const invalidLink = {
+	"url": 3,
+	"label": 4
+}
+export const invalidMetadata = {
+	"name": 3,
+	"value": 4
+}

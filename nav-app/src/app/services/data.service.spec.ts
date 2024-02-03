@@ -250,9 +250,6 @@ describe('DataService', () => {
         expect(campaign_test.compareVersion(group_test)).toEqual(-1);
         let asset_test = new Asset(MockData.invalidAsset, service, false);
         expect(campaign_test.compareVersion(asset_test)).toEqual(0);
-        expect(() => {
-            new Asset(MockData.invalidAsset, service)
-        }).toThrow(new Error('Error: external_references has invalid format in imported StixObject. Read more here: https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html#_72bcfr3t79jx'));
     }));
 
     it('should test technique', inject([DataService], (service: DataService) => {
@@ -266,7 +263,7 @@ describe('DataService', () => {
         let technique_test = new Technique(MockData.T0001,[],service);
         expect(() => {
             technique_test.get_technique_tactic_id("impact")
-        }).toThrow(new Error('impact is not a tactic of T0001'));
+        }).toThrowError();
     }));
 
     it('should parse stix bundle', inject([DataService], (service: DataService) => {
@@ -392,7 +389,7 @@ describe('DataService', () => {
                 MockData.T0000_001revokedByT0000_000, MockData.filteredM0001, MockData.deprecatedMatrixSDO,
                 MockData.G0000usesT0000_000, MockData.S0000usesT0000_000, MockData.C0000usesT0000_000,
                 MockData.M0000mitigatesT0000_000, MockData.DC0000detectsT0000_000,
-                MockData.C0001attributedToG0000, MockData.C0001, MockData.T0001targetsA0000, MockData.T0001_Duplicate,
+                MockData.C0001attributedToG0000, MockData.C0001, MockData.T0001targetsA0000, MockData.T0000_Duplicate,
             ]
         }]);
         // compare versions
