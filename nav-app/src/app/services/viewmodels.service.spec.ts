@@ -8,25 +8,25 @@ import tinygradient from 'tinygradient';
 import * as MockData from '../../tests/utils/mock-data';
 
 describe('ViewmodelsService', () => {
-	let viewModelsService: ViewModelsService;
+    let viewModelsService: ViewModelsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule],
             providers: [ViewModelsService],
         });
-		viewModelsService = TestBed.inject(ViewModelsService);
+        viewModelsService = TestBed.inject(ViewModelsService);
     });
 
     it('should be created', () => {
         expect(viewModelsService).toBeTruthy();
     });
 
-	it('should correctly increment nonce on subsequent calls', () => {
-		expect(viewModelsService.getNonce()).toBe(0);
-		expect(viewModelsService.getNonce()).toBe(1);
-		expect(viewModelsService.getNonce()).toBe(2);
-	});
+    it('should correctly increment nonce on subsequent calls', () => {
+        expect(viewModelsService.getNonce()).toBe(0);
+        expect(viewModelsService.getNonce()).toBe(1);
+        expect(viewModelsService.getNonce()).toBe(2);
+    });
 
     it('should create viewmodel by inheriting the score from other view models', () => {
         viewModelsService.selectionChanged();

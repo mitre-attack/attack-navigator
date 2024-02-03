@@ -9,14 +9,14 @@ import * as MockData from '../../tests/utils/mock-data';
 import { DataService } from './data.service';
 
 describe('DataService', () => {
-	let dataService: DataService;
+    let dataService: DataService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [DataService],
         });
-		dataService = TestBed.inject(DataService);
+        dataService = TestBed.inject(DataService);
     });
 
     it('should be created', () => {
@@ -193,7 +193,7 @@ describe('DataService', () => {
         expect(mitigation_test.relatedTechniques('enterprise-attack-13')).toEqual([]);
     });
 
-    it('should test asset', ()=> {
+    it('should test asset', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
@@ -203,7 +203,7 @@ describe('DataService', () => {
         expect(asset_test.relatedTechniques('enterprise-attack-13')).toEqual([]);
     });
 
-    it('should test campaign', ()=> {
+    it('should test campaign', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['campaign_uses'].set('campaign-0', ['attack-pattern-0']);
@@ -213,7 +213,7 @@ describe('DataService', () => {
         expect(campaign_test.relatedTechniques('enterprise-attack-13')).toEqual([]);
     });
 
-    it('should test data components', ()=> {
+    it('should test data components', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let t1 = new Technique(MockData.T0000, [], dataService);
@@ -233,7 +233,7 @@ describe('DataService', () => {
         expect(data_component_test.techniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
     });
 
-    it('should test group', ()=> {
+    it('should test group', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
@@ -245,7 +245,7 @@ describe('DataService', () => {
         expect(group_test.relatedTechniques('enterprise-attack-13')).toEqual([]);
     });
 
-    it('should test stixObject', ()=> {
+    it('should test stixObject', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let stixObject_test = new Campaign(MockData.G0000, dataService);
@@ -261,21 +261,21 @@ describe('DataService', () => {
         expect(campaign_test.compareVersion(asset_test)).toEqual(0);
     });
 
-    it('should test technique', ()=> {
+    it('should test technique', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let technique_test = new Technique(MockData.T0002, [], dataService);
         expect(technique_test.get_all_technique_tactic_ids()).toEqual([]);
     });
 
-    it('should throw error if tactic does not exist', ()=> {
+    it('should throw error if tactic does not exist', () => {
         let technique_test = new Technique(MockData.T0001, [], dataService);
         expect(() => {
             technique_test.get_technique_tactic_id('impact');
         }).toThrowError();
     });
 
-    it('should parse stix bundle', ()=> {
+    it('should parse stix bundle', () => {
         dataService.subtechniquesEnabled = true; // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
@@ -324,7 +324,7 @@ describe('DataService', () => {
         expect(relationships['targeted_assets'].size).toEqual(1);
     });
 
-    it('should update domain watchers', ()=> {
+    it('should update domain watchers', () => {
         let functionSpy = spyOn(dataService, 'getCurrentVersion');
         dataService.setUpURLs(MockData.configData);
         let domain = dataService.domains[0];
@@ -333,7 +333,7 @@ describe('DataService', () => {
         expect(functionSpy).toHaveBeenCalled();
     });
 
-    it('should compare the same version as unchanged', ()=> {
+    it('should compare the same version as unchanged', () => {
         dataService.setUpURLs([]);
         let domain = dataService.domains[0];
         dataService.parseBundle(domain, MockData.stixBundleSDO);
@@ -345,7 +345,7 @@ describe('DataService', () => {
         expect(result.unchanged.length).toEqual(4);
     });
 
-    it('should compare versions', ()=> {
+    it('should compare versions', () => {
         let newVersion = {
             name: 'ATT&CK v14',
             version: '14',
