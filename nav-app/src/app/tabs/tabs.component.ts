@@ -42,14 +42,13 @@ export class TabsComponent implements AfterViewInit {
     public layerLinkURLs: string[] = [];
     public customizedConfig: any[] = [];
     public bannerContent: string;
-    public subscription = new Subscription();
+    public subscription: Subscription;
     public copiedRecently: boolean = false; // true if copyLayerLink is called, reverts to false after 2 seconds
     public loadData: any = {
         url: undefined,
         version: undefined,
         identifier: undefined,
     };
-    public glayerVersion = globals.layerVersion;
 
     // user input for layer-layer operations
     public opSettings: any = {
@@ -760,7 +759,7 @@ export class TabsComponent implements AfterViewInit {
             let viewModel: ViewModel;
             viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
             let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-            self.versionMismatchWarning(layerVersionStr, this.glayerVersion).then((res) => {
+            self.versionMismatchWarning(layerVersionStr).then((res) => {
                 let isCustom = 'customDataURL' in obj;
                 if (!isCustom) {
                     if (!self.dataService.getDomain(viewModel.domainVersionID)) {
@@ -793,9 +792,9 @@ export class TabsComponent implements AfterViewInit {
      * (for major mismatches)
      * @param {string} layerVersionStr the uploaded layer version
      */
-    private async versionMismatchWarning(layerVersionStr: string, glayerVersion: string): Promise<boolean> {
+    private async versionMismatchWarning(layerVersionStr: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            let globalVersionSplit = glayerVersion.split('.');
+            let globalVersionSplit = globals.layerVersion.split('.');
             let layerVersion = layerVersionStr.split('.');
             // if minor version change, snackbar will be displayed
             if (layerVersion[0] === globalVersionSplit[0] && layerVersion[1] !== globalVersionSplit[1]) {
@@ -845,7 +844,7 @@ export class TabsComponent implements AfterViewInit {
                     let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await self.versionMismatchWarning(layerVersionStr, this.glayerVersion);
+                        await self.versionMismatchWarning(layerVersionStr);
                         if (!self.dataService.getDomain(viewModel.domainVersionID)) {
                             throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
