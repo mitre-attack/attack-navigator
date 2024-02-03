@@ -28,6 +28,7 @@ describe('ViewmodelsService', () => {
 		scoreVariables.set("b",vm2);
 		let tvm_1 = new TechniqueVM("T1583");
 		tvm_1.score = "2";
+		tvm_1.comment = "completed";
 		vm1.setTechniqueVM(tvm_1);
 		let tvm_2 = new TechniqueVM("T1584");
 		tvm_2.score = "1";
@@ -49,81 +50,8 @@ describe('ViewmodelsService', () => {
 		}
 		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
 		let tvm_new = vm_new.getTechniqueVM_id("T1583");
+		expect(vm2.domainVersionID).toBe("enterprise-attack-13");
 		expect(tvm_new.score).toBe("3");
-	}));
-
-	it('should create viewmodel by inheriting the comments from other view models', inject([ViewModelsService], (service: ViewModelsService) => {
-		let vm1 = service.newViewModel("layer","enterprise-attack-13");
-		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
-		let scoreVariables = new Map<string, ViewModel>();
-        scoreVariables.set("a",vm1);
-		scoreVariables.set("b",vm2);
-		let tvm_1 = new TechniqueVM("T1583");
-		tvm_1.comment = "completed";
-		vm1.setTechniqueVM(tvm_1);
-		let opSettings: any = {
-			domain: "Enterprise ATT&CK v13",
-			gradientVM: vm1,
-			coloringVM: vm1,
-			commentVM: vm1,
-			linkVM: vm1,
-			metadataVM: vm1,
-			enabledVM: vm1,
-			filterVM: vm1,
-			scoreExpression: "1+3",
-			legendVM: vm1
-		}
-		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
-		let tvm_new = vm_new.getTechniqueVM_id("T1583");
-		expect(tvm_new.comment).toBe("completed");
-	}));
-
-	it('viewmodel by inheriting opsettings and setting the score to 1 for all', inject([ViewModelsService], (service: ViewModelsService) => {
-		let vm1 = service.newViewModel("layer","enterprise-attack-13");
-		let scoreVariables = new Map<string, ViewModel>();
-        scoreVariables.set("a",vm1);
-		let tvm = new TechniqueVM("T1583");
-		tvm.score = "2";
-		vm1.setTechniqueVM(tvm);
-		let opSettings: any = {
-			domain: "Enterprise ATT&CK v13",
-			gradientVM: vm1,
-			coloringVM: vm1,
-			commentVM: vm1,
-			linkVM: vm1,
-			metadataVM: vm1,
-			enabledVM: vm1,
-			filterVM: vm1,
-			scoreExpression: "true",
-			legendVM: vm1
-		}
-		let vm = service.layerOperation(scoreVariables, "test1", opSettings);
-		expect(vm.domainVersionID).toBe("Enterprise ATT&CK v13");
-	}));
-
-	it('should create viewmodel when score expression is a+b', inject([ViewModelsService], (service: ViewModelsService) => {
-		let vm1 = service.newViewModel("layer","enterprise-attack-13");
-		let vm2 = service.newViewModel("layer1","enterprise-attack-13");
-		let scoreVariables = new Map<string, ViewModel>();
-        scoreVariables.set("a",vm1);
-		scoreVariables.set("b",vm2);
-		let tvm_1 = new TechniqueVM("T1583");
-		tvm_1.comment = "completed";
-		vm1.setTechniqueVM(tvm_1);
-		let opSettings: any = {
-			domain: "Enterprise ATT&CK v13",
-			gradientVM: vm1,
-			coloringVM: vm1,
-			commentVM: vm1,
-			linkVM: vm1,
-			metadataVM: vm1,
-			enabledVM: vm1,
-			filterVM: vm1,
-			scoreExpression: "a+b",
-			legendVM: vm1
-		}
-		let vm_new = service.layerOperation(scoreVariables, "test1", opSettings);
-		let tvm_new = vm_new.getTechniqueVM_id("T1583");
 		expect(tvm_new.comment).toBe("completed");
 	}));
 
@@ -292,28 +220,17 @@ describe('ViewmodelsService', () => {
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
+		vm1.addLegendItem();
+        expect(vm1.legendItems.length).toEqual(1);
+        vm1.deleteLegendItem(0);
+        vm1.clearLegend();
+        expect(vm1.legendItems.length).toEqual(0);
         tvm_1.showSubtechniques = false;
         expect(tvm_1.modified()).toEqual(true); // returns true since techniqueVM is annotated
         tvm_1.isVisible = false;
         expect(vm1.modifiedHiddenTechniques()).toEqual(1);
         tvm_1.isVisible = true;
         expect(vm1.getVisibleTechniquesList()).toEqual(['T0000^tactic-name', 'T0001^tactic-name', 'T0000.002^tactic-name']);
-    }));
-
-	it('should test legends', inject([ViewModelsService], (service: ViewModelsService) => {
-        let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let tvm_1 = new TechniqueVM("T0000^tactic-name");
-        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
-        let tvm_2 = new TechniqueVM("T0001^tactic-name");
-        tvm_1.score = "3";
-        vm1.setTechniqueVM(tvm_1);
-        vm1.setTechniqueVM(tvm_2);
-        vm1.setTechniqueVM(stvm_1);
-        vm1.addLegendItem();
-        expect(vm1.legendItems.length).toEqual(1);
-        vm1.deleteLegendItem(0);
-        vm1.clearLegend();
-        expect(vm1.legendItems.length).toEqual(0);
     }));
 
 	it('should test gradient colors', inject([ViewModelsService], (service: ViewModelsService) => {
@@ -360,35 +277,11 @@ describe('ViewmodelsService', () => {
     }));
 
     it('should copy annotations from one technique VM to another', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let technique_list: Technique[] = [];
         let idToTacticSDO = new Map<string, any>();
         idToTacticSDO.set("tactic-0", MockData.TA0000);
         let to_vm = service.newViewModel("test1","enterprise-attack-13");
-        to_vm.dataService.setUpURLs(versions);
+        to_vm.dataService.setUpURLs(MockData.configDataExtended);
         let matrix = new Matrix(MockData.matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
         to_vm.dataService.domains[0].matrices = [matrix];
         let t1 = new Technique(MockData.T0000,[],null);
@@ -670,21 +563,8 @@ describe('ViewmodelsService', () => {
     });
 
     it('should throw errors for deserializing domain version', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_error_file1 = {
             "versions": {
                 "attack": 6
@@ -696,21 +576,8 @@ describe('ViewmodelsService', () => {
     }));
 
     it('should test versions for layer format 3', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_version_file1 = {
             "version": 6
         }
@@ -718,21 +585,8 @@ describe('ViewmodelsService', () => {
     }));
 
     it('should test patch for old domain name convention', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_version_file1 = {
             "domain": 'mitre-enterprise'
         }
@@ -741,21 +595,8 @@ describe('ViewmodelsService', () => {
     }));
 
     it('should check values', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.setUpURLs(MockData.configData);
         let tvm_1 = new TechniqueVM("T0000^tactic-name");
         let l1 = new Link();
         l1.label = "test1";
@@ -783,21 +624,8 @@ describe('ViewmodelsService', () => {
     }));
 
     it('should load vm data with custom url', inject([ViewModelsService], (service: ViewModelsService) => {
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        vm1.dataService.setUpURLs(versions);
+        vm1.dataService.setUpURLs(MockData.configData);
         vm1.dataService.domains[0].urls = ["https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json"];
         vm1.dataService.domains[0].isCustom = true;
         expect(vm1.loadVMData()).toBeUndefined();

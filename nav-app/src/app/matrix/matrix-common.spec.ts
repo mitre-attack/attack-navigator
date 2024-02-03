@@ -1,9 +1,8 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixCommon } from './matrix-common';
 import { TechniqueVM, ViewModel } from '../classes';
 import { Matrix, Technique, Tactic } from '../classes/stix';
-import { EventEmitter } from '@angular/core';
 import * as MockData from '../../tests/utils/mock-data';
 
 describe('MatrixCommon', () => {
