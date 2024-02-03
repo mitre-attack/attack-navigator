@@ -17,6 +17,6 @@ describe('IconsService', () => {
     it('should register', () => {
         spyOn(service.matIconRegistry, 'addSvgIcon');
         service.registerIcons();
-		expect(service.matIconRegistry.addSvgIcon).toHaveBeenCalledTimes(Object.values(Icons).length);
+        expect(service.matIconRegistry.addSvgIcon).toHaveBeenCalledTimes(Object.values(Icons).length);
     });
 });

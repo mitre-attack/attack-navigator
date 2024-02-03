@@ -10,61 +10,63 @@ describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
     let fixture: ComponentFixture<TechniqueCellComponent>;
     let stixSDO = {
-        "name": "Name",
-        "description": "Description",
-        "created": "2001-01-01T01:01:00.000Z",
-        "modified": "2001-01-01T01:01:00.000Z",
-        "x_mitre_version": "1.0",
-    }
+        name: 'Name',
+        description: 'Description',
+        created: '2001-01-01T01:01:00.000Z',
+        modified: '2001-01-01T01:01:00.000Z',
+        x_mitre_version: '1.0',
+    };
     let techniqueSDO = {
         ...stixSDO,
-        "type": "attack-pattern",
-        "x_mitre_platforms": ["platform"],
-        "kill_chain_phases": [{
-            "kill_chain_name": "mitre-attack",
-            "phase_name": "tactic-name"
-        }],
-    }
+        type: 'attack-pattern',
+        x_mitre_platforms: ['platform'],
+        kill_chain_phases: [
+            {
+                kill_chain_name: 'mitre-attack',
+                phase_name: 'tactic-name',
+            },
+        ],
+    };
     let t0000 = {
         ...techniqueSDO,
-        "id": "attack-pattern-0",
-        "external_references": [{"external_id": "T0000"}],
-    }
+        id: 'attack-pattern-0',
+        external_references: [{ external_id: 'T0000' }],
+    };
     let t0000_000 = {
         ...techniqueSDO,
-        "id": "attack-pattern-1",
-        "x_mitre_is_subtechnique": true,
-        "external_references": [{"external_id": "T0000.000"}],
-    }
+        id: 'attack-pattern-1',
+        x_mitre_is_subtechnique: true,
+        external_references: [{ external_id: 'T0000.000' }],
+    };
     let t0000_001 = {
         ...techniqueSDO,
-        "id": "attack-pattern-2",
-        "x_mitre_is_subtechnique": true,
-        "revoked": true,
-        "external_references": [{"external_id": "T0000.001"}],
-    }
+        id: 'attack-pattern-2',
+        x_mitre_is_subtechnique: true,
+        revoked: true,
+        external_references: [{ external_id: 'T0000.001' }],
+    };
     let tacticSDO = {
         ...stixSDO,
-        "id": "tactic-0",
-        "type": "x-mitre-tactic",
-        "x_mitre_shortname": "tactic-name",
-        "external_references": [{"external_id": "TA0000"}]
-    }
+        id: 'tactic-0',
+        type: 'x-mitre-tactic',
+        x_mitre_shortname: 'tactic-name',
+        external_references: [{ external_id: 'TA0000' }],
+    };
     let tacticSDO2 = {
         ...stixSDO,
-        "id": "tactic-1",
-        "type": "x-mitre-tactic",
-        "x_mitre_shortname": "tactic-name",
-        "external_references": [{"external_id": "TA0001"}]
-    }
+        id: 'tactic-1',
+        type: 'x-mitre-tactic',
+        x_mitre_shortname: 'tactic-name',
+        external_references: [{ external_id: 'TA0001' }],
+    };
     let matrixSDO = {
         ...stixSDO,
-        "id": "matrix-0",
-        "type": "x-mitre-matrix",
-        "tactic_refs": ["tactic-0"],
-        "external_references": [{"external_id": "enterprise-matrix"}]
-    }
-    let techniqueTacticUnionId = "T0000^tactic-name";
+        id: 'matrix-0',
+        type: 'x-mitre-matrix',
+        tactic_refs: ['tactic-0'],
+        external_references: [{ external_id: 'enterprise-matrix' }],
+    };
+    let techniqueTacticUnionId = 'T0000^tactic-name';
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -76,17 +78,17 @@ describe('TechniqueCellComponent', () => {
         component = fixture.debugElement.componentInstance;
         let versions = [
             {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
+                name: 'ATT&CK v13',
+                version: '13',
+                domains: [
                     {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
+                        name: 'Enterprise',
+                        identifier: 'enterprise-attack',
+                        data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                    },
+                ],
+            },
+        ];
         component.dataService.setUpURLs(versions);
         let sub1 = new Technique(t0000_000, [], null);
         let sub2 = new Technique(t0000_001, [], null);
@@ -95,13 +97,13 @@ describe('TechniqueCellComponent', () => {
         let map = new Map();
         map.set(component.tactic.id, tacticSDO);
         component.matrix = new Matrix(matrixSDO, map, [component.technique, sub1, sub2], null);
-        component.viewModel = component.viewModelsService.newViewModel("vm", "enterprise-attack-13");
+        component.viewModel = component.viewModelsService.newViewModel('vm', 'enterprise-attack-13');
         component.viewModel.setTechniqueVM(new TechniqueVM(techniqueTacticUnionId));
-        component.viewModel.setTechniqueVM(new TechniqueVM("T0000.000^tactic-name"));
-        component.viewModel.setTechniqueVM(new TechniqueVM("T0000.001^tactic-name"));
-        component.viewModelsService.pinnedCell = "";
+        component.viewModel.setTechniqueVM(new TechniqueVM('T0000.000^tactic-name'));
+        component.viewModel.setTechniqueVM(new TechniqueVM('T0000.001^tactic-name'));
+        component.viewModelsService.pinnedCell = '';
         component.showContextmenu = false;
-        component.viewModel.techniqueVMs.forEach(tvm => tvm.score = '');
+        component.viewModel.techniqueVMs.forEach((tvm) => (tvm.score = ''));
         fixture.detectChanges();
     });
 
@@ -119,7 +121,7 @@ describe('TechniqueCellComponent', () => {
     });
 
     it('showTooltip should show the tooltip if isCellPinned is true', () => {
-        Object.defineProperty(component, 'isCellPinned', {get: () => true});
+        Object.defineProperty(component, 'isCellPinned', { get: () => true });
         expect(component.showTooltip).toBe(true);
 
         component.viewModel.highlightTechnique(component.technique, component.tactic);
@@ -166,12 +168,12 @@ describe('TechniqueCellComponent', () => {
     });
 
     it('should unpin other cells on click', () => {
-        component.viewModelsService.pinnedCell = "T0001^tactic-name";
+        component.viewModelsService.pinnedCell = 'T0001^tactic-name';
         expect(component.isCellPinned).toBeFalse();
         component.onRightClick(null);
         expect(component.viewModelsService.pinnedCell).toEqual('');
 
-        component.viewModelsService.pinnedCell = "T0001^tactic-name";
+        component.viewModelsService.pinnedCell = 'T0001^tactic-name';
         expect(component.isCellPinned).toBeFalse();
         component.onLeftClick(null);
         expect(component.viewModelsService.pinnedCell).toEqual('');
@@ -180,16 +182,16 @@ describe('TechniqueCellComponent', () => {
     it('should call onRightClick when selecting_techniques is false', () => {
         spyOn(component, 'onRightClick');
         spyOn(component.configService, 'getFeature').and.returnValue(false);
-        const event = {shiftKey: false, ctrlKey: false, metaKey: false, pageX: 0, pageY: 0};
+        const event = { shiftKey: false, ctrlKey: false, metaKey: false, pageX: 0, pageY: 0 };
         component.onLeftClick(event);
         expect(component.onRightClick).toHaveBeenCalledWith(event);
-    })
+    });
 
     it('should emit leftclick event when selecting_techniques is true', () => {
         spyOn(component, 'onRightClick');
         spyOn(component.configService, 'getFeature').and.returnValue(true);
         const emitSpy = spyOn(component.leftclick, 'emit');
-        const event = {shiftKey: true, ctrlKey: true, metaKey: true, pageX: 0, pageY: 0};
+        const event = { shiftKey: true, ctrlKey: true, metaKey: true, pageX: 0, pageY: 0 };
         component.onLeftClick(event);
         expect(component.viewModelsService.pinnedCell).toEqual('');
         expect(emitSpy).toHaveBeenCalledOnceWith({
@@ -198,7 +200,7 @@ describe('TechniqueCellComponent', () => {
             ctrl: event.ctrlKey,
             meta: event.metaKey,
             x: event.pageX,
-            y: event.pageY
+            y: event.pageY,
         });
         expect(component.onRightClick).not.toHaveBeenCalled();
     });
@@ -219,9 +221,9 @@ describe('TechniqueCellComponent', () => {
         component.viewModel.getTechniqueVM = jasmine.createSpy('getTechniqueVM').and.callFake((subtechnique, tactic) => {
             return {
                 ...jasmine.createSpyObj('TechniqueVM', ['annotated', 'setIsVisible']),
-                annotated: jasmine.createSpy('annotated').and.returnValue(true)
-            }
-        })
+                annotated: jasmine.createSpy('annotated').and.returnValue(true),
+            };
+        });
         const result = component.annotatedSubtechniques();
         expect(component.viewModel.getTechniqueVM).toHaveBeenCalledTimes(2);
         expect(component.viewModel.getTechniqueVM).toHaveBeenCalledWith(jasmine.any(Object), component.tactic);
@@ -231,8 +233,8 @@ describe('TechniqueCellComponent', () => {
     it('should return the correct class when not annotated and not editing', () => {
         spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
         spyOn(component, 'annotatedSubtechniques').and.returnValue(0);
-        Object.defineProperty(component, 'isCellPinned', {get: () => false});
-        
+        Object.defineProperty(component, 'isCellPinned', { get: () => false });
+
         const result = component.getClass();
         expect(Cell.prototype.getClass).toHaveBeenCalled();
         expect(result).toBe('base-class unannotated');
@@ -241,8 +243,8 @@ describe('TechniqueCellComponent', () => {
     it('should return the correct class when annotated and not editing', () => {
         spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
         spyOn(component, 'annotatedSubtechniques').and.returnValue(1);
-        Object.defineProperty(component, 'isCellPinned', {get: () => false});
-        
+        Object.defineProperty(component, 'isCellPinned', { get: () => false });
+
         const result = component.getClass();
         expect(Cell.prototype.getClass).toHaveBeenCalled();
         expect(result).toBe('base-class');
@@ -251,8 +253,8 @@ describe('TechniqueCellComponent', () => {
     it('should return the correct class when not annotated and editing', () => {
         spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
         spyOn(component, 'annotatedSubtechniques').and.returnValue(0);
-        Object.defineProperty(component, 'isCellPinned', {get: () => true});
-        
+        Object.defineProperty(component, 'isCellPinned', { get: () => true });
+
         const result = component.getClass();
         expect(Cell.prototype.getClass).toHaveBeenCalled();
         expect(result).toBe('base-class unannotated editing');
@@ -261,8 +263,8 @@ describe('TechniqueCellComponent', () => {
     it('should return the correct class when annotated and editing', () => {
         spyOn(Cell.prototype, 'getClass').and.returnValue('base-class');
         spyOn(component, 'annotatedSubtechniques').and.returnValue(1);
-        Object.defineProperty(component, 'isCellPinned', {get: () => true});
-        
+        Object.defineProperty(component, 'isCellPinned', { get: () => true });
+
         const result = component.getClass();
         expect(Cell.prototype.getClass).toHaveBeenCalled();
         expect(result).toBe('base-class editing');

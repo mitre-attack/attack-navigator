@@ -12,7 +12,7 @@ describe('HelpComponent', () => {
     let markdownService: MarkdownService;
     let dialog: MatDialog;
     let renderer: Renderer2;
-    let mockMarkdownElement: any
+    let mockMarkdownElement: any;
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -31,7 +31,7 @@ describe('HelpComponent', () => {
                 {
                     provide: Renderer2,
                     useValue: {
-                        listen: jasmine.createSpy('listen').and.returnValue(() => { }),
+                        listen: jasmine.createSpy('listen').and.returnValue(() => {}),
                     },
                 },
             ],
@@ -39,22 +39,20 @@ describe('HelpComponent', () => {
         dialog = TestBed.inject(MatDialog);
         markdownService = TestBed.inject(MarkdownService);
         renderer = TestBed.inject(Renderer2);
-
-
     }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(HelpComponent);
         component = fixture.componentInstance;
-        renderer = fixture.componentRef.injector.get<Renderer2>(Renderer2)
+        renderer = fixture.componentRef.injector.get<Renderer2>(Renderer2);
         mockMarkdownElement = {
             element: {
-                nativeElement: document.createElement('div')
-            }
+                nativeElement: document.createElement('div'),
+            },
         };
-        component['markdownElement'] = mockMarkdownElement
+        component['markdownElement'] = mockMarkdownElement;
         spyOn(renderer, 'listen').and.callFake((elem, eventName, callback) => {
-            return () => { }
+            return () => {};
         });
         fixture.detectChanges();
         spyOn(component, 'scrollTo').and.callThrough();

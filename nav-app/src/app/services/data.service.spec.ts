@@ -21,14 +21,14 @@ describe('DataService', () => {
     }));
 
     it('should set up data in constructor', inject([HttpClient], (http: HttpClient) => {
-        let return$ = {versions: MockData.configData};
+        let return$ = { versions: MockData.configData };
         let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
-        DataService.prototype.subscription = new Subscription;
+        DataService.prototype.subscription = new Subscription();
         const unsubscribeSpy = spyOn(DataService.prototype.subscription, 'unsubscribe');
         const mockService = new DataService(http);
         expect(mockService).toBeTruthy();
-        expect(functionSpy).toHaveBeenCalledOnceWith(return$.versions)
+        expect(functionSpy).toHaveBeenCalledOnceWith(return$.versions);
         expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
@@ -115,7 +115,7 @@ describe('DataService', () => {
     }));
 
     it('should fetch domain data via TAXII', inject([DataService], (service: DataService) => {
-        let functionSpy = spyOn(Collection.prototype, 'getObjects').and.returnValue(Promise.resolve([]))
+        let functionSpy = spyOn(Collection.prototype, 'getObjects').and.returnValue(Promise.resolve([]));
         service.setUpURLs(MockData.taxiiData);
         let domain = service.domains[0];
         let result$ = service.getDomainData(domain);
@@ -141,7 +141,7 @@ describe('DataService', () => {
         service.setUpURLs(MockData.configData);
         let domain = service.domains[0];
         let functionSpy = spyOn(service, 'getDomainData').and.returnValue(of(MockData.stixBundleSDO));
-        DataService.prototype.subscription = new Subscription;
+        DataService.prototype.subscription = new Subscription();
         spyOn(DataService.prototype.subscription, 'unsubscribe');
         await expectAsync(service.loadDomainData(domain.id, false)).toBeResolved();
         expect(functionSpy).toHaveBeenCalledOnceWith(domain, false);
@@ -173,7 +173,7 @@ describe('DataService', () => {
     it('should test software', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['software_uses'].set('malware-0',['attack-pattern-0']);
+        service.domains[0].relationships['software_uses'].set('malware-0', ['attack-pattern-0']);
         let software_test = new Software(MockData.malwareS0000, service);
         expect(software_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
         software_test = new Software(MockData.M0000, service); // should return empty list because 'malware-0' is not in softwareUsesTechnique
@@ -183,7 +183,7 @@ describe('DataService', () => {
     it('should test mitigation', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['mitigates'].set('mitigation-0',['attack-pattern-0']);
+        service.domains[0].relationships['mitigates'].set('mitigation-0', ['attack-pattern-0']);
         let mitigation_test = new Mitigation(MockData.M0000, service);
         expect(mitigation_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
         mitigation_test = new Mitigation(MockData.malwareS0000, service); // should return empty list because 'mitigation-0' is not in mitigationMitigates
@@ -193,7 +193,7 @@ describe('DataService', () => {
     it('should test asset', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
+        service.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
         let asset_test = new Asset(MockData.A0000, service);
         expect(asset_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
         asset_test = new Asset(MockData.malwareS0000, service); // should return empty list because 'mitigation-0' is not in mitigationMitigates
@@ -203,7 +203,7 @@ describe('DataService', () => {
     it('should test campaign', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['campaign_uses'].set('campaign-0',['attack-pattern-0']);
+        service.domains[0].relationships['campaign_uses'].set('campaign-0', ['attack-pattern-0']);
         let campaign_test = new Campaign(MockData.C0000, service);
         expect(campaign_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
         campaign_test = new Campaign(MockData.malwareS0000, service); // should return empty list because 'mitigation-0' is not in mitigationMitigates
@@ -216,20 +216,26 @@ describe('DataService', () => {
         let t1 = new Technique(MockData.T0000, [], service);
         service.domains[0].techniques = [t1];
         let data_component_test = new DataComponent(MockData.DC0000, service);
-        service.domains[0].dataSources.set(MockData.DC0000.id, { name: MockData.stixSDO.name, external_references: MockData.DC0000.external_references });
-        expect(data_component_test.source('enterprise-attack-13')).toEqual({name: '', url: ''});
-        service.domains[0].dataSources.set(MockData.DS0000.id, { name: MockData.stixSDO.name, external_references: MockData.DC0001.external_references });
-        expect(data_component_test.source('enterprise-attack-13')).toEqual({name: 'Name', url: 'test-url.com'});
-        service.domains[0].relationships['component_rel'].set('data-component-0',['attack-pattern-0']);
+        service.domains[0].dataSources.set(MockData.DC0000.id, {
+            name: MockData.stixSDO.name,
+            external_references: MockData.DC0000.external_references,
+        });
+        expect(data_component_test.source('enterprise-attack-13')).toEqual({ name: '', url: '' });
+        service.domains[0].dataSources.set(MockData.DS0000.id, {
+            name: MockData.stixSDO.name,
+            external_references: MockData.DC0001.external_references,
+        });
+        expect(data_component_test.source('enterprise-attack-13')).toEqual({ name: 'Name', url: 'test-url.com' });
+        service.domains[0].relationships['component_rel'].set('data-component-0', ['attack-pattern-0']);
         expect(data_component_test.techniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
     }));
 
     it('should test group', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['group_uses'].set('intrusion-set-0',['attack-pattern-0']);
-        service.domains[0].relationships['campaign_uses'].set('intrusion-set-0',['attack-pattern-0']);
-        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0',['intrusion-set-0']);
+        service.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
+        service.domains[0].relationships['campaign_uses'].set('intrusion-set-0', ['attack-pattern-0']);
+        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0', ['intrusion-set-0']);
         let group_test = new Group(MockData.G0000, service);
         expect(group_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
         group_test = new Group(MockData.malwareS0000, service); // should return empty list because 'mitigation-0' is not in mitigationMitigates
@@ -241,10 +247,10 @@ describe('DataService', () => {
         service.setUpURLs(MockData.configData);
         let stixObject_test = new Campaign(MockData.G0000, service);
         let group_test = new Group(MockData.G0001, service);
-        service.domains[0].relationships['revoked_by'].set('relationship-9',['attack-pattern-1']);
-        service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
+        service.domains[0].relationships['revoked_by'].set('relationship-9', ['attack-pattern-1']);
+        service.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
         expect(stixObject_test.revoked_by('enterprise-attack-13')).toBeUndefined();
-        service.domains[0].relationships['revoked_by'].set('intrusion-set-0',['attack-pattern-1']);
+        service.domains[0].relationships['revoked_by'].set('intrusion-set-0', ['attack-pattern-1']);
         expect(stixObject_test.revoked_by('enterprise-attack-13')).toEqual(['attack-pattern-1']);
         let campaign_test = new Campaign(MockData.C0000, service);
         expect(campaign_test.compareVersion(group_test)).toEqual(-1);
@@ -255,27 +261,27 @@ describe('DataService', () => {
     it('should test technique', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        let technique_test = new Technique(MockData.T0002,[],service);
+        let technique_test = new Technique(MockData.T0002, [], service);
         expect(technique_test.get_all_technique_tactic_ids()).toEqual([]);
     }));
 
     it('should throw error if tactic does not exist', inject([DataService], (service: DataService) => {
-        let technique_test = new Technique(MockData.T0001,[],service);
+        let technique_test = new Technique(MockData.T0001, [], service);
         expect(() => {
-            technique_test.get_technique_tactic_id("impact")
+            technique_test.get_technique_tactic_id('impact');
         }).toThrowError();
     }));
 
     it('should parse stix bundle', inject([DataService], (service: DataService) => {
         service.subtechniquesEnabled = true; // enable to parse subs
         service.setUpURLs(MockData.configData);
-        service.domains[0].relationships['group_uses'].set('intrusion-set-0',['attack-pattern-0']);
-        service.domains[0].relationships['software_uses'].set('malware-0',['attack-pattern-0']);
-        service.domains[0].relationships['campaign_uses'].set('campaign-0',['attack-pattern-0']);
-        service.domains[0].relationships['mitigates'].set('mitigation-0',['attack-pattern-0']);
-        service.domains[0].relationships['component_rel'].set('component-0',['attack-pattern-0']);
-        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0',['attack-pattern-0']);
-        service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
+        service.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
+        service.domains[0].relationships['software_uses'].set('malware-0', ['attack-pattern-0']);
+        service.domains[0].relationships['campaign_uses'].set('campaign-0', ['attack-pattern-0']);
+        service.domains[0].relationships['mitigates'].set('mitigation-0', ['attack-pattern-0']);
+        service.domains[0].relationships['component_rel'].set('component-0', ['attack-pattern-0']);
+        service.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0', ['attack-pattern-0']);
+        service.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
         let domain = service.domains[0];
         service.parseBundle(domain, MockData.stixBundleSDO);
         // check data loaded
@@ -283,10 +289,10 @@ describe('DataService', () => {
         expect(domain.platforms).toEqual(MockData.T0000.x_mitre_platforms);
 
         // check objects parsed
-        let testObjectType = function(testArr, quantity, instance) {
+        let testObjectType = function (testArr, quantity, instance) {
             expect(testArr.length).toEqual(quantity);
             expect(testArr[0]).toBeInstanceOf(instance);
-        }
+        };
         testObjectType(domain.techniques, 4, Technique);
         testObjectType(domain.subtechniques, 2, Technique);
         testObjectType(domain.assets, 1, Asset);
@@ -322,7 +328,7 @@ describe('DataService', () => {
         domain.dataLoadedCallbacks = [service.getCurrentVersion];
         service.parseBundle(domain, MockData.stixBundleSDO);
         expect(functionSpy).toHaveBeenCalled();
-    }));    
+    }));
 
     it('should compare the same version as unchanged', inject([DataService], (service: DataService) => {
         service.setUpURLs([]);
@@ -338,9 +344,9 @@ describe('DataService', () => {
 
     it('should compare versions', inject([DataService], (service: DataService) => {
         let newVersion = {
-            "name": "ATT&CK v14",
-            "version": "14",
-            "domains": MockData.configData[0].domains
+            name: 'ATT&CK v14',
+            version: '14',
+            domains: MockData.configData[0].domains,
         };
         service.setUpURLs([MockData.configData[0], newVersion]);
 
@@ -351,50 +357,80 @@ describe('DataService', () => {
         let [oldDomain, newDomain] = service.domains;
         service.parseBundle(oldDomain, MockData.stixBundleSDO);
         expect(oldDomain.dataLoaded).toBeTrue();
-    
+
         // deprecation
         let deprecateSubtechnique = { ...MockData.T0000_000 };
-        deprecateSubtechnique["x_mitre_deprecated"] = true;
-        deprecateSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        deprecateSubtechnique['x_mitre_deprecated'] = true;
+        deprecateSubtechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // revocation
         let revokeTechnique = { ...MockData.T0001 };
-        revokeTechnique["revoked"] = true;
-        revokeTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        revokeTechnique['revoked'] = true;
+        revokeTechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // minor change
         let minorTechnique = { ...MockData.T0000 };
-        minorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        minorTechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // major change
         let majorTechnique = { ...MockData.T0003 };
-        majorTechnique["x_mitre_version"] = "2.0";
-        majorTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        majorTechnique['x_mitre_version'] = '2.0';
+        majorTechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // update deprecated object
         let deprecatedTechnique = { ...MockData.T0002 };
-        deprecatedTechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        deprecatedTechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // update revoked object
         let revokedSubtechnique = { ...MockData.T0000_001 };
-        revokedSubtechnique["modified"] = "2002-01-01T01:01:00.000Z";
+        revokedSubtechnique['modified'] = '2002-01-01T01:01:00.000Z';
         // parse stix bundle into new domain
-        service.parseBundle(newDomain, [{
-            "type": "bundle",
-            "id": "bundle--1",
-            "spec_version": "2.0",
-            "objects": [
-                MockData.T0004, minorTechnique, revokeTechnique, deprecatedTechnique,
-                deprecateSubtechnique,revokedSubtechnique, majorTechnique,
-                MockData.A0000, MockData.C0000, MockData.DC0000, MockData.DS0000, MockData.G0000, MockData.matrixSDO,
-                MockData.M0000, MockData.note, MockData.malwareS0000, MockData.toolS0001, MockData.TA0000,
-                MockData.G0001usesT0000, MockData.S0000usesT0000, MockData.C0000usesT0000,
-                MockData.C0000attributedToG0000, MockData.M0000mitigatesT0000, MockData.T0000_000subtechniqueOfT0000,
-                MockData.T0000_001subtechniqueOfT0000, MockData.DC0000detectsT0000, MockData.T0000targetsA0000,
-                MockData.T0000_001revokedByT0000_000, MockData.filteredM0001, MockData.deprecatedMatrixSDO,
-                MockData.G0000usesT0000_000, MockData.S0000usesT0000_000, MockData.C0000usesT0000_000,
-                MockData.M0000mitigatesT0000_000, MockData.DC0000detectsT0000_000,
-                MockData.C0001attributedToG0000, MockData.C0001, MockData.T0001targetsA0000, MockData.T0000_Duplicate,
-            ]
-        }]);
+        service.parseBundle(newDomain, [
+            {
+                type: 'bundle',
+                id: 'bundle--1',
+                spec_version: '2.0',
+                objects: [
+                    MockData.T0004,
+                    minorTechnique,
+                    revokeTechnique,
+                    deprecatedTechnique,
+                    deprecateSubtechnique,
+                    revokedSubtechnique,
+                    majorTechnique,
+                    MockData.A0000,
+                    MockData.C0000,
+                    MockData.DC0000,
+                    MockData.DS0000,
+                    MockData.G0000,
+                    MockData.matrixSDO,
+                    MockData.M0000,
+                    MockData.note,
+                    MockData.malwareS0000,
+                    MockData.toolS0001,
+                    MockData.TA0000,
+                    MockData.G0001usesT0000,
+                    MockData.S0000usesT0000,
+                    MockData.C0000usesT0000,
+                    MockData.C0000attributedToG0000,
+                    MockData.M0000mitigatesT0000,
+                    MockData.T0000_000subtechniqueOfT0000,
+                    MockData.T0000_001subtechniqueOfT0000,
+                    MockData.DC0000detectsT0000,
+                    MockData.T0000targetsA0000,
+                    MockData.T0000_001revokedByT0000_000,
+                    MockData.filteredM0001,
+                    MockData.deprecatedMatrixSDO,
+                    MockData.G0000usesT0000_000,
+                    MockData.S0000usesT0000_000,
+                    MockData.C0000usesT0000_000,
+                    MockData.M0000mitigatesT0000_000,
+                    MockData.DC0000detectsT0000_000,
+                    MockData.C0001attributedToG0000,
+                    MockData.C0001,
+                    MockData.T0001targetsA0000,
+                    MockData.T0000_Duplicate,
+                ],
+            },
+        ]);
         // compare versions
         let result = service.compareVersions(oldDomain.id, newDomain.id);
-        console.log(result)
+        console.log(result);
         // validate comparison result
         expect(result).toBeInstanceOf(VersionChangelog);
         expect(result.newDomainVersionID).toEqual(newDomain.id);

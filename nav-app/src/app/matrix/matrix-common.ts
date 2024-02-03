@@ -9,10 +9,10 @@ import tinycolor from 'tinycolor2';
 export abstract class MatrixCommon {
     @Input() matrix: Matrix;
     @Input() viewModel: ViewModel;
-    
+
     constructor(
         public configService: ConfigService,
-        public viewModelsService: ViewModelsService,
+        public viewModelsService: ViewModelsService
     ) {
         this.configService = configService;
     }
@@ -104,10 +104,10 @@ export abstract class MatrixCommon {
         if (this.viewModel.showTacticRowBackground)
             return {
                 background: this.viewModel.tacticRowBackground,
-                color: tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black'])
-            }
+                color: tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black']),
+            };
         else {
-            return {}
+            return {};
         }
     }
 }

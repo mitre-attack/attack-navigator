@@ -10,57 +10,63 @@ describe('ContextmenuComponent', () => {
     let fixture: ComponentFixture<ContextmenuComponent>;
 
     let stixSDO = {
-        "name": "Name",
-        "description": "Description",
-        "created": "2001-01-01T01:01:00.000Z",
-        "modified": "2001-01-01T01:01:00.000Z",
-        "x_mitre_version": "1.0",
-    }
+        name: 'Name',
+        description: 'Description',
+        created: '2001-01-01T01:01:00.000Z',
+        modified: '2001-01-01T01:01:00.000Z',
+        x_mitre_version: '1.0',
+    };
     let tacticSDO = {
-        "id": "tactic-0",
+        id: 'tactic-0',
         ...stixSDO,
-        "type": "x-mitre-tactic",
-        "x_mitre_shortname": "tactic-name",
-        "external_references": [{"external_id": "TA0000", "url": "https://attack.mitre.org/tactic/TA0000"}]
-    }
+        type: 'x-mitre-tactic',
+        x_mitre_shortname: 'tactic-name',
+        external_references: [{ external_id: 'TA0000', url: 'https://attack.mitre.org/tactic/TA0000' }],
+    };
     let templateSDO = {
         ...stixSDO,
-        "type": "attack-pattern",
-        "x_mitre_platforms": ["platform"],
-        "kill_chain_phases": [{
-            "kill_chain_name": "mitre-attack",
-            "phase_name": "tactic-name"
-        }],
-    }
+        type: 'attack-pattern',
+        x_mitre_platforms: ['platform'],
+        kill_chain_phases: [
+            {
+                kill_chain_name: 'mitre-attack',
+                phase_name: 'tactic-name',
+            },
+        ],
+    };
     let techniqueSDO = {
         ...templateSDO,
-        "id": "attack-pattern-0",
-        "external_references": [{
-            "external_id": "T0000",
-            "url": "https://attack.mitre.org/technique/T0000"
-        }]
-    }
+        id: 'attack-pattern-0',
+        external_references: [
+            {
+                external_id: 'T0000',
+                url: 'https://attack.mitre.org/technique/T0000',
+            },
+        ],
+    };
     let subtechniqueSDO = {
         ...templateSDO,
-        "id": "attack-pattern-0-1",
-        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
-        "external_references": [
+        id: 'attack-pattern-0-1',
+        x_mitre_platforms: ['Linux', 'macOS', 'Windows'],
+        external_references: [
             {
-                "external_id": "T0000.001",
-                "url": "https://attack.mitre.org/technique/T0000/001"
-            }
+                external_id: 'T0000.001',
+                url: 'https://attack.mitre.org/technique/T0000/001',
+            },
         ],
-    }
+    };
     let techniqueSDO2 = {
         ...templateSDO,
-        "id": "attack-pattern-1",
-        "external_references": [{
-            "external_id": "T0001",
-            "url": "https://attack.mitre.org/technique/T0001"
-        }]
-    }
+        id: 'attack-pattern-1',
+        external_references: [
+            {
+                external_id: 'T0001',
+                url: 'https://attack.mitre.org/technique/T0001',
+            },
+        ],
+    };
 
-    let buildContextMenuViewModel = function(cm: ContextmenuComponent, ds: DataService) {
+    let buildContextMenuViewModel = function (cm: ContextmenuComponent, ds: DataService) {
         // create view model and set in contextmenu
         let viewModel = cm.viewModelsService.newViewModel('name', 'enterprise-attack-13');
         cm.viewModel = viewModel;
@@ -73,8 +79,8 @@ describe('ContextmenuComponent', () => {
         tvm.deserialize(JSON.stringify(techniqueSDO), attackID, contextMenu.tactic.shortname);
         // add a link to the techniqueVM
         let testLink = new Link();
-        testLink.label = "test link";
-        testLink.url = "https://www.google.com";
+        testLink.label = 'test link';
+        testLink.url = 'https://www.google.com';
         tvm.links.push(testLink);
         // set techniqueVM in viewModel
         contextMenu.viewModel.setTechniqueVM(tvm);
@@ -85,7 +91,7 @@ describe('ContextmenuComponent', () => {
         // set second techniqueVM in viewModel
         contextMenu.viewModel.setTechniqueVM(tvm2);
         return [tvm.technique_tactic_union_id, tvm2.technique_tactic_union_id];
-    }
+    };
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -96,24 +102,23 @@ describe('ContextmenuComponent', () => {
         contextMenu = fixture.componentInstance;
     }));
 
-    it('should create the component', (() => {
+    it('should create the component', () => {
         expect(contextMenu).toBeTruthy();
-    }));
+    });
 
-    it('should set placement position', (() => {
+    it('should set placement position', () => {
         let pos = 'right bottom';
-        let functionSpy = spyOn<any>(contextMenu, 'getPosition')
-            .and.returnValue(pos);
+        let functionSpy = spyOn<any>(contextMenu, 'getPosition').and.returnValue(pos);
         contextMenu.ngOnInit();
         expect(functionSpy).toHaveBeenCalled();
         expect(contextMenu.placement).toEqual(pos);
-    }));
+    });
 
-    it('should emit on close', (() => {
+    it('should emit on close', () => {
         let functionSpy = spyOn(contextMenu.close, 'emit');
         contextMenu.closeContextmenu(); // trigger close event
         expect(functionSpy).toHaveBeenCalled();
-    }));
+    });
 
     it('should open tactic url and close', inject([DataService], (service: DataService) => {
         let windowSpy = spyOn(window, 'open');
@@ -143,8 +148,8 @@ describe('ContextmenuComponent', () => {
         let windowSpy = spyOn(window, 'open');
         let functionSpy = spyOn(contextMenu, 'closeContextmenu');
         let technique_list: Technique[] = [];
-        let st1 = new Technique(subtechniqueSDO,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st1 = new Technique(subtechniqueSDO, [], null);
+        let t1 = new Technique(techniqueSDO, [st1], null);
         technique_list.push(t1);
         technique_list.push(st1);
         let tactic = new Tactic(tacticSDO, technique_list, service);
@@ -153,7 +158,7 @@ describe('ContextmenuComponent', () => {
         let replacedUrl = 'https://attack.mitre.org/TA0000/T0000';
         buildContextMenuViewModel(contextMenu, service);
         let customItem = new ContextMenuItem('label', url, subtechnique_url);
-        customItem.getReplacedURL(st1,tactic)
+        customItem.getReplacedURL(st1, tactic);
         customItem = new ContextMenuItem('label', url);
         contextMenu.openCustomContextMenuItem(customItem);
 

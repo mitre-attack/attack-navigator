@@ -14,10 +14,9 @@ describe('VersionUpgradeComponent', () => {
                 {
                     provide: MatDialogRef,
                     useValue: {
-                        close(){
-                            return {
-                            };
-                          }
+                        close() {
+                            return {};
+                        },
                     },
                 },
                 {
@@ -45,7 +44,7 @@ describe('VersionUpgradeComponent', () => {
         const openDialogSpy = spyOn(component.dialogRef, 'close');
         component.upgradeVersion(true);
         expect(openDialogSpy).toHaveBeenCalledWith({
-            upgrade: true
-        })
+            upgrade: true,
+        });
     });
 });

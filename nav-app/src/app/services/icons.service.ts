@@ -6,9 +6,12 @@ import { DomSanitizer } from '@angular/platform-browser';
     providedIn: 'root',
 })
 export class IconsService {
-    constructor(public matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-		// intentionally left blank
-	}
+    constructor(
+        public matIconRegistry: MatIconRegistry,
+        private domSanitizer: DomSanitizer
+    ) {
+        // intentionally left blank
+    }
 
     public registerIcons(): void {
         this.loadIcons(Object.values(Icons), 'assets/icons');

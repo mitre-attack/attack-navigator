@@ -728,38 +728,39 @@ export class TabsComponent implements AfterViewInit {
      * Reads the JSON file, adds the properties to a view model, and
      * loads the view model into a new layer
      */
-    private async readJSONFile(file: File): Promise<void>{
+    private async readJSONFile(file: File): Promise<void> {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
-        let viewModel: ViewModel;
-        reader.onload = (e) => {
-            let result = String(reader.result);
-            try {
-                let objList = typeof result == 'string' ? JSON.parse(result) : result;
-                if ('length' in objList) {
-                    for (let obj of objList) {
+            let viewModel: ViewModel;
+            reader.onload = (e) => {
+                let result = String(reader.result);
+                try {
+                    let objList = typeof result == 'string' ? JSON.parse(result) : result;
+                    if ('length' in objList) {
+                        for (let obj of objList) {
+                            this.loadObjAsLayer(this, obj);
+                        }
+                    } else {
+                        let obj = typeof result == 'string' ? JSON.parse(result) : result;
                         this.loadObjAsLayer(this, obj);
                     }
-                } else {
-                    let obj = typeof result == 'string' ? JSON.parse(result) : result;
-                    this.loadObjAsLayer(this, obj);
+                } catch (err) {
+                    viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
+                    console.error('ERROR: Either the file is not JSON formatted, or the file structure is invalid.', err);
+                    alert('ERROR: Either the file is not JSON formatted, or the file structure is invalid.');
+                    this.viewModelsService.destroyViewModel(viewModel);
                 }
-            } catch (err) {
-                viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
-                console.error('ERROR: Either the file is not JSON formatted, or the file structure is invalid.', err);
-                alert('ERROR: Either the file is not JSON formatted, or the file structure is invalid.');
-                this.viewModelsService.destroyViewModel(viewModel);
-            }
-        };
-        reader.readAsText(file);
+            };
+            reader.readAsText(file);
         });
     }
 
     private loadObjAsLayer(self, obj): void {
-            let viewModel: ViewModel;
-            viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-            let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-            self.versionMismatchWarning(layerVersionStr).then((res) => {
+        let viewModel: ViewModel;
+        viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
+        let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
+        self.versionMismatchWarning(layerVersionStr)
+            .then((res) => {
                 let isCustom = 'customDataURL' in obj;
                 if (!isCustom) {
                     if (!self.dataService.getDomain(viewModel.domainVersionID)) {
@@ -782,10 +783,9 @@ export class TabsComponent implements AfterViewInit {
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     }
 
-        
     /**
      * Check if uploaded layer version is out of date and display
      * a snackbar warning message (for minor mismatches) or a dialog warning
@@ -821,8 +821,7 @@ export class TabsComponent implements AfterViewInit {
                 this.versionDialogRef.afterClosed().subscribe((_) => {
                     resolve(true);
                 });
-            }
-            else{
+            } else {
                 resolve(true);
             }
         });

@@ -7,20 +7,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('AppComponent', () => {
-	let fixture: ComponentFixture<AppComponent>;
-	let app: any;
-	
+    let fixture: ComponentFixture<AppComponent>;
+    let app: any;
+
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [
-                HttpClientTestingModule,
-                MatDialogModule,
-                MatSnackBarModule
-            ],
-            declarations: [
-                AppComponent,
-                TabsComponent,
-            ],
+            imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule],
+            declarations: [AppComponent, TabsComponent],
         }).compileComponents();
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.debugElement.componentInstance;
@@ -42,7 +35,7 @@ describe('AppComponent', () => {
 
     it('should set user theme to theme-override-dark', waitForAsync(() => {
         setCookie('is_user_theme_dark', 'true', 1);
-		// recreate component
+        // recreate component
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.componentInstance;
         expect(app.user_theme).toEqual('theme-override-dark');
@@ -50,7 +43,7 @@ describe('AppComponent', () => {
 
     it('should set user theme to theme-override-light', waitForAsync(() => {
         setCookie('is_user_theme_dark', 'false', 1);
-		// recreate component
+        // recreate component
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.componentInstance;
         expect(app.user_theme).toEqual('theme-override-light');
@@ -58,7 +51,7 @@ describe('AppComponent', () => {
 
     it('should set user theme to theme-use-system', waitForAsync(() => {
         deleteCookie('is_user_theme_dark');
-		// recreate component
+        // recreate component
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.componentInstance;
         expect(app.user_theme).toEqual('theme-use-system');
@@ -89,14 +82,14 @@ describe('AppComponent', () => {
     it('should prompt to navigate away', waitForAsync(() => {
         app.configService.setFeature('leave_site_dialog', true);
         let prompt = 'Are you sure you want to navigate away? Your data may be lost!';
-        let event$ = {returnValue: null};
+        let event$ = { returnValue: null };
         app.promptNavAway(event$);
         expect(event$.returnValue).toEqual(prompt);
     }));
 
     it('should not prompt to navigate away', waitForAsync(() => {
         app.configService.setFeature('leave_site_dialog', false);
-        let event$ = {returnValue: null};
+        let event$ = { returnValue: null };
         app.promptNavAway(event$);
         expect(event$.returnValue).toEqual(null);
     }));
