@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
-import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
 import { DataService } from '../services/data.service';
 import { Filter, Gradient, Link, Metadata, TechniqueVM, ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
-import { MatSnackBar, MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
@@ -19,10 +19,11 @@ import * as MockLayers from '../../tests/utils/mock-layers';
 import * as MockData from '../../tests/utils/mock-data';
 
 describe('TabsComponent', () => {
-    let component: TabsComponent;
+    let component: any;
     let fixture: ComponentFixture<TabsComponent>;
     let snackBar: MatSnackBar;
     let httpClient: HttpClient;
+	let viewModel: ViewModel;
     let bundles: any[] = [{
         "type": "bundle",
         "id": "bundle--0",
@@ -44,53 +45,23 @@ describe('TabsComponent', () => {
                         };
                       } } ,
                 },
-                {
-                    provide: MatDialogRef,
-                    useValue: {},
-                },
-                {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: {},
-                },
-                { 
-                    provide: MAT_SNACK_BAR_DATA, 
-                    useValue: {} 
-                }, 
-                { 
-                    provide: MatSnackBarRef, 
-                    useValue: { open(){
-                        return {
-                          onAction: () => of({})
-                        };
-                      } } , 
-                },
                 DataService,
                 MarkdownService
             ],
         }).compileComponents();
         snackBar = TestBed.inject(MatSnackBar);
+		httpClient = TestBed.inject(HttpClient);
         fixture = TestBed.createComponent(TabsComponent);
         component = fixture.debugElement.componentInstance;
+		fixture.detectChanges();
+		viewModel = new ViewModel("layer","1","enterprise-attack-13",null);
     }));
-
-    beforeEach(waitForAsync(() => {
-        fixture = TestBed.createComponent(TabsComponent);
-        component = fixture.debugElement.componentInstance;
-        fixture.detectChanges();
-        httpClient = TestBed.inject(HttpClient);
-    }));
-
-    it('should create component', () => {
-        expect(component).toBeTruthy();
-    });
 
     it('should set up data in constructor', () => {
         spyOn(DataService.prototype, 'setUpURLs').and.stub();
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(MockData.configData));
         TabsComponent.prototype.subscription = new Subscription;
         spyOn(TabsComponent.prototype, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
-        fixture = TestBed.createComponent(TabsComponent);
-        component = fixture.debugElement.componentInstance;
         expect(component).toBeTruthy();
     });
 
@@ -100,8 +71,6 @@ describe('TabsComponent', () => {
     });
 
     it('should close all open tabs and create new one', () => {
-        let viewModel: ViewModel;
-        let component = fixture.debugElement.componentInstance;
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         vm1.sidebarContentType = "search";
         component.openTab('new layer 1', vm1, true, true, true, true);
@@ -114,8 +83,6 @@ describe('TabsComponent', () => {
     });
 
     it('should close one tab', () => {
-        let viewModel: ViewModel;
-        let component = fixture.debugElement.componentInstance;
         component.openTab('new layer1', viewModel, true, true, true, true)
         component.openTab('new layer', viewModel, true, true, true, true)
         component.closeTab(component.layerTabs[0])
@@ -123,8 +90,6 @@ describe('TabsComponent', () => {
     });
 
     it('should set the active tab to the latest created tab', () => {
-        let viewModel: ViewModel;
-        let component = fixture.debugElement.componentInstance;
         component.openTab('new layer', viewModel, true, true, true, true);
         component.openTab('new layer1', viewModel, true, true, true, true);
         component.selectTab(component.layerTabs[1]);
@@ -134,8 +99,6 @@ describe('TabsComponent', () => {
     });
 
     it('should close the latest created tab', () => {
-        let viewModel: ViewModel;
-        let component = fixture.debugElement.componentInstance;
         component.openTab('new layer', viewModel, true, true, true, true)
         component.openTab('new layer1', viewModel, true, true, true, true)
         component.openTab('new layer2', viewModel, true, true, true, true)
@@ -154,13 +117,7 @@ describe('TabsComponent', () => {
     });
 
     it('should check if feature is defined in config file', () => {
-        let component = fixture.debugElement.componentInstance;
-        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-        ]}
-        component.configService.setFeature_object(feature_object)
+        component.configService.setFeature_object(MockData.configTechniqueControls)
         expect(component.hasFeature("manual_color")).toBeTrue();
     });
 
@@ -186,10 +143,9 @@ describe('TabsComponent', () => {
 
     it('should open svg dialog', () => {
         const openDialogSpy = spyOn(component.dialog, 'open');
-        let vm: ViewModel;
-        component.openSVGDialog(vm);
+        component.openSVGDialog(viewModel);
         const settings = {
-            data: { vm: vm },
+            data: { vm: viewModel },
             panelClass: ['dialog-custom', component.userTheme],
         };
         expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
@@ -215,6 +171,8 @@ describe('TabsComponent', () => {
             ]},
             {"name": "sticky_toolbar", "enabled": false}
         ]
+		expect(component.getNamedFragmentValue("sticky_toolbar")).toEqual([]);
+        expect(component.getNamedFragmentValue("sticky_toolbar", "https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false")).toEqual(['false']);
         expect(component.trackByFunction(1)).toEqual(1);
         component.addLayerLink();
         expect(component.layerLinkURLs.length).toEqual(1);
@@ -228,7 +186,6 @@ describe('TabsComponent', () => {
     });
 
     it('should create new layer by operation based on user input', async () => {
-        let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+b";
         component.opSettings.domain = "enterprise-atack-13";
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
@@ -246,7 +203,6 @@ describe('TabsComponent', () => {
     });
 
     it('should create new layer by operation based on user input when data is loaded', async () => {
-        let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+2";
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         component.openTab('layer', vm1, true, true, true, true);
@@ -325,21 +281,18 @@ describe('TabsComponent', () => {
     });
 
     it('should display warning dialog for major version mismatches', (() => {
-        let component = fixture.debugElement.componentInstance;
         const dialogSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of(true)});
         component.versionMismatchWarning("3.4", "4.4");
         expect(dialogSpy).toHaveBeenCalled();
     }));
 
     it('should display warning snackbar for minor version mismatches', (() => {
-        let component = fixture.debugElement.componentInstance;
         spyOn(snackBar, 'open').and.callThrough();
         component.versionMismatchWarning("4.2", "4.5");        
         expect(snackBar.open).toHaveBeenCalled();
     }));
 
     it('should read and open json file', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
@@ -370,7 +323,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should get unique layer names', () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         expect(component.latestDomains.length).toEqual(1);
         component.newLayer("enterprise-attack-13");
@@ -381,19 +333,7 @@ describe('TabsComponent', () => {
         expect(component.layerTabs.length).toEqual(3);
     });
 
-    it('should get named fragment values', () => {
-        component.customizedConfig = [
-            {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-                {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
-            ]},
-            {"name": "sticky_toolbar", "enabled": false}
-        ]
-        expect(component.getNamedFragmentValue("sticky_toolbar")).toEqual([]);
-        expect(component.getNamedFragmentValue("sticky_toolbar", "https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false")).toEqual(['false']);
-    });
-
     it('should upgrade layer', (waitForAsync (() => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
@@ -408,7 +348,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should not upgrade layer', (waitForAsync (() => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
@@ -423,7 +362,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should not upgrade layer with default layer enabled', (waitForAsync (() => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
@@ -435,7 +373,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should not upgrade layer with default layer enabled and domain data loaded', (waitForAsync (() => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1))
@@ -448,16 +385,15 @@ describe('TabsComponent', () => {
     })));
 
     it('should not upgrade layer with domain data loaded', (waitForAsync (() => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let st1 = new Technique(MockData.T0000_000, [], null);
         let t1 = new Technique(MockData.T0000, [st1], null);
-        let tvm_1 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.showSubtechniques = true;
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
+        let stvm_1 = new TechniqueVM("0000.000^tactic-name");
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(stvm_1);
         component.dataService.domains[0].techniques.push(t1);
@@ -472,7 +408,6 @@ describe('TabsComponent', () => {
     })));
 
      it('should open version upgrade dialog with upgrade', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
@@ -483,7 +418,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should open version upgrade dialog with no upgrade', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configDataExtended);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
@@ -494,17 +428,16 @@ describe('TabsComponent', () => {
     })));
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
         let st1 = new Technique(MockData.T0000_000, [], null);
         let t1 = new Technique(MockData.T0000, [st1], null);
         let t2 = new Technique(MockData.T0001, [], null);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = '3';
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let stvm_1 = new TechniqueVM("T0000.000^tactic-name");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
@@ -532,13 +465,12 @@ describe('TabsComponent', () => {
     })));
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified and are visible', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let t1 = new Technique(MockData.T0000, [], null);
         let t2 = new Technique(MockData.T0001, [], null);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         tvm_1.isVisible = true;
         tvm_1.score = '3';
         vm1.setTechniqueVM(tvm_1);
@@ -552,91 +484,20 @@ describe('TabsComponent', () => {
     })));
 
     it('should throw errors for deserializing viewmodel', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
-        let viewmodel_error_file1 = {
-            "description":3,
-            "sorting": "3",
-            "hideDisabled": "true",
-            "showTacticRowBackground": "false",
-            "selectTechniquesAcrossTactics": "true",
-            "selectSubtechniquesWithParent": "true",
-            "selectVisibleTechniques": "false",
-            "viewMode": "4",
-            "legendItems": [
-                {
-                    label: true
-                },
-                {
-                    color: true
-                },
-                {
-                    label: true,
-                    color:"#FF00FF"
-                },
-                {
-                    label: "Legend Item Label",
-                    color:true
-                }
-            ],
-            "tacticRowBackground": false,
-            "techniques": [
-                {
-                    "techniqueID": "T0002",
-                    "color": "#e60d0d",
-                    "comment": "",
-                    "score": 3,
-                    "enabled": true,
-                    "metadata": [
-                        {
-                            "name":"test1",
-                            "value":"t1"
-                        },
-                        {
-                            "divider":true
-                        }
-                    ],
-                    "links": [
-                        {
-                            "label":"test1",
-                            "url":"t1",
-                        },
-                        {
-                            "divider":true
-                        }
-                    ],
-                    "showSubtechniques": false,
-                },
-                {
-                    "techniqueID": "T1592.001",
-                    "color": "#e60d0d",
-                    "comment": "",
-                    "score": 3,
-                    "enabled": true,
-                    "metadata": [],
-                    "links": [],
-                    "showSubtechniques": false,
-                }
-            ],
-        }
         let consoleSpy = spyOn(console, 'error');
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let st1 = new Technique(MockData.T0000_001, [], null);
         vm1.dataService.domains[0].techniques.push(new Technique(MockData.T0000, [st1], null));
         vm1.dataService.domains[0].techniques[0].subtechniques.push(st1);
         vm1.dataService.domains[0].techniques.push(new Technique(MockData.T0002, [], null));
-        vm1.deserialize(JSON.stringify(viewmodel_error_file1));
+        vm1.deserialize(JSON.stringify(MockLayers.invalidLayerFile1));
         expect(consoleSpy).toHaveBeenCalled();
     })));
 
     it('should validate input and throw errors', (waitForAsync (() => {
-        let validate_input_error_file1 = {
-            'url': 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
-            'version': '100F',
-            'identifier': 'enterprise-attack'
-        }
         component.dataService.setUpURLs(MockData.configData);
-        let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
+        let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
         component.validateInput(layer,'enterprise-attack-13');
@@ -645,32 +506,16 @@ describe('TabsComponent', () => {
     })));
 
     it('should validate if the domainVersionID is unique', (waitForAsync ( () => {
-        let validate_input_error_file1 = {
-            'url': 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json',
-            'version': '13',
-            'identifier': 'enterprise-attack'
-        }
         component.dataService.setUpURLs(MockData.configData);
-        let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
+        let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
-        component.validateInput(layer,'enterprise-attack-13');
-        expect(consoleSpy).toHaveBeenCalled();
-        expect(alertSpy).toHaveBeenCalled();
-
-        validate_input_error_file1 = {
-            'url': '13',
-            'version': '13',
-            'identifier': 'enterprise-attack'
-        }
-        layer = JSON.parse(JSON.stringify(validate_input_error_file1));
         component.validateInput(layer,'enterprise-attack-13');
         expect(consoleSpy).toHaveBeenCalled();
         expect(alertSpy).toHaveBeenCalled();
     })));
 
     it('should through error for invalid domain', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         spyOn(console, 'error');
         let blob = new Blob([JSON.stringify(MockLayers.layerFile1)], { type: 'text/json' });
@@ -680,7 +525,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should read and open json file with 2 layers', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         let combined_layer = [MockLayers.layerFile3, MockLayers.layerFile3]
         let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
@@ -690,7 +534,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should create new layer by operation based on user input when data is loaded errors', async () => {
-        let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+b+2";
         expect(component.getScoreExpressionError()).toEqual('Variable b does not match any layers');
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
@@ -709,7 +552,6 @@ describe('TabsComponent', () => {
     });
 
     it('should load from url', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
@@ -722,7 +564,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should throw errors when loading from url', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
 		let versions = [{
 			"name": "ATT&CK v13",
 			"version": "13",
@@ -746,7 +587,6 @@ describe('TabsComponent', () => {
     })));
 
     it('should create new layer from url', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         let loadData = {
             'url': 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
             'version': '12',
@@ -762,18 +602,13 @@ describe('TabsComponent', () => {
     })));
 
     it('should load base data from URL', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        spyOn(component, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json');
-        component.loadTabs(MockData.defaultLayersDisabled);
-        expect(component.layerTabs.length).toEqual(1)
     })));
 
     it('should load layer from URL', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
         component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
@@ -782,21 +617,6 @@ describe('TabsComponent', () => {
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
         spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
         component.loadTabs(MockData.defaultLayersDisabled).then(() => {
-            expect(versionMismatchSpy).toHaveBeenCalled();
-            expect(upgradeLayerSpy).toHaveBeenCalled();
-        });
-    })));
-
-    it('should load default layers from config file', (waitForAsync ( () => {
-        let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(MockData.configData);
-        component.http = httpClient;
-        spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
-        spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-        let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
-        let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
-        spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], []);
-        component.loadTabs(MockData.defaultLayersEnabled).then(() => {
             expect(versionMismatchSpy).toHaveBeenCalled();
             expect(upgradeLayerSpy).toHaveBeenCalled();
         });

@@ -5,83 +5,9 @@ import { ViewModelsService } from './viewmodels.service';
 import { TechniqueVM, LayoutOptions, Metadata, ViewModel, Link, VersionChangelog } from '../classes';
 import { Technique, Tactic, Matrix } from '../classes/stix';
 import tinygradient from 'tinygradient';
+import * as MockData from '../../tests/utils/mock-data';
 
 describe('ViewmodelsService', () => {
-	let stixSDO = {
-        "name": "Name",
-        "description": "Description",
-        "created": "2001-01-01T01:01:00.000Z",
-        "modified": "2001-01-01T01:01:00.000Z",
-        "x_mitre_version": "1.0",
-    }
-    let tacticSDO = {
-        "id": "tactic-0",
-        ...stixSDO,
-        "name": "Reconnaissance",
-        "type": "x-mitre-tactic",
-        "x_mitre_shortname": "reconnaissance",
-        "external_references": [
-            {
-                "external_id": "TA0043",
-                "url": "https://attack.mitre.org/tactics/TA0043"
-            }
-        ]
-    }
-    let templateSDO = {
-        ...stixSDO,
-        "type": "attack-pattern",
-        "x_mitre_platforms": ['PRE'],
-        "kill_chain_phases": [
-            {
-                "kill_chain_name": "mitre-attack",
-                "phase_name": "reconnaissance"
-            }
-        ],
-    }
-    let subtechniqueSDO1 = {
-        ...templateSDO,
-        "id": "attack-pattern-0-1",
-        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
-        "external_references": [
-            {
-                "external_id": "T1595.002",
-                "url": "https://attack.mitre.org/techniques/T1595/002"
-            }
-        ],
-    }
-	let matrixSDO = {
-        "external_references": [
-            {
-                "external_id": "enterprise-attack",
-                "source_name": "mitre-attack",
-                "url": "https://attack.mitre.org/matrices/enterprise"
-            }
-        ],
-        "id": "x-mitre-matrix--eafc1b4c-5e56-4965-bd4e-66a6a89c88cc",
-        "name":"Enterprise ATT&CK",
-        "tactic_refs": ["tactic-0"]
-    }
-    let techniqueSDO = {
-        ...templateSDO,
-        "id": "attack-pattern-0",
-        "x_mitre_platforms": ['Linux', 'macOS', 'Windows'],
-        "external_references": [
-            {
-                "external_id": "T1595",
-                "url": "https://attack.mitre.org/techniques/T1595"
-            }
-        ]
-    }
-    let techniqueSDO2 = {
-        ...templateSDO,
-        "id": "attack-pattern-1",
-        "external_references": [
-            {
-                "external_id": "T1592",
-                "url": "https://attack.mitre.org/techniques/T1592"
-            }
-        ]
-    }
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule],
@@ -215,33 +141,33 @@ describe('ViewmodelsService', () => {
 	it('should select and unselect technique across tactics', inject([ViewModelsService], (service: ViewModelsService) => {
         let technique_list: Technique[] = [];
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st1 = new Technique(MockData.T0000_002,[],null);
+        let t1 = new Technique(MockData.T0000,[st1],null);
         technique_list.push(t1);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = '3';
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let t2 = new Technique(techniqueSDO2,[],null);
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+        let t2 = new Technique(MockData.T0001,[],null);
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         technique_list.push(t2);
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
         vm1.selectTechniquesAcrossTactics = false;
         vm1.selectSubtechniquesWithParent = true;
         vm1.selectTechnique(t2,tactic1);
-        expect(vm1.selectedTechniques.size).toEqual(1); // T1592
+        expect(vm1.selectedTechniques.size).toEqual(1); // T0001
         vm1.selectTechnique(st1,tactic1);
-        expect(vm1.selectedTechniques.size).toEqual(3); // T1592, T1595, T1595.002
+        expect(vm1.selectedTechniques.size).toEqual(3); // T0001, T0000, T0000.002
         vm1.unselectTechnique(t2,tactic1);
-        expect(vm1.selectedTechniques.size).toEqual(2); // T1595, T1595.002
+        expect(vm1.selectedTechniques.size).toEqual(2); // T0000, T0000.002
         vm1.unselectTechnique(st1,tactic1);
         expect(vm1.selectedTechniques.size).toEqual(0);
         vm1.selectTechniqueAcrossTactics(t2, true, true);
         expect(vm1.highlightedTechniques.size).toEqual(1);
         vm1.selectTechniqueAcrossTactics(st1);
-        expect(vm1.selectedTechniques.size).toEqual(2); // T1595, T1595.002
+        expect(vm1.selectedTechniques.size).toEqual(2); // T0000, T0000.002
         vm1.selectTechniqueAcrossTactics(st1, true, true);
         vm1.unselectTechniqueAcrossTactics(st1);
         expect(vm1.selectedTechniques.size).toEqual(0);
@@ -250,22 +176,22 @@ describe('ViewmodelsService', () => {
 	it('should edit and reset techniques', inject([ViewModelsService], (service: ViewModelsService) => {
         let technique_list: Technique[] = [];
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st1 = new Technique(MockData.T0000_002,[],null);
+        let t1 = new Technique(MockData.T0000,[st1],null);
         technique_list.push(t1);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = '3';
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
 		stvm_1.score = '3';
-        let t2 = new Technique(techniqueSDO2,[],null);
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let t2 = new Technique(MockData.T0001,[],null);
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         tvm_2.score = '3';
         tvm_2.comment = 'test1';
         technique_list.push(t2);
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
         vm1.selectAllTechniques(); // select all techniques
         vm1.selectSubtechniquesWithParent = true;
         expect(vm1.isTechniqueSelected(t1, tactic1)).toEqual(true);
@@ -275,11 +201,11 @@ describe('ViewmodelsService', () => {
         expect(vm1.isTechniqueSelected(st1, tactic1)).toEqual(true);
         vm1.selectUnannotated(); // none
         vm1.editSelectedTechniques('score', '3');
-        expect(vm1.getTechniqueVM_id('T1592^reconnaissance')['score']).toEqual('3');
-        vm1.selectAnnotated(); // T1592, T1595, T1595.002
+        expect(vm1.getTechniqueVM_id('T0001^tactic-name')['score']).toEqual('3');
+        vm1.selectAnnotated(); // T0001, T0000, T0000.002
         vm1.resetSelectedTechniques(); // Unannotate the selected techniques
-        expect(vm1.getTechniqueVM_id('T1592^reconnaissance')['score']).toEqual('');
-        vm1.selectAllTechniques(); // T1592, T1595, T1595.002
+        expect(vm1.getTechniqueVM_id('T0001^tactic-name')['score']).toEqual('');
+        vm1.selectAllTechniques(); // T0001, T0000, T0000.002
         let m2 = new Metadata();
         m2.name = "test1";
         m2.value = "t1";
@@ -292,14 +218,14 @@ describe('ViewmodelsService', () => {
 	it('should get common value from selected techniques', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
         let technique_list: Technique[] = [];
-        let t1 = new Technique(techniqueSDO,[],null);
-        let t2 = new Technique(techniqueSDO2,[],null);
+        let t1 = new Technique(MockData.T0000,[],null);
+        let t2 = new Technique(MockData.T0001,[],null);
         technique_list.push(t1);
         technique_list.push(t2);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = '3';
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         tvm_2.score = '3';
         tvm_2.comment = 'test1';
         vm1.setTechniqueVM(tvm_1);
@@ -313,34 +239,34 @@ describe('ViewmodelsService', () => {
 
 	it('should select annotated techniques and unannotated techniques', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = '3';
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
         vm1.selectAnnotated();
-        expect(vm1.selectedTechniques.size).toEqual(1); // T1595
+        expect(vm1.selectedTechniques.size).toEqual(1); // T0000
         vm1.selectAllTechniques();
         vm1.selectAnnotated();
         expect(vm1.selectedTechniques.size).toEqual(1);
         vm1.selectUnannotated();
         expect(vm1.selectedTechniques.size).toEqual(0); // since currently editing, no unannotated techniques are  selected
         vm1.selectUnannotated();
-        expect(vm1.selectedTechniques.size).toEqual(2); // T1595.002, T1592
+        expect(vm1.selectedTechniques.size).toEqual(2); // T0000.002, T0001
     }));
 
 	it('should check if subtechnique is enabled', inject([ViewModelsService], (service: ViewModelsService) => {
         let technique_list: Technique[] = [];
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let st1 = new Technique(subtechniqueSDO1,[],null);
-        let t1 = new Technique(techniqueSDO,[st1],null);
+        let st1 = new Technique(MockData.T0000_002,[],null);
+        let t1 = new Technique(MockData.T0000,[st1],null);
         technique_list.push(t1);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let t2 = new Technique(techniqueSDO2,[],null);
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+        let t2 = new Technique(MockData.T0001,[],null);
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         technique_list.push(t2);
         tvm_1.score = "3";
         expect(vm1.linksMatch).toEqual(true);
@@ -348,10 +274,10 @@ describe('ViewmodelsService', () => {
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.setTechniqueVM(stvm_1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
         expect(vm1.isSubtechniqueEnabled(t1,tvm_1,tactic1)).toEqual(true); // techniqueVM enabled by default so function returns true
         tvm_1.enabled = false;
-        vm1.filters.platforms.selection = ['Linux', 'macOS', 'Windows'];
+        vm1.filters.platforms.selection = ['PRE'];
         expect(vm1.isSubtechniqueEnabled(t1,tvm_1,tactic1)).toEqual(true); // subtechniqueVM enabled by default so function returns true
         tvm_2.enabled = false;
         expect(vm1.isSubtechniqueEnabled(t2,tvm_2,tactic1)).toEqual(false); // returns false because enabled property set to false
@@ -359,9 +285,9 @@ describe('ViewmodelsService', () => {
 
 	it('should get a list of annotated hidden techniques and visibile techniques', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         tvm_1.score = "3";
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
@@ -371,14 +297,14 @@ describe('ViewmodelsService', () => {
         tvm_1.isVisible = false;
         expect(vm1.modifiedHiddenTechniques()).toEqual(1);
         tvm_1.isVisible = true;
-        expect(vm1.getVisibleTechniquesList()).toEqual(['T1595^reconnaissance', 'T1592^reconnaissance', 'T1595.002^reconnaissance']);
+        expect(vm1.getVisibleTechniquesList()).toEqual(['T0000^tactic-name', 'T0001^tactic-name', 'T0000.002^tactic-name']);
     }));
 
 	it('should test legends', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
+        let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
         tvm_1.score = "3";
         vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
@@ -392,10 +318,10 @@ describe('ViewmodelsService', () => {
 
 	it('should test gradient colors', inject([ViewModelsService], (service: ViewModelsService) => {
 		let vm1 = service.newViewModel("test1","enterprise-attack-13");
-		let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+		let tvm_1 = new TechniqueVM("T0000^tactic-name");
 		tvm_1.score = "3";
-		let stvm_1 = new TechniqueVM("T1595.002^reconnaissance");
-		let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+		let stvm_1 = new TechniqueVM("T0000.002^tactic-name");
+		let tvm_2 = new TechniqueVM("T0001^tactic-name");
 		vm1.setTechniqueVM(tvm_1);
 		vm1.setTechniqueVM(tvm_2);
 		vm1.setTechniqueVM(stvm_1);
@@ -413,7 +339,7 @@ describe('ViewmodelsService', () => {
 	}));
 
 	it('should serialize techniqueVMs', inject([ViewModelsService], (service: ViewModelsService) => {
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         tvm_1.score = "3";
         let m1 = new Metadata();
         m1.name = "test1";
@@ -460,28 +386,28 @@ describe('ViewmodelsService', () => {
         ]
         let technique_list: Technique[] = [];
         let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set("tactic-0", tacticSDO);
+        idToTacticSDO.set("tactic-0", MockData.TA0000);
         let to_vm = service.newViewModel("test1","enterprise-attack-13");
         to_vm.dataService.setUpURLs(versions);
-        let matrix = new Matrix(matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
+        let matrix = new Matrix(MockData.matrixSDO, idToTacticSDO,technique_list,to_vm.dataService);
         to_vm.dataService.domains[0].matrices = [matrix];
-        let t1 = new Technique(techniqueSDO,[],null);
+        let t1 = new Technique(MockData.T0000,[],null);
         technique_list.push(t1);
-        let to_tvm_1 = new TechniqueVM("T1595^reconnaissance");
-        let t2 = new Technique(techniqueSDO2,[],null);
-        let to_tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let to_tvm_1 = new TechniqueVM("T0000^tactic-name");
+        let t2 = new Technique(MockData.T0001,[],null);
+        let to_tvm_2 = new TechniqueVM("T0001^tactic-name");
         technique_list.push(t2);
         to_vm.setTechniqueVM(to_tvm_1);
         to_vm.setTechniqueVM(to_tvm_2);
         to_vm.dataService.domains[0].techniques.push(t1);
         to_vm.dataService.domains[0].techniques.push(t2);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
         to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12','enterprise-attack-13');
         expect(to_vm.versionChangelog.length()).toEqual(0);
-        to_vm.versionChangelog.minor_changes = ['T1595'];
-        to_vm.versionChangelog.unchanged = ['T1592'];
+        to_vm.versionChangelog.minor_changes = ['T0000'];
+        to_vm.versionChangelog.unchanged = ['T0001'];
         let from_vm = service.newViewModel("test2","enterprise-attack-12");
-        let from_tvm_1 = new TechniqueVM("T1592^reconnaissance");
+        let from_tvm_1 = new TechniqueVM("T0001^tactic-name");
         from_tvm_1.score = '2';
         from_tvm_1.comment = "test";
         from_vm.setTechniqueVM(to_tvm_1);
@@ -524,15 +450,15 @@ describe('ViewmodelsService', () => {
     it('should handle missing techniqueVM', inject([ViewModelsService], (service: ViewModelsService) => {
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
         let technique_list: Technique[] = [];
-        let t1 = new Technique(techniqueSDO,[],null);
+        let t1 = new Technique(MockData.T0000,[],null);
         technique_list.push(t1);
-        let tactic1 = new Tactic(tacticSDO,technique_list,null);
+        let tactic1 = new Tactic(MockData.TA0000,technique_list,null);
         expect(() => {
             vm1.getTechniqueVM(t1,tactic1);
-        }).toThrow(new Error('technique VM not found: T1595, TA0043'));
+        }).toThrow(new Error('technique VM not found: T0000, TA0000'));
         expect(() => {
-            vm1.getTechniqueVM_id("T1595^reconnaissance");
-        }).toThrow(new Error('technique VM not found: T1595^reconnaissance'));
+            vm1.getTechniqueVM_id("T0000^tactic-name");
+        }).toThrow(new Error('technique VM not found: T0000^tactic-name'));
     }));
 
     it('should handle missing tactic field', () => {
@@ -830,7 +756,7 @@ describe('ViewmodelsService', () => {
         ]
         let vm1 = service.newViewModel("test1","enterprise-attack-13");
         vm1.dataService.setUpURLs(versions);
-        let tvm_1 = new TechniqueVM("T1595^reconnaissance");
+        let tvm_1 = new TechniqueVM("T0000^tactic-name");
         let l1 = new Link();
         l1.label = "test1";
         l1.url = "t1";
@@ -841,19 +767,19 @@ describe('ViewmodelsService', () => {
         m2.value = "t1";
         m2.divider = true;
         tvm_1.metadata = [m2];
-        let tvm_2 = new TechniqueVM("T1592^reconnaissance");
+        let tvm_2 = new TechniqueVM("T0001^tactic-name");
 		vm1.setTechniqueVM(tvm_1);
         vm1.setTechniqueVM(tvm_2);
         vm1.activeTvm = tvm_2;
-        vm1.checkValues(true,"T1595^reconnaissance");
-        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T1595^reconnaissance"]
+        vm1.checkValues(true,"T0000^tactic-name");
+        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T0000^tactic-name"]
         vm1.activeTvm = tvm_1;
-        vm1.checkValues(false,"T1595^reconnaissance");
+        vm1.checkValues(false,"T0000^tactic-name");
         expect(vm1.linksMatch).toEqual(true); // linkMismatches = []
         vm1.activeTvm = tvm_1;
         vm1.selectAllTechniques(); // select all techniques
-        vm1.checkValues(false,"T1595^reconnaissance");
-        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T1595^reconnaissance"]
+        vm1.checkValues(false,"T0000^tactic-name");
+        expect(vm1.linksMatch).toEqual(false); // linkMismatches = ["T0000^tactic-name"]
     }));
 
     it('should load vm data with custom url', inject([ViewModelsService], (service: ViewModelsService) => {

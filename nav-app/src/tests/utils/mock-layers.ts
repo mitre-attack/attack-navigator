@@ -167,3 +167,69 @@ export const layerFile3 = {
 		}
 	],
 }
+
+export const invalidLayerFile1 = {
+	"description":3,
+	"sorting": "3",
+	"hideDisabled": "true",
+	"showTacticRowBackground": "false",
+	"selectTechniquesAcrossTactics": "true",
+	"selectSubtechniquesWithParent": "true",
+	"selectVisibleTechniques": "false",
+	"viewMode": "4",
+	"legendItems": [
+		{
+			label: true
+		},
+		{
+			color: true
+		},
+		{
+			label: true,
+			color:"#FF00FF"
+		},
+		{
+			label: "Legend Item Label",
+			color:true
+		}
+	],
+	"tacticRowBackground": false,
+	"techniques": [
+		{
+			"techniqueID": "T0002",
+			"color": "#e60d0d",
+			"comment": "",
+			"score": 3,
+			"enabled": true,
+			"metadata": [
+				{
+					"name":"test1",
+					"value":"t1"
+				},
+				{
+					"divider":true
+				}
+			],
+			"links": [
+				{
+					"label":"test1",
+					"url":"t1",
+				},
+				{
+					"divider":true
+				}
+			],
+			"showSubtechniques": false,
+		},
+		{
+			"techniqueID": "T1592.001",
+			"color": "#e60d0d",
+			"comment": "",
+			"score": 3,
+			"enabled": true,
+			"metadata": [],
+			"links": [],
+			"showSubtechniques": false,
+		}
+	],
+}
