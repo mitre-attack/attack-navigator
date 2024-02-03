@@ -10,13 +10,13 @@ describe('IconsService', () => {
         service = TestBed.inject(IconsService);
     });
 
-    it('should be created', inject([IconsService], (service: IconsService) => {
+    it('should be created', () => {
         expect(service).toBeTruthy();
-    }));
+    });
 
-    it('should register', inject([IconsService], (service: IconsService) => {
+    it('should register', () => {
         spyOn(service.matIconRegistry, 'addSvgIcon');
         service.registerIcons();
 		expect(service.matIconRegistry.addSvgIcon).toHaveBeenCalledTimes(Object.values(Icons).length);
-    }));
+    });
 });
