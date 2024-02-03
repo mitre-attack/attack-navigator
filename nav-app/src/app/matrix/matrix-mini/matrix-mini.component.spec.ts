@@ -1,9 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatrixMiniComponent } from './matrix-mini.component';
-import { TechniqueVM, ViewModel } from '../../classes';
-import { Matrix, Technique } from '../../classes/stix';
-import * as MockData from '../../../tests/utils/mock-data';
 
 describe('MatrixMiniComponent', () => {
     let component: MatrixMiniComponent;
