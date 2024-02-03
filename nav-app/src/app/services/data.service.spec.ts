@@ -281,7 +281,6 @@ describe('DataService', () => {
         service.domains[0].relationships['targeted_assets'].set('asset-0',['attack-pattern-0']);
         let domain = service.domains[0];
         service.parseBundle(domain, MockData.stixBundleSDO);
-        console.log('domain', domain)
         // check data loaded
         expect(domain.dataLoaded).toBeTrue();
         expect(domain.platforms).toEqual(MockData.T0000.x_mitre_platforms);

@@ -3,33 +3,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
 import { DataService } from './data.service';
 import { Subscription, of } from 'rxjs';
+import * as MockData from '../../tests/utils/mock-data';
 
 describe('ConfigService', () => {
-    let versions = [
-        {
-            "name": "ATT&CK v13",
-            "version": "13",
-            "domains": [
-                {
-                    "name": "Enterprise",
-                    "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                }
-            ]
-        },
-        {
-            "name": "ATT&CK v12",
-            "version": "12",
-            "domains": [
-                {
-                    "name": "Enterprise",
-                    "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                }
-            ]
-        }
-    ]
-
     let config = {
         "banner":"",
         "comment_color":"yellow",
@@ -47,7 +23,7 @@ describe('ConfigService', () => {
         "link_color": "blue",
         "metadata_color":"purple",
         "versions": [{"name": 'ATT&CK v13', "version": '13', "domains": ["Enterprise"]}]
-        }
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -61,7 +37,7 @@ describe('ConfigService', () => {
     }));
 
     it('should set up data in constructor', inject([ConfigService], (service: ConfigService) => {
-        service.dataService.setUpURLs(versions);
+        service.dataService.setUpURLs(MockData.configDataExtended);
         spyOn(DataService.prototype, 'getConfig').and.returnValue(of(config));
         let fragments = new Map<string, string>();
         fragments.set("comments", "false"); //'https://mitre-attack.github.io/attack-navigator/#comments=false'
@@ -74,12 +50,7 @@ describe('ConfigService', () => {
     }));
 
     it('should set feature object', inject([ConfigService], (service: ConfigService) => {
-        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        expect(service.setFeature_object(feature_object)).toEqual([ 'disable_techniques', 'manual_color', 'background_color' ]);
+        expect(service.setFeature_object(MockData.configTechniqueControls)).toEqual([ 'disable_techniques', 'manual_color', 'background_color' ]);
     }));
 
     it('should set single feature to given value', inject([ConfigService], (service: ConfigService) => {
@@ -87,96 +58,53 @@ describe('ConfigService', () => {
     }));
 
     it('should get feature', inject([ConfigService], (service: ConfigService) => {
-        service.setFeature("sticky_toolbar", true)
+        service.setFeature("sticky_toolbar", true);
         expect(service.getFeature("sticky_toolbar")).toBeTruthy();
     }));
 
     it('should get feature group', inject([ConfigService], (service: ConfigService) => {
         expect(service.getFeatureGroup("technique_controls")).toBeTruthy();
-        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_object)
+        service.setFeature_object(MockData.configTechniqueControls);
         expect(service.getFeatureGroup("technique_controls")).toBeTruthy();
     }));
 
     it('should get feature group count', inject([ConfigService], (service: ConfigService) => {
         expect(service.getFeatureGroupCount("technique_controls")).toEqual(-1);
-        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_object)
+        service.setFeature_object(MockData.configTechniqueControls);
         expect(service.getFeatureGroupCount("technique_controls")).toEqual(3);
     }));
 
     it('should get all features', inject([ConfigService], (service: ConfigService) => {
-        let feature_group_one = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": false, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_group_one)
-        let feature_group_two = {"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
-        ]}
-        service.setFeature_object(feature_group_two)
+        service.setFeature_object(MockData.configTechniqueControls);
+        service.setFeature_object(MockData.configToolbarControls);
         expect(service.getFeatures()).toEqual([ 'disable_techniques', 'manual_color', 'background_color', 'sticky_toolbar' ] );
     }));
 
     it('should get all feature groups', inject([ConfigService], (service: ConfigService) => {
-        let feature_group_one = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": false, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_group_one)
-        let feature_group_two = {"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
-        ]}
-        service.setFeature_object(feature_group_two)
+        service.setFeature_object(MockData.configTechniqueControls);
+        service.setFeature_object(MockData.configToolbarControls);
         expect(service.getFeatureGroups()).toEqual(["technique_controls", "toolbar_controls"] );
     }));
 
     it('should check if feature exists', inject([ConfigService], (service: ConfigService) => {
-        let feature_group_one = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": false, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_group_one)
+        service.setFeature_object(MockData.configTechniqueControls)
         expect(service.isFeature('disable_techniques')).toBeTruthy();
     }));
 
     it('should check if feature group exists', inject([ConfigService], (service: ConfigService) => {
-        let feature_group_one = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": false, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_group_one)
+        service.setFeature_object(MockData.configTechniqueControls)
         expect(service.isFeatureGroup("technique_controls")).toBeTruthy();
     }));
 
     it('should get feature list', inject([ConfigService], (service: ConfigService) => {
         expect(service.getFeatureList()).toEqual([]);
-        service.featureStructure = [
-            {"name": "sticky_toolbar", "enabled": true}
-            ]
+        service.featureStructure = [{"name": "sticky_toolbar", "enabled": true}]
         expect(service.getFeatureList()).toEqual([{"name": "sticky_toolbar", "enabled": true}]);
     }));
 
     it('should set features of the given group to provided value', inject([ConfigService], (service: ConfigService) => {
-        let feature_object = {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": false, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
-            ]}
-        service.setFeature_object(feature_object)
-        expect(service.setFeature("technique_controls",true)).toEqual(["technique_controls"]);
+        service.setFeature_object(MockData.configTechniqueControls);
+        expect(service.setFeature("technique_controls", true)).toEqual(["technique_controls"]);
     }));
 
     it('should set features of the given group to the value object', inject([ConfigService], (service: ConfigService) => {

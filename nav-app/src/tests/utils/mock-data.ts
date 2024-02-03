@@ -10,6 +10,32 @@ export const configData = [{
 		"data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
 	}]
 }];
+export const configDataExtended = [{
+	"name": "ATT&CK v13",
+	"version": "13",
+	"domains": [{
+		"name": "Enterprise",
+		"identifier": "enterprise-attack",
+		"data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
+	}]
+},{
+	"name": "ATT&CK v12",
+	"version": "12",
+	"domains": [{
+		"name": "Enterprise",
+		"identifier": "enterprise-attack",
+		"data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
+	}]
+}];
+export const defaultLayersEnabled = {
+	"enabled": true,
+	"urls": ["https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+}
+export const defaultLayersDisabled = {
+	"enabled": false,
+	"urls": ["https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+}
+
 export const taxiiData = [{
 	"name": "ATT&CK v13",
 	"version": "13",
@@ -28,6 +54,18 @@ export const workbenchData = [{
 		"apiKey": "sample-navigator-apikey"
 	},
 }];
+export const configTechniqueControls = {
+	"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+		{"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
+		{"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
+		{"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."}
+	]
+}
+export const configToolbarControls = {
+	"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
+		{"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
+	]
+}
 
 // mock base STIX SDOs
 export const stixSDO = {

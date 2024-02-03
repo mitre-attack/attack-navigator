@@ -31,20 +31,6 @@ describe('TabsComponent', () => {
         ]
     }];
 
-    let versions = [
-        {
-            "name": "ATT&CK v13",
-            "version": "13",
-            "domains": [
-                {
-                    "name": "Enterprise",
-                    "identifier": "enterprise-attack",
-                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                }
-            ]
-        }
-    ];
-
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule, BrowserAnimationsModule, MarkdownModule.forRoot({ loader: HttpClient })],
@@ -100,8 +86,7 @@ describe('TabsComponent', () => {
 
     it('should set up data in constructor', () => {
         spyOn(DataService.prototype, 'setUpURLs').and.stub();
-        let return$ = {versions: versions};
-        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
+        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(MockData.configData));
         TabsComponent.prototype.subscription = new Subscription;
         spyOn(TabsComponent.prototype, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
         fixture = TestBed.createComponent(TabsComponent);
@@ -160,7 +145,7 @@ describe('TabsComponent', () => {
     });
 
     it('should create new layer', () => {
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         expect(component.latestDomains.length).toEqual(1);
         component.newLayer("enterprise-attack-13");
         expect(component.layerTabs.length).toEqual(1);
@@ -246,25 +231,13 @@ describe('TabsComponent', () => {
         let component = fixture.debugElement.componentInstance;
         component.opSettings.scoreExpression = "a+b";
         component.opSettings.domain = "enterprise-atack-13";
-        let vm1 = component.viewModelsService.newViewModel("layer","ics-attack-13");
-		let vm2 = component.viewModelsService.newViewModel("layer1","ics-attack-13");
+        let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
+		let vm2 = component.viewModelsService.newViewModel("layer1","enterprise-attack-13");
         component.openTab('layer', vm1, true, true, true, true);
         component.openTab('layer1', vm2, true, true, true, true);
         expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "ICS",
-                        "identifier": "ics-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/ics-attack/ics-attack.json"]
-                    }
-                ]
-            }]
-        component.dataService.setUpURLs(versions); // set up data
-        component.opSettings.domain = "ics-attack-13";
+        component.dataService.setUpURLs(MockData.configData); // set up data
+        component.opSettings.domain = "enterprise-attack-13";
         expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         component.dataService.getDomain(component.opSettings.domain).dataLoaded = false;
@@ -278,7 +251,7 @@ describe('TabsComponent', () => {
         let vm1 = component.viewModelsService.newViewModel("layer","enterprise-attack-13");
         component.openTab('layer', vm1, true, true, true, true);
         expect(component.getScoreExpressionError()).toEqual(null);
-        component.dataService.setUpURLs(versions); // set up data
+        component.dataService.setUpURLs(MockData.configData); // set up data
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
         component.opSettings.domain = "enterprise-attack-13";
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -367,19 +340,7 @@ describe('TabsComponent', () => {
 
     it('should read and open json file', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
@@ -410,7 +371,7 @@ describe('TabsComponent', () => {
 
     it('should get unique layer names', () => {
         let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         expect(component.latestDomains.length).toEqual(1);
         component.newLayer("enterprise-attack-13");
         component.newLayer("enterprise-attack-13");
@@ -433,31 +394,7 @@ describe('TabsComponent', () => {
 
     it('should upgrade layer', (waitForAsync (() => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve({oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13'}));
@@ -472,31 +409,7 @@ describe('TabsComponent', () => {
 
     it('should not upgrade layer', (waitForAsync (() => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
@@ -511,31 +424,7 @@ describe('TabsComponent', () => {
 
     it('should not upgrade layer with default layer enabled', (waitForAsync (() => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -547,31 +436,7 @@ describe('TabsComponent', () => {
 
     it('should not upgrade layer with default layer enabled and domain data loaded', (waitForAsync (() => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
@@ -584,31 +449,7 @@ describe('TabsComponent', () => {
 
     it('should not upgrade layer with domain data loaded', (waitForAsync (() => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles);
         let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1))
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
@@ -632,31 +473,7 @@ describe('TabsComponent', () => {
 
      it('should open version upgrade dialog with upgrade', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
         const versionUpgradeSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:true})});
@@ -667,31 +484,7 @@ describe('TabsComponent', () => {
 
     it('should open version upgrade dialog with no upgrade', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configDataExtended);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-12");
         vm1.version = '12';
         const versionUpgradeSpy = spyOn(component.dialog, 'open').and.returnValue({afterClosed: () => of({upgrade:false})});
@@ -702,7 +495,7 @@ describe('TabsComponent', () => {
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         vm1.version = '13';
         let st1 = new Technique(MockData.T0000_000, [], null);
@@ -740,7 +533,7 @@ describe('TabsComponent', () => {
 
     it('should serialize viewmodel and only save techniqueVMs which have been modified and are visible', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let vm1 = component.viewModelsService.newViewModel("layer2","enterprise-attack-13");
         let t1 = new Technique(MockData.T0000, [], null);
         let t2 = new Technique(MockData.T0001, [], null);
@@ -760,7 +553,7 @@ describe('TabsComponent', () => {
 
     it('should throw errors for deserializing viewmodel', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let viewmodel_error_file1 = {
             "description":3,
             "sorting": "3",
@@ -842,7 +635,7 @@ describe('TabsComponent', () => {
             'version': '100F',
             'identifier': 'enterprise-attack'
         }
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
@@ -857,7 +650,7 @@ describe('TabsComponent', () => {
             'version': '13',
             'identifier': 'enterprise-attack'
         }
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let layer = JSON.parse(JSON.stringify(validate_input_error_file1));
         let alertSpy = spyOn(window, "alert");
         let consoleSpy = spyOn(console, 'error');
@@ -878,19 +671,7 @@ describe('TabsComponent', () => {
 
     it('should through error for invalid domain', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         spyOn(console, 'error');
         let blob = new Blob([JSON.stringify(MockLayers.layerFile1)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
@@ -900,19 +681,7 @@ describe('TabsComponent', () => {
 
     it('should read and open json file with 2 layers', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         let combined_layer = [MockLayers.layerFile3, MockLayers.layerFile3]
         let blob = new Blob([JSON.stringify(combined_layer)], { type: 'text/json' });
         let file = new File([blob], "layer-2.json");
@@ -929,31 +698,7 @@ describe('TabsComponent', () => {
         component.openTab('layer', vm1, true, true, true, true);
         component.openTab('layer2', vm2, true, true, true, true);
 
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            },
-            {
-                "name": "ATT&CK v12",
-                "version": "12",
-                "domains": [
-                    {
-                        "name": "Enterprise",
-                        "identifier": "enterprise-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json"]
-                    }
-                ]
-            }
-        ]
-        component.dataService.setUpURLs(versions); // set up data
+        component.dataService.setUpURLs(MockData.configDataExtended); // set up data
         component.dataService.parseBundle(component.dataService.getDomain("enterprise-attack-13"), bundles); //load the data
         component.opSettings.domain = "enterprise-attack-13";
         let alertSpy = spyOn(window, "alert");
@@ -965,7 +710,7 @@ describe('TabsComponent', () => {
 
     it('should load from url', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
@@ -978,18 +723,15 @@ describe('TabsComponent', () => {
 
     it('should throw errors when loading from url', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
+		let versions = [{
+			"name": "ATT&CK v13",
+			"version": "13",
+			"domains": [{
+				"name": "Mobile",
+				"identifier": "mobile-attack",
+				"data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
+			}]
+        }]
         component.dataService.setUpURLs(versions);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
@@ -1010,19 +752,7 @@ describe('TabsComponent', () => {
             'version': '12',
             'identifier': 'enterprise-attack'
         }
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-            }]
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         component.dataService.domains[0].dataLoaded = true;
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
@@ -1033,45 +763,25 @@ describe('TabsComponent', () => {
 
     it('should load base data from URL', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                "name": "ATT&CK v13",
-                "version": "13",
-                "domains": [
-                    {
-                        "name": "Mobile",
-                        "identifier": "mobile-attack",
-                        "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json"]
-                    }
-                ]
-        }]
-        let default_layers = {
-            "enabled": false,
-            "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
-        }
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         spyOn(component, "getNamedFragmentValue").and.returnValues(["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json"], ['13'], ['defending-iaas'], 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json');
-        component.loadTabs(default_layers);
+        component.loadTabs(MockData.defaultLayersDisabled);
         expect(component.layerTabs.length).toEqual(1)
     })));
 
     it('should load layer from URL', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let default_layers = {
-            "enabled": false,
-            "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
-        }
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
         spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']);
-        component.loadTabs(default_layers).then(() => {
+        component.loadTabs(MockData.defaultLayersDisabled).then(() => {
             expect(versionMismatchSpy).toHaveBeenCalled();
             expect(upgradeLayerSpy).toHaveBeenCalled();
         });
@@ -1079,18 +789,14 @@ describe('TabsComponent', () => {
 
     it('should load default layers from config file', (waitForAsync ( () => {
         let component = fixture.debugElement.componentInstance;
-        let default_layers = {
-            "enabled": true,
-            "urls": ["https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
-        }
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpURLs(MockData.configData);
         component.http = httpClient;
         spyOn(component.http,'get').and.returnValue(of(MockLayers.layerFile1));
         spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
         let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve([]));
         let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
         spyOn(component, "getNamedFragmentValue").and.returnValues([], ['13'], ['defending-iaas'], []);
-        component.loadTabs(default_layers).then(() => {
+        component.loadTabs(MockData.defaultLayersEnabled).then(() => {
             expect(versionMismatchSpy).toHaveBeenCalled();
             expect(upgradeLayerSpy).toHaveBeenCalled();
         });
