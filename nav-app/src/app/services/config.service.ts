@@ -12,15 +12,15 @@ export class ConfigService {
     public banner: string;
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-    private featureStructure: object[];
-
+    public featureStructure: object[];
     public contextMenuItems: ContextMenuItem[] = [];
+    public subscription;
 
-    constructor(private dataService: DataService) {
+    constructor(public dataService: DataService) {
         console.debug('initializing config service');
         let self = this;
-        let subscription = dataService.getConfig().subscribe({
-            next: function (config: any) {
+        this.subscription = dataService.getConfig().subscribe({
+            next: (config) => {
                 //parse feature preferences from config json
                 config['features'].forEach(function (featureObject: any) {
                     self.setFeature_object(featureObject);
@@ -28,7 +28,7 @@ export class ConfigService {
                 //override json preferences with preferences from URL fragment
                 self.getAllFragments().forEach(function (value: string, key: string) {
                     let valueBool = value == 'true';
-                    if (self.isFeature(key) || self.isFeatureGroup(key)) {
+                    if (self.isFeatureGroup(key) || self.isFeature(key)) {
                         self.setFeature(key, valueBool);
                     }
                 });
@@ -43,7 +43,7 @@ export class ConfigService {
                 }
             },
             complete: () => {
-                if (subscription) subscription.unsubscribe();
+                if (this.subscription) this.subscription.unsubscribe();
             }, //prevent memory leaks
         });
     }

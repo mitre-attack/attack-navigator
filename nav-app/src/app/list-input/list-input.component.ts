@@ -77,12 +77,7 @@ export class ListInputComponent implements OnInit {
      */
     public canAddDivider(i: number): boolean {
         if (i < 1) return false; // cannot add divider before the first item
-        if (
-            this.list[i]?.valid() &&
-            !this.list[i]?.divider &&
-            this.list[i - 1]?.valid() &&
-            !this.list[i - 1]?.divider
-        ) {
+        if (this.list[i]?.valid() && !this.list[i]?.divider && this.list[i - 1]?.valid() && !this.list[i - 1]?.divider) {
             return true;
         }
         return false;

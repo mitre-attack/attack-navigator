@@ -23,7 +23,7 @@ export class DataComponent extends StixObject {
         if (relationships.has(this.id)) {
             relationships.get(this.id).forEach((targetID) => {
                 const technique = domain.techniques.find((t) => t.id === targetID);
-                if (technique) techniques.push(technique);
+                if (technique) techniques.push(technique.id);
             });
         }
         return techniques;

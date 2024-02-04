@@ -11,8 +11,8 @@ export abstract class MatrixCommon {
     @Input() viewModel: ViewModel;
 
     constructor(
-        private configService: ConfigService,
-        private viewModelsService: ViewModelsService
+        public configService: ConfigService,
+        public viewModelsService: ViewModelsService
     ) {
         this.configService = configService;
     }
@@ -68,7 +68,7 @@ export abstract class MatrixCommon {
         } else {
             // replace selection
             if (this.viewModel.getSelectedTechniqueCount() > 1) {
-                if (this.viewModel.isTechniqueSelected) this.viewModel.clearSelectedTechniques();
+                if (this.viewModel.isTechniqueSelected(technique, tactic)) this.viewModel.clearSelectedTechniques();
                 this.viewModel.selectTechnique(technique, tactic);
             } else if (this.viewModel.isTechniqueSelected(technique, tactic)) {
                 //unselect currently selected
@@ -100,21 +100,14 @@ export abstract class MatrixCommon {
         else this.viewModel.selectAllTechniquesInTactic(tactic);
     }
 
-    public get tacticRowStyle(): any {
-        //change background of sticky tactic header if showTacticRowBackground is enabled
-        if (this.viewModel.showTacticRowBackground) {
-            let elements_name = document.querySelectorAll<HTMLElement>('.tactic.name');
-            let elements_count = document.querySelectorAll<HTMLElement>('.tactic.count');
-            for (let i = 0; i < elements_name.length; i++) {
-                elements_name[i].style.backgroundColor = this.viewModel.tacticRowBackground;
-                elements_count[i].style.backgroundColor = this.viewModel.tacticRowBackground;
-            }
+    public getTacticBackground(): any {
+        if (this.viewModel.showTacticRowBackground)
+            return {
+                background: this.viewModel.tacticRowBackground,
+                color: tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black']),
+            };
+        else {
+            return {};
         }
-        return this.viewModel.showTacticRowBackground
-            ? {
-                  background: this.viewModel.tacticRowBackground,
-                  color: tinycolor.mostReadable(this.viewModel.tacticRowBackground, ['white', 'black']),
-              }
-            : {};
     }
 }

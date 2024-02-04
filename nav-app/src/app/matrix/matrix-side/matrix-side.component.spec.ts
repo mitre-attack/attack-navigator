@@ -17,7 +17,6 @@ describe('MatrixSideComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(MatrixSideComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {

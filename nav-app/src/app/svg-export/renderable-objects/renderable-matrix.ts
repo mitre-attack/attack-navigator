@@ -3,8 +3,8 @@ import { RenderableTactic } from './renderable-tactic';
 import { ViewModel } from '../../classes';
 
 export class RenderableMatrix {
-    public readonly matrix: Matrix;
-    public readonly tactics: RenderableTactic[] = [];
+    public matrix: Matrix;
+    public tactics: RenderableTactic[] = [];
 
     public get height() {
         let heights = this.tactics.map(function (tactic: RenderableTactic) {
