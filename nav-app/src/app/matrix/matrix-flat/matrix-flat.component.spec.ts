@@ -16,7 +16,6 @@ describe('MatrixFlatComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(MatrixFlatComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {

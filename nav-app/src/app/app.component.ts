@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     constructor(
         public configService: ConfigService,
         private iconsService: IconsService,
-        private titleService: Title
+        public titleService: Title
     ) {
         Array.prototype.includes = function (value): boolean {
             for (let i = 0; i < this.length; i++) {

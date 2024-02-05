@@ -6,7 +6,7 @@ export class RenderableTactic {
     public readonly tactic: Tactic;
     public readonly techniques: RenderableTechnique[] = [];
     public readonly subtechniques: RenderableTechnique[] = [];
-    public readonly height: number;
+    public height: number;
 
     constructor(tactic: Tactic, matrix: Matrix, viewModel: ViewModel, renderConfig: any) {
         this.tactic = tactic;

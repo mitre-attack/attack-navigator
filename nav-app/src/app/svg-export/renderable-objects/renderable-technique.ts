@@ -8,7 +8,7 @@ export class RenderableTechnique {
     public readonly tactic: Tactic;
     public readonly matrix: Matrix;
     public readonly showSubtechniques;
-    private readonly viewModel: ViewModel;
+    public readonly viewModel: ViewModel;
 
     constructor(yPosition, technique: Technique, tactic: Tactic, matrix: Matrix, viewModel: ViewModel, showSubtechniques = false) {
         this.yPosition = yPosition;

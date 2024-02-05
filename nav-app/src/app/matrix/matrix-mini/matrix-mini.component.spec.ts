@@ -16,7 +16,6 @@ describe('MatrixMiniComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(MatrixMiniComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {

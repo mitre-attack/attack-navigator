@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { IconsService } from './icons.service';
+import { Icons, IconsService } from './icons.service';
 
 describe('IconsService', () => {
     let service: IconsService;
@@ -12,5 +12,11 @@ describe('IconsService', () => {
 
     it('should be created', () => {
         expect(service).toBeTruthy();
+    });
+
+    it('should register', () => {
+        spyOn(service.matIconRegistry, 'addSvgIcon');
+        service.registerIcons();
+        expect(service.matIconRegistry.addSvgIcon).toHaveBeenCalledTimes(Object.values(Icons).length);
     });
 });

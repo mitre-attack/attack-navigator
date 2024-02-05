@@ -227,11 +227,11 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    private latestVersion: Version = { name: "ATT&CK v14", number: "14" };
-    private lowestSupportedVersion: Version; // used by tabs component
-    private enterpriseAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json";
-    private mobileAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json";
-    private icsAttackURL: string = "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json";
+    public latestVersion: Version = { name: 'ATT&CK v14', number: '14' };
+    public lowestSupportedVersion: Version; // used by tabs component
+    public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
+    public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
+    public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
 
     /**
      * Set up the URLs for data
@@ -310,8 +310,8 @@ export class DataService {
     loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
-            if (domain.dataLoaded && !refresh) resolve(null);
             if (domain) {
+                if (domain.dataLoaded && !refresh) resolve(null);
                 let subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);

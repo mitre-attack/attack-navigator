@@ -21,7 +21,7 @@ export class ViewModel {
     public loaded: boolean = false; // whether or not techniqueVMs are loaded
 
     public techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); // configuration for each technique
-    private selectedTechniques: Set<string> = new Set<string>(); // currently selected techniques (technique_tactic_id)
+    public selectedTechniques: Set<string> = new Set<string>(); // currently selected techniques (technique_tactic_id)
     public activeTvm: TechniqueVM; // first selected techniqueVM
 
     private linkMismatches: string[] = []; // subsequent selected technique_tactic_ids that do not have matching links
@@ -120,7 +120,7 @@ export class ViewModel {
         name: string,
         uid: string,
         domainVersionID: string,
-        private dataService: DataService
+        public dataService: DataService
     ) {
         console.debug("initializing ViewModel '" + name + "'");
         this.domainVersionID = domainVersionID;

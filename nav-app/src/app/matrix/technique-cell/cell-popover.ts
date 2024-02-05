@@ -37,7 +37,7 @@ export abstract class CellPopover {
      * ------------------
      * @returns {string} direction
      */
-    protected getPosition(): string {
+    public getPosition(): string {
         let boundingRect = this.theElement.getBoundingClientRect();
         let halfWidth = window.innerWidth / 2;
         let halfHeight = window.innerHeight / 2;
