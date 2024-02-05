@@ -118,6 +118,7 @@ describe('Dividers', () => {
 
     it('should add and remove divider for technique', () => {
         component.config.level = 'technique';
+        component.ngOnInit();
         addDivider(component);
         expect(component.list.length).toEqual(3);
     });
