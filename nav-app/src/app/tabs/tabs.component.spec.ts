@@ -12,7 +12,7 @@ import { ChangelogComponent } from '../changelog/changelog.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import * as is from 'is_js';
 import { HttpClient } from '@angular/common/http';
-import { Subscription, of } from 'rxjs';
+import { of } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Technique } from '../classes/stix';
 import * as MockLayers from '../../tests/utils/mock-layers';
@@ -60,21 +60,10 @@ describe('TabsComponent', () => {
         viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
     }));
 
-    it('should set up data in constructor', () => {
-        spyOn(DataService.prototype, 'setUpURLs').and.stub();
-        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(MockData.configData));
-        TabsComponent.prototype.subscription = new Subscription();
-        spyOn(TabsComponent.prototype, 'getNamedFragmentValue').and.returnValues(
-            ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/enterprise-attack/enterprise-attack.json'],
-            ['13'],
-            ['defending-iaas'],
-            ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json']
-        );
-        expect(component).toBeTruthy();
-    });
-
     it('should create new tab', () => {
+		spyOn(component, 'openTab');
         component.newBlankTab();
+		expect(component.openTab).toHaveBeenCalled();
         expect(component.layerTabs.length).toEqual(1);
     });
 

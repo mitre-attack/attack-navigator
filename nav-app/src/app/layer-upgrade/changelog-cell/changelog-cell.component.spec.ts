@@ -173,13 +173,13 @@ describe('ChangelogCellComponent', () => {
 
     it('should get the underline color for the given technique', () => {
         component.configService.setFeature('link_underline', true);
-        component.configService.link_color = 'purple';
+        component.configService.linkColor = 'purple';
         expect(component.getTechniqueUnderlineColor()).toEqual('purple');
         component.configService.setFeature('metadata_underline', true);
-        component.configService.metadata_color = 'blue';
+        component.configService.metadataColor = 'blue';
         expect(component.getTechniqueUnderlineColor()).toEqual('blue');
         component.configService.setFeature('comment_underline', true);
-        component.configService.comment_color = 'yellow';
+        component.configService.commentColor = 'yellow';
         expect(component.getTechniqueUnderlineColor()).toEqual('yellow');
     });
 

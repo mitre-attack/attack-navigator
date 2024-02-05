@@ -2,14 +2,16 @@ import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Version, VersionChangelog } from '../classes';
 import { Asset, Campaign, DataComponent, Domain, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
-import { Subscription, of } from 'rxjs';
+import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Collection } from '../utils/taxii2lib';
 import * as MockData from '../../tests/utils/mock-data';
 import { DataService } from './data.service';
+import { ConfigService } from './config.service';
 
 describe('DataService', () => {
     let dataService: DataService;
+	let configService: ConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -17,6 +19,7 @@ describe('DataService', () => {
             providers: [DataService],
         });
         dataService = TestBed.inject(DataService);
+		configService = TestBed.inject(ConfigService);
     });
 
     it('should be created', () => {
@@ -26,13 +29,9 @@ describe('DataService', () => {
     it('should set up data in constructor', inject([HttpClient], (http: HttpClient) => {
         let return$ = { versions: MockData.configData };
         let functionSpy = spyOn(DataService.prototype, 'setUpURLs').and.stub();
-        spyOn(DataService.prototype, 'getConfig').and.returnValue(of(return$));
-        DataService.prototype.subscription = new Subscription();
-        const unsubscribeSpy = spyOn(DataService.prototype.subscription, 'unsubscribe');
-        const mockService = new DataService(http);
+        const mockService = new DataService(http, configService);
         expect(mockService).toBeTruthy();
         expect(functionSpy).toHaveBeenCalledOnceWith(return$.versions);
-        expect(unsubscribeSpy).toHaveBeenCalled();
     }));
 
     it('should set up data', () => {
@@ -144,8 +143,6 @@ describe('DataService', () => {
         dataService.setUpURLs(MockData.configData);
         let domain = dataService.domains[0];
         let functionSpy = spyOn(dataService, 'getDomainData').and.returnValue(of(MockData.stixBundleSDO));
-        DataService.prototype.subscription = new Subscription();
-        spyOn(DataService.prototype.subscription, 'unsubscribe');
         await expectAsync(dataService.loadDomainData(domain.id, false)).toBeResolved();
         expect(functionSpy).toHaveBeenCalledOnceWith(domain, false);
     });
@@ -174,7 +171,7 @@ describe('DataService', () => {
     });
 
     it('should test software', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['software_uses'].set('malware-0', ['attack-pattern-0']);
         let software_test = new Software(MockData.malwareS0000, dataService);
@@ -184,7 +181,7 @@ describe('DataService', () => {
     });
 
     it('should test mitigation', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['mitigates'].set('mitigation-0', ['attack-pattern-0']);
         let mitigation_test = new Mitigation(MockData.M0000, dataService);
@@ -194,7 +191,7 @@ describe('DataService', () => {
     });
 
     it('should test asset', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
         let asset_test = new Asset(MockData.A0000, dataService);
@@ -204,7 +201,7 @@ describe('DataService', () => {
     });
 
     it('should test campaign', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['campaign_uses'].set('campaign-0', ['attack-pattern-0']);
         let campaign_test = new Campaign(MockData.C0000, dataService);
@@ -214,7 +211,7 @@ describe('DataService', () => {
     });
 
     it('should test data components', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let t1 = new Technique(MockData.T0000, [], dataService);
         dataService.domains[0].techniques = [t1];
@@ -234,7 +231,7 @@ describe('DataService', () => {
     });
 
     it('should test group', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
         dataService.domains[0].relationships['campaign_uses'].set('intrusion-set-0', ['attack-pattern-0']);
@@ -246,7 +243,7 @@ describe('DataService', () => {
     });
 
     it('should test stixObject', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let stixObject_test = new Campaign(MockData.G0000, dataService);
         let group_test = new Group(MockData.G0001, dataService);
@@ -262,7 +259,7 @@ describe('DataService', () => {
     });
 
     it('should test technique', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         let technique_test = new Technique(MockData.T0002, [], dataService);
         expect(technique_test.get_all_technique_tactic_ids()).toEqual([]);
@@ -276,7 +273,7 @@ describe('DataService', () => {
     });
 
     it('should parse stix bundle', () => {
-        dataService.subtechniquesEnabled = true; // enable to parse subs
+		Object.defineProperty(configService, 'subtechniquesEnabled', {get: () => true}); // enable to parse subs
         dataService.setUpURLs(MockData.configData);
         dataService.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
         dataService.domains[0].relationships['software_uses'].set('malware-0', ['attack-pattern-0']);
