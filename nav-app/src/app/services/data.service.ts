@@ -59,7 +59,7 @@ export class DataService {
                 //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
-                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier))
+                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier)))
                         continue;
                 }
 
@@ -183,6 +183,7 @@ export class DataService {
             }
 
             //create techniques
+            let techniques: Technique[] = [];
             for (let techniqueSDO of techniqueSDOs) {
                 let subtechniques: Technique[] = [];
                 if (this.subtechniquesEnabled) {
@@ -197,13 +198,14 @@ export class DataService {
                         });
                     }
                 }
+                techniques.push(new Technique(techniqueSDO, subtechniques, this));
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
 
             //create matrices, which also creates tactics and filters techniques
             for (let matrixSDO of matrixSDOs) {
                 if (matrixSDO.x_mitre_deprecated) continue;
-                domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
+                domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, techniques, this));
             }
 
             // parse platforms
