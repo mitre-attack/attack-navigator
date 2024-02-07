@@ -310,7 +310,7 @@ describe('TabsComponent', () => {
     });
 
     it('should read and open json file', waitForAsync(() => {
-        component.dataService.setUpURLs(MockData.configData);
+        component.dataService.setUpURLs(MockData.mobileDomainData);
         let mockedDocElement = document.createElement('input');
         mockedDocElement.id = 'uploader';
         mockedDocElement.value = 'test1';
