@@ -66,7 +66,7 @@ export class DataService {
                         continue;
                     }
                 }
-                
+
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
                 else {
@@ -205,7 +205,7 @@ export class DataService {
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-
+            // create a list of matrix and tactic SDOs
             for (let matrixSDO of matrixSDOs) {
                 if (matrixSDO.x_mitre_deprecated) {
                     continue;

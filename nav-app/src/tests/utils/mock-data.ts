@@ -95,6 +95,7 @@ export const stixSDO = {
     created: '2001-01-01T01:01:00.000Z',
     modified: '2001-01-01T01:01:00.000Z',
     version: '1.0',
+    x_mitre_domains: ['enterprise-attack'],
     x_mitre_version: '1.0',
 };
 export const stixSDO_v1_1 = {
