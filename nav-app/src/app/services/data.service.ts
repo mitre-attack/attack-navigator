@@ -60,15 +60,16 @@ export class DataService {
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
-                //iterate through stix domain objects in the bundle
+                // iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
                     if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0) {
                         if (domain.urls.length == 1){
-                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)){
+                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)) {
                                 continue;
                             }
                         }
+                        // If multiple urls provided see if the technique belongs to a domain parsed over before
                         else if((domain.urls.length > 1) && (sdo.type == "attack-pattern")){
                             if (!sdo.x_mitre_domains.includes(domain.domain_identifier)){
                                 seenDomain = false;
@@ -219,6 +220,7 @@ export class DataService {
                 techniques.push(new Technique(techniqueSDO, subtechniques, this));
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
+            
             if (seenDomain) {
                 techniques = domain.techniques;
             }
