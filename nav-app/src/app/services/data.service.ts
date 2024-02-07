@@ -49,8 +49,7 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
-        let seenDomain: Boolean;
-        let techniquesList = [];
+        let techniqueSDOslist = [];
         let matricesList = [];
         let tacticsList = [];
         let seenIDs = new Set<string>();
@@ -63,24 +62,11 @@ export class DataService {
                 // iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
-                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0) {
-                        if (domain.urls.length == 1){
-                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)) {
-                                continue;
-                            }
-                        }
-                        // If multiple urls provided see if the technique belongs to a domain parsed over before
-                        else if((domain.urls.length > 1) && (sdo.type == "attack-pattern")){
-                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)){
-                                seenDomain = false;
-                            }
-                            else {
-                                seenDomain = true;
-                            }
-                        }
+                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier))) {
+                        continue;
                     }
                 }
-
+                
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
                 else {
@@ -188,6 +174,7 @@ export class DataService {
                         idToTechniqueSDO.set(sdo.id, sdo);
                         if (!sdo.x_mitre_is_subtechnique) {
                             techniqueSDOs.push(sdo);
+                            techniqueSDOslist.push(sdo);
                         }
                         break;
                     case 'x-mitre-tactic':
@@ -201,7 +188,6 @@ export class DataService {
                         break;
                 }
             }
-            let techniques: Technique[] = [];
             //create techniques
             for (let techniqueSDO of techniqueSDOs) {
                 let subtechniques: Technique[] = [];
@@ -217,14 +203,9 @@ export class DataService {
                         });
                     }
                 }
-                techniques.push(new Technique(techniqueSDO, subtechniques, this));
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-            
-            if (seenDomain) {
-                techniques = domain.techniques;
-            }
-            techniquesList.push(techniques);
+
             for (let matrixSDO of matrixSDOs) {
                 if (matrixSDO.x_mitre_deprecated) {
                     continue;
@@ -250,10 +231,16 @@ export class DataService {
         }
         //create matrices, which also creates tactics and filters techniques
         for (let i = 0; i < matricesList.length; i++) {
+            let techniquesList = [];
             if (matricesList[i].x_mitre_deprecated) {
                 continue;
             }
-            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList[i], this));
+            for (let j = 0; j < domain.techniques.length; j++) {
+                if(domain.techniques[j].get_technique_domain(techniqueSDOslist[j]) == matricesList[i].external_references[0].external_id) {
+                    techniquesList.push(domain.techniques[j]);
+                }
+            }
+            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
         }
         domain.platforms = Array.from(platforms); // convert to array
 

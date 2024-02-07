@@ -33,6 +33,10 @@ export class Technique extends StixObject {
         }
     }
 
+    public get_technique_domain(stixSDO: any): string {
+        return stixSDO.x_mitre_domains[0];
+    }
+
     /**
      * Get an ID identifying this technique under a specific tactic
      * @param {string|Tactic} tactic tactic name in phase-name/shortname format, or a Tactic object itself
