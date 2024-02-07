@@ -49,23 +49,42 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
+        let seenDomain: Boolean;
+        let techniquesList = [];
+        let matricesList = [];
+        let tacticsList = [];
         let seenIDs = new Set<string>();
+        let matrixSDOs = [];
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
-            let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
                 //iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
-                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier)))
-                        continue;
+                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0) {
+                        if (domain.urls.length == 1){
+                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)){
+                                continue;
+                            }
+                        }
+                        else if((domain.urls.length > 1) && (sdo.type == "attack-pattern")){
+                            if (!sdo.x_mitre_domains.includes(domain.domain_identifier)){
+                                seenDomain = false;
+                            }
+                            else {
+                                seenDomain = true;
+                            }
+                        }
+                    }
                 }
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
-                else continue;
+                else {
+                    continue;
+                }
 
                 // parse according to type
                 switch (sdo.type) {
@@ -181,9 +200,8 @@ export class DataService {
                         break;
                 }
             }
-
-            //create techniques
             let techniques: Technique[] = [];
+            //create techniques
             for (let techniqueSDO of techniqueSDOs) {
                 let subtechniques: Technique[] = [];
                 if (this.subtechniquesEnabled) {
@@ -201,12 +219,18 @@ export class DataService {
                 techniques.push(new Technique(techniqueSDO, subtechniques, this));
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-
-            //create matrices, which also creates tactics and filters techniques
-            for (let matrixSDO of matrixSDOs) {
-                if (matrixSDO.x_mitre_deprecated) continue;
-                domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, techniques, this));
+            if (seenDomain) {
+                techniques = domain.techniques;
             }
+            techniquesList.push(techniques);
+            for (let matrixSDO of matrixSDOs) {
+                if (matrixSDO.x_mitre_deprecated) {
+                    continue;
+                }
+                matricesList.push(matrixSDO);
+                tacticsList.push(idToTacticSDO);
+            }
+            matrixSDOs = [];
 
             // parse platforms
             for (let technique of domain.techniques) {
@@ -221,6 +245,13 @@ export class DataService {
                     platforms.add(platform);
                 }
             }
+        }
+        //create matrices, which also creates tactics and filters techniques
+        for (let i = 0; i < matricesList.length; i++) {
+            if (matricesList[i].x_mitre_deprecated) {
+                continue;
+            }
+            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList[i], this));
         }
         domain.platforms = Array.from(platforms); // convert to array
 
