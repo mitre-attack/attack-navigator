@@ -202,6 +202,18 @@ export class LayerUpgradeComponent implements OnInit {
     }
 
     /**
+     * Marks all techniques in the section as reviewed
+     * @param section name of the changelog section
+     */
+    public reviewAll(section: string): void {
+        let sectionIDs = this.changelog[section];
+        for(let sectionID of sectionIDs){
+            this.changelog.reviewed.add(sectionID);
+        }
+        this.onStepChange(section, 1);
+    }
+
+    /**
      * Get the number of techniques marked as reviewed in the given section
      * @param section the name of the changelog section
      * @returns number of reviewed techniques

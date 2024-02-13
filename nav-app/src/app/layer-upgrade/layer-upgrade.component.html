@@ -210,11 +210,14 @@
             <mat-divider></mat-divider>
 
             <div class="stepper-button">
-                <span *ngIf="changelog[section].length > 0">Reviewed {{ countReviewed(section) }}/{{ sectionLength(section) }} techniques</span>
-
+                <span style="display: flex; justify-content: right" *ngIf="changelog[section].length > 0">Reviewed {{ countReviewed(section) }}/{{ sectionLength(section) }} techniques</span>
+                <br>
                 <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
                 <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">
                     {{ countReviewed(section) > 0 ? 'Next' : 'Skip' }}
+                </button>
+                <button *ngIf="filteredIDs.length > 0" mat-stroked-button matStepperNext (click)="reviewAll(section)">
+                    Review all
                 </button>
             </div>
         </mat-step>
