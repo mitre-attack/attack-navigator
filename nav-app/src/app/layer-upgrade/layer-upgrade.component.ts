@@ -217,8 +217,16 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewAll(section: string): void {
         let sectionIDs = this.changelog[section];
-        for(let sectionID of sectionIDs){
-            this.changelog.reviewed.add(sectionID);
+        let filtered_section = document.getElementById("filter_"+section) as HTMLInputElement;
+        if(section!="additions" && filtered_section.checked){
+            for(let filteredID of this.filteredIDs){
+                this.changelog.reviewed.add(filteredID);
+            }
+        }
+        else{
+            for(let sectionID of sectionIDs){
+                this.changelog.reviewed.add(sectionID);
+            }
         }
         this.onStepChange(section, 1);
     }
