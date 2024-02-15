@@ -18,7 +18,6 @@ export class LayerUpgradeComponent implements OnInit {
     @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
     public paginator_map: Map<string, number> = new Map(); // section name mapped to index of paginator
     public filteredIDs: string[] = [];
-
     @ViewChild('stepper') stepper: MatStepper;
 
     public changelog: VersionChangelog;
@@ -198,6 +197,17 @@ export class LayerUpgradeComponent implements OnInit {
         } else {
             this.changelog.reviewed.add(attackID);
             panel.expanded = false; // close on review
+        }
+    }
+
+    /**
+     * Expands all the techniques for easy review
+     */
+    public expandAll(): void {
+        let elements = document.querySelectorAll<HTMLElement>('.mat-expansion-panel-content');
+        for(let i =0; i < elements.length; i++){
+            elements[i].style.visibility = 'visible';
+            elements[i].style.height = 'fit-content';
         }
     }
 
