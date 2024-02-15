@@ -205,7 +205,7 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public expandAll(): void {
         let elements = document.querySelectorAll<HTMLElement>('.mat-expansion-panel-content');
-        for(let i =0; i < elements.length; i++){
+        for(let i = 0; i < elements.length; i++){
             elements[i].style.visibility = 'visible';
             elements[i].style.height = 'fit-content';
         }
