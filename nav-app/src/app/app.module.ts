@@ -112,8 +112,8 @@ import { ConfigService } from './services/config.service';
                 return () => configService.loadConfig();
             },
             deps: [ConfigService],
-            multi: true
-        }
+            multi: true,
+        },
     ],
     bootstrap: [AppComponent],
 })

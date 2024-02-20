@@ -11,7 +11,7 @@ import * as MockData from '../../../tests/utils/mock-data';
 describe('ChangelogCellComponent', () => {
     let component: ChangelogCellComponent;
     let fixture: ComponentFixture<ChangelogCellComponent>;
-	let configService: ConfigService;
+    let configService: ConfigService;
     let technique_list: Technique[] = [];
     let stixSDO = {
         name: 'Name',
@@ -69,9 +69,9 @@ describe('ChangelogCellComponent', () => {
             declarations: [ChangelogCellComponent],
         }).compileComponents();
 
-		// set up config service
-		configService = TestBed.inject(ConfigService);
-		configService.versions = MockData.configData;
+        // set up config service
+        configService = TestBed.inject(ConfigService);
+        configService.versions = MockData.configData;
 
         fixture = TestBed.createComponent(ChangelogCellComponent);
         component = fixture.debugElement.componentInstance;

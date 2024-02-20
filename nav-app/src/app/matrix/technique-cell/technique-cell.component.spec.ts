@@ -19,8 +19,8 @@ describe('TechniqueCellComponent', () => {
             providers: [ViewModelsService],
             declarations: [TechniqueCellComponent],
         });
-		let configService = TestBed.inject(ConfigService);
-		configService.versions = MockData.configData;
+        let configService = TestBed.inject(ConfigService);
+        configService.versions = MockData.configData;
         fixture = TestBed.createComponent(TechniqueCellComponent);
         component = fixture.debugElement.componentInstance;
         let sub1 = new Technique(MockData.T0000_000, [], null);

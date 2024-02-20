@@ -26,11 +26,11 @@ export class ConfigService {
         // intentionally left blank
     }
 
-	/**
-	 * Checks if the feature is enabled
-	 * @param featureName feature name
-	 * @returns true if the feature is enabled, false otherwise
-	 */
+    /**
+     * Checks if the feature is enabled
+     * @param featureName feature name
+     * @returns true if the feature is enabled, false otherwise
+     */
     public getFeature(featureName: string): boolean {
         return this.features.get(featureName);
     }
@@ -58,7 +58,7 @@ export class ConfigService {
     public getFeatureGroupCount(featureGroup: string): number {
         if (!this.featureGroups.has(featureGroup)) return -1;
         let subFeatures = this.featureGroups.get(featureGroup);
-		let enabled = subFeatures.filter(f => this.getFeature(f));
+        let enabled = subFeatures.filter((f) => this.getFeature(f));
         return enabled.length;
     }
 
@@ -151,11 +151,11 @@ export class ConfigService {
 
     /**
      * Get all url fragments
-	 * @param  url optional, url to parse instead of window location href
+     * @param  url optional, url to parse instead of window location href
      * @return     all fragments as key-value pairs
      */
     public getAllFragments(url?: string): Map<string, string> {
-		if (!url) url = window.location.href;
+        if (!url) url = window.location.href;
         let fragments = new Map<string, string>();
         let regex = /[#&](\w+)=(\w+)/g;
 
@@ -172,13 +172,14 @@ export class ConfigService {
      * Note: this is done at startup
      */
     public loadConfig() {
-        return this.http.get('./assets/config.json')
+        return this.http
+            .get('./assets/config.json')
             .toPromise()
-            .then(config => {
+            .then((config) => {
                 console.debug(`loaded app configuration settings`);
 
                 this.versions = config['versions'];
-                config['custom_context_menu_items'].forEach(item => {
+                config['custom_context_menu_items'].forEach((item) => {
                     this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
                 });
                 this.defaultLayers = config['default_layers'];
@@ -189,7 +190,7 @@ export class ConfigService {
 
                 // parse feature preferences
                 this.featureList = config['features'];
-                config['features'].forEach(feature => {
+                config['features'].forEach((feature) => {
                     this.setFeature_object(feature);
                 });
 
@@ -199,6 +200,6 @@ export class ConfigService {
                         this.setFeature(key, value == 'true');
                     }
                 });
-            })
+            });
     }
 }

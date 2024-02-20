@@ -12,7 +12,7 @@ describe('MatrixFlatComponent', () => {
             declarations: [MatrixFlatComponent],
         }).compileComponents();
 
-		fixture = TestBed.createComponent(MatrixFlatComponent);
+        fixture = TestBed.createComponent(MatrixFlatComponent);
         component = fixture.componentInstance;
     }));
 

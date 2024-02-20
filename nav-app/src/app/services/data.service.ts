@@ -12,7 +12,10 @@ import { ConfigService } from './config.service';
     providedIn: 'root',
 })
 export class DataService {
-    constructor(private http: HttpClient, private configService: ConfigService) {
+    constructor(
+        private http: HttpClient,
+        private configService: ConfigService
+    ) {
         console.debug('initializing data service');
         this.setUpURLs(configService.versions);
     }
@@ -313,7 +316,7 @@ export class DataService {
             if (domain) {
                 if (domain.dataLoaded && !refresh) resolve(null);
                 let subscription;
-				subscription = this.getDomainData(domain, refresh).subscribe({
+                subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);

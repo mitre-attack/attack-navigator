@@ -4,14 +4,14 @@ import { ConfigService } from './config.service';
 import * as MockData from '../../tests/utils/mock-data';
 
 describe('ConfigService', () => {
-	let service: ConfigService;
+    let service: ConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [ConfigService],
         });
-		service = TestBed.inject(ConfigService);
+        service = TestBed.inject(ConfigService);
     });
 
     it('should be created', () => {

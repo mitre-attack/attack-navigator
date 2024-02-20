@@ -16,9 +16,9 @@ describe('ViewmodelsService', () => {
             imports: [HttpClientTestingModule, MatDialogModule],
             providers: [ViewModelsService],
         });
-		// set up config service
-		let configService = TestBed.inject(ConfigService);
-		configService.versions = MockData.configData;
+        // set up config service
+        let configService = TestBed.inject(ConfigService);
+        configService.versions = MockData.configData;
         viewModelsService = TestBed.inject(ViewModelsService);
     });
 

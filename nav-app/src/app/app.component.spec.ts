@@ -17,10 +17,10 @@ describe('AppComponent', () => {
             declarations: [AppComponent, TabsComponent],
         }).compileComponents();
 
-		// set up config service
-		let configService = TestBed.inject(ConfigService);
-		configService.defaultLayers = {enabled: false};
-		
+        // set up config service
+        let configService = TestBed.inject(ConfigService);
+        configService.defaultLayers = { enabled: false };
+
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.debugElement.componentInstance;
     }));
