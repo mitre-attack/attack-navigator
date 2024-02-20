@@ -168,7 +168,6 @@ describe('DataService', () => {
 
         it('should reject with invalid domain', async () => {
             let functionSpy = spyOn(dataService, 'getDomain').and.returnValue(undefined);
-            // dataService.setUpURLs(MockData.configData);
             let domainId = 'enterprise-attack-4';
             await expectAsync(dataService.loadDomainData(domainId)).toBeRejected();
             expect(functionSpy).toHaveBeenCalledOnceWith(domainId);
@@ -176,7 +175,6 @@ describe('DataService', () => {
 
         it('should parse stix bundle', () => {
             Object.defineProperty(configService, 'subtechniquesEnabled', { get: () => true }); // enable to parse subs
-            // dataService.setUpURLs(MockData.configData);
             mockService.domains[0].relationships['group_uses'].set('intrusion-set-0', ['attack-pattern-0']);
             mockService.domains[0].relationships['software_uses'].set('malware-0', ['attack-pattern-0']);
             mockService.domains[0].relationships['campaign_uses'].set('campaign-0', ['attack-pattern-0']);

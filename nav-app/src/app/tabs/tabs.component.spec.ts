@@ -14,7 +14,6 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { Domain, Technique } from '../classes/stix';
 import { ConfigService } from '../services/config.service';
-import { ViewModelsService } from '../services/viewmodels.service';
 import * as MockLayers from '../../tests/utils/mock-layers';
 import * as MockData from '../../tests/utils/mock-data';
 
@@ -518,7 +517,7 @@ describe('TabsComponent', () => {
     });
 
     describe('layerByOperation', () => {
-        it('should create new layer by operation based on user input', async () => {
+        it('should create new layer by operation based on user input', () => {
             component.opSettings.scoreExpression = 'a+b';
             component.opSettings.domain = 'enterprise-atack-13';
             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
@@ -531,11 +530,11 @@ describe('TabsComponent', () => {
             expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
             component.dataService.getDomain(component.opSettings.domain).dataLoaded = false;
-            await component.layerByOperation();
-            expect(component.layerTabs.length).toEqual(3);
+            component.layerByOperation();
+            expect(component.layerTabs.length).toEqual(2);
         });
 
-        it('should create new layer by operation based on user input when data is loaded', async () => {
+        it('should create new layer by operation based on user input when data is loaded', () => {
             component.opSettings.scoreExpression = 'a+2';
             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
             component.openTab('layer', vm1, true, true, true, true);
@@ -544,7 +543,7 @@ describe('TabsComponent', () => {
             component.dataService.parseBundle(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
             component.opSettings.domain = 'enterprise-attack-13';
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-            await component.layerByOperation();
+            component.layerByOperation();
             expect(component.layerTabs.length).toEqual(2);
         });
 
