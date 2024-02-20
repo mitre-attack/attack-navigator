@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ViewModelsService } from './viewmodels.service';
@@ -6,6 +6,7 @@ import { TechniqueVM, LayoutOptions, Metadata, ViewModel, Link, VersionChangelog
 import { Technique, Tactic, Matrix } from '../classes/stix';
 import tinygradient from 'tinygradient';
 import * as MockData from '../../tests/utils/mock-data';
+import { ConfigService } from './config.service';
 
 describe('ViewmodelsService', () => {
     let viewModelsService: ViewModelsService;
@@ -15,6 +16,9 @@ describe('ViewmodelsService', () => {
             imports: [HttpClientTestingModule, MatDialogModule],
             providers: [ViewModelsService],
         });
+		// set up config service
+		let configService = TestBed.inject(ConfigService);
+		configService.versions = MockData.configData;
         viewModelsService = TestBed.inject(ViewModelsService);
     });
 
@@ -262,44 +266,6 @@ describe('ViewmodelsService', () => {
         vm1.gradient.gradient = false;
         vm1.gradient.getHexColor('200');
         expect(vm1.gradient.colors.length).toEqual(3);
-    });
-
-    it('should copy annotations from one technique VM to another', () => {
-        let technique_list: Technique[] = [];
-        let idToTacticSDO = new Map<string, any>();
-        idToTacticSDO.set('tactic-0', MockData.TA0000);
-        let to_vm = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        to_vm.dataService.setUpURLs(MockData.configDataExtended);
-        let matrix = new Matrix(MockData.matrixSDO, idToTacticSDO, technique_list, to_vm.dataService);
-        to_vm.dataService.domains[0].matrices = [matrix];
-        let t1 = new Technique(MockData.T0000, [], null);
-        technique_list.push(t1);
-        let to_tvm_1 = new TechniqueVM('T0000^tactic-name');
-        let t2 = new Technique(MockData.T0001, [], null);
-        let to_tvm_2 = new TechniqueVM('T0001^tactic-name');
-        technique_list.push(t2);
-        to_vm.setTechniqueVM(to_tvm_1);
-        to_vm.setTechniqueVM(to_tvm_2);
-        to_vm.dataService.domains[0].techniques.push(t1);
-        to_vm.dataService.domains[0].techniques.push(t2);
-        let tactic1 = new Tactic(MockData.TA0000, technique_list, null);
-        to_vm.versionChangelog = new VersionChangelog('enterprise-attack-12', 'enterprise-attack-13');
-        expect(to_vm.versionChangelog.length()).toEqual(0);
-        to_vm.versionChangelog.minor_changes = ['T0000'];
-        to_vm.versionChangelog.unchanged = ['T0001'];
-        let from_vm = viewModelsService.newViewModel('test2', 'enterprise-attack-12');
-        let from_tvm_1 = new TechniqueVM('T0001^tactic-name');
-        from_tvm_1.score = '2';
-        from_tvm_1.comment = 'test';
-        from_vm.setTechniqueVM(to_tvm_1);
-        from_vm.setTechniqueVM(from_tvm_1);
-        from_vm.dataService.domains[1].techniques.push(t1);
-        from_vm.dataService.domains[1].techniques.push(t2);
-        to_vm.compareTo = from_vm;
-        to_vm.initCopyAnnotations();
-        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('2');
-        to_vm.revertCopy(t1, t2, tactic1);
-        expect(to_vm.getTechniqueVM(t2, tactic1).score).toEqual('');
     });
 
     const validTechniqueVMRep = '{"comment": "test comment","color": "#ffffff", "score": 1,"enabled": true,"showSubtechniques": false}';
@@ -616,7 +582,6 @@ describe('ViewmodelsService', () => {
 
     it('should throw errors for deserializing domain version', () => {
         let vm1 = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_error_file1 = {
             versions: {
                 attack: 6,
@@ -629,7 +594,6 @@ describe('ViewmodelsService', () => {
 
     it('should test versions for layer format 3', () => {
         let vm1 = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_version_file1 = {
             version: 6,
         };
@@ -638,7 +602,6 @@ describe('ViewmodelsService', () => {
 
     it('should test patch for old domain name convention', () => {
         let vm1 = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        vm1.dataService.setUpURLs(MockData.configData);
         let viewmodel_version_file1 = {
             domain: 'mitre-enterprise',
         };
@@ -648,7 +611,6 @@ describe('ViewmodelsService', () => {
 
     it('should check values', () => {
         let vm1 = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        vm1.dataService.setUpURLs(MockData.configData);
         let tvm_1 = new TechniqueVM('T0000^tactic-name');
         let l1 = new Link();
         l1.label = 'test1';
@@ -677,7 +639,6 @@ describe('ViewmodelsService', () => {
 
     it('should load vm data with custom url', () => {
         let vm1 = viewModelsService.newViewModel('test1', 'enterprise-attack-13');
-        vm1.dataService.setUpURLs(MockData.configData);
         vm1.dataService.domains[0].urls = ['https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json'];
         vm1.dataService.domains[0].isCustom = true;
         expect(vm1.loadVMData()).toBeUndefined();

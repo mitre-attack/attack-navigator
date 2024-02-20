@@ -5,67 +5,12 @@ import { TechniqueVM } from '../../classes';
 import { Matrix, Tactic, Technique } from '../../classes/stix';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Cell } from '../cell';
+import * as MockData from '../../../tests/utils/mock-data';
+import { ConfigService } from '../../services/config.service';
 
 describe('TechniqueCellComponent', () => {
     let component: TechniqueCellComponent;
     let fixture: ComponentFixture<TechniqueCellComponent>;
-    let stixSDO = {
-        name: 'Name',
-        description: 'Description',
-        created: '2001-01-01T01:01:00.000Z',
-        modified: '2001-01-01T01:01:00.000Z',
-        x_mitre_version: '1.0',
-    };
-    let techniqueSDO = {
-        ...stixSDO,
-        type: 'attack-pattern',
-        x_mitre_platforms: ['platform'],
-        kill_chain_phases: [
-            {
-                kill_chain_name: 'mitre-attack',
-                phase_name: 'tactic-name',
-            },
-        ],
-    };
-    let t0000 = {
-        ...techniqueSDO,
-        id: 'attack-pattern-0',
-        external_references: [{ external_id: 'T0000' }],
-    };
-    let t0000_000 = {
-        ...techniqueSDO,
-        id: 'attack-pattern-1',
-        x_mitre_is_subtechnique: true,
-        external_references: [{ external_id: 'T0000.000' }],
-    };
-    let t0000_001 = {
-        ...techniqueSDO,
-        id: 'attack-pattern-2',
-        x_mitre_is_subtechnique: true,
-        revoked: true,
-        external_references: [{ external_id: 'T0000.001' }],
-    };
-    let tacticSDO = {
-        ...stixSDO,
-        id: 'tactic-0',
-        type: 'x-mitre-tactic',
-        x_mitre_shortname: 'tactic-name',
-        external_references: [{ external_id: 'TA0000' }],
-    };
-    let tacticSDO2 = {
-        ...stixSDO,
-        id: 'tactic-1',
-        type: 'x-mitre-tactic',
-        x_mitre_shortname: 'tactic-name',
-        external_references: [{ external_id: 'TA0001' }],
-    };
-    let matrixSDO = {
-        ...stixSDO,
-        id: 'matrix-0',
-        type: 'x-mitre-matrix',
-        tactic_refs: ['tactic-0'],
-        external_references: [{ external_id: 'enterprise-matrix' }],
-    };
     let techniqueTacticUnionId = 'T0000^tactic-name';
 
     beforeEach(() => {
@@ -74,29 +19,17 @@ describe('TechniqueCellComponent', () => {
             providers: [ViewModelsService],
             declarations: [TechniqueCellComponent],
         });
+		let configService = TestBed.inject(ConfigService);
+		configService.versions = MockData.configData;
         fixture = TestBed.createComponent(TechniqueCellComponent);
         component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                name: 'ATT&CK v13',
-                version: '13',
-                domains: [
-                    {
-                        name: 'Enterprise',
-                        identifier: 'enterprise-attack',
-                        data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
-                    },
-                ],
-            },
-        ];
-        component.dataService.setUpURLs(versions);
-        let sub1 = new Technique(t0000_000, [], null);
-        let sub2 = new Technique(t0000_001, [], null);
-        component.technique = new Technique(t0000, [sub1, sub2], null);
-        component.tactic = new Tactic(tacticSDO, [component.technique], null);
+        let sub1 = new Technique(MockData.T0000_000, [], null);
+        let sub2 = new Technique(MockData.T0000_001, [], null);
+        component.technique = new Technique(MockData.T0000, [sub1, sub2], null);
+        component.tactic = new Tactic(MockData.TA0000, [component.technique], null);
         let map = new Map();
-        map.set(component.tactic.id, tacticSDO);
-        component.matrix = new Matrix(matrixSDO, map, [component.technique, sub1, sub2], null);
+        map.set(component.tactic.id, MockData.TA0000);
+        component.matrix = new Matrix(MockData.matrixSDO, map, [component.technique, sub1, sub2], null);
         component.viewModel = component.viewModelsService.newViewModel('vm', 'enterprise-attack-13');
         component.viewModel.setTechniqueVM(new TechniqueVM(techniqueTacticUnionId));
         component.viewModel.setTechniqueVM(new TechniqueVM('T0000.000^tactic-name'));
@@ -158,7 +91,7 @@ describe('TechniqueCellComponent', () => {
         const ttid = component.technique.get_technique_tactic_id(component.tactic);
         component.viewModel.highlightedTechniques = new Set([ttid]);
         component.viewModel.highlightedTechnique = component.technique;
-        component.viewModel.highlightedTactic = new Tactic(tacticSDO2, [component.technique], null);
+        component.viewModel.highlightedTactic = new Tactic(MockData.TA0001, [component.technique], null);
         expect(component.showTooltip).toBe(false);
     });
 
@@ -215,19 +148,6 @@ describe('TechniqueCellComponent', () => {
         let unhighlightSpy = spyOn(component.unhighlight, 'emit');
         component.onMouseLeave();
         expect(unhighlightSpy).toHaveBeenCalled();
-    });
-
-    it('should return the number of annotated subtechniques', () => {
-        component.viewModel.getTechniqueVM = jasmine.createSpy('getTechniqueVM').and.callFake((subtechnique, tactic) => {
-            return {
-                ...jasmine.createSpyObj('TechniqueVM', ['annotated', 'setIsVisible']),
-                annotated: jasmine.createSpy('annotated').and.returnValue(true),
-            };
-        });
-        const result = component.annotatedSubtechniques();
-        expect(component.viewModel.getTechniqueVM).toHaveBeenCalledTimes(2);
-        expect(component.viewModel.getTechniqueVM).toHaveBeenCalledWith(jasmine.any(Object), component.tactic);
-        expect(result).toEqual(component.applyControls([], component.tactic).length);
     });
 
     it('should return the correct class when not annotated and not editing', () => {

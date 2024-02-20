@@ -5,6 +5,7 @@ import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
 import { TabsComponent } from './tabs/tabs.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ConfigService } from './services/config.service';
 
 describe('AppComponent', () => {
     let fixture: ComponentFixture<AppComponent>;
@@ -15,6 +16,11 @@ describe('AppComponent', () => {
             imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule],
             declarations: [AppComponent, TabsComponent],
         }).compileComponents();
+
+		// set up config service
+		let configService = TestBed.inject(ConfigService);
+		configService.defaultLayers = {enabled: false};
+		
         fixture = TestBed.createComponent(AppComponent);
         app = fixture.debugElement.componentInstance;
     }));
