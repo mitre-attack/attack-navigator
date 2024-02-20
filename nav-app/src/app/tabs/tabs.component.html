@@ -496,7 +496,7 @@
                     <div class="section">
                         <!-- navigator features -->
                         <h2>Navigator Features</h2>
-                        <ng-container *ngFor="let feature of customizedConfig">
+                        <ng-container *ngFor="let feature of configService.featureList">
                             <div *ngIf="!feature.subfeatures" class="multi-column left-align feature-row">
                                 <div class="md-column align-center">
                                     <mat-checkbox [(ngModel)]="feature.enabled">
