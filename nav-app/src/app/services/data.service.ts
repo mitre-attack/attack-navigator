@@ -312,7 +312,8 @@ export class DataService {
             let domain = this.getDomain(domainVersionID);
             if (domain) {
                 if (domain.dataLoaded && !refresh) resolve(null);
-                let subscription = this.getDomainData(domain, refresh).subscribe({
+                let subscription;
+				subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);
