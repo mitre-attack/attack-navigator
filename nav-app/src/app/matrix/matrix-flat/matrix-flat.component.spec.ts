@@ -11,12 +11,10 @@ describe('MatrixFlatComponent', () => {
             imports: [HttpClientTestingModule],
             declarations: [MatrixFlatComponent],
         }).compileComponents();
-    }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(MatrixFlatComponent);
+		fixture = TestBed.createComponent(MatrixFlatComponent);
         component = fixture.componentInstance;
-    });
+    }));
 
     it('should create', () => {
         expect(component).toBeTruthy();

@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Technique } from '../classes/stix';
 import * as MockLayers from '../../tests/utils/mock-layers';
 import * as MockData from '../../tests/utils/mock-data';
+import { ConfigService } from '../services/config.service';
 
 describe('TabsComponent', () => {
     let component: any;
@@ -52,6 +53,12 @@ describe('TabsComponent', () => {
                 MarkdownService,
             ],
         }).compileComponents();
+
+		// set up config service
+		let configService = TestBed.inject(ConfigService);
+		configService.versions = MockData.configData;
+		configService.defaultLayers = {enabled: false};
+
         snackBar = TestBed.inject(MatSnackBar);
         httpClient = TestBed.inject(HttpClient);
         fixture = TestBed.createComponent(TabsComponent);

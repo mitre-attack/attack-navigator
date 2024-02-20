@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
     providedIn: 'root',
 })
 export class ConfigService {
-    public versions: any[];
+    public versions: any[] = [];
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;
     public commentColor = 'yellow';
