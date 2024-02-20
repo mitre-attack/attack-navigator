@@ -151,10 +151,11 @@ export class ConfigService {
 
     /**
      * Get all url fragments
+	 * @param  url optional, url to parse instead of window location href
      * @return     all fragments as key-value pairs
      */
-    public getAllFragments(): Map<string, string> {
-        let url = window.location.href;
+    public getAllFragments(url?: string): Map<string, string> {
+		if (!url) url = window.location.href;
         let fragments = new Map<string, string>();
         let regex = /[#&](\w+)=(\w+)/g;
 
