@@ -5,10 +5,13 @@ import { Link, Metadata, TechniqueVM, ViewModel } from '../../classes';
 import { Note, Tactic, Technique } from '../../classes/stix';
 import tinycolor from 'tinycolor2';
 import { deleteCookie, hasCookie } from '../../utils/cookies';
+import { ConfigService } from '../../services/config.service';
+import * as MockData from '../../../tests/utils/mock-data';
 
 describe('ChangelogCellComponent', () => {
     let component: ChangelogCellComponent;
     let fixture: ComponentFixture<ChangelogCellComponent>;
+    let configService: ConfigService;
     let technique_list: Technique[] = [];
     let stixSDO = {
         name: 'Name',
@@ -65,27 +68,16 @@ describe('ChangelogCellComponent', () => {
             imports: [HttpClientTestingModule],
             declarations: [ChangelogCellComponent],
         }).compileComponents();
-    });
 
-    beforeEach(() => {
+        // set up config service
+        configService = TestBed.inject(ConfigService);
+        configService.versions = MockData.configData;
+
         fixture = TestBed.createComponent(ChangelogCellComponent);
         component = fixture.debugElement.componentInstance;
-        let versions = [
-            {
-                name: 'ATT&CK v13',
-                version: '13',
-                domains: [
-                    {
-                        name: 'Enterprise',
-                        identifier: 'enterprise-attack',
-                        data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
-                    },
-                ],
-            },
-        ];
-        component.dataService.setUpURLs(versions);
-        component.configService.setFeature('aggregate_score_color', true);
-        component.configService.setFeature('non_aggregate_score_color', true);
+
+        configService.setFeature('aggregate_score_color', true);
+        configService.setFeature('non_aggregate_score_color', true);
         component.viewModel = new ViewModel('layer', '33', 'enterprise-attack-13', null);
         component.viewModel.domainVersionID = 'enterprise-attack-13';
         let st1 = new Technique(subtechniqueSDO1, [], null);
@@ -160,7 +152,7 @@ describe('ChangelogCellComponent', () => {
         component.viewModel.layout._showAggregateScores = true;
         expect(component.getTechniqueBackground()).toEqual({ background: component.emulate_alpha('black') });
         component.viewModel.getTechniqueVM(component.technique, component.tactic).enabled = true;
-        component.configService.setFeature('background_color', true);
+        configService.setFeature('background_color', true);
         expect(component.getTechniqueBackground()).toEqual({ background: component.emulate_alpha('black') });
         component.viewModel.highlightedTechniques.add('attack-pattern-0');
         component.viewModel.selectTechnique(component.technique, component.tactic);
@@ -172,14 +164,14 @@ describe('ChangelogCellComponent', () => {
     });
 
     it('should get the underline color for the given technique', () => {
-        component.configService.setFeature('link_underline', true);
-        component.configService.link_color = 'purple';
+        configService.setFeature('link_underline', true);
+        configService.linkColor = 'purple';
         expect(component.getTechniqueUnderlineColor()).toEqual('purple');
-        component.configService.setFeature('metadata_underline', true);
-        component.configService.metadata_color = 'blue';
+        configService.setFeature('metadata_underline', true);
+        configService.metadataColor = 'blue';
         expect(component.getTechniqueUnderlineColor()).toEqual('blue');
-        component.configService.setFeature('comment_underline', true);
-        component.configService.comment_color = 'yellow';
+        configService.setFeature('comment_underline', true);
+        configService.commentColor = 'yellow';
         expect(component.getTechniqueUnderlineColor()).toEqual('yellow');
     });
 
@@ -192,7 +184,7 @@ describe('ChangelogCellComponent', () => {
         component.isDarkTheme = false;
         component.viewModel.layout._showAggregateScores = true;
         expect(component.getTechniqueTextColor()).toEqual(tinycolor.mostReadable(component.emulate_alpha('black'), ['white', 'black']));
-        component.configService.setFeature('background_color', true);
+        configService.setFeature('background_color', true);
         expect(component.getTechniqueTextColor()).toEqual(tinycolor.mostReadable(component.emulate_alpha('black'), ['white', 'black']));
         component.viewModel.getTechniqueVM(component.technique, component.tactic).enabled = false;
         expect(component.getTechniqueTextColor()).toEqual('#aaaaaa');

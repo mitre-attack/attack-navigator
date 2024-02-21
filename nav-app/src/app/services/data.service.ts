@@ -6,22 +6,18 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Version, VersionChangelog } from '../classes';
+import { ConfigService } from './config.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DataService {
-    public subscription;
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private configService: ConfigService
+    ) {
         console.debug('initializing data service');
-        this.subscription = this.getConfig().subscribe({
-            next: (config) => {
-                this.setUpURLs(config['versions']);
-            },
-            complete: () => {
-                if (this.subscription) this.subscription.unsubscribe();
-            }, //prevent memory leaks
-        });
+        this.setUpURLs(configService.versions);
     }
 
     public domain_backwards_compatibility = {
@@ -30,8 +26,6 @@ export class DataService {
     };
     public domains: Domain[] = [];
     public versions: Version[] = [];
-
-    public subtechniquesEnabled: boolean = true;
 
     /**
      * Callback functions passed to this function will be called after data is loaded
@@ -98,7 +92,7 @@ export class DataService {
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case 'relationship':
-                        if (sdo.relationship_type == 'subtechnique-of' && this.subtechniquesEnabled) {
+                        if (sdo.relationship_type == 'subtechnique-of' && this.configService.subtechniquesEnabled) {
                             // record subtechnique:technique relationship
                             if (domain.relationships['subtechniques_of'].has(sdo.target_ref)) {
                                 let ids = domain.relationships['subtechniques_of'].get(sdo.target_ref);
@@ -191,7 +185,7 @@ export class DataService {
             //create techniques
             for (let techniqueSDO of techniqueSDOs) {
                 let subtechniques: Technique[] = [];
-                if (this.subtechniquesEnabled) {
+                if (this.configService.subtechniquesEnabled) {
                     if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
                         domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
                             if (idToTechniqueSDO.has(sub_id)) {
@@ -300,17 +294,6 @@ export class DataService {
     }
 
     /**
-     * get the current config
-     * @param {boolean} refresh: if true fetches the config from file. Otherwise, only fetches if it's never been fetched before
-     */
-    getConfig(refresh: boolean = false) {
-        if (refresh || !this.configData$) {
-            this.configData$ = this.http.get('./assets/config.json');
-        }
-        return this.configData$;
-    }
-
-    /**
      * Fetch the domain data from the endpoint
      */
     getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
@@ -354,13 +337,14 @@ export class DataService {
             let domain = this.getDomain(domainVersionID);
             if (domain) {
                 if (domain.dataLoaded && !refresh) resolve(null);
-                this.subscription = this.getDomainData(domain, refresh).subscribe({
+                let subscription;
+                subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
                         this.parseBundle(domain, data);
                         resolve(null);
                     },
                     complete: () => {
-                        if (this.subscription) this.subscription.unsubscribe();
+                        if (subscription) subscription.unsubscribe();
                     }, //prevent memory leaks
                 });
             } else if (!domain) {
