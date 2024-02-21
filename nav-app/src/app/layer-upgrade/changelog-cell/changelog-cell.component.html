@@ -1,15 +1,15 @@
 <div class="technique-cell" [ngStyle]="getTechniqueBackground()" [ngClass]="getClass()">
     <div (click)="onClick()" (mouseenter)="highlight()" (mouseleave)="unhighlight()">
         <div class="section">
-            <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">
+            <span [style.border-color]="configService.commentColor" [style.color]="getTechniqueTextColor()">
                 <b>{{ tactic.name }}</b>
             </span>
         </div>
         <div class="section">
-            <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">{{ technique.attackID }}</span>
+            <span [style.border-color]="configService.commentColor" [style.color]="getTechniqueTextColor()">{{ technique.attackID }}</span>
         </div>
         <div class="section">
-            <span [style.border-color]="configService.comment_color" [style.color]="getTechniqueTextColor()">{{ technique.name }}</span>
+            <span [style.border-color]="configService.commentColor" [style.color]="getTechniqueTextColor()">{{ technique.name }}</span>
         </div>
     </div>
 </div>

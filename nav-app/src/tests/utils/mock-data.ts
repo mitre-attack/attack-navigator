@@ -306,6 +306,13 @@ export const TA0000 = {
     x_mitre_shortname: 'tactic-name',
     external_references: [{ external_id: 'TA0000' }],
 };
+export const TA0001 = {
+    ...stixSDO,
+    id: 'tactic-1',
+    type: 'x-mitre-tactic',
+    x_mitre_shortname: 'tactic-name-2',
+    external_references: [{ external_id: 'TA0001' }],
+};
 
 // mock relationship SDOs
 export const G0001usesT0000 = {
