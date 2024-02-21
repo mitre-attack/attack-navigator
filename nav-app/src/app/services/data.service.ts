@@ -236,7 +236,7 @@ export class DataService {
                 continue;
             }
             for (let j = 0; j < domain.techniques.length; j++) {
-                if(domain.techniques[j].get_technique_domain(techniqueSDOslist[j]) == matricesList[i].external_references[0].external_id) {
+                if(domain.techniques[j].x_mitre_domains == matricesList[i].external_references[0].external_id) {
                     techniquesList.push(domain.techniques[j]);
                 }
             }
