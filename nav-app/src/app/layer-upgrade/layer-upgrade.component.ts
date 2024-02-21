@@ -203,11 +203,20 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Expands all the techniques for easy review
      */
-    public expandAll(): void {
+    public expandAll(section): void {
         let elements = document.querySelectorAll<HTMLElement>('.mat-expansion-panel-content');
-        for(let i = 0; i < elements.length; i++){
-            elements[i].style.visibility = 'visible';
-            elements[i].style.height = 'fit-content';
+        let filtered_expand_visible_section = document.getElementById("filter_expand_visible_"+section) as HTMLInputElement;
+        if(filtered_expand_visible_section.checked){
+            for(let i = 0; i < elements.length; i++){
+                elements[i].style.visibility = 'visible';
+                elements[i].style.height = 'fit-content';
+            }
+        }
+        else{
+            for(let i = 0; i < elements.length; i++){
+                elements[i].style.visibility = 'hidden';
+                elements[i].style.height = '0px';
+            }
         }
     }
 
@@ -217,18 +226,32 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewAll(section: string): void {
         let sectionIDs = this.changelog[section];
+        let filtered_review_all_section = document.getElementById("filter_review_all_"+section) as HTMLInputElement;
         let filtered_section = document.getElementById("filter_"+section) as HTMLInputElement;
         if(section!="additions" && filtered_section.checked){
-            for(let filteredID of this.filteredIDs){
-                this.changelog.reviewed.add(filteredID);
+            if(filtered_review_all_section.checked){
+                for(let filteredID of this.filteredIDs){
+                    this.changelog.reviewed.add(filteredID);
+                }
+            }
+            else{
+                for(let filteredID of this.filteredIDs){
+                    this.changelog.reviewed.delete(filteredID);
+                }
             }
         }
         else{
-            for(let sectionID of sectionIDs){
-                this.changelog.reviewed.add(sectionID);
+            if(filtered_review_all_section.checked){
+                for(let sectionID of sectionIDs){
+                    this.changelog.reviewed.add(sectionID);
+                }
+            }
+            else{
+                for(let sectionID of sectionIDs){
+                    this.changelog.reviewed.delete(sectionID);
+                }
             }
         }
-        this.onStepChange(section, 1);
     }
 
     /**

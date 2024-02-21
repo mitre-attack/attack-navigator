@@ -33,8 +33,8 @@
             <mat-divider></mat-divider>
 
             <div *ngIf="changelog[section].length > 0">
+                <h4>Filters</h4>
                 <div *ngIf="section !== 'additions'">
-                    <h4>Filters</h4>
                     <input
                         id="filter_{{ section }}"
                         class="checkbox-custom"
@@ -51,6 +51,30 @@
                         show annotated techniques only
                     </label>
                 </div>
+                <input
+                    id="filter_review_all_{{ section }}"
+                    class="checkbox-custom"
+                    type="checkbox"
+                    (change)="reviewAll(section)" />
+                <label
+                    for="filter_review_all_{{ section }}"
+                    class="checkbox-custom-label noselect"
+                    matTooltipPosition="above"
+                    [matTooltip]="'mark all as reviewed'">
+                    mark all as reviewed
+                </label>
+                <input
+                    id="filter_expand_visible_{{ section }}"
+                    class="checkbox-custom"
+                    type="checkbox"
+                    (change)="expandAll(section)" />
+                <label
+                    for="filter_expand_visible_{{ section }}"
+                    class="checkbox-custom-label noselect"
+                    matTooltipPosition="above"
+                    [matTooltip]="'expand visible techniques'">
+                    expand visible techniques
+                </label>
 
                 <div class="spinner" *ngIf="loading">
                     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
@@ -205,17 +229,10 @@
             </div>
             <mat-divider></mat-divider>
             <div class="stepper-button">
-                <span style="display: flex; justify-content: right" *ngIf="changelog[section].length > 0">Reviewed {{ countReviewed(section) }}/{{ sectionLength(section) }} techniques</span>
-                <br>
+                <span *ngIf="changelog[section].length > 0">Reviewed {{ countReviewed(section) }}/{{ sectionLength(section) }} techniques</span>
                 <button *ngIf="section !== 'additions'" mat-stroked-button matStepperPrevious (click)="onStepChange(section, -1)">Back</button>
                 <button mat-stroked-button matStepperNext (click)="onStepChange(section, 1)">
                     {{ countReviewed(section) > 0 ? 'Next' : 'Skip' }}
-                </button>
-                <button *ngIf="filteredIDs.length > 0" mat-stroked-button matStepperNext (click)="reviewAll(section)">
-                    Review all
-                </button>
-                <button *ngIf="filteredIDs.length > 0" mat-stroked-button (click)="expandAll()">
-                    Expand all
                 </button>
             </div>
         </mat-step>
