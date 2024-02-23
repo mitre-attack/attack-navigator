@@ -16,6 +16,7 @@ import { MatStepper } from '@angular/material/stepper';
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
     @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
     public paginator_map: Map<string, number> = new Map(); // section name mapped to index of paginator
     public filteredIDs: string[] = [];
     @ViewChild('stepper') stepper: MatStepper;
@@ -99,6 +100,9 @@ export class LayerUpgradeComponent implements OnInit {
         let start = paginator ? paginator.pageIndex * paginator.pageSize : 0;
         let end = paginator ? start + paginator.pageSize : 10;
         this.filteredIDs = sectionIDs.slice(start, end);
+        setTimeout(() => {
+            this.expandAll(section);
+        })
     }
 
     /**
@@ -203,21 +207,16 @@ export class LayerUpgradeComponent implements OnInit {
     /**
      * Expands all the techniques for easy review
      */
-    public expandAll(section): void {
-        let elements = document.querySelectorAll<HTMLElement>('.mat-expansion-panel-content');
+    public expandAll(section: string): void {
         let filtered_expand_visible_section = document.getElementById("filter_expand_visible_"+section) as HTMLInputElement;
-        if(filtered_expand_visible_section.checked){
-            for(let i = 0; i < elements.length; i++){
-                elements[i].style.visibility = 'visible';
-                elements[i].style.height = 'fit-content';
+        this.panels.forEach(panel => {
+            if (filtered_expand_visible_section.checked){
+                panel.open();
             }
-        }
-        else{
-            for(let i = 0; i < elements.length; i++){
-                elements[i].style.visibility = 'hidden';
-                elements[i].style.height = '0px';
+            else{
+                panel.close();
             }
-        }
+        })
     }
 
     /**
@@ -227,29 +226,14 @@ export class LayerUpgradeComponent implements OnInit {
     public reviewAll(section: string): void {
         let sectionIDs = this.changelog[section];
         let filtered_review_all_section = document.getElementById("filter_review_all_"+section) as HTMLInputElement;
-        let filtered_section = document.getElementById("filter_"+section) as HTMLInputElement;
-        if(section!="additions" && filtered_section.checked){
-            if(filtered_review_all_section.checked){
-                for(let filteredID of this.filteredIDs){
-                    this.changelog.reviewed.add(filteredID);
-                }
-            }
-            else{
-                for(let filteredID of this.filteredIDs){
-                    this.changelog.reviewed.delete(filteredID);
-                }
+        if(filtered_review_all_section.checked){
+            for(let sectionID of sectionIDs){
+                this.changelog.reviewed.add(sectionID);
             }
         }
         else{
-            if(filtered_review_all_section.checked){
-                for(let sectionID of sectionIDs){
-                    this.changelog.reviewed.add(sectionID);
-                }
-            }
-            else{
-                for(let sectionID of sectionIDs){
-                    this.changelog.reviewed.delete(sectionID);
-                }
+            for(let sectionID of sectionIDs){
+                this.changelog.reviewed.delete(sectionID);
             }
         }
     }
