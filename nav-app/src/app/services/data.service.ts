@@ -43,7 +43,6 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
-        let techniqueSDOslist = [];
         let matricesList = [];
         let tacticsList = [];
         let seenIDs = new Set<string>();
@@ -168,7 +167,6 @@ export class DataService {
                         idToTechniqueSDO.set(sdo.id, sdo);
                         if (!sdo.x_mitre_is_subtechnique) {
                             techniqueSDOs.push(sdo);
-                            techniqueSDOslist.push(sdo);
                         }
                         break;
                     case 'x-mitre-tactic':
@@ -229,9 +227,9 @@ export class DataService {
             if (matricesList[i].x_mitre_deprecated) {
                 continue;
             }
-            for (let j = 0; j < domain.techniques.length; j++) {
-                if(domain.techniques[j].x_mitre_domains == matricesList[i].external_references[0].external_id) {
-                    techniquesList.push(domain.techniques[j]);
+            for (let technique of domain.techniques) {
+                if(technique.x_mitre_domains == matricesList[i].external_references[0].external_id) {
+                    techniquesList.push(technique);
                 }
             }
             domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
