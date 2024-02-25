@@ -43,23 +43,28 @@ export class DataService {
      */
     parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
+        let matricesList = [];
+        let tacticsList = [];
         let seenIDs = new Set<string>();
+        let matrixSDOs = [];
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
-            let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
-                //iterate through stix domain objects in the bundle
+                // iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
                 if (!domain.isCustom) {
-                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && !sdo.x_mitre_domains.includes(domain.domain_identifier))
+                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier))) {
                         continue;
+                    }
                 }
 
                 // filter out duplicates
                 if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
-                else continue;
+                else {
+                    continue;
+                }
 
                 // parse according to type
                 switch (sdo.type) {
@@ -175,7 +180,6 @@ export class DataService {
                         break;
                 }
             }
-
             //create techniques
             for (let techniqueSDO of techniqueSDOs) {
                 let subtechniques: Technique[] = [];
@@ -193,12 +197,15 @@ export class DataService {
                 }
                 domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
             }
-
-            //create matrices, which also creates tactics and filters techniques
+            // create a list of matrix and tactic SDOs
             for (let matrixSDO of matrixSDOs) {
-                if (matrixSDO.x_mitre_deprecated) continue;
-                domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
+                if (matrixSDO.x_mitre_deprecated) {
+                    continue;
+                }
+                matricesList.push(matrixSDO);
+                tacticsList.push(idToTacticSDO);
             }
+            matrixSDOs = [];
 
             // parse platforms
             for (let technique of domain.techniques) {
@@ -213,6 +220,19 @@ export class DataService {
                     platforms.add(platform);
                 }
             }
+        }
+        //create matrices, which also creates tactics and filters techniques
+        for (let i = 0; i < matricesList.length; i++) {
+            let techniquesList = [];
+            if (matricesList[i].x_mitre_deprecated) {
+                continue;
+            }
+            for (let technique of domain.techniques) {
+                if(technique.x_mitre_domains == matricesList[i].external_references[0].external_id) {
+                    techniquesList.push(technique);
+                }
+            }
+            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
         }
         domain.platforms = Array.from(platforms); // convert to array
 
