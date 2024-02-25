@@ -46,9 +46,9 @@ export class DataService {
         let matricesList = [];
         let tacticsList = [];
         let seenIDs = new Set<string>();
-        let matrixSDOs = [];
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
+			let matrixSDOs = [];
             let idToTechniqueSDO = new Map<string, any>();
             let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
@@ -181,8 +181,11 @@ export class DataService {
                 }
             }
 
-            //create techniques
+            // create techniques
 			this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
+
+			// parse platforms
+			this.parsePlatforms(domain).forEach(platforms.add, platforms);
 
             // create a list of matrix and tactic SDOs
             for (let matrixSDO of matrixSDOs) {
@@ -191,21 +194,6 @@ export class DataService {
                 }
                 matricesList.push(matrixSDO);
                 tacticsList.push(idToTacticSDO);
-            }
-            matrixSDOs = [];
-
-            // parse platforms
-            for (let technique of domain.techniques) {
-                if (technique.platforms) {
-                    for (let platform of technique.platforms) {
-                        platforms.add(platform);
-                    }
-                }
-            }
-            for (let subtechnique of domain.subtechniques) {
-                for (let platform of subtechnique.platforms) {
-                    platforms.add(platform);
-                }
             }
         }
 
@@ -226,6 +214,7 @@ export class DataService {
 
         // data loading complete; update watchers
         domain.dataLoaded = true;
+		console.log(domain)
         for (let callback of domain.dataLoadedCallbacks) {
             callback();
         }
@@ -248,6 +237,18 @@ export class DataService {
 			}
 			domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
 		}
+	}
+
+	public parsePlatforms(domain: Domain): Set<string> {
+		let platforms = new Set<string>();
+		let allTechniques = domain.techniques.concat(domain.subtechniques);
+
+		// parse platforms
+		allTechniques.forEach((technique) => {
+			technique.platforms?.forEach(platforms.add, platforms);
+		});
+
+		return platforms;
 	}
 
     // Observable for data in config.json
