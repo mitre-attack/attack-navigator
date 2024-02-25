@@ -73,7 +73,7 @@ export class Domain {
         revoked_by: new Map<string, string>(),
         // technique targets asset
         // ID of asset to [] of technique IDs
-        targeted_assets: new Map<string, string>(),
+        targeted_assets: new Map<string, string[]>(),
     };
 
     constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
@@ -90,4 +90,10 @@ export class Domain {
     public getVersion(): string {
         return this.version.number;
     }
+
+	public executeCallbacks(): void {
+		for (let callback of this.dataLoadedCallbacks) {
+            callback();
+        }
+	}
 }
