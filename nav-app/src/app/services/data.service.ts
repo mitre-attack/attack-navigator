@@ -180,23 +180,10 @@ export class DataService {
                         break;
                 }
             }
+
             //create techniques
-            for (let techniqueSDO of techniqueSDOs) {
-                let subtechniques: Technique[] = [];
-                if (this.configService.subtechniquesEnabled) {
-                    if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
-                        domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-                            if (idToTechniqueSDO.has(sub_id)) {
-                                let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
-                                subtechniques.push(subtechnique);
-                                domain.subtechniques.push(subtechnique);
-                            }
-                            // else the target was revoked or deprecated and we can skip honoring the relationship
-                        });
-                    }
-                }
-                domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
-            }
+			this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
+
             // create a list of matrix and tactic SDOs
             for (let matrixSDO of matrixSDOs) {
                 if (matrixSDO.x_mitre_deprecated) {
@@ -221,6 +208,7 @@ export class DataService {
                 }
             }
         }
+
         //create matrices, which also creates tactics and filters techniques
         for (let i = 0; i < matricesList.length; i++) {
             let techniquesList = [];
@@ -242,6 +230,25 @@ export class DataService {
             callback();
         }
     }
+
+	public createTechniques(techniqueSDOs: any, idToTechniqueSDO: Map<string, any>, domain: Domain): void {
+		for (let techniqueSDO of techniqueSDOs) {
+			let subtechniques: Technique[] = [];
+			if (this.configService.subtechniquesEnabled) {
+				if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
+					domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+						if (idToTechniqueSDO.has(sub_id)) {
+							let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
+							subtechniques.push(subtechnique);
+							domain.subtechniques.push(subtechnique);
+						}
+						// else the target was revoked or deprecated and we can skip honoring the relationship
+					});
+				}
+			}
+			domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
+		}
+	}
 
     // Observable for data in config.json
     private configData$: Observable<Object>;
