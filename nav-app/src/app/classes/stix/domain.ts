@@ -90,4 +90,10 @@ export class Domain {
     public getVersion(): string {
         return this.version.number;
     }
+
+	public executeCallbacks(): void {
+		for (let callback of this.dataLoadedCallbacks) {
+            callback();
+        }
+	}
 }

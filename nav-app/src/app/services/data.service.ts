@@ -43,8 +43,8 @@ export class DataService {
      */
     public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
-        let matricesList = [];
-        let tacticsList = [];
+        let matricesList: any[] = [];
+        let tacticsList: any[] = [];
         let seenIDs = new Set<string>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
@@ -54,10 +54,8 @@ export class DataService {
             for (let sdo of bundle.objects) {
                 // iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
-                if (!domain.isCustom) {
-                    if ('x_mitre_domains' in sdo && sdo.x_mitre_domains.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier))) {
-                        continue;
-                    }
+                if (!domain.isCustom && sdo.x_mitre_domains?.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier))) {
+                    continue;
                 }
 
                 // filter out duplicates
@@ -126,27 +124,13 @@ export class DataService {
         }
 
         // create matrices, which also creates tactics and filters techniques
-        for (let i = 0; i < matricesList.length; i++) {
-            let techniquesList = [];
-            if (matricesList[i].x_mitre_deprecated) {
-                continue;
-            }
-            for (let technique of domain.techniques) {
-				if (technique.x_mitre_domains.includes(matricesList[i].external_references[0].external_id)) {
-					techniquesList.push(technique);
-				}
-            }
-            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
-        }
+		this.createMatrices(matricesList, tacticsList, domain);
 
         domain.platforms = Array.from(platforms); // convert to array
 
         // data loading complete; update watchers
         domain.dataLoaded = true;
-		console.log(domain)
-        for (let callback of domain.dataLoadedCallbacks) {
-            callback();
-        }
+		domain.executeCallbacks();
     }
 
 	public createTechniques(techniqueSDOs: any, idToTechniqueSDO: Map<string, any>, domain: Domain): void {
@@ -166,6 +150,21 @@ export class DataService {
 			}
 			domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
 		}
+	}
+
+	public createMatrices(matricesList: any[], tacticsList: any[], domain: Domain): void {
+        for (let i = 0; i < matricesList.length; i++) {
+            let techniquesList = [];
+            if (matricesList[i].x_mitre_deprecated) {
+                continue;
+            }
+            for (let technique of domain.techniques) {
+				if (technique.x_mitre_domains.includes(matricesList[i].external_references[0].external_id)) {
+					techniquesList.push(technique);
+				}
+            }
+            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
+        }
 	}
 
 	public parsePlatforms(domain: Domain): Set<string> {
