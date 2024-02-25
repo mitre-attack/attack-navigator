@@ -132,9 +132,9 @@ export class DataService {
                 continue;
             }
             for (let technique of domain.techniques) {
-                if(technique.x_mitre_domains == matricesList[i].external_references[0].external_id) {
-                    techniquesList.push(technique);
-                }
+				if (technique.x_mitre_domains.includes(matricesList[i].external_references[0].external_id)) {
+					techniquesList.push(technique);
+				}
             }
             domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
         }
@@ -336,7 +336,7 @@ export class DataService {
                 });
             } else if (!domain) {
                 // domain not defined in config
-                reject("'" + domainVersionID + "' is not a valid domain & version.");
+                reject(new Error("'" + domainVersionID + "' is not a valid domain & version."));
             }
         });
         return dataPromise;
