@@ -123,7 +123,7 @@ export class DataService {
             }
         }
 
-        // create matrices, which also creates tactics and filters techniques
+        // create matrices
 		this.createMatrices(matricesList, tacticsList, domain);
 
         domain.platforms = Array.from(platforms); // convert to array
@@ -133,6 +133,12 @@ export class DataService {
 		domain.executeCallbacks();
     }
 
+	/**
+	 * Creates techniques and sub-techniques from the given technique SDOs
+	 * @param techniqueSDOs list of parent-level technique SDOs to create
+	 * @param idToTechniqueSDO map of all technique IDs to SDOs (incl. sub-techniques)
+	 * @param domain the domain to add the techniques to
+	 */
 	public createTechniques(techniqueSDOs: any, idToTechniqueSDO: Map<string, any>, domain: Domain): void {
 		for (let techniqueSDO of techniqueSDOs) {
 			let subtechniques: Technique[] = [];
@@ -152,6 +158,12 @@ export class DataService {
 		}
 	}
 
+	/**
+	 * Creates the matrices, which also creates its tactics and filters the techniques
+	 * @param matricesList list of matrix SDOs to create
+	 * @param tacticsList list of tactic SDOs
+	 * @param domain the domain to add the matrix/tactics to
+	 */
 	public createMatrices(matricesList: any[], tacticsList: any[], domain: Domain): void {
         for (let i = 0; i < matricesList.length; i++) {
             let techniquesList = [];
@@ -167,6 +179,12 @@ export class DataService {
         }
 	}
 
+	/**
+	 * Extrats the set of platforms from the list of techniques
+	 * in the given domain
+	 * @param domain the domain for which to parse the platforms
+	 * @returns the set of platforms found
+	 */
 	public parsePlatforms(domain: Domain): Set<string> {
 		let platforms = new Set<string>();
 		let allTechniques = domain.techniques.concat(domain.subtechniques);
@@ -179,6 +197,11 @@ export class DataService {
 		return platforms;
 	}
 
+	/**
+	 * Parses the given SRO into the domain relationship map
+	 * @param sro the SRO to parse
+	 * @param domain the domain to add the relationship to
+	 */
 	public parseRelationship(sro: any, domain: Domain): void {
 		// for existing keys, add the given value to the list of values
 		// otherwise, add the key with the value as the first item in the list
