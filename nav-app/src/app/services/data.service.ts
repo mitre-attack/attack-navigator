@@ -61,10 +61,8 @@ export class DataService {
                 }
 
                 // filter out duplicates
-                if (!seenIDs.has(sdo.id)) seenIDs.add(sdo.id);
-                else {
-                    continue;
-                }
+				if (seenIDs.has(sdo.id)) continue;
+				seenIDs.add(sdo.id);
 
                 // parse according to type
                 switch (sdo.type) {
@@ -91,77 +89,7 @@ export class DataService {
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case 'relationship':
-                        if (sdo.relationship_type == 'subtechnique-of' && this.configService.subtechniquesEnabled) {
-                            // record subtechnique:technique relationship
-                            if (domain.relationships['subtechniques_of'].has(sdo.target_ref)) {
-                                let ids = domain.relationships['subtechniques_of'].get(sdo.target_ref);
-                                ids.push(sdo.source_ref);
-                            } else {
-                                domain.relationships['subtechniques_of'].set(sdo.target_ref, [sdo.source_ref]);
-                            }
-                        } else if (sdo.relationship_type == 'uses') {
-                            if (sdo.source_ref.startsWith('intrusion-set') && sdo.target_ref.startsWith('attack-pattern')) {
-                                // record group:technique relationship
-                                if (domain.relationships['group_uses'].has(sdo.source_ref)) {
-                                    let ids = domain.relationships['group_uses'].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    domain.relationships['group_uses'].set(sdo.source_ref, [sdo.target_ref]);
-                                }
-                            } else if (
-                                (sdo.source_ref.startsWith('malware') || sdo.source_ref.startsWith('tool')) &&
-                                sdo.target_ref.startsWith('attack-pattern')
-                            ) {
-                                // record software:technique relationship
-                                if (domain.relationships['software_uses'].has(sdo.source_ref)) {
-                                    let ids = domain.relationships['software_uses'].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    domain.relationships['software_uses'].set(sdo.source_ref, [sdo.target_ref]);
-                                }
-                            } else if (sdo.source_ref.startsWith('campaign') && sdo.target_ref.startsWith('attack-pattern')) {
-                                // record campaign:technique relationship
-                                if (domain.relationships['campaign_uses'].has(sdo.source_ref)) {
-                                    let ids = domain.relationships['campaign_uses'].get(sdo.source_ref);
-                                    ids.push(sdo.target_ref);
-                                } else {
-                                    domain.relationships['campaign_uses'].set(sdo.source_ref, [sdo.target_ref]);
-                                }
-                            }
-                        } else if (sdo.relationship_type == 'mitigates') {
-                            if (domain.relationships['mitigates'].has(sdo.source_ref)) {
-                                let ids = domain.relationships['mitigates'].get(sdo.source_ref);
-                                ids.push(sdo.target_ref);
-                            } else {
-                                domain.relationships['mitigates'].set(sdo.source_ref, [sdo.target_ref]);
-                            }
-                        } else if (sdo.relationship_type == 'revoked-by') {
-                            // record stix object: stix object relationship
-                            domain.relationships['revoked_by'].set(sdo.source_ref, sdo.target_ref);
-                        } else if (sdo.relationship_type === 'detects') {
-                            if (domain.relationships['component_rel'].has(sdo.source_ref)) {
-                                let ids = domain.relationships['component_rel'].get(sdo.source_ref);
-                                ids.push(sdo.target_ref);
-                            } else {
-                                domain.relationships['component_rel'].set(sdo.source_ref, [sdo.target_ref]);
-                            }
-                        } else if (sdo.relationship_type == 'attributed-to') {
-                            // record campaign:group relationship
-                            if (domain.relationships['campaigns_attributed_to'].has(sdo.target_ref)) {
-                                let ids = domain.relationships['campaigns_attributed_to'].get(sdo.target_ref);
-                                ids.push(sdo.source_ref);
-                            } else {
-                                domain.relationships['campaigns_attributed_to'].set(sdo.target_ref, [sdo.source_ref]); // group -> [campaigns]
-                            }
-                        } else if (sdo.relationship_type == 'targets') {
-                            // record technique:asset relationship
-                            if (domain.relationships['targeted_assets'].has(sdo.target_ref)) {
-                                let ids = domain.relationships['targeted_assets'].get(sdo.target_ref);
-                                ids.push(sdo.source_ref);
-                            } else {
-                                domain.relationships['targeted_assets'].set(sdo.target_ref, [sdo.source_ref]); // asset -> [techniques]
-                            }
-                        }
+						this.parseRelationship(sdo, domain);
                         break;
                     case 'attack-pattern':
                         idToTechniqueSDO.set(sdo.id, sdo);
@@ -197,7 +125,7 @@ export class DataService {
             }
         }
 
-        //create matrices, which also creates tactics and filters techniques
+        // create matrices, which also creates tactics and filters techniques
         for (let i = 0; i < matricesList.length; i++) {
             let techniquesList = [];
             if (matricesList[i].x_mitre_deprecated) {
@@ -210,6 +138,7 @@ export class DataService {
             }
             domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
         }
+
         domain.platforms = Array.from(platforms); // convert to array
 
         // data loading complete; update watchers
@@ -249,6 +178,80 @@ export class DataService {
 		});
 
 		return platforms;
+	}
+
+	public parseRelationship(sro: any, domain: Domain): void {
+		if (sro.relationship_type == 'subtechnique-of' && this.configService.subtechniquesEnabled) {
+			// record subtechnique:technique relationship
+			if (domain.relationships['subtechniques_of'].has(sro.target_ref)) {
+				let ids = domain.relationships['subtechniques_of'].get(sro.target_ref);
+				ids.push(sro.source_ref);
+			} else {
+				domain.relationships['subtechniques_of'].set(sro.target_ref, [sro.source_ref]);
+			}
+		} else if (sro.relationship_type == 'uses') {
+			if (sro.source_ref.startsWith('intrusion-set') && sro.target_ref.startsWith('attack-pattern')) {
+				// record group:technique relationship
+				if (domain.relationships['group_uses'].has(sro.source_ref)) {
+					let ids = domain.relationships['group_uses'].get(sro.source_ref);
+					ids.push(sro.target_ref);
+				} else {
+					domain.relationships['group_uses'].set(sro.source_ref, [sro.target_ref]);
+				}
+			} else if (
+				(sro.source_ref.startsWith('malware') || sro.source_ref.startsWith('tool')) &&
+				sro.target_ref.startsWith('attack-pattern')
+			) {
+				// record software:technique relationship
+				if (domain.relationships['software_uses'].has(sro.source_ref)) {
+					let ids = domain.relationships['software_uses'].get(sro.source_ref);
+					ids.push(sro.target_ref);
+				} else {
+					domain.relationships['software_uses'].set(sro.source_ref, [sro.target_ref]);
+				}
+			} else if (sro.source_ref.startsWith('campaign') && sro.target_ref.startsWith('attack-pattern')) {
+				// record campaign:technique relationship
+				if (domain.relationships['campaign_uses'].has(sro.source_ref)) {
+					let ids = domain.relationships['campaign_uses'].get(sro.source_ref);
+					ids.push(sro.target_ref);
+				} else {
+					domain.relationships['campaign_uses'].set(sro.source_ref, [sro.target_ref]);
+				}
+			}
+		} else if (sro.relationship_type == 'mitigates') {
+			if (domain.relationships['mitigates'].has(sro.source_ref)) {
+				let ids = domain.relationships['mitigates'].get(sro.source_ref);
+				ids.push(sro.target_ref);
+			} else {
+				domain.relationships['mitigates'].set(sro.source_ref, [sro.target_ref]);
+			}
+		} else if (sro.relationship_type == 'revoked-by') {
+			// record stix object: stix object relationship
+			domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
+		} else if (sro.relationship_type === 'detects') {
+			if (domain.relationships['component_rel'].has(sro.source_ref)) {
+				let ids = domain.relationships['component_rel'].get(sro.source_ref);
+				ids.push(sro.target_ref);
+			} else {
+				domain.relationships['component_rel'].set(sro.source_ref, [sro.target_ref]);
+			}
+		} else if (sro.relationship_type == 'attributed-to') {
+			// record campaign:group relationship
+			if (domain.relationships['campaigns_attributed_to'].has(sro.target_ref)) {
+				let ids = domain.relationships['campaigns_attributed_to'].get(sro.target_ref);
+				ids.push(sro.source_ref);
+			} else {
+				domain.relationships['campaigns_attributed_to'].set(sro.target_ref, [sro.source_ref]); // group -> [campaigns]
+			}
+		} else if (sro.relationship_type == 'targets') {
+			// record technique:asset relationship
+			if (domain.relationships['targeted_assets'].has(sro.target_ref)) {
+				let ids = domain.relationships['targeted_assets'].get(sro.target_ref);
+				ids.push(sro.source_ref);
+			} else {
+				domain.relationships['targeted_assets'].set(sro.target_ref, [sro.source_ref]); // asset -> [techniques]
+			}
+		}
 	}
 
     // Observable for data in config.json
