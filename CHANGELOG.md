@@ -8,6 +8,13 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
+# 4.x.x - Changes Staged on Develop
+
+## Fixes
+- Fixed an issue with loading multiple bundles into a single matrix. See issue [#505](https://github.com/mitre-attack/attack-navigator/issues/505).
+- Fixed an issue where the outdated layer dialog box would not load the latest layer file format specification. See issue [#617](https://github.com/mitre-attack/attack-navigator/issues/617).
+- Fixed an issue in the ATT&CK version comparison which caused deprecated techniques to appear in the "review additions" section of the Layer Upgrade UI. See issue [#618](https://github.com/mitre-attack/attack-navigator/issues/618).
+
 # 4.9.1 - 14 November 2023
 
 Adds support for ATT&CK v14.1.
