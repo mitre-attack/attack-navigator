@@ -419,6 +419,16 @@ export class DataService {
 
             let prevTechnique = objectLookup.get(latestTechnique.id);
             if (!prevTechnique) {
+				if (latestTechnique.deprecated) {
+					// object doesn't exist in previous version, but is deprecated in the
+					// latest version
+					// this case is unlikely to occur and indicates that something has
+					// gone wrong in the data, such as the case in which a sub-technique
+					// was deprecated, had its ties erroneously severed with its parent
+					// and therefore, cannot be parsed correctly
+					continue;
+				}
+
                 // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique.attackID);
             } else if (latestTechnique.modified == prevTechnique.modified) {
