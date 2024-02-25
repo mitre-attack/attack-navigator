@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuItem } from '../classes/context-menu-item';
 import { HttpClient } from '@angular/common/http';
+import { map, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConfigService {
+	public collectionIndex: string;
     public versions: any[] = [];
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;
@@ -172,34 +175,43 @@ export class ConfigService {
      * Note: this is done at startup
      */
     public loadConfig() {
-        return this.http
-            .get('./assets/config.json')
-            .toPromise()
-            .then((config) => {
-                console.debug(`loaded app configuration settings`);
+        return this.http.get('./assets/config.json').pipe(
+			map((config) => {
+				console.debug('loaded app configuration settings');
 
-                this.versions = config['versions'];
-                config['custom_context_menu_items'].forEach((item) => {
-                    this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
-                });
-                this.defaultLayers = config['default_layers'];
-                this.commentColor = config['comment_color'];
-                this.linkColor = config['link_color'];
-                this.metadataColor = config['metadata_color'];
-                this.banner = config['banner'];
+				this.versions = config['versions'];
 
-                // parse feature preferences
-                this.featureList = config['features'];
-                config['features'].forEach((feature) => {
-                    this.setFeature_object(feature);
-                });
+				config['custom_context_menu_items'].forEach((item) => {
+					this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
+				});
+				this.defaultLayers = config['default_layers'];
+				this.commentColor = config['comment_color'];
+				this.linkColor = config['link_color'];
+				this.metadataColor = config['metadata_color'];
+				this.banner = config['banner'];
 
-                // override preferences with preferences from URL fragments
-                this.getAllFragments().forEach((value: string, key: string) => {
-                    if (this.isFeature(key) || this.isFeatureGroup(key)) {
-                        this.setFeature(key, value == 'true');
-                    }
-                });
-            });
+				// parse feature preferences
+				this.featureList = config['features'];
+				config['features'].forEach((feature) => {
+					this.setFeature_object(feature);
+				});
+
+				// override preferences with preferences from URL fragments
+				this.getAllFragments().forEach((value: string, key: string) => {
+					if (this.isFeature(key) || this.isFeatureGroup(key)) {
+						this.setFeature(key, value == 'true');
+					}
+				});
+				return config['collection_index_url'];
+			}),
+			switchMap((collectionIndexUrl: string) => {
+				if (collectionIndexUrl) return this.http.get(collectionIndexUrl);
+				return of({});
+			}),
+			map((collectionIndex: any) => {
+				console.log('loaded collection index');
+				this.collectionIndex = collectionIndex;
+			})
+		).toPromise()
     }
 }
