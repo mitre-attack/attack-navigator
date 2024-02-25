@@ -41,7 +41,7 @@ export class DataService {
      * @param domain
      * @param stixBundles
      */
-    parseBundle(domain: Domain, stixBundles: any[]): void {
+    public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
         let matricesList = [];
         let tacticsList = [];
@@ -261,7 +261,7 @@ export class DataService {
      * @param {versions} list of versions and domains defined in the configuration file
      * @memberof DataService
      */
-    setUpURLs(versions: any[]) {
+    public setUpURLs(versions: any[]) {
         versions.forEach((version: any) => {
             let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
             this.versions.push(v);
@@ -294,7 +294,7 @@ export class DataService {
     /**
      * Fetch the domain data from the endpoint
      */
-    getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
+    public getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
             console.debug('fetching data from TAXII server');
             let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
@@ -330,7 +330,7 @@ export class DataService {
     /**
      * Load and parse domain data
      */
-    loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
+    public loadDomainData(domainVersionID: string, refresh: boolean = false): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
             let domain = this.getDomain(domainVersionID);
             if (domain) {
@@ -356,14 +356,14 @@ export class DataService {
     /**
      * Get domain object by domain ID
      */
-    getDomain(domainVersionID: string): Domain {
+    public getDomain(domainVersionID: string): Domain {
         return this.domains.find((d) => d.id === domainVersionID);
     }
 
     /**
      * Get the ID from domain name & version
      */
-    getDomainVersionID(domain: string, versionNumber: string): string {
+    public getDomainVersionID(domain: string, versionNumber: string): string {
         if (!versionNumber) {
             // layer with no specified version defaults to current version
             versionNumber = this.versions[0].number;
@@ -374,7 +374,7 @@ export class DataService {
     /**
      * Retrieve the technique object with the given attackID in the given domain/version
      */
-    getTechnique(attackID: string, domainVersionID: string) {
+    public getTechnique(attackID: string, domainVersionID: string) {
         let domain = this.getDomain(domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
         return all_techniques.find((t) => t.attackID == attackID);
@@ -383,14 +383,14 @@ export class DataService {
     /**
      * Retrieves the first version defined in the config file
      */
-    getCurrentVersion() {
+    public getCurrentVersion() {
         return this.domains[0].version;
     }
 
     /**
      * Is the given version supported?
      */
-    isSupported(version: string) {
+    public isSupported(version: string) {
         let supported = this.versions.map((v) => v.number);
         let match = version.match(/\d+/g)[0];
         return supported.includes(match);
