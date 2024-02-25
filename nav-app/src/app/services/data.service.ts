@@ -181,76 +181,54 @@ export class DataService {
 	}
 
 	public parseRelationship(sro: any, domain: Domain): void {
-		if (sro.relationship_type == 'subtechnique-of' && this.configService.subtechniquesEnabled) {
-			// record subtechnique:technique relationship
-			if (domain.relationships['subtechniques_of'].has(sro.target_ref)) {
-				let ids = domain.relationships['subtechniques_of'].get(sro.target_ref);
-				ids.push(sro.source_ref);
-			} else {
-				domain.relationships['subtechniques_of'].set(sro.target_ref, [sro.source_ref]);
-			}
-		} else if (sro.relationship_type == 'uses') {
-			if (sro.source_ref.startsWith('intrusion-set') && sro.target_ref.startsWith('attack-pattern')) {
-				// record group:technique relationship
-				if (domain.relationships['group_uses'].has(sro.source_ref)) {
-					let ids = domain.relationships['group_uses'].get(sro.source_ref);
-					ids.push(sro.target_ref);
-				} else {
-					domain.relationships['group_uses'].set(sro.source_ref, [sro.target_ref]);
+		// for existing keys, add the given value to the list of values
+		// otherwise, add the key with the value as the first item in the list
+		let addRelationshipToMap = function(map, key, value) {
+			if (map.has(key)) map.get(key).push(value);
+			else map.set(key, [value]);
+		}
+
+		switch (sro.relationship_type) {
+			case 'subtechnique-of':
+				if (!this.configService.subtechniquesEnabled) return;
+				// record subtechnique:technique relationship
+				addRelationshipToMap(domain.relationships['subtechniques_of'], sro.target_ref, sro.source_ref);
+				break;
+			case 'uses':
+				if (sro.source_ref.startsWith('intrusion-set') && sro.target_ref.startsWith('attack-pattern')) {
+					// record group:technique relationship
+					addRelationshipToMap(domain.relationships['group_uses'], sro.source_ref, sro.target_ref);
+				} else if (
+					(sro.source_ref.startsWith('malware') || sro.source_ref.startsWith('tool')) &&
+					sro.target_ref.startsWith('attack-pattern')
+				) {
+					// record software:technique relationship
+					addRelationshipToMap(domain.relationships['software_uses'], sro.source_ref, sro.target_ref);
+				} else if (sro.source_ref.startsWith('campaign') && sro.target_ref.startsWith('attack-pattern')) {
+					// record campaign:technique relationship
+					addRelationshipToMap(domain.relationships['campaign_uses'], sro.source_ref, sro.target_ref);
 				}
-			} else if (
-				(sro.source_ref.startsWith('malware') || sro.source_ref.startsWith('tool')) &&
-				sro.target_ref.startsWith('attack-pattern')
-			) {
-				// record software:technique relationship
-				if (domain.relationships['software_uses'].has(sro.source_ref)) {
-					let ids = domain.relationships['software_uses'].get(sro.source_ref);
-					ids.push(sro.target_ref);
-				} else {
-					domain.relationships['software_uses'].set(sro.source_ref, [sro.target_ref]);
-				}
-			} else if (sro.source_ref.startsWith('campaign') && sro.target_ref.startsWith('attack-pattern')) {
-				// record campaign:technique relationship
-				if (domain.relationships['campaign_uses'].has(sro.source_ref)) {
-					let ids = domain.relationships['campaign_uses'].get(sro.source_ref);
-					ids.push(sro.target_ref);
-				} else {
-					domain.relationships['campaign_uses'].set(sro.source_ref, [sro.target_ref]);
-				}
-			}
-		} else if (sro.relationship_type == 'mitigates') {
-			if (domain.relationships['mitigates'].has(sro.source_ref)) {
-				let ids = domain.relationships['mitigates'].get(sro.source_ref);
-				ids.push(sro.target_ref);
-			} else {
-				domain.relationships['mitigates'].set(sro.source_ref, [sro.target_ref]);
-			}
-		} else if (sro.relationship_type == 'revoked-by') {
-			// record stix object: stix object relationship
-			domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
-		} else if (sro.relationship_type === 'detects') {
-			if (domain.relationships['component_rel'].has(sro.source_ref)) {
-				let ids = domain.relationships['component_rel'].get(sro.source_ref);
-				ids.push(sro.target_ref);
-			} else {
-				domain.relationships['component_rel'].set(sro.source_ref, [sro.target_ref]);
-			}
-		} else if (sro.relationship_type == 'attributed-to') {
-			// record campaign:group relationship
-			if (domain.relationships['campaigns_attributed_to'].has(sro.target_ref)) {
-				let ids = domain.relationships['campaigns_attributed_to'].get(sro.target_ref);
-				ids.push(sro.source_ref);
-			} else {
-				domain.relationships['campaigns_attributed_to'].set(sro.target_ref, [sro.source_ref]); // group -> [campaigns]
-			}
-		} else if (sro.relationship_type == 'targets') {
-			// record technique:asset relationship
-			if (domain.relationships['targeted_assets'].has(sro.target_ref)) {
-				let ids = domain.relationships['targeted_assets'].get(sro.target_ref);
-				ids.push(sro.source_ref);
-			} else {
-				domain.relationships['targeted_assets'].set(sro.target_ref, [sro.source_ref]); // asset -> [techniques]
-			}
+				break;
+			case 'mitigates':
+				// record mitigation:technique relationship
+				addRelationshipToMap(domain.relationships['mitigates'], sro.source_ref, sro.target_ref);
+				break;
+			case 'revoked-by':
+				// record stix object: stix object relationship
+				domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
+				break;
+			case 'detects':
+				// record data component: technique relationship
+				addRelationshipToMap(domain.relationships['component_rel'], sro.source_ref, sro.target_ref);
+				break;
+			case 'attributed-to':
+				// record campaign:group relationship
+				addRelationshipToMap(domain.relationships['campaigns_attributed_to'], sro.target_ref, sro.source_ref);
+				break;
+			case 'targets':
+				// record technique:asset relationship
+				addRelationshipToMap(domain.relationships['targeted_assets'], sro.target_ref, sro.source_ref);
+				break;
 		}
 	}
 
