@@ -137,15 +137,15 @@ describe('TabsComponent', () => {
 
     describe('openTab', () => {
         let existingTab = new Tab('existing test tab', true, false, 'enterprise-attack', true);
-		let selectTabSpy;
-		let closeActiveTabSpy;
+        let selectTabSpy;
+        let closeActiveTabSpy;
 
         beforeEach(() => {
             component.layerTabs = []; // reset tabs
             component.activeTab = undefined;
 
-			selectTabSpy = spyOn(component, 'selectTab');
-			closeActiveTabSpy = spyOn(component, 'closeActiveTab');
+            selectTabSpy = spyOn(component, 'selectTab');
+            closeActiveTabSpy = spyOn(component, 'closeActiveTab');
         });
 
         it('should change to existing tab', () => {
@@ -202,14 +202,14 @@ describe('TabsComponent', () => {
     describe('close tab', () => {
         let firstTab = new Tab('first tab', true, false, 'enterprise-attack', true);
         let secondTab = new Tab('second tab', true, false, 'enterprise-attack', true);
-		let selectTabSpy;
-		let newBlankTabSpy;
+        let selectTabSpy;
+        let newBlankTabSpy;
 
         beforeEach(() => {
             component.layerTabs = []; // reset tabs
             component.activeTab = undefined;
 
-			selectTabSpy = spyOn(component, 'selectTab');
+            selectTabSpy = spyOn(component, 'selectTab');
             newBlankTabSpy = spyOn(component, 'newBlankTab');
         });
 

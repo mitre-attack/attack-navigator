@@ -91,9 +91,9 @@ export class Domain {
         return this.version.number;
     }
 
-	public executeCallbacks(): void {
-		for (let callback of this.dataLoadedCallbacks) {
+    public executeCallbacks(): void {
+        for (let callback of this.dataLoadedCallbacks) {
             callback();
         }
-	}
+    }
 }
