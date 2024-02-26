@@ -635,7 +635,7 @@ To get the full view of the matrix on a single page, be sure to disable the stic
 
 # Notice
 
-Copyright 2023 The MITRE Corporation
+Copyright 2024 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 
