@@ -14,6 +14,20 @@ export const configData = [
         ],
     },
 ];
+
+export const mobileDomainData = [
+    {
+        name: 'ATT&CK v13',
+        version: '13',
+        domains: [
+            {
+                name: 'Mobile',
+                identifier: 'mobile-attack',
+                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/mobile-attack/mobile-attack.json'],
+            },
+        ],
+    },
+];
 export const configDataExtended = [
     {
         name: 'ATT&CK v13',
@@ -95,6 +109,7 @@ export const stixSDO = {
     created: '2001-01-01T01:01:00.000Z',
     modified: '2001-01-01T01:01:00.000Z',
     version: '1.0',
+    x_mitre_domains: ['enterprise-attack'],
     x_mitre_version: '1.0',
 };
 export const stixSDO_v1_1 = {
@@ -249,7 +264,7 @@ export const matrixSDO = {
     id: 'matrix-0',
     type: 'x-mitre-matrix',
     tactic_refs: ['tactic-0'],
-    external_references: [{ external_id: 'enterprise-matrix' }],
+    external_references: [{ external_id: 'enterprise-attack' }],
 };
 export const deprecatedMatrixSDO = {
     ...stixSDO,
