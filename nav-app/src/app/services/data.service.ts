@@ -44,12 +44,12 @@ export class DataService {
     public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
         let seenIDs = new Set<string>();
-		let matrixSDOs = [];
-		let idToTacticSDO = new Map<string, any>();
-		let matrixToTechniqueSDOs = new Map<string, any[]>();
+        let matrixSDOs = [];
+        let idToTacticSDO = new Map<string, any>();
+        let matrixToTechniqueSDOs = new Map<string, any[]>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
-			let bundleMatrices = [];
+            let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
                 // iterate through stix domain objects in the bundle
@@ -57,18 +57,18 @@ export class DataService {
                 if (
                     !domain.isCustom &&
                     sdo.x_mitre_domains?.length > 0 &&
-					(domain.urls.length == 1 &&
-					!sdo.x_mitre_domains.includes(domain.domain_identifier))
+                    domain.urls.length == 1 &&
+                    !sdo.x_mitre_domains.includes(domain.domain_identifier)
                 ) {
                     continue;
                 }
 
                 // filter out duplicates, except for matrices
-				// which are needed to properly build the datatables
-				if (sdo.type != 'x-mitre-matrix') {
-					if (seenIDs.has(sdo.id)) continue;
-					seenIDs.add(sdo.id);
-				}
+                // which are needed to properly build the datatables
+                if (sdo.type != 'x-mitre-matrix') {
+                    if (seenIDs.has(sdo.id)) continue;
+                    seenIDs.add(sdo.id);
+                }
 
                 // parse according to type
                 switch (sdo.type) {
@@ -108,7 +108,7 @@ export class DataService {
                         break;
                     case 'x-mitre-matrix':
                         matrixSDOs.push(sdo);
-						bundleMatrices.push(sdo);
+                        bundleMatrices.push(sdo);
                         break;
                     case 'note':
                         domain.notes.push(new Note(sdo));
@@ -119,17 +119,17 @@ export class DataService {
             // create techniques
             this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
 
-			// create map of matrices to techniques
-			for (let matrixSDO of bundleMatrices) {
-				if (!matrixToTechniqueSDOs.get(matrixSDO.id)) {
-					matrixToTechniqueSDOs.set(matrixSDO.id, techniqueSDOs);
-				} else {
-					matrixToTechniqueSDOs.get(matrixSDO.id).push(...techniqueSDOs);
-				}
-			}
+            // create map of matrices to techniques
+            for (let matrixSDO of bundleMatrices) {
+                if (!matrixToTechniqueSDOs.get(matrixSDO.id)) {
+                    matrixToTechniqueSDOs.set(matrixSDO.id, techniqueSDOs);
+                } else {
+                    matrixToTechniqueSDOs.get(matrixSDO.id).push(...techniqueSDOs);
+                }
+            }
 
-			// parse platforms
-			this.parsePlatforms(domain).forEach(platforms.add, platforms);
+            // parse platforms
+            this.parsePlatforms(domain).forEach(platforms.add, platforms);
         }
 
         // create matrices
@@ -174,23 +174,23 @@ export class DataService {
      * @param domain the domain to add the matrix/tactics to
      */
     public createMatrices(matrixSDOs: any[], idToTacticSDO: Map<string, any>, matrixToTechniqueSDOs, domain: Domain): void {
-		let createdMatrixIDs = [];
-		for (let matrixSDO of matrixSDOs) {
-			// check if matrix was already created
-			if (createdMatrixIDs.includes(matrixSDO.id)) continue;
+        let createdMatrixIDs = [];
+        for (let matrixSDO of matrixSDOs) {
+            // check if matrix was already created
+            if (createdMatrixIDs.includes(matrixSDO.id)) continue;
 
-			// check if matrix is deprecated
-			if (matrixSDO.x_mitre_deprecated) continue;
+            // check if matrix is deprecated
+            if (matrixSDO.x_mitre_deprecated) continue;
 
-			// retrieve relevant matrix techniques
-			let techniqueSDOs = matrixToTechniqueSDOs.get(matrixSDO.id);
-			let techniqueIDs = techniqueSDOs.map(t => t.id);
-			let techniques = domain.techniques.filter(t => techniqueIDs.includes(t.id));
-			domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, techniques, this));
+            // retrieve relevant matrix techniques
+            let techniqueSDOs = matrixToTechniqueSDOs.get(matrixSDO.id);
+            let techniqueIDs = techniqueSDOs.map((t) => t.id);
+            let techniques = domain.techniques.filter((t) => techniqueIDs.includes(t.id));
+            domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, techniques, this));
 
-			// add to list of created matrices
-			createdMatrixIDs.push(matrixSDO.id);
-		}
+            // add to list of created matrices
+            createdMatrixIDs.push(matrixSDO.id);
+        }
     }
 
     /**
