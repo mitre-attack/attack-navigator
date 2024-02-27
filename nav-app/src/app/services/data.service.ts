@@ -57,7 +57,6 @@ export class DataService {
                 if (
                     !domain.isCustom &&
                     sdo.x_mitre_domains?.length > 0 &&
-                    domain.urls.length == 1 &&
                     !sdo.x_mitre_domains.includes(domain.domain_identifier)
                 ) {
                     continue;
@@ -115,24 +114,24 @@ export class DataService {
             // create techniques
             this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
 
-            // parse platforms
-            this.parsePlatforms(domain).forEach(platforms.add, platforms);
-
             // create a list of matrix and tactic SDOs
             for (let matrixSDO of matrixSDOs) {
                 if (matrixSDO.x_mitre_deprecated) {
                     continue;
                 }
-                matricesList.push(matrixSDO);
-                tacticsList.push(idToTacticSDO);
+				domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, domain.techniques, this));
+                // matricesList.push(matrixSDO);
+                // tacticsList.push(idToTacticSDO);
             }
+
+			// parse platforms
+			this.parsePlatforms(domain).forEach(platforms.add, platforms);
         }
 
         // create matrices
-        this.createMatrices(matricesList, tacticsList, domain);
+        // this.createMatrices(matricesList, tacticsList, domain);
 
         domain.platforms = Array.from(platforms); // convert to array
-
         // data loading complete; update watchers
         domain.dataLoaded = true;
         domain.executeCallbacks();
@@ -175,8 +174,9 @@ export class DataService {
             if (matricesList[i].x_mitre_deprecated) {
                 continue;
             }
+			console.log('domain techniques', domain.techniques)
             for (let technique of domain.techniques) {
-                if (technique.x_mitre_domains.includes(matricesList[i].external_references[0].external_id)) {
+                if (technique.x_mitre_domains?.includes(matricesList[i].external_references[0].external_id)) {
                     techniquesList.push(technique);
                 }
             }
