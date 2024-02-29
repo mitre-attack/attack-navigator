@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# 4.9.4
+# 4.9.4 - 29 February 2024
 
 ## Fixes
 - Fixed a bug with selecting techniques by data sources in the search & multi-select interface. See issue [#622](https://github.com/mitre-attack/attack-navigator/issues/622).
