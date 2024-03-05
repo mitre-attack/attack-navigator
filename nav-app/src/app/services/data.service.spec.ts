@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Version, VersionChangelog } from '../classes';
-import { Asset, Campaign, DataComponent, Domain, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
+import { Domain, Version, VersionChangelog } from '../classes';
+import { Asset, Campaign, DataComponent, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
 import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Collection } from '../utils/taxii2lib';

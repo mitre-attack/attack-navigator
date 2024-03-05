@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TabsComponent } from './tabs.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DataService } from '../services/data.service';
-import { Tab, TechniqueVM, Version, ViewModel } from '../classes';
+import { Tab, TechniqueVM, Domain, Version, ViewModel } from '../classes';
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,7 @@ import { LayerInformationComponent } from '../layer-information/layer-informatio
 import * as is from 'is_js';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { Domain, Technique } from '../classes/stix';
+import { Technique } from '../classes/stix';
 import { ConfigService } from '../services/config.service';
 import * as MockLayers from '../../tests/utils/mock-layers';
 import * as MockData from '../../tests/utils/mock-data';

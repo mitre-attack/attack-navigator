@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from 'rxjs/Rx';
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
+import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
-import { Version, VersionChangelog } from '../classes';
+import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-        this.setUpDomains(configService.versions);
+		this.setUpDomains(configService.versions);
     }
 
     public domain_backwards_compatibility = {

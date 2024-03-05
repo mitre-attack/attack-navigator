@@ -1,4 +1,4 @@
-import { Domain } from './stix/domain';
+import { Domain } from './domain';
 
 export class Filter {
     // the data for a specific filter
