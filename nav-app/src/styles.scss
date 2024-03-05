@@ -47,6 +47,11 @@
     font-feature-settings: 'liga';
 }
 
+.text-deemphasis {
+	color: on-color-deemphasis(body);
+	font-size: 12px !important;
+}
+
 body {
     margin: 0;
     overflow-y: scroll;

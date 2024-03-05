@@ -32,7 +32,6 @@ export class TabsComponent implements AfterViewInit {
     public dropdownEnabled: string = '';
     public layerTabs: Tab[] = [];
     public adjustedHeaderHeight: number = 0;
-    public navVersion = globals.navVersion;
     public safariDialogRef;
     public versionDialogRef;
     public versionMinorSnackbarRef;
@@ -68,6 +67,10 @@ export class TabsComponent implements AfterViewInit {
 
 	public get minimumSupportedVersion(): string {
 		return globals.minimumSupportedVersion;
+	}
+
+	public get navVersion(): string {
+		return globals.navVersion;
 	}
 
     constructor(
