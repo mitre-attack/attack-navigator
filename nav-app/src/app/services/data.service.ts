@@ -17,7 +17,7 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-        this.setUpURLs(configService.versions);
+        this.setUpDomains(configService.versions);
     }
 
     public domain_backwards_compatibility = {
@@ -268,11 +268,11 @@ export class DataService {
     public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
 
     /**
-     * Set up the URLs for data
-     * @param {versions} list of versions and domains defined in the configuration file
+     * Set up the URLs for domains in the list defined in the config file
+     * @param {versions} list of versions and domains
      * @memberof DataService
      */
-    public setUpURLs(versions: any[]) {
+    public setUpDomains(versions: any[]) {
         versions.forEach((version: any) => {
             let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
             this.versions.push(v);

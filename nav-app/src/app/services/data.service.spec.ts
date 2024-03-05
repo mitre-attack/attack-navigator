@@ -85,7 +85,7 @@ describe('DataService', () => {
     describe('setup with Workbench integration', () => {
         beforeEach(() => {
             configService.versions = MockData.workbenchData;
-            spyOn(DataService.prototype, 'setUpURLs').and.callThrough();
+            spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
 
@@ -107,7 +107,7 @@ describe('DataService', () => {
     describe('setup with TAXII', () => {
         beforeEach(() => {
             configService.versions = MockData.taxiiData;
-            spyOn(DataService.prototype, 'setUpURLs').and.callThrough();
+            spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
 
@@ -133,7 +133,7 @@ describe('DataService', () => {
     describe('setup with config data', () => {
         beforeEach(() => {
             configService.versions = MockData.configData;
-            spyOn(DataService.prototype, 'setUpURLs').and.callThrough();
+            spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
 
@@ -223,7 +223,7 @@ describe('DataService', () => {
 
         it('should update domain watchers', () => {
             let functionSpy = spyOn(dataService, 'getCurrentVersion');
-            dataService.setUpURLs(MockData.configData);
+            dataService.setUpDomains(MockData.configData);
             let domain = dataService.domains[0];
             domain.dataLoadedCallbacks = [dataService.getCurrentVersion];
             dataService.parseBundle(domain, MockData.stixBundleSDO);
@@ -239,7 +239,7 @@ describe('DataService', () => {
                 domains: MockData.configData[0].domains,
             };
             configService.versions = [MockData.configData[0], newVersion];
-            spyOn(DataService.prototype, 'setUpURLs').and.callThrough();
+            spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
 
@@ -342,7 +342,7 @@ describe('DataService', () => {
     describe('StixObject tests', () => {
         beforeEach(() => {
             configService.versions = MockData.configData;
-            spyOn(DataService.prototype, 'setUpURLs').and.callThrough();
+            spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
 
