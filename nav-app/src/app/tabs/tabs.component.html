@@ -160,7 +160,7 @@
                             <mat-form-field>
                                 <mat-select placeholder="Select a version" [(ngModel)]="nVersion" required>
                                     <mat-option [value]="null">none</mat-option>
-                                    <mat-option *ngFor="let nVersion of this.dataService.versions" [value]="nVersion">
+                                    <mat-option *ngFor="let nVersion of dataService.versions" [value]="nVersion">
                                         {{ nVersion.name }}
                                     </mat-option>
                                 </mat-select>
@@ -176,7 +176,7 @@
                             </mat-form-field>
                             <!-- note -->
                             <em>
-                                *Note: ATT&CK Versions prior to {{ dataService.lowestSupportedVersion.name }} are not supported by Navigator v{{
+                                *Note: ATT&CK Versions prior to {{ minimumSupportedVersion }} are not supported by Navigator v{{
                                     navVersion
                                 }}.
                             </em>

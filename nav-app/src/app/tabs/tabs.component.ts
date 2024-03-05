@@ -66,6 +66,10 @@ export class TabsComponent implements AfterViewInit {
         return this.filterDomains(this.dataService.versions[0]);
     }
 
+	public get minimumSupportedVersion(): string {
+		return globals.minimumSupportedVersion;
+	}
+
     constructor(
         public dialog: MatDialog,
         public viewModelsService: ViewModelsService,
@@ -438,11 +442,8 @@ export class TabsComponent implements AfterViewInit {
      * Create a new layer in the given domain and version
      */
     public newLayer(domainVersionID: string, obj: any = undefined): void {
-        // load domain data, if not yet loaded
-        let domain = this.dataService.getDomain(domainVersionID);
-        if (!domain.dataLoaded) {
-            this.dataService.loadDomainData(domainVersionID, true);
-        }
+        // load domain data
+        this.dataService.loadDomainData(domainVersionID, true);
 
         // find non conflicting name
         let name;
