@@ -7,6 +7,7 @@ import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mit
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
+import * as globals from '../utils/globals';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +25,7 @@ export class DataService {
 		if (configService.versions) {
 			this.setUpDomains(configService.versions);
 		}
-		this.setUpDomains(configService.versions);
+		this.versions.sort((a, b) => +a.number > +b.number ? -1 : 1);
     }
 
     public domain_backwards_compatibility = {
@@ -44,11 +45,11 @@ export class DataService {
     }
 
     /**
-     * Parse the given stix bundle into the relevant data holders
+     * Parse the given stix bundles into the relevant data holders
      * @param domain
      * @param stixBundles
      */
-    public parseBundle(domain: Domain, stixBundles: any[]): void {
+    public parseBundles(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
         let seenIDs = new Set<string>();
         let matrixSDOs = [];
@@ -58,18 +59,8 @@ export class DataService {
             let techniqueSDOs = [];
             let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
+			// iterate through stix domain objects in the bundle
             for (let sdo of bundle.objects) {
-                // iterate through stix domain objects in the bundle
-                // Filter out object not included in this domain if domains field is available
-                if (
-                    !domain.isCustom &&
-                    sdo.x_mitre_domains?.length > 0 &&
-                    domain.urls.length == 1 &&
-                    !sdo.x_mitre_domains.includes(domain.domain_identifier)
-                ) {
-                    continue;
-                }
-
                 // filter out duplicates, except for matrices
                 // which are needed to properly build the datatables
                 if (sdo.type != 'x-mitre-matrix') {
@@ -275,9 +266,6 @@ export class DataService {
         }
     }
 
-    // Observable for data in config.json
-    private configData$: Observable<Object>;
-
     // Observable for data
     private domainData$: Observable<Object>;
 
@@ -327,13 +315,19 @@ export class DataService {
 	public parseCollectionIndex(collectionIndex: any) {
 		for (let collection of collectionIndex.collections) {
 			for (let version of collection.versions) {
+				// TODO only parse most recent minor versions of a major release?
+				// TODO ignore beta versions?
 				let versionNumber = version.version;
 				let versionName = `${collectionIndex.name} v${versionNumber}`;
+				if (+versionNumber < +globals.minimumSupportedVersion) {
+					console.debug(`version ${versionNumber} is not supported, skipping ${versionName}`);
+					continue;
+				}
+				// create version & domain
 				let v = this.addVersion(versionName, versionNumber);
 				this.domains.push(new Domain(collection.id, collection.name, v, [version.url]));
 			}
 		}
-		console.log('**', this.domains, this.versions);
 	}
 
 	public addVersion(versionName: string, versionNumber: string): Version {
@@ -395,7 +389,7 @@ export class DataService {
                 let subscription;
                 subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data);
+                        this.parseBundles(domain, data);
                         resolve(null);
                     },
                     complete: () => {

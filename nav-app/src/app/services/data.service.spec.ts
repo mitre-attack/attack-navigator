@@ -72,7 +72,7 @@ describe('DataService', () => {
 
         it('should compare the same version as unchanged', () => {
             let domain = dataService.domains[0];
-            dataService.parseBundle(domain, MockData.stixBundleSDO);
+            dataService.parseBundles(domain, MockData.stixBundleSDO);
 
             let result = dataService.compareVersions(domain.id, domain.id);
             expect(result).toBeInstanceOf(VersionChangelog);
@@ -183,7 +183,7 @@ describe('DataService', () => {
             mockService.domains[0].relationships['campaigns_attributed_to'].set('intrusion-set-0', ['attack-pattern-0']);
             mockService.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
             let domain = mockService.domains[0];
-            mockService.parseBundle(domain, MockData.stixBundleSDO);
+            mockService.parseBundles(domain, MockData.stixBundleSDO);
             // check data loaded
             expect(domain.dataLoaded).toBeTrue();
             expect(domain.platforms).toEqual(MockData.T0000.x_mitre_platforms);
@@ -226,7 +226,7 @@ describe('DataService', () => {
             dataService.setUpDomains(MockData.configData);
             let domain = dataService.domains[0];
             domain.dataLoadedCallbacks = [dataService.getCurrentVersion];
-            dataService.parseBundle(domain, MockData.stixBundleSDO);
+            dataService.parseBundles(domain, MockData.stixBundleSDO);
             expect(functionSpy).toHaveBeenCalled();
         });
     });
@@ -249,7 +249,7 @@ describe('DataService', () => {
 
             // parse stix bundles into old domain
             let [oldDomain, newDomain] = mockService.domains;
-            mockService.parseBundle(oldDomain, MockData.stixBundleSDO);
+            mockService.parseBundles(oldDomain, MockData.stixBundleSDO);
             expect(oldDomain.dataLoaded).toBeTrue();
 
             // deprecation
@@ -274,7 +274,7 @@ describe('DataService', () => {
             let revokedSubtechnique = { ...MockData.T0000_001 };
             revokedSubtechnique['modified'] = '2002-01-01T01:01:00.000Z';
             // parse stix bundle into new domain
-            mockService.parseBundle(newDomain, [
+            mockService.parseBundles(newDomain, [
                 {
                     type: 'bundle',
                     id: 'bundle--1',
