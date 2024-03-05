@@ -126,12 +126,6 @@ $colors: (
         color: #5bc0de,
         on-color: white,
     ),
-    //TODO deprecate with search page changes
-    search-results-border:
-        (
-            color: black,
-            on-color: lightgrey,
-        ),
 );
 
 // accessor helper for $colors. Gets the color of the named pair
