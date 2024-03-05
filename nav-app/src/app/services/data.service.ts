@@ -314,6 +314,7 @@ export class DataService {
 
 	public parseCollectionIndex(collectionIndex: any) {
 		for (let collection of collectionIndex.collections) {
+			let domainIdentifier = collection.name.replace(' ', '-').replace('&', 'a').toLowerCase();
 			for (let version of collection.versions) {
 				// TODO only parse most recent minor versions of a major release?
 				// TODO ignore beta versions?
@@ -325,7 +326,7 @@ export class DataService {
 				}
 				// create version & domain
 				let v = this.addVersion(versionName, versionNumber);
-				this.domains.push(new Domain(collection.id, collection.name, v, [version.url]));
+				this.domains.push(new Domain(domainIdentifier, collection.name, v, [version.url]));
 			}
 		}
 	}
