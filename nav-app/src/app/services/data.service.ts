@@ -17,6 +17,13 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
+		if (configService.collectionIndex) {
+			this.parseCollectionIndex(configService.collectionIndex);
+		}
+		// TODO restrict to one or both?
+		if (configService.versions) {
+			this.setUpDomains(configService.versions);
+		}
 		this.setUpDomains(configService.versions);
     }
 
@@ -313,8 +320,33 @@ export class DataService {
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
 
+		//TODO check this with introduction of collection index
         this.lowestSupportedVersion = this.versions[this.versions.length - 1];
     }
+
+	public parseCollectionIndex(collectionIndex: any) {
+		for (let collection of collectionIndex.collections) {
+			for (let version of collection.versions) {
+				let versionNumber = version.version;
+				let versionName = `${collectionIndex.name} v${versionNumber}`;
+				let v = this.addVersion(versionName, versionNumber);
+				this.domains.push(new Domain(collection.id, collection.name, v, [version.url]));
+			}
+		}
+		console.log('**', this.domains, this.versions);
+	}
+
+	public addVersion(versionName: string, versionNumber: string): Version {
+		// check if version already exists
+		let existingVersion = this.versions.find(v => v.name === versionName && v.number === versionNumber);
+		if (!existingVersion) {
+			// create and add new version
+			let version = new Version(versionName, versionNumber);
+			this.versions.push(version);
+			return version;
+		}
+		return existingVersion;
+	}
 
     /**
      * Fetch the domain data from the endpoint

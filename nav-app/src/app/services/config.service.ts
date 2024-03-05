@@ -208,7 +208,7 @@ export class ConfigService {
 			}),
 			switchMap((collectionIndexUrl: string) => {
 				if (collectionIndexUrl) return this.http.get(collectionIndexUrl);
-				// TODO: return properly if no url is provided
+				// TODO return properly if no url is provided
 				return of({});
 			}),
 			map((collectionIndex: any) => {
