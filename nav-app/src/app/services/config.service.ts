@@ -124,8 +124,10 @@ export class ConfigService {
             this.features.set(featureObject.name, enabled);
             return [featureObject.name];
         } else {
-            //has subfeatures
-            override = override ? override : !featureObject.enabled ? false : null;
+            // has subfeatures
+			if (!override) {
+				override = !featureObject.enabled ? false : null;
+			}
             let subfeatures = [];
             featureObject.subfeatures.forEach(function (subfeature) {
                 subfeatures = Array.prototype.concat(subfeatures, self.setFeature_object(subfeature, override));
@@ -206,6 +208,7 @@ export class ConfigService {
 			}),
 			switchMap((collectionIndexUrl: string) => {
 				if (collectionIndexUrl) return this.http.get(collectionIndexUrl);
+				// TODO: return properly if no url is provided
 				return of({});
 			}),
 			map((collectionIndex: any) => {
