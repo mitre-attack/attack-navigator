@@ -8,7 +8,18 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
-# 4.x.x - Changes Staged on Develop
+
+# 4.9.4 - 29 February 2024
+
+## Fixes
+- Fixed a bug with selecting techniques by data sources in the search & multi-select interface. See issue [#622](https://github.com/mitre-attack/attack-navigator/issues/622).
+
+# 4.9.3 - 27 February 2024
+
+## Fixes
+- Fixed a bug with loading Navigator layers on ATT&CK v10 or earlier. See issue [#620](https://github.com/mitre-attack/attack-navigator/issues/620).
+
+# 4.9.2 - 26 February 2024
 
 ## Fixes
 - Fixed an issue with loading multiple bundles into a single matrix. See issue [#505](https://github.com/mitre-attack/attack-navigator/issues/505).

@@ -13,7 +13,7 @@ export class DataComponent extends StixObject {
     /**
      * Get techniques related to the data component
      * @param domainVersionID the ID of the domain and version
-     * @returns {string[]} technique IDs used by the data component
+     * @returns {Technique[]} list of techniques used by the data component
      */
     public techniques(domainVersionID): string[] {
         const techniques = [];
@@ -23,7 +23,7 @@ export class DataComponent extends StixObject {
         if (relationships.has(this.id)) {
             relationships.get(this.id).forEach((targetID) => {
                 const technique = domain.techniques.find((t) => t.id === targetID);
-                if (technique) techniques.push(technique.id);
+                if (technique) techniques.push(technique);
             });
         }
         return techniques;

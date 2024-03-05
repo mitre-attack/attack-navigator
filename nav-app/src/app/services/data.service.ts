@@ -43,24 +43,32 @@ export class DataService {
      */
     public parseBundle(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
-        let matricesList: any[] = [];
-        let tacticsList: any[] = [];
         let seenIDs = new Set<string>();
+        let matrixSDOs = [];
+        let idToTacticSDO = new Map<string, any>();
+        let matrixToTechniqueSDOs = new Map<string, any[]>();
         for (let bundle of stixBundles) {
             let techniqueSDOs = [];
-			let matrixSDOs = [];
+            let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
-            let idToTacticSDO = new Map<string, any>();
             for (let sdo of bundle.objects) {
                 // iterate through stix domain objects in the bundle
                 // Filter out object not included in this domain if domains field is available
-                if (!domain.isCustom && sdo.x_mitre_domains?.length > 0 && (domain.urls.length == 1 && !sdo.x_mitre_domains.includes(domain.domain_identifier))) {
+                if (
+                    !domain.isCustom &&
+                    sdo.x_mitre_domains?.length > 0 &&
+                    domain.urls.length == 1 &&
+                    !sdo.x_mitre_domains.includes(domain.domain_identifier)
+                ) {
                     continue;
                 }
 
-                // filter out duplicates
-				if (seenIDs.has(sdo.id)) continue;
-				seenIDs.add(sdo.id);
+                // filter out duplicates, except for matrices
+                // which are needed to properly build the datatables
+                if (sdo.type != 'x-mitre-matrix') {
+                    if (seenIDs.has(sdo.id)) continue;
+                    seenIDs.add(sdo.id);
+                }
 
                 // parse according to type
                 switch (sdo.type) {
@@ -87,7 +95,7 @@ export class DataService {
                         domain.mitigations.push(new Mitigation(sdo, this));
                         break;
                     case 'relationship':
-						this.parseRelationship(sdo, domain);
+                        this.parseRelationship(sdo, domain);
                         break;
                     case 'attack-pattern':
                         idToTechniqueSDO.set(sdo.id, sdo);
@@ -100,6 +108,7 @@ export class DataService {
                         break;
                     case 'x-mitre-matrix':
                         matrixSDOs.push(sdo);
+                        bundleMatrices.push(sdo);
                         break;
                     case 'note':
                         domain.notes.push(new Note(sdo));
@@ -108,151 +117,156 @@ export class DataService {
             }
 
             // create techniques
-			this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
+            this.createTechniques(techniqueSDOs, idToTechniqueSDO, domain);
 
-			// parse platforms
-			this.parsePlatforms(domain).forEach(platforms.add, platforms);
-
-            // create a list of matrix and tactic SDOs
-            for (let matrixSDO of matrixSDOs) {
-                if (matrixSDO.x_mitre_deprecated) {
-                    continue;
+            // create map of matrices to techniques
+            for (let matrixSDO of bundleMatrices) {
+                if (!matrixToTechniqueSDOs.get(matrixSDO.id)) {
+                    matrixToTechniqueSDOs.set(matrixSDO.id, techniqueSDOs);
+                } else {
+                    matrixToTechniqueSDOs.get(matrixSDO.id).push(...techniqueSDOs);
                 }
-                matricesList.push(matrixSDO);
-                tacticsList.push(idToTacticSDO);
             }
+
+            // parse platforms
+            this.parsePlatforms(domain).forEach(platforms.add, platforms);
         }
 
         // create matrices
-		this.createMatrices(matricesList, tacticsList, domain);
+        this.createMatrices(matrixSDOs, idToTacticSDO, matrixToTechniqueSDOs, domain);
 
         domain.platforms = Array.from(platforms); // convert to array
 
         // data loading complete; update watchers
         domain.dataLoaded = true;
-		domain.executeCallbacks();
+        domain.executeCallbacks();
     }
 
-	/**
-	 * Creates techniques and sub-techniques from the given technique SDOs
-	 * @param techniqueSDOs list of parent-level technique SDOs to create
-	 * @param idToTechniqueSDO map of all technique IDs to SDOs (incl. sub-techniques)
-	 * @param domain the domain to add the techniques to
-	 */
-	public createTechniques(techniqueSDOs: any, idToTechniqueSDO: Map<string, any>, domain: Domain): void {
-		for (let techniqueSDO of techniqueSDOs) {
-			let subtechniques: Technique[] = [];
-			if (this.configService.subtechniquesEnabled) {
-				if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
-					domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
-						if (idToTechniqueSDO.has(sub_id)) {
-							let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
-							subtechniques.push(subtechnique);
-							domain.subtechniques.push(subtechnique);
-						}
-						// else the target was revoked or deprecated and we can skip honoring the relationship
-					});
-				}
-			}
-			domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
-		}
-	}
-
-	/**
-	 * Creates the matrices, which also creates its tactics and filters the techniques
-	 * @param matricesList list of matrix SDOs to create
-	 * @param tacticsList list of tactic SDOs
-	 * @param domain the domain to add the matrix/tactics to
-	 */
-	public createMatrices(matricesList: any[], tacticsList: any[], domain: Domain): void {
-        for (let i = 0; i < matricesList.length; i++) {
-            let techniquesList = [];
-            if (matricesList[i].x_mitre_deprecated) {
-                continue;
+    /**
+     * Creates techniques and sub-techniques from the given technique SDOs
+     * @param techniqueSDOs list of parent-level technique SDOs to create
+     * @param idToTechniqueSDO map of all technique IDs to SDOs (incl. sub-techniques)
+     * @param domain the domain to add the techniques to
+     */
+    public createTechniques(techniqueSDOs: any, idToTechniqueSDO: Map<string, any>, domain: Domain): void {
+        for (let techniqueSDO of techniqueSDOs) {
+            let subtechniques: Technique[] = [];
+            if (this.configService.subtechniquesEnabled) {
+                if (domain.relationships.subtechniques_of.has(techniqueSDO.id)) {
+                    domain.relationships.subtechniques_of.get(techniqueSDO.id).forEach((sub_id) => {
+                        if (idToTechniqueSDO.has(sub_id)) {
+                            let subtechnique = new Technique(idToTechniqueSDO.get(sub_id), [], this);
+                            subtechniques.push(subtechnique);
+                            domain.subtechniques.push(subtechnique);
+                        }
+                        // else the target was revoked or deprecated and we can skip honoring the relationship
+                    });
+                }
             }
-            for (let technique of domain.techniques) {
-				if (technique.x_mitre_domains.includes(matricesList[i].external_references[0].external_id)) {
-					techniquesList.push(technique);
-				}
-            }
-            domain.matrices.push(new Matrix(matricesList[i], tacticsList[i], techniquesList, this));
+            domain.techniques.push(new Technique(techniqueSDO, subtechniques, this));
         }
-	}
+    }
 
-	/**
-	 * Extrats the set of platforms from the list of techniques
-	 * in the given domain
-	 * @param domain the domain for which to parse the platforms
-	 * @returns the set of platforms found
-	 */
-	public parsePlatforms(domain: Domain): Set<string> {
-		let platforms = new Set<string>();
-		let allTechniques = domain.techniques.concat(domain.subtechniques);
+    /**
+     * Creates the matrices, which also creates its tactics and filters the techniques
+     * @param matricesList list of matrix SDOs to create
+     * @param tacticsList list of tactic SDOs
+     * @param domain the domain to add the matrix/tactics to
+     */
+    public createMatrices(matrixSDOs: any[], idToTacticSDO: Map<string, any>, matrixToTechniqueSDOs, domain: Domain): void {
+        let createdMatrixIDs = [];
+        for (let matrixSDO of matrixSDOs) {
+            // check if matrix was already created
+            if (createdMatrixIDs.includes(matrixSDO.id)) continue;
 
-		// parse platforms
-		allTechniques.forEach((technique) => {
-			technique.platforms?.forEach(platforms.add, platforms);
-		});
+            // check if matrix is deprecated
+            if (matrixSDO.x_mitre_deprecated) continue;
 
-		return platforms;
-	}
+            // retrieve relevant matrix techniques
+            let techniqueSDOs = matrixToTechniqueSDOs.get(matrixSDO.id);
+            let techniqueIDs = techniqueSDOs.map((t) => t.id);
+            let techniques = domain.techniques.filter((t) => techniqueIDs.includes(t.id));
+            domain.matrices.push(new Matrix(matrixSDO, idToTacticSDO, techniques, this));
 
-	/**
-	 * Parses the given SRO into the domain relationship map
-	 * @param sro the SRO to parse
-	 * @param domain the domain to add the relationship to
-	 */
-	public parseRelationship(sro: any, domain: Domain): void {
-		// for existing keys, add the given value to the list of values
-		// otherwise, add the key with the value as the first item in the list
-		let addRelationshipToMap = function(map, key, value) {
-			if (map.has(key)) map.get(key).push(value);
-			else map.set(key, [value]);
-		}
+            // add to list of created matrices
+            createdMatrixIDs.push(matrixSDO.id);
+        }
+    }
 
-		switch (sro.relationship_type) {
-			case 'subtechnique-of':
-				if (!this.configService.subtechniquesEnabled) return;
-				// record subtechnique:technique relationship
-				addRelationshipToMap(domain.relationships['subtechniques_of'], sro.target_ref, sro.source_ref);
-				break;
-			case 'uses':
-				if (sro.source_ref.startsWith('intrusion-set') && sro.target_ref.startsWith('attack-pattern')) {
-					// record group:technique relationship
-					addRelationshipToMap(domain.relationships['group_uses'], sro.source_ref, sro.target_ref);
-				} else if (
-					(sro.source_ref.startsWith('malware') || sro.source_ref.startsWith('tool')) &&
-					sro.target_ref.startsWith('attack-pattern')
-				) {
-					// record software:technique relationship
-					addRelationshipToMap(domain.relationships['software_uses'], sro.source_ref, sro.target_ref);
-				} else if (sro.source_ref.startsWith('campaign') && sro.target_ref.startsWith('attack-pattern')) {
-					// record campaign:technique relationship
-					addRelationshipToMap(domain.relationships['campaign_uses'], sro.source_ref, sro.target_ref);
-				}
-				break;
-			case 'mitigates':
-				// record mitigation:technique relationship
-				addRelationshipToMap(domain.relationships['mitigates'], sro.source_ref, sro.target_ref);
-				break;
-			case 'revoked-by':
-				// record stix object: stix object relationship
-				domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
-				break;
-			case 'detects':
-				// record data component: technique relationship
-				addRelationshipToMap(domain.relationships['component_rel'], sro.source_ref, sro.target_ref);
-				break;
-			case 'attributed-to':
-				// record campaign:group relationship
-				addRelationshipToMap(domain.relationships['campaigns_attributed_to'], sro.target_ref, sro.source_ref);
-				break;
-			case 'targets':
-				// record technique:asset relationship
-				addRelationshipToMap(domain.relationships['targeted_assets'], sro.target_ref, sro.source_ref);
-				break;
-		}
-	}
+    /**
+     * Extrats the set of platforms from the list of techniques
+     * in the given domain
+     * @param domain the domain for which to parse the platforms
+     * @returns the set of platforms found
+     */
+    public parsePlatforms(domain: Domain): Set<string> {
+        let platforms = new Set<string>();
+        let allTechniques = domain.techniques.concat(domain.subtechniques);
+
+        // parse platforms
+        allTechniques.forEach((technique) => {
+            technique.platforms?.forEach(platforms.add, platforms);
+        });
+
+        return platforms;
+    }
+
+    /**
+     * Parses the given SRO into the domain relationship map
+     * @param sro the SRO to parse
+     * @param domain the domain to add the relationship to
+     */
+    public parseRelationship(sro: any, domain: Domain): void {
+        // for existing keys, add the given value to the list of values
+        // otherwise, add the key with the value as the first item in the list
+        let addRelationshipToMap = function (map, key, value) {
+            if (map.has(key)) map.get(key).push(value);
+            else map.set(key, [value]);
+        };
+
+        switch (sro.relationship_type) {
+            case 'subtechnique-of':
+                if (!this.configService.subtechniquesEnabled) return;
+                // record subtechnique:technique relationship
+                addRelationshipToMap(domain.relationships['subtechniques_of'], sro.target_ref, sro.source_ref);
+                break;
+            case 'uses':
+                if (sro.source_ref.startsWith('intrusion-set') && sro.target_ref.startsWith('attack-pattern')) {
+                    // record group:technique relationship
+                    addRelationshipToMap(domain.relationships['group_uses'], sro.source_ref, sro.target_ref);
+                } else if (
+                    (sro.source_ref.startsWith('malware') || sro.source_ref.startsWith('tool')) &&
+                    sro.target_ref.startsWith('attack-pattern')
+                ) {
+                    // record software:technique relationship
+                    addRelationshipToMap(domain.relationships['software_uses'], sro.source_ref, sro.target_ref);
+                } else if (sro.source_ref.startsWith('campaign') && sro.target_ref.startsWith('attack-pattern')) {
+                    // record campaign:technique relationship
+                    addRelationshipToMap(domain.relationships['campaign_uses'], sro.source_ref, sro.target_ref);
+                }
+                break;
+            case 'mitigates':
+                // record mitigation:technique relationship
+                addRelationshipToMap(domain.relationships['mitigates'], sro.source_ref, sro.target_ref);
+                break;
+            case 'revoked-by':
+                // record stix object: stix object relationship
+                domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
+                break;
+            case 'detects':
+                // record data component: technique relationship
+                addRelationshipToMap(domain.relationships['component_rel'], sro.source_ref, sro.target_ref);
+                break;
+            case 'attributed-to':
+                // record campaign:group relationship
+                addRelationshipToMap(domain.relationships['campaigns_attributed_to'], sro.target_ref, sro.source_ref);
+                break;
+            case 'targets':
+                // record technique:asset relationship
+                addRelationshipToMap(domain.relationships['targeted_assets'], sro.target_ref, sro.source_ref);
+                break;
+        }
+    }
 
     // Observable for data in config.json
     private configData$: Observable<Object>;
@@ -430,15 +444,15 @@ export class DataService {
 
             let prevTechnique = objectLookup.get(latestTechnique.id);
             if (!prevTechnique) {
-				if (latestTechnique.deprecated || latestTechnique.revoked) {
-					// object doesn't exist in previous version, but is deprecated or revoked
-					// in the latest version
-					// this case is unlikely to occur and indicates that something has
-					// gone wrong in the data, such as the case in which a sub-technique
-					// was deprecated, had its ties erroneously severed with its parent
-					// and therefore, cannot be parsed correctly
-					continue;
-				}
+                if (latestTechnique.deprecated || latestTechnique.revoked) {
+                    // object doesn't exist in previous version, but is deprecated or revoked
+                    // in the latest version
+                    // this case is unlikely to occur and indicates that something has
+                    // gone wrong in the data, such as the case in which a sub-technique
+                    // was deprecated, had its ties erroneously severed with its parent
+                    // and therefore, cannot be parsed correctly
+                    continue;
+                }
 
                 // object doesn't exist in previous version, added to latest version
                 changelog.additions.push(latestTechnique.attackID);
