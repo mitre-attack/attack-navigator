@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuItem } from '../classes/context-menu-item';
 import { HttpClient } from '@angular/common/http';
-import { map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -178,7 +178,7 @@ export class ConfigService {
      */
     public loadConfig() {
         return this.http.get('./assets/config.json').pipe(
-			map((config) => {
+			switchMap((config: any) => {
 				console.debug('loaded app configuration settings');
 
 				this.versions = config['versions'];
@@ -204,16 +204,17 @@ export class ConfigService {
 						this.setFeature(key, value == 'true');
 					}
 				});
-				return config['collection_index_url'];
-			}),
-			switchMap((collectionIndexUrl: string) => {
-				if (collectionIndexUrl) return this.http.get(collectionIndexUrl);
-				// TODO return properly if no url is provided
-				return of({});
+
+				if (config['collection_index_url']) {
+					return this.http.get(config['collection_index_url']).pipe(
+						tap(_ => console.log('loaded collection index from', config['collection_index_url'])),
+						catchError(() => of(null))
+					);
+				}
+				return of(null);
 			}),
 			map((collectionIndex: any) => {
-				console.log('loaded collection index');
-				this.collectionIndex = collectionIndex;
+				if (collectionIndex) this.collectionIndex = collectionIndex;
 			})
 		).toPromise()
     }
