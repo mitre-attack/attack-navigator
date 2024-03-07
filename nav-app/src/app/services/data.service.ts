@@ -21,7 +21,6 @@ export class DataService {
 		if (configService.collectionIndex) {
 			this.parseCollectionIndex(configService.collectionIndex);
 		}
-		// TODO restrict to one or both?
 		if (configService.versions) {
 			this.setUpDomains(configService.versions);
 		}
@@ -269,9 +268,9 @@ export class DataService {
     // Observable for data
     private domainData$: Observable<Object>;
 
+	// TODO remove this block & update config loading
     // URLs in case config file doesn't load properly
     public latestVersion: Version = { name: 'ATT&CK v14', number: '14' };
-    public lowestSupportedVersion: Version; // used by tabs component
     public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
     public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
     public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
@@ -299,6 +298,7 @@ export class DataService {
             });
         });
 
+		// TODO remove this & update config loading
         if (this.domains.length == 0) {
             // issue loading config
             this.versions.push(this.latestVersion);
@@ -307,18 +307,24 @@ export class DataService {
             let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
             this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
         }
-
-		//TODO check this with introduction of collection index
-        this.lowestSupportedVersion = this.versions[this.versions.length - 1];
     }
 
 	public parseCollectionIndex(collectionIndex: any) {
 		for (let collection of collectionIndex.collections) {
 			let domainIdentifier = collection.name.replace(' ', '-').replace('&', 'a').toLowerCase();
-			for (let version of collection.versions) {
-				// TODO only parse most recent minor versions of a major release?
-				// TODO ignore beta versions?
-				let versionNumber = version.version;
+
+			// only most recent minor versions of a major release
+			let minorVersionMap = collection.versions.reduce((acc, version) => {
+				const [major, minor] = version.version.split('.').map(Number);
+				if (!acc[major] || acc[major].minor < minor) {
+					acc[major] = {version: version.version, url: version.url};
+				}
+				return acc;
+			}, {});
+			let versions: Array<{version: string, url: string}> = Object.values(minorVersionMap);
+
+			for (let version of versions) {
+				let versionNumber = version.version.split('.')[0]; // major version only
 				let versionName = `${collectionIndex.name} v${versionNumber}`;
 				if (+versionNumber < +globals.minimumSupportedVersion) {
 					console.debug(`version ${versionNumber} is not supported, skipping ${versionName}`);
