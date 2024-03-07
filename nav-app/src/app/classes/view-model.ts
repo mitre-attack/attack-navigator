@@ -1078,7 +1078,8 @@ export class ViewModel {
         let versionNumber = '';
         let obj = typeof rep == 'string' ? JSON.parse(rep) : rep;
         this.name = obj.name;
-        this.version = this.dataService.getCurrentVersion().number; // layer with no specified version defaults to current version
+		// layer with no specified version defaults to current version
+        this.version = this.dataService.latestVersion.number;
         if ('versions' in obj) {
             if ('attack' in obj.versions) {
                 if (typeof obj.versions.attack === 'string') {

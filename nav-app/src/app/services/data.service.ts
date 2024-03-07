@@ -19,12 +19,16 @@ export class DataService {
     ) {
         console.debug('initializing data service');
 		if (configService.collectionIndex) {
+			// parse versions from collection index
 			this.parseCollectionIndex(configService.collectionIndex);
 		}
 		if (configService.versions) {
+			// parse versions structure from configuration file
+			// support for workbench integration, taxii and custom data
 			this.setUpDomains(configService.versions);
 		}
 		this.versions.sort((a, b) => +a.number > +b.number ? -1 : 1);
+		this.latestVersion = this.versions[0];
     }
 
     public domain_backwards_compatibility = {
@@ -33,6 +37,16 @@ export class DataService {
     };
     public domains: Domain[] = [];
     public versions: Version[] = [];
+
+    // Observable for data
+    private domainData$: Observable<Object>;
+
+	// TODO remove this block & update config loading
+    // URLs in case config file doesn't load properly
+	public latestVersion: Version; // set in constructor
+    public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
+    public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
+    public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
 
     /**
      * Callback functions passed to this function will be called after data is loaded
@@ -265,16 +279,6 @@ export class DataService {
         }
     }
 
-    // Observable for data
-    private domainData$: Observable<Object>;
-
-	// TODO remove this block & update config loading
-    // URLs in case config file doesn't load properly
-    public latestVersion: Version = { name: 'ATT&CK v14', number: '14' };
-    public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
-    public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
-    public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
-
     /**
      * Set up the URLs for domains in the list defined in the config file
      * @param {versions} list of versions and domains
@@ -299,14 +303,14 @@ export class DataService {
         });
 
 		// TODO remove this & update config loading
-        if (this.domains.length == 0) {
-            // issue loading config
-            this.versions.push(this.latestVersion);
-            let enterpriseDomain = new Domain('enterprise-attack', 'Enterprise', this.latestVersion, [this.enterpriseAttackURL]);
-            let mobileDomain = new Domain('mobile-attack', 'Mobile', this.latestVersion, [this.mobileAttackURL]);
-            let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
-            this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
-        }
+        // if (this.domains.length == 0) {
+        //     // issue loading config
+        //     this.versions.push(this.latestVersion);
+        //     let enterpriseDomain = new Domain('enterprise-attack', 'Enterprise', this.latestVersion, [this.enterpriseAttackURL]);
+        //     let mobileDomain = new Domain('mobile-attack', 'Mobile', this.latestVersion, [this.mobileAttackURL]);
+        //     let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
+        //     this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
+        // }
     }
 
 	public parseCollectionIndex(collectionIndex: any) {
@@ -436,13 +440,6 @@ export class DataService {
         let domain = this.getDomain(domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
         return all_techniques.find((t) => t.attackID == attackID);
-    }
-
-    /**
-     * Retrieves the first version defined in the config file
-     */
-    public getCurrentVersion() {
-        return this.domains[0].version;
     }
 
     /**

@@ -589,7 +589,7 @@ export class TabsComponent implements AfterViewInit {
      */
     public versionUpgradeDialog(viewModel: ViewModel): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
-            let currVersion = this.dataService.getCurrentVersion().number;
+            let currVersion = this.dataService.latestVersion.number;
             if (viewModel.version !== currVersion) {
                 // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
@@ -641,7 +641,7 @@ export class TabsComponent implements AfterViewInit {
                             // user upgraded to latest version
                             // create and open the latest version
                             let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
-                            newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
+                            newViewModel.version = this.dataService.latestVersion.number; // update version to new ID
                             newViewModel.deserialize(serialized, false); // restore layer data, except for technique annotations
                             newViewModel.loadVMData();
                             newViewModel.compareTo = oldViewModel;
