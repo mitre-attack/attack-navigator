@@ -18,14 +18,14 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-		if (configService.collectionIndex) {
-			// parse versions from collection index
-			this.parseCollectionIndex(configService.collectionIndex);
-		}
 		if (configService.versions) {
 			// parse versions structure from configuration file
 			// support for workbench integration, taxii and custom data
 			this.setUpDomains(configService.versions);
+		}
+		if (configService.collectionIndex) {
+			// parse versions from collection index
+			this.parseCollectionIndex(configService.collectionIndex);
 		}
 		this.versions.sort((a, b) => +a.number > +b.number ? -1 : 1);
 		this.latestVersion = this.versions[0];
@@ -286,8 +286,7 @@ export class DataService {
      */
     public setUpDomains(versions: any[]) {
         versions.forEach((version: any) => {
-            let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
-            this.versions.push(v);
+			let v = this.addVersion(version['name'], version['version'].match(/\d+/g)[0]);
             version['domains'].forEach((domain: any) => {
                 let identifier = domain['identifier'];
                 let domainObject = new Domain(identifier, domain['name'], v);
