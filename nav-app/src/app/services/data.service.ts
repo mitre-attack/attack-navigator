@@ -37,13 +37,13 @@ export class DataService {
     };
     public domains: Domain[] = [];
     public versions: Version[] = [];
+	public latestVersion: Version; // set in constructor
 
     // Observable for data
     private domainData$: Observable<Object>;
 
 	// TODO remove this block & update config loading
     // URLs in case config file doesn't load properly
-	public latestVersion: Version; // set in constructor
     public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
     public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
     public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';

@@ -172,16 +172,25 @@ export class ConfigService {
         return fragments;
     }
 
+	public validateConfig(config: any): any {
+		if (!config.collection_index_url && !config.versions?.length) {
+			throw new Error(`'collection_index_url' or 'versions' must be defined`);
+		}
+		if (config.collection_index_url && typeof config.collection_index_url !== typeof 'string') {
+			throw new Error(`'collection_index_url' must be a string`);
+		}
+		return config;
+	}
+
     /**
      * Load the configuration file
      * Note: this is done at startup
      */
     public loadConfig() {
         return this.http.get('./assets/config.json').pipe(
+			map((config: any) => this.validateConfig(config)),
 			switchMap((config: any) => {
 				console.debug('loaded app configuration settings');
-
-				this.versions = config['versions'];
 
 				config['custom_context_menu_items'].forEach((item) => {
 					this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
@@ -205,16 +214,22 @@ export class ConfigService {
 					}
 				});
 
+				// parse configured domains and versions
+				this.versions = config['versions'];
 				if (config['collection_index_url']) {
 					return this.http.get(config['collection_index_url']).pipe(
 						tap(_ => console.log('loaded collection index from', config['collection_index_url'])),
-						catchError(() => of(null))
+						catchError((err) => { throw new Error('collection index failed to load. ' + err.message) })
 					);
 				}
 				return of(null);
 			}),
 			map((collectionIndex: any) => {
 				if (collectionIndex) this.collectionIndex = collectionIndex;
+			}),
+			catchError(err => {
+				alert(`ERROR the configuration file failed to parse. See the javascript console for more details.`);
+				throw err;
 			})
 		).toPromise()
     }
