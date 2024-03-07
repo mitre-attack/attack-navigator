@@ -315,7 +315,7 @@ export class DataService {
 
 	public parseCollectionIndex(collectionIndex: any) {
 		for (let collection of collectionIndex.collections) {
-			let domainIdentifier = collection.name.replace(' ', '-').replace('&', 'a').toLowerCase();
+			let domainIdentifier = this.getDomainIdentifier(collection.name);
 
 			// only most recent minor versions of a major release
 			let minorVersionMap = collection.versions.reduce((acc, version) => {
@@ -339,6 +339,10 @@ export class DataService {
 				this.domains.push(new Domain(domainIdentifier, collection.name, v, [version.url]));
 			}
 		}
+	}
+
+	public getDomainIdentifier(domainName: string): string {
+		return domainName.replace(/ /g, '-').replace(/&/g, 'a').toLowerCase();
 	}
 
 	public addVersion(versionName: string, versionNumber: string): Version {
