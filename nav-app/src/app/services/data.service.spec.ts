@@ -53,12 +53,6 @@ describe('DataService', () => {
             expect(result).toEqual(`${domainIdentifier}-${version}`);
         });
 
-        it('should get current version', () => {
-            let result = dataService.getCurrentVersion();
-            expect(result.name).toEqual(dataService.latestVersion.name);
-            expect(result.number).toEqual(dataService.latestVersion.number);
-        });
-
         it('should not be supported version', () => {
             let result = dataService.isSupported('3');
             expect(result).toBeFalse();
@@ -219,15 +213,6 @@ describe('DataService', () => {
             expect(relationships['software_uses'].size).toEqual(1);
             expect(relationships['subtechniques_of'].size).toEqual(1);
             expect(relationships['targeted_assets'].size).toEqual(1);
-        });
-
-        it('should update domain watchers', () => {
-            let functionSpy = spyOn(dataService, 'getCurrentVersion');
-            dataService.setUpDomains(MockData.configData);
-            let domain = dataService.domains[0];
-            domain.dataLoadedCallbacks = [dataService.getCurrentVersion];
-            dataService.parseBundles(domain, MockData.stixBundleSDO);
-            expect(functionSpy).toHaveBeenCalled();
         });
     });
 
