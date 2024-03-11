@@ -16,9 +16,9 @@ import { MatStepper } from '@angular/material/stepper';
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version
     @ViewChildren(MatPaginator) paginators = new QueryList<MatPaginator>();
+    @ViewChildren(MatExpansionPanel) panels: QueryList<MatExpansionPanel>;
     public paginator_map: Map<string, number> = new Map(); // section name mapped to index of paginator
     public filteredIDs: string[] = [];
-
     @ViewChild('stepper') stepper: MatStepper;
 
     public changelog: VersionChangelog;
@@ -100,6 +100,9 @@ export class LayerUpgradeComponent implements OnInit {
         let start = paginator ? paginator.pageIndex * paginator.pageSize : 0;
         let end = paginator ? start + paginator.pageSize : 10;
         this.filteredIDs = sectionIDs.slice(start, end);
+        setTimeout(() => {
+            this.expandAll(section);
+        })
     }
 
     /**
@@ -198,6 +201,40 @@ export class LayerUpgradeComponent implements OnInit {
         } else {
             this.changelog.reviewed.add(attackID);
             panel.expanded = false; // close on review
+        }
+    }
+
+    /**
+     * Expands all the techniques for easy review
+     */
+    public expandAll(section: string): void {
+        let filtered_expand_visible_section = document.getElementById("filter_expand_visible_"+section) as HTMLInputElement;
+        this.panels.forEach(panel => {
+            if (filtered_expand_visible_section.checked){
+                panel.open();
+            }
+            else{
+                panel.close();
+            }
+        })
+    }
+
+    /**
+     * Marks all techniques in the section as reviewed
+     * @param section name of the changelog section
+     */
+    public reviewAll(section: string): void {
+        let sectionIDs = this.changelog[section];
+        let filtered_review_all_section = document.getElementById("filter_review_all_"+section) as HTMLInputElement;
+        if(filtered_review_all_section.checked){
+            for(let sectionID of sectionIDs){
+                this.changelog.reviewed.add(sectionID);
+            }
+        }
+        else{
+            for(let sectionID of sectionIDs){
+                this.changelog.reviewed.delete(sectionID);
+            }
         }
     }
 
