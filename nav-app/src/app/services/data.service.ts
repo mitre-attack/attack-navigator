@@ -42,12 +42,6 @@ export class DataService {
     // Observable for data
     private domainData$: Observable<Object>;
 
-	// TODO remove this block & update config loading
-    // URLs in case config file doesn't load properly
-    public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
-    public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
-    public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
-
     /**
      * Callback functions passed to this function will be called after data is loaded
      * @param {string} domainVersionID the ID of the domain and version to load
@@ -300,16 +294,6 @@ export class DataService {
                 this.domains.push(domainObject);
             });
         });
-
-		// TODO remove this & update config loading
-        // if (this.domains.length == 0) {
-        //     // issue loading config
-        //     this.versions.push(this.latestVersion);
-        //     let enterpriseDomain = new Domain('enterprise-attack', 'Enterprise', this.latestVersion, [this.enterpriseAttackURL]);
-        //     let mobileDomain = new Domain('mobile-attack', 'Mobile', this.latestVersion, [this.mobileAttackURL]);
-        //     let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
-        //     this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
-        // }
     }
 
 	public parseCollectionIndex(collectionIndex: any) {
@@ -330,7 +314,7 @@ export class DataService {
 				let versionNumber = version.version.split('.')[0]; // major version only
 				let versionName = `${collectionIndex.name} v${versionNumber}`;
 				if (+versionNumber < +globals.minimumSupportedVersion) {
-					console.debug(`version ${versionNumber} is not supported, skipping ${versionName}`);
+					console.debug(`version ${versionNumber} is not supported, skipping ${collection.name} v${versionNumber}`);
 					continue;
 				}
 				// create version & domain
