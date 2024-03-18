@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-GFD952VXH6"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-GFD952VXH6');
+	</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATT&amp;CK&reg; Navigator</title>
+</head>
+<body>
+    <div>
+        <h3>ATT&CK Navigator's Mobile instance has moved to the new multi-domain instance.</h3>
+        <p>This page should automatically redirect. If it does not, please use the following link:</p>
+        <p><a href="https://mitre-attack.github.io/attack-navigator/">https://mitre-attack.github.io/attack-navigator/</a></p>
+    </div>
+    
+    <style>
+        h3 {
+            font-size: 25px;
+        }
+        div { 
+            max-width: 35em;
+            margin: 5vh auto;
+        }
+        .deemphasis {
+            color: rgb(171, 171, 171);
+        }
+    </style>
+    <script>
+        let configuration = window.location.hash
+        let redirectURL = "https://mitre-attack.github.io/attack-navigator" + configuration
+        console.log("redirecting to", redirectURL)
+        window.location = redirectURL;
+    </script>
+</body>
+</html>
