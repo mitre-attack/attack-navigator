@@ -1,0 +1,67 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  deploy-to-gh-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    defaults:
+      run:
+        working-directory: ./nav-app/
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: nav-app/package-lock.json
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build Navigator
+        run: npm run build -- --configuration production,googleAnalytics --aot=false --build-optimizer=false --base-href=https://mitre-attack.github.io/attack-navigator/
+
+      - name: Download and extract Navigator v2
+        uses: robinraju/release-downloader@v1.9
+        with:
+          repository: "mitre-attack/attack-navigator"
+          tag: "v2.3.2"
+          fileName: "attack-navigator-v2.zip"
+          extract: true
+
+      - name: Move v2 to output directory
+        run: mv ../v2/ dist/
+
+      - name: Download and extract Navigator v3
+        uses: robinraju/release-downloader@v1.9
+        with:
+          repository: "mitre-attack/attack-navigator"
+          tag: "v3.1"
+          fileName: "attack-navigator-v3.zip"
+          extract: true
+
+      - name: Move v3 to output directory
+        run: mv ../v3/ dist/
+
+      - name: Copy redirects
+        run: cp -r ./redirects/* ./dist/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./nav-app/dist
