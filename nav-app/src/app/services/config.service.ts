@@ -9,7 +9,13 @@ import { of } from 'rxjs';
 })
 export class ConfigService {
 	public collectionIndex: string;
-    public versions: any[] = [];
+    public versions: {
+		enabled: boolean,
+		data: any
+	} = {
+		enabled: false,
+		data: []
+	};
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;
     public commentColor = 'yellow';

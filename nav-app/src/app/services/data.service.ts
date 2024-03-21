@@ -18,10 +18,10 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-		if (configService.versions) {
+		if (configService.versions?.enabled) {
 			// parse versions structure from configuration file
 			// support for workbench integration, taxii and custom data
-			this.setUpDomains(configService.versions);
+			this.setUpDomains(configService.versions.data);
 		}
 		if (configService.collectionIndex) {
 			// parse versions from collection index
