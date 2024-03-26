@@ -1,5 +1,6 @@
 import { DataService } from '../../services/data.service';
 import { StixObject } from './stix-object';
+import { Technique } from './technique';
 
 export class DataComponent extends StixObject {
     public readonly url: string;
@@ -15,7 +16,7 @@ export class DataComponent extends StixObject {
      * @param domainVersionID the ID of the domain and version
      * @returns {Technique[]} list of techniques used by the data component
      */
-    public techniques(domainVersionID): string[] {
+    public techniques(domainVersionID): Technique[] {
         const techniques = [];
         const domain = this.dataService.getDomain(domainVersionID);
 

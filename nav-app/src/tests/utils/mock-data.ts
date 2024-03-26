@@ -1,57 +1,49 @@
 // Mock Test Data
 
 // mock data configurations
-export const configData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
-            },
-        ],
-    },
-];
-
-export const mobileDomainData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Mobile',
-                identifier: 'mobile-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/mobile-attack/mobile-attack.json'],
-            },
-        ],
-    },
-];
-export const configDataExtended = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
-            },
-        ],
-    },
-    {
-        name: 'ATT&CK v12',
-        version: '12',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json'],
-            },
-        ],
-    },
-];
+export const configData = {
+	"enabled": true,
+	"data": [
+		{
+			name: 'ATT&CK v13',
+			version: '13',
+			domains: [
+				{
+					name: 'Enterprise',
+					identifier: 'enterprise-attack',
+					data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+				},
+			],
+		},
+	]
+}
+export const configDataExtended = {
+	enabled: true,
+	data: [
+		{
+			name: 'ATT&CK v13',
+			version: '13',
+			domains: [
+				{
+					name: 'Enterprise',
+					identifier: 'enterprise-attack',
+					data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+				},
+			],
+		},
+		{
+			name: 'ATT&CK v12',
+			version: '12',
+			domains: [
+				{
+					name: 'Enterprise',
+					identifier: 'enterprise-attack',
+					data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json'],
+				},
+			],
+		},
+	]
+};
 export const defaultLayersEnabled = {
     enabled: true,
     urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
@@ -61,30 +53,46 @@ export const defaultLayersDisabled = {
     urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
 };
 
-export const taxiiData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                taxii_url: 'https://cti-taxii.mitre.org/',
-                taxii_collection: '95ecc380-afe9-11e4-9b6c-751b66dd541e',
-            },
-        ],
-    },
-];
-export const workbenchData = [
-    {
-        ...configData[0],
-        authentication: {
-            enabled: true,
-            serviceName: 'navigator',
-            apiKey: 'sample-navigator-apikey',
-        },
-    },
-];
+export const taxiiData = {
+	enabled: true,
+	data: [
+		{
+			name: 'ATT&CK v13',
+			version: '13',
+			domains: [
+				{
+					name: 'Enterprise',
+					identifier: 'enterprise-attack',
+					taxii_url: 'https://cti-taxii.mitre.org/',
+					taxii_collection: '95ecc380-afe9-11e4-9b6c-751b66dd541e',
+				},
+			],
+		},
+	]
+};
+
+export const workbenchData = {
+	enabled: true,
+	data: [
+		{
+			name: 'ATT&CK v13',
+			version: '13',
+			domains: [
+				{
+					name: 'Enterprise',
+					identifier: 'enterprise-attack',
+					data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+				},
+			],
+			authentication: {
+				enabled: true,
+				serviceName: 'navigator',
+				apiKey: 'sample-navigator-apikey',
+			},
+		},
+	]
+};
+
 export const configTechniqueControls = {
     name: 'technique_controls',
     enabled: true,

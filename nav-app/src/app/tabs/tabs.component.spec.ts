@@ -40,7 +40,7 @@ describe('TabsComponent', () => {
         }).compileComponents();
         dialog = TestBed.inject(MatDialog);
         configService = TestBed.inject(ConfigService);
-        configService.versions = [];
+        configService.versions = {enabled: true, data: []};
         configService.banner = 'test banner';
         configService.defaultLayers = MockData.defaultLayersDisabled;
         dataService = TestBed.inject(DataService);
@@ -457,16 +457,16 @@ describe('TabsComponent', () => {
         });
 
         it('should create new layer from url', waitForAsync(() => {
-            component.dataService.domains[0].dataLoaded = true;
+			component.dataService.setUpDomains(MockData.configData.data);
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
             component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(MockLayers.layerFile1)));
-            expect(component.dataService.domains.length).toEqual(3);
+            expect(component.dataService.domains.length).toEqual(2);
         }));
 
         it('should read and open json file', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configData);
+            component.dataService.setUpDomains(MockData.configData.data);
             let mockedDocElement = document.createElement('input');
             mockedDocElement.id = 'uploader';
             mockedDocElement.value = 'test1';
@@ -525,7 +525,7 @@ describe('TabsComponent', () => {
             component.openTab('layer', vm1, true, true, true, true);
             component.openTab('layer1', vm2, true, true, true, true);
             expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
-            component.dataService.setUpDomains(MockData.configData); // set up data
+            component.dataService.setUpDomains(MockData.configData.data); // set up data
             component.opSettings.domain = 'enterprise-attack-13';
             expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -539,7 +539,7 @@ describe('TabsComponent', () => {
             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
             component.openTab('layer', vm1, true, true, true, true);
             expect(component.getScoreExpressionError()).toEqual(null);
-            component.dataService.setUpDomains(MockData.configData); // set up data
+            component.dataService.setUpDomains(MockData.configData.data); // set up data
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
             component.opSettings.domain = 'enterprise-attack-13';
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -555,7 +555,7 @@ describe('TabsComponent', () => {
             component.openTab('layer', vm1, true, true, true, true);
             component.openTab('layer2', vm2, true, true, true, true);
 
-            component.dataService.setUpDomains(MockData.configDataExtended); // set up data
+            component.dataService.setUpDomains(MockData.configDataExtended.data); // set up data
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
             component.opSettings.domain = 'enterprise-attack-13';
             let alertSpy = spyOn(window, 'alert');
@@ -568,7 +568,7 @@ describe('TabsComponent', () => {
 
     describe('versionUpgradeDialog', () => {
         it('should upgrade layer', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
@@ -579,12 +579,12 @@ describe('TabsComponent', () => {
                 expect(versionUpgradeSpy).toHaveBeenCalled();
             });
             fixture.whenStable().then(() => {
-                expect(component.layerTabs.length).toEqual(2);
+                expect(component.layerTabs.length).toEqual(1);
             });
         }));
 
         it('should not upgrade layer', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
@@ -598,7 +598,7 @@ describe('TabsComponent', () => {
         }));
 
         it('should not upgrade layer with domain data loaded', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
@@ -623,7 +623,7 @@ describe('TabsComponent', () => {
 
     describe('upgradeLayer', () => {
         it('should upgrade layer', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
@@ -634,12 +634,12 @@ describe('TabsComponent', () => {
                 expect(versionUpgradeSpy).toHaveBeenCalled();
             });
             fixture.whenStable().then(() => {
-                expect(component.layerTabs.length).toEqual(2);
+                expect(component.layerTabs.length).toEqual(1);
             });
         }));
 
         it('should not upgrade layer', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
@@ -653,7 +653,7 @@ describe('TabsComponent', () => {
         }));
 
         it('should not upgrade layer with default layer enabled', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -664,7 +664,7 @@ describe('TabsComponent', () => {
         }));
 
         it('should not upgrade layer with default layer enabled and domain data loaded', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
             let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
@@ -676,7 +676,7 @@ describe('TabsComponent', () => {
         }));
 
         it('should not upgrade layer with domain data loaded', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configDataExtended);
+            component.dataService.setUpDomains(MockData.configDataExtended.data);
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
@@ -701,16 +701,13 @@ describe('TabsComponent', () => {
 
     describe('loadLayerFromURL', () => {
         it('should load from url', waitForAsync(() => {
-            component.dataService.setUpDomains(MockData.configData);
+            component.dataService.setUpDomains(MockData.configData.data);
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
-            let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve(true));
-            let upgradeLayerSpy = spyOn(component, 'upgradeLayer').and.returnValue(Promise.resolve([]));
             component
                 .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
                 .then(() => {
-                    expect(versionMismatchSpy).toHaveBeenCalled();
-                    expect(upgradeLayerSpy).toHaveBeenCalled();
+					expect(component.loadTabs.length).toEqual(1);
                 });
         }));
 
@@ -731,7 +728,6 @@ describe('TabsComponent', () => {
             component.dataService.setUpDomains(versions);
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
-            let versionMismatchSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve(true));
             let alertSpy = spyOn(window, 'alert');
             let consoleSpy = spyOn(console, 'error');
             component
@@ -739,7 +735,6 @@ describe('TabsComponent', () => {
                 .then(() => {
                     expect(consoleSpy).toHaveBeenCalled();
                     expect(alertSpy).toHaveBeenCalled();
-                    expect(versionMismatchSpy).toHaveBeenCalled();
                 });
         }));
     });

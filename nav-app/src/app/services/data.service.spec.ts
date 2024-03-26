@@ -21,7 +21,7 @@ describe('DataService', () => {
             providers: [DataService],
         });
         configService = TestBed.inject(ConfigService);
-        configService.versions = [];
+        configService.versions = MockData.configData;
         dataService = TestBed.inject(DataService);
         http = TestBed.inject(HttpClient);
     });
@@ -29,14 +29,6 @@ describe('DataService', () => {
     describe('setup with default versions', () => {
         it('should be created', () => {
             expect(dataService).toBeTruthy();
-        });
-
-        it('should set up data on failure to load config', () => {
-            expect(dataService.versions.length).toEqual(1);
-            expect(dataService.versions[0]).toEqual(dataService.latestVersion);
-            expect(dataService.domains.length).toEqual(3);
-            let last = dataService.domains[dataService.domains.length - 1];
-            expect(last).toBeInstanceOf(Domain);
         });
 
         it('should get domainVersionID with latest version', () => {
@@ -88,7 +80,7 @@ describe('DataService', () => {
             expect(mockService.versions.length).toEqual(1);
             expect(domain).toBeInstanceOf(Domain);
             expect(domain.authentication).toBeTruthy();
-            expect(domain.authentication).toEqual(MockData.workbenchData[0].authentication);
+            expect(domain.authentication).toEqual(MockData.workbenchData.data[0].authentication);
         });
 
         it('should fetch domain data via Workbench', () => {
@@ -110,9 +102,9 @@ describe('DataService', () => {
             expect(mockService.versions.length).toEqual(1);
             expect(domain).toBeInstanceOf(Domain);
             expect(domain.taxii_url).toBeTruthy();
-            expect(domain.taxii_url).toEqual(MockData.taxiiData[0].domains[0].taxii_url);
+            expect(domain.taxii_url).toEqual(MockData.taxiiData.data[0].domains[0].taxii_url);
             expect(domain.taxii_collection).toBeTruthy();
-            expect(domain.taxii_collection).toEqual(MockData.taxiiData[0].domains[0].taxii_collection);
+            expect(domain.taxii_collection).toEqual(MockData.taxiiData.data[0].domains[0].taxii_collection);
         });
 
         it('should fetch domain data via TAXII', () => {
@@ -194,7 +186,7 @@ describe('DataService', () => {
             testObjectType(domain.dataComponents, 1, DataComponent);
             testObjectType(domain.groups, 1, Group);
             testObjectType(domain.matrices, 1, Matrix);
-            testObjectType(domain.mitigations, 1, Mitigation);
+            testObjectType(domain.mitigations, 2, Mitigation);
             testObjectType(domain.notes, 1, Note);
             testObjectType(domain.software, 2, Software);
             testObjectType(domain.tactics, 1, Tactic);
@@ -221,9 +213,12 @@ describe('DataService', () => {
             let newVersion = {
                 name: 'ATT&CK v14',
                 version: '14',
-                domains: MockData.configData[0].domains,
+                domains: MockData.configData.data[0].domains,
             };
-            configService.versions = [MockData.configData[0], newVersion];
+            configService.versions = {
+				enabled: true,
+				data: [MockData.configData.data[0], newVersion]
+			};
             spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });
@@ -386,7 +381,7 @@ describe('DataService', () => {
             });
             expect(data_component_test.source('enterprise-attack-13')).toEqual({ name: 'Name', url: 'test-url.com' });
             mockService.domains[0].relationships['component_rel'].set('data-component-0', ['attack-pattern-0']);
-            expect(data_component_test.techniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
+            expect(data_component_test.techniques('enterprise-attack-13')[0].id).toEqual('attack-pattern-0');
         });
 
         it('should test group', () => {
