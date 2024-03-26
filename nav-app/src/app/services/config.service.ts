@@ -178,8 +178,14 @@ export class ConfigService {
         return fragments;
     }
 
+	/**
+	 * Validate that the configuration file specifies a collection index URL
+	 * or a list of versions/domains
+	 * @param config the configuration to validate
+	 * @returns the configuration, if valid, otherwise throws an error
+	 */
 	public validateConfig(config: any): any {
-		if (!config.collection_index_url && !config.versions?.length) {
+		if (!config.collection_index_url && !config.versions?.data?.length) {
 			throw new Error(`'collection_index_url' or 'versions' must be defined`);
 		}
 		if (config.collection_index_url && typeof config.collection_index_url !== typeof 'string') {

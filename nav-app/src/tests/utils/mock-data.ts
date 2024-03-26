@@ -17,6 +17,38 @@ export const configData = {
 		},
 	]
 }
+export const collectionIndexConfig = {
+	"collection_index_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json",
+}
+export const versionsConfig = {
+	"versions": {
+		"enabled": true,
+		"data": [
+			{
+				name: 'ATT&CK v13',
+				version: '13',
+				domains: [
+					{
+						name: 'Enterprise',
+						identifier: 'enterprise-attack',
+						data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+					},
+				],
+			},
+		]
+	}
+}
+export const customConfig = {
+	...collectionIndexConfig,
+	...versionsConfig
+}
+export const invalidTypeConfig = {
+	"collection_index_url": false
+}
+export const invalidConfig = {
+	"collection_index_url": "",
+	"versions": {}
+}
 export const configDataExtended = {
 	enabled: true,
 	data: [
