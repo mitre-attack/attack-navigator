@@ -276,7 +276,6 @@ export class DataService {
     /**
      * Set up the URLs for domains in the list defined in the config file
      * @param {versions} list of versions and domains
-     * @memberof DataService
      */
     public setUpDomains(versions: any[]) {
         versions.forEach((version: any) => {
@@ -296,6 +295,10 @@ export class DataService {
         });
     }
 
+	/**
+	 * Parses the collection index for domains/versions
+	 * @param collectionIndex the collection index
+	 */
 	public parseCollectionIndex(collectionIndex: any) {
 		for (let collection of collectionIndex.collections) {
 			let domainIdentifier = this.getDomainIdentifier(collection.name);
@@ -324,10 +327,23 @@ export class DataService {
 		}
 	}
 
+	/**
+	 * Retrieves the domain identifier from the domain name
+	 * Helper function for parseCollectionIndex()
+	 * @param domainName the name of the domain
+	 * @returns the domain identifier (e.g. 'enterprise-attack')
+	 */
 	public getDomainIdentifier(domainName: string): string {
 		return domainName.replace(/ /g, '-').replace(/&/g, 'a').toLowerCase();
 	}
 
+	/**
+	 * Adds a new version to the list of versions, checking if
+	 * one already exists.
+	 * @param versionName the name of the version
+	 * @param versionNumber the version number
+	 * @returns the existing or created Version object
+	 */
 	public addVersion(versionName: string, versionNumber: string): Version {
 		// check if version already exists
 		let existingVersion = this.versions.find(v => v.name === versionName && v.number === versionNumber);

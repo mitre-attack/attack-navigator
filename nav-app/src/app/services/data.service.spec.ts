@@ -26,7 +26,7 @@ describe('DataService', () => {
         http = TestBed.inject(HttpClient);
     });
 
-    describe('setup with default versions', () => {
+    describe('helper functions', () => {
         it('should be created', () => {
             expect(dataService).toBeTruthy();
         });
@@ -66,7 +66,48 @@ describe('DataService', () => {
             expect(result.oldDomainVersionID).toEqual(domain.id);
             expect(result.unchanged.length).toEqual(3);
         });
+
+		it('should get domain identifier from name', () => {
+			const domainName = "Enterprise ATT&CK";
+			expect(dataService.getDomainIdentifier(domainName)).toEqual('enterprise-attack');
+		});
+
+		it('should handle empty string', () => {
+			expect(dataService.getDomainIdentifier('')).toEqual('');
+		});
     });
+
+	describe('set up via collection index', () => {
+		beforeEach(() => {
+			dataService.versions = [];
+		});
+
+		it('should add new version when it does not already exist', () => {
+			const versionName = "Enterprise ATT&CK v14";
+			const versionNumber = "14";
+
+			const result = dataService.addVersion(versionName, versionNumber);
+
+			expect(result instanceof Version).toBeTruthy();
+			expect(result.name).toBe(versionName);
+			expect(result.number).toBe(versionNumber);
+			expect(dataService.versions.length).toBe(1);
+			expect(dataService.versions[0]).toBe(result);
+		});
+
+		it('should return existing version if it already exists', () => {
+			const versionName = "Enterprise ATT&CK v14";
+			const versionNumber = "14";
+
+			const existingVersion = new Version(versionName, versionNumber);
+			dataService.versions.push(existingVersion);
+
+			const result = dataService.addVersion(versionName, versionNumber);
+
+			expect(result).toBe(existingVersion);
+			expect(dataService.versions.length).toBe(1);
+		});
+	});
 
     describe('setup with Workbench integration', () => {
         beforeEach(() => {
