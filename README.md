@@ -74,7 +74,7 @@ _Note: `ng build --configuration production` does not currently work for ATT&CK 
 
 ## Documentation
 
-When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK® Navigator** title to view its documentation.
+When viewing the Navigator in a browser, click on the **?** icon in the upper right corner to view the in-app documentation.
 
 ## Layers Folder
 
