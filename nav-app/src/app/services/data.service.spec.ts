@@ -67,61 +67,61 @@ describe('DataService', () => {
             expect(result.unchanged.length).toEqual(3);
         });
 
-		it('should get domain identifier from name', () => {
-			const domainName = "Enterprise ATT&CK";
-			expect(dataService.getDomainIdentifier(domainName)).toEqual('enterprise-attack');
-		});
+        it('should get domain identifier from name', () => {
+            const domainName = 'Enterprise ATT&CK';
+            expect(dataService.getDomainIdentifier(domainName)).toEqual('enterprise-attack');
+        });
 
-		it('should handle empty string', () => {
-			expect(dataService.getDomainIdentifier('')).toEqual('');
-		});
+        it('should handle empty string', () => {
+            expect(dataService.getDomainIdentifier('')).toEqual('');
+        });
     });
 
-	describe('set up via collection index', () => {
-		beforeEach(() => {
-			dataService.versions = [];
-		});
+    describe('set up via collection index', () => {
+        beforeEach(() => {
+            dataService.versions = [];
+        });
 
-		it('should add new version when it does not already exist', () => {
-			const versionName = "Enterprise ATT&CK v14";
-			const versionNumber = "14";
+        it('should add new version when it does not already exist', () => {
+            const versionName = 'Enterprise ATT&CK v14';
+            const versionNumber = '14';
 
-			const result = dataService.addVersion(versionName, versionNumber);
+            const result = dataService.addVersion(versionName, versionNumber);
 
-			expect(result instanceof Version).toBeTruthy();
-			expect(result.name).toBe(versionName);
-			expect(result.number).toBe(versionNumber);
-			expect(dataService.versions.length).toBe(1);
-			expect(dataService.versions[0]).toBe(result);
-		});
+            expect(result instanceof Version).toBeTruthy();
+            expect(result.name).toBe(versionName);
+            expect(result.number).toBe(versionNumber);
+            expect(dataService.versions.length).toBe(1);
+            expect(dataService.versions[0]).toBe(result);
+        });
 
-		it('should return existing version if it already exists', () => {
-			const versionName = "Enterprise ATT&CK v14";
-			const versionNumber = "14";
+        it('should return existing version if it already exists', () => {
+            const versionName = 'Enterprise ATT&CK v14';
+            const versionNumber = '14';
 
-			const existingVersion = new Version(versionName, versionNumber);
-			dataService.versions.push(existingVersion);
+            const existingVersion = new Version(versionName, versionNumber);
+            dataService.versions.push(existingVersion);
 
-			const result = dataService.addVersion(versionName, versionNumber);
+            const result = dataService.addVersion(versionName, versionNumber);
 
-			expect(result).toBe(existingVersion);
-			expect(dataService.versions.length).toBe(1);
-		});
+            expect(result).toBe(existingVersion);
+            expect(dataService.versions.length).toBe(1);
+        });
 
-		it('should parse collection index correctly', () => {
-			spyOn(dataService, 'getDomainIdentifier').and.callThrough();
-			spyOn(dataService, 'addVersion').and.callThrough();
-			spyOn(console, 'debug');
+        it('should parse collection index correctly', () => {
+            spyOn(dataService, 'getDomainIdentifier').and.callThrough();
+            spyOn(dataService, 'addVersion').and.callThrough();
+            spyOn(console, 'debug');
 
-			dataService.parseCollectionIndex(MockData.collectionIndex);
+            dataService.parseCollectionIndex(MockData.collectionIndex);
 
-			expect(dataService.getDomainIdentifier).toHaveBeenCalledTimes(3); // once for each collection
-			expect(dataService.addVersion).toHaveBeenCalledTimes(3); // once for each valid defined MAJOR version
-			expect(console.debug).toHaveBeenCalledTimes(1); // once for v1.0
-			expect(dataService.versions.length).toBe(1); // for each uniquely defined MAJOR version
-			expect(dataService.domains.length).toBe(4); // for each supported domain
-		});
-	});
+            expect(dataService.getDomainIdentifier).toHaveBeenCalledTimes(3); // once for each collection
+            expect(dataService.addVersion).toHaveBeenCalledTimes(3); // once for each valid defined MAJOR version
+            expect(console.debug).toHaveBeenCalledTimes(1); // once for v1.0
+            expect(dataService.versions.length).toBe(1); // for each uniquely defined MAJOR version
+            expect(dataService.domains.length).toBe(4); // for each supported domain
+        });
+    });
 
     describe('setup with Workbench integration', () => {
         beforeEach(() => {
@@ -271,9 +271,9 @@ describe('DataService', () => {
                 domains: MockData.configData.data[0].domains,
             };
             configService.versions = {
-				enabled: true,
-				data: [MockData.configData.data[0], newVersion]
-			};
+                enabled: true,
+                data: [MockData.configData.data[0], newVersion],
+            };
             spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
         });

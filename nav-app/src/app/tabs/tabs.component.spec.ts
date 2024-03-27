@@ -39,7 +39,7 @@ describe('TabsComponent', () => {
         }).compileComponents();
         dialog = TestBed.inject(MatDialog);
         configService = TestBed.inject(ConfigService);
-        configService.versions = {enabled: true, data: []};
+        configService.versions = { enabled: true, data: [] };
         configService.banner = 'test banner';
         configService.defaultLayers = MockData.defaultLayersDisabled;
         dataService = TestBed.inject(DataService);
@@ -455,7 +455,7 @@ describe('TabsComponent', () => {
         });
 
         it('should create new layer from url', waitForAsync(() => {
-			component.dataService.setUpDomains(MockData.configData.data);
+            component.dataService.setUpDomains(MockData.configData.data);
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -493,17 +493,17 @@ describe('TabsComponent', () => {
             });
         }));
 
-		it('should retrieve the minimum supported version', () => {
-			const result = component.minimumSupportedVersion;
-			expect(result).toBeDefined();
-			expect(result).toBe('4.0');
-		});
+        it('should retrieve the minimum supported version', () => {
+            const result = component.minimumSupportedVersion;
+            expect(result).toBeDefined();
+            expect(result).toBe('4.0');
+        });
 
-		it('should retrieve the current navigator version', () => {
-			const result = component.navVersion;
-			expect(result).toBeDefined();
-			expect(typeof result).toBe('string');
-		});
+        it('should retrieve the current navigator version', () => {
+            const result = component.navVersion;
+            expect(result).toBeDefined();
+            expect(typeof result).toBe('string');
+        });
     });
 
     describe('validateInput', () => {
@@ -717,7 +717,7 @@ describe('TabsComponent', () => {
             component
                 .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
                 .then(() => {
-					expect(component.loadTabs.length).toEqual(1);
+                    expect(component.loadTabs.length).toEqual(1);
                 });
         }));
 

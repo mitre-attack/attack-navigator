@@ -51,11 +51,7 @@
                         show annotated techniques only
                     </label>
                 </div>
-                <input
-                    id="filter_review_all_{{ section }}"
-                    class="checkbox-custom"
-                    type="checkbox"
-                    (change)="reviewAll(section)" />
+                <input id="filter_review_all_{{ section }}" class="checkbox-custom" type="checkbox" (change)="reviewAll(section)" />
                 <label
                     for="filter_review_all_{{ section }}"
                     class="checkbox-custom-label noselect"
@@ -63,11 +59,7 @@
                     [matTooltip]="'mark all as reviewed'">
                     mark all as reviewed
                 </label>
-                <input
-                    id="filter_expand_visible_{{ section }}"
-                    class="checkbox-custom"
-                    type="checkbox"
-                    (change)="expandAll(section)" />
+                <input id="filter_expand_visible_{{ section }}" class="checkbox-custom" type="checkbox" (change)="expandAll(section)" />
                 <label
                     for="filter_expand_visible_{{ section }}"
                     class="checkbox-custom-label noselect"
@@ -218,7 +210,7 @@
                                             (click)="reviewedChanged(attackID, panel)" />
                                         <label for="review_{{ attackID }}" class="checkbox-custom-label noselect">reviewed</label>
                                     </div>
-                            </ng-template>
+                                </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>
                     </div>

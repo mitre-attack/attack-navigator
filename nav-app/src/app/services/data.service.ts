@@ -18,17 +18,17 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-		if (configService.versions?.enabled) {
-			// parse versions structure from configuration file
-			// support for workbench integration, taxii and custom data
-			this.setUpDomains(configService.versions.data);
-		}
-		if (configService.collectionIndex) {
-			// parse versions from collection index
-			this.parseCollectionIndex(configService.collectionIndex);
-		}
-		this.versions.sort((a, b) => +a.number > +b.number ? -1 : 1);
-		this.latestVersion = this.versions[0];
+        if (configService.versions?.enabled) {
+            // parse versions structure from configuration file
+            // support for workbench integration, taxii and custom data
+            this.setUpDomains(configService.versions.data);
+        }
+        if (configService.collectionIndex) {
+            // parse versions from collection index
+            this.parseCollectionIndex(configService.collectionIndex);
+        }
+        this.versions.sort((a, b) => (+a.number > +b.number ? -1 : 1));
+        this.latestVersion = this.versions[0];
     }
 
     public domain_backwards_compatibility = {
@@ -37,7 +37,7 @@ export class DataService {
     };
     public domains: Domain[] = [];
     public versions: Version[] = [];
-	public latestVersion: Version; // set in constructor
+    public latestVersion: Version; // set in constructor
 
     // Observable for data
     private domainData$: Observable<Object>;
@@ -66,7 +66,7 @@ export class DataService {
             let techniqueSDOs = [];
             let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
-			// iterate through stix domain objects in the bundle
+            // iterate through stix domain objects in the bundle
             for (let sdo of bundle.objects) {
                 // filter out duplicates, except for matrices
                 // which are needed to properly build the datatables
@@ -279,7 +279,7 @@ export class DataService {
      */
     public setUpDomains(versions: any[]) {
         versions.forEach((version: any) => {
-			let v = this.addVersion(version['name'], version['version'].match(/\d+/g)[0]);
+            let v = this.addVersion(version['name'], version['version'].match(/\d+/g)[0]);
             version['domains'].forEach((domain: any) => {
                 let identifier = domain['identifier'];
                 let domainObject = new Domain(identifier, domain['name'], v);
@@ -295,66 +295,66 @@ export class DataService {
         });
     }
 
-	/**
-	 * Parses the collection index for domains/versions
-	 * @param collectionIndex the collection index
-	 */
-	public parseCollectionIndex(collectionIndex: any) {
-		for (let collection of collectionIndex.collections) {
-			let domainIdentifier = this.getDomainIdentifier(collection.name);
+    /**
+     * Parses the collection index for domains/versions
+     * @param collectionIndex the collection index
+     */
+    public parseCollectionIndex(collectionIndex: any) {
+        for (let collection of collectionIndex.collections) {
+            let domainIdentifier = this.getDomainIdentifier(collection.name);
 
-			// only most recent minor versions of a major release
-			let minorVersionMap = collection.versions.reduce((acc, version) => {
-				const [major, minor] = version.version.split('.').map(Number);
-				if (!acc[major] || acc[major].minor < minor) {
-					acc[major] = {version: version.version, url: version.url};
-				}
-				return acc;
-			}, {});
-			let versions: Array<{version: string, url: string}> = Object.values(minorVersionMap);
+            // only most recent minor versions of a major release
+            let minorVersionMap = collection.versions.reduce((acc, version) => {
+                const [major, minor] = version.version.split('.').map(Number);
+                if (!acc[major] || acc[major].minor < minor) {
+                    acc[major] = { version: version.version, url: version.url };
+                }
+                return acc;
+            }, {});
+            let versions: Array<{ version: string; url: string }> = Object.values(minorVersionMap);
 
-			for (let version of versions) {
-				let versionNumber = version.version.split('.')[0]; // major version only
-				let versionName = `${collectionIndex.name} v${versionNumber}`;
-				if (+versionNumber < +globals.minimumSupportedVersion) {
-					console.debug(`version ${versionNumber} is not supported, skipping ${collection.name} v${versionNumber}`);
-					continue;
-				}
-				// create version & domain
-				let v = this.addVersion(versionName, versionNumber);
-				this.domains.push(new Domain(domainIdentifier, collection.name, v, [version.url]));
-			}
-		}
-	}
+            for (let version of versions) {
+                let versionNumber = version.version.split('.')[0]; // major version only
+                let versionName = `${collectionIndex.name} v${versionNumber}`;
+                if (+versionNumber < +globals.minimumSupportedVersion) {
+                    console.debug(`version ${versionNumber} is not supported, skipping ${collection.name} v${versionNumber}`);
+                    continue;
+                }
+                // create version & domain
+                let v = this.addVersion(versionName, versionNumber);
+                this.domains.push(new Domain(domainIdentifier, collection.name, v, [version.url]));
+            }
+        }
+    }
 
-	/**
-	 * Retrieves the domain identifier from the domain name
-	 * Helper function for parseCollectionIndex()
-	 * @param domainName the name of the domain
-	 * @returns the domain identifier (e.g. 'enterprise-attack')
-	 */
-	public getDomainIdentifier(domainName: string): string {
-		return domainName.replace(/ /g, '-').replace(/&/g, 'a').toLowerCase();
-	}
+    /**
+     * Retrieves the domain identifier from the domain name
+     * Helper function for parseCollectionIndex()
+     * @param domainName the name of the domain
+     * @returns the domain identifier (e.g. 'enterprise-attack')
+     */
+    public getDomainIdentifier(domainName: string): string {
+        return domainName.replace(/ /g, '-').replace(/&/g, 'a').toLowerCase();
+    }
 
-	/**
-	 * Adds a new version to the list of versions, checking if
-	 * one already exists.
-	 * @param versionName the name of the version
-	 * @param versionNumber the version number
-	 * @returns the existing or created Version object
-	 */
-	public addVersion(versionName: string, versionNumber: string): Version {
-		// check if version already exists
-		let existingVersion = this.versions.find(v => v.name === versionName && v.number === versionNumber);
-		if (!existingVersion) {
-			// create and add new version
-			let version = new Version(versionName, versionNumber);
-			this.versions.push(version);
-			return version;
-		}
-		return existingVersion;
-	}
+    /**
+     * Adds a new version to the list of versions, checking if
+     * one already exists.
+     * @param versionName the name of the version
+     * @param versionNumber the version number
+     * @returns the existing or created Version object
+     */
+    public addVersion(versionName: string, versionNumber: string): Version {
+        // check if version already exists
+        let existingVersion = this.versions.find((v) => v.name === versionName && v.number === versionNumber);
+        if (!existingVersion) {
+            // create and add new version
+            let version = new Version(versionName, versionNumber);
+            this.versions.push(version);
+            return version;
+        }
+        return existingVersion;
+    }
 
     /**
      * Fetch the domain data from the endpoint

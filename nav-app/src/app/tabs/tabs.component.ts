@@ -65,13 +65,13 @@ export class TabsComponent implements AfterViewInit {
         return this.filterDomains(this.dataService.versions[0]);
     }
 
-	public get minimumSupportedVersion(): string {
-		return globals.minimumSupportedVersion;
-	}
+    public get minimumSupportedVersion(): string {
+        return globals.minimumSupportedVersion;
+    }
 
-	public get navVersion(): string {
-		return globals.navVersion;
-	}
+    public get navVersion(): string {
+        return globals.navVersion;
+    }
 
     constructor(
         public dialog: MatDialog,

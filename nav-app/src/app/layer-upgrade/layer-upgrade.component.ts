@@ -102,7 +102,7 @@ export class LayerUpgradeComponent implements OnInit {
         this.filteredIDs = sectionIDs.slice(start, end);
         setTimeout(() => {
             this.expandAll(section);
-        })
+        });
     }
 
     /**
@@ -208,15 +208,14 @@ export class LayerUpgradeComponent implements OnInit {
      * Expands all the techniques for easy review
      */
     public expandAll(section: string): void {
-        let filtered_expand_visible_section = document.getElementById("filter_expand_visible_"+section) as HTMLInputElement;
-        this.panels.forEach(panel => {
-            if (filtered_expand_visible_section.checked){
+        let filtered_expand_visible_section = document.getElementById('filter_expand_visible_' + section) as HTMLInputElement;
+        this.panels.forEach((panel) => {
+            if (filtered_expand_visible_section.checked) {
                 panel.open();
-            }
-            else{
+            } else {
                 panel.close();
             }
-        })
+        });
     }
 
     /**
@@ -225,14 +224,13 @@ export class LayerUpgradeComponent implements OnInit {
      */
     public reviewAll(section: string): void {
         let sectionIDs = this.changelog[section];
-        let filtered_review_all_section = document.getElementById("filter_review_all_"+section) as HTMLInputElement;
-        if(filtered_review_all_section.checked){
-            for(let sectionID of sectionIDs){
+        let filtered_review_all_section = document.getElementById('filter_review_all_' + section) as HTMLInputElement;
+        if (filtered_review_all_section.checked) {
+            for (let sectionID of sectionIDs) {
                 this.changelog.reviewed.add(sectionID);
             }
-        }
-        else{
-            for(let sectionID of sectionIDs){
+        } else {
+            for (let sectionID of sectionIDs) {
                 this.changelog.reviewed.delete(sectionID);
             }
         }

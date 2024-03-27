@@ -48,8 +48,8 @@
 }
 
 .text-deemphasis {
-	color: on-color-deemphasis(body);
-	font-size: 12px !important;
+    color: on-color-deemphasis(body);
+    font-size: 12px !important;
 }
 
 body {
@@ -70,26 +70,26 @@ body {
         @include adaptive-color-dark-only('border-color', on-color(dark-1));
     }
 
-	.content {
-		overflow-y: scroll;
-		max-height: 60vh;
-		font-size: 11pt;
-	
-		p,
-		ul {
-			margin-block-start: 1em;
-			margin-block-end: 1em;
-		}
-	
-		code {
-			@include adaptive-color-dark-only('background-color', color(dark-1));
-			@include adaptive-color-dark-only('border-color', color(panel-dark) !important);
-			@include adaptive-color-dark-only('color', on-color(dark) !important);
-			color: black;
-			padding: 1px 2px;
-			word-break: break-word;
-		}
-	}
+    .content {
+        overflow-y: scroll;
+        max-height: 60vh;
+        font-size: 11pt;
+
+        p,
+        ul {
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+        }
+
+        code {
+            @include adaptive-color-dark-only('background-color', color(dark-1));
+            @include adaptive-color-dark-only('border-color', color(panel-dark) !important);
+            @include adaptive-color-dark-only('color', on-color(dark) !important);
+            color: black;
+            padding: 1px 2px;
+            word-break: break-word;
+        }
+    }
 
     a {
         @include adaptive-color-dark-only('color', color(dark-link) !important);
@@ -100,7 +100,7 @@ body {
         @include adaptive-color-dark-only('color', color(dark-link-active));
     }
 
-	.top-button {
+    .top-button {
         margin-top: 25px;
         text-align: right;
     }
