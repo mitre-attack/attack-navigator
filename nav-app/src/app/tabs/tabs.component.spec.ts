@@ -24,7 +24,6 @@ describe('TabsComponent', () => {
     let dataService: DataService;
     let configService: ConfigService;
     let http: HttpClient;
-    let snackBar: MatSnackBar;
 
     let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
     let loadData = {
@@ -45,7 +44,6 @@ describe('TabsComponent', () => {
         configService.defaultLayers = MockData.defaultLayersDisabled;
         dataService = TestBed.inject(DataService);
         http = TestBed.inject(HttpClient);
-        snackBar = TestBed.inject(MatSnackBar);
         fixture = TestBed.createComponent(TabsComponent);
         component = fixture.debugElement.componentInstance;
     });
@@ -494,6 +492,18 @@ describe('TabsComponent', () => {
                 expect(component.layerTabs.length).toEqual(3);
             });
         }));
+
+		it('should retrieve the minimum supported version', () => {
+			const result = component.minimumSupportedVersion;
+			expect(result).toBeDefined();
+			expect(result).toBe('4.0');
+		});
+
+		it('should retrieve the current navigator version', () => {
+			const result = component.navVersion;
+			expect(result).toBeDefined();
+			expect(typeof result).toBe('string');
+		});
     });
 
     describe('validateInput', () => {
