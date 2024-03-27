@@ -107,6 +107,20 @@ describe('DataService', () => {
 			expect(result).toBe(existingVersion);
 			expect(dataService.versions.length).toBe(1);
 		});
+
+		it('should parse collection index correctly', () => {
+			spyOn(dataService, 'getDomainIdentifier').and.callThrough();
+			spyOn(dataService, 'addVersion').and.callThrough();
+			spyOn(console, 'debug');
+
+			dataService.parseCollectionIndex(MockData.collectionIndex);
+
+			expect(dataService.getDomainIdentifier).toHaveBeenCalledTimes(3); // once for each collection
+			expect(dataService.addVersion).toHaveBeenCalledTimes(3); // once for each valid defined MAJOR version
+			expect(console.debug).toHaveBeenCalledTimes(1); // once for v1.0
+			expect(dataService.versions.length).toBe(1); // for each uniquely defined MAJOR version
+			expect(dataService.domains.length).toBe(4); // for each supported domain
+		});
 	});
 
     describe('setup with Workbench integration', () => {

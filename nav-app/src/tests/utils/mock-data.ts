@@ -142,6 +142,52 @@ export const configToolbarControls = {
     subfeatures: [{ name: 'sticky_toolbar', enabled: true, description: 'Disable to remove the ability to enable/disable the sticky toolbar.' }],
 };
 
+// mock collection index
+export const collectionIndex = {
+    "name": "MITRE ATT&CK",
+    "collections": [
+        {
+			"name": "Enterprise ATT&CK",
+            "id": "x-mitre-collection--1f5f1533-f617-4ca8-9ab4-6a02367fa019",
+            "versions": [
+                {
+                    "version": "14.1",
+                    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-14.1.json",
+                },
+                {
+                    "version": "14.0",
+                    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-14.0.json",
+                },
+            ]
+        },
+        {
+			"name": "Mobile ATT&CK",
+            "id": "x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858",
+            "versions": [
+                {
+                    "version": "14.1",
+                    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack-14.1.json",
+                },
+				{
+                    "version": "1.0",
+                    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-1.0.json",
+                },
+            ]
+        },
+        {
+			"name": "ICS ATT&CK",
+            "id": "x-mitre-collection--90c00720-636b-4485-b342-8751d232bf09",
+            "versions": [
+                {
+                    "version": "14.1",
+                    "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack-14.1.json",
+                    "modified": "2023-11-14T14:00:00.188Z"
+                },
+            ]
+        }
+    ]
+}
+
 // mock base STIX SDOs
 export const stixSDO = {
     name: 'Name',
