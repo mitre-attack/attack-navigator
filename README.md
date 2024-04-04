@@ -74,7 +74,7 @@ _Note: `ng build --configuration production` does not currently work for ATT&CK 
 
 ## Documentation
 
-When viewing the app in a browser, click on the **?** icon to the right of the **ATT&CK® Navigator** title to view its documentation.
+When viewing the Navigator in a browser, click on the **?** icon in the upper right corner to view the in-app documentation.
 
 ## Layers Folder
 
@@ -237,6 +237,10 @@ The following is an example iframe which embeds our [*Bear APTs](layers/data/sam
 ### CTI
 
 [Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
+
+### ATT&CK STIX Data
+
+[ATT&CK STIX Data repository](https://github.com/mitre-attack/attack-stix-data) of the ATT&CK catalog expressed in STIX 2.1 JSON.
 
 ### ATT&CK
 
