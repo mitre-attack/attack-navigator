@@ -8,7 +8,6 @@ export class Technique extends StixObject {
     public readonly subtechniques: Technique[]; // subtechniques under this technique
     public readonly datasources: string; // data sources of the technique
     public parent: Technique = null; // parent technique. Only present if it's a sub-technique
-
     public get isSubtechnique() {
         return this.parent != null;
     }
@@ -22,7 +21,6 @@ export class Technique extends StixObject {
         super(stixSDO, dataService);
         this.platforms = stixSDO.x_mitre_platforms ? stixSDO.x_mitre_platforms.map((platform) => platform.trim()) : undefined;
         this.datasources = stixSDO.x_mitre_data_sources ? stixSDO.x_mitre_data_sources.toString() : '';
-
         if (!this.revoked && !this.deprecated) {
             this.tactics = stixSDO.kill_chain_phases.map((phase) => phase.phase_name);
         }

@@ -18,7 +18,7 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
     public placement: string;
     @Output() close = new EventEmitter<any>();
 
-    private get techniqueVM(): TechniqueVM {
+    public get techniqueVM(): TechniqueVM {
         return this.viewModel.getTechniqueVM(this.technique, this.tactic);
     }
 

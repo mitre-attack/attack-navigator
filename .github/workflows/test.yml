@@ -1,0 +1,36 @@
+name: Jasmine Tests
+
+on:
+  push:
+    branches: ["develop"]
+  pull_request:
+    branches: ["master", "develop"]
+    types: [synchronize]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    defaults:
+       run:
+         working-directory: ./nav-app/
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: nav-app/package-lock.json
+    - name: Install
+      run: npm ci
+    - name: Run Jasmine tests
+      run: npm run test -- --code-coverage --no-watch --browsers ChromeHeadlessCI
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: code-coverage-report
+        path: nav-app/coverage/chrome/

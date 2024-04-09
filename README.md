@@ -256,7 +256,7 @@ STIX is designed to improve many different capabilities, such as collaborative t
 
 ## Notice
 
-Copyright 2023 The MITRE Corporation
+Copyright 2024 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-0128.
 

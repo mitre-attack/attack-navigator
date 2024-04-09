@@ -13,7 +13,7 @@ export abstract class Cell {
     @Input() tactic: Tactic;
 
     public showContextmenu: boolean = false;
-    isDarkTheme: boolean;
+    public isDarkTheme: boolean;
 
     constructor(
         public dataService: DataService,
@@ -88,7 +88,7 @@ export abstract class Cell {
      * @param color color with alpha channel
      * @returns color without an alpha channel which has been mixed with the proper background color as if it is transparent
      */
-    private emulate_alpha(color: any) {
+    public emulate_alpha(color: any) {
         /* note: constructing a tinycolor of a tinycolor makes them aliases. E.g:
          *
          *    x = tinycolor("#ffffff")
@@ -144,13 +144,13 @@ export abstract class Cell {
         if (this.tactic) {
             let tvm = this.viewModel.getTechniqueVM(this.technique, this.tactic);
             if (tvm.comment.length > 0 || this.hasNotes()) {
-                if (this.configService.getFeature('comment_underline')) return this.configService.comment_color;
+                if (this.configService.getFeature('comment_underline')) return this.configService.commentColor;
             }
             if (tvm.metadata.length > 0) {
-                if (this.configService.getFeature('metadata_underline')) return this.configService.metadata_color;
+                if (this.configService.getFeature('metadata_underline')) return this.configService.metadataColor;
             }
             if (tvm.links.length > 0) {
-                if (this.configService.getFeature('link_underline')) return this.configService.link_color;
+                if (this.configService.getFeature('link_underline')) return this.configService.linkColor;
             }
         }
         return '';

@@ -13,7 +13,11 @@ describe('VersionUpgradeComponent', () => {
             providers: [
                 {
                     provide: MatDialogRef,
-                    useValue: {},
+                    useValue: {
+                        close() {
+                            return {};
+                        },
+                    },
                 },
                 {
                     provide: MAT_DIALOG_DATA,
@@ -26,10 +30,21 @@ describe('VersionUpgradeComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(VersionUpgradeComponent);
         component = fixture.componentInstance;
+        component.data.currVersion = '4.9';
+        component.data.vmVersion = '4.8';
+        component.data.layerName = 'test1';
         fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should upgrade version', () => {
+        const openDialogSpy = spyOn(component.dialogRef, 'close');
+        component.upgradeVersion(true);
+        expect(openDialogSpy).toHaveBeenCalledWith({
+            upgrade: true,
+        });
     });
 });

@@ -1,67 +1,45 @@
 import { Injectable } from '@angular/core';
-import { DataService } from './data.service';
 import { ContextMenuItem } from '../classes/context-menu-item';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConfigService {
-    public comment_color = 'yellow';
-    public link_color = 'blue';
-    public metadata_color = 'purple';
+    public versions: any[] = [];
+    public contextMenuItems: ContextMenuItem[] = [];
+    public defaultLayers: any;
+    public commentColor = 'yellow';
+    public linkColor = 'blue';
+    public metadataColor = 'purple';
     public banner: string;
+    public featureList: any[] = [];
+
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
-    private featureStructure: object[];
 
-    public contextMenuItems: ContextMenuItem[] = [];
-
-    constructor(private dataService: DataService) {
-        console.debug('initializing config service');
-        let self = this;
-        let subscription = dataService.getConfig().subscribe({
-            next: function (config: any) {
-                //parse feature preferences from config json
-                config['features'].forEach(function (featureObject: any) {
-                    self.setFeature_object(featureObject);
-                });
-                //override json preferences with preferences from URL fragment
-                self.getAllFragments().forEach(function (value: string, key: string) {
-                    let valueBool = value == 'true';
-                    if (self.isFeature(key) || self.isFeatureGroup(key)) {
-                        self.setFeature(key, valueBool);
-                    }
-                });
-                dataService.subtechniquesEnabled = self.getFeature('subtechniques');
-                self.featureStructure = config['features'];
-                self.comment_color = config['comment_color'];
-                self.metadata_color = config['metadata_color'];
-                self.link_color = config['link_color'];
-                self.banner = config['banner'];
-                for (let obj of config['custom_context_menu_items']) {
-                    self.contextMenuItems.push(new ContextMenuItem(obj.label, obj.url, obj.subtechnique_url));
-                }
-            },
-            complete: () => {
-                if (subscription) subscription.unsubscribe();
-            }, //prevent memory leaks
-        });
+    public get subtechniquesEnabled(): boolean {
+        return this.features.get('subtechniques');
     }
 
-    public getFeatureList(): object[] {
-        if (!this.featureStructure) return [];
-        return this.featureStructure;
+    constructor(private http: HttpClient) {
+        // intentionally left blank
     }
 
+    /**
+     * Checks if the feature is enabled
+     * @param featureName feature name
+     * @returns true if the feature is enabled, false otherwise
+     */
     public getFeature(featureName: string): boolean {
         return this.features.get(featureName);
     }
 
     /**
-     * Return true if any/all features in the group are enabled
+     * Checks if any/all features in the group are enabled
      * @param  featureGroup feature group name
-     * @param  type         'any' or 'all' for logical or/and
-     * @return              true iffany/all are enabled, false otherwise
+     * @param  type	'any' or 'all' for logical or/and
+     * @returns true iff any/all are enabled, false otherwise
      */
     public getFeatureGroup(featureGroup: string, type?: string): boolean {
         if (!this.featureGroups.has(featureGroup)) return true;
@@ -72,19 +50,16 @@ export class ConfigService {
     }
 
     /**
-     * Return the number of enabled features in the group
+     * Get the number of enabled features in the group
      * @param  featureGroup feature group name
-     * @return              the number of enabled features in the group, or -1 if
-     *                      the group does not exist
+     * @returns the number of enabled features in the group, or -1 if
+     * the group does not exist
      */
     public getFeatureGroupCount(featureGroup: string): number {
         if (!this.featureGroups.has(featureGroup)) return -1;
-        let count = 0;
         let subFeatures = this.featureGroups.get(featureGroup);
-        for (let subFeature of subFeatures) {
-            if (this.getFeature(subFeature)) count += 1;
-        }
-        return count;
+        let enabled = subFeatures.filter((f) => this.getFeature(f));
+        return enabled.length;
     }
 
     /**
@@ -174,22 +149,6 @@ export class ConfigService {
         return this.featureGroups.has(featureGroupName);
     }
 
-    public getFeatureGroups(): string[] {
-        let keys = [];
-        this.featureGroups.forEach(function (value, key) {
-            keys.push(key);
-        });
-        return keys;
-    }
-
-    public getFeatures(): string[] {
-        let keys = [];
-        this.features.forEach(function (value, key) {
-            keys.push(key);
-        });
-        return keys;
-    }
-
     /**
      * Get all url fragments
      * @param  url optional, url to parse instead of window location href
@@ -206,5 +165,41 @@ export class ConfigService {
         }
 
         return fragments;
+    }
+
+    /**
+     * Load the configuration file
+     * Note: this is done at startup
+     */
+    public loadConfig() {
+        return this.http
+            .get('./assets/config.json')
+            .toPromise()
+            .then((config) => {
+                console.debug(`loaded app configuration settings`);
+
+                this.versions = config['versions'];
+                config['custom_context_menu_items'].forEach((item) => {
+                    this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
+                });
+                this.defaultLayers = config['default_layers'];
+                this.commentColor = config['comment_color'];
+                this.linkColor = config['link_color'];
+                this.metadataColor = config['metadata_color'];
+                this.banner = config['banner'];
+
+                // parse feature preferences
+                this.featureList = config['features'];
+                config['features'].forEach((feature) => {
+                    this.setFeature_object(feature);
+                });
+
+                // override preferences with preferences from URL fragments
+                this.getAllFragments().forEach((value: string, key: string) => {
+                    if (this.isFeature(key) || this.isFeatureGroup(key)) {
+                        this.setFeature(key, value == 'true');
+                    }
+                });
+            });
     }
 }

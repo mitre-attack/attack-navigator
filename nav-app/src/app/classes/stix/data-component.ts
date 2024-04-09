@@ -13,7 +13,7 @@ export class DataComponent extends StixObject {
     /**
      * Get techniques related to the data component
      * @param domainVersionID the ID of the domain and version
-     * @returns {string[]} technique IDs used by the data component
+     * @returns {Technique[]} list of techniques used by the data component
      */
     public techniques(domainVersionID): string[] {
         const techniques = [];

@@ -12,7 +12,6 @@ export class ViewModelsService {
 
     public viewModels: ViewModel[] = [];
     public pinnedCell: string = '';
-
     private nonce: number = 0;
 
     constructor(private dataService: DataService) {
@@ -42,12 +41,12 @@ export class ViewModelsService {
      * Note: this applies on a session-by-session basis, nonces are not
      * unique between app instances.
      */
-    private getNonce(): number {
+    public getNonce(): number {
         return this.nonce++;
     }
 
     /**
-     * Destroy the viewmodel completely Nessecary if tab is closed!
+     * Destroy the viewmodel
      * @param vm viewmodel to destroy.
      */
     public destroyViewModel(vm: ViewModel): void {
