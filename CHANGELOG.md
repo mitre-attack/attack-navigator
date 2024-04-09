@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# x.x.x - Changes Staged for Later Release
+# 5.0.0 - Changes Staged for Later Release
 
 ## Improvements
 - Updated Navigator to load data via the STIX 2.1 Collection Index. See issue [#607](https://github.com/mitre-attack/attack-navigator/issues/607).
