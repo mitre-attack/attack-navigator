@@ -10,7 +10,7 @@
  * @author R. Wathelet, September 2017
  * @modified by I. Tuson 24 May 2018
  * @modified by C. Miller 9 April 2024
- * 
+ *
  * @version 0.3
  */
 
@@ -26,7 +26,7 @@ export class TaxiiConnect {
     version: string;
     getConfig: any;
     getStixConfig: any;
-	mediaType: string;
+    mediaType: string;
 
     /**
      * provide network communication to a Taxii 2.0 or 2.1 server.
@@ -42,13 +42,13 @@ export class TaxiiConnect {
         this.hash = btoa(this.user + ':' + this.password);
         this.timeout = timeout;
 
-		this.version = '2.1';
-		this.mediaType = `application/taxii+json;version=${this.version}`;
-		// backwards compatibility for STIX 2.0
-		if (url.includes('cti-taxii.mitre.org')) {
-			this.version = '2.0';
-			this.mediaType = 'application/vnd.oasis.stix+json';
-		}
+        this.version = '2.1';
+        this.mediaType = `application/taxii+json;version=${this.version}`;
+        // backwards compatibility for STIX 2.0
+        if (url.includes('cti-taxii.mitre.org')) {
+            this.version = '2.0';
+            this.mediaType = 'application/vnd.oasis.stix+json';
+        }
 
         // default headers configurations
         this.getConfig = {
@@ -96,7 +96,7 @@ export class TaxiiConnect {
     async asyncFetch(path, config, filter?) {
         //CHANGED
         let fullPath = !filter ? path : path + '?' + TaxiiConnect.asQueryString(filter);
-		return await this.fetchTimeout(fullPath, config, this.timeout, 'connection timeout')
+        return await this.fetchTimeout(fullPath, config, this.timeout, 'connection timeout')
             .then((res: Response) => res.json())
             .catch((err) => {
                 throw new Error('fetch error: ' + err);
@@ -183,13 +183,13 @@ export class Collection {
     constructor(collectionInfo, api_root_path, conn) {
         this.collectionInfo = collectionInfo;
 
-		this.api_root_path = TaxiiConnect.withLastSlash(api_root_path + 'api/v21');
-		// backwards compatibility for STIX 2.0
-		if (api_root_path.includes('cti-taxii.mitre.org')) {
-			// cont. support for stix 2.0
-			this.api_root_path = TaxiiConnect.withLastSlash(api_root_path + 'stix');
-		}
-		this.conn = conn;
+        this.api_root_path = TaxiiConnect.withLastSlash(api_root_path + 'api/v21');
+        // backwards compatibility for STIX 2.0
+        if (api_root_path.includes('cti-taxii.mitre.org')) {
+            // cont. support for stix 2.0
+            this.api_root_path = TaxiiConnect.withLastSlash(api_root_path + 'stix');
+        }
+        this.conn = conn;
         // construct the path
         this.path = this.api_root_path + 'collections/' + collectionInfo.id + '/';
         // cache represents the cached results and flag determines if it needs a re-fetch
