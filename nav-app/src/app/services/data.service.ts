@@ -362,16 +362,15 @@ export class DataService {
     public getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
             console.debug('fetching data from TAXII server');
-            let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
+            let conn = new TaxiiConnect(domain.taxii_url, '', '');
             let collectionInfo: any = {
                 id: domain.taxii_collection,
                 title: domain.name,
                 description: '',
                 can_read: true,
                 can_write: false,
-                media_types: ['application/vnd.oasis.stix+json'],
             };
-            const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
+            const collection = new Collection(collectionInfo, domain.taxii_url, conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
             console.debug('retrieving data', domain.urls);
