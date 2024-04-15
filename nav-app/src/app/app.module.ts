@@ -50,6 +50,7 @@ import { ChangelogComponent } from './changelog/changelog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
 import { ConfigService } from './services/config.service';
+import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
     declarations: [
@@ -101,6 +102,7 @@ import { ConfigService } from './services/config.service';
         MarkdownModule.forRoot(),
         PopoverModule,
         MatTabsModule,
+        AngularSplitModule
     ],
     exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
     providers: [

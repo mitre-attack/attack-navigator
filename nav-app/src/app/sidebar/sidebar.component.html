@@ -8,5 +8,234 @@
                 <layer-upgrade [viewModel]="viewModel"></layer-upgrade>
             </div>
         </div>
+        <div *ngIf="viewModel.sidebarContentType === 'layerInformation'">
+            <div class="search-and-multiselect">
+                <div class="sidebar-content layerInfoCard">
+                    <mat-card>
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Name</h4>
+                            </mat-card-title>
+                            <mat-card-content>
+                                <mat-form-field>
+                                    <input matInput type="text" [(ngModel)]="viewModel.name" />
+                                </mat-form-field>
+                            </mat-card-content>
+                        </div>
+                    </mat-card>
+                    <mat-card>
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Description</h4>
+                            </mat-card-title>
+                            <mat-form-field>
+                                <textarea matInput matTextareaAutosize [(ngModel)]="viewModel.description"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content layerInfoCard">
+                    <mat-card>
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Domain</h4>
+                            </mat-card-title>
+                            <mat-form-field>
+                                <input matInput readonly disabled type="text"
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+                    <mat-card>
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Version</h4>
+                            </mat-card-title>
+                            <mat-form-field>
+                                <input matInput readonly disabled type="text"
+                                    [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content">
+                    <mat-card *ngIf="viewModel.bundleURL">
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Domain</h4>
+                            </mat-card-title>
+                            <mat-form-field *ngIf="viewModel.bundleURL">
+                                <input matInput readonly disabled type="text" placeholder="collection/bundle url"
+                                    [(ngModel)]="viewModel.bundleURL" />
+                            </mat-form-field>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content">
+                    <mat-card>
+                        <div class="layer-data">
+                            <!-- layer metadata -->
+                            <b>Metadata</b>
+                            <div class="data-input">
+                                <app-list-input [config]="{
+                                            viewModel: viewModel,
+                                            list: viewModel.metadata,
+                                            level: 'layer',
+                                            type: 'metadata',
+                                            nameField: 'name',
+                                            valueField: 'value'
+                                        }"></app-list-input>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content">
+                    <mat-card>
+                        <div class="layer-data">
+                            <!-- layer links -->
+                            <b>Links</b>
+                            <div class="data-input">
+                                <app-list-input [config]="{
+                                            viewModel: viewModel,
+                                            list: viewModel.links,
+                                            level: 'layer',
+                                            type: 'links',
+                                            nameField: 'label',
+                                            valueField: 'url'
+                                        }"></app-list-input>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content layerInfoCard">
+                    <mat-card class="infoCard">
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Matrix Layout</h4>
+                            </mat-card-title>
+                            <div *ngFor="let option of viewModel.layout.layoutOptions">
+                                <input type="radio" [value]="option" [(ngModel)]="viewModel.layout.layout" [name]="option"> {{option}} layout
+                            </div>
+                        </div>
+                    </mat-card>
+                    <mat-card class="infoCard">
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Labels</h4>
+                            </mat-card-title>
+                            <div>
+                                <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option"
+                                    class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showID" />
+                                <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option"
+                                    class="checkbox-custom-label noselect">
+                                    show IDs
+                                </label>
+                            </div>
+                            <div>
+                                <input [disabled]="viewModel.layout.layout == 'mini'" id="showName-option"
+                                    class="checkbox-custom" type="checkbox" [(ngModel)]="viewModel.layout.showName" />
+                                <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option"
+                                    class="checkbox-custom-label noselect">
+                                    show names
+                                </label>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="sidebar-content">
+                    <mat-card>
+                        <div class="settings">
+                            <mat-card-title>
+                                <h4 class="title">Aggregate Scores</h4>
+                            </mat-card-title>
+                            <div>
+                                <input id="showAggregateScores-option" class="checkbox-custom" type="checkbox"
+                                    [(ngModel)]="viewModel.layout.showAggregateScores" />
+                                <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show
+                                    aggregate scores</label>
+                            </div>
+                            <div>
+                                <input
+                                    [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                                    id="countUnscored-option" class="checkbox-custom" type="checkbox"
+                                    [(ngModel)]="viewModel.layout.countUnscored" />
+                                <label
+                                    [class.disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                                    for="countUnscored-option" class="checkbox-custom-label noselect">
+                                    count unscored techniques as 0
+                                </label>
+                            </div>
+                            <div class="settings">
+                                <mat-card-title>
+                                    <h4 class="title">Aggregate Function</h4>
+                                </mat-card-title>
+                                <div id="aggregateFunctionDropdown" *ngFor="let option of viewModel.layout.aggregateFunctionOptions">
+                                    <input type="radio" [value]="option" [(ngModel)]="viewModel.layout.aggregateFunction" [name]="option" [disabled]="!viewModel.layout.showAggregateScores"> {{option}} layout
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+<!-- <div class="dropdown-container layout" *ngIf="currentDropdown === 'layout'" #dropdown
+    [class.left]="checkalign(dropdown)">
+    <div class="section">
+        <select [(ngModel)]="viewModel.layout.layout" placeholder="layout">
+            <option *ngFor="let option of viewModel.layout.layoutOptions" [value]="option">{{ option }} layout</option>
+        </select>
+    </div>
+    <div class="section">
+        <b class="filter-label">labels</b>
+        <div>
+            <input [disabled]="viewModel.layout.layout == 'mini'" id="showID-option" class="checkbox-custom"
+                type="checkbox" [(ngModel)]="viewModel.layout.showID" />
+            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showID-option"
+                class="checkbox-custom-label noselect">
+                show IDs
+            </label>
+        </div>
+        <div>
+            <input [disabled]="viewModel.layout.layout == 'mini'" id="showName-option" class="checkbox-custom"
+                type="checkbox" [(ngModel)]="viewModel.layout.showName" />
+            <label [class.disabled]="viewModel.layout.layout == 'mini'" for="showName-option"
+                class="checkbox-custom-label noselect">
+                show names
+            </label>
+        </div>
+    </div>
+    <div class="section">
+        <b class="filter-label">aggregate scores</b>
+        <div>
+            <input id="showAggregateScores-option" class="checkbox-custom" type="checkbox"
+                [(ngModel)]="viewModel.layout.showAggregateScores" />
+            <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
+        </div>
+        <div>
+            <input
+                [disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                id="countUnscored-option" class="checkbox-custom" type="checkbox"
+                [(ngModel)]="viewModel.layout.countUnscored" />
+            <label
+                [class.disabled]="!viewModel.layout.showAggregateScores || viewModel.layout.aggregateFunction !== 'average'"
+                for="countUnscored-option" class="checkbox-custom-label noselect">
+                count unscored techniques as 0
+            </label>
+        </div>
+        <div class="subsection">
+            <label for="aggregateFunctionDropdown">aggregate function:</label>
+            <div class="inner-dropdown-container">
+                <select [disabled]="!viewModel.layout.showAggregateScores" id="aggregateFunctionDropdown"
+                    [(ngModel)]="viewModel.layout.aggregateFunction" placeholder="function">
+                    <option *ngFor="let option of viewModel.layout.aggregateFunctionOptions" [value]="option">
+                        {{ option }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div> -->

@@ -33,6 +33,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public headerHeight: number = 0;
     public footerHeight: number = 32;
     public controlsHeight: number = 34;
+    public includedControls: any;
     public isScrollUp: boolean = true;
     public handleScroll = (e) => {
         const diff = this.scrollRef.nativeElement.scrollTop - this.previousScrollTop;
@@ -59,6 +60,9 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     private selectionChangeSubscription: Subscription;
 
+    
+    public layerControlsList = [];
+    public techniqueControlsList = [];
     constructor(
         public dataService: DataService,
         private tabs: TabsComponent,
@@ -69,6 +73,19 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
         });
+        this.includedControls = configService.featureList;
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == "layer_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].name)
+                }
+            }
+            else if(this.includedControls[i].name == "technique_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].name)
+                }
+            }
+        }
     }
 
     ngAfterViewInit(): void {
@@ -92,6 +109,47 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.scrollRef.nativeElement.style.height = null;
             this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
         }
+    }
+
+    handleLayerControlsSettingsDropdown() {
+        this.currentDropdown !== 'layer_control_settings' ? this.currentDropdown = 'layer_control_settings' : this.currentDropdown = '';
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    handleTechniqueControlsSettingsDropdown() {
+        this.currentDropdown !== 'technique_control_settings' ? this.currentDropdown = 'technique_control_settings' : this.currentDropdown = '';
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    isControlIncluded(foo, control) {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == foo){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].name == control){
+                        if(this.includedControls[i].subfeatures[j].enabled){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    getControl(foo, control): Object {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == foo){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].name == control){
+                        return this.includedControls[i].subfeatures[j];
+                    }
+                }
+            }
+        }
+        return null
     }
     /**
      * Save the given blob
@@ -378,6 +436,26 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
+    showControlsBar = true;
+
+    currentControlSection = "layer";
+
+    showHelpDropDown = false;
+
+    toggleShowControlsBar() {
+        this.showControlsBar = !this.showControlsBar;
+    }
+
+    setCurrentControlSection(controlType) {
+        this.currentControlSection = controlType;
+    }
+
+    showControlLabels = {
+        selection: false,
+        later: false,
+        technique: false,
+    };
+
     /**
      * Handle export drop down change
      */
@@ -510,5 +588,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'search' ? true : !this.viewModel.sidebarOpened;
             this.viewModel.sidebarContentType = 'search';
         }
+    }
+
+    public openLayerInfo(): void {
+            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerInformation' ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'layerInformation';
     }
 }
