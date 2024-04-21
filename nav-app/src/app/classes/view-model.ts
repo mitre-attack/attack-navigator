@@ -848,18 +848,23 @@ export class ViewModel {
                 }
             }
 
-            // filter by data sources
-            let dataSources = new Set(technique.datasources);
-            for (let dataSource of this.filters.dataSources.selection) {
-                if (dataSources.has(dataSource)) {
+            // technique.datasources is a string of the datasource for
+            // the current technique. The string is of the form:
+            // 'Sensor Health: Host Status,File: File Metadata'
+
+            let datasource = technique.datasources.split(':')[0];
+
+            for (let ds of this.filters.dataSources.selection) {
+                if (ds === datasource) {
                     techniqueVM.setIsVisible(true);
                     technique.subtechniques.forEach((subtechnique) => {
                         let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                         subtechniqueVM.setIsVisible(true);
                     });
-                    return true; // data source match
+                    return true; //datasource match
                 }
             }
+
 
             techniqueVM.setIsVisible(false);
             technique.subtechniques.forEach((subtechnique) => {

@@ -31,6 +31,7 @@ export class Filter {
      */
     public initPlatformOptions(domain: Domain): void {
         this.platforms.options = JSON.parse(JSON.stringify(domain.platforms));
+
         if (!this.platforms.selection.length) {
             // prevent overwriting current selection
             this.platforms.selection = JSON.parse(JSON.stringify(domain.platforms));
