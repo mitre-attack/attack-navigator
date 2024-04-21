@@ -146,10 +146,12 @@ export class ViewModel {
             this.dataService.onDataLoad(this.domainVersionID, function () {
                 self.initTechniqueVMs();
                 self.filters.initPlatformOptions(self.dataService.getDomain(self.domainVersionID));
+                self.filters.initDataSourcesOptions(self.dataService.getDomain(self.domainVersionID));
             });
         } else {
             this.initTechniqueVMs();
             this.filters.initPlatformOptions(domain);
+            this.filters.initDataSourcesOptions(domain);
         }
         this.loaded = true;
     }
@@ -845,6 +847,20 @@ export class ViewModel {
                     return true; //platform match
                 }
             }
+
+            // filter by data sources
+            let dataSources = new Set(technique.datasources);
+            for (let dataSource of this.filters.dataSources.selection) {
+                if (dataSources.has(dataSource)) {
+                    techniqueVM.setIsVisible(true);
+                    technique.subtechniques.forEach((subtechnique) => {
+                        let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
+                        subtechniqueVM.setIsVisible(true);
+                    });
+                    return true; // data source match
+                }
+            }
+
             techniqueVM.setIsVisible(false);
             technique.subtechniques.forEach((subtechnique) => {
                 let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
