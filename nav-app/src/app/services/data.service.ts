@@ -275,7 +275,7 @@ export class DataService {
     private domainData$: Observable<Object>;
 
     // URLs in case config file doesn't load properly
-    public latestVersion: Version = { name: 'ATT&CK v14', number: '14' };
+    public latestVersion: Version = { name: 'ATT&CK v15', number: '15' };
     public lowestSupportedVersion: Version; // used by tabs component
     public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
     public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
