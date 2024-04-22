@@ -296,11 +296,30 @@ $cellSize: 15px;
     }
 }
 
+// .filters {
+//     padding: 4px;
+
+//     .filter {
+//         text-align: left;
+
+//         &:not(:first-child) {
+//             margin-top: 4px;
+//         }
+
+//         .filter-option {
+//             &:hover {
+//                 @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+//             }
+//         }
+//     }
+// }
 .filters {
     padding: 4px;
 
     .filter {
         text-align: left;
+        max-height: 20em; /* Set a fixed height */
+        overflow-y: auto; /* Add scrollbar for vertical overflow */
 
         &:not(:first-child) {
             margin-top: 4px;
@@ -313,6 +332,7 @@ $cellSize: 15px;
         }
     }
 }
+
 
 .warning {
     @include adaptive-color('color', #b30000, #ffab0f);
