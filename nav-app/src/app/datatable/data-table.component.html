@@ -269,23 +269,39 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <span class="material-icons">filter_list</span>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="filter" *ngFor="let filter of ['platforms', 'dataSources']">
-                        <b class="filter-label">{{ filter }}</b>
-                        <div *ngIf="viewModel.filters[filter].options.length !== 0">
-                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options">
+                    <!-- Platforms Filter -->
+                    <div class="filter">
+                        <b class="filter-label">Platforms</b>
+                        <div *ngIf="viewModel.filters.platforms.options.length !== 0">
+                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters.platforms.options">
                                 <input
                                     [id]="filterOption"
                                     class="checkbox-custom"
                                     type="checkbox"
-                                    (click)="viewModel.filters.toggleInFilter(filter, filterOption)"
-                                    [checked]="viewModel.filters.inFilter(filter, filterOption)" />
+                                    (click)="viewModel.filters.toggleInFilter('platforms', filterOption)"
+                                    [checked]="viewModel.filters.inFilter('platforms', filterOption)" />
                                 <label [for]="filterOption" class="checkbox-custom-label noselect">{{ filterOption }}</label>
                             </div>
                         </div>
-                        <div *ngIf="viewModel.filters[filter].options.length == 0">Data does not include {{ filter }}</div>
+                        <div *ngIf="viewModel.filters.platforms.options.length == 0">Data does not include Platforms</div>
                     </div>
-                    <!-- Debug print the 'filters[dataSources]' object -->
-                    <!-- <pre>{{ viewModel.filters['dataSources'] | json }}</pre> -->
+
+                    <!-- Data Sources Filter -->
+                    <div class="filter">
+                        <b class="filter-label">Data Sources</b>
+                        <div *ngIf="viewModel.filters.dataSources.options.length !== 0">
+                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters.dataSources.options">
+                                <input
+                                    [id]="filterOption"
+                                    class="checkbox-custom"
+                                    type="checkbox"
+                                    (click)="viewModel.filters.toggleInFilter('dataSources', filterOption)"
+                                    [checked]="viewModel.filters.inFilter('dataSources', filterOption)" />
+                                <label [for]="filterOption" class="checkbox-custom-label noselect">{{ filterOption }}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="viewModel.filters.dataSources.options.length == 0">Data does not include Data Sources</div>
+                    </div>
                 </div>
             </div>
 

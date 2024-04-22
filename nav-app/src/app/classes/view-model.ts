@@ -819,6 +819,9 @@ export class ViewModel {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
             // filter by enabled
+            let in_platform = false;
+            let in_ds = false;
+
             if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
                 techniqueVM.setIsVisible(false);
                 technique.subtechniques.forEach((subtechnique) => {
@@ -844,34 +847,32 @@ export class ViewModel {
                         let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                         subtechniqueVM.setIsVisible(true);
                     });
-                    return true; //platform match
+                    in_platform = true;
                 }
             }
 
-            // technique.datasources is a string of the datasource for
-            // the current technique. The string is of the form:
-            // 'Sensor Health: Host Status,File: File Metadata'
-
-            let datasource = technique.datasources.split(':')[0];
+            let ds_mid = technique.datasources.split(',').map((ds) => ds.split(':')[0]);
+            let datasources = new Set(ds_mid);
 
             for (let ds of this.filters.dataSources.selection) {
-                if (ds === datasource) {
+                if (datasources.has(ds)) {
                     techniqueVM.setIsVisible(true);
                     technique.subtechniques.forEach((subtechnique) => {
                         let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                         subtechniqueVM.setIsVisible(true);
                     });
-                    return true; //datasource match
+                    in_ds = true;
                 }
             }
-
 
             techniqueVM.setIsVisible(false);
             technique.subtechniques.forEach((subtechnique) => {
                 let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                 subtechniqueVM.setIsVisible(false);
             });
-            return false; // no platform match
+
+            return in_platform && in_ds;
+
         });
     }
 

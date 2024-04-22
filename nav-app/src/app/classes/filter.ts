@@ -71,8 +71,7 @@ export class Filter {
             this[filterName].selection.splice(index, 1);
         } else {
             this[filterName].selection.push(value);
-        }
-    }
+        }    }
 
     /**
      * determine if the given value is active in the filter
@@ -116,7 +115,11 @@ export class Filter {
             // Iterate over the entries of the Map
             for (const [key, value] of obj.entries()) {
                 // Check if key is a string and value is an object with 'name' and 'external_references' properties
-                if (typeof key !== 'string' || typeof value !== 'object' || value === null || !('name' in value) || !('external_references' in value)) {
+                if (typeof key !== 'string'   ||
+                    typeof value !== 'object' ||
+                    value === null            ||
+                    !('name' in value)        ||
+                    !('external_references' in value)) {
                     return false;
                 }
             }
