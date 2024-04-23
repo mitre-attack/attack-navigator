@@ -314,7 +314,8 @@ $cellSize: 15px;
 //     }
 // }
 .filters {
-    padding: 4px;
+    display: flex;
+    overflow-y: hidden; // Prevents additional space when content is too large
 
     .filter {
         text-align: left;
