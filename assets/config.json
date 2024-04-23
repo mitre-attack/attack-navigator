@@ -1,5 +1,26 @@
 {
     "versions": [
+		{
+            "name": "ATT&CK v15",
+            "version": "15",
+            "domains": [
+                {   
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v15.0/enterprise-attack/enterprise-attack.json"]
+                },
+                {   
+                    "name": "Mobile",
+                    "identifier": "mobile-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v15.0/mobile-attack/mobile-attack.json"]
+                },
+                {
+                    "name": "ICS",
+                    "identifier": "ics-attack",
+                    "data": ["https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v15.0/ics-attack/ics-attack.json"]
+                }
+            ]
+        },
         {
             "name": "ATT&CK v14",
             "version": "14",

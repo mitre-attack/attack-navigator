@@ -9,6 +9,14 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 4.9.5 - 23 April 2024
+
+Adds support for ATT&CK v15.0.
+
+## Improvements
+- Added "mark all as reviewed" and "expand visible techniques" options to the Layer Upgrade UI to improve the overall technique review workflow. See issue [#595](https://github.com/mitre-attack/attack-navigator/issues/595).
+
+
 # 4.9.4 - 29 February 2024
 
 ## Fixes
