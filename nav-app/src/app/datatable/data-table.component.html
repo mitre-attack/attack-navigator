@@ -270,7 +270,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
                     <!-- Platforms Filter -->
-                    <div class="filter">
+                    <div class="filter-platform">
                         <b class="filter-label">Platforms</b>
                         <div *ngIf="viewModel.filters.platforms.options.length !== 0">
                             <div class="filter-option" *ngFor="let filterOption of viewModel.filters.platforms.options">
@@ -287,7 +287,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     </div>
 
                     <!-- Data Sources Filter -->
-                    <div class="filter">
+                    <div class="filter-datasource">
                         <b class="filter-label">Data Sources</b>
                         <div *ngIf="viewModel.filters.dataSources.options.length !== 0">
                             <div class="filter-option" *ngFor="let filterOption of viewModel.filters.dataSources.options">

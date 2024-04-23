@@ -314,18 +314,45 @@ $cellSize: 15px;
 //     }
 // }
 .filters {
-    display: flex;
-    overflow-y: scroll; // Prevents additional space when content is too large
-    max-height: 30vh;
-    border: 1px solid color(panel-dark);
+    display: block;
+    overflow-y: auto; // Prevents additional space when content is too large
+    max-height: 60vh;
+    //border: 1px solid color(panel-dark);
 
-    .filter {
+    .filter-platform {
         text-align: left;
         flex-direction: column; /* Ensures elements are stacked vertically */
         // max-height: 20em; /* Set a fixed height */
         // overflow-y: scroll; /* Add scrollbar for vertical overflow */
         // max-height: 30vh;
         // border: 1px solid color(panel-dark);
+
+        overflow-y: scroll; // Prevents additional space when content is too large
+        // max-height: 30vh;
+        border: 1px solid color(panel-dark);
+
+        &:not(:first-child) {
+            margin-top: 4px;
+        }
+
+        .filter-option {
+            &:hover {
+                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+            }
+        }
+    }
+
+    .filter-datasource {
+        text-align: left;
+        flex-direction: column; /* Ensures elements are stacked vertically */
+        // max-height: 20em; /* Set a fixed height */
+        //overflow-y: scroll; /* Add scrollbar for vertical overflow */
+        // max-height: 30vh;
+        // border: 1px solid color(panel-dark);
+
+        overflow-y: scroll; // Prevents additional space when content is too large
+        //max-height: 30vh;
+        border: 1px solid color(panel-dark);
 
         &:not(:first-child) {
             margin-top: 4px;
