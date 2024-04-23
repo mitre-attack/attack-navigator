@@ -315,12 +315,17 @@ $cellSize: 15px;
 // }
 .filters {
     display: flex;
-    overflow-y: hidden; // Prevents additional space when content is too large
+    overflow-y: scroll; // Prevents additional space when content is too large
+    max-height: 30vh;
+    border: 1px solid color(panel-dark);
 
     .filter {
         text-align: left;
-        max-height: 20em; /* Set a fixed height */
-        overflow-y: auto; /* Add scrollbar for vertical overflow */
+        flex-direction: column; /* Ensures elements are stacked vertically */
+        // max-height: 20em; /* Set a fixed height */
+        // overflow-y: scroll; /* Add scrollbar for vertical overflow */
+        // max-height: 30vh;
+        // border: 1px solid color(panel-dark);
 
         &:not(:first-child) {
             margin-top: 4px;
