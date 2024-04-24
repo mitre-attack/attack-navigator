@@ -11,8 +11,14 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
     <div class="control-section-header">
         <div class="control-section-tabs">
             <div
-                *ngIf="configService.getFeatureGroupCount('layer_controls') >= 2"
+                *ngIf="configService.getFeatureGroupCount('selection_controls') >= 2"
                 class="section-label"
+                [class.active]="currentControlSection === 'selection' && showControlsBar"
+                (click)="setCurrentControlSection('selection')">
+                Selection Controls
+            </div>
+            <div
+                *ngIf="configService.getFeatureGroupCount('layer_controls') >= 2"
                 class="section-label"
                 [class.active]="currentControlSection === 'layer' && showControlsBar"
                 (click)="setCurrentControlSection('layer')">
@@ -47,7 +53,30 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <span *ngIf="!viewModel.stickyToolbar" alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
                     </div>
                 </div>
-                <div *ngIf="configService.getFeature('search')" class="control-row-item">
+            </li>
+            <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && currentControlSection === 'selection'">
+                <div class="control-row-item">
+                    <div class="control-row-button dropdown noselect"
+                        (click)="handleSelectionControlsSettingsDropdown()"
+                        matTooltipPosition="below"
+                        matTooltip="selection control settings">
+                        <span class="material-symbols-outlined">
+                            more_vert
+                        </span>
+                    </div>
+                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
+                       <div>
+                            <div>
+                                <b>Included Controls:</b>
+                            </div>
+                            <div *ngFor="let control of selectionControlsList">
+                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('selection_controls',control).enabled">
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="configService.getFeature('search') && isControlIncluded('selection_controls','search')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
                         [ngClass]="{ disabled: viewModel.sidebarContentType === 'layerUpgrade' }"
@@ -59,7 +88,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
 
                 <!-- deselect all -->
-                <div *ngIf="configService.getFeature('deselect_all')" class="control-row-item">
+                <div *ngIf="configService.getFeature('deselect_all') && isControlIncluded('selection_controls','deselect_all')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
                         (click)="viewModel.clearSelectedTechniques(); currentDropdown = null"
@@ -69,33 +98,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <span class="deselectNumber">{{ this.viewModel.getSelectedTechniqueCount() }}</span>
                     </div>
                 </div>
-            </li>
-            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'">
-                <!-- layer name, description, metadata, and links -->
-                <!-- layer control settings -->
-                <div class="control-row-item">
-                    <div class="control-row-button dropdown noselect"
-                        (click)="handleLayerControlsSettingsDropdown()"
-                        matTooltipPosition="below"
-                        matTooltip="layer control settings">
-                        <span class="material-symbols-outlined">
-                            more_vert
-                        </span>
-                    </div>
-                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'layer_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
-                       <div>
-                            <div>
-                                <b>Included Controls:</b>
-                            </div>
-                            <div *ngFor="let control of layerControlsList">
-                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('layer_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- lock selection locks -->
-                <div *ngIf="configService.getFeature('selecting_techniques') && isControlIncluded('layer_controls','selecting_techniques')" class="control-row-item">
+                <div *ngIf="configService.getFeature('selecting_techniques') && isControlIncluded('selection_controls','selecting_techniques')" class="control-row-item">
                     <div
                         class="control-row-button dropdown noselect"
                         (click)="currentDropdown = currentDropdown !== 'selection_behavior' ? 'selection_behavior' : null"
@@ -134,6 +138,31 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 type="checkbox"
                                 [(ngModel)]="viewModel.selectVisibleTechniques" />
                             <label for="select_behavior_visible" class="checkbox-custom-label noselect">select only visible techniques</label>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'">
+                <!-- layer name, description, metadata, and links -->
+                <!-- layer control settings -->
+                <div class="control-row-item">
+                    <div class="control-row-button dropdown noselect"
+                        (click)="handleLayerControlsSettingsDropdown()"
+                        matTooltipPosition="below"
+                        matTooltip="layer control settings">
+                        <span class="material-symbols-outlined">
+                            more_vert
+                        </span>
+                    </div>
+                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'layer_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
+                       <div>
+                            <div>
+                                <b>Included Controls:</b>
+                            </div>
+                            <div *ngFor="let control of layerControlsList">
+                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('layer_controls',control).enabled">
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -536,7 +565,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     </div>
                 </div>
                 <!-- enable/disable technique -->
-                <div *ngIf="configService.getFeature('disable_techniques')" class="control-row-item">
+                <div *ngIf="configService.getFeature('disable_techniques') && isControlIncluded('technique_controls','disable_techniques')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
                         [ngClass]="{ disabled: !viewModel.isCurrentlyEditing() }"

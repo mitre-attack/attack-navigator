@@ -63,6 +63,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     
     public layerControlsList = [];
     public techniqueControlsList = [];
+    public selectionControlsList = [];
     constructor(
         public dataService: DataService,
         private tabs: TabsComponent,
@@ -83,6 +84,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             else if(this.includedControls[i].name == "technique_controls"){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
                     this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].name)
+                }
+            }
+            else if(this.includedControls[i].name == "selection_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].name)
                 }
             }
         }
@@ -111,6 +117,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    handleSelectionControlsSettingsDropdown() {
+        this.currentDropdown !== 'selection_control_settings' ? this.currentDropdown = 'selection_control_settings' : this.currentDropdown = '';
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
     handleLayerControlsSettingsDropdown() {
         this.currentDropdown !== 'layer_control_settings' ? this.currentDropdown = 'layer_control_settings' : this.currentDropdown = '';
         this.dropdownChange.emit(this.currentDropdown);
@@ -121,11 +132,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
-    isControlIncluded(foo, control) {
+    isControlIncluded(control, subfeature) {
         for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == foo){
+            if(this.includedControls[i].name == control){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    if(this.includedControls[i].subfeatures[j].name == control){
+                    if(this.includedControls[i].subfeatures[j].name == subfeature){
                         if(this.includedControls[i].subfeatures[j].enabled){
                             return true;
                         }
@@ -139,11 +150,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         return false
     }
 
-    getControl(foo, control): Object {
+    getControl(control, subfeature): Object {
         for(let i=0;i <this.includedControls.length;i++){
-            if(this.includedControls[i].name == foo){
+            if(this.includedControls[i].name == control){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    if(this.includedControls[i].subfeatures[j].name == control){
+                    if(this.includedControls[i].subfeatures[j].name == subfeature){
                         return this.includedControls[i].subfeatures[j];
                     }
                 }
@@ -438,7 +449,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     showControlsBar = true;
 
-    currentControlSection = "layer";
+    currentControlSection = "selection";
 
     showHelpDropDown = false;
 
