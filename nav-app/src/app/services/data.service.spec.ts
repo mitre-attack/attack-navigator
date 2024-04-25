@@ -135,7 +135,7 @@ describe('DataService', () => {
             expect(mockService.versions.length).toEqual(1);
             expect(domain).toBeInstanceOf(Domain);
             expect(domain.authentication).toBeTruthy();
-            expect(domain.authentication).toEqual(MockData.workbenchData.data[0].authentication);
+            expect(domain.authentication).toEqual(MockData.workbenchData.entries[0].authentication);
         });
 
         it('should fetch domain data via Workbench', () => {
@@ -157,9 +157,9 @@ describe('DataService', () => {
             expect(mockService.versions.length).toEqual(1);
             expect(domain).toBeInstanceOf(Domain);
             expect(domain.taxii_url).toBeTruthy();
-            expect(domain.taxii_url).toEqual(MockData.taxiiData.data[0].domains[0].taxii_url);
+            expect(domain.taxii_url).toEqual(MockData.taxiiData.entries[0].domains[0].taxii_url);
             expect(domain.taxii_collection).toBeTruthy();
-            expect(domain.taxii_collection).toEqual(MockData.taxiiData.data[0].domains[0].taxii_collection);
+            expect(domain.taxii_collection).toEqual(MockData.taxiiData.entries[0].domains[0].taxii_collection);
         });
 
         it('should fetch domain data via TAXII', () => {
@@ -268,11 +268,11 @@ describe('DataService', () => {
             let newVersion = {
                 name: 'ATT&CK v14',
                 version: '14',
-                domains: MockData.configData.data[0].domains,
+                domains: MockData.configData.entries[0].domains,
             };
             configService.versions = {
                 enabled: true,
-                data: [MockData.configData.data[0], newVersion],
+                entries: [MockData.configData.entries[0], newVersion],
             };
             spyOn(DataService.prototype, 'setUpDomains').and.callThrough();
             mockService = new DataService(http, configService);
