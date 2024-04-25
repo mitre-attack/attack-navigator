@@ -47,6 +47,11 @@
     font-feature-settings: 'liga';
 }
 
+.text-deemphasis {
+    color: on-color-deemphasis(body);
+    font-size: 12px !important;
+}
+
 body {
     margin: 0;
     overflow-y: scroll;
@@ -65,10 +70,25 @@ body {
         @include adaptive-color-dark-only('border-color', on-color(dark-1));
     }
 
-    .content code {
-        @include adaptive-color-dark-only('background-color', color(dark-1));
-        @include adaptive-color-dark-only('border-color', color(panel-dark) !important);
-        @include adaptive-color-dark-only('color', on-color(dark) !important);
+    .content {
+        overflow-y: scroll;
+        max-height: 60vh;
+        font-size: 11pt;
+
+        p,
+        ul {
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+        }
+
+        code {
+            @include adaptive-color-dark-only('background-color', color(dark-1));
+            @include adaptive-color-dark-only('border-color', color(panel-dark) !important);
+            @include adaptive-color-dark-only('color', on-color(dark) !important);
+            color: black;
+            padding: 1px 2px;
+            word-break: break-word;
+        }
     }
 
     a {
@@ -78,6 +98,15 @@ body {
     a:active,
     a:visited {
         @include adaptive-color-dark-only('color', color(dark-link-active));
+    }
+
+    .top-button {
+        margin-top: 25px;
+        text-align: right;
+    }
+
+    .close-button {
+        text-align: center;
     }
 }
 
@@ -97,15 +126,11 @@ body {
 // | (_| (_) | .` | | | |   / (_) | |__\__ \
 //  \___\___/|_|\_| |_| |_|_\\___/|____|___/
 
-// $inputFontSize: 10pt;
 // panel with controls
 .controlsContainer {
     @include adaptive-color('background-color', color(panel-dark), color(dark-2));
 
-    // width: 100%;
     text-align: right;
-    // padding: 0 3px;
-    // display: flex;
     display: block;
     @media print {
         display: none;
@@ -115,9 +140,6 @@ body {
         margin: 0;
     }
 
-    // justify-content: space-between;
-    // font: 400 12px system-ui;
-
     .control-sections > li {
         list-style: none;
         display: inline-block;
@@ -126,18 +148,13 @@ body {
         padding: 0 5px 0 5px;
         position: relative;
 
-        // text-align: center;
         // label for a section of controls, e.g layer controls or technique controls
         .section-label {
             @include adaptive-color('background-color', color(panel-dark), color(dark-2));
             @include adaptive-color('color', color(tab-text-color), on-color(dark));
             font-size: 8pt;
-            // height: 8px;
             top: -12px;
             position: absolute;
-            // border: 1px 1px 0 1px solid black;
-            // width:50%;
-            // left: 25%;
             padding: 0 5px;
             border-radius: 2px 2px 0 0;
             text-align: center;
@@ -145,7 +162,6 @@ body {
             user-select: none;
             white-space: nowrap;
             z-index: 1;
-            // bottom: 10px;
         }
 
         .control-row-item {
@@ -354,35 +370,6 @@ body {
     .mat-button-base {
         @include adaptive-color-dark-only('background-color', color(dark-4));
         @include adaptive-color-dark-only('color', on-color(dark));
-    }
-}
-
-.mat-dialog-container {
-    .top-button {
-        margin-top: 25px;
-        text-align: right;
-    }
-
-    .close-button {
-        text-align: center;
-    }
-}
-
-.mat-dialog-container .content {
-    overflow-y: scroll;
-    max-height: 60vh;
-    font-size: 11pt;
-
-    p,
-    ul {
-        margin-block-start: 1em;
-        margin-block-end: 1em;
-    }
-
-    code {
-        color: black;
-        padding: 1px 2px;
-        word-break: break-word;
     }
 }
 

@@ -1,7 +1,6 @@
 export { StixObject } from './stix-object';
 export { Campaign } from './campaign';
 export { DataComponent } from './data-component';
-export { Domain } from './domain';
 export { Group } from './group';
 export { Matrix } from './matrix';
 export { Mitigation } from './mitigation';

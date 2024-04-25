@@ -63,12 +63,12 @@
                                 }
                             ]
                         },
-						"googleAnalytics": {
-							"index": {
-								"input": "src/index.google-analytics.html",
-								"output": "index.html"
-							}
-						}
+                        "googleAnalytics": {
+                            "index": {
+                                "input": "src/index.google-analytics.html",
+                                "output": "index.html"
+                            }
+                        }
                     },
                     "defaultConfiguration": ""
                 },

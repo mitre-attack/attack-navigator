@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuItem } from '../classes/context-menu-item';
 import { HttpClient } from '@angular/common/http';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ConfigService {
-    public versions: any[] = [];
+    public collectionIndex: string;
+    public versions: {
+        enabled: boolean;
+        entries: any;
+    } = {
+        enabled: false,
+        entries: [],
+    };
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;
     public commentColor = 'yellow';
@@ -121,8 +130,10 @@ export class ConfigService {
             this.features.set(featureObject.name, enabled);
             return [featureObject.name];
         } else {
-            //has subfeatures
-            override = override ? override : !featureObject.enabled ? false : null;
+            // has subfeatures
+            if (!override) {
+                override = !featureObject.enabled ? false : null;
+            }
             let subfeatures = [];
             featureObject.subfeatures.forEach(function (subfeature) {
                 subfeatures = Array.prototype.concat(subfeatures, self.setFeature_object(subfeature, override));
@@ -168,38 +179,75 @@ export class ConfigService {
     }
 
     /**
+     * Validate that the configuration file specifies a collection index URL
+     * or a list of versions/domains
+     * @param config the configuration to validate
+     * @returns the configuration, if valid, otherwise throws an error
+     */
+    public validateConfig(config: any): any {
+        if (!config.collection_index_url && !config.versions?.entries?.length) {
+            throw new Error(`'collection_index_url' or 'versions' must be defined`);
+        }
+        if (config.collection_index_url && typeof config.collection_index_url !== typeof 'string') {
+            throw new Error(`'collection_index_url' must be a string`);
+        }
+        return config;
+    }
+
+    /**
      * Load the configuration file
      * Note: this is done at startup
      */
     public loadConfig() {
         return this.http
             .get('./assets/config.json')
-            .toPromise()
-            .then((config) => {
-                console.debug(`loaded app configuration settings`);
+            .pipe(
+                map((config: any) => this.validateConfig(config)),
+                switchMap((config: any) => {
+                    console.debug('loaded app configuration settings');
 
-                this.versions = config['versions'];
-                config['custom_context_menu_items'].forEach((item) => {
-                    this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
-                });
-                this.defaultLayers = config['default_layers'];
-                this.commentColor = config['comment_color'];
-                this.linkColor = config['link_color'];
-                this.metadataColor = config['metadata_color'];
-                this.banner = config['banner'];
+                    config['custom_context_menu_items'].forEach((item) => {
+                        this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
+                    });
+                    this.defaultLayers = config['default_layers'];
+                    this.commentColor = config['comment_color'];
+                    this.linkColor = config['link_color'];
+                    this.metadataColor = config['metadata_color'];
+                    this.banner = config['banner'];
 
-                // parse feature preferences
-                this.featureList = config['features'];
-                config['features'].forEach((feature) => {
-                    this.setFeature_object(feature);
-                });
+                    // parse feature preferences
+                    this.featureList = config['features'];
+                    config['features'].forEach((feature) => {
+                        this.setFeature_object(feature);
+                    });
 
-                // override preferences with preferences from URL fragments
-                this.getAllFragments().forEach((value: string, key: string) => {
-                    if (this.isFeature(key) || this.isFeatureGroup(key)) {
-                        this.setFeature(key, value == 'true');
+                    // override preferences with preferences from URL fragments
+                    this.getAllFragments().forEach((value: string, key: string) => {
+                        if (this.isFeature(key) || this.isFeatureGroup(key)) {
+                            this.setFeature(key, value == 'true');
+                        }
+                    });
+
+                    // parse configured domains and versions
+                    this.versions = config['versions'];
+                    if (config['collection_index_url']) {
+                        return this.http.get(config['collection_index_url']).pipe(
+                            tap((_) => console.log('loaded collection index from', config['collection_index_url'])),
+                            catchError((err) => {
+                                throw new Error('collection index failed to load. ' + err.message);
+                            })
+                        );
                     }
-                });
-            });
+                    return of(null);
+                }),
+                map((collectionIndex: any) => {
+                    if (collectionIndex) this.collectionIndex = collectionIndex;
+                }),
+                catchError((err) => {
+                    alert(`ERROR the configuration file failed to parse. See the javascript console for more details.`);
+                    throw err;
+                })
+            )
+            .toPromise();
     }
 }

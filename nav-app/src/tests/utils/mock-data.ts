@@ -1,57 +1,81 @@
 // Mock Test Data
 
 // mock data configurations
-export const configData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
+export const configData = {
+    enabled: true,
+    entries: [
+        {
+            name: 'ATT&CK v13',
+            version: '13',
+            domains: [
+                {
+                    name: 'Enterprise',
+                    identifier: 'enterprise-attack',
+                    data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                },
+            ],
+        },
+    ],
+};
+export const collectionIndexConfig = {
+    collection_index_url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json',
+};
+export const versionsConfig = {
+    versions: {
+        enabled: true,
+        entries: [
             {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                name: 'ATT&CK v13',
+                version: '13',
+                domains: [
+                    {
+                        name: 'Enterprise',
+                        identifier: 'enterprise-attack',
+                        data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                    },
+                ],
             },
         ],
     },
-];
-
-export const mobileDomainData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Mobile',
-                identifier: 'mobile-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v14.1/mobile-attack/mobile-attack.json'],
-            },
-        ],
-    },
-];
-export const configDataExtended = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
-            },
-        ],
-    },
-    {
-        name: 'ATT&CK v12',
-        version: '12',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json'],
-            },
-        ],
-    },
-];
+};
+export const customConfig = {
+    ...collectionIndexConfig,
+    ...versionsConfig,
+};
+export const invalidTypeConfig = {
+    collection_index_url: false,
+};
+export const invalidConfig = {
+    collection_index_url: '',
+    versions: {},
+};
+export const configDataExtended = {
+    enabled: true,
+    entries: [
+        {
+            name: 'ATT&CK v13',
+            version: '13',
+            domains: [
+                {
+                    name: 'Enterprise',
+                    identifier: 'enterprise-attack',
+                    data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                },
+            ],
+        },
+        {
+            name: 'ATT&CK v12',
+            version: '12',
+            domains: [
+                {
+                    name: 'Enterprise',
+                    identifier: 'enterprise-attack',
+                    data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v12.1/enterprise-attack/enterprise-attack.json'],
+                },
+            ],
+        },
+    ],
+};
 export const defaultLayersEnabled = {
     enabled: true,
     urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
@@ -61,30 +85,46 @@ export const defaultLayersDisabled = {
     urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
 };
 
-export const taxiiData = [
-    {
-        name: 'ATT&CK v13',
-        version: '13',
-        domains: [
-            {
-                name: 'Enterprise',
-                identifier: 'enterprise-attack',
-                taxii_url: 'https://cti-taxii.mitre.org/',
-                taxii_collection: '95ecc380-afe9-11e4-9b6c-751b66dd541e',
-            },
-        ],
-    },
-];
-export const workbenchData = [
-    {
-        ...configData[0],
-        authentication: {
-            enabled: true,
-            serviceName: 'navigator',
-            apiKey: 'sample-navigator-apikey',
+export const taxiiData = {
+    enabled: true,
+    entries: [
+        {
+            name: 'ATT&CK v13',
+            version: '13',
+            domains: [
+                {
+                    name: 'Enterprise',
+                    identifier: 'enterprise-attack',
+                    taxii_url: 'https://cti-taxii.mitre.org/',
+                    taxii_collection: '95ecc380-afe9-11e4-9b6c-751b66dd541e',
+                },
+            ],
         },
-    },
-];
+    ],
+};
+
+export const workbenchData = {
+    enabled: true,
+    entries: [
+        {
+            name: 'ATT&CK v13',
+            version: '13',
+            domains: [
+                {
+                    name: 'Enterprise',
+                    identifier: 'enterprise-attack',
+                    data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/enterprise-attack/enterprise-attack.json'],
+                },
+            ],
+            authentication: {
+                enabled: true,
+                serviceName: 'navigator',
+                apiKey: 'sample-navigator-apikey',
+            },
+        },
+    ],
+};
+
 export const configTechniqueControls = {
     name: 'technique_controls',
     enabled: true,
@@ -100,6 +140,52 @@ export const configToolbarControls = {
     enabled: true,
     description: 'Disable to disable all subfeatures',
     subfeatures: [{ name: 'sticky_toolbar', enabled: true, description: 'Disable to remove the ability to enable/disable the sticky toolbar.' }],
+};
+
+// mock collection index
+export const collectionIndex = {
+    name: 'MITRE ATT&CK',
+    collections: [
+        {
+            name: 'Enterprise ATT&CK',
+            id: 'x-mitre-collection--1f5f1533-f617-4ca8-9ab4-6a02367fa019',
+            versions: [
+                {
+                    version: '14.1',
+                    url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-14.1.json',
+                },
+                {
+                    version: '14.0',
+                    url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-14.0.json',
+                },
+            ],
+        },
+        {
+            name: 'Mobile ATT&CK',
+            id: 'x-mitre-collection--dac0d2d7-8653-445c-9bff-82f934c1e858',
+            versions: [
+                {
+                    version: '14.1',
+                    url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack-14.1.json',
+                },
+                {
+                    version: '1.0',
+                    url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack-1.0.json',
+                },
+            ],
+        },
+        {
+            name: 'ICS ATT&CK',
+            id: 'x-mitre-collection--90c00720-636b-4485-b342-8751d232bf09',
+            versions: [
+                {
+                    version: '14.1',
+                    url: 'https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack-14.1.json',
+                    modified: '2023-11-14T14:00:00.188Z',
+                },
+            ],
+        },
+    ],
 };
 
 // mock base STIX SDOs

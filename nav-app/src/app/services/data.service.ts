@@ -3,10 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from 'rxjs/Rx';
 import { fromPromise } from 'rxjs/observable/fromPromise';
-import { Asset, Campaign, Domain, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
+import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
-import { Version, VersionChangelog } from '../classes';
+import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
+import * as globals from '../utils/globals';
 
 @Injectable({
     providedIn: 'root',
@@ -17,7 +18,17 @@ export class DataService {
         private configService: ConfigService
     ) {
         console.debug('initializing data service');
-        this.setUpURLs(configService.versions);
+        if (configService.versions?.enabled) {
+            // parse versions structure from configuration file
+            // support for workbench integration, taxii and custom data
+            this.setUpDomains(configService.versions.entries);
+        }
+        if (configService.collectionIndex) {
+            // parse versions from collection index
+            this.parseCollectionIndex(configService.collectionIndex);
+        }
+        this.versions.sort((a, b) => (+a.number > +b.number ? -1 : 1));
+        this.latestVersion = this.versions[0];
     }
 
     public domain_backwards_compatibility = {
@@ -26,6 +37,10 @@ export class DataService {
     };
     public domains: Domain[] = [];
     public versions: Version[] = [];
+    public latestVersion: Version; // set in constructor
+
+    // Observable for data
+    private domainData$: Observable<Object>;
 
     /**
      * Callback functions passed to this function will be called after data is loaded
@@ -37,11 +52,11 @@ export class DataService {
     }
 
     /**
-     * Parse the given stix bundle into the relevant data holders
+     * Parse the given stix bundles into the relevant data holders
      * @param domain
      * @param stixBundles
      */
-    public parseBundle(domain: Domain, stixBundles: any[]): void {
+    public parseBundles(domain: Domain, stixBundles: any[]): void {
         let platforms = new Set<string>();
         let seenIDs = new Set<string>();
         let matrixSDOs = [];
@@ -51,18 +66,8 @@ export class DataService {
             let techniqueSDOs = [];
             let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
+            // iterate through stix domain objects in the bundle
             for (let sdo of bundle.objects) {
-                // iterate through stix domain objects in the bundle
-                // Filter out object not included in this domain if domains field is available
-                if (
-                    !domain.isCustom &&
-                    sdo.x_mitre_domains?.length > 0 &&
-                    domain.urls.length == 1 &&
-                    !sdo.x_mitre_domains.includes(domain.domain_identifier)
-                ) {
-                    continue;
-                }
-
                 // filter out duplicates, except for matrices
                 // which are needed to properly build the datatables
                 if (sdo.type != 'x-mitre-matrix') {
@@ -268,28 +273,13 @@ export class DataService {
         }
     }
 
-    // Observable for data in config.json
-    private configData$: Observable<Object>;
-
-    // Observable for data
-    private domainData$: Observable<Object>;
-
-    // URLs in case config file doesn't load properly
-    public latestVersion: Version = { name: 'ATT&CK v15', number: '15' };
-    public lowestSupportedVersion: Version; // used by tabs component
-    public enterpriseAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json';
-    public mobileAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json';
-    public icsAttackURL: string = 'https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json';
-
     /**
-     * Set up the URLs for data
-     * @param {versions} list of versions and domains defined in the configuration file
-     * @memberof DataService
+     * Set up the URLs for domains in the list defined in the config file
+     * @param {versions} list of versions and domains
      */
-    public setUpURLs(versions: any[]) {
+    public setUpDomains(versions: any[]) {
         versions.forEach((version: any) => {
-            let v: Version = new Version(version['name'], version['version'].match(/\d+/g)[0]);
-            this.versions.push(v);
+            let v = this.addVersion(version['name'], version['version'].match(/\d+/g)[0]);
             version['domains'].forEach((domain: any) => {
                 let identifier = domain['identifier'];
                 let domainObject = new Domain(identifier, domain['name'], v);
@@ -303,17 +293,67 @@ export class DataService {
                 this.domains.push(domainObject);
             });
         });
+    }
 
-        if (this.domains.length == 0) {
-            // issue loading config
-            this.versions.push(this.latestVersion);
-            let enterpriseDomain = new Domain('enterprise-attack', 'Enterprise', this.latestVersion, [this.enterpriseAttackURL]);
-            let mobileDomain = new Domain('mobile-attack', 'Mobile', this.latestVersion, [this.mobileAttackURL]);
-            let icsDomain = new Domain('ics-attack', 'ICS', this.latestVersion, [this.icsAttackURL]);
-            this.domains.push(...[enterpriseDomain, mobileDomain, icsDomain]);
+    /**
+     * Parses the collection index for domains/versions
+     * @param collectionIndex the collection index
+     */
+    public parseCollectionIndex(collectionIndex: any) {
+        for (let collection of collectionIndex.collections) {
+            let domainIdentifier = this.getDomainIdentifier(collection.name);
+
+            // only most recent minor versions of a major release
+            let minorVersionMap = collection.versions.reduce((acc, version) => {
+                const [major, minor] = version.version.split('.').map(Number);
+                if (!acc[major] || acc[major].minor < minor) {
+                    acc[major] = { version: version.version, url: version.url };
+                }
+                return acc;
+            }, {});
+            let versions: Array<{ version: string; url: string }> = Object.values(minorVersionMap);
+
+            for (let version of versions) {
+                let versionNumber = version.version.split('.')[0]; // major version only
+                let versionName = `${collectionIndex.name} v${versionNumber}`;
+                if (+versionNumber < +globals.minimumSupportedVersion) {
+                    console.debug(`version ${versionNumber} is not supported, skipping ${collection.name} v${versionNumber}`);
+                    continue;
+                }
+                // create version & domain
+                let v = this.addVersion(versionName, versionNumber);
+                this.domains.push(new Domain(domainIdentifier, collection.name, v, [version.url]));
+            }
         }
+    }
 
-        this.lowestSupportedVersion = this.versions[this.versions.length - 1];
+    /**
+     * Retrieves the domain identifier from the domain name
+     * Helper function for parseCollectionIndex()
+     * @param domainName the name of the domain
+     * @returns the domain identifier (e.g. 'enterprise-attack')
+     */
+    public getDomainIdentifier(domainName: string): string {
+        return domainName.replace(/ /g, '-').replace(/&/g, 'a').toLowerCase();
+    }
+
+    /**
+     * Adds a new version to the list of versions, checking if
+     * one already exists.
+     * @param versionName the name of the version
+     * @param versionNumber the version number
+     * @returns the existing or created Version object
+     */
+    public addVersion(versionName: string, versionNumber: string): Version {
+        // check if version already exists
+        let existingVersion = this.versions.find((v) => v.name === versionName && v.number === versionNumber);
+        if (!existingVersion) {
+            // create and add new version
+            let version = new Version(versionName, versionNumber);
+            this.versions.push(version);
+            return version;
+        }
+        return existingVersion;
     }
 
     /**
@@ -322,16 +362,15 @@ export class DataService {
     public getDomainData(domain: Domain, refresh: boolean = false): Observable<Object> {
         if (domain.taxii_collection && domain.taxii_url) {
             console.debug('fetching data from TAXII server');
-            let conn = new TaxiiConnect(domain.taxii_url, '', '', 5000);
+            let conn = new TaxiiConnect(domain.taxii_url, '', '');
             let collectionInfo: any = {
                 id: domain.taxii_collection,
                 title: domain.name,
                 description: '',
                 can_read: true,
                 can_write: false,
-                media_types: ['application/vnd.oasis.stix+json'],
             };
-            const collection = new Collection(collectionInfo, domain.taxii_url + 'stix', conn);
+            const collection = new Collection(collectionInfo, domain.taxii_url, conn);
             this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
             console.debug('retrieving data', domain.urls);
@@ -363,7 +402,7 @@ export class DataService {
                 let subscription;
                 subscription = this.getDomainData(domain, refresh).subscribe({
                     next: (data: Object[]) => {
-                        this.parseBundle(domain, data);
+                        this.parseBundles(domain, data);
                         resolve(null);
                     },
                     complete: () => {
@@ -403,13 +442,6 @@ export class DataService {
         let domain = this.getDomain(domainVersionID);
         let all_techniques = domain.techniques.concat(domain.subtechniques);
         return all_techniques.find((t) => t.attackID == attackID);
-    }
-
-    /**
-     * Retrieves the first version defined in the config file
-     */
-    public getCurrentVersion() {
-        return this.domains[0].version;
     }
 
     /**
