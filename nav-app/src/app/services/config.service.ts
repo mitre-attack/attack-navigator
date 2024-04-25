@@ -195,7 +195,9 @@ export class ConfigService {
                 config['features'].forEach((feature) => {
                     this.setFeature_object(feature);
                 });
-
+                config['customize_features'].forEach((feature) => {
+                    this.setFeature_object(feature);
+                });
                 // override preferences with preferences from URL fragments
                 this.getAllFragments().forEach((value: string, key: string) => {
                     if (this.isFeature(key) || this.isFeatureGroup(key)) {

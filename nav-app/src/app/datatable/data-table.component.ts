@@ -52,6 +52,13 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
     };
 
+    /*
+     * 0: expand subtechniques
+     * 1: expand annotated subtechniques
+     * 2: collapse subtechniques
+     */
+    public showSubtechniquesType: number = 0;
+
     public downloadAnnotationsOnVisibleTechniques: boolean = false;
 
     // edit field bindings
@@ -515,6 +522,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                     tvm.showSubtechniques = true;
                     continue;
                 }
+                if (showAnnotatedOnly) {
+                    // expand all sub-techniques
+                    tvm.showSubtechniques = false;
+                }
 
                 // expand only if sub-techniques have annotations
                 for (let subtechnique of technique.subtechniques) {
@@ -538,6 +549,32 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             tvm.showSubtechniques = false;
         });
         this.viewModel.layout.expandedSubtechniques = 'none';
+    }
+
+    /**
+     * Expand all, annotated or no subtechniques based on selection
+     */
+    public showSubtechniquesTypeAlgorithm() {
+        switch (this.showSubtechniquesType) {
+            case 1: // expand all subtechniques
+                this.expandSubtechniques();
+                console.log(this.showSubtechniquesType);
+                break;
+            case 2: // expand only annotated subtechniques
+                this.expandSubtechniques(true);
+                console.log(this.showSubtechniquesType);
+                break;
+            case 3: // collapse all subtechniques
+                this.collapseSubtechniques();
+                console.log(this.showSubtechniquesType);
+                this.showSubtechniquesType = 0;
+                break;
+            case 0:
+                break;
+            default:
+                // expand all subtechniques
+                this.expandSubtechniques();
+        }
     }
 
     /**

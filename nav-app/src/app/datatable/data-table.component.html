@@ -499,39 +499,26 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     </div>
                 </div>
 
-                <!-- expand all sub-techniques -->
+                <!-- expand all, annonated or no subtechniques -->
                 <div *ngIf="configService.getFeature('subtechniques') && isControlIncluded('layer_controls','subtechniques')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
-                        [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
-                        (click)="expandSubtechniques()"
+                        (click)="showSubtechniquesType = (showSubtechniquesType + 1) % 4; showSubtechniquesTypeAlgorithm()"
                         matTooltipPosition="below"
-                        matTooltip="expand sub-techniques">
-                        <span class="material-icons" alt="expand sub-techniques">unfold_more</span>
-                    </div>
-                </div>
-
-                <!-- expand only annotated sub-techniques -->
-                <div *ngIf="configService.getFeature('subtechniques') && isControlIncluded('layer_controls','subtechniques')" class="control-row-item">
-                    <div
-                        class="control-row-button noselect"
-                        [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
-                        (click)="expandSubtechniques(true)"
-                        matTooltipPosition="below"
-                        matTooltip="expand annotated sub-techniques">
-                        <mat-icon svgIcon="ic_unfold_more_alt"></mat-icon>
-                    </div>
-                </div>
-
-                <!-- collapse all sub-techniques -->
-                <div *ngIf="configService.getFeature('subtechniques') && isControlIncluded('layer_controls','subtechniques')" class="control-row-item">
-                    <div
-                        class="control-row-button noselect"
-                        [ngClass]="{ disabled: viewModel.layout.layout === 'mini' }"
-                        (click)="collapseSubtechniques()"
-                        matTooltipPosition="below"
-                        matTooltip="collapse sub-techniques">
-                        <span class="material-icons" alt="collapse sub-techniques">unfold_less</span>
+                        [matTooltip]="
+                            [
+                                'expand subtechniques',
+                                'expand annotated subtechniques',
+                                'collapse subtechniques'
+                            ][showSubtechniquesType]
+                        ">
+                        <span [ngSwitch]="['expanded', 'annotated', 'none'][showSubtechniquesType]">
+                            <ng-container *ngSwitchCase="'expanded'"><span class="material-icons" alt="expand sub-techniques">unfold_more</span></ng-container>
+                            <ng-container *ngSwitchCase="'annotated'">
+                                <mat-icon svgIcon="ic_unfold_more_alt"></mat-icon>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'none'"><span class="material-icons" alt="collapse sub-techniques">unfold_less</span></ng-container>
+                        </span>
                     </div>
                 </div>
             </li>
