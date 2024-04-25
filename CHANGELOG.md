@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# 5.0.0 - Changes Staged for Later Release
+# 5.0.0 - Changes staged on develop
 
 ## Improvements
 - Updated Navigator to load data via the STIX 2.1 Collection Index. See issue [#607](https://github.com/mitre-attack/attack-navigator/issues/607).
@@ -19,7 +19,9 @@
 - Added support for loading content from a TAXII 2.1 server. See issue [#277](https://github.com/mitre-attack/attack-navigator/issues/277). For more information on how to load content from TAXII 2.1 see _Loading content from a TAXII server_ in the [README](README.md).
 - Improved error handling when there is an issue loading the configuration file. See issue [#398](https://github.com/mitre-attack/attack-navigator/issues/398).
 
-# 4.x.x - Changes Staged on Develop
+# 4.9.5 - 23 April 2024
+
+Adds support for ATT&CK v15.0.
 
 ## Improvements
 - Added "mark all as reviewed" and "expand visible techniques" options to the Layer Upgrade UI to improve the overall technique review workflow. See issue [#595](https://github.com/mitre-attack/attack-navigator/issues/595).
