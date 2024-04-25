@@ -1,7 +1,6 @@
 import { Component, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { Domain } from '../classes/stix';
-import { Tab, Version, ViewModel } from '../classes';
+import { Tab, Domain, Version, ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
@@ -33,7 +32,6 @@ export class TabsComponent implements AfterViewInit {
     public dropdownEnabled: string = '';
     public layerTabs: Tab[] = [];
     public adjustedHeaderHeight: number = 0;
-    public navVersion = globals.navVersion;
     public safariDialogRef;
     public versionDialogRef;
     public versionMinorSnackbarRef;
@@ -65,6 +63,14 @@ export class TabsComponent implements AfterViewInit {
 
     public get latestDomains(): Domain[] {
         return this.filterDomains(this.dataService.versions[0]);
+    }
+
+    public get minimumSupportedVersion(): string {
+        return globals.minimumSupportedVersion;
+    }
+
+    public get navVersion(): string {
+        return globals.navVersion;
     }
 
     constructor(
@@ -439,11 +445,8 @@ export class TabsComponent implements AfterViewInit {
      * Create a new layer in the given domain and version
      */
     public newLayer(domainVersionID: string, obj: any = undefined): void {
-        // load domain data, if not yet loaded
-        let domain = this.dataService.getDomain(domainVersionID);
-        if (!domain.dataLoaded) {
-            this.dataService.loadDomainData(domainVersionID, true);
-        }
+        // load domain data
+        this.dataService.loadDomainData(domainVersionID, true);
 
         // find non conflicting name
         let name;
@@ -586,7 +589,7 @@ export class TabsComponent implements AfterViewInit {
      */
     public versionUpgradeDialog(viewModel: ViewModel): Promise<any> {
         let dataPromise: Promise<any> = new Promise((resolve, reject) => {
-            let currVersion = this.dataService.getCurrentVersion().number;
+            let currVersion = this.dataService.latestVersion.number;
             if (viewModel.version !== currVersion) {
                 // ask to upgrade
                 let dialog = this.dialog.open(VersionUpgradeComponent, {
@@ -638,7 +641,7 @@ export class TabsComponent implements AfterViewInit {
                             // user upgraded to latest version
                             // create and open the latest version
                             let newViewModel = this.viewModelsService.newViewModel(oldViewModel.name, versions.newID);
-                            newViewModel.version = this.dataService.getCurrentVersion().number; // update version to new ID
+                            newViewModel.version = this.dataService.latestVersion.number; // update version to new ID
                             newViewModel.deserialize(serialized, false); // restore layer data, except for technique annotations
                             newViewModel.loadVMData();
                             newViewModel.compareTo = oldViewModel;

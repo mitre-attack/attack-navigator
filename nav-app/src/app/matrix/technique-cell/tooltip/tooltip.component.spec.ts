@@ -83,7 +83,7 @@ describe('TooltipComponent', () => {
             innerWidth: { get: () => 100 },
             innerHeight: { get: () => 100 },
         });
-        component.dataService.setUpURLs(versions);
+        component.dataService.setUpDomains(versions);
         component.dataService.domains[0].notes = [new Note(stixSDO)];
         component.viewModel = new ViewModel('layer', '33', 'enterprise-attack-13', null);
         component.viewModel.domainVersionID = 'enterprise-attack-13';

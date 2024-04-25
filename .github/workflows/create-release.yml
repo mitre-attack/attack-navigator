@@ -1,0 +1,19 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  create_github_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ncipollo/release-action@v1
+      with:
+        makeLatest: true
+        name: "attack-navigator ${{github.ref_name}}"
+        body: "See [the changelog](./CHANGELOG.md) for details about what changed in this release."

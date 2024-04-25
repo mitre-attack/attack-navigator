@@ -62,6 +62,12 @@
                                     "with": "src/environments/environment.prod.ts"
                                 }
                             ]
+                        },
+                        "googleAnalytics": {
+                            "index": {
+                                "input": "src/index.google-analytics.html",
+                                "output": "index.html"
+                            }
                         }
                     },
                     "defaultConfiguration": ""

@@ -73,4 +73,25 @@ describe('ConfigService', () => {
     it('should set up data in constructor', () => {
         expect(service).toBeTruthy();
     });
+
+    it('should pass validation if only versions is configured', () => {
+        expect(() => service.validateConfig(MockData.versionsConfig)).not.toThrow();
+    });
+
+    it('should pass validation if only collection index is configured', () => {
+        expect(() => service.validateConfig(MockData.collectionIndexConfig)).not.toThrow();
+    });
+
+    it('should fail validation if collection_index_url is not a string', () => {
+        expect(() => service.validateConfig(MockData.invalidTypeConfig)).toThrowError();
+    });
+
+    it('should fail validation if neither versions or collection index are configured', () => {
+        expect(() => service.validateConfig(MockData.invalidConfig)).toThrowError();
+    });
+
+    it('should return config if validation passes', () => {
+        expect(() => service.validateConfig(MockData.customConfig)).not.toThrow();
+        expect(service.validateConfig(MockData.customConfig)).toEqual(MockData.customConfig);
+    });
 });

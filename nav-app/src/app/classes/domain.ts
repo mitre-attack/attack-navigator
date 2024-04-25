@@ -1,15 +1,15 @@
-import { ServiceAuth } from '../../services/data.service';
-import { Campaign } from './campaign';
-import { DataComponent } from './data-component';
-import { Group } from './group';
-import { Matrix } from './matrix';
-import { Mitigation } from './mitigation';
-import { Note } from './note';
-import { Software } from './software';
-import { Tactic } from './tactic';
-import { Technique } from './technique';
-import { Version } from '../version';
-import { Asset } from './asset';
+import { ServiceAuth } from '../services/data.service';
+import { Campaign } from './stix/campaign';
+import { DataComponent } from './stix/data-component';
+import { Group } from './stix/group';
+import { Matrix } from './stix/matrix';
+import { Mitigation } from './stix/mitigation';
+import { Note } from './stix/note';
+import { Software } from './stix/software';
+import { Tactic } from './stix/tactic';
+import { Technique } from './stix/technique';
+import { Version } from './version';
+import { Asset } from './stix/asset';
 
 export class Domain {
     public readonly id: string; // domain ID
@@ -73,7 +73,7 @@ export class Domain {
         revoked_by: new Map<string, string>(),
         // technique targets asset
         // ID of asset to [] of technique IDs
-        targeted_assets: new Map<string, string>(),
+        targeted_assets: new Map<string, string[]>(),
     };
 
     constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
@@ -89,5 +89,11 @@ export class Domain {
      */
     public getVersion(): string {
         return this.version.number;
+    }
+
+    public executeCallbacks(): void {
+        for (let callback of this.dataLoadedCallbacks) {
+            callback();
+        }
     }
 }

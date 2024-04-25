@@ -109,7 +109,7 @@ export class SvgExportComponent implements OnInit {
     }
 
     constructor(
-        private dialogRef: MatDialogRef<SvgExportComponent>,
+        private dialogRef: MatDialogRef<SvgExportComponent>, // needed for mat-dialog-close
         private configService: ConfigService,
         private dataService: DataService,
         @Inject(MAT_DIALOG_DATA) public data
@@ -233,7 +233,7 @@ export class SvgExportComponent implements OnInit {
             let domainSection = { title: 'domain', contents: [] };
             if (self.showDomain) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-                domainSection.contents.push({ label: 'domain', data: domain.name + ' ' + domain.version.name });
+                domainSection.contents.push({ label: 'domain', data: `${domain.name} v${domain.version.number}` });
             }
 
             // platform section
