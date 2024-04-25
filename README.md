@@ -126,22 +126,32 @@ Example custom context menu objects:
 }
 ```
 
-## Loading content from a TAXII server
+## Methods for loading content
 
-*By default, the Navigator loads content from ATT&CK STIX data hosted on the [MITRE/CTI repository](#related-mitre-work).*
+### Loading content from a Collection Index
 
-1. Edit the `config.json` file in the **nav-app/src/assets** directory.
-2. In the `versions` property, set `enabled` to `true`.
-3. Add a new version to the version `data` array.
-4. Define the `taxii_url` property in the list of domains, in place of the domain `data` property. Set the value to the server URL.
-5. Define the `taxii_collection` property and set the value to the collection UUID your TAXII server has set.
+By default, the Navigator loads content from the ATT&CK Collection Index hosted on the [ATT&CK STIX Data repository](#related-mitre-work). More information about Collection Indexes can be found [here](https://github.com/mitre-attack/attack-stix-data?tab=readme-ov-file#collection-indexes).
 
-### Example loading content from a TAXII 2.0 server:
+1. Modify the `config.json` file located in the `src/assets` directory.
+2. Set the `collection_index_url` property to the URL of your Collection Index (for example, `"collection_index_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json"`)
+
+*Note: For the Navigator to load successfully, either the `collection_index_url` property, the `versions` property, or both must be defined. If both the `collection_index_url` and `versions` properties are defined, the Navigator will display the union of the versions under the "More Options" dropdown in the "Create New Layer" interface. If neither are defined, an alert will be triggered indicating that the Navigator failed to load.*
+
+### Loading content from a TAXII server
+
+Both TAXII 2.0 and TAXII 2.1 are currently supported. Support for TAXII 2.0 will be deprecated in December 2024. More information about the TAXII 2.1 Server can be found [here](https://github.com/mitre-attack/attack-workbench-taxii-server/tree/main).
+
+1. Modify the `config.json` file located in the `src/assets` directory.
+2. In the `versions` section, set the `enabled` property to `true`.
+3. Define the `taxii_url` property in the list of domains, in place of the domain `data` property, and set its value to the TAXII server URL.
+4. Define the `taxii_collection` property and set its value to the collection UUID as determined by the TAXII server.
+
+#### Example loading content from a TAXII 2.0 server:
 
 ```json
 "versions": {
 	"enabled": true,
-	"data": [
+	"entries": [
 		{
 			"name": "Enterprise TAXII 2.0 Data",
 			"version": "14",
@@ -157,11 +167,12 @@ Example custom context menu objects:
 },
 ```
 
-### Example loading content from a TAXII 2.1 server:
+#### Example loading content from a TAXII 2.1 server:
+
 ```json
 "versions": {
 	"enabled": true,
-	"data": [
+	"entries": [
 		{
 			"name": "Enterprise TAXII 2.1 Data",
 			"version": "14",
@@ -177,23 +188,34 @@ Example custom context menu objects:
 },
 ```
 
-## Loading content from local files
+### Loading content from local files
 
-*It's possible to populate the the Navigator using files that consist of bundles of STIX objects, similarly to [this](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json) file. STIX 2.0 and STIX 2.1 bundles are supported.*
+Navigator can be populated using files that consist of bundles of STIX objects, similar to the format found in [this example](https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json). Both STIX 2.0 and STIX 2.1 bundles are supported.
 
-1. Put the stix bundles in `src/assets`. This will tell the server hosting the Navigator to host the data as well.
-2. Edit the `config.json` file in the **nav-app/src/assets** directory.
-3. Change the URL specified in the `data` array to the path to the STIX bundle (e.g `assets/enterprise-attack.json`). Multiple paths may be added to the `data` array to display multiple STIX bundles in a single instance.
+1. Place the STIX bundle(s) in the `src/assets` directory. This allows the server hosting the Navigator to also host the data.
+2. Modify the `config.json` file located in the `src/assets` directory.
+3. In the `versions` section, set the `enabled` property to `true`.
+4. Update the URL specified in the `data` array to the path to the STIX bundle (for example, `assets/enterprise-attack.json`). Multiple paths may be added to the `data` array to display multiple STIX bundles in a single instance.
 
-Example loading content from local files:
+#### Example loading content from local files:
 
 ```json
-"domains": [
-    {
-        "name": "Enterprise",
-        "data": ["assets/enterprise-attack.json"]
-    }
-]
+"versions": {
+    "enabled": true,
+    "entries": [
+        {
+            "name": "Local Enterprise STIX Data",
+            "version": "14",
+            "domains": [
+                {
+                    "name": "Enterprise",
+                    "identifier": "enterprise-attack",
+                    "data": ["assets/enterprise-attack.json"]
+                }
+            ]
+        }
+    ]
+},
 ```
 
 ## Running the Docker File
