@@ -11,10 +11,10 @@ export class ConfigService {
     public collectionIndex: string;
     public versions: {
         enabled: boolean;
-        data: any;
+        entries: any;
     } = {
         enabled: false,
-        data: [],
+        entries: [],
     };
     public contextMenuItems: ContextMenuItem[] = [];
     public defaultLayers: any;

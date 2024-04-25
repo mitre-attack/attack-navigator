@@ -3,7 +3,7 @@
 // mock data configurations
 export const configData = {
     enabled: true,
-    data: [
+    entries: [
         {
             name: 'ATT&CK v13',
             version: '13',
@@ -23,7 +23,7 @@ export const collectionIndexConfig = {
 export const versionsConfig = {
     versions: {
         enabled: true,
-        data: [
+        entries: [
             {
                 name: 'ATT&CK v13',
                 version: '13',
@@ -51,7 +51,7 @@ export const invalidConfig = {
 };
 export const configDataExtended = {
     enabled: true,
-    data: [
+    entries: [
         {
             name: 'ATT&CK v13',
             version: '13',
@@ -87,7 +87,7 @@ export const defaultLayersDisabled = {
 
 export const taxiiData = {
     enabled: true,
-    data: [
+    entries: [
         {
             name: 'ATT&CK v13',
             version: '13',
@@ -105,7 +105,7 @@ export const taxiiData = {
 
 export const workbenchData = {
     enabled: true,
-    data: [
+    entries: [
         {
             name: 'ATT&CK v13',
             version: '13',

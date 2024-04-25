@@ -3,7 +3,7 @@
 
     "versions": {
 		"enabled": false,
-		"data": [
+		"entries": [
 			{
 				"name": "Custom Data v14",
 				"version": "14",

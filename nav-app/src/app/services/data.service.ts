@@ -21,7 +21,7 @@ export class DataService {
         if (configService.versions?.enabled) {
             // parse versions structure from configuration file
             // support for workbench integration, taxii and custom data
-            this.setUpDomains(configService.versions.data);
+            this.setUpDomains(configService.versions.entries);
         }
         if (configService.collectionIndex) {
             // parse versions from collection index
