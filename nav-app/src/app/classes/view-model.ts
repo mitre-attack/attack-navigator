@@ -818,6 +818,9 @@ export class ViewModel {
     public filterTechniques(techniques: Technique[], tactic: Tactic, matrix: Matrix): Technique[] {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
+            // filter by enabled
+            let in_platform = false;
+            let in_ds = false;
 
             if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
                 techniqueVM.setIsVisible(false);
@@ -835,10 +838,6 @@ export class ViewModel {
                 });
                 return true; // don't filter by platform if it's pre-attack
             }
-
-            // filter by enabled
-            let in_platform = false;
-            let in_ds = false;
             // filter by platform
             let platforms = new Set(technique.platforms);
             for (let platform of this.filters.platforms.selection) {
@@ -848,15 +847,13 @@ export class ViewModel {
                         let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                         subtechniqueVM.setIsVisible(true);
                     });
-                    //return true;
                     in_platform = true;
                 }
             }
-            
+
             let ds_mid = technique.datasources.split(',').map((ds) => ds.split(':')[0]);
             let datasources = new Set(ds_mid);
             
-            //if (this.filters.dataSources.selection.length==0) return true;
             if (ds_mid.length==1 && ds_mid[0]=='') return in_platform;
             for (let ds of this.filters.dataSources.selection) {
                 if (datasources.has(ds)) {
@@ -869,13 +866,13 @@ export class ViewModel {
                 }
             }
 
-            if (in_ds&&in_platform) return true;
-
             techniqueVM.setIsVisible(false);
             technique.subtechniques.forEach((subtechnique) => {
                 let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                 subtechniqueVM.setIsVisible(false);
             });
+
+            return in_platform && in_ds;
 
         });
     }
