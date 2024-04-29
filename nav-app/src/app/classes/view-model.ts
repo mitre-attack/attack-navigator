@@ -855,10 +855,9 @@ export class ViewModel {
             
             let ds_mid = technique.datasources.split(',').map((ds) => ds.split(':')[0]);
             let datasources = new Set(ds_mid);
-            console.log(ds_mid);
             
             //if (this.filters.dataSources.selection.length==0) return true;
-            if (ds_mid.length==1 && ds_mid[0]=='') return true;
+            if (ds_mid.length==1 && ds_mid[0]=='') return in_platform;
             for (let ds of this.filters.dataSources.selection) {
                 if (datasources.has(ds)) {
                     techniqueVM.setIsVisible(true);
