@@ -732,14 +732,13 @@ export class TabsComponent implements AfterViewInit {
             reader.onload = (e) => {
                 let result = String(reader.result);
                 try {
-                    let objList = typeof result == 'string' ? JSON.parse(result) : result;
-                    if ('length' in objList) {
-                        for (let obj of objList) {
-                            this.loadObjAsLayer(this, obj);
+                    let layerFile = typeof result == 'string' ? JSON.parse(result) : result;
+                    if (layerFile?.length) {
+                        for (let layer of layerFile) {
+                            this.loadObjAsLayer(this, layer);
                         }
                     } else {
-                        let obj = typeof result == 'string' ? JSON.parse(result) : result;
-                        this.loadObjAsLayer(this, obj);
+                        this.loadObjAsLayer(this, layerFile);
                     }
                 } catch (err) {
                     viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
@@ -855,14 +854,14 @@ export class TabsComponent implements AfterViewInit {
                         }
                     };
 
-                    let objs = typeof res == 'string' ? JSON.parse(res) : res;
-                    if (objs?.length) {
+                    let layerFile = typeof res == 'string' ? JSON.parse(res) : res;
+                    if (layerFile?.length) {
                         console.debug('loading file with multiple layers')
-                        for (let obj of objs) {
-                            await loadLayerAsync(obj);
+                        for (let layer of layerFile) {
+                            await loadLayerAsync(layer);
                         }
                     } else {
-                        await loadLayerAsync(objs);
+                        await loadLayerAsync(layerFile);
                     }
                     resolve(null); //continue
                 },
