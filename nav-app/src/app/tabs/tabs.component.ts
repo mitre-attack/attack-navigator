@@ -837,22 +837,34 @@ export class TabsComponent implements AfterViewInit {
             let self = this;
             subscription = self.http.get(loadURL).subscribe({
                 next: async (res) => {
-                    let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-                    try {
-                        let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await self.versionMismatchWarning(layerVersionStr);
-                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                    let loadLayerAsync = async function(layerObj) {
+                        let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
+                        try {
+                            let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
+                            await self.versionMismatchWarning(layerVersionStr);
+                            if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                                throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                            }
+                            await self.upgradeLayer(viewModel, layerObj, replace, defaultLayers);
+                            console.debug(`loaded layer "${viewModel.name}" from ${loadURL}`)
+                        } catch (err) {
+                            console.error(err);
+                            alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
+                            this.viewModelsService.destroyViewModel(viewModel);
+                            resolve(null); // continue
                         }
-                        await self.upgradeLayer(viewModel, res, replace, defaultLayers);
-                        console.debug('loaded layer from', loadURL);
-                        resolve(null); //continue
-                    } catch (err) {
-                        console.error(err);
-                        this.viewModelsService.destroyViewModel(viewModel);
-                        alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
-                        resolve(null); // continue
+                    };
+
+                    let objs = typeof res == 'string' ? JSON.parse(res) : res;
+                    if (objs?.length) {
+                        console.debug('loading file with multiple layers')
+                        for (let obj of objs) {
+                            await loadLayerAsync(obj);
+                        }
+                    } else {
+                        await loadLayerAsync(objs);
                     }
+                    resolve(null); //continue
                 },
                 error: (err) => {
                     console.error(err);
