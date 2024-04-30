@@ -19,6 +19,9 @@
 - Added support for loading content from a TAXII 2.1 server. See issue [#277](https://github.com/mitre-attack/attack-navigator/issues/277). For more information on how to load content from TAXII 2.1 see _Loading content from a TAXII server_ in the [README](README.md).
 - Improved error handling when there is an issue loading the configuration file. See issue [#398](https://github.com/mitre-attack/attack-navigator/issues/398).
 
+## Fixes
+- Fixed an issue where loading a multi-layer JSON file through embedded links would throw an error and prevent the layers from loading. See issue [#624](https://github.com/mitre-attack/attack-navigator/issues/624).
+
 # 4.9.5 - 23 April 2024
 
 Adds support for ATT&CK v15.0.

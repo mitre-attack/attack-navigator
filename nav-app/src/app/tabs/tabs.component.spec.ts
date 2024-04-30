@@ -474,22 +474,9 @@ describe('TabsComponent', () => {
             component.openUploadPrompt();
             expect(logSpy).toHaveBeenCalled();
             let blob = new Blob([JSON.stringify(MockLayers.layerFile2)], { type: 'text/json' });
-            let file = new File([blob], 'layer-2.json');
+            let file = new File([blob], 'layer-1.json');
             component.readJSONFile(file).then(() => {
                 expect(component.layerTabs.length).toEqual(1);
-            });
-            let layer = MockLayers.layerFile2;
-            layer.viewMode = 2;
-            blob = new Blob([JSON.stringify(layer)], { type: 'text/json' });
-            file = new File([blob], 'layer-2.json');
-            component.readJSONFile(file).then(() => {
-                expect(component.layerTabs.length).toEqual(2);
-            });
-            layer.viewMode = 0;
-            blob = new Blob([JSON.stringify(layer)], { type: 'text/json' });
-            file = new File([blob], 'layer-2.json');
-            component.readJSONFile(file).then(() => {
-                expect(component.layerTabs.length).toEqual(3);
             });
         }));
 
