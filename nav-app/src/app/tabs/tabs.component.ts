@@ -445,8 +445,11 @@ export class TabsComponent implements AfterViewInit {
      * Create a new layer in the given domain and version
      */
     public newLayer(domainVersionID: string, obj: any = undefined): void {
-        // load domain data
-        this.dataService.loadDomainData(domainVersionID, true);
+        // load domain data, if not yet loaded
+        let domain = this.dataService.getDomain(domainVersionID);
+        if (!domain.dataLoaded) {
+            this.dataService.loadDomainData(domainVersionID, true);
+        }
 
         // find non conflicting name
         let name;
