@@ -757,7 +757,7 @@ export class TabsComponent implements AfterViewInit {
                     } catch (err) {
                         console.error(err);
                         alert(`ERROR parsing layer, check the javascript console for more information.`);
-                        this.viewModelsService.destroyViewModel(viewModel);
+                        self.viewModelsService.destroyViewModel(viewModel);
                         resolve(null); // continue
                     }
                 }
@@ -844,7 +844,7 @@ export class TabsComponent implements AfterViewInit {
                         } catch (err) {
                             console.error(err);
                             alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
-                            this.viewModelsService.destroyViewModel(viewModel);
+                            self.viewModelsService.destroyViewModel(viewModel);
                             resolve(null); // continue
                         }
                     };
