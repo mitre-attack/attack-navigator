@@ -9,6 +9,11 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 5.0.1 - 9 May 2024
+
+## Fixes
+- Fixed an issue with parsing technique platforms.
+
 # 5.0.0 - 2 May 2024
 
 ## New Features
