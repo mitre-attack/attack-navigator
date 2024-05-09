@@ -210,7 +210,9 @@ export class DataService {
 
         // parse platforms
         allTechniques.forEach((technique) => {
-            technique.platforms?.forEach(platforms.add, platforms);
+            if (!technique.deprecated && !technique.revoked) {
+                technique.platforms?.forEach(platforms.add, platforms);
+            }
         });
 
         return platforms;
