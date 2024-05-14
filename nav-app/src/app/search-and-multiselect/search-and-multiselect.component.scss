@@ -5,11 +5,11 @@
         padding-left: 5px;
     }
 
-    .mat-form-field {
+    .mat-mdc-form-field {
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 
-    .mat-input-element,
+    .mat-mdc-input-element,
     .mat-input-element::placeholder {
         @include adaptive-color-dark-only('color', on-color(dark));
     }
@@ -17,11 +17,11 @@
     .mat-form-field-appearance-outline {
         width: 100%;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-outline-start {
         width: 30px !important;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-outline-start,
     .mat-form-field-outline-gap,
     .mat-form-field-outline-end {
@@ -31,7 +31,7 @@
     .sidebar-content {
         margin: 1rem 0;
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
     mat-card-content {
         margin-bottom: 0;
     }

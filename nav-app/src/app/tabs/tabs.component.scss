@@ -14,8 +14,8 @@
     .mat-ink-bar {
         display: none;
     }
-    .mat-tab-nav-bar,
-    .mat-tab-header {
+    .mat-mdc-tab-nav-bar,
+    .mat-mdc-tab-header {
         border-bottom: none !important;
     }
     .tabs .tab-title.active {
@@ -152,6 +152,7 @@
     border-radius: 5px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
 .hide-select .mat-select-value {
     visibility: hidden !important;
 }
@@ -165,7 +166,7 @@
     }
 
     .mat-expansion-panel-header,
-    button.mat-raised-button {
+    button.mat-mdc-raised-button {
         // nested items inside parent expansion panel
         @include adaptive-color-dark-only('background-color', color(dark-2));
         @include adaptive-color-dark-only('color', on-color(dark-3));
@@ -173,7 +174,7 @@
 
     .mat-expansion-panel-content {
         .mat-expansion-panel-header,
-        .mat-raised-button:not([class*='mat-elevation-z']) {
+        .mat-mdc-raised-button:not([class*='mat-elevation-z']) {
             @include adaptive-color-dark-only('border-top', 1px solid #ffffff21);
         }
     }
@@ -190,8 +191,9 @@
         @include adaptive-color('background', color(cell-highlight-color), color(dark-link));
     }
 
-    .mat-form-field {
+    .mat-mdc-form-field {
         &:not(.mat-form-field-disabled) {
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-label,
             .mat-select-arrow,
             .mat-select-value-text,
@@ -202,31 +204,33 @@
 
         &.mat-form-field-disabled,
         .layerOpTable td.disabled {
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
             .mat-form-field-label,
             .mat-select-arrow {
                 @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
             }
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         &.mat-form-field-disabled .mat-form-field-underline {
             @include adaptive-color-dark-only('background-color', darken(on-color(dark-1), 25%));
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
         &:not(.mat-form-field-disabled) .mat-form-field-underline {
             @include adaptive-color-dark-only('background-color', on-color(dark-3));
         }
 
-        .mat-hint {
+        .mat-mdc-form-field-hint {
             @include adaptive-color-dark-only('color', on-color(dark));
         }
     }
 
-    .mat-button {
+    .mat-mdc-button {
+        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
         &:not(.mat-button-disabled) {
             @include adaptive-color-dark-only('background-color', color(dark-3));
             @include adaptive-color-dark-only('color', on-color(dark-3));
         }
-
+        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
         &.mat-button-disabled {
             @include adaptive-color-dark-only('background-color', color(dark-1));
             @include adaptive-color-dark-only('border', color(dark-2) 2px solid);
@@ -277,11 +281,12 @@ input[type='file'] {
 
 // theme button on new tab page
 .theme-select-container {
-    .mat-select {
+    .mat-mdc-select {
         position: absolute;
         margin-left: -85px;
         top: 20px;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
     .mat-select-arrow-wrapper {
         display: none;
     }
@@ -411,7 +416,7 @@ input[type='file'] {
     display: flex;
     justify-content: center;
     padding: 0 24px;
-    .mat-raised-button {
+    .mat-mdc-raised-button {
         width: 100%;
         margin: 0 6px 12px;
     }
@@ -429,10 +434,10 @@ input[type='file'] {
     div.disabled {
         color: gray;
     }
-    .mat-form-field {
+    .mat-mdc-form-field {
         width: 100%;
     }
-    .mat-raised-button {
+    .mat-mdc-raised-button {
         width: 100%;
     }
     .md-column {
@@ -461,11 +466,15 @@ input[type='file'] {
     &:hover {
         @include adaptive-color('background-color', darken(white, 5%), color(dark-3));
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     mat-checkbox.mat-checkbox-checked {
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
         .mat-checkbox-background {
             background-color: color(primary) !important;
         }
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     mat-checkbox .mat-checkbox-frame {
         @include adaptive-color('border-color', color(dark-1), color(body));
     }
@@ -495,6 +504,7 @@ input[type='file'] {
     #layerLink {
         cursor: pointer;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
     .mat-form-field-underline {
         background: none;
         background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0, rgba(0, 0, 0, 0.42) 33%, transparent 0);

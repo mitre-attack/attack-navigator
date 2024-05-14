@@ -6,8 +6,8 @@ import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.comp
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { ViewModelsService } from '../services/viewmodels.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { Subscription, forkJoin } from 'rxjs';

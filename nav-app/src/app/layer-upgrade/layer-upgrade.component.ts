@@ -2,9 +2,9 @@ import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncap
 import { DataService } from '../services/data.service';
 import { Tactic, Technique } from '../classes/stix';
 import { VersionChangelog, ViewModel } from '../classes';
-import { DndDropEvent } from 'ngx-drag-drop';
+// import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -356,7 +356,7 @@ export class LayerUpgradeComponent implements OnInit {
      * @param toTactic the tactic object to copy annotations to
      * @param section the name of the changelog section
      */
-    public onDrop(event: DndDropEvent, toTechnique: Technique, toTactic: Tactic, section: string): void {
+    public onDrop(event: any, toTechnique: Technique, toTactic: Tactic, section: string): void {
         let attackID = event.data.split('^')[0];
         let validTechnique = this.getTechnique(attackID, this.viewModel, section);
 

@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ChangelogComponent } from './changelog.component';
-import { MatLegacyDialogModule as MatDialogModule, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
-import { MarkdownService, MarkdownModule } from 'ngx-markdown';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+// import { MarkdownService, MarkdownModule } from 'ngx-markdown';
 describe('ChangelogComponent', () => {
     let component: ChangelogComponent;
     let fixture: ComponentFixture<ChangelogComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule, MarkdownModule.forRoot()],
+            imports: [HttpClientTestingModule, MatDialogModule], //MarkdownModule.forRoot()],
             declarations: [ChangelogComponent],
             providers: [
                 {
@@ -20,7 +20,7 @@ describe('ChangelogComponent', () => {
                     provide: MAT_DIALOG_DATA,
                     useValue: {},
                 },
-                MarkdownService,
+                // MarkdownService,
             ],
         }).compileComponents();
     });

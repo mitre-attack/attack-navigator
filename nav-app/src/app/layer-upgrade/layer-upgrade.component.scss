@@ -34,8 +34,9 @@ h4 {
     }
 }
 
-.mat-step .mat-button-base {
+.mat-step .mat-mdc-button-base {
     @include adaptive-color-dark-only('background-color', rgba(0, 0, 0, 0));
+    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
     &.mat-button-disabled {
         @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.5));
     }
@@ -49,12 +50,12 @@ h4 {
     @include adaptive-color-dark-only('border-left-color', on-color(dark));
 }
 
-.mat-paginator-container {
+.mat-mdc-paginator-container {
     min-height: unset;
 }
 
 .mat-stepper-vertical,
-.mat-paginator {
+.mat-mdc-paginator {
     @include adaptive-color-dark-only('background-color', color(dark-3));
     @include adaptive-color-dark-only('color', on-color(dark));
 }
@@ -140,7 +141,7 @@ tr td {
 .stepper-button {
     float: right;
     padding-bottom: 24px;
-    .mat-stroked-button {
+    .mat-mdc-outlined-button {
         margin-left: 12px;
     }
 }

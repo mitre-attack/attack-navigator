@@ -62,7 +62,7 @@ body {
     @include adaptive-color-dark-only('background-color', white);
 }
 
-.mat-dialog-container {
+.mat-mdc-dialog-container {
     @include adaptive-color-dark-only('background-color', color(dark-2));
     @include adaptive-color-dark-only('color', on-color(dark-3));
 
@@ -220,19 +220,19 @@ body {
                         }
                     }
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-label {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
 
-                .mat-input-element:disabled {
+                .mat-mdc-input-element:disabled {
                     @include adaptive-color-dark-only('color', color(dark-disabled));
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-underline {
                     @include adaptive-color-dark-only('background-color', on-color(dark));
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-disabled .mat-form-field-underline {
                     @include adaptive-color-dark-only('background-color', transparent);
                     @include adaptive-color-dark-only(
@@ -240,11 +240,11 @@ body {
                         linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 33%, transparent 0%)
                     );
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                 .mat-select-value {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version. */
                 .mat-select-arrow {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
@@ -317,10 +317,11 @@ body {
 //////////////////////
 /// Dialog Styling ///
 //////////////////////
-.dialog-custom .mat-dialog-container {
+.dialog-custom .mat-mdc-dialog-container {
     padding: 0 !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
 .mat-button-focus-overlay {
     background-color: transparent !important;
 }
@@ -339,17 +340,17 @@ body {
     a:active {
         @include adaptive-color-dark-only('color', color(dark-link-active));
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-outline div {
         @include adaptive-color-dark-only('background-color', color(dark-3));
         @include adaptive-color-dark-only('color', color(dark-4));
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-label {
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 
-    .mat-card {
+    .mat-mdc-card {
         @include adaptive-color-dark-only('background-color', color(dark-3));
         @include adaptive-color-dark-only('color', on-color(dark));
     }
@@ -367,13 +368,13 @@ body {
         @include adaptive-color-dark-only('border-top-color', color(dark-4));
     }
 
-    .mat-button-base {
+    .mat-mdc-button-base {
         @include adaptive-color-dark-only('background-color', color(dark-4));
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 }
 
-.mat-dialog-container .markdown {
+.mat-mdc-dialog-container .markdown {
     padding: 25px;
 }
 
