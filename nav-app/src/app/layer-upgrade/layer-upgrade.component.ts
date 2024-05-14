@@ -4,7 +4,7 @@ import { Tactic, Technique } from '../classes/stix';
 import { VersionChangelog, ViewModel } from '../classes';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({

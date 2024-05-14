@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ViewChild, Renderer2 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 

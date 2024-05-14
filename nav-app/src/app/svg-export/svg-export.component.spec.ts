@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogModule as MatDialogModule, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { SvgExportComponent } from './svg-export.component';
 import { TechniqueVM, ViewModel } from '../classes';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';

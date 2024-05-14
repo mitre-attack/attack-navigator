@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { ViewModelsService } from './viewmodels.service';
 import { TechniqueVM, LayoutOptions, Metadata, ViewModel, Link, VersionChangelog } from '../classes';
 import { Technique, Tactic, Matrix } from '../classes/stix';
