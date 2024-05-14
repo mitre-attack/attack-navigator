@@ -24,7 +24,7 @@
                             "src/assets",
                             "src/favicon.ico"
                         ],
-                        "styles": ["src/styles.scss", "node_modules/ngx-smart-popover/scss/popover-content.component.scss"],
+                        "styles": ["src/styles.scss"],
                         "scripts": [
                             "node_modules/file-saver/dist/FileSaver.js",
                             "node_modules/mathjs/lib/browser/math.js",
