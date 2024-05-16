@@ -1,6 +1,6 @@
 # Build stage
 
-FROM node:18
+FROM node:21.6.2-bookworm-slim
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
 
