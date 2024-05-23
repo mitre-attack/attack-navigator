@@ -11,12 +11,11 @@
 
 .tabs-container {
     display: flex;
-    .mat-ink-bar {
-        display: none;
+    .mdc-tab-indicator__content--underline {
+        border: none;
     }
-    .mat-mdc-tab-nav-bar,
-    .mat-mdc-tab-header {
-        border-bottom: none !important;
+    .mat-mdc-tab-header-pagination {
+        display: none !important;
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
@@ -27,8 +26,6 @@
     }
     .tabs .tab-title:not(.active) {
         @include adaptive-color('border-color', color(panel-dark), color(dark-4));
-        border-width: 0 1px 0 0;
-        border-style: solid;
     }
 }
 
@@ -75,7 +72,6 @@
             @include adaptive-color('background-color', color(panel-dark), lighten(color(dark), 1%));
             @include adaptive-color('color', color(tab-text-color), color(panel-dark));
             cursor: default;
-            border: 1px solid transparent; // override border highlighting on hover
         }
     }
 
@@ -96,18 +92,12 @@
 }
 
 .tab-close {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
     color: gray;
     text-align: right;
     cursor: pointer;
-    .mat-icon {
-        transform: scale(0.75);
-        &:hover {
-            @include adaptive-color('color', black, white);
-        }
-    }
+}
+.icon-button-scale-down {
+    transform: scale(0.75);
 }
 
 .new-tab {
@@ -152,9 +142,13 @@
     border-radius: 5px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
-.hide-select .mat-select-value {
+.hide-select .mat-mdc-select-value {
     visibility: hidden !important;
+}
+.hide-select {
+    .mat-mdc-select-value, .mat-mdc-select-arrow-wrapper {
+        visibility: hidden !important;
+    }
 }
 
 .mat-expansion-panel {
@@ -277,6 +271,7 @@ input[type='file'] {
     justify-content: center;
     margin-bottom: 1em;
     width: 100%;
+    gap: 10px;
 }
 
 // theme button on new tab page
@@ -425,6 +420,12 @@ input[type='file'] {
 .multi-column-container {
     padding: 0 24px;
 }
+.multi-column-container + .multi-column-container {
+    margin-top: 20px;
+}
+.multi-column + .multi-column {
+    margin-top: 16px;
+}
 .multi-column {
     display: flex;
     &:not(.left-align) {
@@ -466,13 +467,9 @@ input[type='file'] {
     &:hover {
         @include adaptive-color('background-color', darken(white, 5%), color(dark-3));
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-    mat-checkbox.mat-checkbox-checked {
-        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-        .mat-checkbox-background {
-            background-color: color(primary) !important;
-        }
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+        background-color: color(primary) !important;
+        border-color: color(primary) !important;
     }
     /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
     mat-checkbox .mat-checkbox-frame {

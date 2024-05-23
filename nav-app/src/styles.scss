@@ -50,6 +50,7 @@
 .text-deemphasis {
     color: on-color-deemphasis(body);
     font-size: 12px !important;
+    letter-spacing: normal;
 }
 
 body {
@@ -60,6 +61,10 @@ body {
 
 .svgcontainer {
     @include adaptive-color-dark-only('background-color', white);
+}
+
+.mdc-button {
+    letter-spacing: normal;
 }
 
 .mat-mdc-dialog-container {
@@ -209,10 +214,10 @@ body {
 
                 &.inputfield {
                     width: 150px;
-                    padding: 0px 10px;
+                    padding: 0px 10px 10px;
                     z-index: 1000;
 
-                    mat-form-field {
+                    .mat-mdc-form-field {
                         width: 100%;
 
                         &:first-child {
@@ -386,4 +391,24 @@ body {
     border-radius: 4px !important;
     //don't force 20rem width, conform to content of popover
     width: unset !important;
+}
+
+// form field styling
+.mat-mdc-form-field {
+    .mdc-text-field--filled, .mdc-text-field--filled:hover {
+        background-color: transparent !important;
+    }
+}
+.hide-subscript {
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}
+.mat-mdc-floating-label, .mat-mdc-form-field-hint {
+    letter-spacing: normal !important;
+}
+
+// expansion panel styling
+.mat-expansion-panel-body {
+    padding-bottom: 24px !important;
 }

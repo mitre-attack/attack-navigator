@@ -1,7 +1,6 @@
-.mat-mdc-dialog {
+.mat-dialog {
     text-align: center;
-    /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
-    mat-dialog-actions {
+    .mat-mdc-dialog-actions {
         display: inline-block;
     }
 }

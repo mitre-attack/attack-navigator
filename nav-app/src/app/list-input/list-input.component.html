@@ -4,7 +4,7 @@
             <!-- divider -->
             <div *ngIf="item.divider" class="divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
                 <mat-divider></mat-divider>
-                <button mat-icon-button class="icon">-</button>
+                <mat-icon class="icon">remove</mat-icon>
                 <mat-divider></mat-divider>
             </div>
             <div
@@ -14,28 +14,28 @@
                 matTooltipPosition="below"
                 matTooltip="add a divider">
                 <mat-divider></mat-divider>
-                <button mat-icon-button class="icon">+</button>
+                <mat-icon class="icon">add</mat-icon>
                 <mat-divider></mat-divider>
             </div>
         </div>
 
         <!-- list item -->
-        <div class="item-container" *ngIf="!item.divider">
+        <div class="item-container hide-subscript" *ngIf="!item.divider">
             <mat-form-field>
-                <textarea
+                <mat-label>{{config.nameField}}</mat-label>
+                <input
                     matInput
                     matTextareaAutosize
-                    [placeholder]="config.nameField"
                     [(ngModel)]="item[config.nameField]"
-                    (input)="updateList()"></textarea>
+                    (input)="updateList()"/>
             </mat-form-field>
             <mat-form-field>
-                <textarea
+                <mat-label>{{config.valueField}}</mat-label>
+                <input
                     matInput
                     matTextareaAutosize
-                    [placeholder]="config.valueField"
                     [(ngModel)]="item[config.valueField]"
-                    (input)="updateList()"></textarea>
+                    (input)="updateList()"/>
             </mat-form-field>
             <a
                 *ngIf="includeLinks && item.valid()"

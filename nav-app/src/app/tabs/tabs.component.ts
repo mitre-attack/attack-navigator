@@ -326,6 +326,7 @@ export class TabsComponent implements AfterViewInit {
         this.dialog.open(SvgExportComponent, {
             data: { vm: viewModel },
             panelClass: ['dialog-custom', this.userTheme],
+            autoFocus: false,
         });
     }
 
@@ -604,6 +605,7 @@ export class TabsComponent implements AfterViewInit {
                     disableClose: true,
                     width: '25%',
                     panelClass: this.userTheme,
+                    autoFocus: false,
                 });
                 this.subscription = dialog.afterClosed().subscribe({
                     next: (result) => {
