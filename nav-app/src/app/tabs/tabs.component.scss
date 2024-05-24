@@ -61,8 +61,8 @@
         .tab-enumerator {
             @include adaptive-color-dark-only('color', color(dark-1));
             position: absolute;
-            top: 2px;
-            right: 7px;
+            top: 4px;
+            right: -4px;
             padding: 2px 4px;
             background: rgb(255, 255, 0);
             border-radius: 5px;
@@ -185,32 +185,29 @@
         @include adaptive-color('background', color(cell-highlight-color), color(dark-link));
     }
 
-    .mat-mdc-form-field {
+    .mat-mdc-form-field, .mat-mdc-form-field:hover {
         &:not(.mat-form-field-disabled) {
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-            .mat-form-field-label,
-            .mat-select-arrow,
-            .mat-select-value-text,
-            .mat-input-element {
+            .mat-mdc-floating-label,
+            .mat-mdc-select-arrow,
+            .mat-mdc-select-value-text,
+            .mat-mdc-input-element,
+            .mat-mdc-form-field-icon-suffix .mat-mdc-button-base {
                 @include adaptive-color-dark-only('color', on-color(dark));
             }
         }
 
         &.mat-form-field-disabled,
         .layerOpTable td.disabled {
-            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-            .mat-form-field-label,
-            .mat-select-arrow {
+            .mat-mdc-floating-label,
+            .mat-mdc-select-arrow {
                 @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
             }
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        &.mat-form-field-disabled .mat-form-field-underline {
-            @include adaptive-color-dark-only('background-color', darken(on-color(dark-1), 25%));
+        &.mat-form-field-disabled .mdc-line-ripple::before {
+            @include adaptive-color-dark-only('border-bottom-color', darken(on-color(dark-1), 25%));
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-        &:not(.mat-form-field-disabled) .mat-form-field-underline {
-            @include adaptive-color-dark-only('background-color', on-color(dark-3));
+        &:not(.mat-form-field-disabled) .mdc-line-ripple::before {
+            @include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
         }
 
         .mat-mdc-form-field-hint {
@@ -218,14 +215,12 @@
         }
     }
 
-    .mat-mdc-button {
-        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
-        &:not(.mat-button-disabled) {
-            @include adaptive-color-dark-only('background-color', color(dark-3));
-            @include adaptive-color-dark-only('color', on-color(dark-3));
+    .mat-mdc-unelevated-button {
+        &:not(:disabled) {
+            @include adaptive-color-dark-only('background-color', color(dark-2));
+            @include adaptive-color-dark-only('color', on-color(dark-2));
         }
-        /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
-        &.mat-button-disabled {
+        &:disabled {
             @include adaptive-color-dark-only('background-color', color(dark-1));
             @include adaptive-color-dark-only('border', color(dark-2) 2px solid);
             @include adaptive-color-dark-only('color', darken(on-color(dark-1), 50%));
@@ -272,6 +267,11 @@ input[type='file'] {
     margin-bottom: 1em;
     width: 100%;
     gap: 10px;
+
+    button.mdc-button {
+        @include adaptive-color-dark-only('background-color', color(dark-1));
+        @include adaptive-color-dark-only('color', on-color(dark-3));
+    }
 }
 
 // theme button on new tab page
@@ -280,10 +280,6 @@ input[type='file'] {
         position: absolute;
         margin-left: -85px;
         top: 20px;
-    }
-    /* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
-    .mat-select-arrow-wrapper {
-        display: none;
     }
 }
 
@@ -467,13 +463,17 @@ input[type='file'] {
     &:hover {
         @include adaptive-color('background-color', darken(white, 5%), color(dark-3));
     }
-    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+    .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
         background-color: color(primary) !important;
         border-color: color(primary) !important;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
-    mat-checkbox .mat-checkbox-frame {
-        @include adaptive-color('border-color', color(dark-1), color(body));
+    .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked)~.mdc-checkbox__background {
+        .theme-override-dark & {
+            border-color: color(body) !important;
+        }
+    }
+    .mat-mdc-checkbox.adaptive-checkbox .mdc-form-field {
+        @include adaptive-color('color', color(dark-1), color(body));
     }
 }
 
@@ -501,8 +501,7 @@ input[type='file'] {
     #layerLink {
         cursor: pointer;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
-    .mat-form-field-underline {
+    .mdc-line-ripple::before {
         background: none;
         background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0, rgba(0, 0, 0, 0.42) 33%, transparent 0);
         background-size: 4px 1px;

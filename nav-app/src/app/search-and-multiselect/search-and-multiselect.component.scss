@@ -10,7 +10,7 @@
     }
 
     .mat-mdc-input-element,
-    .mat-input-element::placeholder {
+    .mat-mdc-input-element::placeholder {
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 

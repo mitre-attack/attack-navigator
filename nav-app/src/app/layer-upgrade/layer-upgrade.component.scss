@@ -35,9 +35,9 @@ h4 {
 }
 
 .mat-step .mat-mdc-button-base {
+    @include adaptive-color-dark-only('border-color', color(dark-4));
     @include adaptive-color-dark-only('background-color', rgba(0, 0, 0, 0));
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
-    &.mat-button-disabled {
+    &:disabled {
         @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.5));
     }
 }

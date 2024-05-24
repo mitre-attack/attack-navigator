@@ -512,7 +512,7 @@
                         <ng-container *ngFor="let feature of configService.featureList">
                             <div *ngIf="!feature.subfeatures" class="multi-column left-align feature-row">
                                 <div class="md-column align-center">
-                                    <mat-checkbox [(ngModel)]="feature.enabled">
+                                    <mat-checkbox class="adaptive-checkbox" [(ngModel)]="feature.enabled">
                                         {{ feature.name.split('_').join(' ') }}
                                     </mat-checkbox>
                                 </div>
@@ -528,7 +528,7 @@
                                     <ng-container *ngFor="let subfeature of feature.subfeatures">
                                         <div class="multi-column left-align feature-row">
                                             <div class="md-column align-center">
-                                                <mat-checkbox [(ngModel)]="subfeature.enabled">
+                                                <mat-checkbox class="adaptive-checkbox" [(ngModel)]="subfeature.enabled">
                                                     {{ subfeature.name.split('_').join(' ') }}
                                                 </mat-checkbox>
                                             </div>
