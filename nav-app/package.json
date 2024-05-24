@@ -39,6 +39,7 @@
     "load-json-file": "^7.0.1",
     "mathjs": "^10.6.4",
     "ngx-color-picker": "^13.0.0",
+    "ngx-markdown": "^17.2.1",
     "rxjs": "^6.6.7",
     "rxjs-compat": "^6.6.7",
     "tinycolor2": "^1.6.0",
