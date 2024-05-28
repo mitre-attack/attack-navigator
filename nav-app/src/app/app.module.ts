@@ -18,7 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ColorPickerModule } from 'ngx-color-picker';
-// import { DndModule } from 'ngx-drag-drop';
+import { DndModule } from 'ngx-drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -91,7 +91,7 @@ import { ConfigService } from './services/config.service';
         MatDialogModule,
         MatSnackBarModule,
         ColorPickerModule,
-        // DndModule,
+        DndModule,
         MatSidenavModule,
         MatCardModule,
         MatDividerModule,
