@@ -1,3 +1,4 @@
+<div class="mat-dialog">
 <div class="controlsContainer">
     <ul class="control-sections">
         <li class="iewarning" *ngIf="isIE">
@@ -370,6 +371,7 @@
 
 <div [ngClass]="[config.theme === 'light' ? 'svgcontainer' : 'svgcontainer dark-mode']" [id]="'svgInsert' + viewModel.uid">loading...</div>
 
-<div class="close-button">
+<mat-dialog-actions>
     <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>
 </div>

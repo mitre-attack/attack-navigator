@@ -63,8 +63,21 @@ body {
     @include adaptive-color-dark-only('background-color', white);
 }
 
-.mdc-button {
-    letter-spacing: normal;
+.mdc-button, .mat-mdc-button-base {
+    letter-spacing: normal !important;
+}
+
+.mat-dialog {
+    .mat-mdc-dialog-actions {
+        justify-content: center;
+    }
+    .mat-mdc-dialog-title {
+        text-align: center;
+    }
+    .mat-mdc-dialog-content {
+        color: black !important;
+        @include adaptive-color-dark-only('color', on-color(dark) !important);
+    }
 }
 
 .mat-mdc-dialog-container {
@@ -115,12 +128,9 @@ body {
     }
 
     .top-button {
-        margin-top: 25px;
-        text-align: right;
-    }
-
-    .close-button {
-        text-align: center;
+        display: inline;
+        float: right;
+        margin-top: 14px;
     }
 }
 
