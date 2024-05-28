@@ -38,7 +38,7 @@
     "is_js": "^0.9.0",
     "load-json-file": "^7.0.1",
     "mathjs": "^12.4.2",
-    "ngx-color-picker": "^13.0.0",
+    "ngx-color-picker": "^16.0.0",
     "ngx-drag-drop": "^17.0.0",
     "ngx-markdown": "^17.2.1",
     "rxjs": "^7.8.1",
