@@ -1,7 +1,6 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import 'rxjs/add/operator/map';
 
 // material
 import { MatInputModule } from '@angular/material/input';
