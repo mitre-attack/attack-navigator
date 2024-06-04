@@ -476,6 +476,9 @@ input[type='file'] {
         @include adaptive-color('color', color(dark-1), color(body));
     }
 }
+.feature-row + .feature-row {
+    margin: 0 !important;
+}
 
 .align-center {
     display: flex;

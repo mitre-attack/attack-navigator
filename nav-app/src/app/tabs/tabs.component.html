@@ -510,7 +510,7 @@
                         <!-- navigator features -->
                         <h2>Navigator Features</h2>
                         <ng-container *ngFor="let feature of configService.featureList">
-                            <div *ngIf="!feature.subfeatures" class="multi-column left-align feature-row">
+                            <div *ngIf="!feature.subfeatures" class="feature-row multi-column left-align">
                                 <div class="md-column align-center">
                                     <mat-checkbox class="adaptive-checkbox" [(ngModel)]="feature.enabled">
                                         {{ feature.name.split('_').join(' ') }}
@@ -526,7 +526,7 @@
                                 <h3 class="capitalize">{{ feature.name.split('_').join(' ') }}</h3>
                                 <div class="subfeature-section">
                                     <ng-container *ngFor="let subfeature of feature.subfeatures">
-                                        <div class="multi-column left-align feature-row">
+                                        <div class="feature-row multi-column left-align">
                                             <div class="md-column align-center">
                                                 <mat-checkbox class="adaptive-checkbox" [(ngModel)]="subfeature.enabled">
                                                     {{ subfeature.name.split('_').join(' ') }}
