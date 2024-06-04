@@ -92,11 +92,10 @@
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "src/test.ts",
                         "karmaConfig": "./karma.conf.js",
                         "codeCoverageExclude": ["src/polyfills.ts", "src/app/utils/taxii2lib.ts"],
                         "polyfills": "src/polyfills.ts",
-                        "tsConfig": "src/tsconfig.spec.json",
+                        "tsConfig": "tsconfig.spec.json",
                         "scripts": [
                             "node_modules/file-saver/dist/FileSaver.js",
                             "node_modules/mathjs/lib/browser/math.js",
