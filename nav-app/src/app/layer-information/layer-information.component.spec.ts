@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LayerInformationComponent } from './layer-information.component';
 
 describe('LayerInformationComponent', () => {

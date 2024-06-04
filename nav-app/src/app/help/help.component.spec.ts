@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { HelpComponent } from './help.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-// import { MarkdownService, MarkdownModule } from 'ngx-markdown';
+import { MarkdownService, MarkdownModule } from 'ngx-markdown';
 import { Renderer2 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -16,7 +16,7 @@ describe('HelpComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientModule, MatDialogModule, BrowserAnimationsModule], //MarkdownModule.forRoot({ loader: HttpClient }), BrowserAnimationsModule],
+            imports: [HttpClientModule, MatDialogModule, MarkdownModule.forRoot({ loader: HttpClient }), BrowserAnimationsModule],
             declarations: [HelpComponent],
             providers: [
                 {
@@ -27,7 +27,7 @@ describe('HelpComponent', () => {
                     provide: MAT_DIALOG_DATA,
                     useValue: {},
                 },
-                // MarkdownService,
+                MarkdownService,
                 {
                     provide: Renderer2,
                     useValue: {
@@ -37,7 +37,7 @@ describe('HelpComponent', () => {
             ],
         }).compileComponents();
         dialog = TestBed.inject(MatDialog);
-        // markdownService = TestBed.inject(MarkdownService);
+        markdownService = TestBed.inject(MarkdownService);
         renderer = TestBed.inject(Renderer2);
     }));
 
