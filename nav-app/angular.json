@@ -15,7 +15,7 @@
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "tsConfig": "src/tsconfig.app.json",
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": ["src/polyfills.ts", "zone.js"],
                         "preserveSymlinks": true,
                         "allowedCommonJsDependencies": ["lodash", "is_js", "seedrandom", "typed_function", "tinygradient", "exceljs"],
                         "assets": [
@@ -94,7 +94,7 @@
                     "options": {
                         "karmaConfig": "./karma.conf.js",
                         "codeCoverageExclude": ["src/polyfills.ts", "src/app/utils/taxii2lib.ts"],
-                        "polyfills": "src/polyfills.ts",
+                        "polyfills": ["src/polyfills.ts", "zone.js/testing", "zone.js"],
                         "tsConfig": "tsconfig.spec.json",
                         "scripts": [
                             "node_modules/file-saver/dist/FileSaver.js",
