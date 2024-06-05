@@ -97,39 +97,31 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <!-- layer name field -->
                     <div class="name_desc">
                         <mat-form-field>
-                            <input matInput type="text" placeholder="name" [(ngModel)]="viewModel.name" />
+                            <mat-label>name</mat-label>
+                            <input matInput type="text" [(ngModel)]="viewModel.name" />
                         </mat-form-field>
 
                         <!-- layer description field -->
                         <mat-form-field>
-                            <textarea matInput matTextareaAutosize placeholder="description" [(ngModel)]="viewModel.description"></textarea>
+                            <mat-label>description</mat-label>
+                            <textarea matInput matTextareaAutosize [(ngModel)]="viewModel.description"></textarea>
                         </mat-form-field>
 
-                        <!-- layer domain (uneditable) -->
+                        <!-- layer domain/version (uneditable) -->
                         <mat-form-field>
+                            <mat-label>domain/version</mat-label>
                             <input
                                 matInput
                                 readonly
                                 disabled
                                 type="text"
-                                placeholder="domain"
-                                [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).name" />
-                        </mat-form-field>
-
-                        <!-- layer version (uneditable) -->
-                        <mat-form-field>
-                            <input
-                                matInput
-                                readonly
-                                disabled
-                                type="text"
-                                placeholder="version"
-                                [(ngModel)]="dataService.getDomain(viewModel.domainVersionID).version.number" />
+                                [(ngModel)]="layerDomainVersion" />
                         </mat-form-field>
 
                         <!-- bundle URL (uneditable) -->
                         <mat-form-field *ngIf="viewModel.bundleURL">
-                            <input matInput readonly disabled type="text" placeholder="collection/bundle url" [(ngModel)]="viewModel.bundleURL" />
+                            <mat-label>collection/bundle url</mat-label>
+                            <input matInput readonly disabled type="text" [(ngModel)]="viewModel.bundleURL" />
                         </mat-form-field>
                     </div>
                     <div class="layer-data">
@@ -635,13 +627,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <span class="material-icons" alt="score">insert_chart</span>
                 </div>
                 <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'score'">
-                    <mat-form-field>
+                    <mat-form-field class="hide-subscript">
                         <!-- update data whenever it is typed in -->
+                        <mat-label>score</mat-label>
                         <input
                             matInput
                             type="number"
                             [(ngModel)]="scoreEditField"
-                            placeholder="score"
                             (input)="
                                 viewModel.editSelectedTechniques('score', $event.target.value);
                                 viewModel.editSelectedTechniques('scoreColor', viewModel.gradient.getHexColor($event.target.value))
@@ -664,11 +656,11 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 </div>
                 <!-- comment input (invisible, absolute) -->
                 <div class="dropdown-container inputfield left" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'comment'">
-                    <mat-form-field>
+                    <mat-form-field class="hide-subscript">
+                        <mat-label>comment</mat-label>
                         <textarea
                             matInput
                             matTextareaAutosize
-                            placeholder="comment"
                             [(ngModel)]="commentEditField"
                             (input)="viewModel.editSelectedTechniques('comment', $event.target.value)"></textarea>
                     </mat-form-field>
@@ -834,7 +826,9 @@ o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
         <div class="noselect title">legend</div>
     </div>
     <div class="itemArea">
-        <div class="item" *ngFor="let item of viewModel.legendItems; let Even = even; let i = index" [class.even]="!Even">
+        <button style="margin-left: 75px; margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.addLegendItem()">Add Item</button>
+        <button style="margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.clearLegend()">Clear</button>
+        <div class="item" *ngFor="let item of viewModel.legendItems; let i = index">
             <input
                 [(colorPicker)]="item.color"
                 [(ngModel)]="item.color"
@@ -842,12 +836,16 @@ o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
                 [cpPosition]="'top'"
                 [cpPresetColors]="viewModel.legendColorPresets"
                 style="width: 75px" />
-            <mat-form-field class="label">
-                <input matInput [(ngModel)]="item.label" />
+            <mat-form-field class="label hide-subscript">
+                <input matInput [(ngModel)]="item.label"/>
+                <button class="icon-button-scale-down"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="remove legend item"
+                    (click)="viewModel.deleteLegendItem(i)">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
-            <span class="material-icons" (click)="viewModel.deleteLegendItem(i)">clear</span>
         </div>
-        <button style="margin-left: 75px; margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.addLegendItem()">Add Item</button>
-        <button style="margin-top: 10px; margin-bottom: 10px" class="button" (click)="viewModel.clearLegend()">Clear</button>
     </div>
 </div>

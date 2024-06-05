@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
-import { Observable } from 'rxjs/Rx';
-import { fromPromise } from 'rxjs/observable/fromPromise';
+import { forkJoin, from, Observable } from 'rxjs';
 import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Domain, Version, VersionChangelog } from '../classes';
@@ -373,7 +372,7 @@ export class DataService {
                 can_write: false,
             };
             const collection = new Collection(collectionInfo, domain.taxii_url, conn);
-            this.domainData$ = Observable.forkJoin(fromPromise(collection.getObjects('', undefined)));
+            this.domainData$ = forkJoin(from(collection.getObjects('', undefined)));
         } else if (refresh || !this.domainData$) {
             console.debug('retrieving data', domain.urls);
             let bundleData = [];
@@ -388,7 +387,7 @@ export class DataService {
             domain.urls.forEach((url) => {
                 bundleData.push(this.http.get(url, httpOptions));
             });
-            this.domainData$ = Observable.forkJoin(bundleData);
+            this.domainData$ = forkJoin(bundleData);
         }
         return this.domainData$;
     }

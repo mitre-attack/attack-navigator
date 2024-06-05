@@ -9,7 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 describe('HelpComponent', () => {
     let component: HelpComponent;
     let fixture: ComponentFixture<HelpComponent>;
-    let markdownService: MarkdownService;
+    let markdownService: any;
     let dialog: MatDialog;
     let renderer: Renderer2;
     let mockMarkdownElement: any;

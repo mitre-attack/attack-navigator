@@ -11,12 +11,11 @@
 
 .tabs-container {
     display: flex;
-    .mat-ink-bar {
-        display: none;
+    .mdc-tab-indicator__content--underline {
+        border: none;
     }
-    .mat-tab-nav-bar,
-    .mat-tab-header {
-        border-bottom: none !important;
+    .mat-mdc-tab-header-pagination {
+        display: none !important;
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
@@ -27,8 +26,6 @@
     }
     .tabs .tab-title:not(.active) {
         @include adaptive-color('border-color', color(panel-dark), color(dark-4));
-        border-width: 0 1px 0 0;
-        border-style: solid;
     }
 }
 
@@ -64,8 +61,8 @@
         .tab-enumerator {
             @include adaptive-color-dark-only('color', color(dark-1));
             position: absolute;
-            top: 2px;
-            right: 7px;
+            top: 4px;
+            right: -4px;
             padding: 2px 4px;
             background: rgb(255, 255, 0);
             border-radius: 5px;
@@ -75,7 +72,6 @@
             @include adaptive-color('background-color', color(panel-dark), lighten(color(dark), 1%));
             @include adaptive-color('color', color(tab-text-color), color(panel-dark));
             cursor: default;
-            border: 1px solid transparent; // override border highlighting on hover
         }
     }
 
@@ -96,18 +92,12 @@
 }
 
 .tab-close {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
     color: gray;
     text-align: right;
     cursor: pointer;
-    .mat-icon {
-        transform: scale(0.75);
-        &:hover {
-            @include adaptive-color('color', black, white);
-        }
-    }
+}
+.icon-button-scale-down {
+    transform: scale(0.75);
 }
 
 .new-tab {
@@ -152,8 +142,13 @@
     border-radius: 5px;
 }
 
-.hide-select .mat-select-value {
+.hide-select .mat-mdc-select-value {
     visibility: hidden !important;
+}
+.hide-select {
+    .mat-mdc-select-value, .mat-mdc-select-arrow-wrapper {
+        visibility: hidden !important;
+    }
 }
 
 .mat-expansion-panel {
@@ -165,7 +160,7 @@
     }
 
     .mat-expansion-panel-header,
-    button.mat-raised-button {
+    button.mat-mdc-raised-button {
         // nested items inside parent expansion panel
         @include adaptive-color-dark-only('background-color', color(dark-2));
         @include adaptive-color-dark-only('color', on-color(dark-3));
@@ -173,7 +168,7 @@
 
     .mat-expansion-panel-content {
         .mat-expansion-panel-header,
-        .mat-raised-button:not([class*='mat-elevation-z']) {
+        .mat-mdc-raised-button:not([class*='mat-elevation-z']) {
             @include adaptive-color-dark-only('border-top', 1px solid #ffffff21);
         }
     }
@@ -190,44 +185,42 @@
         @include adaptive-color('background', color(cell-highlight-color), color(dark-link));
     }
 
-    .mat-form-field {
+    .mat-mdc-form-field, .mat-mdc-form-field:hover {
         &:not(.mat-form-field-disabled) {
-            .mat-form-field-label,
-            .mat-select-arrow,
-            .mat-select-value-text,
-            .mat-input-element {
+            .mat-mdc-floating-label,
+            .mat-mdc-select-arrow,
+            .mat-mdc-select-value-text,
+            .mat-mdc-input-element,
+            .mat-mdc-form-field-icon-suffix .mat-mdc-button-base {
                 @include adaptive-color-dark-only('color', on-color(dark));
             }
         }
 
         &.mat-form-field-disabled,
         .layerOpTable td.disabled {
-            .mat-form-field-label,
-            .mat-select-arrow {
+            .mat-mdc-floating-label,
+            .mat-mdc-select-arrow {
                 @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
             }
         }
-
-        &.mat-form-field-disabled .mat-form-field-underline {
-            @include adaptive-color-dark-only('background-color', darken(on-color(dark-1), 25%));
+        &.mat-form-field-disabled .mdc-line-ripple::before {
+            @include adaptive-color-dark-only('border-bottom-color', darken(on-color(dark-1), 25%));
+        }
+        &:not(.mat-form-field-disabled) .mdc-line-ripple::before {
+            @include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
         }
 
-        &:not(.mat-form-field-disabled) .mat-form-field-underline {
-            @include adaptive-color-dark-only('background-color', on-color(dark-3));
-        }
-
-        .mat-hint {
+        .mat-mdc-form-field-hint {
             @include adaptive-color-dark-only('color', on-color(dark));
         }
     }
 
-    .mat-button {
-        &:not(.mat-button-disabled) {
-            @include adaptive-color-dark-only('background-color', color(dark-3));
-            @include adaptive-color-dark-only('color', on-color(dark-3));
+    .mat-mdc-unelevated-button {
+        &:not(:disabled) {
+            @include adaptive-color-dark-only('background-color', color(dark-2));
+            @include adaptive-color-dark-only('color', on-color(dark-2));
         }
-
-        &.mat-button-disabled {
+        &:disabled {
             @include adaptive-color-dark-only('background-color', color(dark-1));
             @include adaptive-color-dark-only('border', color(dark-2) 2px solid);
             @include adaptive-color-dark-only('color', darken(on-color(dark-1), 50%));
@@ -273,17 +266,20 @@ input[type='file'] {
     justify-content: center;
     margin-bottom: 1em;
     width: 100%;
+    gap: 10px;
+
+    button.mdc-button {
+        @include adaptive-color-dark-only('background-color', color(dark-1));
+        @include adaptive-color-dark-only('color', on-color(dark-3));
+    }
 }
 
 // theme button on new tab page
 .theme-select-container {
-    .mat-select {
+    .mat-mdc-select {
         position: absolute;
         margin-left: -85px;
         top: 20px;
-    }
-    .mat-select-arrow-wrapper {
-        display: none;
     }
 }
 
@@ -411,7 +407,7 @@ input[type='file'] {
     display: flex;
     justify-content: center;
     padding: 0 24px;
-    .mat-raised-button {
+    .mat-mdc-raised-button {
         width: 100%;
         margin: 0 6px 12px;
     }
@@ -419,6 +415,12 @@ input[type='file'] {
 
 .multi-column-container {
     padding: 0 24px;
+}
+.multi-column-container + .multi-column-container {
+    margin-top: 20px;
+}
+.multi-column + .multi-column {
+    margin-top: 16px;
 }
 .multi-column {
     display: flex;
@@ -429,10 +431,10 @@ input[type='file'] {
     div.disabled {
         color: gray;
     }
-    .mat-form-field {
+    .mat-mdc-form-field {
         width: 100%;
     }
-    .mat-raised-button {
+    .mat-mdc-raised-button {
         width: 100%;
     }
     .md-column {
@@ -461,14 +463,21 @@ input[type='file'] {
     &:hover {
         @include adaptive-color('background-color', darken(white, 5%), color(dark-3));
     }
-    mat-checkbox.mat-checkbox-checked {
-        .mat-checkbox-background {
-            background-color: color(primary) !important;
+    .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background {
+        background-color: color(primary) !important;
+        border-color: color(primary) !important;
+    }
+    .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked)~.mdc-checkbox__background {
+        .theme-override-dark & {
+            border-color: color(body) !important;
         }
     }
-    mat-checkbox .mat-checkbox-frame {
-        @include adaptive-color('border-color', color(dark-1), color(body));
+    .mat-mdc-checkbox.adaptive-checkbox .mdc-form-field {
+        @include adaptive-color('color', color(dark-1), color(body));
     }
+}
+.feature-row + .feature-row {
+    margin: 0 !important;
 }
 
 .align-center {
@@ -495,7 +504,7 @@ input[type='file'] {
     #layerLink {
         cursor: pointer;
     }
-    .mat-form-field-underline {
+    .mdc-line-ripple::before {
         background: none;
         background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0, rgba(0, 0, 0, 0.42) 33%, transparent 0);
         background-size: 4px 1px;

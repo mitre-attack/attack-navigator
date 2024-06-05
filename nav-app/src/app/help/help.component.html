@@ -1,5 +1,11 @@
-<div class="help-dialog">
-    <div class="content markdown">
+<div class="help-dialog mat-dialog">
+    <h1 mat-dialog-title>
+        <span style="margin-left: 50px">Documentation</span>
+        <div class="top-button">
+            <button mat-button (click)="scrollTo('toc')">Top ^</button>
+        </div>
+    </h1>
+    <mat-dialog-content class="content markdown">
         <div class="col toc">
             <h1>Table of Contents</h1>
             <ul class="table-of-contents" *ngIf="headingAnchors.length > 0">
@@ -9,11 +15,8 @@
             </ul>
         </div>
         <markdown #markdownElement [src]="'./USAGE.md'" (load)="onMarkdownLoad($event)"></markdown>
-    </div>
-    <div class="top-button">
-        <button mat-button (click)="scrollTo('toc')">Top ^</button>
-    </div>
-    <div class="close-button">
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button mat-dialog-close>close</button>
-    </div>
+    </mat-dialog-actions>
 </div>

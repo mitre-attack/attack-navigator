@@ -424,7 +424,7 @@ describe('TabsComponent', () => {
         });
 
         it('should open the selected dialog', () => {
-            const settings = { maxWidth: '75ch', panelClass: component.userTheme };
+            const settings = { maxWidth: '75ch', panelClass: component.userTheme, autoFocus: false, data: {theme: undefined} };
             const openDialogSpy = spyOn(component.dialog, 'open');
 
             // layer dialog
@@ -450,6 +450,7 @@ describe('TabsComponent', () => {
             const settings = {
                 data: { vm: viewModel },
                 panelClass: ['dialog-custom', component.userTheme],
+                autoFocus: false,
             };
             expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
         });

@@ -1,17 +1,14 @@
 <div class="search-and-multiselect">
-    <mat-form-field appearance="outline">
-        <mat-label>Search</mat-label>
-        <span matPrefix class="material-icons" alt="search">search</span>
-        <input matInput [(ngModel)]="query" placeholder="Search" />
-    </mat-form-field>
-
-    <mat-divider></mat-divider>
-
     <div class="sidebar-content">
-        <mat-card>
+        <mat-card appearance="outlined">
             <div class="settings">
-                <mat-card-title><h4 class="title">Search Settings</h4></mat-card-title>
                 <mat-card-content>
+                    <mat-form-field appearance="outline">
+                        <input matInput [(ngModel)]="query" placeholder="Search"/>
+                        <mat-icon matPrefix>search</mat-icon>
+                    </mat-form-field>
+
+                    <span class="title">Search Settings</span>
                     <div class="fields">
                         <div class="field" *ngFor="let field of fields">
                             <input

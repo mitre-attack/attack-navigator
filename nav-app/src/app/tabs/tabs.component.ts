@@ -306,15 +306,13 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} dialogName {"changelog"|"help"} the dialog to open
      */
     public openDialog(dialogName: string) {
-        const settings = { maxWidth: '75ch', panelClass: this.userTheme };
+        const settings = { maxWidth: '75ch', panelClass: this.userTheme, autoFocus: false, data: {theme: this.userTheme} };
         if (dialogName == 'changelog') {
             this.dialog.open(ChangelogComponent, settings);
         } else if (dialogName == 'help') {
             this.dialog.open(HelpComponent, settings);
         } else if (dialogName == 'layers') {
-            this.dialog.open(LayerInformationComponent, {
-                maxWidth: '90ch',
-            });
+            this.dialog.open(LayerInformationComponent, settings);
         }
     }
 
@@ -326,6 +324,7 @@ export class TabsComponent implements AfterViewInit {
         this.dialog.open(SvgExportComponent, {
             data: { vm: viewModel },
             panelClass: ['dialog-custom', this.userTheme],
+            autoFocus: false,
         });
     }
 
@@ -604,6 +603,7 @@ export class TabsComponent implements AfterViewInit {
                     disableClose: true,
                     width: '25%',
                     panelClass: this.userTheme,
+                    autoFocus: false,
                 });
                 this.subscription = dialog.afterClosed().subscribe({
                     next: (result) => {

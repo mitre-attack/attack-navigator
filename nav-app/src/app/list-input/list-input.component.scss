@@ -8,8 +8,15 @@
     padding: 10px;
     border: 1px solid color(panel-dark);
     margin: 4px 0;
+
+    &.hide-subscript {
+        .mat-mdc-form-field + .mat-mdc-form-field {
+            margin-top: 8px;
+        }
+    }
 }
 .remove-button {
+    margin-top: 8px;
     display: flex;
     justify-content: flex-end;
 }
@@ -28,13 +35,16 @@
         @include adaptive-color('border-top-color', color(panel-dark), color(dark-4));
     }
     .icon {
+        font-size: 16px;
         height: 16px;
         width: 16px;
-        line-height: 16px;
         border-radius: 3px;
     }
     .divider-option,
     .divider {
+        .mat-mdc-button-touch-target {
+            display: none;
+        }
         display: flex;
         justify-content: center;
         align-items: center;

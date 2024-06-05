@@ -14,12 +14,6 @@
     }
 }
 
-.close-button {
-    margin-top: 25px;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
 .dropdown-container {
     padding: 10px;
     top: 34px;
@@ -28,14 +22,6 @@
         li {
             list-style: none;
             text-align: left;
-            input.has-suffix {
-                text-align: right;
-                &::-webkit-inner-spin-button,
-                &::-webkit-outer-spin-button {
-                    display: none;
-                }
-                -moz-appearance: textfield;
-            }
         }
     }
 }
