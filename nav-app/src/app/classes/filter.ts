@@ -8,8 +8,18 @@ export class Filter {
         selection: string[];
     };
 
+    public dataSources : {
+        options: string[];
+        selection: string[];
+    }
+
     constructor() {
         this.platforms = {
+            selection: [],
+            options: [],
+        };
+
+        this.dataSources = {
             selection: [],
             options: [],
         };
@@ -21,10 +31,29 @@ export class Filter {
      */
     public initPlatformOptions(domain: Domain): void {
         this.platforms.options = JSON.parse(JSON.stringify(domain.platforms));
+
         if (!this.platforms.selection.length) {
             // prevent overwriting current selection
             this.platforms.selection = JSON.parse(JSON.stringify(domain.platforms));
         }
+    }
+
+    /**
+     * Initialize the data source options according to the data in the domain
+     * @param {Domain} domain the domain to parse for data source options
+     */
+
+    public initDataSourcesOptions(domain: Domain): void {
+        // dataSourcesMap is a Map<string, { name: string; external_references: any[] }>
+        // We want to store the name field in the options array as well as the selection array
+
+        // Iterate over the entries of the Map
+        for (const [key, value] of domain.dataSources.entries()) {
+            // Store the name field in the options array
+            this.dataSources.options.push(value.name);
+            this.dataSources.selection.push(value.name);
+        }
+
     }
 
     /**
@@ -42,8 +71,7 @@ export class Filter {
             this[filterName].selection.splice(index, 1);
         } else {
             this[filterName].selection.push(value);
-        }
-    }
+        }    }
 
     /**
      * determine if the given value is active in the filter
@@ -60,7 +88,7 @@ export class Filter {
      * @return stringified filter
      */
     public serialize(): string {
-        return JSON.stringify({ platforms: this.platforms.selection });
+        return JSON.stringify({ platforms: this.platforms.selection, dataSources: this.dataSources.selection });
     }
 
     /**
@@ -78,6 +106,29 @@ export class Filter {
             return true;
         };
 
+        let isDataSourcesMap = function (obj: any): boolean {
+            // Check if obj is an instance of Map
+            if (!(obj instanceof Map)) {
+                return false;
+            }
+
+            // Iterate over the entries of the Map
+            for (const [key, value] of obj.entries()) {
+                // Check if key is a string and value is an object with 'name' and 'external_references' properties
+                if (typeof key !== 'string'   ||
+                    typeof value !== 'object' ||
+                    value === null            ||
+                    !('name' in value)        ||
+                    !('external_references' in value)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        // Deserialize platforms
         if (rep.platforms) {
             if (isStringArray(rep.platforms)) {
                 let backwards_compatibility_mappings = {
@@ -100,6 +151,20 @@ export class Filter {
                 });
                 this.platforms.selection = Array.from(selection);
             } else console.error('TypeError: filter platforms field is not a string[]');
+        }
+
+        // Deserialize data sources
+
+        if(rep.dataSources) {
+            if (isDataSourcesMap(rep.dataSources)) {
+                this.dataSources.selection = Array.from(rep.dataSources.keys());
+                // show debug message
+                console.log('Data Sources:', this.dataSources.selection);
+                // assert that selections is an array
+                if (!Array.isArray(this.dataSources.selection)) {
+                    console.error('TypeError: filter dataSources selection field is not a string[]');
+                }
+            } else console.error('TypeError: filter dataSources field is not a Map<string, { name: string; external_references: any[] }>');
         }
     }
 }

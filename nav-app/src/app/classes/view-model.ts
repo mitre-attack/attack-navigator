@@ -146,10 +146,12 @@ export class ViewModel {
             this.dataService.onDataLoad(this.domainVersionID, function () {
                 self.initTechniqueVMs();
                 self.filters.initPlatformOptions(self.dataService.getDomain(self.domainVersionID));
+                self.filters.initDataSourcesOptions(self.dataService.getDomain(self.domainVersionID));
             });
         } else {
             this.initTechniqueVMs();
             this.filters.initPlatformOptions(domain);
+            this.filters.initDataSourcesOptions(domain);
         }
         this.loaded = true;
     }
@@ -817,6 +819,9 @@ export class ViewModel {
         return techniques.filter((technique: Technique) => {
             let techniqueVM = this.getTechniqueVM(technique, tactic);
             // filter by enabled
+            let in_platform = false;
+            let in_ds = false;
+
             if (this.hideDisabled && !this.isSubtechniqueEnabled(technique, techniqueVM, tactic)) {
                 techniqueVM.setIsVisible(false);
                 technique.subtechniques.forEach((subtechnique) => {
@@ -843,15 +848,33 @@ export class ViewModel {
                         let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                         subtechniqueVM.setIsVisible(true);
                     });
-                    return true; //platform match
+                    in_platform = true;
                 }
             }
+
+            let ds_mid = technique.datasources.split(',').map((ds) => ds.split(':')[0]);
+            let datasources = new Set(ds_mid);
+            
+            if (ds_mid.length==1 && ds_mid[0]=='') return in_platform;
+            for (let ds of this.filters.dataSources.selection) {
+                if (datasources.has(ds)) {
+                    techniqueVM.setIsVisible(true);
+                    technique.subtechniques.forEach((subtechnique) => {
+                        let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
+                        subtechniqueVM.setIsVisible(true);
+                    });
+                    in_ds = true;
+                }
+            }
+
             techniqueVM.setIsVisible(false);
             technique.subtechniques.forEach((subtechnique) => {
                 let subtechniqueVM = this.getTechniqueVM(subtechnique, tactic);
                 subtechniqueVM.setIsVisible(false);
             });
-            return false; // no platform match
+
+            return in_platform && in_ds;
+
         });
     }
 
