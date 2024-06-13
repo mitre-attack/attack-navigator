@@ -1,0 +1,39 @@
+<table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="mat-elevation-z8">
+  <ng-container matColumnDef="Data source">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="color">Data source</th>
+    <td mat-cell *matCellDef="let element">{{ element.data_source }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="Data component">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="data_component">Data component</th>
+    <td mat-cell *matCellDef="let element">{{ element.data_component }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="count">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="count">Count</th>
+    <td mat-cell *matCellDef="let element">{{ element.count }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="coverage">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="coveragePerc">Coverage</th>
+    <td mat-cell *matCellDef="let element">{{ element.coveragePerc }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+      [ngClass]="element.color + '_cell'" (click)="toggleRow(element)">
+  </tr>
+
+  <!-- Detail Row -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+      <div class="example-element-detail" *ngIf="expandedElement === element"
+           [@detailExpand]="expandedElement === element ? 'expanded' : 'collapsed'">
+        <div *ngFor="let tech of element.technologies">
+          <div><strong>{{ tech.name }}</strong>: {{ tech.percentage }}%</div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-row *matRowDef="let element; columns: ['expandedDetail'];" [ngClass]="element.color + '_dropdown'"></tr>
+</table>
