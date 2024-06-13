@@ -1,4 +1,3 @@
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
@@ -42,22 +41,15 @@ import { LayerUpgradeComponent } from './layer-upgrade/layer-upgrade.component';
 import { ChangelogCellComponent } from './layer-upgrade/changelog-cell/changelog-cell.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { LayerInformationComponent } from './layer-information/layer-information.component';
 import { ChangelogComponent } from './changelog/changelog.component';
-import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
 import { ConfigService } from './services/config.service';
-import { MyChartComponent } from './my-chart/my-chart.component';
-import { LayerService } from './services/data.service';
-import { DCcoverageTableComponent } from './dccoverage-table/dccoverage-table.component';
-import { CoverageDetailsDialogComponent } from './coverage-details-dialog/coverage-details-dialog.component';
-
 
 @NgModule({
     declarations: [
@@ -81,9 +73,6 @@ import { CoverageDetailsDialogComponent } from './coverage-details-dialog/covera
         LayerInformationComponent,
         ChangelogComponent,
         ListInputComponent,
-        MyChartComponent,
-        DCcoverageTableComponent,
-        CoverageDetailsDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -101,8 +90,6 @@ import { CoverageDetailsDialogComponent } from './coverage-details-dialog/covera
         MatMenuModule,
         MatExpansionModule,
         MatDialogModule,
-        MatTableModule,
-        MatSortModule,
         MatSnackBarModule,
         ColorPickerModule,
         DndModule,
@@ -114,11 +101,9 @@ import { CoverageDetailsDialogComponent } from './coverage-details-dialog/covera
         MarkdownModule.forRoot(),
         PopoverModule,
         MatTabsModule,
-        NgxChartsModule
     ],
     exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
     providers: [
-        LayerService,
         Title,
         ConfigService,
         {

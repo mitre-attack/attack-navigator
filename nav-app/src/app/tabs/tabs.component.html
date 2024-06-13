@@ -252,22 +252,206 @@
                 </div>
             </mat-expansion-panel>
 
-<!--         load layer from dropdown-->
-            <mat-expansion-panel>
+            <!-- Create layer from other layers -->
+            <mat-expansion-panel (opened)="activeTab.showScoreVariables = true" (closed)="activeTab.showScoreVariables = false">
                 <mat-expansion-panel-header>
-                    <mat-panel-title>Open Existing Customer Layer</mat-panel-title>
-                    <mat-panel-description>Load a layer from the server</mat-panel-description>
+                    <mat-panel-title>Create Layer from Other Layers</mat-panel-title>
+                    <mat-panel-description>Select layers to inherit properties from</mat-panel-description>
                 </mat-expansion-panel-header>
 
-                <div class="multi-column multi-column-container">
-                    <div class="md-column">
-                        <mat-form-field>
-                            <mat-label>Select a customer</mat-label>
-                            <mat-select (selectionChange)="loadLayerFromServer($event.value)">
-                                <mat-option *ngFor="let layer of navLayers" [value]="layer.id">{{layer.name}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                <div class="multi-column-container">
+                    <!-- domain -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="domain" [(ngModel)]="opSettings.domain" required>
+                                    <mat-option *ngFor="let domain of this.dataService.domains" [value]="domain.id">
+                                        {{ domain.name }} {{ domain.version.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center">
+                            <span>Select the domain and version for the new layer. Only layers of the same domain and version can be merged.</span>
+                        </div>
                     </div>
+
+                    <!-- score expression -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <input
+                                    type="text"
+                                    matInput
+                                    placeholder="score expression"
+                                    [disabled]="!opSettings.domain"
+                                    [(ngModel)]="opSettings.scoreExpression"
+                                    (keyup)="opSettings.scoreExpression = opSettings.scoreExpression.toLowerCase()"
+                                    style="letter-spacing: 2px" />
+                                <mat-hint style="color: red" align="start">{{ getScoreExpressionError() }}</mat-hint>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>
+                                Use constants (numbers) and layer variables (yellow, above) to write an expression for the initial value of scores in
+                                the new layer. A full list of supported operations can be found
+                                <a href="http://mathjs.org/docs/expressions/syntax.html#operators">here</a>
+                                . Leave blank to initialize scores to 0. Here's a list of available layer variables:
+                                <ul *ngFor="let tab of layerTabs; let $i = index">
+                                    <li
+                                        *ngIf="
+                                            activeTab.showScoreVariables &&
+                                            tab.isDataTable &&
+                                            (!opSettings.domain || tab.domain === opSettings.domain) &&
+                                            isAlphabetical(indexToChar($i))
+                                        ">
+                                        <span class="tab-enumerator-highlight">{{ indexToChar($i) }}</span>
+                                        ({{ tab.isDataTable ? tab.viewModel.name : tab.title }})
+                                    </li>
+                                </ul>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- gradient -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="gradient" [(ngModel)]="opSettings.gradientVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>
+                                Select which layer to import the scoring gradient from. Leave blank to initialize with the default scoring gradient.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- coloring -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="coloring" [(ngModel)]="opSettings.coloringVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import manually assigned colors from. Leave blank to initialize with no colors.</span>
+                        </div>
+                    </div>
+
+                    <!-- comments -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="comments" [(ngModel)]="opSettings.commentVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import comments from. Leave blank to initialize with no comments.</span>
+                        </div>
+                    </div>
+
+                    <!-- links -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="links" [(ngModel)]="opSettings.linkVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import technique links from. Leave blank to initialize without links.</span>
+                        </div>
+                    </div>
+
+                    <!-- metadata -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="metadata" [(ngModel)]="opSettings.metadataVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import technique metadata from. Leave blank to initialize without metadata.</span>
+                        </div>
+                    </div>
+
+                    <!-- enabled state -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="states" [(ngModel)]="opSettings.enabledVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import enabled/disabled states from. Leave blank to initialize all to enabled.</span>
+                        </div>
+                    </div>
+
+                    <!-- filters -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="filters" [(ngModel)]="opSettings.filterVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import filters from. Leave blank to initialize with no filters.</span>
+                        </div>
+                    </div>
+
+                    <!-- legend -->
+                    <div class="multi-column">
+                        <div class="md-column">
+                            <mat-form-field>
+                                <mat-select placeholder="legend" [(ngModel)]="opSettings.legendVM" [disabled]="!opSettings.domain">
+                                    <mat-option [value]="null">none</mat-option>
+                                    <mat-option *ngFor="let vm of getFilteredVMs()" [value]="vm">{{ vm.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="lg-column align-center" [ngClass]="{ disabled: !opSettings.domain }">
+                            <span>Select which layer to import the legend from. Leave blank to initialize with an empty legend.</span>
+                        </div>
+                    </div>
+
+                    <!-- create -->
+                    <button
+                        mat-button
+                        [disabled]="getScoreExpressionError() || !opSettings.domain"
+                        (click)="layerByOperation(); showScoreVariables = false">
+                        Create layer
+                    </button>
                 </div>
             </mat-expansion-panel>
 
@@ -365,7 +549,6 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-
 </ng-template>
 
 <!-- data table tab template -->
@@ -375,8 +558,4 @@
         [currentDropdown]="dropdownEnabled"
         (dropdownChange)="dropdownEnabled = $event"
         (onScroll)="adjustHeader($event)"></DataTable>
-    <my-chart></my-chart>
-    <app-dccoverage-table></app-dccoverage-table>
 </ng-template>
-
-

@@ -2,17 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs';
 import { fromPromise } from 'rxjs/observable/fromPromise';
 import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
-<<<<<<< Updated upstream
 import * as globals from '../utils/globals';
-=======
-import { ViewModel } from '../classes/view-model';
->>>>>>> Stashed changes
 
 @Injectable({
     providedIn: 'root',
@@ -428,7 +423,6 @@ export class DataService {
      * Get domain object by domain ID
      */
     public getDomain(domainVersionID: string): Domain {
-//         console.log('domainVersionID', domainVersionID);
         return this.domains.find((d) => d.id === domainVersionID);
     }
 
@@ -529,7 +523,6 @@ export class DataService {
         }
         return changelog;
     }
-
 }
 
 export interface ServiceAuth {
@@ -537,39 +530,3 @@ export interface ServiceAuth {
     serviceName: string;
     apiKey: string;
 }
-
-@Injectable({
-    providedIn: 'root',
-})
-export class LayerService {
-  constructor(private http: HttpClient) { }
-
-  getLayers(): Observable<any> {
-    return this.http.get('/api/layers');
-  }
-  getLayerData(filename: string): Observable<any> {
-    return this.http.get(`/api/layers/${filename}`, { responseType: 'json' });
-}
-
-}
-
-export interface CompanyDictionary {
-    companyName: string;
-    sectors: string[];
-    geographies: string[];
-}
-
-@Injectable({
-    providedIn: 'root'
-})
-export class SharedService {
-  private selectedLayerSource = new BehaviorSubject<CompanyDictionary>(null);
-  currentLayer = this.selectedLayerSource.asObservable();
-
-  constructor() {}
-
-  changeLayer(layerId: CompanyDictionary) {
-    this.selectedLayerSource.next(layerId);
-  }
-}
-
