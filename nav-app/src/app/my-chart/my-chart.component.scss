@@ -1,0 +1,36 @@
+/* Stylesheet (mogelijk in styles.css of component-specifieke stylesheet) */
+
+.chart-container {
+  background-color: rgba(33,33,44,255);
+  display: flex;
+  justify-content: center; /* Horizontaal centreren */
+  align-items: center; /* Verticaal centreren (optioneel, afhankelijk van de container hoogte) */
+  margin: 20px auto; /* Boven/onder marge en automatische zijmarges */
+  width: 80%; /* Pas breedte aan naar gewenste grootte */
+  height: auto; /* Als je de hoogte niet expliciet wilt zetten */
+}
+
+// /* Verzeker dat de gehele container (misschien de body of een specifieke div) ook goed gestyled is */
+// body {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   min-height: 100vh; /* Minimale hoogte van de viewport */
+//   margin: 0; /* Verwijder default body margin */
+// }
+
+/* Specifieke stijlen voor ngx-charts-bar-vertical kunnen ook hier worden opgenomen */
+ngx-charts-bar-vertical {
+  width: 100%; /* Volledige breedte van zijn container */
+  height: 600px; /* Specifieke hoogte, pas aan indien nodig */
+}
+
+
+.chart-container ngx-charts-bar-vertical {
+  color: white; /* Past de tekstkleur aan voor alle tekst binnen ngx-charts-bar-vertical */
+}
+/* my-chart.component.scss */
+::ng-deep .chart-container ngx-charts-bar-vertical .x.axis text,
+::ng-deep .chart-container ngx-charts-bar-vertical .y.axis text {
+  fill: white; /* 'fill' wordt vaak gebruikt voor SVG elementen */
+}

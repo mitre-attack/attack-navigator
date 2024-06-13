@@ -75,6 +75,7 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
+                        "proxyConfig": "proxy.conf.json",
                         "browserTarget": "nav-app:build"
                     },
                     "configurations": {
@@ -148,5 +149,8 @@
         "@schematics/angular:directive": {
             "prefix": "app"
         }
+    },
+    "cli": {
+      "analytics": false
     }
 }

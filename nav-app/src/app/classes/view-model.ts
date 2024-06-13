@@ -1,4 +1,4 @@
-import { DataService } from '../services/data.service';
+import { DataService, CompanyDictionary } from '../services/data.service';
 import { Filter } from './filter';
 import { Gradient } from './gradient';
 import { LayoutOptions } from './layout-options';
@@ -19,6 +19,7 @@ export class ViewModel {
     public uid: string; // unique identifier for this ViewModel
     public bundleURL: string; // the STIX bundle URL that a custom layer was loaded from
     public loaded: boolean = false; // whether or not techniqueVMs are loaded
+    public companyDict: CompanyDictionary;
 
     public techniqueVMs: Map<string, TechniqueVM> = new Map<string, TechniqueVM>(); // configuration for each technique
     public selectedTechniques: Set<string> = new Set<string>(); // currently selected techniques (technique_tactic_id)
@@ -1109,6 +1110,10 @@ export class ViewModel {
      */
     public deserialize(rep: any, restoreTechniques: boolean = true): void {
         let obj = typeof rep == 'string' ? JSON.parse(rep) : rep;
+
+        if ('companyDict' in obj) {
+          this.companyDict = obj.companyDict
+        }
 
         if ('description' in obj) {
             if (typeof obj.description === 'string') this.description = obj.description;

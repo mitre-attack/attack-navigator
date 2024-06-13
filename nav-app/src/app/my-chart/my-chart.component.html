@@ -1,0 +1,23 @@
+<!-- my-chart.component.html -->
+<button *ngIf="isSubcategoryView" (click)="loadMainCategories()">Back to Main Categories</button>
+
+<div class="chart-container">
+
+<ngx-charts-bar-vertical
+  [view]="view"
+  [scheme]="colorScheme"
+  [results]="chartData"
+  [gradient]="gradient"
+  [xAxis]="showXAxis"
+  [yAxis]="showYAxis"
+  [yScaleMax]="100"
+  [legend]="showLegend"
+  [showXAxisLabel]="showXAxisLabel"
+  [showYAxisLabel]="showYAxisLabel"
+  [xAxisLabel]="xAxisLabel"
+  [yAxisLabel]="yAxisLabel"
+  [animations]="true"
+  [barPadding]="8"
+  (select)="onCategorySelect($event)">
+</ngx-charts-bar-vertical>
+</div>

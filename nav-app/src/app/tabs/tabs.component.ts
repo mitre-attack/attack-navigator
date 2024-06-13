@@ -1,6 +1,13 @@
+<<<<<<< Updated upstream
 import { Component, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Tab, Domain, Version, ViewModel } from '../classes';
+=======
+import { Component, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { DataService, LayerService, SharedService, CompanyDictionary } from '../services/data.service';
+import { Domain } from '../classes/stix';
+import { Tab, Version, ViewModel } from '../classes';
+>>>>>>> Stashed changes
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
@@ -28,6 +35,7 @@ export class TabsComponent implements AfterViewInit {
     @ViewChild('safariWarning') safariWarning: TemplateRef<any>;
     @ViewChild('versionWarning') versionWarning: TemplateRef<any>;
 
+    navLayers = [];
     public activeTab: Tab = null;
     public dropdownEnabled: string = '';
     public layerTabs: Tab[] = [];
@@ -79,7 +87,10 @@ export class TabsComponent implements AfterViewInit {
         public dataService: DataService,
         public http: HttpClient,
         public configService: ConfigService,
-        public snackBar: MatSnackBar
+        public snackBar: MatSnackBar,
+        private layerService: LayerService,
+        private cdr: ChangeDetectorRef,
+        private sharedService: SharedService
     ) {
         console.debug('initializing tabs component');
         this.newBlankTab();
@@ -93,6 +104,15 @@ export class TabsComponent implements AfterViewInit {
         this.bannerContent = this.configService.banner;
     }
 
+    ngOnInit() {
+      this.layerService.getLayers().subscribe(
+        data => {
+          this.navLayers = data;
+          console.log('navlayers', this.navLayers);
+        },
+        error => console.error("Failed to load layers", error)
+      );
+    }
     ngAfterViewInit(): void {
         if (is.safari('<=13')) {
             // open safari version incompatibility warning
@@ -102,6 +122,15 @@ export class TabsComponent implements AfterViewInit {
                 panelClass: this.userTheme,
             });
         }
+    }
+
+    ngOnDestroy(): void {
+    // Clean up the ViewModel and unsubscribe from observables
+      this.layerTabs.forEach(tab => {
+          if (tab.viewModel) {
+              this.viewModelsService.destroyViewModel(tab.viewModel);
+          }
+      });
     }
 
     /**
@@ -272,6 +301,7 @@ export class TabsComponent implements AfterViewInit {
         if (this.activeTab !== tab) {
             this.activeTab = tab;
             this.dropdownEnabled = '';
+            this.sharedService.changeLayer(tab.viewModel.companyDict);
         } else this.dropdownEnabled = this.dropdownEnabled !== 'description' ? 'description' : '';
     }
 
@@ -446,7 +476,9 @@ export class TabsComponent implements AfterViewInit {
      */
     public newLayer(domainVersionID: string, obj: any = undefined): void {
         // load domain data, if not yet loaded
+        console.log('domainVersionID', domainVersionID)
         let domain = this.dataService.getDomain(domainVersionID);
+        console.log('domain', domain)
         if (!domain.dataLoaded) {
             this.dataService.loadDomainData(domainVersionID, true);
         }
@@ -709,6 +741,34 @@ export class TabsComponent implements AfterViewInit {
         });
     }
 
+
+    loadLayerFromServer(filename: string): void {
+
+        this.layerService.getLayerData(filename).subscribe({
+            next: (obj) => {
+                this.sharedService.changeLayer(obj.companyDict);
+                this.processLayerObject(obj);
+            },
+            error: (err) => {
+                console.error('Failed to load layer from server:', err);
+            }
+        });
+    }
+
+    processLayerObject(obj: any): void {
+        try {
+            if ('length' in obj) {
+                obj.forEach(item => this.loadObjAsLayer(this, item));
+            } else {
+                this.loadObjAsLayer(this, obj);
+            }
+        } catch (err) {
+            console.error('ERROR: The file structure is invalid.', err);
+            alert('ERROR: The file structure is invalid.');
+        }
+    }
+
+
     /**
      * Load a layer from file
      */
@@ -774,6 +834,8 @@ export class TabsComponent implements AfterViewInit {
                 }
             };
             reader.readAsText(file);
+            console.log('file:', file)
+
         });
     }
 
@@ -979,4 +1041,7 @@ export class TabsComponent implements AfterViewInit {
     public getFilteredVMs(): ViewModel[] {
         return this.viewModelsService.viewModels.filter((vm) => vm.domainVersionID == this.opSettings.domain);
     }
+
+
+
 }
