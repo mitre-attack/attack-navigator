@@ -66,11 +66,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public scoreEditField: string = '';
 
     private selectionChangeSubscription: Subscription;
-
     
     public layerControlsList = [];
     public techniqueControlsList = [];
     public selectionControlsList = [];
+
+    showControlLabels = {
+        selection: false,
+        layer: false,
+        technique: false,
+    };
+
     constructor(
         public dataService: DataService,
         private tabs: TabsComponent,
@@ -85,17 +91,17 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         for(let i=0;i <this.includedControls.length;i++){
             if(this.includedControls[i].name == "layer_controls"){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].name)
+                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].display_name)
                 }
             }
             else if(this.includedControls[i].name == "technique_controls"){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].name)
+                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].display_name)
                 }
             }
             else if(this.includedControls[i].name == "selection_controls"){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
-                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].name)
+                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].display_name)
                 }
             }
         }
@@ -157,11 +163,24 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         return false
     }
 
-    getControl(control, subfeature): Object {
+    getControlDisplayName(control, subfeature): Object {
         for(let i=0;i <this.includedControls.length;i++){
             if(this.includedControls[i].name == control){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
                     if(this.includedControls[i].subfeatures[j].name == subfeature){
+                        return this.includedControls[i].subfeatures[j].display_name;
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    getControl(control, subfeature): Object {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == control){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].display_name == subfeature){
                         return this.includedControls[i].subfeatures[j];
                     }
                 }
@@ -467,12 +486,6 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     setCurrentControlSection(controlType) {
         this.currentControlSection = controlType;
     }
-
-    showControlLabels = {
-        selection: false,
-        later: false,
-        technique: false,
-    };
 
     /**
      * Handle export drop down change
