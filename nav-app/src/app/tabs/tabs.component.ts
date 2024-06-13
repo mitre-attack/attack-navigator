@@ -445,8 +445,11 @@ export class TabsComponent implements AfterViewInit {
      * Create a new layer in the given domain and version
      */
     public newLayer(domainVersionID: string, obj: any = undefined): void {
-        // load domain data
-        this.dataService.loadDomainData(domainVersionID, true);
+        // load domain data, if not yet loaded
+        let domain = this.dataService.getDomain(domainVersionID);
+        if (!domain.dataLoaded) {
+            this.dataService.loadDomainData(domainVersionID, true);
+        }
 
         // find non conflicting name
         let name;
@@ -725,59 +728,53 @@ export class TabsComponent implements AfterViewInit {
     public async readJSONFile(file: File): Promise<void> {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
-            let viewModel: ViewModel;
-            reader.onload = (e) => {
-                let result = String(reader.result);
-                try {
-                    let objList = typeof result == 'string' ? JSON.parse(result) : result;
-                    if ('length' in objList) {
-                        for (let obj of objList) {
-                            this.loadObjAsLayer(this, obj);
+            let self = this;
+
+            reader.onload = async (e) => {
+                let loadObjAsLayer = async function(layerObj) {
+                    let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
+                    try {
+                        let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
+                        await self.versionMismatchWarning(layerVersionStr);
+                        self.versionMismatchWarning(layerVersionStr);
+                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
                         }
-                    } else {
-                        let obj = typeof result == 'string' ? JSON.parse(result) : result;
-                        this.loadObjAsLayer(this, obj);
+
+                        let isCustom = 'customDataURL' in layerObj;
+                        if (!isCustom) {
+                            await self.upgradeLayer(viewModel, layerObj, true);
+                            console.debug(`loaded layer "${viewModel.name}"`);
+                        } else {
+                            // load as custom data
+                            viewModel.deserialize(layerObj);
+                            let url = layerObj['customDataURL'];
+                            self.newLayerFromURL(
+                                {url: url, version: viewModel.version, identifier: viewModel.domain},
+                                layerObj
+                            );
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert(`ERROR parsing layer, check the javascript console for more information.`);
+                        self.viewModelsService.destroyViewModel(viewModel);
+                        resolve(null); // continue
                     }
-                } catch (err) {
-                    viewModel = this.viewModelsService.newViewModel('loading layer...', undefined);
-                    console.error('ERROR: Either the file is not JSON formatted, or the file structure is invalid.', err);
-                    alert('ERROR: Either the file is not JSON formatted, or the file structure is invalid.');
-                    this.viewModelsService.destroyViewModel(viewModel);
+                }
+
+                let result = String(reader.result);
+                let layerFile = typeof result == 'string' ? JSON.parse(result) : result;
+                if (layerFile?.length) {
+                    console.debug('loading file with multiple layers');
+                    for (let layer of layerFile) {
+                        await loadObjAsLayer(layer);
+                    }
+                } else {
+                    await loadObjAsLayer(layerFile);
                 }
             };
             reader.readAsText(file);
         });
-    }
-
-    public loadObjAsLayer(self, obj): void {
-        let viewModel: ViewModel;
-        viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-        let layerVersionStr = viewModel.deserializeDomainVersionID(obj);
-        self.versionMismatchWarning(layerVersionStr)
-            .then((res) => {
-                let isCustom = 'customDataURL' in obj;
-                if (!isCustom) {
-                    if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                        throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
-                    }
-                    self.upgradeLayer(viewModel, obj, true);
-                } else {
-                    // load as custom data
-                    viewModel.deserialize(obj);
-                    self.openTab('new layer', viewModel, true, true, true, true);
-                    self.newLayerFromURL(
-                        {
-                            url: obj['customDataURL'],
-                            version: viewModel.version,
-                            identifier: viewModel.domain,
-                        },
-                        obj
-                    );
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }
 
     /**
@@ -834,22 +831,34 @@ export class TabsComponent implements AfterViewInit {
             let self = this;
             subscription = self.http.get(loadURL).subscribe({
                 next: async (res) => {
-                    let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
-                    try {
-                        let layerVersionStr = viewModel.deserializeDomainVersionID(res);
-                        await self.versionMismatchWarning(layerVersionStr);
-                        if (!self.dataService.getDomain(viewModel.domainVersionID)) {
-                            throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                    let loadLayerAsync = async function(layerObj) {
+                        let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
+                        try {
+                            let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
+                            await self.versionMismatchWarning(layerVersionStr);
+                            if (!self.dataService.getDomain(viewModel.domainVersionID)) {
+                                throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+                            }
+                            await self.upgradeLayer(viewModel, layerObj, replace, defaultLayers);
+                            console.debug(`loaded layer "${viewModel.name}" from ${loadURL}`);
+                        } catch (err) {
+                            console.error(err);
+                            alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
+                            self.viewModelsService.destroyViewModel(viewModel);
+                            resolve(null); // continue
                         }
-                        await self.upgradeLayer(viewModel, res, replace, defaultLayers);
-                        console.debug('loaded layer from', loadURL);
-                        resolve(null); //continue
-                    } catch (err) {
-                        console.error(err);
-                        this.viewModelsService.destroyViewModel(viewModel);
-                        alert(`ERROR parsing layer from ${loadURL}, check the javascript console for more information.`);
-                        resolve(null); // continue
+                    };
+
+                    let layerFile = typeof res == 'string' ? JSON.parse(res) : res;
+                    if (layerFile?.length) {
+                        console.debug('loading file with multiple layers');
+                        for (let layer of layerFile) {
+                            await loadLayerAsync(layer);
+                        }
+                    } else {
+                        await loadLayerAsync(layerFile);
                     }
+                    resolve(null); //continue
                 },
                 error: (err) => {
                     console.error(err);

@@ -9,15 +9,25 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# 5.0.0 - Changes staged on develop
+# 5.0.1 - 9 May 2024
 
-## Improvements
-- Updated Navigator to load data via the STIX 2.1 Collection Index. See issue [#607](https://github.com/mitre-attack/attack-navigator/issues/607).
+## Fixes
+- Fixed an issue with parsing technique platforms.
+
+# 5.0.0 - 2 May 2024
+
+## New Features
+- Navigator now loads data via the STIX 2.1 Collection Index. See issue [#607](https://github.com/mitre-attack/attack-navigator/issues/607).
 	- Added the `collection_index_url` property to `config.json` which specifies the URL to the collection index. By default, it is set to [ATT&CK's STIX 2.1 Collection Index](https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json). More information about Collection Indexes can be found [here](https://github.com/mitre-attack/attack-stix-data?tab=readme-ov-file#collection-indexes).
 	- Removed the hardcoded list of ATT&CK versions from the `versions` property in `config.json`. Support for this property is continued for loading custom versions of the dataset, integration with the ATT&CK Workbench, loading content from a TAXII server, and for offline hosting. For any issues encountered, please ensure the versions `enabled` property is set to `true` and the data is properly defined in the versions `entries` array.
 	- The `collection_index_url` property and/or the `versions` property must be defined for Navigator to load properly. When both properties are defined, the Navigator will display the union of the versions that are specified under the "More Options" dropdown in the "Create New Layer" interface. If neither are defined, the user will be alerted that the Navigator failed to load.
 - Added support for loading content from a TAXII 2.1 server. See issue [#277](https://github.com/mitre-attack/attack-navigator/issues/277). For more information on how to load content from TAXII 2.1 see _Loading content from a TAXII server_ in the [README](README.md).
+
+## Improvements
 - Improved error handling when there is an issue loading the configuration file. See issue [#398](https://github.com/mitre-attack/attack-navigator/issues/398).
+
+## Fixes
+- Fixed an issue where loading a multi-layer JSON file through embedded links would throw an error and prevent the layers from loading. See issue [#624](https://github.com/mitre-attack/attack-navigator/issues/624).
 
 # 4.9.5 - 23 April 2024
 
@@ -25,7 +35,6 @@ Adds support for ATT&CK v15.0.
 
 ## Improvements
 - Added "mark all as reviewed" and "expand visible techniques" options to the Layer Upgrade UI to improve the overall technique review workflow. See issue [#595](https://github.com/mitre-attack/attack-navigator/issues/595).
-
 
 # 4.9.4 - 29 February 2024
 

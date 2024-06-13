@@ -199,7 +199,7 @@ export class DataService {
     }
 
     /**
-     * Extrats the set of platforms from the list of techniques
+     * Extracts the set of platforms from the list of techniques
      * in the given domain
      * @param domain the domain for which to parse the platforms
      * @returns the set of platforms found
@@ -210,7 +210,9 @@ export class DataService {
 
         // parse platforms
         allTechniques.forEach((technique) => {
-            technique.platforms?.forEach(platforms.add, platforms);
+            if (!technique.deprecated && !technique.revoked) {
+                technique.platforms?.forEach(platforms.add, platforms);
+            }
         });
 
         return platforms;
