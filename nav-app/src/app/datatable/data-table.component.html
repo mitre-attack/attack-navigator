@@ -9,6 +9,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
 <div class="controlsContainer">
     <div class="control-section-header">
+        <div class="control-bar-toggle">
+            <input id="show_control_bar_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlsBar" />
+            <label for="show_control_bar_toggle" class="checkbox-custom-label noselect">Hide Controls</label>
+        </div>
         <div class="control-section-tabs">
             <div
                 *ngIf="configService.getFeatureGroupCount('selection_controls') >= 2"
@@ -33,53 +37,9 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
             </div>
             <!-- Header/Help -->
         </div>
-        <div class="control-bar-toggle">
-            <input id="show_control_bar_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlsBar" />
-            <label *ngIf="showControlsBar" for="show_control_bar_toggle" class="checkbox-custom-label noselect">Hide Controls</label>
-            <label *ngIf="!showControlsBar" for="show_control_bar_toggle" class="checkbox-custom-label noselect">Show Controls</label>
-        </div>
     </div>
-    <div class="control-section-header">
         <ul *ngIf="showControlsBar" class="control-sections">
-            <li *ngIf="configService.getFeatureGroup('toolbar_controls', 'any')">
-                <!-- enable disable sticky toolbar -->
-                <div *ngIf="configService.getFeature('sticky_toolbar')" class="control-row-item">
-                    <div
-                        class="control-row-button noselect"
-                        (click)="updateStickyToolbar()"
-                        matTooltipPosition="below"
-                        [matTooltip]="viewModel.stickyToolbar ? 'disable sticky toolbar' : 'enable sticky toolbar'">
-                        <span *ngIf="viewModel.stickyToolbar" class="material-symbols-outlined" alt="show disabled">push_pin</span>
-                        <span *ngIf="!viewModel.stickyToolbar" alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
-                    </div>
-                </div>
-            </li>
             <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && currentControlSection === 'selection'">
-                <div class="control-row-item">
-                    <div class="control-row-button dropdown noselect"
-                        (click)="handleSelectionControlsSettingsDropdown()"
-                        matTooltipPosition="below"
-                        matTooltip="selection control settings">
-                        <span class="material-symbols-outlined">
-                            more_vert
-                        </span>
-                    </div>
-                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
-                        <div>
-                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['selection']">
-                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
-                        </div>
-                       <div>
-                            <div>
-                                <b>Included Controls:</b>
-                            </div>
-                            <div *ngFor="let control of selectionControlsList">
-                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('selection_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div *ngIf="configService.getFeature('search') && isControlIncluded('selection_controls','search')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
@@ -148,35 +108,35 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         </div>
                     </div>
                 </div>
-            </li>
-            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'">
-                <!-- layer name, description, metadata, and links -->
-                <!-- layer control settings -->
                 <div class="control-row-item">
                     <div class="control-row-button dropdown noselect"
-                        (click)="handleLayerControlsSettingsDropdown()"
+                        (click)="handleSelectionControlsSettingsDropdown()"
                         matTooltipPosition="below"
-                        matTooltip="layer control settings">
+                        matTooltip="selection control settings">
                         <span class="material-symbols-outlined">
                             more_vert
                         </span>
                     </div>
-                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'layer_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
+                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
                         <div>
-                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['layer']">
+                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['selection']">
                             <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
                         </div>
                        <div>
                             <div>
                                 <b>Included Controls:</b>
                             </div>
-                            <div *ngFor="let control of layerControlsList">
-                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('layer_controls',control).enabled">
+                            <div *ngFor="let control of selectionControlsList">
+                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('selection_controls',control).enabled">
                                 <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
                             </div>
                         </div>
                     </div>
                 </div>
+            </li>
+            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'">
+                <!-- layer name, description, metadata, and links -->
+                <!-- layer control settings -->
                 <div *ngIf="configService.getFeature('layer_settings') && isControlIncluded('layer_controls','layer_settings')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
@@ -538,6 +498,31 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         </span>
                     </div>
                 </div>
+                <div class="control-row-item">
+                    <div class="control-row-button dropdown noselect"
+                        (click)="handleLayerControlsSettingsDropdown()"
+                        matTooltipPosition="below"
+                        matTooltip="layer control settings">
+                        <span class="material-symbols-outlined">
+                            more_vert
+                        </span>
+                    </div>
+                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'layer_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
+                        <div>
+                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['layer']">
+                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
+                        </div>
+                       <div>
+                            <div>
+                                <b>Included Controls:</b>
+                            </div>
+                            <div *ngFor="let control of layerControlsList">
+                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('layer_controls',control).enabled">
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </li>
             <li
                 *ngIf="
@@ -547,31 +532,6 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 ">
                 <!-- TECHNIQUE CONTROLS -->
                 <!-- technique control settings -->
-                <div class="control-row-item">
-                    <div class="control-row-button dropdown noselect"
-                        (click)="handleTechniqueControlsSettingsDropdown()"
-                        matTooltipPosition="below"
-                        matTooltip="technique control settings">
-                        <span class="material-symbols-outlined">
-                            more_vert
-                        </span>
-                    </div>
-                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'technique_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
-                        <div>
-                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['technique']">
-                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
-                        </div>
-                        <div>
-                            <div>
-                                <b>Included Controls:</b>
-                            </div>
-                            <div *ngFor="let control of techniqueControlsList">
-                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('technique_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- enable/disable technique -->
                 <div *ngIf="configService.getFeature('disable_techniques') && isControlIncluded('technique_controls','disable_techniques')" class="control-row-item">
                     <div
@@ -754,9 +714,46 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         <span class="material-icons" alt="remove all annotations">layers_clear</span>
                     </div>
                 </div>
+                <div class="control-row-item">
+                    <div class="control-row-button dropdown noselect"
+                        (click)="handleTechniqueControlsSettingsDropdown()"
+                        matTooltipPosition="below"
+                        matTooltip="technique control settings">
+                        <span class="material-symbols-outlined">
+                            more_vert
+                        </span>
+                    </div>
+                    <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'technique_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
+                        <div>
+                            <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['technique']">
+                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
+                        </div>
+                        <div>
+                            <div>
+                                <b>Included Controls:</b>
+                            </div>
+                            <div *ngFor="let control of techniqueControlsList">
+                                <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('technique_controls',control).enabled">
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li *ngIf="configService.getFeatureGroup('toolbar_controls', 'any')">
+                <!-- enable disable sticky toolbar -->
+                <div *ngIf="configService.getFeature('sticky_toolbar')" class="control-row-item">
+                    <div
+                        class="control-row-button noselect"
+                        (click)="updateStickyToolbar()"
+                        matTooltipPosition="below"
+                        [matTooltip]="viewModel.stickyToolbar ? 'disable sticky toolbar' : 'enable sticky toolbar'">
+                        <span *ngIf="viewModel.stickyToolbar" class="material-symbols-outlined" alt="show disabled">push_pin</span>
+                        <span *ngIf="!viewModel.stickyToolbar" alt="hide disabled"><mat-icon svgIcon="ic_push_pin_gray"></mat-icon></span>
+                    </div>
+                </div>
             </li>
         </ul>
-    </div>
 </div>
 
 <!--

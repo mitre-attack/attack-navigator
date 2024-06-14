@@ -51,7 +51,7 @@
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing banner."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
-            {"name": "search", "enabled": true, "display_name": "search & multislect", "description": "Disable to remove the technique search panel from the interface."},
+            {"name": "search", "enabled": true, "display_name": "search & multiselect", "description": "Disable to remove the technique search panel from the interface."},
             {"name": "deselect_all", "enabled": true, "display_name": "deselect techniques", "description": "Disable to remove the deselect all button from the interface."},
             {"name": "selecting_techniques", "enabled": true, "display_name": "selection behavior", "description": "Disable to remove the ability to select techniques."}
         ]},
