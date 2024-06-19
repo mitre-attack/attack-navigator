@@ -151,8 +151,7 @@
                             <div>
                                 <input id="showAggregateScores-option" class="checkbox-custom" type="checkbox"
                                     [(ngModel)]="viewModel.layout.showAggregateScores" />
-                                <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show
-                                    aggregate scores</label>
+                                <label for="showAggregateScores-option" class="checkbox-custom-label noselect">show aggregate scores</label>
                             </div>
                             <div>
                                 <input
@@ -175,6 +174,10 @@
                             </div>
                         </div>
                     </mat-card>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="button-container sidebar-content">
+                    <button (click)="viewModel.sidebarOpened = !viewModel.sidebarOpened" mat-raised-button>Close</button>
                 </div>
             </div>
         </div>

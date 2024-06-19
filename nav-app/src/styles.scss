@@ -141,6 +141,12 @@ body {
         padding: 0;
     }
 
+    .label{
+        .control-row-item + .control-row-item{
+            margin-right: 6px;
+        }
+    }
+
     .control-sections > li {
         list-style: none;
         display: inline-block;
@@ -191,6 +197,12 @@ body {
                 &.dropdown::after {
                     font-size: 5pt;
                     content: '▼';
+                }
+                span{
+                    vertical-align: middle;
+                }
+                .control-label {
+                    padding-right: 5px;
                 }
             }
 

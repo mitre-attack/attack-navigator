@@ -62,7 +62,7 @@
             {"name": "sorting", "enabled": true, "display_name": "sorting", "description": "Disable to remove the sorting button from the interface."},
             {"name": "color_setup", "enabled": true, "display_name": "color setup", "description": "Disable to remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
             {"name": "toggle_hide_disabled", "enabled": true, "display_name": "show/hide disabled", "description": "Disable to remove the hide disabled techniques button from the interface."},
-            {"name": "subtechniques", "enabled": true, "display_name": "subtechniques", "description": "Disable to remove all sub-technique features from the interface."}
+            {"name": "subtechniques", "enabled": true, "display_name": "sub-techniques", "description": "Disable to remove all sub-technique features from the interface."}
         ]},
         {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "disable_techniques", "enabled": true, "display_name": "toggle state", "description": "Disable to remove the ability to disable techniques."},

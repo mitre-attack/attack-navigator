@@ -61,6 +61,13 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
 
     public downloadAnnotationsOnVisibleTechniques: boolean = false;
 
+    showControlsBar = true;
+    previousControlSection = '';
+
+    currentControlSection = "selection";
+
+    showHelpDropDown = false;
+
     // edit field bindings
     public commentEditField: string = '';
     public scoreEditField: string = '';
@@ -473,18 +480,18 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
-    showControlsBar = true;
-
-    currentControlSection = "selection";
-
-    showHelpDropDown = false;
-
     toggleShowControlsBar() {
         this.showControlsBar = !this.showControlsBar;
     }
 
     setCurrentControlSection(controlType) {
         this.currentControlSection = controlType;
+        if (this.previousControlSection === controlType && this.showControlsBar) {
+            this.showControlsBar = false;
+        } else {
+            this.showControlsBar = true;
+        }
+        this.previousControlSection = controlType;
     }
 
     /**

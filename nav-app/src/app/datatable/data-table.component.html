@@ -9,10 +9,6 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
 <div class="controlsContainer">
     <div class="control-section-header">
-        <div class="control-bar-toggle">
-            <input id="show_control_bar_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlsBar" />
-            <label for="show_control_bar_toggle" class="checkbox-custom-label noselect">Hide Controls</label>
-        </div>
         <div class="control-section-tabs">
             <div
                 *ngIf="configService.getFeatureGroupCount('selection_controls') >= 2"
@@ -39,7 +35,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
         </div>
     </div>
         <ul *ngIf="showControlsBar" class="control-sections">
-            <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && currentControlSection === 'selection'">
+            <li *ngIf="configService.getFeatureGroup('selection_controls', 'any') && currentControlSection === 'selection'" [class.label]="showControlLabels['selection']">
                 <div *ngIf="configService.getFeature('search') && isControlIncluded('selection_controls','search')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
@@ -47,7 +43,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="openSearch()"
                         matTooltipPosition="below"
                         matTooltip="search & multiselect">
-                        <span *ngIf="showControlLabels['selection']">{{getControlDisplayName('selection_controls','search')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['selection']">{{getControlDisplayName('selection_controls','search') | titlecase}}</span>
                         <span class="material-icons" alt="search">search</span>
                     </div>
                 </div>
@@ -59,7 +55,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="viewModel.clearSelectedTechniques(); currentDropdown = null"
                         matTooltipPosition="below"
                         matTooltip="deselect {{ this.viewModel.getSelectedTechniqueCount() }} techniques">
-                        <span *ngIf="showControlLabels['selection']">{{getControlDisplayName('selection_controls','deselect_all')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['selection']">Deselect {{ this.viewModel.getSelectedTechniqueCount() }} Techniques</span>
                         <span class="material-icons" alt="deselect all">clear</span>
                         <span class="deselectNumber">{{ this.viewModel.getSelectedTechniqueCount() }}</span>
                     </div>
@@ -71,7 +67,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="currentDropdown = currentDropdown !== 'selection_behavior' ? 'selection_behavior' : null"
                         matTooltipPosition="below"
                         matTooltip="selection behavior">
-                        <span *ngIf="showControlLabels['selection']">{{getControlDisplayName('selection_controls','selecting_techniques')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['selection']">{{getControlDisplayName('selection_controls','selecting_techniques') | titlecase}}</span>
                         <span class="material-icons">lock</span>
                     </div>
                     <div
@@ -120,7 +116,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'selection_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
                         <div>
                             <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['selection']">
-                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
+                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">Show Control Labels</label>
                         </div>
                        <div>
                             <div>
@@ -128,13 +124,13 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             </div>
                             <div *ngFor="let control of selectionControlsList">
                                 <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('selection_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control | titlecase }}</label>
                             </div>
                         </div>
                     </div>
                 </div>
             </li>
-            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'">
+            <li *ngIf="configService.getFeatureGroup('layer_controls', 'any') && currentControlSection === 'layer'" [class.label]="showControlLabels['layer']">
                 <!-- layer name, description, metadata, and links -->
                 <!-- layer control settings -->
                 <div *ngIf="configService.getFeature('layer_settings') && isControlIncluded('layer_controls','layer_settings')" class="control-row-item">
@@ -143,7 +139,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="openLayerInfo()"
                         matTooltipPosition="below"
                         matTooltip="layer settings">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','layer_settings')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','layer_settings') | titlecase }}</span>
                         <span class="material-symbols-outlined" alt="layer information">
                             settings
                         </span>
@@ -152,7 +148,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <!-- export, save, and render features -->
                 <div *ngIf="configService.getFeature('download_layer') && isControlIncluded('layer_controls','download_layer')" class="control-row-item">
                     <div class="control-row-button dropdown noselect" (click)="handleExportDropdown()" matTooltipPosition="below" matTooltip="export">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','download_layer')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','download_layer') | titlecase}}</span>
                         <span class="material-icons" alt="export">file_download</span>
                     </div>
                     <div
@@ -255,7 +251,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="currentDropdown = currentDropdown !== 'filters' ? 'filters' : null"
                         matTooltipPosition="below"
                         matTooltip="filters">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','filters')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','filters') | titlecase}}</span>
                         <span class="material-icons">filter_list</span>
                     </div>
                     <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
@@ -291,14 +287,23 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 'sorting by score descending'
                             ][viewModel.sorting]
                         ">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','sorting')}}</span>
                         <span [ngSwitch]="['alpha_asc', 'alpha_desc', 'numeric_asc', 'numeric_desc'][viewModel.sorting]">
-                            <ng-container *ngSwitchCase="'alpha_asc'"><mat-icon svgIcon="ic_sort_alphabetically_ascending"></mat-icon></ng-container>
-                            <ng-container *ngSwitchCase="'alpha_desc'">
-                                <mat-icon svgIcon="ic_sort_alphabetically_descending"></mat-icon>
+                            <ng-container *ngSwitchCase="'alpha_asc'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">A-Z Ascending</span>
+                                <span><mat-icon svgIcon="ic_sort_alphabetically_ascending"></mat-icon></span>
                             </ng-container>
-                            <ng-container *ngSwitchCase="'numeric_asc'"><mat-icon svgIcon="ic_sort_numerically_ascending"></mat-icon></ng-container>
-                            <ng-container *ngSwitchCase="'numeric_desc'"><mat-icon svgIcon="ic_sort_numerically_descending"></mat-icon></ng-container>
+                            <ng-container *ngSwitchCase="'alpha_desc'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">A-Z Descending</span>
+                                <span><mat-icon svgIcon="ic_sort_alphabetically_descending"></mat-icon></span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'numeric_asc'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">Numerically Ascending</span>
+                                <span><mat-icon svgIcon="ic_sort_numerically_ascending"></mat-icon></span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'numeric_desc'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">Numerically Descending</span>
+                                <span><mat-icon svgIcon="ic_sort_numerically_descending"></mat-icon></span>
+                            </ng-container>
                         </span>
                     </div>
                 </div>
@@ -310,7 +315,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         (click)="currentDropdown = currentDropdown !== 'colorSetup' ? 'colorSetup' : null; viewModel.updateGradient()"
                         matTooltipPosition="below"
                         matTooltip="color setup">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','color_setup')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','color_setup') | titlecase}}</span>
                         <span class="material-icons">palette</span>
                     </div>
                     <div class="dropdown-container colorSetup" *ngIf="currentDropdown === 'colorSetup'" #dropdown [class.left]="checkalign(dropdown)">
@@ -468,9 +473,10 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         class="control-row-button noselect"
                         (click)="viewModel.hideDisabled = !viewModel.hideDisabled"
                         matTooltipPosition="below"
-                        matTooltip="show/hide disabled">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','toggle_hide_disabled')}}</span>
+                        [matTooltip]="viewModel.hideDisabled ? 'Hide Disabled' : 'Show Disabled'">
+                        <span class="control-label" *ngIf="showControlLabels['layer'] && viewModel.hideDisabled">Hide Disabled</span>
                         <span *ngIf="viewModel.hideDisabled" class="material-icons" alt="show disabled">visibility_off</span>
+                        <span class="control-label" *ngIf="showControlLabels['layer'] && !viewModel.hideDisabled">Show Disabled</span>
                         <span *ngIf="!viewModel.hideDisabled" class="material-icons" alt="hide disabled">visibility</span>
                     </div>
                 </div>
@@ -488,13 +494,19 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                                 'collapse subtechniques'
                             ][showSubtechniquesType]
                         ">
-                        <span *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','subtechniques')}}</span>
                         <span [ngSwitch]="['expanded', 'annotated', 'none'][showSubtechniquesType]">
-                            <ng-container *ngSwitchCase="'expanded'"><span class="material-icons" alt="expand sub-techniques">unfold_more</span></ng-container>
-                            <ng-container *ngSwitchCase="'annotated'">
-                                <mat-icon svgIcon="ic_unfold_more_alt"></mat-icon>
+                            <ng-container *ngSwitchCase="'expanded'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">Expand All Sub-techniques</span>
+                                <span class="material-icons" alt="expand sub-techniques">unfold_more</span>
                             </ng-container>
-                            <ng-container *ngSwitchCase="'none'"><span class="material-icons" alt="collapse sub-techniques">unfold_less</span></ng-container>
+                            <ng-container *ngSwitchCase="'annotated'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">Expand Annotated Sub-techniques</span>
+                                <span><mat-icon svgIcon="ic_unfold_more_alt"></mat-icon></span>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'none'">
+                                <span class="control-label" *ngIf="showControlLabels['layer']">Collapse Sub-techniques</span>
+                                <span class="material-icons" alt="collapse sub-techniques">unfold_less</span>
+                            </ng-container>
                         </span>
                     </div>
                 </div>
@@ -510,7 +522,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'layer_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
                         <div>
                             <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['layer']">
-                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
+                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">Show Control Labels</label>
                         </div>
                        <div>
                             <div>
@@ -518,7 +530,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             </div>
                             <div *ngFor="let control of layerControlsList">
                                 <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('layer_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control | titlecase }}</label>
                             </div>
                         </div>
                     </div>
@@ -528,8 +540,8 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 *ngIf="
                     configService.getFeatureGroup('technique_controls', 'any') &&
                     configService.getFeature('selecting_techniques') &&
-                    currentControlSection === 'technique'
-                ">
+                    currentControlSection === 'technique'"
+                    [class.label]="showControlLabels['technique']">
                 <!-- TECHNIQUE CONTROLS -->
                 <!-- technique control settings -->
                 <!-- enable/disable technique -->
@@ -541,7 +553,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         matTooltip="toggle state"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','disable_techniques')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','disable_techniques') | titlecase}}</span>
                         <span class="material-icons" alt="toggle state">texture</span>
                     </div>
                 </div>
@@ -557,7 +569,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         matTooltip="background color"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','manual_color')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','manual_color') | titlecase}}</span>
                         <span class="material-icons" alt="edit background color">format_color_fill</span>
                     </div>
                     <!-- color picker (invisible, absolute)-->
@@ -584,7 +596,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         matTooltip="scoring"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','scoring')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','scoring') | titlecase}}</span>
                         <span class="material-icons" alt="score">insert_chart</span>
                     </div>
                     <div class="dropdown-container inputfield" #dropdown [class.left]="checkalign(dropdown)" *ngIf="currentDropdown === 'score'">
@@ -613,7 +625,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         matTooltip="comment"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','comments')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','comments') | titlecase}}</span>
                         <span class="material-icons" alt="comment">insert_comment</span>
                     </div>
                     <!-- comment input (invisible, absolute) -->
@@ -646,7 +658,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         [matTooltip]="viewModel.linksMatch ? 'link' : 'cannot edit links on selected techniques with differing links'"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','links')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','links') | titlecase}}</span>
                         <span class="material-icons" alt="add a link">link</span>
                     </div>
                     <!-- link input -->
@@ -680,7 +692,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         [matTooltip]="viewModel.metadataMatch ? 'metadata' : 'cannot edit metadata on selected techniques with differing metadata'"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','metadata')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','metadata') | titlecase}}</span>
                         <span class="material-icons" alt="add metadata">list</span>
                     </div>
                     <!-- metadata input -->
@@ -710,7 +722,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                         matTooltipPosition="below"
                         matTooltip="clear annotations on selected"
                         [matTooltipDisabled]="!viewModel.isCurrentlyEditing()">
-                        <span *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','clear_annotations')}}</span>
+                        <span class="control-label" *ngIf="showControlLabels['technique']">{{getControlDisplayName('technique_controls','clear_annotations') | titlecase}}</span>
                         <span class="material-icons" alt="remove all annotations">layers_clear</span>
                     </div>
                 </div>
@@ -726,7 +738,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <div class="dropdown-container select_behavior" *ngIf="currentDropdown === 'technique_control_settings'" #dropdown [class.left]="checkalign(dropdown)">
                         <div>
                             <input id="show_control_label_toggle" class="checkbox-custom" type="checkbox" [(ngModel)]="showControlLabels['technique']">
-                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">show control labels</label>
+                            <label for="show_control_label_toggle" class="checkbox-custom-label noselect">Show Control Labels</label>
                         </div>
                         <div>
                             <div>
@@ -734,7 +746,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                             </div>
                             <div *ngFor="let control of techniqueControlsList">
                                 <input [attr.id]="'include-'+control+'-toggle'" class="checkbox-custom" type="checkbox" [(ngModel)]="getControl('technique_controls',control).enabled">
-                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control }}</label>
+                                <label [attr.for]="'include-'+control+'-toggle'" class="checkbox-custom-label noselect">{{ control | titlecase }}</label>
                             </div>
                         </div>
                     </div>
