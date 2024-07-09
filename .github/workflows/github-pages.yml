@@ -35,7 +35,7 @@ jobs:
         run: npm run build -- --configuration production,googleAnalytics --aot=false --build-optimizer=false --base-href=https://mitre-attack.github.io/attack-navigator/
 
       - name: Download and extract Navigator v2
-        uses: robinraju/release-downloader@v1.9
+        uses: robinraju/release-downloader@v1.10
         with:
           repository: "mitre-attack/attack-navigator"
           tag: "v2.3.2"
@@ -46,7 +46,7 @@ jobs:
         run: mv ../v2/ dist/
 
       - name: Download and extract Navigator v3
-        uses: robinraju/release-downloader@v1.9
+        uses: robinraju/release-downloader@v1.10
         with:
           repository: "mitre-attack/attack-navigator"
           tag: "v3.1"
