@@ -36,6 +36,7 @@ describe('TabsComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, MatDialogModule, MatTabsModule, MatTabNavPanel],
+            declarations: [TabsComponent],
             providers: [DataService, { provide: MatSnackBar, useValue: {} }],
         }).compileComponents();
         dialog = TestBed.inject(MatDialog);
