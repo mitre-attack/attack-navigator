@@ -1,22 +1,24 @@
 <div class="list-container">
-    <div *ngFor="let item of list; let i = index">
+    @for (item of list; track item; let i = $index) {
         <div class="divider-container">
             <!-- divider -->
-            <div *ngIf="item.divider" class="divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
-                <mat-divider></mat-divider>
-                <mat-icon class="icon">remove</mat-icon>
-                <mat-divider></mat-divider>
-            </div>
-            <div
-                *ngIf="!item.divider && canAddDivider(i)"
-                class="divider-option"
-                (click)="addDivider(i)"
-                matTooltipPosition="below"
-                matTooltip="add a divider">
-                <mat-divider></mat-divider>
-                <mat-icon class="icon">add</mat-icon>
-                <mat-divider></mat-divider>
-            </div>
+            @if (item.divider) {
+                <div class="divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
+                    <mat-divider></mat-divider>
+                    <mat-icon class="icon">remove</mat-icon>
+                    <mat-divider></mat-divider>
+                </div>
+            }
+            @if (!item.divider && canAddDivider(i)) {
+                <div class="divider-option"
+                    (click)="addDivider(i)"
+                    matTooltipPosition="below"
+                    matTooltip="add a divider">
+                    <mat-divider></mat-divider>
+                    <mat-icon class="icon">add</mat-icon>
+                    <mat-divider></mat-divider>
+                </div>
+            }
         </div>
 
         <!-- list item -->
@@ -37,19 +39,20 @@
                     [(ngModel)]="item[config.valueField]"
                     (input)="updateList()"/>
             </mat-form-field>
-            <a
-                *ngIf="includeLinks && item.valid()"
-                class="assigned-link"
-                href="{{ item[config.valueField] }}"
-                target="_blank"
-                rel="noopener noreferrer">
-                {{ item[config.nameField] }}
-            </a>
+            @if (includeLinks && item.valid()) {
+                <span> trying something </span>
+                <a  class="assigned-link"
+                    href="{{ item[config.valueField] }}"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    {{ item[config.nameField] }}
+                </a>
+            }
             <div class="remove-button">
                 <button class="button" (click)="remove(i)">remove</button>
             </div>
         </div>
-    </div>
+    }
 </div>
 <div class="add-more">
     <button class="button" (click)="add()">add {{ config.type }}</button>

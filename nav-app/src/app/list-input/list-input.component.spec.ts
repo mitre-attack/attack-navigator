@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListInputComponent } from './list-input.component';
 import { Link, Metadata, ViewModel } from '../classes';
 import * as MockData from '../../tests/utils/mock-data';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +17,6 @@ describe('ListInputComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
           imports: [
-            CommonModule,
             FormsModule,
             MatFormFieldModule,
             MatInputModule,
