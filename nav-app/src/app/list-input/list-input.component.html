@@ -22,36 +22,38 @@
         </div>
 
         <!-- list item -->
-        <div class="item-container hide-subscript" *ngIf="!item.divider">
-            <mat-form-field>
-                <mat-label>{{config.nameField}}</mat-label>
-                <input
-                    matInput
-                    matTextareaAutosize
-                    [(ngModel)]="item[config.nameField]"
-                    (input)="updateList()"/>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>{{config.valueField}}</mat-label>
-                <input
-                    matInput
-                    matTextareaAutosize
-                    [(ngModel)]="item[config.valueField]"
-                    (input)="updateList()"/>
-            </mat-form-field>
-            @if (includeLinks && item.valid()) {
-                <span> trying something </span>
-                <a  class="assigned-link"
-                    href="{{ item[config.valueField] }}"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    {{ item[config.nameField] }}
-                </a>
-            }
-            <div class="remove-button">
-                <button class="button" (click)="remove(i)">remove</button>
+        @if (!item.divider) {
+            <div class="item-container hide-subscript">
+                <mat-form-field>
+                    <mat-label>{{config.nameField}}</mat-label>
+                    <input
+                        matInput
+                        matTextareaAutosize
+                        [(ngModel)]="item[config.nameField]"
+                        (input)="updateList()"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{config.valueField}}</mat-label>
+                    <input
+                        matInput
+                        matTextareaAutosize
+                        [(ngModel)]="item[config.valueField]"
+                        (input)="updateList()"/>
+                </mat-form-field>
+                @if (includeLinks && item.valid()) {
+                    <span> trying something </span>
+                    <a  class="assigned-link"
+                        href="{{ item[config.valueField] }}"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        {{ item[config.nameField] }}
+                    </a>
+                }
+                <div class="remove-button">
+                    <button class="button" (click)="remove(i)">remove</button>
+                </div>
             </div>
-        </div>
+        }
     }
 </div>
 <div class="add-more">
