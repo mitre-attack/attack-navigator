@@ -5,6 +5,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { MarkdownService, MarkdownModule } from 'ngx-markdown';
 import { Renderer2 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayerInformationComponent } from '../layer-information/layer-information.component';
 
 describe('HelpComponent', () => {
     let component: HelpComponent;
@@ -17,7 +18,7 @@ describe('HelpComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientModule, MatDialogModule, MarkdownModule.forRoot({ loader: HttpClient }), BrowserAnimationsModule],
-            declarations: [HelpComponent],
+            declarations: [HelpComponent, LayerInformationComponent],
             providers: [
                 {
                     provide: MatDialogRef,

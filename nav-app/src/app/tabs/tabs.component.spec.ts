@@ -16,6 +16,7 @@ import { Technique } from '../classes/stix';
 import { ConfigService } from '../services/config.service';
 import * as MockLayers from '../../tests/utils/mock-layers';
 import * as MockData from '../../tests/utils/mock-data';
+import { MatTabNavPanel, MatTabsModule } from '@angular/material/tabs';
 
 describe('TabsComponent', () => {
     let component: TabsComponent;
@@ -34,7 +35,7 @@ describe('TabsComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
+            imports: [HttpClientTestingModule, MatDialogModule, MatTabsModule, MatTabNavPanel],
             providers: [DataService, { provide: MatSnackBar, useValue: {} }],
         }).compileComponents();
         dialog = TestBed.inject(MatDialog);
@@ -429,9 +430,7 @@ describe('TabsComponent', () => {
 
             // layer dialog
             component.openDialog('layers');
-            expect(openDialogSpy).toHaveBeenCalledWith(LayerInformationComponent, {
-                maxWidth: '90ch',
-            });
+            expect(openDialogSpy).toHaveBeenCalledWith(LayerInformationComponent, settings);
 
             // help dialog
             component.openDialog('help');

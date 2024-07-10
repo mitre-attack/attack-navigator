@@ -6,6 +6,7 @@ import { TabsComponent } from './tabs/tabs.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfigService } from './services/config.service';
+import { MatTabsModule } from '@angular/material/tabs';
 
 describe('AppComponent', () => {
     let fixture: ComponentFixture<AppComponent>;
@@ -13,7 +14,7 @@ describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule],
+            imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, MatTabsModule],
             declarations: [AppComponent, TabsComponent],
         }).compileComponents();
 
