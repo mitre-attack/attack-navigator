@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
+        angular-version: [17.x]
     steps:
     - uses: actions/checkout@v4
 
@@ -27,7 +28,7 @@ jobs:
         cache-dependency-path: nav-app/package-lock.json
 
     - name: Install Angular CLI
-      run: npm install -g @angular/cli
+      run: npm install -g @angular/cli@${{ matrix.angular-version}}
     
     - name: Install
       run: npm ci
