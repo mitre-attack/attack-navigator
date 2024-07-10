@@ -23,7 +23,9 @@ describe('ListInputComponent', () => {
             MatIconModule,
             MatDividerModule,
             MatTooltipModule,
-            BrowserAnimationsModule
+            BrowserAnimationsModule,
+            Link,
+            Metadata,
           ],
           declarations: [ListInputComponent],
         }).compileComponents()
@@ -49,6 +51,7 @@ describe('ListInputComponent', () => {
     });
 
     it('should and remove from list', () => {
+        component.config.type = 'metadata';
         component.addDivider(0);
         component.add();
         component.add();
@@ -64,6 +67,7 @@ describe('ListInputComponent', () => {
     });
 
     it('should throw errors for metadata', () => {
+        component.config.type = 'metadata';
         let consoleSpy = spyOn(console, 'error');
         let metadata = new Metadata();
         metadata.deserialize(JSON.stringify(MockData.invalidMetadata));
@@ -78,6 +82,7 @@ describe('ListInputComponent', () => {
     });
 
     it('should throw errors for links', () => {
+        component.config.type = 'links';
         let consoleSpy = spyOn(console, 'error');
         let link = new Link();
         link.deserialize(JSON.stringify(MockData.invalidLink));
