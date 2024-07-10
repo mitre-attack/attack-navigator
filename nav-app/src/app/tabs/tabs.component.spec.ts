@@ -457,6 +457,7 @@ describe('TabsComponent', () => {
 
         it('should create new layer from url', waitForAsync(() => {
             component.dataService.setUpDomains(MockData.configData.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -466,6 +467,7 @@ describe('TabsComponent', () => {
 
         it('should read and open json file', waitForAsync(() => {
             component.dataService.setUpDomains(MockData.configData.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
             let mockedDocElement = document.createElement('input');
             mockedDocElement.id = 'uploader';
             mockedDocElement.value = 'test1';
@@ -524,6 +526,7 @@ describe('TabsComponent', () => {
             component.openTab('layer1', vm2, true, true, true, true);
             expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
             component.dataService.setUpDomains(MockData.configData.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
             component.opSettings.domain = 'enterprise-attack-13';
             expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -538,6 +541,7 @@ describe('TabsComponent', () => {
             component.openTab('layer', vm1, true, true, true, true);
             expect(component.getScoreExpressionError()).toEqual(null);
             component.dataService.setUpDomains(MockData.configData.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
             component.opSettings.domain = 'enterprise-attack-13';
             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
@@ -554,6 +558,7 @@ describe('TabsComponent', () => {
             component.openTab('layer2', vm2, true, true, true, true);
 
             component.dataService.setUpDomains(MockData.configDataExtended.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
             component.opSettings.domain = 'enterprise-attack-13';
             let alertSpy = spyOn(window, 'alert');
@@ -733,6 +738,7 @@ describe('TabsComponent', () => {
                 },
             ];
             component.dataService.setUpDomains(versions);
+            component.dataService.latestVersion = new Version('mobile-attack-13', '13');
             component.http = http;
             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
             let alertSpy = spyOn(window, 'alert');
