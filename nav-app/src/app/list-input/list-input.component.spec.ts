@@ -1,157 +1,199 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ListInputComponent } from './list-input.component';
-import { Link, Metadata, ViewModel } from '../classes';
-import * as MockData from '../../tests/utils/mock-data';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ListInputComponent, ListInputConfig } from "./list-input.component";
+import { Link, Metadata, ViewModel } from "../classes";
+
+class MockLink extends Link {
+	serialize = jasmine.createSpy('serialize').and.returnValue({});
+	deserialize = jasmine.createSpy('deserialize');
+	valid = jasmine.createSpy('valid').and.returnValue(true);
+}
+
+class MockMetadata extends Metadata {
+	serialize = jasmine.createSpy('serialize').and.returnValue({});
+	deserialize = jasmine.createSpy('deserialize');
+	vaid = jasmine.createSpy('valid').and.returnValue(true);
+}
+
+class MockViewModel extends ViewModel {
+	editSelectedTechniqueValues = jasmine.createSpy('editSelectedTechniqueValues');
+}
 
 describe('ListInputComponent', () => {
-    let component: ListInputComponent;
-    let fixture: ComponentFixture<ListInputComponent>;
+	let component: ListInputComponent;
+	let fixture: ComponentFixture<ListInputComponent>;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-          imports: [
-            FormsModule,
-            MatFormFieldModule,
-            MatInputModule,
-            MatIconModule,
-            MatDividerModule,
-            MatTooltipModule,
-            BrowserAnimationsModule,
-            Link,
-            Metadata,
-          ],
-          declarations: [ListInputComponent],
-        }).compileComponents()
-    });
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			declarations: [ListInputComponent],
+			providers: [
+				{provide: Link, useClass: MockLink},
+				{provide: Metadata, useClass: MockMetadata}
+			]
+		}).compileComponents();
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(ListInputComponent);
-        component = fixture.debugElement.componentInstance;
-        let vm1 = new ViewModel('layer', '33', 'enterprise-attack-13', null);
-        component.config = {
-            viewModel: vm1,
-            list: vm1.metadata,
-            level: 'layer',
-            type: 'metadata',
-            nameField: 'name',
-            valueField: 'value',
-        };
-        fixture.detectChanges();
-    });
+		fixture = TestBed.createComponent(ListInputComponent);
+		component = fixture.componentInstance;
+	});
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-    it('should and remove from list', () => {
-        component.config.type = 'metadata';
-        component.addDivider(0);
-        component.add();
-        component.add();
-        component.remove(1);
-        component.addDivider(0);
-        component.addDivider(2);
-        component.add();
-        component.remove(1);
-        component.addDivider(1);
-        component.addDivider(1);
-        component.remove(component.list.length - 1);
-        expect(component.list.length).toEqual(1);
-    });
+	it('should clone list items for technique level', () => {
+		const config: ListInputConfig = {
+			viewModel: new MockViewModel('name', 'uid', 'enterprise-attack-13', null),
+			list: [new MockLink()],
+			type: 'links',
+			level: 'technique',
+			nameField: 'name',
+			valueField: 'value'
+		};
+		
+		component.config = config;
+		component.ngOnInit();
 
-    it('should throw errors for metadata', () => {
-        component.config.type = 'metadata';
-        let consoleSpy = spyOn(console, 'error');
-        let metadata = new Metadata();
-        metadata.deserialize(JSON.stringify(MockData.invalidMetadata));
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Metadata field 'name' is not a string");
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Metadata field 'value' is not a string");
-        metadata.deserialize(JSON.stringify(MockData.invalidName));
-        expect(consoleSpy).toHaveBeenCalledWith("Error: Metadata required field 'value' not present");
-        metadata.deserialize(JSON.stringify(MockData.invalidDivider));
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Metadata field 'divider' is not a boolean");
-        metadata.deserialize(JSON.stringify(MockData.invalidValue));
-        expect(consoleSpy).toHaveBeenCalledWith("Error: Metadata required field 'name' or 'divider' not present");
-    });
+		expect(component.list.length).toBe(config.list.length);
+		expect(config.list[0].serialize).toHaveBeenCalled();
+	});
 
-    it('should throw errors for links', () => {
-        component.config.type = 'links';
-        let consoleSpy = spyOn(console, 'error');
-        let link = new Link();
-        link.deserialize(JSON.stringify(MockData.invalidLink));
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Link field 'url' is not a string");
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Link field 'label' is not a string");
-        link.deserialize(JSON.stringify(MockData.invalidUrl));
-        expect(consoleSpy).toHaveBeenCalledWith("Error: Link required field 'label' not present");
-        link.deserialize(JSON.stringify(MockData.invalidDivider));
-        expect(consoleSpy).toHaveBeenCalledWith("TypeError: Link field 'divider' is not a boolean");
-        link.deserialize(JSON.stringify(MockData.invalidValue));
-        expect(consoleSpy).toHaveBeenCalledWith("Error: Link required field 'url' or 'divider' not present");
-    });
+	it('should not clone list items for layer level', () => {
+		const config: ListInputConfig = {
+			viewModel: new MockViewModel('name', 'uid', 'enterprise-attack-13', null),
+			list: [new MockLink()],
+			type: 'links',
+			level: 'layer',
+			nameField: 'name',
+			valueField: 'value'
+		};
+		
+		component.config = config;
+		component.ngOnInit();
 
-    it('should return false if links are not in config type', () => {
-        expect(component.includeLinks).toEqual(false);
-    });
-});
+		expect(component.list).toBe(config.list);
+		expect(config.list[0].serialize).not.toHaveBeenCalled();
+	});
 
-describe('Dividers', () => {
-    let component: ListInputComponent;
-    let fixture: ComponentFixture<ListInputComponent>;
-    let viewModel: ViewModel;
+	describe('includeLinks', () => {
+		it('should return true if config type is links', () => {
+			component.config = { type: 'links' } as ListInputConfig;
+			expect(component.includeLinks).toBeTrue();
+		});
+	
+		it('should return false if config type is not links', () => {
+			component.config = { type: 'metadata' } as ListInputConfig;
+			expect(component.includeLinks).toBeFalse();
+		});
+	});
 
-    let addDivider = (component) => {
-        if (component.canAddDivider(1)) {
-            component.addDivider(1);
-        }
-        component.addDivider(1);
-        component.removeDivider(1);
-    };
+	describe('add', () => {
+		it('should add a new item to the list', () => {
+			component.config = { type: 'links' } as ListInputConfig;
+			component.list = [];
+			component.add();
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(ListInputComponent);
-        component = fixture.debugElement.componentInstance;
-        viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
-        let metadata = new Metadata();
-        metadata.name = 'test1';
-        metadata.value = 't1';
-        let metadata2 = new Metadata();
-        metadata2.name = 'test2';
-        metadata2.value = 't2';
-        viewModel.metadata = [metadata, metadata2];
-        component.config = {
-            viewModel: viewModel,
-            list: viewModel.metadata,
-            level: 'layer',
-            type: 'metadata',
-            nameField: 'name',
-            valueField: 'value',
-        };
-        component.ngOnInit();
-        fixture.detectChanges();
-    });
+			expect(component.list.length).toBe(1);
+			expect(component.list[0] instanceof Link).toBeTrue();
+		});
+	});
 
-    it('should add and remove divider for layer', () => {
-        component.config.level = 'layer';
-        addDivider(component);
-        expect(component.list.length).toEqual(3);
-    });
+	describe('remove', () => {
+		beforeEach(() => {
+			const config: ListInputConfig = {
+				viewModel: new MockViewModel('name', 'uid', 'enterprise-attack-13', null),
+				list: [new MockLink()],
+				type: 'links',
+				level: 'technique',
+				nameField: 'name',
+				valueField: 'value'
+			};
+			component.config = config;
+			component.list = [
+				new MockLink(),
+				new MockLink(),
+				new MockLink()
+			];
+		});
 
-    it('should add and remove divider for technique', () => {
-        component.config.level = 'technique';
-        component.ngOnInit();
-        addDivider(component);
-        expect(component.list.length).toEqual(3);
-    });
+		it('should remove an item from the list', () => {
+			component.remove(1);
+			expect(component.list.length).toBe(2);
+		});
 
-    it('should not add divider', () => {
-        expect(component.canAddDivider(5)).toEqual(false);
-        expect(component.canAddDivider(0)).toEqual(false);
-    });
+		it('should remove two items if adjacent items are dividers', () => {
+			component.list[1].divider = true;
+			component.remove(2);
+			expect(component.list.length).toBe(1);
+		});
+
+		it('should call removeDivider if the first item is a divider', () => {
+			spyOn(component, 'removeDivider');
+			component.list[0].divider = true;
+			component.remove(1);
+			expect(component.removeDivider).toHaveBeenCalledWith(0);
+		});
+
+		it('should call removeDivider if the last item is a divider', () => {
+			spyOn(component, 'removeDivider');
+			component.list[2].divider = true;
+			component.remove(1);
+			expect(component.removeDivider).toHaveBeenCalledWith(1);
+		});
+	});
+
+	describe('updateList', () => {
+		it('should filter and update the list of valid items', () => {
+			const config: ListInputConfig = {
+				viewModel: new MockViewModel('name', 'uid', 'enterprise-attack-13', null),
+				list: [new MockLink(), new MockLink()],
+				type: 'links',
+				level: 'technique',
+				nameField: 'name',
+				valueField: 'value'
+			};
+			component.config = config;
+			component.list = config.list;
+			component.updateList();
+			expect(config.viewModel.editSelectedTechniqueValues).toHaveBeenCalled();
+		});
+	});
+
+	describe('canAddDivider', () => {
+		it('should return false if index is less than 1', () => {
+			component.list = [new MockLink(), new MockLink()];
+			expect(component.canAddDivider(0)).toBeFalse();
+		});
+
+		it('should return true if current and previous items are valid non-dividers', () => {
+			component.list = [new MockLink(), new MockLink()];
+			expect(component.canAddDivider(1)).toBeTrue();
+		});
+
+		it('should return false if current or previous items are not valid or are dividers', () => {
+			component.list = [new MockLink(), new MockLink()];
+			component.list[1].divider = true;
+			expect(component.canAddDivider(1)).toBeFalse();
+		});
+	});
+
+	describe('addDivider', () => {
+		it('should add a divider at the given index', () => {
+			component.config = { type: 'links' } as ListInputConfig;
+			component.list = [new MockLink(), new MockLink()];
+			component.addDivider(1);
+
+			expect(component.list.length).toBe(3);
+			expect(component.list[1].divider).toBeTrue();
+		});
+	});
+
+	describe('removeDivider', () => {
+		it('should remove a divider at the given index', () => {
+			component.config = { type: 'links' } as ListInputConfig;
+			component.list = [new MockLink(), new MockLink()];
+			component.list[1].divider = true;
+			component.removeDivider(1);
+
+			expect(component.list.length).toBe(1);
+		});
+	});
 });

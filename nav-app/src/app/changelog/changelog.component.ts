@@ -7,7 +7,7 @@ import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
     templateUrl: './changelog.component.html',
 })
 export class ChangelogComponent {
-    @ViewChild('markdownElement', { static: false }) private markdownElement: any;
+    @ViewChild('markdownElement', { static: false }) public markdownElement: any;
 
     constructor(
         private dialog: MatDialog,

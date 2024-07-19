@@ -11,7 +11,7 @@ import { LayerInformationComponent } from '../layer-information/layer-informatio
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;
-    @ViewChild('markdownElement', { static: false }) private markdownElement: any;
+    @ViewChild('markdownElement', { static: false }) public markdownElement: any;
     public headingAnchors: MarkdownHeadingAnchor[] = [];
 
     constructor(
