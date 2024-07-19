@@ -1,3 +1,107 @@
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { TabsComponent } from "./tabs.component";
+import { ViewModelsService } from "../services/viewmodels.service";
+import { DataService } from "../services/data.service";
+import { HttpClientModule } from "@angular/common/http";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { FormsModule } from "@angular/forms";
+import { Tab, ViewModel } from "../classes";
+import { MatTabsModule } from "@angular/material/tabs";
+import { ConfigService } from "../services/config.service";
+import * as MockData from '../../tests/utils/mock-data';
+import * as is from 'is_js';
+
+describe('TabsComponent', () => {
+	let component: TabsComponent;
+	let fixture: ComponentFixture<TabsComponent>;
+	let viewModelsService: ViewModelsService;
+	let dataService: DataService;
+	let configService: ConfigService;
+	let dialog: MatDialog;
+
+    let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
+    let loadData = {
+        url: 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
+        version: '14',
+        identifier: 'enterprise-attack',
+    };
+
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			declarations: [TabsComponent],
+			imports: [
+				HttpClientModule,
+				MatDialogModule,
+				MatSnackBarModule,
+				MatTabsModule,
+				FormsModule,
+			],
+			providers: [
+				ViewModelsService,
+				DataService,
+				ConfigService,
+				{provide: MatSnackBar, useValue: {}}
+			]
+		}).compileComponents();
+
+		fixture = TestBed.createComponent(TabsComponent);
+		component = fixture.componentInstance;
+		viewModelsService = TestBed.inject(ViewModelsService);
+		dataService = TestBed.inject(DataService);
+		configService = TestBed.inject(ConfigService);
+		dialog = TestBed.inject(MatDialog);
+	});
+
+    describe('constructor', () => {
+        beforeEach(() => {
+            configService.defaultLayers = MockData.defaultLayersEnabled;
+        });
+
+        it('should create TabsComponent', () => {
+            fixture = TestBed.createComponent(TabsComponent);
+            component = fixture.debugElement.componentInstance;
+            expect(component).toBeTruthy();
+        });
+
+        it('should call newBlankTab on initialization', () => {
+            let blankTabSpy = spyOn(TabsComponent.prototype, 'newBlankTab');
+            fixture = TestBed.createComponent(TabsComponent);
+            component = fixture.debugElement.componentInstance;
+            expect(blankTabSpy).toHaveBeenCalled();
+        });
+
+        it('should call loadTabs with default layers and handle success', () => {
+            let loadTabsSuccess = spyOn(TabsComponent.prototype, 'loadTabs').and.returnValue(Promise.resolve());
+            fixture = TestBed.createComponent(TabsComponent);
+            component = fixture.debugElement.componentInstance;
+            expect(loadTabsSuccess).toHaveBeenCalledWith(MockData.defaultLayersEnabled);
+        });
+
+        it('should set bannerContent from ConfigService', () => {
+            fixture = TestBed.createComponent(TabsComponent);
+            component = fixture.debugElement.componentInstance;
+            expect(component.bannerContent).toEqual(configService.banner);
+        });
+    });
+
+    describe('ngAfterViewInit', () => {
+        it('should open Safari warning for Safari version <= 13', () => {
+            spyOn(is, 'safari').withArgs('<=13').and.returnValue(true);
+            let dialogSpy = spyOn(dialog, 'open');
+            component.ngAfterViewInit();
+            expect(dialogSpy).toHaveBeenCalled();
+        });
+
+        it('should not open Safari warning for Safari version > 13 or non-Safari browsers', () => {
+            spyOn(is, 'safari').withArgs('<=13').and.returnValue(false);
+            let dialogSpy = spyOn(dialog, 'open');
+            component.ngAfterViewInit();
+            expect(dialogSpy).not.toHaveBeenCalled();
+        });
+    });
+});
+
 // import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
 // import { HttpClientTestingModule } from '@angular/common/http/testing';
 // import { TabsComponent } from './tabs.component';
@@ -48,54 +152,6 @@
 //         http = TestBed.inject(HttpClient);
 //         fixture = TestBed.createComponent(TabsComponent);
 //         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('constructor', () => {
-//         beforeEach(() => {
-//             configService.defaultLayers = MockData.defaultLayersEnabled;
-//         });
-
-//         it('should create TabsComponent', () => {
-//             fixture = TestBed.createComponent(TabsComponent);
-//             component = fixture.debugElement.componentInstance;
-//             expect(component).toBeTruthy();
-//         });
-
-//         it('should call newBlankTab on initialization', () => {
-//             let blankTabSpy = spyOn(TabsComponent.prototype, 'newBlankTab');
-//             fixture = TestBed.createComponent(TabsComponent);
-//             component = fixture.debugElement.componentInstance;
-//             expect(blankTabSpy).toHaveBeenCalled();
-//         });
-
-//         it('should call loadTabs with default layers and handle success', () => {
-//             let loadTabsSuccess = spyOn(TabsComponent.prototype, 'loadTabs').and.returnValue(Promise.resolve());
-//             fixture = TestBed.createComponent(TabsComponent);
-//             component = fixture.debugElement.componentInstance;
-//             expect(loadTabsSuccess).toHaveBeenCalledWith(MockData.defaultLayersEnabled);
-//         });
-
-//         it('should set bannerContent from ConfigService', () => {
-//             fixture = TestBed.createComponent(TabsComponent);
-//             component = fixture.debugElement.componentInstance;
-//             expect(component.bannerContent).toEqual(configService.banner);
-//         });
-//     });
-
-//     describe('ngAfterViewInit', () => {
-//         it('should open Safari warning for Safari version <= 13', () => {
-//             spyOn(is, 'safari').withArgs('<=13').and.returnValue(true);
-//             let dialogSpy = spyOn(dialog, 'open');
-//             component.ngAfterViewInit();
-//             expect(dialogSpy).toHaveBeenCalled();
-//         });
-
-//         it('should not open Safari warning for Safari version > 13 or non-Safari browsers', () => {
-//             spyOn(is, 'safari').withArgs('<=13').and.returnValue(false);
-//             let dialogSpy = spyOn(dialog, 'open');
-//             component.ngAfterViewInit();
-//             expect(dialogSpy).not.toHaveBeenCalled();
-//         });
 //     });
 
 //     describe('loadTabs', () => {
