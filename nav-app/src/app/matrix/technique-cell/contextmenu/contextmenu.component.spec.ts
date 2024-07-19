@@ -8,7 +8,7 @@ import { Tactic, Technique } from "src/app/classes/stix";
 
 class MockTechniqueVM {
 	technique_tactic_union_id = 'mock-id';
-	links = [{url: 'http://example.com'}] as Link[];
+	links = [{url: 'https://example.com'}] as Link[];
 }
 
 class MockViewModel extends ViewModel {
@@ -24,8 +24,6 @@ class MockViewModel extends ViewModel {
 	getTechniqueVM = jasmine.createSpy('getTechniqueVM').and.returnValue(new MockTechniqueVM());
 }
 
-class MockConfigService {}
-
 class MockViewModelsService {
 	pinnedCell = '';
 }
@@ -38,7 +36,7 @@ describe('ContextmenuComponent', () => {
 		await TestBed.configureTestingModule({
 			declarations: [ContextmenuComponent],
 			providers: [
-				{provide: ConfigService, useClass: MockConfigService},
+				{provide: ConfigService, useValue: {}},
 				{provide: ViewModelsService, useClass: MockViewModelsService},
 				{provide: ElementRef, useValue: {nativeElement: {}}}
 			]
@@ -156,7 +154,7 @@ describe('ContextmenuComponent', () => {
 		});
 
 		it('should open technique URL in new tab and close context menu', () => {
-			const mockTechnique = { url: 'http://technique-url.com' } as Technique;
+			const mockTechnique = { url: 'https://technique-url.com' } as Technique;
 			component.technique = mockTechnique;
 			component.viewTechnique();
 			expect(window.open).toHaveBeenCalledWith(mockTechnique.url, '_blank');
@@ -164,7 +162,7 @@ describe('ContextmenuComponent', () => {
 		});
 
 		it('should open tactic URL in new tab and close context menu', () => {
-			const mockTactic = { url: 'http://tactic-url.com' } as Tactic;
+			const mockTactic = { url: 'https://tactic-url.com' } as Tactic;
 			component.tactic = mockTactic;
 			component.viewTactic();
 			expect(window.open).toHaveBeenCalledWith(mockTactic.url, '_blank');
@@ -172,7 +170,7 @@ describe('ContextmenuComponent', () => {
 		});
 
 		it('should open link URL and close context menu', () => {
-			const mockLink = { url: 'http://link-url.com' } as Link;
+			const mockLink = { url: 'https://link-url.com' } as Link;
 			component.openLink(mockLink);
 			expect(window.open).toHaveBeenCalledWith(mockLink.url);
 			expect(component.closeContextmenu).toHaveBeenCalled();
@@ -198,7 +196,7 @@ describe('ContextmenuComponent', () => {
 			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
 			spyOn(component, 'closeContextmenu');
 			spyOn(window, 'open');
-			const customURL = 'http://custom-url.com';
+			const customURL = 'https://custom-url.com';
 			const mockCustomItem = new ContextMenuItem('label', customURL);
 			spyOn(mockCustomItem, 'getReplacedURL').and.returnValue(customURL)
 			component.openCustomContextMenuItem(mockCustomItem);
