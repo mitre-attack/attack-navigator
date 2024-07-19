@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { TabsComponent } from "./tabs.component";
 import { ViewModelsService } from "../services/viewmodels.service";
 import { DataService } from "../services/data.service";
@@ -10,6 +10,7 @@ import { Tab, ViewModel } from "../classes";
 import { MatTabsModule } from "@angular/material/tabs";
 import { ConfigService } from "../services/config.service";
 import * as MockData from '../../tests/utils/mock-data';
+import * as MockLayers from '../../tests/utils/mock-layers';
 import * as is from 'is_js';
 
 describe('TabsComponent', () => {
@@ -45,11 +46,12 @@ describe('TabsComponent', () => {
 			]
 		}).compileComponents();
 
+		configService = TestBed.inject(ConfigService);
+		configService.defaultLayers = MockData.defaultLayersDisabled;
 		fixture = TestBed.createComponent(TabsComponent);
 		component = fixture.componentInstance;
 		viewModelsService = TestBed.inject(ViewModelsService);
 		dataService = TestBed.inject(DataService);
-		configService = TestBed.inject(ConfigService);
 		dialog = TestBed.inject(MatDialog);
 	});
 
@@ -201,6 +203,125 @@ describe('TabsComponent', () => {
             expect(component.dropdownEnabled).toEqual('comment');
         });
     });
+
+    describe('close tab', () => {
+        let firstTab = new Tab('first tab', true, false, 'enterprise-attack', true);
+        let secondTab = new Tab('second tab', true, false, 'enterprise-attack', true);
+        let selectTabSpy;
+        let newBlankTabSpy;
+
+        beforeEach(() => {
+            component.layerTabs = []; // reset tabs
+            component.activeTab = undefined;
+
+            selectTabSpy = spyOn(component, 'selectTab');
+            newBlankTabSpy = spyOn(component, 'newBlankTab');
+        });
+
+        it('should close the first tab and select the second tab', () => {
+            component.layerTabs = [firstTab, secondTab];
+            component.activeTab = firstTab;
+            component.closeTab(firstTab);
+
+            expect(component.layerTabs.length).toEqual(1);
+            expect(component.layerTabs[0]).toBe(secondTab);
+            expect(selectTabSpy).toHaveBeenCalledWith(secondTab);
+            expect(newBlankTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should close the second tab and select the first', () => {
+            component.layerTabs = [firstTab, secondTab];
+            component.activeTab = secondTab;
+            component.closeTab(secondTab);
+
+            expect(component.layerTabs.length).toEqual(1);
+            expect(component.layerTabs[0]).toBe(firstTab);
+            expect(selectTabSpy).toHaveBeenCalledWith(firstTab);
+            expect(newBlankTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should close the only tab and create a new blank tab', () => {
+            component.layerTabs = [firstTab];
+            component.activeTab = firstTab;
+            component.closeTab(firstTab);
+
+            expect(component.layerTabs.length).toEqual(0);
+            expect(selectTabSpy).not.toHaveBeenCalled();
+            expect(newBlankTabSpy).toHaveBeenCalled();
+        });
+
+        it('should close non-active tab', () => {
+            component.layerTabs = [firstTab, secondTab];
+            component.activeTab = firstTab;
+            component.closeTab(secondTab);
+
+            expect(component.layerTabs.length).toEqual(1);
+            expect(component.layerTabs[0]).toBe(firstTab);
+            expect(selectTabSpy).not.toHaveBeenCalled();
+            expect(newBlankTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should close the only tab and not create a new one when allowNoTab is true', () => {
+            component.layerTabs = [firstTab];
+            component.activeTab = firstTab;
+            component.closeTab(firstTab, true);
+
+            expect(component.layerTabs.length).toEqual(0);
+            expect(selectTabSpy).not.toHaveBeenCalled();
+            expect(newBlankTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should close the active tab', () => {
+            component.activeTab = testTab;
+            spyOn(component, 'closeTab');
+            component.closeActiveTab();
+            expect(component.closeTab).toHaveBeenCalledWith(testTab, false);
+        });
+    });
+
+    describe('getUniqueLayerName', () => {
+        let viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
+        let viewModel1 = new ViewModel('layer1', '1', 'enterprise-attack-13', null);
+        const root = 'layer';
+
+        it('should return root layer name when no existing layers match root', () => {
+            component.viewModelsService.viewModels = [];
+            let rootLayerName = component.getUniqueLayerName(root);
+            expect(rootLayerName).toEqual(root);
+        });
+
+        it('should generate unique layer name when existing layer matches root exactly', () => {
+            component.viewModelsService.viewModels = [viewModel];
+            let nextRootName = component.getUniqueLayerName(root);
+            expect(nextRootName).toEqual('layer1');
+        });
+
+        it('should generate unique layer name when multiple existing layers match root', () => {
+            component.viewModelsService.viewModels = [viewModel, viewModel1];
+            let nextRootName = component.getUniqueLayerName(root);
+            expect(nextRootName).toEqual('layer2');
+        });
+    });
+
+    describe('validateInput', () => {
+        it('should validate input and throw errors', waitForAsync(() => {
+            let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
+            let alertSpy = spyOn(window, 'alert');
+            let consoleSpy = spyOn(console, 'error');
+            component.validateInput(layer, 'enterprise-attack-13');
+            expect(consoleSpy).toHaveBeenCalled();
+            expect(alertSpy).toHaveBeenCalled();
+        }));
+
+        it('should validate if the domainVersionID is unique', waitForAsync(() => {
+			let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
+            let alertSpy = spyOn(window, 'alert');
+            let consoleSpy = spyOn(console, 'error');
+            component.validateInput(layer, 'enterprise-attack-13');
+            expect(consoleSpy).toHaveBeenCalled();
+            expect(alertSpy).toHaveBeenCalled();
+        }));
+    });
 });
 
 // import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
@@ -253,105 +374,6 @@ describe('TabsComponent', () => {
 //         http = TestBed.inject(HttpClient);
 //         fixture = TestBed.createComponent(TabsComponent);
 //         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('close tab', () => {
-//         let firstTab = new Tab('first tab', true, false, 'enterprise-attack', true);
-//         let secondTab = new Tab('second tab', true, false, 'enterprise-attack', true);
-//         let selectTabSpy;
-//         let newBlankTabSpy;
-
-//         beforeEach(() => {
-//             component.layerTabs = []; // reset tabs
-//             component.activeTab = undefined;
-
-//             selectTabSpy = spyOn(component, 'selectTab');
-//             newBlankTabSpy = spyOn(component, 'newBlankTab');
-//         });
-
-//         it('should close the first tab and select the second tab', () => {
-//             component.layerTabs = [firstTab, secondTab];
-//             component.activeTab = firstTab;
-//             component.closeTab(firstTab);
-
-//             expect(component.layerTabs.length).toEqual(1);
-//             expect(component.layerTabs[0]).toBe(secondTab);
-//             expect(selectTabSpy).toHaveBeenCalledWith(secondTab);
-//             expect(newBlankTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should close the second tab and select the first', () => {
-//             component.layerTabs = [firstTab, secondTab];
-//             component.activeTab = secondTab;
-//             component.closeTab(secondTab);
-
-//             expect(component.layerTabs.length).toEqual(1);
-//             expect(component.layerTabs[0]).toBe(firstTab);
-//             expect(selectTabSpy).toHaveBeenCalledWith(firstTab);
-//             expect(newBlankTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should close the only tab and create a new blank tab', () => {
-//             component.layerTabs = [firstTab];
-//             component.activeTab = firstTab;
-//             component.closeTab(firstTab);
-
-//             expect(component.layerTabs.length).toEqual(0);
-//             expect(selectTabSpy).not.toHaveBeenCalled();
-//             expect(newBlankTabSpy).toHaveBeenCalled();
-//         });
-
-//         it('should close non-active tab', () => {
-//             component.layerTabs = [firstTab, secondTab];
-//             component.activeTab = firstTab;
-//             component.closeTab(secondTab);
-
-//             expect(component.layerTabs.length).toEqual(1);
-//             expect(component.layerTabs[0]).toBe(firstTab);
-//             expect(selectTabSpy).not.toHaveBeenCalled();
-//             expect(newBlankTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should close the only tab and not create a new one when allowNoTab is true', () => {
-//             component.layerTabs = [firstTab];
-//             component.activeTab = firstTab;
-//             component.closeTab(firstTab, true);
-
-//             expect(component.layerTabs.length).toEqual(0);
-//             expect(selectTabSpy).not.toHaveBeenCalled();
-//             expect(newBlankTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should close the active tab', () => {
-//             component.activeTab = testTab;
-//             spyOn(component, 'closeTab');
-//             component.closeActiveTab();
-//             expect(component.closeTab).toHaveBeenCalledWith(testTab, false);
-//         });
-//     });
-
-//     describe('getUniqueLayerName', () => {
-//         let viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
-//         let viewModel1 = new ViewModel('layer1', '1', 'enterprise-attack-13', null);
-//         const root = 'layer';
-
-//         it('should return root layer name when no existing layers match root', () => {
-//             component.viewModelsService.viewModels = [];
-//             let rootLayerName = component.getUniqueLayerName(root);
-//             expect(rootLayerName).toEqual(root);
-//         });
-
-//         it('should generate unique layer name when existing layer matches root exactly', () => {
-//             component.viewModelsService.viewModels = [viewModel];
-//             let nextRootName = component.getUniqueLayerName(root);
-//             expect(nextRootName).toEqual('layer1');
-//         });
-
-//         it('should generate unique layer name when multiple existing layers match root', () => {
-//             component.viewModelsService.viewModels = [viewModel, viewModel1];
-//             let nextRootName = component.getUniqueLayerName(root);
-//             expect(nextRootName).toEqual('layer2');
-//         });
 //     });
 
 //     describe('tab utility functions', () => {
@@ -550,26 +572,6 @@ describe('TabsComponent', () => {
 //             expect(result).toBeDefined();
 //             expect(typeof result).toBe('string');
 //         });
-//     });
-
-//     describe('validateInput', () => {
-//         it('should validate input and throw errors', waitForAsync(() => {
-//             let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
-//             let alertSpy = spyOn(window, 'alert');
-//             let consoleSpy = spyOn(console, 'error');
-//             component.validateInput(layer, 'enterprise-attack-13');
-//             expect(consoleSpy).toHaveBeenCalled();
-//             expect(alertSpy).toHaveBeenCalled();
-//         }));
-
-//         it('should validate if the domainVersionID is unique', waitForAsync(() => {
-//             let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
-//             let alertSpy = spyOn(window, 'alert');
-//             let consoleSpy = spyOn(console, 'error');
-//             component.validateInput(layer, 'enterprise-attack-13');
-//             expect(consoleSpy).toHaveBeenCalled();
-//             expect(alertSpy).toHaveBeenCalled();
-//         }));
 //     });
 
 //     describe('layerByOperation', () => {
