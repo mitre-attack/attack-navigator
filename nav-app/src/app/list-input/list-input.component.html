@@ -1,7 +1,7 @@
 <div class="list-container">
     <div *ngFor="let item of list; let i = index;" class="divider-container">
         <!-- divider -->
-        <div class="divider" *ngIf="item.divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
+        <div class="divider" *ngIf="item.divider" onkeypress="removeDivider(i)" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
             <mat-divider></mat-divider>
             <mat-icon class="icon">remove</mat-icon>
             <mat-divider></mat-divider>

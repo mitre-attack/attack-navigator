@@ -22,7 +22,6 @@ import { Technique } from "../classes/stix";
 describe('TabsComponent', () => {
 	let component: TabsComponent;
 	let fixture: ComponentFixture<TabsComponent>;
-	let viewModelsService: ViewModelsService;
 	let dataService: DataService;
 	let configService: ConfigService;
 	let dialog: MatDialog;
@@ -57,7 +56,6 @@ describe('TabsComponent', () => {
 		configService.defaultLayers = MockData.defaultLayersDisabled;
 		fixture = TestBed.createComponent(TabsComponent);
 		component = fixture.componentInstance;
-		viewModelsService = TestBed.inject(ViewModelsService);
 		dataService = TestBed.inject(DataService);
 		dialog = TestBed.inject(MatDialog);
 		http = TestBed.inject(HttpClient);
