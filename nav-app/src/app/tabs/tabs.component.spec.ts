@@ -100,6 +100,107 @@ describe('TabsComponent', () => {
             expect(dialogSpy).not.toHaveBeenCalled();
         });
     });
+
+    describe('loadTabs', () => {
+        it('should load bundle when all fragment values are provided', async () => {
+            let bundleURL = 'testbundleurl';
+            let bundleVersion = '1';
+            let bundleDomain = 'enterprise-attack';
+            spyOn(component, 'getNamedFragmentValue').and.returnValues([bundleURL], [bundleVersion], [bundleDomain]);
+            let newLayerSpy = spyOn(component, 'newLayerFromURL');
+            await component.loadTabs(MockData.defaultLayersDisabled);
+            expect(newLayerSpy).toHaveBeenCalledWith({ url: bundleURL, version: bundleVersion, identifier: bundleDomain });
+        });
+
+        it('should load layers from URL when provided', async () => {
+            let layerURLs = ['testlayerurl1', 'testlayerurl2'];
+            spyOn(component, 'getNamedFragmentValue')
+                .and.returnValue([]) // return empty list for bundle fragments
+                .withArgs('layerURL')
+                .and.returnValue(layerURLs);
+            let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
+            await component.loadTabs(MockData.defaultLayersDisabled);
+            expect(loadLayerSpy).toHaveBeenCalledTimes(layerURLs.length);
+        });
+
+        it('should not load default layers when disabled', async () => {
+            spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
+            let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
+            await component.loadTabs(MockData.defaultLayersDisabled);
+            expect(loadLayerSpy).not.toHaveBeenCalled();
+        });
+
+        it('should load default layers when enabled', async () => {
+            spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
+            let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
+            await component.loadTabs(MockData.defaultLayersEnabled);
+            expect(loadLayerSpy).toHaveBeenCalledTimes(MockData.defaultLayersEnabled.urls.length);
+        });
+    });
+
+    describe('openTab', () => {
+        let existingTab = new Tab('existing test tab', true, false, 'enterprise-attack', true);
+        let selectTabSpy;
+        let closeActiveTabSpy;
+
+        beforeEach(() => {
+            component.layerTabs = []; // reset tabs
+            component.activeTab = undefined;
+
+            selectTabSpy = spyOn(component, 'selectTab');
+            closeActiveTabSpy = spyOn(component, 'closeActiveTab');
+        });
+
+        it('should change to existing tab', () => {
+            component.layerTabs = [existingTab];
+            component.openTab(existingTab.title, null, existingTab.isCloseable, true, false);
+            expect(selectTabSpy).toHaveBeenCalledWith(existingTab);
+        });
+
+        it('should create and select new tab', () => {
+            component.openTab('new test tab', null, false, false, true);
+            expect(component.layerTabs.length).toEqual(1);
+            expect(component.layerTabs[0].title).toEqual('new test tab');
+            expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[0]);
+            expect(closeActiveTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should replace the active tab', () => {
+            component.layerTabs = [existingTab];
+            component.activeTab = existingTab;
+            component.openTab('new test tab', null, false, true, true);
+            console.log('mytest', component.layerTabs);
+            expect(component.layerTabs.length).toEqual(2);
+            expect(component.layerTabs[0].title).toEqual('new test tab');
+            expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[0]);
+            expect(closeActiveTabSpy).not.toHaveBeenCalled();
+        });
+
+        it('should close current tab and select new tab', () => {
+            let newTab = new Tab('new tab', true, false, 'enterprise-attack', true);
+            component.layerTabs = [existingTab, newTab];
+            component.activeTab = newTab;
+            component.openTab('new test tab', null, false, true, true);
+            expect(component.layerTabs.length).toEqual(3);
+            expect(component.layerTabs[1].title).toEqual('new test tab');
+            expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[1]);
+            expect(closeActiveTabSpy).toHaveBeenCalled();
+        });
+
+        it('should reset dropdown when selecting new tab', () => {
+            component.dropdownEnabled = 'comment';
+            component.openTab('new test tab', null, false, false, true);
+            expect(component.dropdownEnabled).toEqual('');
+        });
+
+        it('should not reset dropdown when replacing active tab', () => {
+            component.dropdownEnabled = 'comment';
+            component.layerTabs = [existingTab];
+            component.activeTab = existingTab;
+            component.openTab('new test tab', null, false, true, true);
+            expect(component.dropdownEnabled).toEqual('comment');
+        });
+    });
 });
 
 // import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
@@ -152,107 +253,6 @@ describe('TabsComponent', () => {
 //         http = TestBed.inject(HttpClient);
 //         fixture = TestBed.createComponent(TabsComponent);
 //         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('loadTabs', () => {
-//         it('should load bundle when all fragment values are provided', async () => {
-//             let bundleURL = 'testbundleurl';
-//             let bundleVersion = '1';
-//             let bundleDomain = 'enterprise-attack';
-//             spyOn(component, 'getNamedFragmentValue').and.returnValues([bundleURL], [bundleVersion], [bundleDomain]);
-//             let newLayerSpy = spyOn(component, 'newLayerFromURL');
-//             await component.loadTabs(MockData.defaultLayersDisabled);
-//             expect(newLayerSpy).toHaveBeenCalledWith({ url: bundleURL, version: bundleVersion, identifier: bundleDomain });
-//         });
-
-//         it('should load layers from URL when provided', async () => {
-//             let layerURLs = ['testlayerurl1', 'testlayerurl2'];
-//             spyOn(component, 'getNamedFragmentValue')
-//                 .and.returnValue([]) // return empty list for bundle fragments
-//                 .withArgs('layerURL')
-//                 .and.returnValue(layerURLs);
-//             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-//             await component.loadTabs(MockData.defaultLayersDisabled);
-//             expect(loadLayerSpy).toHaveBeenCalledTimes(layerURLs.length);
-//         });
-
-//         it('should not load default layers when disabled', async () => {
-//             spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
-//             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-//             await component.loadTabs(MockData.defaultLayersDisabled);
-//             expect(loadLayerSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should load default layers when enabled', async () => {
-//             spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
-//             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-//             await component.loadTabs(MockData.defaultLayersEnabled);
-//             expect(loadLayerSpy).toHaveBeenCalledTimes(MockData.defaultLayersEnabled.urls.length);
-//         });
-//     });
-
-//     describe('openTab', () => {
-//         let existingTab = new Tab('existing test tab', true, false, 'enterprise-attack', true);
-//         let selectTabSpy;
-//         let closeActiveTabSpy;
-
-//         beforeEach(() => {
-//             component.layerTabs = []; // reset tabs
-//             component.activeTab = undefined;
-
-//             selectTabSpy = spyOn(component, 'selectTab');
-//             closeActiveTabSpy = spyOn(component, 'closeActiveTab');
-//         });
-
-//         it('should change to existing tab', () => {
-//             component.layerTabs = [existingTab];
-//             component.openTab(existingTab.title, null, existingTab.isCloseable, true, false);
-//             expect(selectTabSpy).toHaveBeenCalledWith(existingTab);
-//         });
-
-//         it('should create and select new tab', () => {
-//             component.openTab('new test tab', null, false, false, true);
-//             expect(component.layerTabs.length).toEqual(1);
-//             expect(component.layerTabs[0].title).toEqual('new test tab');
-//             expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[0]);
-//             expect(closeActiveTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should replace the active tab', () => {
-//             component.layerTabs = [existingTab];
-//             component.activeTab = existingTab;
-//             component.openTab('new test tab', null, false, true, true);
-//             console.log('mytest', component.layerTabs);
-//             expect(component.layerTabs.length).toEqual(2);
-//             expect(component.layerTabs[0].title).toEqual('new test tab');
-//             expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[0]);
-//             expect(closeActiveTabSpy).not.toHaveBeenCalled();
-//         });
-
-//         it('should close current tab and select new tab', () => {
-//             let newTab = new Tab('new tab', true, false, 'enterprise-attack', true);
-//             component.layerTabs = [existingTab, newTab];
-//             component.activeTab = newTab;
-//             component.openTab('new test tab', null, false, true, true);
-//             expect(component.layerTabs.length).toEqual(3);
-//             expect(component.layerTabs[1].title).toEqual('new test tab');
-//             expect(selectTabSpy).toHaveBeenCalledWith(component.layerTabs[1]);
-//             expect(closeActiveTabSpy).toHaveBeenCalled();
-//         });
-
-//         it('should reset dropdown when selecting new tab', () => {
-//             component.dropdownEnabled = 'comment';
-//             component.openTab('new test tab', null, false, false, true);
-//             expect(component.dropdownEnabled).toEqual('');
-//         });
-
-//         it('should not reset dropdown when replacing active tab', () => {
-//             component.dropdownEnabled = 'comment';
-//             component.layerTabs = [existingTab];
-//             component.activeTab = existingTab;
-//             component.openTab('new test tab', null, false, true, true);
-//             expect(component.dropdownEnabled).toEqual('comment');
-//         });
 //     });
 
 //     describe('close tab', () => {
