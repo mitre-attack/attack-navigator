@@ -6,7 +6,7 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { FormsModule } from "@angular/forms";
-import { Domain, Tab, Version, ViewModel } from "../classes";
+import { Domain, Tab, TechniqueVM, Version, ViewModel } from "../classes";
 import { MatTabsModule } from "@angular/material/tabs";
 import { ConfigService } from "../services/config.service";
 import * as MockData from '../../tests/utils/mock-data';
@@ -17,6 +17,7 @@ import { ChangelogComponent } from "../changelog/changelog.component";
 import { HelpComponent } from "../help/help.component";
 import { LayerInformationComponent } from "../layer-information/layer-information.component";
 import { SvgExportComponent } from "../svg-export/svg-export.component";
+import { Technique } from "../classes/stix";
 
 describe('TabsComponent', () => {
 	let component: TabsComponent;
@@ -527,6 +528,117 @@ describe('TabsComponent', () => {
             expect(typeof result).toBe('string');
         });
     });
+
+    describe('layerByOperation', () => {
+        it('should create new layer by operation based on user input', () => {
+            component.opSettings.scoreExpression = 'a+b';
+            component.opSettings.domain = 'enterprise-atack-13';
+            let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
+            let vm2 = component.viewModelsService.newViewModel('layer1', 'enterprise-attack-13');
+            component.openTab('layer', vm1, true, true, true, true);
+            component.openTab('layer1', vm2, true, true, true, true);
+            expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
+            component.dataService.setUpDomains(MockData.configData.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.opSettings.domain = 'enterprise-attack-13';
+            expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.dataService.getDomain(component.opSettings.domain).dataLoaded = false;
+            component.layerByOperation();
+            expect(component.layerTabs.length).toEqual(2);
+        });
+
+        it('should create new layer by operation based on user input when data is loaded', () => {
+            component.opSettings.scoreExpression = 'a+2';
+            let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
+            component.openTab('layer', vm1, true, true, true, true);
+            expect(component.getScoreExpressionError()).toEqual(null);
+            component.dataService.setUpDomains(MockData.configData.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
+            component.opSettings.domain = 'enterprise-attack-13';
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.layerByOperation();
+            expect(component.layerTabs.length).toEqual(2);
+        });
+
+        it('should create new layer by operation based on user input when data is loaded errors', async () => {
+            component.opSettings.scoreExpression = 'a+b+2';
+            expect(component.getScoreExpressionError()).toEqual('Variable b does not match any layers');
+            let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
+            let vm2 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-12');
+            component.openTab('layer', vm1, true, true, true, true);
+            component.openTab('layer2', vm2, true, true, true, true);
+
+            component.dataService.setUpDomains(MockData.configDataExtended.entries); // set up data
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
+            component.opSettings.domain = 'enterprise-attack-13';
+            let alertSpy = spyOn(window, 'alert');
+            let consoleSpy = spyOn(console, 'error');
+            component.layerByOperation();
+            expect(consoleSpy).toHaveBeenCalled();
+            expect(alertSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('versionUpgradeDialog', () => {
+        it('should upgrade layer', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
+                Promise.resolve({ oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13' })
+            );
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer with domain data loaded', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
+            let st1 = new Technique(MockData.T0000_000, [], null);
+            let t1 = new Technique(MockData.T0000, [st1], null);
+            let tvm_1 = new TechniqueVM('T0000^tactic-name');
+            tvm_1.showSubtechniques = true;
+            let stvm_1 = new TechniqueVM('0000.000^tactic-name');
+            vm1.setTechniqueVM(tvm_1);
+            vm1.setTechniqueVM(stvm_1);
+            component.dataService.domains[0].techniques.push(t1);
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+    });
 });
 
 // import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
@@ -579,117 +691,6 @@ describe('TabsComponent', () => {
 //         http = TestBed.inject(HttpClient);
 //         fixture = TestBed.createComponent(TabsComponent);
 //         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('layerByOperation', () => {
-//         it('should create new layer by operation based on user input', () => {
-//             component.opSettings.scoreExpression = 'a+b';
-//             component.opSettings.domain = 'enterprise-atack-13';
-//             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
-//             let vm2 = component.viewModelsService.newViewModel('layer1', 'enterprise-attack-13');
-//             component.openTab('layer', vm1, true, true, true, true);
-//             component.openTab('layer1', vm2, true, true, true, true);
-//             expect(component.getScoreExpressionError()).toEqual('Layer b does not match the chosen domain');
-//             component.dataService.setUpDomains(MockData.configData.entries); // set up data
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.opSettings.domain = 'enterprise-attack-13';
-//             expect(component.getFilteredVMs()).toEqual(component.viewModelsService.viewModels);
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.dataService.getDomain(component.opSettings.domain).dataLoaded = false;
-//             component.layerByOperation();
-//             expect(component.layerTabs.length).toEqual(2);
-//         });
-
-//         it('should create new layer by operation based on user input when data is loaded', () => {
-//             component.opSettings.scoreExpression = 'a+2';
-//             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
-//             component.openTab('layer', vm1, true, true, true, true);
-//             expect(component.getScoreExpressionError()).toEqual(null);
-//             component.dataService.setUpDomains(MockData.configData.entries); // set up data
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
-//             component.opSettings.domain = 'enterprise-attack-13';
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.layerByOperation();
-//             expect(component.layerTabs.length).toEqual(2);
-//         });
-
-//         it('should create new layer by operation based on user input when data is loaded errors', async () => {
-//             component.opSettings.scoreExpression = 'a+b+2';
-//             expect(component.getScoreExpressionError()).toEqual('Variable b does not match any layers');
-//             let vm1 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-13');
-//             let vm2 = component.viewModelsService.newViewModel('layer', 'enterprise-attack-12');
-//             component.openTab('layer', vm1, true, true, true, true);
-//             component.openTab('layer2', vm2, true, true, true, true);
-
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries); // set up data
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO); //load the data
-//             component.opSettings.domain = 'enterprise-attack-13';
-//             let alertSpy = spyOn(window, 'alert');
-//             let consoleSpy = spyOn(console, 'error');
-//             component.layerByOperation();
-//             expect(consoleSpy).toHaveBeenCalled();
-//             expect(alertSpy).toHaveBeenCalled();
-//         });
-//     });
-
-//     describe('versionUpgradeDialog', () => {
-//         it('should upgrade layer', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
-//                 Promise.resolve({ oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13' })
-//             );
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(1);
-//             });
-//         }));
-
-//         it('should not upgrade layer', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
-
-//         it('should not upgrade layer with domain data loaded', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
-//             let st1 = new Technique(MockData.T0000_000, [], null);
-//             let t1 = new Technique(MockData.T0000, [st1], null);
-//             let tvm_1 = new TechniqueVM('T0000^tactic-name');
-//             tvm_1.showSubtechniques = true;
-//             let stvm_1 = new TechniqueVM('0000.000^tactic-name');
-//             vm1.setTechniqueVM(tvm_1);
-//             vm1.setTechniqueVM(stvm_1);
-//             component.dataService.domains[0].techniques.push(t1);
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
 //     });
 
 //     describe('upgradeLayer', () => {
