@@ -1,17 +1,22 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from "@angular/core/testing";
 import { TabsComponent } from "./tabs.component";
 import { ViewModelsService } from "../services/viewmodels.service";
 import { DataService } from "../services/data.service";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { FormsModule } from "@angular/forms";
-import { Tab, ViewModel } from "../classes";
+import { Domain, Tab, Version, ViewModel } from "../classes";
 import { MatTabsModule } from "@angular/material/tabs";
 import { ConfigService } from "../services/config.service";
 import * as MockData from '../../tests/utils/mock-data';
 import * as MockLayers from '../../tests/utils/mock-layers';
 import * as is from 'is_js';
+import { of } from "rxjs";
+import { ChangelogComponent } from "../changelog/changelog.component";
+import { HelpComponent } from "../help/help.component";
+import { LayerInformationComponent } from "../layer-information/layer-information.component";
+import { SvgExportComponent } from "../svg-export/svg-export.component";
 
 describe('TabsComponent', () => {
 	let component: TabsComponent;
@@ -20,6 +25,7 @@ describe('TabsComponent', () => {
 	let dataService: DataService;
 	let configService: ConfigService;
 	let dialog: MatDialog;
+	let http: HttpClient;
 
     let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
     let loadData = {
@@ -53,6 +59,7 @@ describe('TabsComponent', () => {
 		viewModelsService = TestBed.inject(ViewModelsService);
 		dataService = TestBed.inject(DataService);
 		dialog = TestBed.inject(MatDialog);
+		http = TestBed.inject(HttpClient);
 	});
 
     describe('constructor', () => {
@@ -322,6 +329,204 @@ describe('TabsComponent', () => {
             expect(alertSpy).toHaveBeenCalled();
         }));
     });
+
+    describe('tab utility functions', () => {
+        it('should handle links', () => {
+            configService.featureList = [
+                {
+                    name: 'technique_controls',
+                    enabled: true,
+                    description: 'Disable to disable all subfeatures',
+                    subfeatures: [
+                        { name: 'disable_techniques', enabled: false, description: 'Disable to remove the ability to disable techniques.' },
+                    ],
+                },
+                { name: 'sticky_toolbar', enabled: false },
+            ];
+            expect(component.getNamedFragmentValue('sticky_toolbar')).toEqual([]);
+            expect(
+                component.getNamedFragmentValue('sticky_toolbar', 'https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false')
+            ).toEqual(['false']);
+            expect(component.trackByFunction(1)).toEqual(1);
+            component.addLayerLink();
+            expect(component.layerLinkURLs.length).toEqual(1);
+            component.addLayerLink();
+            component.removeLayerLink(1);
+            expect(component.layerLinkURLs.length).toEqual(1);
+            component.getLayerLink();
+            component.removeLayerLink(0);
+            let url_string = component.getLayerLink();
+            expect(url_string).toContain('disable_techniques=false&sticky_toolbar=false');
+        });
+
+        it('should copy link', fakeAsync(() => {
+            let mockedDocElement = document.createElement('input');
+            mockedDocElement.id = 'layerLink';
+            mockedDocElement.value = 'test1';
+            mockedDocElement.type = 'text';
+            document.getElementById = jasmine.createSpy('layerLink').and.returnValue(mockedDocElement);
+            const logSpy = spyOn(console, 'debug');
+            component.copyLayerLink();
+            flush();
+            expect(logSpy).toHaveBeenCalledWith('copied', mockedDocElement.value);
+        }));
+
+        it('should open upload prompt', fakeAsync(() => {
+            let mockedDocElement = document.createElement('input');
+            mockedDocElement.id = 'uploader';
+            mockedDocElement.value = 'test1';
+            mockedDocElement.type = 'text';
+            document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement);
+            const logSpy = spyOn(mockedDocElement, 'click');
+            component.openUploadPrompt();
+            flush();
+            expect(logSpy).toHaveBeenCalled();
+        }));
+
+        it('should adjust the header height', () => {
+            let newHeight = 5;
+            component.adjustHeader(newHeight);
+            expect(component.adjustedHeaderHeight).toEqual(newHeight);
+        });
+
+        it('should call openTab when opening a new blank tab', () => {
+            spyOn(component, 'openTab');
+            component.newBlankTab();
+            expect(component.openTab).toHaveBeenCalled();
+        });
+
+        it('should select the specified tab', () => {
+            component.selectTab(testTab);
+            expect(component.activeTab).toBe(testTab);
+        });
+
+        it('should activate clicked tab and reset dropdown', () => {
+            let activeTab = new Tab('active tab', true, false, 'enterprise-attack', true);
+            let clickedTab = new Tab('clicked tab', true, false, 'enterprise-attack', true);
+            component.activeTab = activeTab;
+
+            component.handleTabClick(clickedTab);
+
+            expect(component.activeTab).toBe(clickedTab);
+            expect(component.dropdownEnabled).toEqual('');
+        });
+
+        it('should toggle dropdown state if clicked tab is active', () => {
+            let activeTab = new Tab('active tab', true, false, 'enterprise-attack', true);
+            component.activeTab = activeTab;
+            component.dropdownEnabled = '';
+
+            component.handleTabClick(activeTab);
+
+            expect(component.activeTab).toEqual(activeTab);
+            expect(component.dropdownEnabled).toEqual('description');
+
+            component.handleTabClick(activeTab);
+
+            expect(component.activeTab).toEqual(activeTab);
+            expect(component.dropdownEnabled).toEqual('');
+        });
+
+        it('should filter domains based on version', () => {
+            let v13 = new Version('ATT&CK v13', '13');
+            let v12 = new Version('ATT&CK v12', '12');
+            let domainv13 = new Domain('enterprise-attack-13', 'Enterprise ATT&CK', v13);
+            let domainv12 = new Domain('enterprise-attack-12', 'Enterprise ATT&CK', v12);
+            dataService.domains = [domainv13, domainv12];
+            let filteredDomains = component.filterDomains(v12);
+            expect(filteredDomains).toEqual([domainv12]);
+        });
+
+        it('should return empty array if no domains match the version', () => {
+            let v13 = new Version('ATT&CK v13', '13');
+            let v12 = new Version('ATT&CK v12', '12');
+            let domainv13 = new Domain('enterprise-attack-13', 'Enterprise ATT&CK', v13);
+            dataService.domains = [domainv13];
+            let filteredDomains = component.filterDomains(v12);
+            expect(filteredDomains).toEqual([]);
+        });
+
+        it('should check if feature is defined in config file', () => {
+            component.configService.setFeature_object(MockData.configTechniqueControls);
+            expect(component.hasFeature('manual_color')).toBeTrue();
+        });
+
+        it('should emit event on theme change', () => {
+            spyOn(component.onUserThemeChange, 'emit');
+            component.handleUserThemeChange('dark');
+            expect(component.onUserThemeChange.emit).toHaveBeenCalled();
+        });
+
+        it('should open the selected dialog', () => {
+            const settings = { maxWidth: '75ch', panelClass: component.userTheme, autoFocus: false, data: {theme: undefined} };
+            const openDialogSpy = spyOn(component.dialog, 'open');
+
+            // layer dialog
+            component.openDialog('layers');
+            expect(openDialogSpy).toHaveBeenCalledWith(LayerInformationComponent, settings);
+
+            // help dialog
+            component.openDialog('help');
+            expect(openDialogSpy).toHaveBeenCalledWith(HelpComponent, settings);
+
+            // changelog dialog
+            component.openDialog('changelog');
+            expect(openDialogSpy).toHaveBeenCalledWith(ChangelogComponent, settings);
+        });
+
+        it('should open the SVG exporter dialog', () => {
+            const openDialogSpy = spyOn(component.dialog, 'open');
+            let viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
+
+            component.openSVGDialog(viewModel);
+            const settings = {
+                data: { vm: viewModel },
+                panelClass: ['dialog-custom', component.userTheme],
+                autoFocus: false,
+            };
+            expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
+        });
+
+        it('should create new layer from url', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configData.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.http = http;
+            spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(MockLayers.layerFile1)));
+            expect(component.dataService.domains.length).toEqual(2);
+        }));
+
+        it('should read and open json file', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configData.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let mockedDocElement = document.createElement('input');
+            mockedDocElement.id = 'uploader';
+            mockedDocElement.value = 'test1';
+            mockedDocElement.type = 'text';
+            document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement);
+            const logSpy = spyOn(mockedDocElement, 'click');
+            component.openUploadPrompt();
+            expect(logSpy).toHaveBeenCalled();
+            let blob = new Blob([JSON.stringify(MockLayers.layerFile2)], { type: 'text/json' });
+            let file = new File([blob], 'layer-1.json');
+            component.readJSONFile(file).then(() => {
+                expect(component.layerTabs.length).toEqual(1);
+            });
+        }));
+
+        it('should retrieve the minimum supported version', () => {
+            const result = component.minimumSupportedVersion;
+            expect(result).toBeDefined();
+            expect(result).toBe('4.0');
+        });
+
+        it('should retrieve the current navigator version', () => {
+            const result = component.navVersion;
+            expect(result).toBeDefined();
+            expect(typeof result).toBe('string');
+        });
+    });
 });
 
 // import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
@@ -374,204 +579,6 @@ describe('TabsComponent', () => {
 //         http = TestBed.inject(HttpClient);
 //         fixture = TestBed.createComponent(TabsComponent);
 //         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('tab utility functions', () => {
-//         it('should handle links', () => {
-//             configService.featureList = [
-//                 {
-//                     name: 'technique_controls',
-//                     enabled: true,
-//                     description: 'Disable to disable all subfeatures',
-//                     subfeatures: [
-//                         { name: 'disable_techniques', enabled: false, description: 'Disable to remove the ability to disable techniques.' },
-//                     ],
-//                 },
-//                 { name: 'sticky_toolbar', enabled: false },
-//             ];
-//             expect(component.getNamedFragmentValue('sticky_toolbar')).toEqual([]);
-//             expect(
-//                 component.getNamedFragmentValue('sticky_toolbar', 'https://mitre-attack.github.io/attack-navigator/#sticky_toolbar=false')
-//             ).toEqual(['false']);
-//             expect(component.trackByFunction(1)).toEqual(1);
-//             component.addLayerLink();
-//             expect(component.layerLinkURLs.length).toEqual(1);
-//             component.addLayerLink();
-//             component.removeLayerLink(1);
-//             expect(component.layerLinkURLs.length).toEqual(1);
-//             component.getLayerLink();
-//             component.removeLayerLink(0);
-//             let url_string = component.getLayerLink();
-//             expect(url_string).toContain('disable_techniques=false&sticky_toolbar=false');
-//         });
-
-//         it('should copy link', fakeAsync(() => {
-//             let mockedDocElement = document.createElement('input');
-//             mockedDocElement.id = 'layerLink';
-//             mockedDocElement.value = 'test1';
-//             mockedDocElement.type = 'text';
-//             document.getElementById = jasmine.createSpy('layerLink').and.returnValue(mockedDocElement);
-//             const logSpy = spyOn(console, 'debug');
-//             component.copyLayerLink();
-//             flush();
-//             expect(logSpy).toHaveBeenCalledWith('copied', mockedDocElement.value);
-//         }));
-
-//         it('should open upload prompt', fakeAsync(() => {
-//             let mockedDocElement = document.createElement('input');
-//             mockedDocElement.id = 'uploader';
-//             mockedDocElement.value = 'test1';
-//             mockedDocElement.type = 'text';
-//             document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement);
-//             const logSpy = spyOn(mockedDocElement, 'click');
-//             component.openUploadPrompt();
-//             flush();
-//             expect(logSpy).toHaveBeenCalled();
-//         }));
-
-//         it('should adjust the header height', () => {
-//             let newHeight = 5;
-//             component.adjustHeader(newHeight);
-//             expect(component.adjustedHeaderHeight).toEqual(newHeight);
-//         });
-
-//         it('should call openTab when opening a new blank tab', () => {
-//             spyOn(component, 'openTab');
-//             component.newBlankTab();
-//             expect(component.openTab).toHaveBeenCalled();
-//         });
-
-//         it('should select the specified tab', () => {
-//             component.selectTab(testTab);
-//             expect(component.activeTab).toBe(testTab);
-//         });
-
-//         it('should activate clicked tab and reset dropdown', () => {
-//             let activeTab = new Tab('active tab', true, false, 'enterprise-attack', true);
-//             let clickedTab = new Tab('clicked tab', true, false, 'enterprise-attack', true);
-//             component.activeTab = activeTab;
-
-//             component.handleTabClick(clickedTab);
-
-//             expect(component.activeTab).toBe(clickedTab);
-//             expect(component.dropdownEnabled).toEqual('');
-//         });
-
-//         it('should toggle dropdown state if clicked tab is active', () => {
-//             let activeTab = new Tab('active tab', true, false, 'enterprise-attack', true);
-//             component.activeTab = activeTab;
-//             component.dropdownEnabled = '';
-
-//             component.handleTabClick(activeTab);
-
-//             expect(component.activeTab).toEqual(activeTab);
-//             expect(component.dropdownEnabled).toEqual('description');
-
-//             component.handleTabClick(activeTab);
-
-//             expect(component.activeTab).toEqual(activeTab);
-//             expect(component.dropdownEnabled).toEqual('');
-//         });
-
-//         it('should filter domains based on version', () => {
-//             let v13 = new Version('ATT&CK v13', '13');
-//             let v12 = new Version('ATT&CK v12', '12');
-//             let domainv13 = new Domain('enterprise-attack-13', 'Enterprise ATT&CK', v13);
-//             let domainv12 = new Domain('enterprise-attack-12', 'Enterprise ATT&CK', v12);
-//             dataService.domains = [domainv13, domainv12];
-//             let filteredDomains = component.filterDomains(v12);
-//             expect(filteredDomains).toEqual([domainv12]);
-//         });
-
-//         it('should return empty array if no domains match the version', () => {
-//             let v13 = new Version('ATT&CK v13', '13');
-//             let v12 = new Version('ATT&CK v12', '12');
-//             let domainv13 = new Domain('enterprise-attack-13', 'Enterprise ATT&CK', v13);
-//             dataService.domains = [domainv13];
-//             let filteredDomains = component.filterDomains(v12);
-//             expect(filteredDomains).toEqual([]);
-//         });
-
-//         it('should check if feature is defined in config file', () => {
-//             component.configService.setFeature_object(MockData.configTechniqueControls);
-//             expect(component.hasFeature('manual_color')).toBeTrue();
-//         });
-
-//         it('should emit event on theme change', () => {
-//             spyOn(component.onUserThemeChange, 'emit');
-//             component.handleUserThemeChange('dark');
-//             expect(component.onUserThemeChange.emit).toHaveBeenCalled();
-//         });
-
-//         it('should open the selected dialog', () => {
-//             const settings = { maxWidth: '75ch', panelClass: component.userTheme, autoFocus: false, data: {theme: undefined} };
-//             const openDialogSpy = spyOn(component.dialog, 'open');
-
-//             // layer dialog
-//             component.openDialog('layers');
-//             expect(openDialogSpy).toHaveBeenCalledWith(LayerInformationComponent, settings);
-
-//             // help dialog
-//             component.openDialog('help');
-//             expect(openDialogSpy).toHaveBeenCalledWith(HelpComponent, settings);
-
-//             // changelog dialog
-//             component.openDialog('changelog');
-//             expect(openDialogSpy).toHaveBeenCalledWith(ChangelogComponent, settings);
-//         });
-
-//         it('should open the SVG exporter dialog', () => {
-//             const openDialogSpy = spyOn(component.dialog, 'open');
-//             let viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
-
-//             component.openSVGDialog(viewModel);
-//             const settings = {
-//                 data: { vm: viewModel },
-//                 panelClass: ['dialog-custom', component.userTheme],
-//                 autoFocus: false,
-//             };
-//             expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
-//         });
-
-//         it('should create new layer from url', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configData.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.http = http;
-//             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.newLayerFromURL(loadData, JSON.parse(JSON.stringify(MockLayers.layerFile1)));
-//             expect(component.dataService.domains.length).toEqual(2);
-//         }));
-
-//         it('should read and open json file', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configData.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let mockedDocElement = document.createElement('input');
-//             mockedDocElement.id = 'uploader';
-//             mockedDocElement.value = 'test1';
-//             mockedDocElement.type = 'text';
-//             document.getElementById = jasmine.createSpy('uploader').and.returnValue(mockedDocElement);
-//             const logSpy = spyOn(mockedDocElement, 'click');
-//             component.openUploadPrompt();
-//             expect(logSpy).toHaveBeenCalled();
-//             let blob = new Blob([JSON.stringify(MockLayers.layerFile2)], { type: 'text/json' });
-//             let file = new File([blob], 'layer-1.json');
-//             component.readJSONFile(file).then(() => {
-//                 expect(component.layerTabs.length).toEqual(1);
-//             });
-//         }));
-
-//         it('should retrieve the minimum supported version', () => {
-//             const result = component.minimumSupportedVersion;
-//             expect(result).toBeDefined();
-//             expect(result).toBe('4.0');
-//         });
-
-//         it('should retrieve the current navigator version', () => {
-//             const result = component.navVersion;
-//             expect(result).toBeDefined();
-//             expect(typeof result).toBe('string');
-//         });
 //     });
 
 //     describe('layerByOperation', () => {
