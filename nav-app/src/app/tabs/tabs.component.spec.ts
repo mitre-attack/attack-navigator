@@ -639,182 +639,117 @@ describe('TabsComponent', () => {
             });
         }));
     });
+
+    describe('upgradeLayer', () => {
+        it('should upgrade layer', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
+                Promise.resolve({ oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13' })
+            );
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer with default layer enabled', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, true);
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer with default layer enabled and domain data loaded', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
+            let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, bb, false, true);
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+
+        it('should not upgrade layer with domain data loaded', waitForAsync(() => {
+            component.dataService.setUpDomains(MockData.configDataExtended.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
+            let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
+            let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
+            let st1 = new Technique(MockData.T0000_000, [], null);
+            let t1 = new Technique(MockData.T0000, [st1], null);
+            let tvm_1 = new TechniqueVM('T0000^tactic-name');
+            tvm_1.showSubtechniques = true;
+            let stvm_1 = new TechniqueVM('0000.000^tactic-name');
+            vm1.setTechniqueVM(tvm_1);
+            vm1.setTechniqueVM(stvm_1);
+            component.dataService.domains[0].techniques.push(t1);
+            let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
+            spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
+            component.upgradeLayer(vm1, layer, false, false).then(() => {
+                expect(versionUpgradeSpy).toHaveBeenCalled();
+            });
+            fixture.whenStable().then(() => {
+                expect(component.layerTabs.length).toEqual(2);
+            });
+        }));
+    });
+
+    describe('loadLayerFromURL', () => {
+        it('should throw errors when loading from url', waitForAsync(() => {
+            let versions = [
+                {
+                    name: 'ATT&CK v13',
+                    version: '13',
+                    domains: [
+                        {
+                            name: 'Mobile',
+                            identifier: 'mobile-attack',
+                            data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json'],
+                        },
+                    ],
+                },
+            ];
+            component.dataService.setUpDomains(versions);
+            component.dataService.latestVersion = new Version('mobile-attack-13', '13');
+            component.http = http;
+            spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
+            let alertSpy = spyOn(window, 'alert');
+            let consoleSpy = spyOn(console, 'error');
+            component
+                .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
+                .then(() => {
+                    expect(consoleSpy).toHaveBeenCalled();
+                    expect(alertSpy).toHaveBeenCalled();
+                });
+        }));
+    });
 });
-
-// import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
-// import { HttpClientTestingModule } from '@angular/common/http/testing';
-// import { TabsComponent } from './tabs.component';
-// import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-// import { DataService } from '../services/data.service';
-// import { Tab, TechniqueVM, Domain, Version, ViewModel } from '../classes';
-// import { HelpComponent } from '../help/help.component';
-// import { SvgExportComponent } from '../svg-export/svg-export.component';
-// import { MatSnackBar } from '@angular/material/snack-bar';
-// import { ChangelogComponent } from '../changelog/changelog.component';
-// import { LayerInformationComponent } from '../layer-information/layer-information.component';
-// import * as is from 'is_js';
-// import { HttpClient } from '@angular/common/http';
-// import { of } from 'rxjs';
-// import { Technique } from '../classes/stix';
-// import { ConfigService } from '../services/config.service';
-// import * as MockLayers from '../../tests/utils/mock-layers';
-// import * as MockData from '../../tests/utils/mock-data';
-// import { MatTabNavPanel, MatTabsModule } from '@angular/material/tabs';
-
-// describe('TabsComponent', () => {
-//     let component: TabsComponent;
-//     let fixture: ComponentFixture<TabsComponent>;
-//     let dialog: MatDialog;
-//     let dataService: DataService;
-//     let configService: ConfigService;
-//     let http: HttpClient;
-
-//     let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
-//     let loadData = {
-//         url: 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
-//         version: '14',
-//         identifier: 'enterprise-attack',
-//     };
-
-//     beforeEach(() => {
-//         TestBed.configureTestingModule({
-//             imports: [HttpClientTestingModule, MatDialogModule, MatTabsModule, MatTabNavPanel],
-//             declarations: [TabsComponent],
-//             providers: [DataService, { provide: MatSnackBar, useValue: {} }],
-//         }).compileComponents();
-//         dialog = TestBed.inject(MatDialog);
-//         configService = TestBed.inject(ConfigService);
-//         configService.versions = { enabled: true, entries: [] };
-//         configService.banner = 'test banner';
-//         configService.defaultLayers = MockData.defaultLayersDisabled;
-//         dataService = TestBed.inject(DataService);
-//         http = TestBed.inject(HttpClient);
-//         fixture = TestBed.createComponent(TabsComponent);
-//         component = fixture.debugElement.componentInstance;
-//     });
-
-//     describe('upgradeLayer', () => {
-//         it('should upgrade layer', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(
-//                 Promise.resolve({ oldID: 'enterprise-attack-12', newID: 'enterprise-attack-13' })
-//             );
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(1);
-//             });
-//         }));
-
-//         it('should not upgrade layer', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
-
-//         it('should not upgrade layer with default layer enabled', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-12');
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, true);
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
-
-//         it('should not upgrade layer with default layer enabled and domain data loaded', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
-//             let bb = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, bb, false, true);
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
-
-//         it('should not upgrade layer with domain data loaded', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configDataExtended.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.dataService.parseBundles(component.dataService.getDomain('enterprise-attack-13'), MockData.stixBundleSDO);
-//             let layer = JSON.parse(JSON.stringify(MockLayers.layerFile1));
-//             let vm1 = component.viewModelsService.newViewModel('layer2', 'enterprise-attack-13');
-//             let st1 = new Technique(MockData.T0000_000, [], null);
-//             let t1 = new Technique(MockData.T0000, [st1], null);
-//             let tvm_1 = new TechniqueVM('T0000^tactic-name');
-//             tvm_1.showSubtechniques = true;
-//             let stvm_1 = new TechniqueVM('0000.000^tactic-name');
-//             vm1.setTechniqueVM(tvm_1);
-//             vm1.setTechniqueVM(stvm_1);
-//             component.dataService.domains[0].techniques.push(t1);
-//             let versionUpgradeSpy = spyOn(component, 'versionUpgradeDialog').and.returnValue(Promise.resolve(null));
-//             spyOn(component.dataService, 'loadDomainData').and.returnValue(Promise.resolve());
-//             component.upgradeLayer(vm1, layer, false, false).then(() => {
-//                 expect(versionUpgradeSpy).toHaveBeenCalled();
-//             });
-//             fixture.whenStable().then(() => {
-//                 expect(component.layerTabs.length).toEqual(2);
-//             });
-//         }));
-//     });
-
-//     describe('loadLayerFromURL', () => {
-//         it('should load from url', waitForAsync(() => {
-//             component.dataService.setUpDomains(MockData.configData.entries);
-//             component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
-//             component.http = http;
-//             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
-//             component
-//                 .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
-//                 .then(() => {
-//                     expect(component.loadTabs.length).toEqual(1);
-//                 });
-//         }));
-
-//         it('should throw errors when loading from url', waitForAsync(() => {
-//             let versions = [
-//                 {
-//                     name: 'ATT&CK v13',
-//                     version: '13',
-//                     domains: [
-//                         {
-//                             name: 'Mobile',
-//                             identifier: 'mobile-attack',
-//                             data: ['https://raw.githubusercontent.com/mitre/cti/ATT%26CK-v13.1/mobile-attack/attack-attack.json'],
-//                         },
-//                     ],
-//                 },
-//             ];
-//             component.dataService.setUpDomains(versions);
-//             component.dataService.latestVersion = new Version('mobile-attack-13', '13');
-//             component.http = http;
-//             spyOn(component.http, 'get').and.returnValue(of(MockLayers.layerFile1));
-//             let alertSpy = spyOn(window, 'alert');
-//             let consoleSpy = spyOn(console, 'error');
-//             component
-//                 .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
-//                 .then(() => {
-//                     expect(consoleSpy).toHaveBeenCalled();
-//                     expect(alertSpy).toHaveBeenCalled();
-//                 });
-//         }));
-//     });
-// });
