@@ -1,3 +1,4 @@
+<div class="mat-dialog">
 <div class="controlsContainer">
     <ul class="control-sections">
         <li class="iewarning" *ngIf="isIE">
@@ -45,7 +46,8 @@
                     <ul>
                         <li>
                             <mat-form-field>
-                                <mat-select placeholder="orientation" [(ngModel)]="config.orientation" (selectionChange)="buildSVG()">
+                                <mat-label>orientation</mat-label>
+                                <mat-select [(ngModel)]="config.orientation" (selectionChange)="buildSVG()">
                                     <mat-option value="portrait">Portrait</mat-option>
                                     <mat-option value="landscape">Landscape</mat-option>
                                 </mat-select>
@@ -53,7 +55,8 @@
                         </li>
                         <li>
                             <mat-form-field>
-                                <mat-select matSelect placeholder="size" [(ngModel)]="config.size" (selectionChange)="buildSVG()">
+                                <mat-label>size</mat-label>
+                                <mat-select matSelect [(ngModel)]="config.size" (selectionChange)="buildSVG()">
                                     <mat-option value="custom">Custom</mat-option>
                                     <mat-option value="letter">US Letter: 8.5x11</mat-option>
                                     <mat-option value="legal">US Legal: 8.5x14</mat-option>
@@ -65,44 +68,44 @@
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>width</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="width"
                                     step="0.01"
                                     [disabled]="config.size !== 'custom'"
                                     [(ngModel)]="config.width"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.size !== 'custom' }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.size !== 'custom' }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>height</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="height"
                                     step="0.01"
                                     [disabled]="config.size !== 'custom'"
                                     [(ngModel)]="config.height"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.size !== 'custom' }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.size !== 'custom' }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>header height</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="header height"
                                     step="0.01"
                                     [disabled]="!config.showHeader"
                                     [(ngModel)]="config.headerHeight"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': !config.showHeader }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': !config.showHeader }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                     </ul>
@@ -121,7 +124,8 @@
                     <ul>
                         <li>
                             <mat-form-field>
-                                <mat-select placeholder="font" [(ngModel)]="config.font" (selectionChange)="buildSVG()">
+                                <mat-label>font</mat-label>
+                                <mat-select [(ngModel)]="config.font" (selectionChange)="buildSVG()">
                                     <mat-option value="serif">serif</mat-option>
                                     <mat-option value="sans-serif">sans-serif</mat-option>
                                     <mat-option value="monospace">monospace</mat-option>
@@ -129,21 +133,12 @@
                             </mat-form-field>
                         </li>
                         <li>
-                            <input
-                                [id]="uid + 'autofit'"
-                                type="checkbox"
-                                class="checkbox-custom"
-                                [(ngModel)]="config.autofitText"
-                                (change)="buildSVG()" />
-                            <label [for]="uid + 'autofit'" class="checkbox-custom-label noselect">auto-fit font size</label>
-                        </li>
-                        <li>
-                            <mat-form-field>
+                            <mat-form-field class="hide-subscript">
+                                <mat-label>font size</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="font size"
                                     step="1"
                                     [disabled]="config.autofitText"
                                     [(ngModel)]="config.fontSize"
@@ -153,6 +148,15 @@
                                 <span class="material-icons" alt="warning" style="padding-right: 5px">warning</span>
                                 <label class="warning-label" style="font-size: 12px">cell text is overflowing</label>
                             </div>
+                        </li>
+                        <li>
+                            <input
+                                [id]="uid + 'autofit'"
+                                type="checkbox"
+                                class="checkbox-custom"
+                                [(ngModel)]="config.autofitText"
+                                (change)="buildSVG()" />
+                            <label [for]="uid + 'autofit'" class="checkbox-custom-label noselect">auto-fit font size</label>
                         </li>
                     </ul>
                 </div>
@@ -179,58 +183,58 @@
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>legend X position</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="legend X position"
                                     [disabled]="config.legendDocked"
                                     step="1"
                                     [(ngModel)]="config.legendX"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>legend Y position</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="legend Y position"
                                     [disabled]="config.legendDocked"
                                     step="1"
                                     [(ngModel)]="config.legendY"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>legend width</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="legend width"
                                     [disabled]="config.legendDocked"
                                     step="1"
                                     [(ngModel)]="config.legendWidth"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                         <li>
                             <mat-form-field>
+                                <mat-label>legend height</mat-label>
                                 <input
                                     matInput
                                     class="has-suffix"
                                     type="number"
-                                    placeholder="legend height"
                                     [disabled]="config.legendDocked"
                                     step="1"
                                     [(ngModel)]="config.legendHeight"
                                     (input)="buildSVG()" />
-                                <span matSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
+                                <span matTextSuffix [ngClass]="{ 'disabled-text': config.legendDocked }">{{ config.unit }}</span>
                             </mat-form-field>
                         </li>
                     </ul>
@@ -323,7 +327,8 @@
                         </li>
                         <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
                             <mat-form-field>
-                                <mat-select placeholder="sub-techniques" [(ngModel)]="config.showSubtechniques" (selectionChange)="buildSVG()">
+                                <mat-label>sub-techniques</mat-label>
+                                <mat-select [(ngModel)]="config.showSubtechniques" (selectionChange)="buildSVG()">
                                     <mat-option value="all">show all</mat-option>
                                     <mat-option value="expanded">show expanded</mat-option>
                                     <mat-option value="none">show none</mat-option>
@@ -366,6 +371,7 @@
 
 <div [ngClass]="[config.theme === 'light' ? 'svgcontainer' : 'svgcontainer dark-mode']" [id]="'svgInsert' + viewModel.uid">loading...</div>
 
-<div class="close-button">
+<mat-dialog-actions>
     <button mat-button mat-dialog-close>close</button>
+</mat-dialog-actions>
 </div>

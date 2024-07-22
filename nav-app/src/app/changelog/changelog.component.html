@@ -1,8 +1,9 @@
-<div class="changelog-dialog">
-    <div class="content markdown">
+<div class="changelog-dialog mat-dialog">
+    <h1 mat-dialog-title>Changelog</h1>
+    <mat-dialog-content class="content markdown">
         <markdown #markdownElement [src]="'./CHANGELOG.md'"></markdown>
-    </div>
-    <div class="close-button">
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button mat-dialog-close>close</button>
-    </div>
+    </mat-dialog-actions>
 </div>

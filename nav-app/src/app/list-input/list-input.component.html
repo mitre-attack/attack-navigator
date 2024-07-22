@@ -1,44 +1,41 @@
 <div class="list-container">
-    <div *ngFor="let item of list; let i = index">
-        <div class="divider-container">
-            <!-- divider -->
-            <div *ngIf="item.divider" class="divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
-                <mat-divider></mat-divider>
-                <button mat-icon-button class="icon">-</button>
-                <mat-divider></mat-divider>
-            </div>
-            <div
-                *ngIf="!item.divider && canAddDivider(i)"
-                class="divider-option"
-                (click)="addDivider(i)"
-                matTooltipPosition="below"
-                matTooltip="add a divider">
-                <mat-divider></mat-divider>
-                <button mat-icon-button class="icon">+</button>
-                <mat-divider></mat-divider>
-            </div>
+    <div *ngFor="let item of list; let i = index;">
+        <!-- remove divider -->
+        <div class="divider-button-container" *ngIf="item.divider">
+            <button class="divider-button divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
+                <span class="line"></span>
+                <mat-icon class="icon">remove</mat-icon>
+                <span class="line"></span>
+            </button>
+        </div>
+        <!-- add divider -->
+        <div class="divider-button-container" *ngIf="!item.divider && canAddDivider(i)">
+            <button class="divider-button divider-option" (click)="addDivider(i)" matTooltipPosition="below" matTooltip="add a divider">
+                <span class="line"></span>
+                <mat-icon class="icon">add</mat-icon>
+                <span class="line"></span>
+            </button>
         </div>
 
         <!-- list item -->
-        <div class="item-container" *ngIf="!item.divider">
+        <div *ngIf="!item.divider" class="item-container hide-subscript">
             <mat-form-field>
-                <textarea
+                <mat-label>{{config.nameField}}</mat-label>
+                <input
                     matInput
                     matTextareaAutosize
-                    [placeholder]="config.nameField"
                     [(ngModel)]="item[config.nameField]"
-                    (input)="updateList()"></textarea>
+                    (input)="updateList()"/>
             </mat-form-field>
             <mat-form-field>
-                <textarea
+                <mat-label>{{config.valueField}}</mat-label>
+                <input
                     matInput
                     matTextareaAutosize
-                    [placeholder]="config.valueField"
                     [(ngModel)]="item[config.valueField]"
-                    (input)="updateList()"></textarea>
+                    (input)="updateList()"/>
             </mat-form-field>
-            <a
-                *ngIf="includeLinks && item.valid()"
+            <a  *ngIf="includeLinks && item.valid()"
                 class="assigned-link"
                 href="{{ item[config.valueField] }}"
                 target="_blank"

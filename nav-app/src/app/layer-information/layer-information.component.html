@@ -1,8 +1,10 @@
-<div class="layer-dialog">
-    <div class="content markdown">
-        <markdown #markdownElement [src]="layerFormatLink"></markdown>
-    </div>
-    <div class="close-button">
+<div class="layer-dialog mat-dialog">
+    <mat-dialog-content>
+        <div class="content markdown">
+            <markdown #markdownElement [src]="layerFormatLink"></markdown>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
         <button mat-button mat-dialog-close>close</button>
-    </div>
+    </mat-dialog-actions>
 </div>

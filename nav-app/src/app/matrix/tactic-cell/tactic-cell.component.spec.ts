@@ -3,6 +3,7 @@ import { TechniqueVM, ViewModel } from '../../classes';
 import { Tactic, Technique } from '../../classes/stix';
 import { TacticCellComponent } from './tactic-cell.component';
 import * as MockData from '../../../tests/utils/mock-data';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('TacticCellComponent', () => {
     let component: TacticCellComponent;
@@ -10,6 +11,7 @@ describe('TacticCellComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
+            imports: [MatTooltipModule],
             declarations: [TacticCellComponent],
         }).compileComponents();
     }));
