@@ -2,7 +2,7 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Gradient, TechniqueVM, ViewModel } from '../classes';
 import { DataService } from './data.service';
 import { evaluate } from 'mathjs';
-import * as is from 'is_js';
+import { isBoolean, isNumber } from '../utils/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -98,10 +98,10 @@ export class ViewModelsService {
 
                 // if it didn't except after this, it evaluated to a single result
                 console.debug('score expression evaluated to single result to be applied to all techniques');
-                if (is.boolean(result)) {
+                if (isBoolean(result)) {
                     // boolean to binary
                     result = result ? '1' : '0';
-                } else if (is.not.number(result)) {
+                } else if (!isNumber(result)) {
                     // unexpected user input
                     throw Error('math result ( ' + result + ' ) is not a number');
                 }
@@ -139,10 +139,10 @@ export class ViewModelsService {
                     // did at least one technique have a score for this technique?
                     if (misses < scoreVariables.size) {
                         let mathResult = evaluate(opSettings.scoreExpression, scope);
-                        if (is.boolean(mathResult)) {
+                        if (isBoolean(mathResult)) {
                             // boolean to binary
                             mathResult = mathResult ? '1' : '0';
-                        } else if (is.not.number(mathResult)) {
+                        } else if (!isNumber(mathResult)) {
                             // unexpected user input
                             throw Error('math result ( ' + mathResult + ' ) is not a number');
                         }
