@@ -19,7 +19,7 @@
     src:
         local('Material Icons'),
         local('MaterialIcons-Regular'),
-        url(~assets/icons/MaterialIcons-Regular.ttf) format('truetype');
+        url(assets/icons/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 .material-icons {
@@ -50,6 +50,7 @@
 .text-deemphasis {
     color: on-color-deemphasis(body);
     font-size: 12px !important;
+    letter-spacing: normal;
 }
 
 body {
@@ -62,9 +63,35 @@ body {
     @include adaptive-color-dark-only('background-color', white);
 }
 
-.mat-dialog-container {
-    @include adaptive-color-dark-only('background-color', color(dark-2));
-    @include adaptive-color-dark-only('color', on-color(dark-3));
+.mdc-button, .mat-mdc-button-base {
+    letter-spacing: normal !important;
+}
+
+.mat-dialog {
+    .mat-mdc-dialog-actions {
+        justify-content: center;
+    }
+    .mat-mdc-dialog-title {
+        text-align: center;
+    }
+    .mat-mdc-dialog-content {
+        color: black !important;
+        @include adaptive-color-dark-only('color', on-color(dark) !important);
+    }
+}
+
+.mat-mdc-dialog-container {
+    .mdc-dialog__surface {
+        @include adaptive-color-dark-only('background-color', color(dark-2));
+    }
+    .mdc-dialog__title,
+    .mdc-dialog__content {
+        @include adaptive-color-dark-only('color', on-color(dark) !important);
+    }
+    .mat-mdc-button-base {
+        @include adaptive-color-dark-only('border-color', color(dark-4));
+        @include adaptive-color-dark-only('color', on-color(dark));
+    }
 
     .help-dialog h1 {
         @include adaptive-color-dark-only('border-color', on-color(dark-1));
@@ -101,12 +128,9 @@ body {
     }
 
     .top-button {
-        margin-top: 25px;
-        text-align: right;
-    }
-
-    .close-button {
-        text-align: center;
+        display: inline;
+        float: right;
+        margin-top: 14px;
     }
 }
 
@@ -222,10 +246,10 @@ body {
 
                 &.inputfield {
                     width: 150px;
-                    padding: 0px 10px;
+                    padding: 0px 10px 10px;
                     z-index: 1000;
 
-                    mat-form-field {
+                    .mat-mdc-form-field {
                         width: 100%;
 
                         &:first-child {
@@ -233,32 +257,31 @@ body {
                         }
                     }
                 }
-
-                .mat-form-field-label {
+                .mat-mdc-floating-label {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
 
-                .mat-input-element:disabled {
+                .mat-mdc-input-element,
+                .mat-mdc-input-element::placeholder {
+                    @include adaptive-color-dark-only('color', on-color(dark));
+                }
+                .mat-mdc-input-element:disabled {
                     @include adaptive-color-dark-only('color', color(dark-disabled));
                 }
-
-                .mat-form-field-underline {
-                    @include adaptive-color-dark-only('background-color', on-color(dark));
+                .mdc-line-ripple::before {
+                    @include adaptive-color-dark-only('border-bottom-color', on-color(dark));
                 }
-
-                .mat-form-field-disabled .mat-form-field-underline {
-                    @include adaptive-color-dark-only('background-color', transparent);
+                .mat-mdc-form-field.mat-form-field-disabled .mdc-line-ripple::before {
+                    @include adaptive-color-dark-only('border-bottom-color', transparent);
                     @include adaptive-color-dark-only(
                         'background-image',
                         linear-gradient(to right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 33%, transparent 0%)
                     );
                 }
-
-                .mat-select-value {
+                .mat-mdc-select-value-text {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
-
-                .mat-select-arrow {
+                .mat-mdc-select-arrow {
                     @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
                 }
 
@@ -330,12 +353,8 @@ body {
 //////////////////////
 /// Dialog Styling ///
 //////////////////////
-.dialog-custom .mat-dialog-container {
+.dialog-custom .mat-mdc-dialog-container {
     padding: 0 !important;
-}
-
-.mat-button-focus-overlay {
-    background-color: transparent !important;
 }
 
 .mat-drawer-side.mat-drawer-end {
@@ -352,17 +371,15 @@ body {
     a:active {
         @include adaptive-color-dark-only('color', color(dark-link-active));
     }
-
-    .mat-form-field-outline div {
-        @include adaptive-color-dark-only('background-color', color(dark-3));
-        @include adaptive-color-dark-only('color', color(dark-4));
+    .mat-mdc-form-field, .mat-mdc-form-field:hover {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            @include adaptive-color-dark-only('border-color', on-color(dark) !important);
+        }
     }
 
-    .mat-form-field-label {
-        @include adaptive-color-dark-only('color', on-color(dark));
-    }
-
-    .mat-card {
+    .mat-mdc-card {
         @include adaptive-color-dark-only('background-color', color(dark-3));
         @include adaptive-color-dark-only('color', on-color(dark));
     }
@@ -380,13 +397,13 @@ body {
         @include adaptive-color-dark-only('border-top-color', color(dark-4));
     }
 
-    .mat-button-base {
+    .mat-mdc-button-base {
         @include adaptive-color-dark-only('background-color', color(dark-4));
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 }
 
-.mat-dialog-container .markdown {
+.mat-mdc-dialog-container .markdown {
     padding: 25px;
 }
 
@@ -398,4 +415,24 @@ body {
     border-radius: 4px !important;
     //don't force 20rem width, conform to content of popover
     width: unset !important;
+}
+
+// form field styling
+.mat-mdc-form-field {
+    .mdc-text-field--filled, .mdc-text-field--filled:hover {
+        background-color: transparent !important;
+    }
+}
+.hide-subscript {
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}
+.mat-mdc-floating-label, .mat-mdc-form-field-hint {
+    letter-spacing: normal !important;
+}
+
+// expansion panel styling
+.mat-expansion-panel-body {
+    padding-bottom: 24px !important;
 }

@@ -28,6 +28,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public customContextMenuItems = []; // items for custom context menu
     public showingLegend = false; // is the legend panel currently expanded
 
+    public get layerDomainVersion(): string {
+        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
+        return `${domain.name} v${domain.version.number}`;
+    }
+
     // scroll handling
     public previousScrollTop: number = 0;
     public headerHeight: number = 0;

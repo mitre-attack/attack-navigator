@@ -38,9 +38,16 @@
         @include adaptive-color-dark-only('color', on-color(dark));
     }
 
-    .mat-input-element,
-    .mat-input-element::placeholder {
+    .mat-mdc-input-element,
+    .mat-mdc-input-element::placeholder {
         @include adaptive-color-dark-only('color', on-color(dark));
+    }
+    .mat-mdc-input-element:disabled {
+      @include adaptive-color-dark-only('color', color(dark-disabled));
+    }
+
+    .mat-mdc-floating-label {
+        @include adaptive-color-dark-only('color', rgba(255, 255, 255, 0.9));
     }
 
     .mat-form-field-appearance-outline {

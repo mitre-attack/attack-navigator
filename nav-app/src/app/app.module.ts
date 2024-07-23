@@ -1,7 +1,6 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
-import 'rxjs/add/operator/map';
 
 // material
 import { MatInputModule } from '@angular/material/input';
@@ -19,7 +18,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { DndModule } from 'ngx-drag-drop';
-import { PopoverModule } from 'ngx-smart-popover';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -50,7 +48,6 @@ import { ChangelogComponent } from './changelog/changelog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
 import { ConfigService } from './services/config.service';
-import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
     declarations: [
@@ -100,9 +97,7 @@ import { AngularSplitModule } from 'angular-split';
         MatStepperModule,
         MatPaginatorModule,
         MarkdownModule.forRoot(),
-        PopoverModule,
-        MatTabsModule,
-        AngularSplitModule
+        MatTabsModule
     ],
     exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
     providers: [

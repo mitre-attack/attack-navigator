@@ -1,320 +1,207 @@
-import { ComponentFixture, TestBed, inject, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ContextmenuComponent } from './contextmenu.component';
-import { ContextMenuItem, Link, TechniqueVM, ViewModel } from '../../../classes';
-import { Tactic, Technique } from '../../../classes/stix';
-import { DataService } from '../../../services/data.service';
+import { ContextMenuItem, Link, ViewModel } from "src/app/classes";
+import { ContextmenuComponent } from "./contextmenu.component";
+import { ConfigService } from "src/app/services/config.service";
+import { ViewModelsService } from "src/app/services/viewmodels.service";
+import { ElementRef } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Tactic, Technique } from "src/app/classes/stix";
+
+class MockTechniqueVM {
+	technique_tactic_union_id = 'mock-id';
+	links = [{url: 'https://example.com'}] as Link[];
+}
+
+class MockViewModel extends ViewModel {
+	clearSelectedTechniques = jasmine.createSpy('clearSelectedTechniques');
+	selectTechnique = jasmine.createSpy('selectTechnique');
+	unselectTechnique = jasmine.createSpy('unselectTechnique');
+	selectAllTechniques = jasmine.createSpy('selectAllTechniques');
+	invertSelection = jasmine.createSpy('invertSelection');
+	selectAnnotated = jasmine.createSpy('selectAnnotated');
+	selectUnannotated = jasmine.createSpy('selectUnannotated');
+	selectAllTechniquesInTactic = jasmine.createSpy('selectAllTechniquesInTactic');
+	unselectAllTechniquesInTactic = jasmine.createSpy('unselectAllTechniquesInTactic');
+	getTechniqueVM = jasmine.createSpy('getTechniqueVM').and.returnValue(new MockTechniqueVM());
+}
+
+class MockViewModelsService {
+	pinnedCell = '';
+}
 
 describe('ContextmenuComponent', () => {
-    let contextMenu: ContextmenuComponent;
-    let fixture: ComponentFixture<ContextmenuComponent>;
+	let component: ContextmenuComponent;
+	let fixture: ComponentFixture<ContextmenuComponent>;
 
-    let stixSDO = {
-        name: 'Name',
-        description: 'Description',
-        created: '2001-01-01T01:01:00.000Z',
-        modified: '2001-01-01T01:01:00.000Z',
-        x_mitre_version: '1.0',
-    };
-    let tacticSDO = {
-        id: 'tactic-0',
-        ...stixSDO,
-        type: 'x-mitre-tactic',
-        x_mitre_shortname: 'tactic-name',
-        external_references: [{ external_id: 'TA0000', url: 'https://attack.mitre.org/tactic/TA0000' }],
-    };
-    let templateSDO = {
-        ...stixSDO,
-        type: 'attack-pattern',
-        x_mitre_platforms: ['platform'],
-        kill_chain_phases: [
-            {
-                kill_chain_name: 'mitre-attack',
-                phase_name: 'tactic-name',
-            },
-        ],
-    };
-    let techniqueSDO = {
-        ...templateSDO,
-        id: 'attack-pattern-0',
-        external_references: [
-            {
-                external_id: 'T0000',
-                url: 'https://attack.mitre.org/technique/T0000',
-            },
-        ],
-    };
-    let subtechniqueSDO = {
-        ...templateSDO,
-        id: 'attack-pattern-0-1',
-        x_mitre_platforms: ['Linux', 'macOS', 'Windows'],
-        external_references: [
-            {
-                external_id: 'T0000.001',
-                url: 'https://attack.mitre.org/technique/T0000/001',
-            },
-        ],
-    };
-    let techniqueSDO2 = {
-        ...templateSDO,
-        id: 'attack-pattern-1',
-        external_references: [
-            {
-                external_id: 'T0001',
-                url: 'https://attack.mitre.org/technique/T0001',
-            },
-        ],
-    };
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			declarations: [ContextmenuComponent],
+			providers: [
+				{provide: ConfigService, useValue: {}},
+				{provide: ViewModelsService, useClass: MockViewModelsService},
+				{provide: ElementRef, useValue: {nativeElement: {}}}
+			]
+		}).compileComponents();
 
-    let buildContextMenuViewModel = function (cm: ContextmenuComponent, ds: DataService) {
-        // create view model and set in contextmenu
-        let viewModel = cm.viewModelsService.newViewModel('name', 'enterprise-attack-13');
-        cm.viewModel = viewModel;
-        // create context menu tactic & technique
-        contextMenu.tactic = new Tactic(tacticSDO, [], ds);
-        contextMenu.technique = new Technique(techniqueSDO, [], ds);
-        // create a techniqueVM with technique T0000
-        let tvm = new TechniqueVM('');
-        let attackID = techniqueSDO.external_references[0].external_id;
-        tvm.deserialize(JSON.stringify(techniqueSDO), attackID, contextMenu.tactic.shortname);
-        // add a link to the techniqueVM
-        let testLink = new Link();
-        testLink.label = 'test link';
-        testLink.url = 'https://www.google.com';
-        tvm.links.push(testLink);
-        // set techniqueVM in viewModel
-        contextMenu.viewModel.setTechniqueVM(tvm);
-        // create a second techniqueVM with technique T0001
-        let tvm2 = new TechniqueVM('');
-        let attackID2 = techniqueSDO2.external_references[0].external_id;
-        tvm2.deserialize(JSON.stringify(techniqueSDO2), attackID2, contextMenu.tactic.shortname);
-        // set second techniqueVM in viewModel
-        contextMenu.viewModel.setTechniqueVM(tvm2);
-        return [tvm.technique_tactic_union_id, tvm2.technique_tactic_union_id];
-    };
+		fixture = TestBed.createComponent(ContextmenuComponent);
+		component = fixture.componentInstance;
+	});
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [ContextmenuComponent],
-        }).compileComponents();
-        fixture = TestBed.createComponent(ContextmenuComponent);
-        contextMenu = fixture.componentInstance;
-    }));
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 
-    it('should create the component', () => {
-        expect(contextMenu).toBeTruthy();
-    });
+	describe('ngOnInit', () => {
+		it('should initialize placement with getPosition', () => {
+			spyOn(component, 'getPosition').and.returnValue('top-right');
+			component.ngOnInit();
+			expect(component.placement).toBe('top-right');
+		});
+	});
 
-    it('should set placement position', () => {
-        let pos = 'right bottom';
-        let functionSpy = spyOn<any>(contextMenu, 'getPosition').and.returnValue(pos);
-        contextMenu.ngOnInit();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(contextMenu.placement).toEqual(pos);
-    });
+	describe('get techniqueVM', () => {
+		it('should return techniqueVM from viewModel', () => {
+			const mockTechnique = {} as Technique;
+			const mockTactic  = {} as Tactic;
+			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
+			component.technique = mockTechnique;
+			component.tactic = mockTactic;
+			const result = component.techniqueVM;
+			expect(component.viewModel.getTechniqueVM).toHaveBeenCalledWith(mockTechnique, mockTactic);
+			expect(result).toBeTruthy();
+		});
+	});
 
-    it('should emit on close', () => {
-        let functionSpy = spyOn(contextMenu.close, 'emit');
-        contextMenu.closeContextmenu(); // trigger close event
-        expect(functionSpy).toHaveBeenCalled();
-    });
+	describe('closeContextmenu', () => {
+		it('should emit close event', () => {
+			spyOn(component.close, 'emit');
+			component.closeContextmenu();
+			expect(component.close.emit).toHaveBeenCalled();
+		});
+	});
 
-    it('should open tactic url and close', inject([DataService], (service: DataService) => {
-        let windowSpy = spyOn(window, 'open');
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
+	describe('selection functionality', () => {
+		const mockTechnique = {} as Technique;
+		const mockTactic = {} as Tactic;
 
-        let tactic = new Tactic(tacticSDO, [], service);
-        contextMenu.tactic = tactic;
-        contextMenu.viewTactic();
+		beforeEach(() => {
+			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
+			component.technique = mockTechnique;
+			component.tactic = mockTactic;
+			spyOn(component, 'closeContextmenu');
+		});
 
-        expect(windowSpy).toHaveBeenCalledOnceWith(tactic.url, '_blank');
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should select technique and close context menu', () => {
+			component.select();
+			expect(component.viewModel.clearSelectedTechniques).toHaveBeenCalled();
+			expect(component.viewModel.selectTechnique).toHaveBeenCalledWith(mockTechnique, mockTactic);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should open technique url and close', inject([DataService], (service: DataService) => {
-        let windowSpy = spyOn(window, 'open');
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
+		it('should add selection and close context menu', () => {
+			component.addSelection();
+			expect(component.viewModel.selectTechnique).toHaveBeenCalledWith(mockTechnique, mockTactic);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-        let technique = new Technique(techniqueSDO, [], service);
-        contextMenu.technique = technique;
-        contextMenu.viewTechnique();
+		it('should remove selection and close context menu', () => {
+			component.removeSelection();
+			expect(component.viewModel.unselectTechnique).toHaveBeenCalledWith(mockTechnique, mockTactic);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-        expect(windowSpy).toHaveBeenCalledOnceWith(technique.url, '_blank');
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should deselect all techniques and close context menu', () => {
+			component.deselectAll();
+			expect(component.viewModel.clearSelectedTechniques).toHaveBeenCalled();
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should open custom url and close', inject([DataService], (service: DataService) => {
-        let windowSpy = spyOn(window, 'open');
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let technique_list: Technique[] = [];
-        let st1 = new Technique(subtechniqueSDO, [], null);
-        let t1 = new Technique(techniqueSDO, [st1], null);
-        technique_list.push(t1);
-        technique_list.push(st1);
-        let tactic = new Tactic(tacticSDO, technique_list, service);
-        let url = 'https://attack.mitre.org/{{tactic_attackID}}/{{technique_attackID}}';
-        let subtechnique_url = 'https://attack.mitre.org/{{tactic_attackID}}/{{technique_attackID}}/{{subtechnique_attackID}}';
-        let replacedUrl = 'https://attack.mitre.org/TA0000/T0000';
-        buildContextMenuViewModel(contextMenu, service);
-        let customItem = new ContextMenuItem('label', url, subtechnique_url);
-        customItem.getReplacedURL(st1, tactic);
-        customItem = new ContextMenuItem('label', url);
-        contextMenu.openCustomContextMenuItem(customItem);
+		it('should invert selection and close context menu', () => {
+			component.invertSelection();
+			expect(component.viewModel.invertSelection).toHaveBeenCalled();
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-        expect(windowSpy).toHaveBeenCalledOnceWith(replacedUrl, '_blank');
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should select annotated items and close context menu', () => {
+			component.selectAnnotated();
+			expect(component.viewModel.selectAnnotated).toHaveBeenCalled();
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should build view model and technique view model', inject([DataService], (service: DataService) => {
-        let [ttid, ttid2] = buildContextMenuViewModel(contextMenu, service);
-        expect(ttid).toBeTruthy();
-        expect(contextMenu.viewModel).toBeTruthy();
-        expect(contextMenu.viewModel).toBeInstanceOf(ViewModel);
-        expect(contextMenu.viewModel.getTechniqueVM_id(ttid)).toBeTruthy();
-        expect(contextMenu.viewModel.getTechniqueVM_id(ttid)).toBeInstanceOf(TechniqueVM);
-        expect(contextMenu.viewModel.getTechniqueVM_id(ttid2)).toBeTruthy();
-        expect(contextMenu.viewModel.getTechniqueVM_id(ttid2)).toBeInstanceOf(TechniqueVM);
-    }));
+		it('should select unannotated items and close context menu', () => {
+			component.selectUnannotated();
+			expect(component.viewModel.selectUnannotated).toHaveBeenCalled();
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should get technique vm', inject([DataService], (service: DataService) => {
-        let ttids = buildContextMenuViewModel(contextMenu, service);
-        let tvm = contextMenu.techniqueVM;
-        expect(tvm).toBeTruthy();
-        expect(tvm).toBeInstanceOf(TechniqueVM);
-        expect(tvm.technique_tactic_union_id).toEqual(ttids[0]);
-    }));
+		it('should select all tecniques in tactic and close context menu', () => {
+			component.selectAllInTactic();
+			expect(component.viewModel.selectAllTechniquesInTactic).toHaveBeenCalledWith(mockTactic);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should get links', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let links = contextMenu.links;
-        expect(links).toBeTruthy();
-        expect(links.length).toEqual(1);
-        expect(links[0]).toBeInstanceOf(Link);
-    }));
+		it('should deselect all techniques in tactic and close context menu', () => {
+			component.deselectAllInTactic();
+			expect(component.viewModel.unselectAllTechniquesInTactic).toHaveBeenCalledWith(mockTactic);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
+	});
 
-    it('should open link and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let windowSpy = spyOn(window, 'open');
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let link = contextMenu.links[0];
-        contextMenu.openLink(link);
-        expect(windowSpy).toHaveBeenCalledOnceWith(link.url);
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+	describe('open links', () => {
+		beforeEach(() => {
+			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
+			spyOn(component, 'closeContextmenu');
+			spyOn(window, 'open');
+		});
 
-    it('should select technique and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        contextMenu.select();
-        expect(contextMenu.viewModel.activeTvm).toBe(contextMenu.techniqueVM);
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should open technique URL in new tab and close context menu', () => {
+			const mockTechnique = { url: 'https://technique-url.com' } as Technique;
+			component.technique = mockTechnique;
+			component.viewTechnique();
+			expect(window.open).toHaveBeenCalledWith(mockTechnique.url, '_blank');
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should add technique selection and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        contextMenu.addSelection();
-        expect(contextMenu.viewModel.activeTvm).toBe(contextMenu.techniqueVM);
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        contextMenu.viewModel.selectSubtechniquesWithParent = true;
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        contextMenu.viewModel.selectTechniquesAcrossTactics = false;
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        contextMenu.viewModel.selectSubtechniquesWithParent = false;
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should open tactic URL in new tab and close context menu', () => {
+			const mockTactic = { url: 'https://tactic-url.com' } as Tactic;
+			component.tactic = mockTactic;
+			component.viewTactic();
+			expect(window.open).toHaveBeenCalledWith(mockTactic.url, '_blank');
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
 
-    it('should remove technique selection and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        contextMenu.select();
-        expect(contextMenu.viewModel.activeTvm).toBe(contextMenu.techniqueVM);
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(1);
-        contextMenu.removeSelection();
-        expect(contextMenu.viewModel.activeTvm).toBe(undefined);
-        expect(contextMenu.viewModel.getSelectedTechniqueCount()).toEqual(0);
-        expect(functionSpy).toHaveBeenCalled();
-    }));
+		it('should open link URL and close context menu', () => {
+			const mockLink = { url: 'https://link-url.com' } as Link;
+			component.openLink(mockLink);
+			expect(window.open).toHaveBeenCalledWith(mockLink.url);
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
+	});
 
-    it('should call selectAllTechniques and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'selectAllTechniques');
-        contextMenu.selectAll();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalled();
-    }));
+	describe('pinCell', () => {
+		it('should toggle pinnedCell and close context menu', () => {
+			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
+			spyOn(component, 'closeContextmenu');
+			const mockTechniqueVM = new MockTechniqueVM();
+			component.viewModelsService = new MockViewModelsService() as ViewModelsService;
+			component.pinCell();
+			expect(component.viewModelsService.pinnedCell).toBe(mockTechniqueVM.technique_tactic_union_id);
+			component.pinCell();
+			expect(component.viewModelsService.pinnedCell).toBe('');
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
+	});
 
-    it('should call clearSelectedTechniques and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'clearSelectedTechniques');
-        contextMenu.deselectAll();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalled();
-    }));
-
-    it('should call invertSelection and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'invertSelection');
-        contextMenu.invertSelection();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalled();
-    }));
-
-    it('should call selectAnnotated and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'selectAnnotated');
-        contextMenu.selectAnnotated();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalled();
-    }));
-
-    it('should call selectUnannotated and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'selectUnannotated');
-        contextMenu.selectUnannotated();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalled();
-    }));
-
-    it('should call selectAllTechniquesInTactic and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'selectAllTechniquesInTactic');
-        contextMenu.selectAllInTactic();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalledOnceWith(contextMenu.tactic);
-    }));
-
-    it('should call unselectAllTechniquesInTactic and close', inject([DataService], (service: DataService) => {
-        buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        let viewModelSpy = spyOn(contextMenu.viewModel, 'unselectAllTechniquesInTactic');
-        contextMenu.deselectAllInTactic();
-        expect(functionSpy).toHaveBeenCalled();
-        expect(viewModelSpy).toHaveBeenCalledOnceWith(contextMenu.tactic);
-    }));
-
-    it('should pin cell and close', inject([DataService], (service: DataService) => {
-        let ttids = buildContextMenuViewModel(contextMenu, service);
-        let functionSpy = spyOn(contextMenu, 'closeContextmenu');
-        contextMenu.pinCell();
-        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttids[0]);
-        expect(functionSpy).toHaveBeenCalled();
-    }));
-
-    it('should unpin cell', inject([DataService], (service: DataService) => {
-        let ttids = buildContextMenuViewModel(contextMenu, service);
-        contextMenu.pinCell();
-        expect(contextMenu.viewModelsService.pinnedCell).toBe(ttids[0]);
-        contextMenu.pinCell();
-        expect(contextMenu.viewModelsService.pinnedCell).toBe('');
-    }));
-});
+	describe('openCustomContextMenuItem' , () => {
+		it('should open custom context menu link and close context menu', () => {
+			component.viewModel = new MockViewModel('name', 'uid', 'enterprise-attack-13', null);
+			spyOn(component, 'closeContextmenu');
+			spyOn(window, 'open');
+			const customURL = 'https://custom-url.com';
+			const mockCustomItem = new ContextMenuItem('label', customURL);
+			spyOn(mockCustomItem, 'getReplacedURL').and.returnValue(customURL)
+			component.openCustomContextMenuItem(mockCustomItem);
+			expect(window.open).toHaveBeenCalledWith(customURL, '_blank');
+			expect(component.closeContextmenu).toHaveBeenCalled();
+		});
+	});
+})

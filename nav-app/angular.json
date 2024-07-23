@@ -14,17 +14,17 @@
                         "outputPath": "dist",
                         "index": "src/index.html",
                         "main": "src/main.ts",
-                        "tsConfig": "src/tsconfig.app.json",
-                        "polyfills": "src/polyfills.ts",
+                        "tsConfig": "tsconfig.app.json",
+                        "polyfills": ["src/polyfills.ts", "zone.js"],
                         "preserveSymlinks": true,
-                        "allowedCommonJsDependencies": ["lodash"],
+                        "allowedCommonJsDependencies": ["lodash", "is_js", "seedrandom", "typed_function", "tinygradient", "exceljs"],
                         "assets": [
                             { "glob": "*.md", "input": "../", "output": "/" },
                             { "glob": "*.md", "input": "../layers", "output": "/layers" },
                             "src/assets",
                             "src/favicon.ico"
                         ],
-                        "styles": ["src/styles.scss", "node_modules/ngx-smart-popover/scss/popover-content.component.scss"],
+                        "styles": ["src/styles.scss"],
                         "scripts": [
                             "node_modules/file-saver/dist/FileSaver.js",
                             "node_modules/mathjs/lib/browser/math.js",
@@ -75,28 +75,27 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "nav-app:build"
+                      "buildTarget": "nav-app:build"
                     },
                     "configurations": {
                         "production": {
-                            "browserTarget": "nav-app:build:production"
+                          "buildTarget": "nav-app:build:production"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "nav-app:build"
+                      "buildTarget": "nav-app:build"
                     }
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
-                        "main": "src/test.ts",
                         "karmaConfig": "./karma.conf.js",
                         "codeCoverageExclude": ["src/polyfills.ts", "src/app/utils/taxii2lib.ts"],
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "src/tsconfig.spec.json",
+                        "polyfills": ["src/polyfills.ts", "zone.js/testing", "zone.js"],
+                        "tsConfig": "tsconfig.spec.json",
                         "scripts": [
                             "node_modules/file-saver/dist/FileSaver.js",
                             "node_modules/mathjs/lib/browser/math.js",
@@ -112,7 +111,7 @@
                 "lint": {
                     "builder": "@angular-devkit/build-angular:tslint",
                     "options": {
-                        "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+                        "tsConfig": ["tsconfig.app.json", "tsconfig.spec.json"],
                         "exclude": ["**/node_modules/**"]
                     }
                 }
