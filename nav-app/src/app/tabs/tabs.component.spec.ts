@@ -11,7 +11,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { ConfigService } from "../services/config.service";
 import * as MockData from '../../tests/utils/mock-data';
 import * as MockLayers from '../../tests/utils/mock-layers';
-import * as is from 'is_js';
 import { of } from "rxjs";
 import { ChangelogComponent } from "../changelog/changelog.component";
 import { HelpComponent } from "../help/help.component";

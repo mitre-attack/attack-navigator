@@ -24,9 +24,9 @@ export function isIE(): boolean {
 export function isSafari(compRange): boolean {
 	function compare(version, comp) {
 		let str = (comp + '');
-		let n = +(str.match(/\d+/) || NaN);
-		let op = str.match(/^[<>]=?|/)[0];
-		return comparatorFn[op] ? comparatorFn[op](version, n) : (version == n || n !== n);
+		let n = +(/\d+/.exec(str) || NaN);
+		let op = /^[<>]=?|/.exec(str)[0];
+		return comparatorFn[op] ? comparatorFn[op](version, n) : (version == n || Number.isNaN(n));
 	}
 
 	const browser = detect();
