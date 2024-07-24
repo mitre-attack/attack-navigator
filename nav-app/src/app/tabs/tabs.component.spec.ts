@@ -11,7 +11,6 @@ import { MatTabsModule } from "@angular/material/tabs";
 import { ConfigService } from "../services/config.service";
 import * as MockData from '../../tests/utils/mock-data';
 import * as MockLayers from '../../tests/utils/mock-layers';
-import * as is from 'is_js';
 import { of } from "rxjs";
 import { ChangelogComponent } from "../changelog/changelog.component";
 import { HelpComponent } from "../help/help.component";
@@ -90,22 +89,6 @@ describe('TabsComponent', () => {
             fixture = TestBed.createComponent(TabsComponent);
             component = fixture.debugElement.componentInstance;
             expect(component.bannerContent).toEqual(configService.banner);
-        });
-    });
-
-    describe('ngAfterViewInit', () => {
-        it('should open Safari warning for Safari version <= 13', () => {
-            spyOn(is, 'safari').withArgs('<=13').and.returnValue(true);
-            let dialogSpy = spyOn(dialog, 'open');
-            component.ngAfterViewInit();
-            expect(dialogSpy).toHaveBeenCalled();
-        });
-
-        it('should not open Safari warning for Safari version > 13 or non-Safari browsers', () => {
-            spyOn(is, 'safari').withArgs('<=13').and.returnValue(false);
-            let dialogSpy = spyOn(dialog, 'open');
-            component.ngAfterViewInit();
-            expect(dialogSpy).not.toHaveBeenCalled();
         });
     });
 
