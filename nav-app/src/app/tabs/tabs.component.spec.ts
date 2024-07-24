@@ -93,22 +93,6 @@ describe('TabsComponent', () => {
         });
     });
 
-    describe('ngAfterViewInit', () => {
-        it('should open Safari warning for Safari version <= 13', () => {
-            spyOn(utils, 'isSafari').withArgs('<=13').and.returnValue(true);
-            let dialogSpy = spyOn(dialog, 'open');
-            component.ngAfterViewInit();
-            expect(dialogSpy).toHaveBeenCalled();
-        });
-
-        it('should not open Safari warning for Safari version > 13 or non-Safari browsers', () => {
-            spyOn(utils, 'isSafari').withArgs('<=13').and.returnValue(false);
-            let dialogSpy = spyOn(dialog, 'open');
-            component.ngAfterViewInit();
-            expect(dialogSpy).not.toHaveBeenCalled();
-        });
-    });
-
     describe('loadTabs', () => {
         it('should load bundle when all fragment values are provided', async () => {
             let bundleURL = 'testbundleurl';

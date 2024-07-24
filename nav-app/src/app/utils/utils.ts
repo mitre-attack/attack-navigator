@@ -25,7 +25,7 @@ export function isSafari(compRange): boolean {
 	function compare(version, comp) {
 		let str = (comp + '');
 		let n = +(/\d+/.exec(str) || NaN);
-		let op = /^[<>]=?|/.exec(str)[0];
+		let op = /^[<>]=?/.exec(str)[0];
 		return comparatorFn[op] ? comparatorFn[op](version, n) : (version == n || Number.isNaN(n));
 	}
 
