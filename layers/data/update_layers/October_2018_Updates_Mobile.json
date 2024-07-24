@@ -1,0 +1,202 @@
+{
+	"name": "October 2018 Updates Mobile",
+	"version": "3.0",
+	"domain": "mitre-mobile",
+	"description": "",
+	"filters": {
+		"stages": [
+			"act"
+		],
+		"platforms": [
+			"Android",
+			"iOS"
+		]
+	},
+	"sorting": 0,
+	"hideDisabled": false,
+	"techniques": [
+		{
+			"techniqueID": "T1475",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "created to consolidate several techniques from old tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1476",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "created to consolidate several techniques from old tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1466",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1456",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "renamed from Malicious Web Content and moved to Initial Access",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1439",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1449",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1450",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1458",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "moved to Initial Access",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1477",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1478",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1478",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1464",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1461",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "moved to Initial Access",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1463",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1470",
+			"tactic": "remote-service-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1468",
+			"tactic": "remote-service-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1469",
+			"tactic": "remote-service-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1444",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "moved to Initial Access",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1467",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1465",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1451",
+			"tactic": "network-effects",
+			"color": "#fcf26b",
+			"comment": "moved into new tactics from the Network-Based Effects Matrix",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1474",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "created to consolidate several techniques in the old tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1411",
+			"tactic": "credential-access",
+			"color": "#fcf26b",
+			"comment": "changed scope, content, or tactics",
+			"enabled": true
+		}
+	],
+	"gradient": {
+		"colors": [
+			"#ff6666",
+			"#ffe766",
+			"#8ec843"
+		],
+		"minValue": 0,
+		"maxValue": 100
+	},
+	"legendItems": [
+		{
+			"color": "#a1d99b",
+			"label": "new technique"
+		},
+		{
+			"color": "#fcf26b",
+			"label": "changed scope, content, or tactics"
+		}
+	],
+	"showTacticRowBackground": true,
+	"tacticRowBackground": "#205b8f",
+	"selectTechniquesAcrossTactics": true
+}

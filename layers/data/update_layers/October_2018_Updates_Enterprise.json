@@ -1,0 +1,259 @@
+{
+	"name": "October 2018 Updates Enterprise",
+	"version": "3.0",
+	"domain": "mitre-enterprise",
+	"description": "",
+	"filters": {
+		"stages": [
+			"act"
+		],
+		"platforms": [
+			"Windows",
+			"Linux",
+			"macOS"
+		]
+	},
+	"sorting": 0,
+	"hideDisabled": false,
+	"techniques": [
+		{
+			"techniqueID": "T1009",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1042",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1109",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1109",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1181",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1181",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1222",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1223",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1223",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1061",
+			"tactic": "execution",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1183",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1183",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1183",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1054",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1070",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1112",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1096",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1034",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1034",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "command-and-control",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1055",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1055",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1060",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1178",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1051",
+			"tactic": "lateral-movement",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1221",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1111",
+			"tactic": "credential-access",
+			"color": "#fcf26b",
+			"comment": "Changed scope, content, or tactics",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1220",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1220",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "new technique",
+			"enabled": true
+		}
+	],
+	"gradient": {
+		"colors": [
+			"#ff6666",
+			"#ffe766",
+			"#8ec843"
+		],
+		"minValue": 0,
+		"maxValue": 100
+	},
+	"legendItems": [
+		{
+			"color": "#a1d99b",
+			"label": "new techniques"
+		},
+		{
+			"color": "#fcf26b",
+			"label": "changed scope, content, or tactics"
+		}
+	],
+	"showTacticRowBackground": true,
+	"tacticRowBackground": "#205b8f",
+	"selectTechniquesAcrossTactics": true
+}

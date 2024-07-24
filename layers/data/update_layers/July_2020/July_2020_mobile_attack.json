@@ -1,0 +1,230 @@
+{
+    "version": "3.0",
+    "name": "July 2020 Mobile Updates",
+    "description": "Mobile updates for the July 2020 release of ATT&CK. This layer represents the updates made since the last full release of ATT&CK.",
+    "domain": "mitre-mobile",
+    "techniques": [
+        {
+            "techniqueID": "T1577",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1541",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1541",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1540",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1540",
+            "tactic": "privilege-escalation",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1540",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1575",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1575",
+            "tactic": "execution",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1579",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1544",
+            "tactic": "command-and-control",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1576",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1422",
+            "tactic": "discovery",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1444",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1444",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1411",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1402",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1402",
+            "tactic": "execution",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1417",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1417",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1516",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1516",
+            "tactic": "impact",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1513",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1448",
+            "tactic": "impact",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1508",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf3a2",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1517",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#c7c4e0",
+            "comment": "minor_change"
+        },
+        {
+            "techniqueID": "T1517",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#c7c4e0",
+            "comment": "minor_change"
+        },
+        {
+            "techniqueID": "T1476",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#c7c4e0",
+            "comment": "minor_change"
+        },
+        {
+            "techniqueID": "T1510",
+            "tactic": "impact",
+            "enabled": true,
+            "color": "#c7c4e0",
+            "comment": "minor_change"
+        },
+        {
+            "techniqueID": "T1426",
+            "tactic": "discovery",
+            "enabled": true,
+            "color": "#c7c4e0",
+            "comment": "minor_change"
+        }
+    ],
+    "sorting": 0,
+    "hideDisabled": false,
+    "legendItems": [
+        {
+            "color": "#a1d99b",
+            "label": "additions: objects which are present in the new data and not the old"
+        },
+        {
+            "color": "#c7c4e0",
+            "label": "minor_changes: objects which have a newer last edit date in the new data than in the old, but the same version number"
+        },
+        {
+            "color": "#fcf3a2",
+            "label": "changes: objects which have a newer version number in the new data compared to the old"
+        }
+    ],
+    "showTacticRowBackground": true,
+    "tacticRowBackground": "#205b8f",
+    "selectTechniquesAcrossTactics": true
+}

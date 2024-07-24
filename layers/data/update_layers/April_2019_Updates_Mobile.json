@@ -1,0 +1,296 @@
+{
+    "version": "3.0",
+    "name": "April 2019 Mobile Updates",
+    "description": "Mobile updates for the April 2019 release of ATT&CK",
+    "domain": "mitre-mobile",
+    "techniques": [
+        {
+            "techniqueID": "T1481",
+            "tactic": "command-and-control",
+            "enabled": true,
+            "color": "#a1d99b",
+            "comment": "addition"
+        },
+        {
+            "techniqueID": "T1439",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1415",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1476",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1477",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1426",
+            "tactic": "discovery",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1464",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1401",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1400",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1400",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1449",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1466",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1417",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1417",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1467",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1448",
+            "tactic": "effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1461",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1408",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1465",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1458",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1444",
+            "tactic": "initial-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1471",
+            "tactic": "effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1411",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1421",
+            "tactic": "discovery",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1437",
+            "tactic": "command-and-control",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1437",
+            "tactic": "exfiltration",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1406",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1453",
+            "tactic": "collection",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1453",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1402",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1422",
+            "tactic": "discovery",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1451",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1450",
+            "tactic": "network-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1407",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1468",
+            "tactic": "remote-service-effects",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1399",
+            "tactic": "defense-evasion",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1399",
+            "tactic": "persistence",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1427",
+            "tactic": "lateral-movement",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        },
+        {
+            "techniqueID": "T1416",
+            "tactic": "credential-access",
+            "enabled": true,
+            "color": "#fcf26b",
+            "comment": "change"
+        }
+    ],
+    "sorting": 0,
+    "hideDisabled": false,
+    "legendItems": [
+        {
+            "color": "#fcf26b",
+            "label": "changes"
+        },
+        {
+            "color": "#a1d99b",
+            "label": "additions"
+        }
+    ],
+    "showTacticRowBackground": true,
+    "tacticRowBackground": "#205b8f",
+    "selectTechniquesAcrossTactics": true
+}

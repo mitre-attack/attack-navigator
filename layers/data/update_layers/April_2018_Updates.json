@@ -1,0 +1,420 @@
+{
+	"name": "April 2018 Updates",
+	"version": "3.0",
+	"domain": "mitre-enterprise",
+	"description": "Green techniques are techniques that are new to ATT&CK as of the April 2018 Update. Yellow techniques are techniques that changed in scope or content, including existing techniques that were added to new tactics.",
+	"filters": {
+		"stages": [
+			"act"
+		],
+		"platforms": [
+			"Windows",
+			"Linux",
+			"macOS"
+		]
+	},
+	"sorting": 0,
+	"hideDisabled": false,
+	"techniques": [
+		{
+			"techniqueID": "T1197",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1197",
+			"tactic": "persistence",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1191",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1191",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1196",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1196",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1003",
+			"tactic": "credential-access",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description and contributors",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1214",
+			"tactic": "credential-access",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1207",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1213",
+			"tactic": "collection",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1189",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1190",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1203",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1212",
+			"tactic": "credential-access",
+			"color": "#a1d99b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1211",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1068",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1210",
+			"tactic": "lateral-movement",
+			"color": "#a1d99b",
+			"comment": "Exploitation of Vulnerability was broken out into six variations - this is one of these variations under an individual tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1200",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1202",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1208",
+			"tactic": "credential-access",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1215",
+			"tactic": "persistence",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1217",
+			"tactic": "discovery",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1218",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1218",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1096",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Renamed from NTFS Extended Attributes, updated description, added data source, and contributor added",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1201",
+			"tactic": "discovery",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "persistence",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1205",
+			"tactic": "command-and-control",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1219",
+			"tactic": "command-and-control",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1091",
+			"tactic": "lateral-movement",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1091",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1198",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1198",
+			"tactic": "persistence",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1216",
+			"tactic": "defense-evasion",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1216",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1193",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1192",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1194",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1206",
+			"tactic": "privilege-escalation",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1195",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1209",
+			"tactic": "persistence",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1199",
+			"tactic": "initial-access",
+			"color": "#a1d99b",
+			"comment": "New technique added to new tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1204",
+			"tactic": "execution",
+			"color": "#a1d99b",
+			"comment": "New technique",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "privilege-escalation",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1078",
+			"tactic": "initial-access",
+			"color": "#fcf26b",
+			"comment": "Existing technique cross-referenced into new Initial Access tactic",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1080",
+			"tactic": "lateral-movement",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description, permissions required added, contributor added",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1102",
+			"tactic": "command-and-control",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description, data source added, defense bypassed added, contributor added",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1102",
+			"tactic": "defense-evasion",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description, data source added, defense bypassed added, contributor added",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1004",
+			"tactic": "persistence",
+			"color": "#fcf26b",
+			"comment": "Major content change from previous release - updated description and contributor",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1379",
+			"tactic": "stage-capabilities",
+			"color": "#fcf26b",
+			"comment": "Moved from deprecated Launch tactic to Stage Capabilities",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1397",
+			"tactic": "technical-information-gathering",
+			"color": "#74c476",
+			"comment": "New technique added to PRE-ATT&CK",
+			"enabled": true
+		}
+	],
+	"gradient": {
+		"colors": [
+			"#ff6666",
+			"#ffe766",
+			"#8ec843"
+		],
+		"minValue": 0,
+		"maxValue": 100
+	},
+	"legendItems": [
+		{
+			"color": "#a1d99b",
+			"label": "new techniques"
+		},
+		{
+			"color": "#fcf26b",
+			"label": "changed scope, content, or tactics"
+		}
+	],
+	"showTacticRowBackground": true,
+	"tacticRowBackground": "#205b8f",
+	"selectTechniquesAcrossTactics": true
+}
