@@ -34,6 +34,7 @@
     "core-js": "^3.31.1",
     "d3": "^7.8.5",
     "d3-svg-legend": "^2.25.6",
+    "detect-browser": "^5.3.0",
     "file-saver": "^2.0.5",
     "load-json-file": "^7.0.1",
     "mathjs": "^12.4.2",
