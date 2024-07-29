@@ -1,3 +1,4 @@
+
 <!--
   oooooooo8   ooooooo  oooo   oooo ooooooooooo oooooooooo    ooooooo  ooooo        oooooooo8
 o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888        888
@@ -260,23 +261,42 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                     <span class="material-icons">filter_list</span>
                 </div>
                 <div class="dropdown-container filters" *ngIf="currentDropdown === 'filters'" #dropdown [class.left]="checkalign(dropdown)">
-                    <div class="filter" *ngFor="let filter of ['platforms']">
-                        <b class="filter-label">{{ filter }}</b>
-                        <div *ngIf="viewModel.filters[filter].options.length !== 0">
-                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters[filter].options">
+                    <!-- Platforms Filter -->
+                    <div class="filter-platform">
+                        <b class="filter-label">Platforms</b>
+                        <div *ngIf="viewModel.filters.platforms.options.length !== 0">
+                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters.platforms.options">
                                 <input
                                     [id]="filterOption"
                                     class="checkbox-custom"
                                     type="checkbox"
-                                    (click)="viewModel.filters.toggleInFilter(filter, filterOption)"
-                                    [checked]="viewModel.filters.inFilter(filter, filterOption)" />
+                                    (click)="viewModel.filters.toggleInFilter('platforms', filterOption)"
+                                    [checked]="viewModel.filters.inFilter('platforms', filterOption)" />
                                 <label [for]="filterOption" class="checkbox-custom-label noselect">{{ filterOption }}</label>
                             </div>
                         </div>
-                        <div *ngIf="viewModel.filters[filter].options.length == 0">Data does not include {{ filter }}</div>
+                        <div *ngIf="viewModel.filters.platforms.options.length == 0">Data does not include Platforms</div>
+                    </div>
+
+                    <!-- Data Sources Filter -->
+                    <div class="filter-datasource">
+                        <b class="filter-label">Data Sources</b>
+                        <div *ngIf="viewModel.filters.dataSources.options.length !== 0">
+                            <div class="filter-option" *ngFor="let filterOption of viewModel.filters.dataSources.options">
+                                <input
+                                    [id]="filterOption"
+                                    class="checkbox-custom"
+                                    type="checkbox"
+                                    (click)="viewModel.filters.toggleInFilter('dataSources', filterOption)"
+                                    [checked]="viewModel.filters.inFilter('dataSources', filterOption)" />
+                                <label [for]="filterOption" class="checkbox-custom-label noselect">{{ filterOption }}</label>
+                            </div>
+                        </div>
+                        <div *ngIf="viewModel.filters.dataSources.options.length == 0">Data does not include Data Sources</div>
                     </div>
                 </div>
             </div>
+
 
             <!-- sorting -->
             <div *ngIf="configService.getFeature('sorting')" class="control-row-item">
@@ -764,11 +784,11 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
 
 <!--
 oooo     oooo      o   ooooooooooo oooooooooo  ooooo ooooo  oooo
- 8888o   888      888  88  888  88  888    888  888    888  88
- 88 888o8 88     8  88     888      888oooo88   888      888
- 88  888  88    8oooo88    888      888  88o    888     88 888
+8888o   888      888  88  888  88  888    888  888    888  88
+88 888o8 88     8  88     888      888oooo88   888      888
+88  888  88    8oooo88    888      888  88o    888     88 888
 o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
-                                                                 -->
+                                                                -->
 <mat-drawer-container class="matrices-content" autosize>
     <mat-drawer-content>
         <div class="matrices" #scrollRef>
@@ -809,11 +829,11 @@ o88o  8  o88o o88o  o888o o888o    o888o  88o8 o888o o88o  o888o
 
 <!--
 ooooo       ooooooooooo  ooooooo8 ooooooooooo oooo   oooo ooooooooo
- 888         888    88 o888    88  888    88   8888o  88   888    88o
- 888         888ooo8   888    oooo 888ooo8     88 888o88   888    888
- 888      o  888    oo 888o    88  888    oo   88   8888   888    888
+888         888    88 o888    88  888    88   8888o  88   888    88o
+888         888ooo8   888    oooo 888ooo8     88 888o88   888    888
+888      o  888    oo 888o    88  888    oo   88   8888   888    888
 o888ooooo88 o888ooo8888 888ooo888 o888ooo8888 o88o    88  o888ooo88
-                                                                      -->
+                                                                    -->
 
 <div class="legendBar" (click)="showingLegend = !showingLegend" *ngIf="!showingLegend && configService.getFeature('legend')">
     <span class="material-icons">keyboard_arrow_up</span>
