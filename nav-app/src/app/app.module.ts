@@ -41,6 +41,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { LayerSettingsComponent } from './layer-settings/layer-settings.component';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { LayerInformationComponent } from './layer-information/layer-information.component';
@@ -71,6 +72,7 @@ import { ConfigService } from './services/config.service';
         LayerInformationComponent,
         ChangelogComponent,
         ListInputComponent,
+        LayerSettingsComponent,
     ],
     imports: [
         BrowserModule,
@@ -97,7 +99,7 @@ import { ConfigService } from './services/config.service';
         MatStepperModule,
         MatPaginatorModule,
         MarkdownModule.forRoot(),
-        MatTabsModule
+        MatTabsModule,
     ],
     exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
     providers: [

@@ -663,8 +663,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public openLayerInfo(): void {
-            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerInformation' ? true : !this.viewModel.sidebarOpened;
-            this.viewModel.sidebarContentType = 'layerInformation';
+    /**
+     * Open layer settings in sidebar
+     */
+    public openLayerSettings(): void {
+            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerSettings' ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'layerSettings';
     }
 }
