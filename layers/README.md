@@ -7,7 +7,3 @@ See the latest [layer format specification](LAYERFORMATv4_5.md) for more informa
 ## Sample Layers
 
 This repository includes a couple of [sample layers](samples/) demonstrating example use cases of layers and the ATT&CK Navigator. The scripts used to generate these layer files can be found in the [mitreattack-python repository](https://github.com/mitre-attack/attack-scripts/tree/master/scripts/layers/samples). These scripts may serve as examples on how to access and work with [ATT&CK data](https://github.com/mitre/cti).
-
-## Layers showing updates to the ATT&CK knowledge base
-
-[Updates to the ATT&CK knowledge base](https://attack.mitre.org/resources/updates/) are typically accompanied by layer files showing changes to techniques. Layers for relevant updates can be found in the [data/update_layers](data/update_layers) folder. The script used to generate these update layers [can be found in our attack-scripts repository](https://github.com/mitre-attack/attack-scripts/blob/master/scripts/diff_stix.py).
