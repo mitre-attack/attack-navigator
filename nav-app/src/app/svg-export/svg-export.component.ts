@@ -5,7 +5,7 @@ import { ConfigService } from '../services/config.service';
 import { DataService } from '../services/data.service';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
 import tinycolor from 'tinycolor2';
-import * as is from 'is_js';
+import { isIE } from '../utils/utils';
 declare var d3: any; //d3js
 
 @Component({
@@ -62,7 +62,7 @@ export class SvgExportComponent implements OnInit {
 
     // browser compatibility
     public get isIE(): boolean {
-        return is.ie();
+        return isIE();
     }
 
     // getters for visibility of SVG header sections
