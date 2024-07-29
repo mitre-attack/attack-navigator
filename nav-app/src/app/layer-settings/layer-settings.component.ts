@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { ViewModel } from '../classes';
 import { DataService } from '../services/data.service';
-import { ViewModelsService } from '../services/viewmodels.service';
 
 @Component({
   selector: 'app-layer-settings',
@@ -9,16 +8,12 @@ import { ViewModelsService } from '../services/viewmodels.service';
   styleUrls: ['./layer-settings.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class LayerSettingsComponent implements OnInit {
+export class LayerSettingsComponent {
   @Input() viewModel: ViewModel;
 
   constructor(
       public dataService: DataService,
   ) {
       // intentionally left blank
-  }
-
-  ngOnInit(): void {
-    console.log(this.dataService.getDomain(this.viewModel.domainVersionID))
   }
 }
