@@ -195,7 +195,12 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             if(this.includedControls[i].name == control){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
                     if(this.includedControls[i].subfeatures[j].name == subfeature){
-                        return this.includedControls[i].subfeatures[j].enabled
+                        if(this.includedControls[i].subfeatures[j].enabled){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
                     }
                 }
             }
