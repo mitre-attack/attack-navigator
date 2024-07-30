@@ -35,13 +35,11 @@ $cellSize: 15px;
     }
 
     .matrices-columns {
-        // white-space: nowrap;
         display: table;
 
         .matrix-column {
             display: table-cell;
             white-space: normal;
-            // display: inline-block;
             padding: 10px;
             @media print {
                 padding: 0;
@@ -60,10 +58,6 @@ $cellSize: 15px;
             }
         }
     }
-}
-
-.multiselect-dropdown {
-    display: inline-block;
 }
 
 .colorpicker {
@@ -114,7 +108,6 @@ $cellSize: 15px;
     }
 
     .display-buttons {
-        // width: 183px;
         text-align: center;
 
         .squarebutton {
@@ -160,7 +153,6 @@ $cellSize: 15px;
                 }
 
                 &.buttons > div {
-                    // border: 1px solid black;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -181,15 +173,12 @@ $cellSize: 15px;
                     select {
                         width: 80px;
                     }
-
-                    // width: 100%;
                 }
 
                 &.col2 {
                     width: 45px;
 
                     input[type='number'] {
-                        // background-color: rgb(104, 60, 213);
                         width: 40px;
                     }
                 }
@@ -198,15 +187,11 @@ $cellSize: 15px;
             .minmax {
                 @include adaptive-color('background-color', color(panel-light), color(dark-4));
                 text-align: center;
-                // &.top { border-top: 1px solid black; border-bottom: 1px solid black}
-                // &.bottom { border-top: 1px solid black}
             }
         }
 
-        // button {background: red;}
         .addcolor {
             width: 100%;
-            // background: red;
         }
     }
 }
@@ -216,59 +201,12 @@ $cellSize: 15px;
     text-align: left;
 }
 
-.contextMenu-cover {
-    // covers entire page
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    // background: rgba(0, 0, 0, 0.15);
-}
-
-.contextMenu-box {
-    position: absolute;
-    // background: white;
-    &.left {
-        right: 0;
-    }
-
-    border: 1px solid black;
-    background-color: white;
-    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5);
-    position: absolute;
-    z-index: 100; //draw on top of other controls
-    width: max-content;
-
-    .contextMenu-section {
-        &:not(:first-child) {
-            border-top: 1px solid color(panel-dark);
-            margin-top: 2px;
-            padding-top: 2px;
-        }
-
-        .contextMenu-button {
-            padding: 3px;
-            cursor: pointer;
-
-            &:hover {
-                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
-            }
-        }
-    }
-}
-
 .control-section-header {
     display: flex;
     justify-content: flex-end;
     align-items: center;
   
     height: 30px;
-  }
-  
-  .control-bar-toggle {
-    @include adaptive-color("color", black, white);
-    padding: 4px 24px;
   }
   
   .control-section-tabs {
@@ -343,38 +281,6 @@ $cellSize: 15px;
     }
 }
 
-// .tooltip {
-//     position: absolute;
-//     z-index: 100; //draw on top of other controls
-
-//     padding: 6px;
-//     border-radius: 3px;
-//     background: rgba(80, 80, 80, 0.75);
-
-//     font-size: 8pt;
-//     color: white;
-
-//     max-width: 150px;
-//     overflow-x: hidden;
-
-//     .comment {
-//         max-height: 300px;
-//         overflow-y: hidden;
-//     }
-
-//     .comment-overflow-note {
-//         // color: rgb(255, 199, 190);
-//     }
-//     .metadatalist {
-//         margin: 0;
-//         margin-top: 1px;
-//         padding-left: 6px;
-//         list-style: none;
-
-//     }
-
-// }
-
 .mat-mdc-select {
     :focus {
         color: #63961c;
@@ -408,14 +314,12 @@ $cellSize: 15px;
 }
 
 .multiselect {
-    // padding: 4px;
     text-align: center;
 
     .multiselect-grouping {
         .multiselect-grouping-label {
             padding: 4px;
             font-weight: bold;
-            // font-size: 14pt;
         }
 
         .multiselect-list {
@@ -426,7 +330,6 @@ $cellSize: 15px;
             overflow-y: scroll;
 
             table {
-                // table-layout:fixed; //fixes width
                 border-collapse: collapse;
             }
 
@@ -448,7 +351,6 @@ $cellSize: 15px;
 }
 
 .search {
-    // padding: 4px;
     text-align: center;
 
     .search-list {
@@ -460,7 +362,6 @@ $cellSize: 15px;
         overflow-y: scroll;
 
         table {
-            // table-layout:fixed; //fixes width
             border-collapse: collapse;
             width: 325px;
         }
@@ -493,7 +394,6 @@ $cellSize: 15px;
     border: none;
     padding: 4px 10px;
     text-align: center;
-    //font-size: 16px;
     margin: 2px 1px;
     transition: 0.3s;
     display: inline-block;
@@ -575,31 +475,6 @@ $cellSize: 15px;
     &:hover {
         @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
         cursor: pointer;
-    }
-}
-
-.layer_info {
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    width: 300px !important;
-
-    .name_desc {
-        padding: 0 10px;
-    }
-
-    .layer-data {
-        text-align: left;
-        margin: 0 10px;
-
-        .mat-divider.layer-div {
-            margin-bottom: 10px;
-            @include adaptive-color-dark-only('border-top-color', color(dark-4));
-        }
-    }
-
-    .data-input {
-        overflow-y: auto;
-        max-height: 25vh;
     }
 }
 

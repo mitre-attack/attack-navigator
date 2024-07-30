@@ -137,7 +137,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <div *ngIf="configService.getFeature('layer_settings') && isControlIncluded('layer_controls','layer_settings')" class="control-row-item">
                     <div
                         class="control-row-button noselect"
-                        (click)="openLayerInfo()"
+                        (click)="openLayerSettings()"
                         matTooltipPosition="below"
                         matTooltip="layer settings">
                         <span class="control-label" *ngIf="showControlLabels['layer']">{{getControlDisplayName('layer_controls','layer_settings') | titlecase }}</span>

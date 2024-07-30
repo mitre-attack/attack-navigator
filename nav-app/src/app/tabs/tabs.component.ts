@@ -11,9 +11,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { Subscription, forkJoin } from 'rxjs';
-import * as is from 'is_js';
 import * as globals from '../utils/globals';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
+import { isSafari } from '../utils/utils';
 
 @Component({
     selector: 'tabs',
@@ -94,7 +94,7 @@ export class TabsComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (is.safari('<=13')) {
+        if (isSafari('<=13')) {
             // open safari version incompatibility warning
             this.safariDialogRef = this.dialog.open(this.safariWarning, {
                 width: '350px',

@@ -7,8 +7,8 @@ import { ViewModel } from '../classes';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/exceljs.min.js';
-import * as is from 'is_js';
 import tinycolor from 'tinycolor2';
+import { isIE } from '../utils/utils';
 
 @Component({
     selector: 'DataTable',
@@ -234,7 +234,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * @param filename save as filename
      */
     public saveBlob(blob, filename): void {
-        if (is.ie()) {
+        if (isIE()) {
             // internet explorer
             const nav = window.navigator as any;
             nav.msSaveOrOpenBlob(blob, filename);
@@ -691,8 +691,11 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public openLayerInfo(): void {
-            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerInformation' ? true : !this.viewModel.sidebarOpened;
-            this.viewModel.sidebarContentType = 'layerInformation';
+    /**
+     * Open layer settings in sidebar
+     */
+    public openLayerSettings(): void {
+            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerSettings' ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'layerSettings';
     }
 }
