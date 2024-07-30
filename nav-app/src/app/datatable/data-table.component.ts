@@ -143,18 +143,51 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     }
 
     handleSelectionControlsSettingsDropdown() {
-        this.currentDropdown !== 'selection_control_settings' ? this.currentDropdown = 'selection_control_settings' : this.currentDropdown = '';
+        if (this.currentDropdown !== 'selection_control_settings') {
+            this.currentDropdown = 'selection_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
         this.dropdownChange.emit(this.currentDropdown);
     }
 
     handleLayerControlsSettingsDropdown() {
-        this.currentDropdown !== 'layer_control_settings' ? this.currentDropdown = 'layer_control_settings' : this.currentDropdown = '';
+        if (this.currentDropdown !== 'layer_control_settings') {
+            this.currentDropdown = 'layer_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
         this.dropdownChange.emit(this.currentDropdown);
     }
 
     handleTechniqueControlsSettingsDropdown() {
-        this.currentDropdown !== 'technique_control_settings' ? this.currentDropdown = 'technique_control_settings' : this.currentDropdown = '';
+        if (this.currentDropdown !== 'technique_control_settings') {
+            this.currentDropdown = 'technique_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
         this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    handleKeyDownTechnique(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleTechniqueControlsSettingsDropdown();
+        }
+    }
+    
+    handleKeyDownSelection(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleSelectionControlsSettingsDropdown();
+        }
+    }
+
+    handleKeyDownLayer(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleLayerControlsSettingsDropdown();
+        }
     }
 
     isControlIncluded(control, subfeature) {
@@ -162,12 +195,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             if(this.includedControls[i].name == control){
                 for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
                     if(this.includedControls[i].subfeatures[j].name == subfeature){
-                        if(this.includedControls[i].subfeatures[j].enabled){
-                            return true;
-                        }
-                        else{
-                            return false;
-                        }
+                        return this.includedControls[i].subfeatures[j].enabled
                     }
                 }
             }

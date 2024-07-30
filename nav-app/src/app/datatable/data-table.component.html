@@ -107,6 +107,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <div class="control-row-item">
                     <div class="control-row-button dropdown noselect"
                         (click)="handleSelectionControlsSettingsDropdown()"
+                        (keydown)="handleKeyDownSelection($event)"
                         matTooltipPosition="below"
                         matTooltip="selection control settings">
                         <span class="material-symbols-outlined">
@@ -513,6 +514,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <div class="control-row-item">
                     <div class="control-row-button dropdown noselect"
                         (click)="handleLayerControlsSettingsDropdown()"
+                        (keydown)="handleKeyDownLayer($event)"
                         matTooltipPosition="below"
                         matTooltip="layer control settings">
                         <span class="material-symbols-outlined">
@@ -729,6 +731,7 @@ o888     88 o888   888o 8888o  88  88  888  88  888    888 o888   888o 888      
                 <div class="control-row-item">
                     <div class="control-row-button dropdown noselect"
                         (click)="handleTechniqueControlsSettingsDropdown()"
+                        (keydown)="handleKeyDownTechnique($event)"
                         matTooltipPosition="below"
                         matTooltip="technique control settings">
                         <span class="material-symbols-outlined">
