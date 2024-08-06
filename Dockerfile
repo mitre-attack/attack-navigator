@@ -14,9 +14,11 @@ RUN npm install
 # copy over needed files
 COPY ./nav-app/ ./
 
+# copy layers directory
 WORKDIR /src
-COPY layers/*.md ./layers/
+COPY layers/ ./layers/
 
+# copy markdown files from root
 COPY *.md ./
 
 WORKDIR /src/nav-app

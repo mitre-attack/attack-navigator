@@ -94,7 +94,7 @@ Adds support for ATT&CK v14.0.
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.5. See [layers/LAYERFORMATv4_5.md](layers/LAYERFORMATv4_5.md) for the full specification.
+Layer file format updated to version 4.5. See [layer format v4.5](layers/spec/v4.5/layerformat.md) for the full specification.
 
 - Added support for selecting only visible techniques. The `selectVisibleTechniques` field specifies whether or not hidden techniques will be included in the different select behaviors.
 - Added support for configuring how sub-techniques are displayed in the layer with the `expandedSubtechniques` field. This property can be set to `all`, `annotated`, or `none` to expand all sub-techniques, expand only annotated sub-techniques, or collapse all sub-techniques, respectively.
@@ -128,7 +128,7 @@ Adds support for ATT&CK v13.
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.4. This update adds support for layers created with a custom collection or STIX bundle; the optional `customDataURL` field contains the URL from which custom data was loaded. This update is fully backwards compatible with layer format v4.3 since the added field is optional. See [layers/LAYERFORMATv4_4.md](layers/LAYERFORMATv4_4.md) for the full specification.
+Layer file format updated to version 4.4. This update adds support for layers created with a custom collection or STIX bundle; the optional `customDataURL` field contains the URL from which custom data was loaded. This update is fully backwards compatible with layer format v4.3 since the added field is optional. See [layer format v4.4](layers/spec/v4.4/layerformat.md) for the full specification.
 
 # 4.7.1 - 8 November 2022
 
@@ -315,7 +315,7 @@ Version 4.4 of the Navigator restores Safari support provided you are using Safa
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.2. This update is fully backwards compatible with the layer format v4.1 since the added fields are optional. See [layers/LAYERFORMATv4_2.md](layers/LAYERFORMATv4_2.md) for the full specification.
+Layer file format updated to version 4.2. This update is fully backwards compatible with the layer format v4.1 since the added fields are optional. See [layer format v4.2](layers/spec/v4.2/layerformat.md) for the full specification.
 
 This update adds settings for aggregate scores to the layout object of the layer:
 
@@ -356,7 +356,7 @@ Refactored the implementation of tabs to reduce performance issues when opening 
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.1. This update is fully backwards compatible with layer format v4.0 since the added field is optional. See [layers/LAYERFORMATv4_1.md](layers/LAYERFORMATv4_1.md) for the full specification.
+Layer file format updated to version 4.1. This update is fully backwards compatible with layer format v4.0 since the added field is optional. See [layer format v4.1](layers/spec/v4.1/layerformat.md) for the full specification.
 
 This update adds an optional `divider` object to the `metadata` format on technique objects. Each object in the metadata array must either be of the schema `{"name": string, "value": string}` or `{"divider": boolean}`. A separator will be displayed in the metadata tooltip where the `divider` property occurs in the list of metadata.
 
@@ -391,7 +391,7 @@ This update adds an optional `divider` object to the `metadata` format on techni
 
 ## Layer File Format Changes
 
-Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the Pre-ATT&CK domain. See [layers/LAYERFORMATv4.md](layers/LAYERFORMATv4.md) for the full specification.
+Layer file format updated to version 4.0. Older versions can still be loaded in the Navigator, but will no longer display the Pre-ATT&CK domain. See [layer format v4.0](layers/spec/v4.0/layerformat.md) for the full specification.
 
 - ATT&CK version 8.0 removed the pre-ATT&CK domain, which became two tactics tagged with the `PRE` platform in the Enterprise domain. The `stages` section of filters have been removed to reflect this migration.
 - Replaced `version` field with `versions` object which specifies the layer format, Navigator, and ATT&CK content versions in support of the mixed domains and versions update.
@@ -569,7 +569,7 @@ The "features" structure is used to enable/disable specific Navigator features. 
 
 ## Layer File Format Changes
 
-Layer file format updated to version 2.2. Older versions can still be loaded in the Navigator, and this update is fully backwards compatible with Version 2.1. See [layers/LAYERFORMATv2_2md](layers/LAYERFORMATv2_2.md) for the full v2.2 specification.
+Layer file format updated to version 2.2. Older versions can still be loaded in the Navigator, and this update is fully backwards compatible with Version 2.1. See [layer format v2.2](layers/spec/v2.2/layerformat.md) for the full specification.
 
 - Added the following cloud platforms to the set of acceptable enterprise platforms: "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS".
 - Updated Enterprise and Mobile platforms to match their format as seen elsewhere in ATT&CK. This change is fully backwards compatible, and if the old format is detected it will automatically be updated to the new format.
@@ -654,7 +654,7 @@ Also, please note that multiple matrices are only supported for `mitre-mobile`, 
 
 ## Layer File Format Changes
 
-Layer file format updated to version 2.1. This update is fully backwards compatible with layer format v2.0 since all the added fields are optional. See [layers/LAYERFORMATv2_1.md](layers/LAYERFORMATv2_1.md) for the full v2.1 specification.
+Layer file format updated to version 2.1. This update is fully backwards compatible with layer format v2.0 since all the added fields are optional. See [layer format v2.1](layers/spec/v2.1/layerformat.md) for the full specification.
 
 This update constitutes the addition of `metadata` fields to the layer and technique objects. Metadata can be used to support other applications using the layer format, or to add additional descriptive fields to layers or techniques. Metadata is formatted as an array, and each piece of metadata in the array must conform to the schema `{"name": string, "value": string}`.  
 
@@ -714,7 +714,7 @@ This update constitutes the addition of `metadata` fields to the layer and techn
 
 ## Layer File Format Changes
 
-Layer file format updated to version 2.0. Older layer versions can still be loaded by the Navigator, however some fields may no longer be supported. See [layers/LAYERFORMATv2.md](layers/LAYERFORMATv2.md) for the full v2.0 specification.
+Layer file format updated to version 2.0. Older layer versions can still be loaded by the Navigator, however some fields may no longer be supported. See [layer format v2.0](layers/spec/v2.0/layerformat.md) for the full specification.
 
 - Replaced the `viewFullTable` field (boolean) with the `viewMode` field (number) in order to support the "super compact" view option. See issue [#11](https://github.com/mitre-attack/attack-navigator/issues/11).
   - If `viewFullTable` is present in a layer file uploaded to the v2.0 Navigator it will be ignored.

@@ -86,7 +86,6 @@ export class HelpComponent implements OnInit {
      */
     public openLayerDialog(): void {
         this.dialog.open(LayerInformationComponent, {
-            maxWidth: '90ch',
             autoFocus: false,
             panelClass: this.data.theme,
         });
