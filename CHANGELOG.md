@@ -213,7 +213,7 @@ Adds support for ATT&CK v11.
 
 ## Layer File Format Changes
 
-Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects and to layers. This supports the assignment of hyperlinks to techniques which are accessed in the context menu and to layers which are accessed in the layer information dropdown menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the technique context menu where the `divider` property occurs in the list of hyperlinks.
+Updated the Layer File Format to v4.3 which adds a `links` array field to technique objects and to layers. This supports the assignment of hyperlinks to techniques which are accessed in the context menu and to layers which are accessed in the layer information dropdown menu. Link objects must conform to the schema `{"label": string, "url": string}` or `{"divider": boolean}`. A separator is displayed in the technique context menu where the `divider` property occurs in the list of hyperlinks. See [layer format v4.3](layers/spec/v4.3/layerformat.md) for the full specification.
 
 # v4.5.4 - 15 November 2021
 
@@ -508,7 +508,7 @@ If you want to continue using the non-sub-techniques Navigator, please use the [
 
 ## Layer File Format Changes
 
-Layer file format updated to version 3.0. Older versions can still be loaded in the Navigator, but may have degraded functionality.
+Layer file format updated to version 3.0. Older versions can still be loaded in the Navigator, but may have degraded functionality. See [layer format v3.0](layers/spec/v3.0/layerformat.md) for the full specification.
 
 - Removed "viewMode" enumeration in favor of "layout" object. viewMode will get parsed into a layout configuration automatically, but the conversion is not perfect since the layouts have changed.
 - Added "showSubtechniques" field to technique objects.
