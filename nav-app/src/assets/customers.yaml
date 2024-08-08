@@ -1,0 +1,189 @@
+---
+- aquamarinedoe:
+    name: Harvest House
+    sectors:
+      - Agriculture
+      - Food and Agriculture
+    geographies:
+      - Netherlands
+- awesomesauce:
+    name: Hunt & Hackett
+    sectors:
+      - private sectors
+      - Consulting companies
+    geographies:
+      - Netherlands
+- azurealpaca:
+    name: ONE-Dyas
+    sectors:
+      - Oil and gas
+      - Critical infrastructure
+    geographies:
+      - Netherlands
+- bluerabbit:
+    name: Huisman
+    sectors:
+      - Maritime and Shipbuilding
+    geographies:
+      - Netherlands
+      - Singapore
+      - Brazil
+      - China
+      - United States
+      - Czechia
+- blueraccoon:
+    name: Monta
+    sectors:
+      - Shipping and Logistics
+      - Retail
+    geographies:
+      - Netherlands
+- brownokapi:
+    name: KUBO
+    sectors:
+      - Food and Agriculture
+      - Agriculture
+    geographies:
+      - Netherlands
+- graydeer:
+    name: MMA
+    sectors:
+      - Law enforcement
+    geographies:
+      - Netherlands
+- graymoose:
+    name: Fokker Services
+    sectors:
+      - Aviation
+      - Aerospace
+    geographies:
+      - Netherlands
+      - United States
+      - Singapore
+- greenelephant:
+    name: iRvN
+    sectors:
+      - Government
+      - Critical infrastructure
+    geographies:
+      - Netherlands
+- greenwalrus:
+    name: Iv-Groep
+    sectors:
+      - Construction
+      - Consulting
+    geographies:
+      - Netherlands
+      - Poland
+- greenwolf:
+    name: the Greenery
+    sectors:
+      - Food
+      - Food and Agriculture
+    geographies:
+      - Netherlands
+- indigocotinga:
+    name: Deribit
+    sectors:
+      - Banking & Investment Services
+      - Financial
+    geographies:
+      - Netherlands
+      - Panama
+      - United Arab Emirates
+- navycoot:
+    name: van Halteren
+    sectors:
+      - Construction
+      - Consulting
+      - Defense
+      - Critical infrastructure
+    geographies:
+      - Netherlands
+- orangeimpala:
+    name: CRV
+    sectors:
+      - Agriculture
+    geographies:
+      - Netherlands
+      - Belgium
+      - New Zealand
+      - Germany
+- plumdingo:
+    name: Headfirst group
+    sectors:
+      - Human Resources
+      - Web development
+    geographies:
+      - Netherlands
+      - Belgium
+- purplemandrill:
+    name: Esdec
+    sectors:
+      - Energy
+    geographies:
+      - United States
+      - Netherlands
+      - Spain
+      - Norway
+      - Sweden
+      - Finland
+      - Portugal
+      - United Kingdom
+      - France
+- purplepanda:
+    name: VidaXL
+    sectors:
+      - Retail
+      - Shipping and Logistics
+    geographies:
+      - Netherlands
+- redcapybara:
+    name: Hillebrand
+    sectors:
+      - Shipping and Logistics
+      - Food
+    geographies:
+      - Europe
+      - Netherlands
+      - Asia
+      - North America
+      - South America
+      - Africa
+- silvercheetah:
+    name: Atlas Edge
+    sectors:
+      - Internet infrastructure
+    geographies:
+      - United Kingdom
+      - Netherlands
+      - Germany
+- tealgorilla:
+    name: Agro care
+    sectors:
+      - Agriculture
+      - Food and Agriculture
+    geographies:
+      - France
+      - Netherlands
+      - Tunisia
+- yellowbighorn:
+    name: ANVS
+    sectors:
+      - Government
+    geographies:
+      - Netherlands
+- yellowcrow:
+    name: Vroon
+    sectors:
+      - Netherlands
+    geographies:
+      - Maritime and Shipbuilding
+- bisquechipmunk:
+    name: ICT Group
+    sectors:
+      - Consulting
+      - IT
+    geographies:
+      - Netherlands
+      - Bulgaria

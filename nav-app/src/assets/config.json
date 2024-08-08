@@ -1,7 +1,5 @@
 {
-<<<<<<< Updated upstream
 	"collection_index_url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/index.json",
-
     "versions": {
 		"enabled": false,
 		"entries": [
@@ -18,7 +16,6 @@
 			}
 		]
 	},
-=======
     "versions": [
         {
           "name": "ATT&CK v15",
@@ -253,7 +250,6 @@
             ]
         }
     ],
->>>>>>> Stashed changes
 
     "custom_context_menu_items": [
 

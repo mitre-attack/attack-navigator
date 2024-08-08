@@ -1,13 +1,6 @@
-<<<<<<< Updated upstream
-import { Component, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
-import { DataService } from '../services/data.service';
 import { Tab, Domain, Version, ViewModel } from '../classes';
-=======
 import { Component, ViewChild, TemplateRef, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { DataService, LayerService, SharedService, CompanyDictionary } from '../services/data.service';
-import { Domain } from '../classes/stix';
-import { Tab, Version, ViewModel } from '../classes';
->>>>>>> Stashed changes
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
@@ -765,6 +758,35 @@ export class TabsComponent implements AfterViewInit {
         } catch (err) {
             console.error('ERROR: The file structure is invalid.', err);
             alert('ERROR: The file structure is invalid.');
+        }
+    }
+
+    private async loadObjAsLayer(context: TabsComponent, layerObj: any): Promise<void> {
+        let viewModel = context.viewModelsService.newViewModel('loading layer...', undefined);
+        try {
+            let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
+            await context.versionMismatchWarning(layerVersionStr);
+            if (!context.dataService.getDomain(viewModel.domainVersionID)) {
+                throw new Error(`Error: '${viewModel.domain}' (v${viewModel.version}) is an invalid domain.`);
+            }
+
+            let isCustom = 'customDataURL' in layerObj;
+            if (!isCustom) {
+                await context.upgradeLayer(viewModel, layerObj, true);
+                console.debug(`loaded layer "${viewModel.name}"`);
+            } else {
+                // load as custom data
+                viewModel.deserialize(layerObj);
+                let url = layerObj['customDataURL'];
+                context.newLayerFromURL(
+                    { url: url, version: viewModel.version, identifier: viewModel.domain },
+                    layerObj
+                );
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`ERROR parsing layer, check the javascript console for more information.`);
+            context.viewModelsService.destroyViewModel(viewModel);
         }
     }
 

@@ -83,7 +83,7 @@ def get_tds_data(companyName, sectors, geographies):
       for tech in companyTechData:
         try:
           datasourceDict = technologyCoverage.get(tech, {}).get(dataSource, {})
-          if dataComp in datasourceDict:
+          if datasourceDict[dataComp] != 0:
             techCovers.append({tech: datasourceDict[dataComp]})
 
         except:

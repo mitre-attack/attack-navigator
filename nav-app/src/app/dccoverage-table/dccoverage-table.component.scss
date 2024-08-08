@@ -71,3 +71,31 @@ thead {
   padding: 20px;
   font-size: 16px;
 }
+
+.coverage-table {
+  width: 100%;
+}
+
+.coverage-row {
+  background-color: lightgrey;
+  background-image: linear-gradient(to right, green, green);
+  background-repeat: no-repeat;
+}
+
+.coverage-bar-container {
+  position: relative;
+  width: 100%;
+}
+
+.coverage-bar {
+  height: 100%;
+  background-color: green;
+}
+
+.green_cell .coverage-row {
+  background-image: linear-gradient(to right, green, green);
+}
+
+.yellow_cell .coverage-row {
+  background-image: linear-gradient(to right, yellow, yellow);
+}

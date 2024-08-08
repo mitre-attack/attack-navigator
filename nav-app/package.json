@@ -41,6 +41,7 @@
         "d3-svg-legend": "^2.25.6",
         "express": "^4.19.2",
         "file-saver": "^2.0.5",
+        "html2canvas": "^1.4.1",
         "is_js": "^0.9.0",
         "load-json-file": "^7.0.1",
         "mathjs": "^10.6.4",

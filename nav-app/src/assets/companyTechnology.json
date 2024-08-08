@@ -1,8 +1,6 @@
 {
     "Huisman": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_WAF",
         "BEYONDTRUST_REMOTE_ACCESS",
         "FORTINET_FIREWALL",
@@ -21,14 +19,12 @@
     ],
     "Hillebrand": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CB_DEFENSE",
         "CB_EDR",
         "CISCO_ASA_FIREWALL",
         "CISCO_ROUTER",
         "CLOUDFLARE_WAF",
-        "DUO_AUTH",
+        "DUO",
         "FORTINET_FIREWALL",
         "FORTINET_FORTIANALYZER",
         "HAPROXY",
@@ -62,8 +58,6 @@
     ],
     "CRV": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CHECKPOINT_FIREWALL",
         "CISCO_MERAKI",
         "FORTINET_FIREWALL",
@@ -83,8 +77,6 @@
     ],
     "ESDEC": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CISCO_MERAKI",
         "MICROSOFT_DEFENDER_ENDPOINT",
@@ -103,8 +95,6 @@
     "Hunt & Hackett": [
         "AWS_CLOUDTRAIL",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_MDM_INTUNE",
         "AZURE_RESOURCE_LOGS",
         "GCP_BIGQUERY_CONTEXT",
@@ -133,11 +123,8 @@
     "MMA": [
         "APACHE",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CB_EDR",
-        "DUO_AUTH",
-        "DUO_USER_CONTEXT",
+        "DUO",
         "FORTINET_FIREWALL",
         "MICROSOFT_GRAPH_ALERT",
         "MYSQL",
@@ -153,8 +140,6 @@
     ],
     "Fokker services": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CISCO_ISE",
         "CISCO_SWITCH",
@@ -178,8 +163,6 @@
     "Atlas Edge": [
         "AZURE_ACTIVITY",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_FIREWALL",
         "AZURE_NSG_FLOW",
         "AZURE_VPN",
@@ -193,11 +176,8 @@
     ],
     "Van Halteren": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CISCO_MERAKI",
-        "DUO_AUTH",
-        "DUO_USER_CONTEXT",
+        "DUO",
         "EXCHANGE_MAIL",
         "FORTINET_FIREWALL",
         "IIS",
@@ -214,8 +194,6 @@
     "Harvest House": [
         "ARUBA_WIRELESS",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CISCO_MERAKI",
         "CISCO_ROUTER",
         "IIS",
@@ -230,8 +208,6 @@
     ],
     "KUBO": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "MICROSOFT_DEFENDER_ENDPOINT",
         "MICROSOFT_GRAPH_ALERT",
         "OFFICE 365",
@@ -246,8 +222,6 @@
     ],
     "Agro Care": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "FORTINET_FIREWALL",
         "MICROSOFT_DEFENDER_ENDPOINT",
         "MICROSOFT_GRAPH_ALERT",
@@ -261,11 +235,8 @@
     ],
     "Monta": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CISCO_SWITCH",
-        "DUO_AUTH",
-        "DUO_USER_CONTEXT",
+        "DUO",
         "F5_BIGIP_LTM",
         "FORTINET_FIREWALL",
         "HAPROXY",
@@ -287,8 +258,6 @@
     ],
     "Greenery": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "CISCO_ISE",
         "CISCO_MERAKI",
         "CISCO_SWITCH",
@@ -334,8 +303,6 @@
     ],
     "Iv-Groep": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_DEVOPS",
         "AZURE_RESOURCE_LOGS",
         "CISCO_MERAKI",
@@ -353,8 +320,6 @@
     ],
     "Vroon": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CLEARPASS",
         "EXCHANGE_MAIL",
@@ -374,8 +339,6 @@
         "APACHE",
         "AUDITD",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CB_EDR",
         "CHECKPOINT_FIREWALL",
@@ -398,8 +361,6 @@
     "VidaXL": [
         "AZURE_ACTIVITY",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CATO_NETWORKS",
         "CISCO_SWITCH",
@@ -434,8 +395,6 @@
     "One-Dyas": [
         "AZURE_ACTIVITY",
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_MDM_INTUNE",
         "AZURE_RESOURCE_LOGS",
         "CISCO_FIREPOWER_FIREWALL",
@@ -449,12 +408,28 @@
     ],
     "Head First": [
         "AZURE_AD",
-        "AZURE_AD_AUDIT",
-        "AZURE_AD_CONTEXT",
         "AZURE_RESOURCE_LOGS",
         "CISCO_MERAKI",
         "MICROSOFT_DEFENDER_ENDPOINT",
         "MICROSOFT_GRAPH_ALERT",
         "OFFICE 365"
+    ],
+    "ICT Group": [
+        "ARUBA_WIRELESS",
+        "AZURE_ACTIVITY",
+        "AZURE_AD",
+        "AZURE_RESOURCE_LOGS",
+        "BARRACUDA_FIREWALL",
+        "CISCO_SWITCH",
+        "LINUX_DHCP",
+        "MICROSOFT_DEFENDER_ENDPOINT",
+        "MICROSOFT_GRAPH_ALERT",
+        "OFFICE 365",
+        "PFSENSE",
+        "SQUID_WEBPROXY",
+        "VMWARE_ESX",
+        "VMWARE_VCENTER",
+        "WINDOWS_DNS",
+        "WINEVTLOG"
     ]
 }

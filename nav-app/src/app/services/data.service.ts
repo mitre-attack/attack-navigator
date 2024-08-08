@@ -8,11 +8,8 @@ import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mit
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
-<<<<<<< Updated upstream
 import * as globals from '../utils/globals';
-=======
 import { ViewModel } from '../classes/view-model';
->>>>>>> Stashed changes
 
 @Injectable({
     providedIn: 'root',
@@ -55,7 +52,7 @@ export class DataService {
     public onDataLoad(domainVersionID, callback) {
         this.getDomain(domainVersionID).dataLoadedCallbacks.push(callback);
     }
-
+ 
     /**
      * Parse the given stix bundles into the relevant data holders
      * @param domain

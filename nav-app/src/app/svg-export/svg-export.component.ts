@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
-import { DataService } from '../services/data.service';
+import { DataService, SharedService, CompanyDictionary } from '../services/data.service';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
 import tinycolor from 'tinycolor2';
 import * as is from 'is_js';
@@ -17,6 +17,9 @@ declare var d3: any; //d3js
 export class SvgExportComponent implements OnInit {
     // vm to render
     public viewModel: ViewModel;
+    public sector: string; // Voeg sector toe
+    public geographies: string[]; // Voeg geographies toe
+    public companyName: string;
 
     // SVG configuration
     public config: any = {};
@@ -112,17 +115,30 @@ export class SvgExportComponent implements OnInit {
         private dialogRef: MatDialogRef<SvgExportComponent>, // needed for mat-dialog-close
         private configService: ConfigService,
         private dataService: DataService,
+        private sharedService: SharedService, // Voeg SharedService toe aan de constructor
         @Inject(MAT_DIALOG_DATA) public data
     ) {
         this.config = this.svgConfigDefaults;
     }
 
-    ngOnInit(): void {
-        this.viewModel = this.data.vm;
-        this.svgElementID = 'svgInsert' + this.viewModel.uid;
+      ngOnInit(): void {
+          this.viewModel = this.data.vm;
+          this.svgElementID = 'svgInsert' + this.viewModel.uid;
+
+          // Voeg de nieuwe legenda-item toe
+          this.viewModel.legendItems.push({ label: 'Cannot be detected', color: '#3884bc' });
+
+          // Verkrijg sector en geographies van de shared service
+          this.sharedService.currentLayer.subscribe((companyData: CompanyDictionary) => {
+              if (companyData) {
+                  this.companyName = companyData.companyName;
+                  this.sector = companyData.sectors.join(', ');
+                  this.geographies = companyData.geographies;
+              }
+          });
 
         let self = this;
-        //determine if the layer has any scores
+        // determine if the layer has any scores
         let visibleTechniques = self.viewModel.getVisibleTechniquesList();
         for (let unionID of visibleTechniques) {
             let techniqueVM = self.viewModel.getTechniqueVM_id(unionID);
@@ -138,12 +154,12 @@ export class SvgExportComponent implements OnInit {
         if (self.hasLegendItems) legendSectionCount++;
         self.config.legendHeight = 0.5 * legendSectionCount;
 
-        //initial legend position for undocked legend
+        // initial legend position for undocked legend
         this.config.legendX = this.config.width - this.config.legendWidth - 0.1;
         this.config.legendY = this.config.height - this.config.legendHeight - 0.1;
         if (this.config.showHeader) this.config.legendY -= this.config.headerHeight;
 
-        //initial table border color
+        // initial table border color
         if (this.config.theme === 'light') {
             this.config.tableBorderColor = '#6B7279';
         } else if (this.config.theme === 'dark') {
@@ -158,51 +174,52 @@ export class SvgExportComponent implements OnInit {
 
     /** build the SVG */
     public buildSVG(self?: any, bypassDebounce: boolean = false): void {
-        if (!self) self = this; // called from somewhere other than ngOnInit
+      if (!self) self = this; // called from somewhere other than ngOnInit
 
-        // debounce
-        if (self.buildSVGDebounce && !bypassDebounce) return;
-        if (!bypassDebounce) {
-            self.buildSVGDebounce = true;
-            window.setTimeout(function () {
-                self.buildSVG(self, true);
-            }, 500);
-            return;
-        }
-        self.buildSVGDebounce = false;
+      // debounce
+      if (self.buildSVGDebounce && !bypassDebounce) return;
+      if (!bypassDebounce) {
+          self.buildSVGDebounce = true;
+          window.setTimeout(function () {
+              self.buildSVG(self, true);
+          }, 500);
+          return;
+      }
+      self.buildSVGDebounce = false;
 
-        // set svg size
-        this.setSize(self, self.config.size, self.config.orientation);
+      // set svg size
+      this.setSize(self, self.config.size, self.config.orientation);
 
-        // calculate svg height and width
-        let margin = { top: 5, right: 5, bottom: 5, left: 5 };
-        let width = Math.max(self.toPx(self.config.width, self.config.unit) - (margin.right + margin.left), 10);
-        let svgWidth = width + margin.left + margin.right;
-        let height = Math.max(self.toPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
-        let svgHeight = height + margin.top + margin.bottom;
-        let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
+      // calculate svg height and width
+      let margin = { top: 5, right: 5, bottom: 5, left: 5 };
+      let width = Math.max(self.toPx(self.config.width, self.config.unit) - (margin.right + margin.left), 10);
+      let svgWidth = width + margin.left + margin.right;
+      let height = Math.max(self.toPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
+      let svgHeight = height + margin.top + margin.bottom;
+      let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
 
-        // remove previous graphic
-        let svgElement: HTMLElement = document.getElementById(self.svgElementID);
-        svgElement.innerHTML = '';
+      // remove previous graphic
+      let svgElement: HTMLElement = document.getElementById(self.svgElementID);
+      svgElement.innerHTML = '';
 
-        // create new SVG
-        let svg = d3
-            .select('#' + self.svgElementID)
-            .append('svg')
-            .attr('width', svgWidth)
-            .attr('height', svgHeight)
-            .attr('xmlns', 'http://www.w3.org/2000/svg')
-            .attr('id', 'svg' + self.viewModel.uid) // SVG download tag
-            .append('g')
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-            .style('font-family', self.config.font);
+      // create new SVG
+      let svg = d3
+          .select('#' + self.svgElementID)
+          .append('svg')
+          .attr('width', svgWidth)
+          .attr('height', svgHeight)
+          .attr('xmlns', 'http://www.w3.org/2000/svg')
+          .attr('id', 'svg' + self.viewModel.uid) // SVG download tag
+          .append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+          .style('font-family', self.config.font);
+
 
         // -----------------------------------------------------------------------------
         // LEGEND
         // -----------------------------------------------------------------------------
 
-        let legendSection = { title: 'legend', contents: [] };
+        let legendSection = { title: 'Legend', contents: [] };
 
         // scores and gradient
         if (self.hasScores && self.showGradient) {
@@ -222,22 +239,27 @@ export class SvgExportComponent implements OnInit {
             let headerSections: HeaderSection[] = [];
 
             // about section
-            if (self.showName || self.showDescription) {
-                let aboutSection = { title: 'about', contents: [] };
-                if (self.showName) aboutSection.contents.push({ label: 'name', data: this.viewModel.name });
+            if (self.showName || self.showDescription || this.sector || this.geographies) {
+                let aboutSection = { title: 'About', contents: [] };
+                if (self.showName) aboutSection.contents.push({ label: 'name', data: this.companyName });
                 if (self.showDescription) aboutSection.contents.push({ label: 'description', data: this.viewModel.description });
+                // Voeg sector en geographies toe aan de about sectie
+                if (this.sector) aboutSection.contents.push({ label: 'sector', data: this.sector });
+                if (this.geographies && this.geographies.length > 0) {
+                    aboutSection.contents.push({ label: 'geographies', data: this.geographies.join(', ') });
+                }
                 headerSections.push(aboutSection);
             }
 
             // domain section
-            let domainSection = { title: 'domain', contents: [] };
+            let domainSection = { title: 'Domain', contents: [] };
             if (self.showDomain) {
                 let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
                 domainSection.contents.push({ label: 'domain', data: `${domain.name} v${domain.version.number}` });
             }
 
             // platform section
-            let platformSection = { title: 'platforms', contents: [] };
+            let platformSection = { title: 'Platforms', contents: [] };
             if (self.showFilters) {
                 let filterData = { label: 'platforms', data: this.viewModel.filters.platforms.selection.join(', ') };
 
@@ -290,7 +312,7 @@ export class SvgExportComponent implements OnInit {
 
             if (headerSections.length == 0) headerHeight = 0; // no header sections
         } else {
-            //no header
+            // no header
             headerHeight = 0;
         }
 
@@ -385,34 +407,19 @@ export class SvgExportComponent implements OnInit {
                 return `translate(${subtechniqueIndent}, ${yRange(subtechnique.yPosition)})`;
             });
 
-        // add cell style to techniques
+
+        // add cell style to sub-techniques
         techniqueGroups
             .append('rect')
             .attr('class', 'cell')
-            .attr('height', yRange(1))
+            .attr('height', function (technique: RenderableTechnique) {
+                const fontSize = self.optimalFontSize(this, technique.text, xRange.bandwidth(), yRange(1), false);
+                return yRange(1) + (fontSize - self.config.fontSize);
+            })
             .attr('width', xRange.bandwidth())
             .attr('fill', function (technique: RenderableTechnique) {
                 if (technique.fill !== null) {
                     return technique.fill;
-                } else {
-                    if (self.config.theme === 'light') {
-                        return '#ffffff';
-                    } else {
-                        return '#2e2e3f';
-                    }
-                }
-            })
-            .attr('stroke', self.config.tableBorderColor);
-
-        // add cell style to sub-techniques
-        subtechniqueGroups
-            .append('rect')
-            .attr('class', 'cell')
-            .attr('height', yRange(1))
-            .attr('width', xRange.bandwidth() - subtechniqueIndent)
-            .attr('fill', function (subtechnique: RenderableTechnique) {
-                if (subtechnique.fill !== null) {
-                    return subtechnique.fill;
                 } else {
                     if (self.config.theme === 'light') {
                         return '#ffffff';
@@ -466,8 +473,9 @@ export class SvgExportComponent implements OnInit {
                 return technique.text;
             })
             .attr('font-size', function (technique: RenderableTechnique) {
-                const fontSize = self.optimalFontSize(this, technique.text, xRange.bandwidth(), yRange(1), false);
+                const fontSize = self.optimalFontSize(this, technique.text, xRange.bandwidth(), yRange(1), false) + 3;
                 if (fontSize < minFontSize) minFontSize = fontSize;
+
                 return fontSize;
             })
             .attr('fill', function (technique: RenderableTechnique) {
@@ -481,6 +489,7 @@ export class SvgExportComponent implements OnInit {
                     }
                 }
             })
+
             .each(function () {
                 self.verticalAlignCenter(this);
             });
@@ -679,12 +688,12 @@ export class SvgExportComponent implements OnInit {
                 .domain(
                     self.viewModel.legendItems.map(function (item) {
                         return item.label;
-                    })
+                    }).concat('Cannot be detected')
                 )
                 .range(
                     self.viewModel.legendItems.map(function (item) {
                         return item.color;
-                    })
+                    }).concat('#3884bc') // Voeg hier de blauwe kleur toe
                 );
 
             // legend svg group
@@ -694,7 +703,7 @@ export class SvgExportComponent implements OnInit {
                 .call(
                     d3
                         .legendColor()
-                        .shapeWidth(width / self.viewModel.legendItems.length)
+                        .shapeWidth(width / (self.viewModel.legendItems.length + 1)) // +1 voor het nieuwe item
                         .shapePadding(0)
                         .shape('rect')
                         .orient('horizontal')

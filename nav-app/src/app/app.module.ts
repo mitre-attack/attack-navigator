@@ -83,7 +83,8 @@ import { CoverageDetailsDialogComponent } from './coverage-details-dialog/covera
         ListInputComponent,
         MyChartComponent,
         DCcoverageTableComponent,
-        CoverageDetailsDialogComponent
+        CoverageDetailsDialogComponent,
+
     ],
     imports: [
         BrowserModule,

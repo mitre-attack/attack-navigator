@@ -1,5 +1,5 @@
 {
-    "AZURE_AD_*": {
+    "AZURE_AD": {
         "Active Directory": {
             "Active Directory Credential Request": 100,
             "Active Directory Object Access": 100,
@@ -7,14 +7,151 @@
             "Active Directory Object Deletion": 100,
             "Active Directory Object Modification": 100
         },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
         "Group": {
             "Group Enumeration": 100,
             "Group Metadata": 100,
             "Group Modification": 100
         },
+        "Image": {
+            "Image Creation": 100,
+            "Image Deletion": 100,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
         "Logon Session": {
             "Logon Session Creation": 100,
             "Logon Session Metadata": 100
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
         },
         "User Account": {
             "User Account Authentication": 100,
@@ -22,9 +159,42 @@
             "User Account Deletion": 100,
             "User Account Metadata": 100,
             "User Account Modification": 100
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
     "AZURE_ACTIVITY": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 100,
+            "Active Directory Object Creation": 100,
+            "Active Directory Object Deletion": 100,
+            "Active Directory Object Modification": 100
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
         "Cloud Service": {
             "Cloud Service Disable": 100,
             "Cloud Service Enumeration": 100,
@@ -39,15 +209,124 @@
             "Cloud Storage Metadata": 100,
             "Cloud Storage Modification": 100
         },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
         "Image": {
-            "Image Creation": 10,
-            "Image Deletion": 10,
-            "Image Metadata": 10,
-            "Image Modification": 10
+            "Image Creation": 50,
+            "Image Deletion": 50,
+            "Image Metadata": 50,
+            "Image Modification": 50
+        },
+        "Instance": {
+            "Instance Creation": 50,
+            "Instance Deletion": 50,
+            "Instance Enumeration": 50,
+            "Instance Metadata": 50,
+            "Instance Modification": 50,
+            "Instance Start": 50,
+            "Instance Stop": 50
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
         },
         "Logon Session": {
             "Logon Session Creation": 10,
             "Logon Session Metadata": 10
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
         },
         "Snapshot": {
             "Snapshot Creation": 100,
@@ -55,9 +334,35 @@
             "Snapshot Enumeration": 100,
             "Snapshot Metadata": 100,
             "Snapshot Modification": 100
+        },
+        "User Account": {
+            "User Account Authentication": 50,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
-    "MICROSOFT_GRAPH_ALERT ": {},
     "OFFICE 365": {
         "Active Directory": {
             "Active Directory Credential Request": 50,
@@ -69,6 +374,45 @@
         "Application Log": {
             "Application Log Content": 100
         },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
         "File": {
             "File Access": 100,
             "File Creation": 100,
@@ -76,16 +420,102 @@
             "File Metadata": 100,
             "File Modification": 100
         },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
         "Group": {
+            "Group Enumeration": 0,
             "Group Metadata": 50,
             "Group Modification": 50
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
         },
         "Logon Session": {
             "Logon Session Creation": 100,
             "Logon Session Metadata": 100
         },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
         "Network Share": {
             "Network Share Access": 100
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
         },
         "User Account": {
             "User Account Authentication": 100,
@@ -93,6 +523,26 @@
             "User Account Deletion": 100,
             "User Account Metadata": 100,
             "User Account Modification": 100
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
     "WINEVTLOG": {
@@ -103,25 +553,101 @@
             "Active Directory Object Deletion": 100,
             "Active Directory Object Modification": 100
         },
+        "Application Log": {
+            "Application Log Content": 0
+        },
         "Certificate": {
             "Certificate Registration": 10
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
         },
         "Command": {
             "Command Execution": 50
         },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
         "Firewall": {
             "Firewall Disable": 100,
+            "Firewall Enumeration": 0,
             "Firewall Metadata": 10,
             "Firewall Rule Modification": 10
+        },
+        "Firmware": {
+            "Firmware Modification": 0
         },
         "Group": {
             "Group Enumeration": 100,
             "Group Metadata": 50,
             "Group Modification": 100
         },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
         "Logon Session": {
             "Logon Session Creation": 100,
             "Logon Session Metadata": 100
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
         },
         "Named Pipe": {
             "Named Pipe Metadata": 10
@@ -130,9 +656,20 @@
             "Network Share Access": 100
         },
         "Network Traffic": {
-            "Network Connection Creation": 10
+            "Network Connection Creation": 10,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
         },
         "Process": {
+            "OS API Execution": 0,
             "Process Access": 10,
             "Process Creation": 10,
             "Process Metadata": 10,
@@ -155,6 +692,13 @@
             "Service Metadata": 100,
             "Service Modification": 100
         },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
         "User Account": {
             "User Account Authentication": 100,
             "User Account Creation": 100,
@@ -162,30 +706,447 @@
             "User Account Metadata": 100,
             "User Account Modification": 100
         },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
         "Windows Registry": {
             "Windows Registry Key Access": 10,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
             "Windows Registry Key Modification": 100
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
-    "MICROSOFT_DEFENDER_ENDPOINT": {},
+    "MICROSOFT_DEFENDER_ENDPOINT": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 100
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 100,
+            "Driver Metadata": 50
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 100,
+            "File Deletion": 100,
+            "File Metadata": 100,
+            "File Modification": 100
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 100,
+            "Group Metadata": 100,
+            "Group Modification": 100
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 100,
+            "Logon Session Metadata": 100
+        },
+        "Malware Repository": {
+            "Malware Content": 100,
+            "Malware Metadata": 100
+        },
+        "Module": {
+            "Module Load": 100
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 50
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 100,
+            "Process Metadata": 100,
+            "Process Modification": 0,
+            "Process Termination": 50
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 100,
+            "Scheduled Job Metadata": 100,
+            "Scheduled Job Modification": 100
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 100,
+            "Service Metadata": 100,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 100,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 100
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
     "WINDOWS_DNS": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
         "Application Log": {
             "Application Log Content": 10
         },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
         "Domain Name": {
-            "Active DNS": 100
+            "Active DNS": 100,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
         },
         "Network Traffic": {
+            "Network Connection Creation": 0,
             "Network Traffic Content": 10,
             "Network Traffic Flow": 10
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
     "FORTINET_FIREWALL ": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
         "Certificate": {
             "Certificate Registration": 10
         },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
         "Domain Name": {
-            "Active DNS": 10
+            "Active DNS": 10,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
         },
         "Firewall": {
             "Firewall Disable": 100,
@@ -196,9 +1157,29 @@
         "Firmware": {
             "Firmware Modification": 100
         },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
         "Image": {
             "Image Creation": 10,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
             "Image Modification": 10
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
         },
         "Kernel": {
             "Kernel Module Load": 10
@@ -207,13 +1188,62 @@
             "Logon Session Creation": 50,
             "Logon Session Metadata": 50
         },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
         "Network Traffic": {
             "Network Connection Creation": 100,
             "Network Traffic Content": 100,
             "Network Traffic Flow": 100
         },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
         "Sensor Health": {
             "Host Status": 100
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
         },
         "User Account": {
             "User Account Authentication": 10,
@@ -221,60 +1251,492 @@
             "User Account Deletion": 10,
             "User Account Metadata": 10,
             "User Account Modification": 10
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
     "WINDOWS_DHCP": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
         "Application Log": {
             "Application Log Content": 10
         },
-        "Network Traffic": {
-            "Network Traffic Content": 10,
-            "Network Traffic Flow": 10
-        }
-    },
-    "AZURE_RESOURCE_LOGS ": {},
-    "CB_APP": {
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
         "Domain Name": {
-            "Passive DNS": 10
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
         },
         "Drive": {
-            "Drive Access": 100,
-            "Drive Creation": 100,
-            "Drive Modification": 50
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
         },
         "Driver": {
-            "Driver Load": 100
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
         },
         "Internet Scan": {
-            "Response Metadata": 100
+            "Response Content": 0,
+            "Response Metadata": 0
         },
         "Kernel": {
-            "Kernel Module Load": 50
+            "Kernel Module Load": 0
         },
         "Logon Session": {
-            "Logon Session Metadata": 100
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
         },
         "Malware Repository": {
-            "Malware Content": 10,
-            "Malware Metadata": 50
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
         },
         "Network Traffic": {
-            "Network Traffic Flow": 50
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 10,
+            "Network Traffic Flow": 10
         },
         "Persona": {
-            "Social Media": 100
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
         },
         "User Account": {
-            "User Account Modification": 100
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "CB_APP": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
     "CB_EDR": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
         "File": {
-            "File Access": 10,
+            "File Access": 50,
             "File Creation": 100,
             "File Deletion": 100,
             "File Metadata": 50,
             "File Modification": 100
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
         },
         "Module": {
             "Module Load": 100
@@ -282,34 +1744,490 @@
         "Named Pipe": {
             "Named Pipe Metadata": 50
         },
+        "Network Share": {
+            "Network Share Access": 0
+        },
         "Network Traffic": {
             "Network Connection Creation": 100,
             "Network Traffic Content": 10,
             "Network Traffic Flow": 50
         },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
         "Process": {
+            "OS API Execution": 0,
             "Process Access": 50,
             "Process Creation": 100,
             "Process Metadata": 100,
+            "Process Modification": 0,
             "Process Termination": 100
         },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
         "Windows Registry": {
+            "Windows Registry Key Access": 0,
             "Windows Registry Key Creation": 100,
             "Windows Registry Key Deletion": 100,
             "Windows Registry Key Modification": 100
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
-    "SENTINEL_EDR": {},
-    "ESET_EDR": {},
+    "SENTINEL_EDR": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "ESET_EDR": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
     "WINDOWS_SYSMON": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
         "Command": {
             "Command Execution": 100
         },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
         "Domain Name": {
-            "Active DNS": 100
+            "Active DNS": 100,
+            "Domain Registration": 0,
+            "Passive DNS": 0
         },
         "Drive": {
-            "Drive Access": 100
+            "Drive Access": 100,
+            "Drive Creation": 0,
+            "Drive Modification": 0
         },
         "Driver": {
             "Driver Load": 100,
@@ -322,25 +2240,123 @@
             "File Metadata": 100,
             "File Modification": 100
         },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
         "Module": {
             "Module Load": 100
         },
         "Named Pipe": {
             "Named Pipe Metadata": 100
         },
+        "Network Share": {
+            "Network Share Access": 0
+        },
         "Network Traffic": {
             "Network Connection Creation": 100,
             "Network Traffic Content": 10,
             "Network Traffic Flow": 10
         },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
         "Process": {
+            "OS API Execution": 0,
             "Process Access": 100,
             "Process Creation": 100,
             "Process Metadata": 100,
             "Process Modification": 100,
             "Process Termination": 100
         },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
         "Windows Registry": {
+            "Windows Registry Key Access": 0,
             "Windows Registry Key Creation": 100,
             "Windows Registry Key Deletion": 100,
             "Windows Registry Key Modification": 100
@@ -363,13 +2379,145 @@
         "Certificate": {
             "Certificate Registration": 10
         },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
         "Group": {
             "Group Enumeration": 50,
             "Group Metadata": 50,
             "Group Modification": 50
         },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
         "Network Traffic": {
-            "Network Connection Creation": 10
+            "Network Connection Creation": 10,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
         },
         "User Account": {
             "User Account Authentication": 100,
@@ -378,10 +2526,3664 @@
             "User Account Metadata": 100,
             "User Account Modification": 100
         },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
         "Web Credential": {
             "Web Credential Creation": 100,
             "Web Credential Usage": 100
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
         }
     },
-    "DUO": {}
+    "DUO": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 100,
+            "User Account Creation": 50,
+            "User Account Deletion": 50,
+            "User Account Metadata": 50,
+            "User Account Modification": 50
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "DARKTRACE (surricate_ev)": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 50
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 100
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 100,
+            "Response Metadata": 100
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 100
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 50
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 50
+        }
+    },
+    "HADRIAN ASM ( 7rapid vuln scanner)": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 10
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 100,
+            "Malware Metadata": 100
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "SQUID_WEBPROXY": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 100,
+            "Domain Registration": 50,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "VMWARE_ESX": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 10,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 50
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 10,
+            "Process Creation": 0,
+            "Process Metadata": 10,
+            "Process Modification": 10,
+            "Process Termination": 10
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 10
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 10,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "VMWARE_VCENTER": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 10
+        },
+        "Certificate": {
+            "Certificate Registration": 10
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 10
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 10,
+            "Drive Creation": 10,
+            "Drive Modification": 10
+        },
+        "Driver": {
+            "Driver Load": 10,
+            "Driver Metadata": 10
+        },
+        "File": {
+            "File Access": 10,
+            "File Creation": 10,
+            "File Deletion": 10,
+            "File Metadata": 10,
+            "File Modification": 10
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 10,
+            "Group Metadata": 10,
+            "Group Modification": 10
+        },
+        "Image": {
+            "Image Creation": 100,
+            "Image Deletion": 100,
+            "Image Metadata": 100,
+            "Image Modification": 100
+        },
+        "Instance": {
+            "Instance Creation": 100,
+            "Instance Deletion": 100,
+            "Instance Enumeration": 100,
+            "Instance Metadata": 100,
+            "Instance Modification": 100,
+            "Instance Start": 100,
+            "Instance Stop": 100
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 10
+        },
+        "Logon Session": {
+            "Logon Session Creation": 10,
+            "Logon Session Metadata": 10
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 10
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 10
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 10,
+            "Network Traffic Content": 10,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 10,
+            "Process Access": 10,
+            "Process Creation": 10,
+            "Process Metadata": 10,
+            "Process Modification": 10,
+            "Process Termination": 10
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 10,
+            "Scheduled Job Metadata": 10,
+            "Scheduled Job Modification": 10
+        },
+        "Script": {
+            "Script Execution": 10
+        },
+        "Sensor Health": {
+            "Host Status": 50
+        },
+        "Service": {
+            "Service Creation": 10,
+            "Service Metadata": 10,
+            "Service Modification": 10
+        },
+        "Snapshot": {
+            "Snapshot Creation": 100,
+            "Snapshot Deletion": 100,
+            "Snapshot Enumeration": 100,
+            "Snapshot Metadata": 100,
+            "Snapshot Modification": 100
+        },
+        "User Account": {
+            "User Account Authentication": 10,
+            "User Account Creation": 10,
+            "User Account Deletion": 10,
+            "User Account Metadata": 10,
+            "User Account Modification": 10
+        },
+        "Volume": {
+            "Volume Creation": 50,
+            "Volume Deletion": 50,
+            "Volume Enumeration": 50,
+            "Volume Metadata": 50,
+            "Volume Modification": 50
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "ARUBA_WIRELESS": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 50,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 10,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 50,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "PFSENSE": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 50,
+            "Domain Registration": 50,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 100,
+            "Firewall Enumeration": 100,
+            "Firewall Metadata": 100,
+            "Firewall Rule Modification": 100
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 50,
+            "Logon Session Metadata": 50
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 10
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 10
+        },
+        "Service": {
+            "Service Creation": 10,
+            "Service Metadata": 10,
+            "Service Modification": 10
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 50,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "AZURE_ACTIVITY.1": {
+        "Active Directory": {
+            "Active Directory Object Access": 100,
+            "Active Directory Object Creation": 100,
+            "Active Directory Object Deletion": 100,
+            "Active Directory Object Modification": 100
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 100,
+            "Cloud Service Enumeration": 100,
+            "Cloud Service Metadata": 100,
+            "Cloud Service Modification": 100
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 100,
+            "Cloud Storage Creation": 100,
+            "Cloud Storage Deletion": 100,
+            "Cloud Storage Enumeration": 100,
+            "Cloud Storage Metadata": 100,
+            "Cloud Storage Modification": 100
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 50,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "CISCO_SWITCH": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 10,
+            "Logon Session Metadata": 10
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "BARRACUDA_FIREWALL": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 100,
+            "Domain Registration": 100,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 100,
+            "Firewall Rule Modification": 100
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 50,
+            "Logon Session Metadata": 50
+        },
+        "Malware Repository": {
+            "Malware Content": 10,
+            "Malware Metadata": 10
+        },
+        "Module": {
+            "Module Load": 50
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 10,
+            "Process Creation": 0,
+            "Process Metadata": 10,
+            "Process Modification": 10,
+            "Process Termination": 10
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 50
+        },
+        "Service": {
+            "Service Creation": 50,
+            "Service Metadata": 50,
+            "Service Modification": 50
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "APACHE": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "MYSQL": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 10
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 10
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 10,
+            "File Creation": 10,
+            "File Deletion": 10,
+            "File Metadata": 10,
+            "File Modification": 10
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 10,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 10,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 10
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 10,
+            "Service Modification": 10
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 10,
+            "User Account Creation": 10,
+            "User Account Deletion": 10,
+            "User Account Metadata": 10,
+            "User Account Modification": 10
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "NETFILTER_IPTABLES": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 50
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 50
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 10,
+            "File Creation": 10,
+            "File Deletion": 10,
+            "File Metadata": 10,
+            "File Modification": 10
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 10,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 10
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 10,
+            "Service Modification": 10
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 10,
+            "User Account Creation": 10,
+            "User Account Deletion": 10,
+            "User Account Metadata": 10,
+            "User Account Modification": 10
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "NIX_SYSTEM": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 50,
+            "Logon Session Metadata": 50
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 50,
+            "Scheduled Job Metadata": 50,
+            "Scheduled Job Modification": 50
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 50,
+            "Service Metadata": 50,
+            "Service Modification": 50
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 10,
+            "User Account Deletion": 10,
+            "User Account Metadata": 10,
+            "User Account Modification": 10
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "OPENSSH": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 100
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 50
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 10,
+            "File Creation": 10,
+            "File Deletion": 10,
+            "File Metadata": 10,
+            "File Modification": 10
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 10,
+            "Logon Session Metadata": 10
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 50
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 10,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 10,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 10,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "POSTFIX_MAIL": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 100
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "SMDB": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 100
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 10,
+            "File Creation": 10,
+            "File Deletion": 10,
+            "File Metadata": 10,
+            "File Modification": 10
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 100
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    },
+    "SURICATA_EVE": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 50
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 100
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 100,
+            "Response Metadata": 100
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 100
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 100,
+            "Network Traffic Content": 100,
+            "Network Traffic Flow": 100
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 50
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 50
+        }
+    },
+    "RAPID7": {
+        "Active Directory": {
+            "Active Directory Credential Request": 0,
+            "Active Directory Object Access": 0,
+            "Active Directory Object Creation": 0,
+            "Active Directory Object Deletion": 0,
+            "Active Directory Object Modification": 0
+        },
+        "Application Log": {
+            "Application Log Content": 0
+        },
+        "Certificate": {
+            "Certificate Registration": 0
+        },
+        "Cloud Service": {
+            "Cloud Service Disable": 0,
+            "Cloud Service Enumeration": 0,
+            "Cloud Service Metadata": 0,
+            "Cloud Service Modification": 0
+        },
+        "Cloud Storage": {
+            "Cloud Storage Access": 0,
+            "Cloud Storage Creation": 0,
+            "Cloud Storage Deletion": 0,
+            "Cloud Storage Enumeration": 0,
+            "Cloud Storage Metadata": 0,
+            "Cloud Storage Modification": 0
+        },
+        "Command": {
+            "Command Execution": 0
+        },
+        "Container": {
+            "Container Creation": 0,
+            "Container Enumeration": 0,
+            "Container Start": 0
+        },
+        "Domain Name": {
+            "Active DNS": 0,
+            "Domain Registration": 0,
+            "Passive DNS": 0
+        },
+        "Drive": {
+            "Drive Access": 0,
+            "Drive Creation": 0,
+            "Drive Modification": 0
+        },
+        "Driver": {
+            "Driver Load": 0,
+            "Driver Metadata": 0
+        },
+        "File": {
+            "File Access": 0,
+            "File Creation": 0,
+            "File Deletion": 0,
+            "File Metadata": 0,
+            "File Modification": 0
+        },
+        "Firewall": {
+            "Firewall Disable": 0,
+            "Firewall Enumeration": 0,
+            "Firewall Metadata": 0,
+            "Firewall Rule Modification": 0
+        },
+        "Firmware": {
+            "Firmware Modification": 0
+        },
+        "Group": {
+            "Group Enumeration": 0,
+            "Group Metadata": 0,
+            "Group Modification": 0
+        },
+        "Image": {
+            "Image Creation": 0,
+            "Image Deletion": 0,
+            "Image Metadata": 0,
+            "Image Modification": 0
+        },
+        "Instance": {
+            "Instance Creation": 0,
+            "Instance Deletion": 0,
+            "Instance Enumeration": 0,
+            "Instance Metadata": 0,
+            "Instance Modification": 0,
+            "Instance Start": 0,
+            "Instance Stop": 0
+        },
+        "Internet Scan": {
+            "Response Content": 0,
+            "Response Metadata": 0
+        },
+        "Kernel": {
+            "Kernel Module Load": 0
+        },
+        "Logon Session": {
+            "Logon Session Creation": 0,
+            "Logon Session Metadata": 0
+        },
+        "Malware Repository": {
+            "Malware Content": 0,
+            "Malware Metadata": 0
+        },
+        "Module": {
+            "Module Load": 0
+        },
+        "Named Pipe": {
+            "Named Pipe Metadata": 0
+        },
+        "Network Share": {
+            "Network Share Access": 0
+        },
+        "Network Traffic": {
+            "Network Connection Creation": 0,
+            "Network Traffic Content": 0,
+            "Network Traffic Flow": 0
+        },
+        "Persona": {
+            "Social Media": 0
+        },
+        "Pod": {
+            "Pod Creation": 0,
+            "Pod Enumeration": 0,
+            "Pod Modification": 0
+        },
+        "Process": {
+            "OS API Execution": 0,
+            "Process Access": 0,
+            "Process Creation": 0,
+            "Process Metadata": 0,
+            "Process Modification": 0,
+            "Process Termination": 0
+        },
+        "Scheduled Job": {
+            "Scheduled Job Creation": 0,
+            "Scheduled Job Metadata": 0,
+            "Scheduled Job Modification": 0
+        },
+        "Script": {
+            "Script Execution": 0
+        },
+        "Sensor Health": {
+            "Host Status": 0
+        },
+        "Service": {
+            "Service Creation": 0,
+            "Service Metadata": 0,
+            "Service Modification": 0
+        },
+        "Snapshot": {
+            "Snapshot Creation": 0,
+            "Snapshot Deletion": 0,
+            "Snapshot Enumeration": 0,
+            "Snapshot Metadata": 0,
+            "Snapshot Modification": 0
+        },
+        "User Account": {
+            "User Account Authentication": 0,
+            "User Account Creation": 0,
+            "User Account Deletion": 0,
+            "User Account Metadata": 0,
+            "User Account Modification": 0
+        },
+        "Volume": {
+            "Volume Creation": 0,
+            "Volume Deletion": 0,
+            "Volume Enumeration": 0,
+            "Volume Metadata": 0,
+            "Volume Modification": 0
+        },
+        "Web Credential": {
+            "Web Credential Creation": 0,
+            "Web Credential Usage": 0
+        },
+        "Windows Registry": {
+            "Windows Registry Key Access": 0,
+            "Windows Registry Key Creation": 0,
+            "Windows Registry Key Deletion": 0,
+            "Windows Registry Key Modification": 0
+        },
+        "WMI": {
+            "WMI Creation": 0
+        }
+    }
 }
