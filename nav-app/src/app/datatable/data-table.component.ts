@@ -38,6 +38,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
     public headerHeight: number = 0;
     public footerHeight: number = 32;
     public controlsHeight: number = 34;
+    public includedControls: any;
     public isScrollUp: boolean = true;
     public handleScroll = (e) => {
         const diff = this.scrollRef.nativeElement.scrollTop - this.previousScrollTop;
@@ -56,13 +57,37 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.scrollRef.nativeElement.style.height = `calc(100vh - ${scrollWindowHeight}px)`;
     };
 
+    /*
+     * 0: expand subtechniques
+     * 1: expand annotated subtechniques
+     * 2: collapse subtechniques
+     */
+    public showSubtechniquesType: number = 0;
+
     public downloadAnnotationsOnVisibleTechniques: boolean = false;
+
+    showControlsBar = true;
+    previousControlSection = '';
+
+    currentControlSection = "selection";
+
+    showHelpDropDown = false;
 
     // edit field bindings
     public commentEditField: string = '';
     public scoreEditField: string = '';
 
     private selectionChangeSubscription: Subscription;
+    
+    public layerControlsList = [];
+    public techniqueControlsList = [];
+    public selectionControlsList = [];
+
+    showControlLabels = {
+        selection: false,
+        layer: false,
+        technique: false,
+    };
 
     constructor(
         public dataService: DataService,
@@ -74,6 +99,24 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.selectionChangeSubscription = this.viewModelsService.onSelectionChange.subscribe(() => {
             this.onTechniqueSelect();
         });
+        this.includedControls = configService.featureList;
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == "layer_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.layerControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+                }
+            }
+            else if(this.includedControls[i].name == "technique_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.techniqueControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+                }
+            }
+            else if(this.includedControls[i].name == "selection_controls"){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    this.selectionControlsList.push(this.includedControls[i].subfeatures[j].display_name)
+                }
+            }
+        }
     }
 
     ngAfterViewInit(): void {
@@ -97,6 +140,98 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.scrollRef.nativeElement.style.height = null;
             this.scrollRef.nativeElement.addEventListener('scroll', this.handleScroll);
         }
+    }
+
+    handleSelectionControlsSettingsDropdown() {
+        if (this.currentDropdown !== 'selection_control_settings') {
+            this.currentDropdown = 'selection_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    handleLayerControlsSettingsDropdown() {
+        if (this.currentDropdown !== 'layer_control_settings') {
+            this.currentDropdown = 'layer_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    handleTechniqueControlsSettingsDropdown() {
+        if (this.currentDropdown !== 'technique_control_settings') {
+            this.currentDropdown = 'technique_control_settings';
+        } else {
+            this.currentDropdown = '';
+        }
+        this.dropdownChange.emit(this.currentDropdown);
+    }
+
+    handleKeyDownTechnique(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleTechniqueControlsSettingsDropdown();
+        }
+    }
+    
+    handleKeyDownSelection(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleSelectionControlsSettingsDropdown();
+        }
+    }
+
+    handleKeyDownLayer(event: KeyboardEvent): void {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            this.handleLayerControlsSettingsDropdown();
+        }
+    }
+
+    isControlIncluded(control, subfeature) {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == control){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].name == subfeature){
+                        if(this.includedControls[i].subfeatures[j].enabled){
+                            return true;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return false
+    }
+
+    getControlDisplayName(control, subfeature): Object {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == control){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].name == subfeature){
+                        return this.includedControls[i].subfeatures[j].display_name;
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    getControl(control, subfeature): Object {
+        for(let i=0;i <this.includedControls.length;i++){
+            if(this.includedControls[i].name == control){
+                for(let j=0;j<this.includedControls[i].subfeatures.length;j++){
+                    if(this.includedControls[i].subfeatures[j].display_name == subfeature){
+                        return this.includedControls[i].subfeatures[j];
+                    }
+                }
+            }
+        }
+        return null
     }
     /**
      * Save the given blob
@@ -383,6 +518,20 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
         this.dropdownChange.emit(this.currentDropdown);
     }
 
+    toggleShowControlsBar() {
+        this.showControlsBar = !this.showControlsBar;
+    }
+
+    setCurrentControlSection(controlType) {
+        this.currentControlSection = controlType;
+        if (this.previousControlSection === controlType && this.showControlsBar) {
+            this.showControlsBar = false;
+        } else {
+            this.showControlsBar = true;
+        }
+        this.previousControlSection = controlType;
+    }
+
     /**
      * Handle export drop down change
      */
@@ -431,6 +580,10 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
                     tvm.showSubtechniques = true;
                     continue;
                 }
+                if (showAnnotatedOnly) {
+                    // expand all sub-techniques
+                    tvm.showSubtechniques = false;
+                }
 
                 // expand only if sub-techniques have annotations
                 for (let subtechnique of technique.subtechniques) {
@@ -454,6 +607,32 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             tvm.showSubtechniques = false;
         });
         this.viewModel.layout.expandedSubtechniques = 'none';
+    }
+
+    /**
+     * Expand all, annotated or no subtechniques based on selection
+     */
+    public showSubtechniquesTypeAlgorithm() {
+        switch (this.showSubtechniquesType) {
+            case 1: // expand all subtechniques
+                this.expandSubtechniques();
+                console.log(this.showSubtechniquesType);
+                break;
+            case 2: // expand only annotated subtechniques
+                this.expandSubtechniques(true);
+                console.log(this.showSubtechniquesType);
+                break;
+            case 3: // collapse all subtechniques
+                this.collapseSubtechniques();
+                console.log(this.showSubtechniquesType);
+                this.showSubtechniquesType = 0;
+                break;
+            case 0:
+                break;
+            default:
+                // expand all subtechniques
+                this.expandSubtechniques();
+        }
     }
 
     /**
@@ -515,5 +694,13 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
             this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'search' ? true : !this.viewModel.sidebarOpened;
             this.viewModel.sidebarContentType = 'search';
         }
+    }
+
+    /**
+     * Open layer settings in sidebar
+     */
+    public openLayerSettings(): void {
+            this.viewModel.sidebarOpened = this.viewModel.sidebarContentType !== 'layerSettings' ? true : !this.viewModel.sidebarOpened;
+            this.viewModel.sidebarContentType = 'layerSettings';
     }
 }

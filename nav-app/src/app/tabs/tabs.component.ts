@@ -906,7 +906,7 @@ export class TabsComponent implements AfterViewInit {
             str += join + 'layerURL=' + encodeURIComponent(layerLinkURL);
             join = '&';
         }
-        for (let feature of this.configService.featureList) {
+        for (let feature of this.configService.customizefeatureList) {
             if (feature.subfeatures) {
                 for (let subfeature of feature.subfeatures) {
                     if (!subfeature.enabled) {

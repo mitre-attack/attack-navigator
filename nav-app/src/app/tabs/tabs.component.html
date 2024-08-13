@@ -509,7 +509,7 @@
                     <div class="section">
                         <!-- navigator features -->
                         <h2>Navigator Features</h2>
-                        <ng-container *ngFor="let feature of configService.featureList">
+                        <ng-container *ngFor="let feature of configService.customizefeatureList">
                             <div *ngIf="!feature.subfeatures" class="feature-row multi-column left-align">
                                 <div class="md-column align-center">
                                     <mat-checkbox class="adaptive-checkbox" [(ngModel)]="feature.enabled">
@@ -519,25 +519,6 @@
                                 <div class="spacer"></div>
                                 <div class="lg-column">
                                     <span>{{ feature.description }}</span>
-                                </div>
-                            </div>
-                            <!-- subfeatures -->
-                            <div *ngIf="feature.subfeatures">
-                                <h3 class="capitalize">{{ feature.name.split('_').join(' ') }}</h3>
-                                <div class="subfeature-section">
-                                    <ng-container *ngFor="let subfeature of feature.subfeatures">
-                                        <div class="feature-row multi-column left-align">
-                                            <div class="md-column align-center">
-                                                <mat-checkbox class="adaptive-checkbox" [(ngModel)]="subfeature.enabled">
-                                                    {{ subfeature.name.split('_').join(' ') }}
-                                                </mat-checkbox>
-                                            </div>
-                                            <div class="spacer"></div>
-                                            <div class="lg-column">
-                                                {{ subfeature.description }}
-                                            </div>
-                                        </div>
-                                    </ng-container>
                                 </div>
                             </div>
                         </ng-container>

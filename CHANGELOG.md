@@ -13,7 +13,9 @@
 
 ## Improvements
 - Refactored the `layers/` directory structure to organize Layer File Formats into versioned subdirectories and removed outdated layer samples. See pull request [#649](https://github.com/mitre-attack/attack-navigator/pull/649).
+- Improved toolbar for better usability. See issue [#534](https://github.com/mitre-attack/attack-navigator/issues/534).
 - Updated Angular from v14 to v17.
+
 
 # 5.0.1 - 9 May 2024
 

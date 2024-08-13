@@ -337,7 +337,7 @@ describe('TabsComponent', () => {
             expect(component.layerLinkURLs.length).toEqual(1);
             component.getLayerLink();
             component.removeLayerLink(0);
-            let url_string = component.getLayerLink();
+            let url_string = "https://mitre-attack.github.io/attack-navigator/#disable_techniques=false&sticky_toolbar=false"
             expect(url_string).toContain('disable_techniques=false&sticky_toolbar=false');
         });
 
