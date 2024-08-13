@@ -29,8 +29,7 @@ describe('LayerInformationComponent', () => {
     });
 
 	it('should return correct layerFormatLink based on global layer version', () => {
-		let layerVersion = globals.layerVersion.split('.');
-		let formatFilePath = `./layers/LAYERFORMATv${layerVersion[0]}_${layerVersion[1]}.md`;
-		expect(component.layerFormatLink).toBe(formatFilePath);
+		let filePath = `./layers/spec/v${globals.layerVersion}/layerformat.md`;
+		expect(component.layerFormatLink).toBe(filePath);
 	});
 });

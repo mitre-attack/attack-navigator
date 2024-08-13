@@ -78,11 +78,11 @@ export const configDataExtended = {
 };
 export const defaultLayersEnabled = {
     enabled: true,
-    urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
+    urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json'],
 };
 export const defaultLayersDisabled = {
     enabled: false,
-    urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json'],
+    urls: ['https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json'],
 };
 
 export const taxiiData = {

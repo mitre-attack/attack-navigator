@@ -28,7 +28,7 @@ describe('TabsComponent', () => {
 
     let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
     let loadData = {
-        url: 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json',
+        url: 'https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json',
         version: '14',
         identifier: 'enterprise-attack',
     };
@@ -726,7 +726,7 @@ describe('TabsComponent', () => {
             let alertSpy = spyOn(window, 'alert');
             let consoleSpy = spyOn(console, 'error');
             component
-                .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json', false)
+                .loadLayerFromURL('https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json', false)
                 .then(() => {
                     expect(consoleSpy).toHaveBeenCalled();
                     expect(alertSpy).toHaveBeenCalled();
