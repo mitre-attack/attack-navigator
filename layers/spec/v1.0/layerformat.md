@@ -1,5 +1,5 @@
 # ATT&CK<sup>TM</sup> Navigator Layer File Format Definition
-This document describes **Version 1** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
+This document describes **Version 1.0** of the MITRE ATT&CK Navigator Layer file format. The ATT&CK Navigator stores layers as JSON, therefore this document defines the JSON properties in a layer file.
 
 ## Property Table
 

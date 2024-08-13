@@ -20,7 +20,7 @@
                         "allowedCommonJsDependencies": ["lodash", "is_js", "seedrandom", "typed_function", "tinygradient", "exceljs"],
                         "assets": [
                             { "glob": "*.md", "input": "../", "output": "/" },
-                            { "glob": "*.md", "input": "../layers", "output": "/layers" },
+                            { "glob": "**/*", "input": "../layers", "output": "/layers" },
                             "src/assets",
                             "src/favicon.ico"
                         ],
