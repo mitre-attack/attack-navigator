@@ -9,7 +9,7 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
-# Changes Staged on Develop
+# 5.1.0 - 14 August 2024
 
 ## Improvements
 - Refactored the `layers/` directory structure to organize Layer File Formats into versioned subdirectories and removed outdated layer samples. See pull request [#649](https://github.com/mitre-attack/attack-navigator/pull/649).
