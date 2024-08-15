@@ -1,0 +1,208 @@
+{
+	"name": "Black Pins",
+	"version": "3.0",
+	"domain": "mitre-enterprise",
+	"description": "ATT&CKcon Matrix Question: With your ATT&CK-mapped detections, which ones generate the most true positives?\n",
+	"filters": {
+		"stages": [
+			"act"
+		],
+		"platforms": [
+			"Windows",
+			"Linux",
+			"macOS"
+		]
+	},
+	"sorting": 0,
+	"hideDisabled": false,
+	"techniques": [
+		{
+			"techniqueID": "T1172",
+			"tactic": "command-and-control",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1086",
+			"tactic": "execution",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1060",
+			"tactic": "persistence",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1116",
+			"tactic": "defense-evasion",
+			"score": 2,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1003",
+			"tactic": "credential-access",
+			"score": 3,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1081",
+			"tactic": "credential-access",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1094",
+			"tactic": "command-and-control",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1041",
+			"tactic": "exfiltration",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1143",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1056",
+			"tactic": "collection",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1056",
+			"tactic": "credential-access",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1208",
+			"tactic": "credential-access",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1036",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1046",
+			"tactic": "discovery",
+			"score": 4,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1075",
+			"tactic": "lateral-movement",
+			"score": 2,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1186",
+			"tactic": "defense-evasion",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1219",
+			"tactic": "command-and-control",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1193",
+			"tactic": "initial-access",
+			"score": 3,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1192",
+			"tactic": "initial-access",
+			"score": 4,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1082",
+			"tactic": "discovery",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1100",
+			"tactic": "persistence",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		},
+		{
+			"techniqueID": "T1100",
+			"tactic": "privilege-escalation",
+			"score": 1,
+			"color": "",
+			"comment": "",
+			"enabled": true
+		}
+	],
+	"gradient": {
+		"colors": [
+			"#cfcfcf",
+			"#3c3c3c"
+		],
+		"minValue": 1,
+		"maxValue": 8
+	},
+	"legendItems": [],
+	"showTacticRowBackground": true,
+	"tacticRowBackground": "#205b8f",
+	"selectTechniquesAcrossTactics": true
+}

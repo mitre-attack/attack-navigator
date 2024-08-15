@@ -24,52 +24,54 @@
 
     "default_layers": {
         "enabled": false,
-        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/data/samples/Bear_APT.json"]
+        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json"]
     },
 
     "comment_color": "yellow",
     "link_color": "blue",
     "metadata_color": "purple",
 
-    "banner": "ATT&CKcon 5.0 returns October 22-23, 2024 in McLean, VA. <a href='https://www.mitre.org/events/attackcon-5'>Register here</a> today!",
+    "banner": "",
+
+    "customize_features": [
+        {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
+        {"name": "export_render", "enabled": true, "description": "Disable to remove the button to render the current layer."},
+        {"name": "export_excel", "enabled": true, "description": "Disable to remove the button to export the current layer to MS Excel (.xlsx) format."},
+        {"name": "legend", "enabled": true, "description": "Disable to remove the legend panel from the interface."},
+        {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."},
+        {"name": "non_aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on non-aggregate scores."},
+        {"name": "aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on aggregate scores."},
+        {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
+        {"name": "metadata_underline", "enabled": true, "description": "Disable to remove the metadata underline effect on techniques."},
+        {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."}
+    ],
 
     "features": [
         {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
-        {"name": "selecting_techniques", "enabled": true, "description": "Disable to remove the ability to select techniques."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing banner."},
-        {"name": "subtechniques", "enabled": true, "description": "Disable to remove all sub-technique features from the interface."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
-            {"name": "search", "enabled": true, "description": "Disable to remove the technique search panel from the interface."},
-            {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
-            {"name": "deselect_all", "enabled": true, "description": "Disable to remove the deselect all button from the interface."}
+            {"name": "search", "enabled": true, "display_name": "search & multiselect", "description": "Disable to remove the technique search panel from the interface."},
+            {"name": "deselect_all", "enabled": true, "display_name": "deselect techniques", "description": "Disable to remove the deselect all button from the interface."},
+            {"name": "selecting_techniques", "enabled": true, "display_name": "selection behavior", "description": "Disable to remove the ability to select techniques."}
         ]},
         {"name": "layer_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "layer_info", "enabled": true, "description": "Disable to remove the layer info (name, description and layer metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
-            {"name": "download_layer", "enabled": true, "description": "Disable to remove the button to download the layer."},
-            {"name": "export_render", "enabled": true, "description": "Disable to remove the button to render the current layer."},
-            {"name": "export_excel", "enabled": true, "description": "Disable to remove the button to export the current layer to MS Excel (.xlsx) format."},
-            {"name": "filters", "enabled": true, "description": "Disable to remove the filters panel from interface."},
-            {"name": "sorting", "enabled": true, "description": "Disable to remove the sorting button from the interface."},
-            {"name": "color_setup", "enabled": true, "description": "Disable to remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
-            {"name": "toggle_hide_disabled", "enabled": true, "description": "Disable to remove the hide disabled techniques button from the interface."},
-            {"name": "layout_controls", "enabled": true, "description": "Disable to remove the ability to change the current matrix layout."},
-            {"name": "legend", "enabled": true, "description": "Disable to remove the legend panel from the interface."}
+            {"name": "layer_settings", "enabled": true, "display_name": "layer settings", "description": "Disable to remove the layer info (name, description and layer metadata) panel from the interface. Note that the layer can still be renamed in the tab."},
+            {"name": "download_layer", "enabled": true, "display_name": "export", "description": "Disable to remove the button to download the layer."},
+            {"name": "filters", "enabled": true, "display_name": "filters", "description": "Disable to remove the filters panel from interface."},
+            {"name": "sorting", "enabled": true, "display_name": "sorting", "description": "Disable to remove the sorting button from the interface."},
+            {"name": "color_setup", "enabled": true, "display_name": "color setup", "description": "Disable to remove the color setup panel from interface, containing customization controls for scoring gradient and tactic row color."},
+            {"name": "toggle_hide_disabled", "enabled": true, "display_name": "show/hide disabled", "description": "Disable to remove the hide disabled techniques button from the interface."},
+            {"name": "subtechniques", "enabled": true, "display_name": "sub-techniques", "description": "Disable to remove all sub-technique features from the interface."}
         ]},
         {"name": "technique_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
-            {"name": "disable_techniques", "enabled": true, "description": "Disable to remove the ability to disable techniques."},
-            {"name": "manual_color", "enabled": true, "description": "Disable to remove the ability to assign manual colors to techniques."},
-            {"name": "background_color", "enabled": true, "description": "Disable to remove the background color effect on manually assigned colors."},
-            {"name": "non_aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on non-aggregate scores."},
-            {"name": "aggregate_score_color", "enabled": true, "description": "Disable to remove the color effect on aggregate scores."},
-            {"name": "scoring", "enabled": true, "description": "Disable to remove the ability to score techniques."},
-            {"name": "comments", "enabled": true, "description": "Disable to remove the ability to add comments to techniques."},
-            {"name": "comment_underline", "enabled": true, "description": "Disable to remove the comment underline effect on techniques."},
-            {"name": "metadata_underline", "enabled": true, "description": "Disable to remove the metadata underline effect on techniques."},
-            {"name": "links", "enabled": true, "description": "Disable to remove the ability to assign hyperlinks to techniques."},
-            {"name": "link_underline", "enabled": true, "description": "Disable to remove the hyperlink underline effect on techniques."},
-            {"name": "metadata", "enabled": true, "description": "Disable to remove the ability to add metadata to techniques."},
-            {"name": "clear_annotations", "enabled": true, "description": "Disable to remove the button to clear all annotations on the selected techniques."}
+            {"name": "disable_techniques", "enabled": true, "display_name": "toggle state", "description": "Disable to remove the ability to disable techniques."},
+            {"name": "manual_color", "enabled": true, "display_name": "background color", "description": "Disable to remove the ability to assign manual colors to techniques."},
+            {"name": "scoring", "enabled": true, "display_name": "scoring", "description": "Disable to remove the ability to score techniques."},
+            {"name": "comments", "enabled": true, "display_name": "comment", "description": "Disable to remove the ability to add comments to techniques."},
+            {"name": "links", "enabled": true, "display_name": "link", "description": "Disable to remove the ability to assign hyperlinks to techniques."},
+            {"name": "metadata", "enabled": true, "display_name": "metadata", "description": "Disable to remove the ability to add metadata to techniques."},
+            {"name": "clear_annotations", "enabled": true, "display_name": "clear annotations on selected", "description": "Disable to remove the button to clear all annotations on the selected techniques."}
         ]},
         {"name": "toolbar_controls", "enabled": true, "description": "Disable to disable all subfeatures", "subfeatures": [
             {"name": "sticky_toolbar", "enabled": true, "description": "Disable to remove the ability to enable/disable the sticky toolbar."}
