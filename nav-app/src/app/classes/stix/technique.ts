@@ -38,7 +38,13 @@ export class Technique extends StixObject {
      */
     public get_technique_tactic_id(tactic: string | Tactic): string {
         let tactic_shortname = tactic instanceof Tactic ? tactic.shortname : tactic;
-        if (!this.tactics.includes(tactic_shortname)) {
+
+        // TODO: Remove this hot fix after the 16.1 release fixes this technique
+        if (this.attackID == 'T1546.017') {
+            if (tactic_shortname == 'privilege-escalation') {
+                tactic_shortname = 'persistence';
+            }
+        } else if (!this.tactics.includes(tactic_shortname)) {
             throw new Error(tactic_shortname + ' is not a tactic of ' + this.attackID);
         }
         return this.attackID + '^' + tactic_shortname;
