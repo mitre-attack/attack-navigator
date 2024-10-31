@@ -31,7 +31,7 @@
     "link_color": "blue",
     "metadata_color": "purple",
 
-    "banner": "ATT&CKcon 5.0 returns October 22-23, 2024 in McLean, VA. <a href='https://www.mitre.org/events/attackcon-5'>Register here</a> today!",
+    "banner": "ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.",
 
     "customize_features": [
         {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
