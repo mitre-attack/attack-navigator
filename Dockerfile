@@ -1,27 +1,11 @@
-# Build stage
-
-FROM node:18
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-# install node packages - cache for faster future builds
-WORKDIR /src/nav-app
-COPY ./nav-app/package*.json ./
-
-# install packages and build 
+FROM node:18-alpine as builder
+WORKDIR /usr/src/app
+COPY /nav-app/package.json .
+COPY /nav-app/package-lock.json .
 RUN npm install
 
-# copy over needed files
-COPY ./nav-app/ ./
+COPY /nav-app .
+RUN npm run build -- --configuration production
 
-# copy layers directory
-WORKDIR /src
-COPY layers/ ./layers/
-
-# copy markdown files from root
-COPY *.md ./
-
-WORKDIR /src/nav-app
-EXPOSE 4200
-
-CMD npm start
+FROM nginxinc/nginx-unprivileged:1.27-alpine3.19
+COPY --from=builder /usr/src/app/dist/ /usr/share/nginx/html
