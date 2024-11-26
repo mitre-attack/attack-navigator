@@ -31,7 +31,7 @@
     "link_color": "blue",
     "metadata_color": "purple",
 
-    "banner": "Reminder: the TAXII 2.0 server will be <a href='https://medium.com/mitre-attack/introducing-taxii-2-1-and-a-fond-farewell-to-taxii-2-0-d9fca6ce4c58'>retiring on December 18</a>. Please switch to the <a href='https://github.com/mitre-attack/attack-workbench-taxii-server/blob/main/README.md'>TAXII 2.1 server</a> to ensure uninterrupted service.",
+    "banner": "Reminder: the TAXII 2.0 server will be <a href='https://medium.com/mitre-attack/introducing-taxii-2-1-and-a-fond-farewell-to-taxii-2-0-d9fca6ce4c58'>retiring on December 18</a>. Please switch to the <a href='https://github.com/mitre-attack/attack-workbench-taxii-server/blob/main/docs/USAGE.md'>TAXII 2.1 server</a> to ensure uninterrupted service.",
 
     "customize_features": [
         {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
