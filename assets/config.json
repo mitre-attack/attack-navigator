@@ -31,7 +31,7 @@
     "link_color": "blue",
     "metadata_color": "purple",
 
-    "banner": "ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.",
+    "banner": "Reminder: the TAXII 2.0 server will be <a href='https://medium.com/mitre-attack/introducing-taxii-2-1-and-a-fond-farewell-to-taxii-2-0-d9fca6ce4c58'>retiring on December 18</a>. Please switch to the <a href='https://github.com/mitre-attack/attack-workbench-taxii-server/blob/main/README.md'>TAXII 2.1 server</a> to ensure uninterrupted service.",
 
     "customize_features": [
         {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
