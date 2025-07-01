@@ -9,13 +9,17 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 5.1.1 - 1 July 2025
+
+## Fixes
+- Fixed layer upgrade pagination button visibility in dark mode. See issue [#678](https://github.com/mitre-attack/attack-navigator/issues/678).
+
 # 5.1.0 - 14 August 2024
 
 ## Improvements
 - Refactored the `layers/` directory structure to organize Layer File Formats into versioned subdirectories and removed outdated layer samples. See pull request [#649](https://github.com/mitre-attack/attack-navigator/pull/649).
 - Improved toolbar for better usability. See issue [#534](https://github.com/mitre-attack/attack-navigator/issues/534).
 - Updated Angular from v14 to v17.
-
 
 # 5.0.1 - 9 May 2024
 
