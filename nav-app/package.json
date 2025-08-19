@@ -54,7 +54,7 @@
     "@angular/cli": "^17.3.8",
     "@angular/compiler-cli": "^17.3.10",
     "@angular/language-service": "^17.3.10",
-    "@types/jasmine": "^5.1.4",
+    "@types/jasmine": "^5.1.9",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^18.15.12",
     "codelyzer": "^6.0.0",
