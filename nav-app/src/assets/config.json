@@ -162,7 +162,7 @@
     ],
 
     "features": [
-        {"name": "leave_site_dialog", "enabled": true, "description": "Disable to remove the dialog prompt when leaving site."},
+        {"name": "leave_site_dialog", "enabled": false, "description": "Disable to remove the dialog prompt when leaving site."},
         {"name": "tabs", "enabled": true, "description": "Disable to remove the ability to open new tabs."},
         {"name": "header", "enabled": true, "description": "Disable to remove the header containing banner."},
         {"name": "selection_controls", "enabled": true, "description": "Disable to to disable all subfeatures", "subfeatures": [
