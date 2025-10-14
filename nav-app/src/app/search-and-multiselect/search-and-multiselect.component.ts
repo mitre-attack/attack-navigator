@@ -249,15 +249,15 @@ export class SearchAndMultiselectComponent implements OnInit {
         }
 
         const legacyFormat = this.domain.supportsLegacyDataSources;
-        this.domain.dataComponents.forEach((c) => {
-            const source = legacyFormat ? c.source(this.viewModel.domainVersionID) : c;
-            const label = legacyFormat ? `${source.name}: ${c.name}` : source.name;
+        for (let dc of this.domain.dataComponents) {
+            const source = legacyFormat ? dc.source(this.viewModel.domainVersionID) : dc;
+            const label = legacyFormat ? `${source.name}: ${dc.name}` : source.name;
             const obj = {
-                objects: c.techniques(this.viewModel.domainVersionID),
+                objects: dc.techniques(this.viewModel.domainVersionID),
                 url: source.url,
             }
             this.stixDataComponents.set(label, obj);
-        });
+        }
         this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
     }
 

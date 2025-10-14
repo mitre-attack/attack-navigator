@@ -240,15 +240,19 @@ export class DataService {
                 let dataComponentRefs = analytic?.x_mitre_log_source_references?.map(
                     logSource => logSource.x_mitre_data_component_ref
                 ) ?? []; // handle optional field
-                for (let dataComponentRef of dataComponentRefs) {
-                    if (!domain.dataComponentsToTechniques.has(dataComponentRef)) {
-                        domain.dataComponentsToTechniques.set(dataComponentRef, []);
-                    }
-                    const techniqueList = domain.dataComponentsToTechniques.get(dataComponentRef);
-                    if (techniqueList.find(t => t.id === technique.id)) continue; // technique already added
-                    techniqueList.push(technique);
-                }
+                this.addTechniqueToDataComponents(domain, dataComponentRefs, technique);
             }
+        }
+    }
+
+    public addTechniqueToDataComponents(domain: Domain, dataComponentRefs: string[], technique: Technique) {
+        for (let dataComponentRef of dataComponentRefs) {
+            if (!domain.dataComponentsToTechniques.has(dataComponentRef)) {
+                domain.dataComponentsToTechniques.set(dataComponentRef, []);
+            }
+            const techniqueList = domain.dataComponentsToTechniques.get(dataComponentRef);
+            if (techniqueList.some(t => t.id === technique.id)) continue; // technique already added
+            techniqueList.push(technique);
         }
     }
 
