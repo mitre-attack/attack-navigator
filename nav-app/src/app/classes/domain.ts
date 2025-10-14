@@ -1,15 +1,6 @@
 import { ServiceAuth } from '../services/data.service';
-import { Campaign } from './stix/campaign';
-import { DataComponent } from './stix/data-component';
-import { Group } from './stix/group';
-import { Matrix } from './stix/matrix';
-import { Mitigation } from './stix/mitigation';
-import { Note } from './stix/note';
-import { Software } from './stix/software';
-import { Tactic } from './stix/tactic';
-import { Technique } from './stix/technique';
 import { Version } from './version';
-import { Asset } from './stix/asset';
+import { Asset, Campaign, DataComponent, DetectionStrategy, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from './stix';
 
 export class Domain {
     public readonly id: string; // domain ID
@@ -43,8 +34,10 @@ export class Domain {
     public assets: Asset[] = [];
     public dataComponents: DataComponent[] = [];
     public dataSources = new Map<string, { name: string; external_references: any[] }>(); // Map data source ID to name and urls to be used by data components
+    public dataComponentsToTechniques = new Map<string, Technique[]>(); // Map data component ID to list of related Techniques
     public groups: Group[] = [];
     public mitigations: Mitigation[] = [];
+    public detectionStrategies: DetectionStrategy[] = [];
     public notes: Note[] = [];
     public relationships: any = {
         // subtechnique subtechnique-of technique
@@ -53,6 +46,9 @@ export class Domain {
         // data component related to technique
         // ID of data component to [] of technique IDs
         component_rel: new Map<string, string[]>(),
+        // detection strategy related to technique
+        // ID of detection strategy to [] of technique IDs
+        detection_strategies_detect: new Map<string, string[]>(),
         // group uses technique
         // ID of group to [] of technique IDs
         group_uses: new Map<string, string[]>(),
@@ -76,6 +72,10 @@ export class Domain {
         targeted_assets: new Map<string, string[]>(),
     };
 
+    public get supportsLegacyDataSources(): boolean {
+        return !!this.dataSources.size && !!this.relationships.component_rel.size;
+    }
+
     constructor(domain_identifier: string, name: string, version: Version, urls?: string[]) {
         this.id = `${domain_identifier}-${version.number}`;
         this.domain_identifier = domain_identifier;
@@ -95,5 +95,9 @@ export class Domain {
         for (let callback of this.dataLoadedCallbacks) {
             callback();
         }
+    }
+
+    public getTechniqueById(stixId: string): Technique {
+        return this.techniques.find(t => t.id === stixId) ?? null;
     }
 }

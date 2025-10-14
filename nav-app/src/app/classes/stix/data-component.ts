@@ -17,16 +17,22 @@ export class DataComponent extends StixObject {
      * @returns {Technique[]} list of techniques used by the data component
      */
     public techniques(domainVersionID): Technique[] {
-        const techniques = [];
+        let techniques = [];
         const domain = this.dataService.getDomain(domainVersionID);
 
-        let relationships = domain.relationships.component_rel;
-        if (relationships.has(this.id)) {
-            relationships.get(this.id).forEach((targetID) => {
-                const technique = domain.techniques.find((t) => t.id === targetID);
-                if (technique) techniques.push(technique);
-            });
+        if (domain.supportsLegacyDataSources) {
+            // backwards compatibility with data sources
+            let relationships = domain.relationships.component_rel;
+            if (relationships.has(this.id)) {
+                relationships.get(this.id).forEach((targetID) => {
+                    const technique = domain.techniques.find((t) => t.id === targetID);
+                    if (technique) techniques.push(technique);
+                });
+            }
+        } else {
+            techniques = domain.dataComponentsToTechniques.get(this.id) ?? [];
         }
+
         return techniques;
     }
     /**
@@ -39,7 +45,7 @@ export class DataComponent extends StixObject {
         if (dataSources.has(this.dataSource)) {
             const source = dataSources.get(this.dataSource);
             let url = '';
-            if (source.external_references && source.external_references[0] && source.external_references[0].url)
+            if (source.external_references?.[0]?.url)
                 url = source.external_references[0].url;
             return { name: source.name, url: url };
         } else return { name: '', url: '' };
