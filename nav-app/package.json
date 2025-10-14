@@ -27,7 +27,7 @@
     "@angular/platform-browser-dynamic": "^17.3.10",
     "@angular/router": "^17.3.10",
     "@babel/runtime": "^7.22.6",
-    "@fontsource/roboto": "^5.0.7",
+    "@fontsource/roboto": "^5.2.8",
     "@fontsource/roboto-mono": "^5.2.8",
     "@types/file-saver": "^2.0.1",
     "classlist.js": "^1.1.20150312",
