@@ -31,7 +31,7 @@
     "link_color": "blue",
     "metadata_color": "purple",
 
-    "banner": "",
+    "banner": "ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.",
 
     "customize_features": [
         {"name": "multiselect", "enabled": true, "description": "Disable to remove the multiselect panel from interface."},
