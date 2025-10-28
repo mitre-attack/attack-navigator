@@ -9,6 +9,11 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 5.2.0 - 28 October 2025
+
+## Improvements
+- Extended search interface to support searching for techniques by detection strategy. See pull request [#702](https://github.com/mitre-attack/attack-navigator/pull/702).
+
 # 5.1.1 - 1 July 2025
 
 ## Fixes

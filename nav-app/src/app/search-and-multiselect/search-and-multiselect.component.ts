@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { StixObject, Group, Mitigation, Software, Technique, Campaign, Asset } from '../classes/stix';
+import { StixObject, Group, Mitigation, Software, Technique, Campaign, Asset, DetectionStrategy } from '../classes/stix';
 import { ViewModelsService } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
 import { ViewModel } from '../classes';
@@ -13,6 +13,7 @@ import { ViewModel } from '../classes';
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;
 
+    public domain;
     public stixTypes: any[] = [];
     public techniqueResults: Technique[] = [];
     // Data Components is a map mainly because it is a collection of labels that map to
@@ -25,15 +26,15 @@ export class SearchAndMultiselectComponent implements OnInit {
         0: true, // techniques panel
         1: false, // groups panel
         2: false, // software panel
-        3: false, // campaign panel
-        4: false, // mitigations panel
-        5: false, // data components panel
-        6: false, // assets panel
+        3: false, // mitigations panel
+        4: false, // campaigns panel
+        5: false, // assets panel
+        6: false, // data sources OR detection strategies panel
     };
 
     public fields = [
         {
-            label: 'name',
+            label: 'Name',
             field: 'name',
             enabled: true,
         },
@@ -43,13 +44,8 @@ export class SearchAndMultiselectComponent implements OnInit {
             enabled: true,
         },
         {
-            label: 'description',
+            label: 'Description',
             field: 'description',
-            enabled: true,
-        },
-        {
-            label: 'data sources',
-            field: 'datasources',
             enabled: true,
         },
     ];
@@ -92,6 +88,15 @@ export class SearchAndMultiselectComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.domain = this.dataService.getDomain(this.viewModel.domainVersionID);
+        // backwards compatibility for old data sources
+        if (this.domain.supportsLegacyDataSources) {
+            this.fields.push({
+                label: 'Data Sources',
+                field: 'datasources',
+                enabled: true,
+            });
+        }
         this.getResults();
     }
 
@@ -202,8 +207,8 @@ export class SearchAndMultiselectComponent implements OnInit {
      * Retrieve master list of techniques and sub-techniques
      */
     public getTechniques(): void {
-        let allTechniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
-        for (let technique of allTechniques) {
+        let allTechniques = this.domain.techniques;
+        for (let technique of this.domain.techniques) {
             allTechniques = allTechniques.concat(technique.subtechniques);
         }
         this.techniqueResults = this.filterAndSort(allTechniques, this._query, true);
@@ -213,40 +218,46 @@ export class SearchAndMultiselectComponent implements OnInit {
      * Retrieve master list of STIX objects
      */
     public getStixData(): void {
-        let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
-
         this.stixTypes = [
             {
                 label: 'threat groups',
-                objects: this.filterAndSort(domain.groups, this._query),
+                objects: this.filterAndSort(this.domain.groups, this._query),
             },
             {
                 label: 'software',
-                objects: this.filterAndSort(domain.software, this._query),
+                objects: this.filterAndSort(this.domain.software, this._query),
             },
             {
                 label: 'mitigations',
-                objects: this.filterAndSort(domain.mitigations, this._query),
+                objects: this.filterAndSort(this.domain.mitigations, this._query),
             },
             {
                 label: 'campaigns',
-                objects: this.filterAndSort(domain.campaigns, this._query),
+                objects: this.filterAndSort(this.domain.campaigns, this._query),
             },
             {
                 label: 'assets',
-                objects: this.filterAndSort(domain.assets, this._query),
+                objects: this.filterAndSort(this.domain.assets, this._query),
             },
         ];
 
-        domain.dataComponents.forEach((c) => {
-            const source = c.source(this.viewModel.domainVersionID);
-            const label = `${source.name}: ${c.name}`;
+        if (this.domain.detectionStrategies.length) {
+            this.stixTypes.push({
+                label: 'detection strategies',
+                objects: this.filterAndSort(this.domain.detectionStrategies, this._query),
+            })
+        }
+
+        const legacyFormat = this.domain.supportsLegacyDataSources;
+        for (let dc of this.domain.dataComponents) {
+            const source = legacyFormat ? dc.source(this.viewModel.domainVersionID) : dc;
+            const label = legacyFormat ? `${source.name}: ${dc.name}` : source.name;
             const obj = {
-                objects: c.techniques(this.viewModel.domainVersionID),
+                objects: dc.techniques(this.viewModel.domainVersionID),
                 url: source.url,
-            };
+            }
             this.stixDataComponents.set(label, obj);
-        });
+        }
         this.stixDataComponentLabels = this.filterAndSortLabels(Array.from(this.stixDataComponents.keys()), this._query);
     }
 
@@ -323,22 +334,15 @@ export class SearchAndMultiselectComponent implements OnInit {
 
     public getRelated(stixObject: StixObject): Technique[] {
         // master list of all techniques and sub-techniques
-        let techniques = this.dataService.getDomain(this.viewModel.domainVersionID).techniques;
-        let allTechniques = techniques.concat(this.dataService.getDomain(this.viewModel.domainVersionID).subtechniques);
+        let techniques = this.domain.techniques;
+        let allTechniques = techniques.concat(this.domain.subtechniques);
         let domainVersionID = this.viewModel.domainVersionID;
 
-        if (stixObject instanceof Group) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Group).relatedTechniques(domainVersionID).includes(technique.id));
-        } else if (stixObject instanceof Software) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Software).relatedTechniques(domainVersionID).includes(technique.id));
-        } else if (stixObject instanceof Mitigation) {
-            return allTechniques.filter((technique: Technique) =>
-                (stixObject as Mitigation).relatedTechniques(domainVersionID).includes(technique.id)
-            );
-        } else if (stixObject instanceof Campaign) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Campaign).relatedTechniques(domainVersionID).includes(technique.id));
-        } else if (stixObject instanceof Asset) {
-            return allTechniques.filter((technique: Technique) => (stixObject as Asset).relatedTechniques(domainVersionID).includes(technique.id));
+        const types = [Group, Software, Mitigation, Campaign, Asset, DetectionStrategy];
+        const matchedType = types.find(StixType => stixObject instanceof StixType);
+        if (matchedType) {
+            return allTechniques.filter((technique: Technique) => (stixObject as any).relatedTechniques(domainVersionID).includes(technique.id));
         }
+        return [];
     }
 }

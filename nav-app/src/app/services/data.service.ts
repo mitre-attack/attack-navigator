@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Buffer } from 'buffer';
 import { forkJoin, from, Observable } from 'rxjs';
-import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note } from '../classes/stix';
+import { Asset, Campaign, DataComponent, Group, Software, Matrix, Technique, Mitigation, Note, DetectionStrategy } from '../classes/stix';
 import { TaxiiConnect, Collection } from '../utils/taxii2lib';
 import { Domain, Version, VersionChangelog } from '../classes';
 import { ConfigService } from './config.service';
@@ -65,6 +65,7 @@ export class DataService {
             let techniqueSDOs = [];
             let bundleMatrices = [];
             let idToTechniqueSDO = new Map<string, any>();
+            let analyticSDOs = [];
             // iterate through stix domain objects in the bundle
             for (let sdo of bundle.objects) {
                 // filter out duplicates, except for matrices
@@ -94,6 +95,12 @@ export class DataService {
                         break;
                     case 'x-mitre-asset':
                         domain.assets.push(new Asset(sdo, this));
+                        break;
+                    case 'x-mitre-detection-strategy':
+                        domain.detectionStrategies.push(new DetectionStrategy(sdo, this));
+                        break;
+                    case 'x-mitre-analytic':
+                        analyticSDOs.push(sdo);
                         break;
                     case 'course-of-action':
                         domain.mitigations.push(new Mitigation(sdo, this));
@@ -134,6 +141,11 @@ export class DataService {
 
             // parse platforms
             this.parsePlatforms(domain).forEach(platforms.add, platforms);
+
+            // build data component to techniques map
+            if (domain.detectionStrategies && analyticSDOs.length && domain.relationships.detection_strategies_detect) {
+                this.buildDataComponentToTechniquesMap(domain, analyticSDOs);
+            }
         }
 
         // create matrices
@@ -217,6 +229,33 @@ export class DataService {
         return platforms;
     }
 
+    public buildDataComponentToTechniquesMap(domain: Domain, analytics: any[]) {
+        for (let det of domain.detectionStrategies) {
+            let techniqueRefs = domain.relationships.detection_strategies_detect.get(det.id);
+            let techniqueRef = techniqueRefs.length > 0 ? techniqueRefs[0] : undefined; // should only be one
+            const technique = domain.getTechniqueById(techniqueRef);
+            if (!technique) continue; // no technique found, skip
+            for (let analytic_ref of det.analyticRefs) {
+                let analytic = analytics.find(an => an.id === analytic_ref);
+                let dataComponentRefs = analytic?.x_mitre_log_source_references?.map(
+                    logSource => logSource.x_mitre_data_component_ref
+                ) ?? []; // handle optional field
+                this.addTechniqueToDataComponents(domain, dataComponentRefs, technique);
+            }
+        }
+    }
+
+    public addTechniqueToDataComponents(domain: Domain, dataComponentRefs: string[], technique: Technique) {
+        for (let dataComponentRef of dataComponentRefs) {
+            if (!domain.dataComponentsToTechniques.has(dataComponentRef)) {
+                domain.dataComponentsToTechniques.set(dataComponentRef, []);
+            }
+            const techniqueList = domain.dataComponentsToTechniques.get(dataComponentRef);
+            if (techniqueList.some(t => t.id === technique.id)) continue; // technique already added
+            techniqueList.push(technique);
+        }
+    }
+
     /**
      * Parses the given SRO into the domain relationship map
      * @param sro the SRO to parse
@@ -260,8 +299,14 @@ export class DataService {
                 domain.relationships['revoked_by'].set(sro.source_ref, sro.target_ref);
                 break;
             case 'detects':
-                // record data component: technique relationship
-                addRelationshipToMap(domain.relationships['component_rel'], sro.source_ref, sro.target_ref);
+                if (sro.source_ref.startsWith('x-mitre-data-component')) {
+                    // backwards compatibility for old data component detects techniques
+                    // record data component: technique relationship
+                    addRelationshipToMap(domain.relationships['component_rel'], sro.source_ref, sro.target_ref);
+                } else if (sro.source_ref.startsWith('x-mitre-detection-strategy')) {
+                    // record detection strategy: technique relationship
+                    addRelationshipToMap(domain.relationships['detection_strategies_detect'], sro.source_ref, sro.target_ref);
+                }
                 break;
             case 'attributed-to':
                 // record campaign:group relationship

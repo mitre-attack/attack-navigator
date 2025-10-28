@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/mitre-attack/attack-navigator.git"
   },
-  "version": "5.1.1",
+  "version": "5.2.0",
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
@@ -27,8 +27,8 @@
     "@angular/platform-browser-dynamic": "^17.3.10",
     "@angular/router": "^17.3.10",
     "@babel/runtime": "^7.22.6",
-    "@fontsource/roboto": "^5.0.7",
-    "@fontsource/roboto-mono": "^5.0.7",
+    "@fontsource/roboto": "^5.2.8",
+    "@fontsource/roboto-mono": "^5.2.8",
     "@types/file-saver": "^2.0.1",
     "classlist.js": "^1.1.20150312",
     "core-js": "^3.31.1",
@@ -54,7 +54,7 @@
     "@angular/cli": "^17.3.8",
     "@angular/compiler-cli": "^17.3.10",
     "@angular/language-service": "^17.3.10",
-    "@types/jasmine": "^5.1.4",
+    "@types/jasmine": "^5.1.9",
     "@types/jasminewd2": "^2.0.8",
     "@types/node": "^18.15.12",
     "codelyzer": "^6.0.0",

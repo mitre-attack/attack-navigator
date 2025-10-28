@@ -253,7 +253,7 @@ describe('DataService', () => {
             let relationships = domain.relationships;
             expect(relationships['campaign_uses'].size).toEqual(1);
             expect(relationships['campaigns_attributed_to'].size).toEqual(1);
-            expect(relationships['component_rel'].size).toEqual(2);
+            expect(relationships['component_rel'].size).toEqual(1);
             expect(relationships['group_uses'].size).toEqual(1);
             expect(relationships['mitigates'].size).toEqual(1);
             expect(relationships['revoked_by'].size).toEqual(1);
@@ -419,24 +419,6 @@ describe('DataService', () => {
             expect(campaign_test.relatedTechniques('enterprise-attack-13')).toEqual(['attack-pattern-0']);
             campaign_test = new Campaign(MockData.malwareS0000, mockService); // should return empty list because 'mitigation-0' is not in mitigationMitigates
             expect(campaign_test.relatedTechniques('enterprise-attack-13')).toEqual([]);
-        });
-
-        it('should test data components', () => {
-            let t1 = new Technique(MockData.T0000, [], mockService);
-            mockService.domains[0].techniques = [t1];
-            let data_component_test = new DataComponent(MockData.DC0000, mockService);
-            mockService.domains[0].dataSources.set(MockData.DC0000.id, {
-                name: MockData.stixSDO.name,
-                external_references: MockData.DC0000.external_references,
-            });
-            expect(data_component_test.source('enterprise-attack-13')).toEqual({ name: '', url: '' });
-            mockService.domains[0].dataSources.set(MockData.DS0000.id, {
-                name: MockData.stixSDO.name,
-                external_references: MockData.DC0001.external_references,
-            });
-            expect(data_component_test.source('enterprise-attack-13')).toEqual({ name: 'Name', url: 'test-url.com' });
-            mockService.domains[0].relationships['component_rel'].set('data-component-0', ['attack-pattern-0']);
-            expect(data_component_test.techniques('enterprise-attack-13')[0].id).toEqual('attack-pattern-0');
         });
 
         it('should test group', () => {

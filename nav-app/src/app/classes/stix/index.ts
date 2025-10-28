@@ -9,3 +9,4 @@ export { Software } from './software';
 export { Tactic } from './tactic';
 export { Technique } from './technique';
 export { Asset } from './asset';
+export { DetectionStrategy } from './detection-strategy';
