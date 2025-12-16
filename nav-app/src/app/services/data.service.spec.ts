@@ -434,11 +434,11 @@ describe('DataService', () => {
         it('should test stixObject', () => {
             let stixObject_test = new Campaign(MockData.G0000, mockService);
             let group_test = new Group(MockData.G0001, mockService);
-            mockService.domains[0].relationships['revoked_by'].set('relationship-9', ['attack-pattern-1']);
+            mockService.domains[0].relationships['revoked_by'].set('relationship-9', 'attack-pattern-1');
             mockService.domains[0].relationships['targeted_assets'].set('asset-0', ['attack-pattern-0']);
             expect(stixObject_test.revoked_by('enterprise-attack-13')).toBeUndefined();
-            mockService.domains[0].relationships['revoked_by'].set('intrusion-set-0', ['attack-pattern-1']);
-            expect(stixObject_test.revoked_by('enterprise-attack-13')).toEqual(['attack-pattern-1']);
+            mockService.domains[0].relationships['revoked_by'].set('intrusion-set-0', 'attack-pattern-1');
+            expect(stixObject_test.revoked_by('enterprise-attack-13')).toEqual('attack-pattern-1');
             let campaign_test = new Campaign(MockData.C0000, mockService);
             expect(campaign_test.compareVersion(group_test)).toEqual(-1);
             let asset_test = new Asset(MockData.invalidAsset, mockService, false);
