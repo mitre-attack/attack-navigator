@@ -98,40 +98,44 @@ describe('TabsComponent', () => {
     });
 
     describe('loadTabs', () => {
-        it('should load bundle when all fragment values are provided', async () => {
+        it('should load bundle when all fragment values are provided', waitForAsync(() => {
             let bundleURL = 'testbundleurl';
             let bundleVersion = '1';
             let bundleDomain = 'enterprise-attack';
             spyOn(component, 'getNamedFragmentValue').and.returnValues([bundleURL], [bundleVersion], [bundleDomain]);
             let newLayerSpy = spyOn(component, 'newLayerFromURL');
-            await component.loadTabs(MockData.defaultLayersDisabled);
-            expect(newLayerSpy).toHaveBeenCalledWith({ url: bundleURL, version: bundleVersion, identifier: bundleDomain });
-        });
+            component.loadTabs(MockData.defaultLayersDisabled).then(() => {
+                expect(newLayerSpy).toHaveBeenCalledWith({ url: bundleURL, version: bundleVersion, identifier: bundleDomain });
+            });
+        }));
 
-        it('should load layers from URL when provided', async () => {
+        it('should load layers from URL when provided', waitForAsync(() => {
             let layerURLs = ['testlayerurl1', 'testlayerurl2'];
             spyOn(component, 'getNamedFragmentValue')
                 .and.returnValue([]) // return empty list for bundle fragments
                 .withArgs('layerURL')
                 .and.returnValue(layerURLs);
             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-            await component.loadTabs(MockData.defaultLayersDisabled);
-            expect(loadLayerSpy).toHaveBeenCalledTimes(layerURLs.length);
-        });
+            component.loadTabs(MockData.defaultLayersDisabled).then(() => {
+                expect(loadLayerSpy).toHaveBeenCalledTimes(layerURLs.length);
+            });
+        }));
 
-        it('should not load default layers when disabled', async () => {
+        it('should not load default layers when disabled', waitForAsync(() => {
             spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-            await component.loadTabs(MockData.defaultLayersDisabled);
-            expect(loadLayerSpy).not.toHaveBeenCalled();
-        });
+            component.loadTabs(MockData.defaultLayersDisabled).then(() => {
+                expect(loadLayerSpy).not.toHaveBeenCalled();
+            });
+        }));
 
-        it('should load default layers when enabled', async () => {
+        it('should load default layers when enabled', waitForAsync(() => {
             spyOn(component, 'getNamedFragmentValue').and.returnValue([]); // return empty list for all fragments
             let loadLayerSpy = spyOn(component, 'loadLayerFromURL');
-            await component.loadTabs(MockData.defaultLayersEnabled);
-            expect(loadLayerSpy).toHaveBeenCalledTimes(MockData.defaultLayersEnabled.urls.length);
-        });
+            component.loadTabs(MockData.defaultLayersEnabled).then(() => {
+                expect(loadLayerSpy).toHaveBeenCalledTimes(MockData.defaultLayersEnabled.urls.length);
+            });
+        }));
     });
 
     describe('openTab', () => {
