@@ -58,6 +58,11 @@ describe('TabsComponent', () => {
 		dataService = TestBed.inject(DataService);
 		dialog = TestBed.inject(MatDialog);
 		http = TestBed.inject(HttpClient);
+
+        dataService.latestVersion = {
+            name: "ATT&CK v18",
+            number: "18",
+        } as Version;
 	});
 
     describe('constructor', () => {
