@@ -38,9 +38,9 @@
     "file-saver": "^2.0.5",
     "load-json-file": "^7.0.1",
     "mathjs": "^12.4.2",
-    "ngx-color-picker": "^16.0.0",
-    "ngx-drag-drop": "^17.0.0",
-    "ngx-markdown": "^17.2.1",
+    "ngx-color-picker": "^18.0.0",
+    "ngx-drag-drop": "^18.0.2",
+    "ngx-markdown": "^18.1.0",
     "rxjs": "^7.8.1",
     "rxjs-compat": "^6.6.7",
     "tinycolor2": "^1.6.0",
@@ -49,7 +49,7 @@
     "zone.js": "~0.14.6"
   },
   "devDependencies": {
-    "@angular-builders/custom-webpack": "^17.0.2",
+    "@angular-builders/custom-webpack": "^18.0.0",
     "@angular-devkit/build-angular": "^18.2.21",
     "@angular/cli": "^18.2.21",
     "@angular/compiler-cli": "^18.2.14",
