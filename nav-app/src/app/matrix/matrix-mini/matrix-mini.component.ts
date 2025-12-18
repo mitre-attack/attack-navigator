@@ -7,6 +7,7 @@ import { ViewModelsService } from '../../services/viewmodels.service';
     selector: 'matrix-mini',
     templateUrl: './matrix-mini.component.html',
     styleUrls: ['./matrix-mini.component.scss'],
+    standalone: false
 })
 export class MatrixMiniComponent extends MatrixCommon implements OnInit {
     constructor(configService: ConfigService, viewModelsService: ViewModelsService) {

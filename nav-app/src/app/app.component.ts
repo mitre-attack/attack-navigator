@@ -10,6 +10,7 @@ import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;

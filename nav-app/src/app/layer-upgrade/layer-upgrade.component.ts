@@ -12,6 +12,7 @@ import { MatStepper } from '@angular/material/stepper';
     templateUrl: './layer-upgrade.component.html',
     styleUrls: ['./layer-upgrade.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version

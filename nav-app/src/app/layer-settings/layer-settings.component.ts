@@ -3,10 +3,11 @@ import { ViewModel } from '../classes';
 import { DataService } from '../services/data.service';
 
 @Component({
-  selector: 'app-layer-settings',
-  templateUrl: './layer-settings.component.html',
-  styleUrls: ['./layer-settings.component.scss'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-layer-settings',
+    templateUrl: './layer-settings.component.html',
+    styleUrls: ['./layer-settings.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LayerSettingsComponent {
   @Input() viewModel: ViewModel;

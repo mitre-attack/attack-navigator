@@ -10,6 +10,7 @@ import { ViewModelsService } from '../../services/viewmodels.service';
     templateUrl: './technique-cell.component.html',
     styleUrls: ['./technique-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;

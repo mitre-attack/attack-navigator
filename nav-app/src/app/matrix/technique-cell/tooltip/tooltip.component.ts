@@ -10,6 +10,7 @@ import { CellPopover } from '../cell-popover';
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

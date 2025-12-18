@@ -10,6 +10,7 @@ import { CellPopover } from '../cell-popover';
     templateUrl: './contextmenu.component.html',
     styleUrls: ['./contextmenu.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

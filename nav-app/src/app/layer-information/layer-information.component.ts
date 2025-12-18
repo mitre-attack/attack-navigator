@@ -6,6 +6,7 @@ import * as globals from '../utils/globals';
     templateUrl: './layer-information.component.html',
     styleUrls: ['./layer-information.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LayerInformationComponent {
     public get layerFormatLink(): string {

@@ -8,6 +8,7 @@ import { ViewModelsService } from '../../services/viewmodels.service';
     templateUrl: './matrix-flat.component.html',
     styleUrls: ['./matrix-flat.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MatrixFlatComponent extends MatrixCommon implements OnInit {
     constructor(configService: ConfigService, viewModelsService: ViewModelsService) {

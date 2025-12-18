@@ -13,6 +13,7 @@ declare var d3: any; //d3js
     templateUrl: './svg-export.component.html',
     styleUrls: ['./svg-export.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class SvgExportComponent implements OnInit {
     // vm to render

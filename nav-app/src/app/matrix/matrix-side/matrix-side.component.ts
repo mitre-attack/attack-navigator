@@ -8,6 +8,7 @@ import { ViewModelsService } from '../../services/viewmodels.service';
     templateUrl: './matrix-side.component.html',
     styleUrls: ['./matrix-side.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MatrixSideComponent extends MatrixCommon implements OnInit {
     constructor(configService: ConfigService, viewModelsService: ViewModelsService) {

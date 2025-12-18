@@ -9,6 +9,7 @@ import * as globals from '../utils/globals';
     templateUrl: './version-upgrade.component.html',
     styleUrls: ['./version-upgrade.component.scss'],
     providers: [ViewModelsService],
+    standalone: false
 })
 export class VersionUpgradeComponent implements OnInit {
     navVersion = globals.navVersion;

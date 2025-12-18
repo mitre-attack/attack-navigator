@@ -9,6 +9,7 @@ import { ViewModel } from '../classes';
     templateUrl: './search-and-multiselect.component.html',
     styleUrls: ['./search-and-multiselect.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class SearchAndMultiselectComponent implements OnInit {
     @Input() viewModel: ViewModel;

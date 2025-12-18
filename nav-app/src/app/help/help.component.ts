@@ -8,6 +8,7 @@ import { LayerInformationComponent } from '../layer-information/layer-informatio
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;

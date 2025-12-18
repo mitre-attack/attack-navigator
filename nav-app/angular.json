@@ -9,11 +9,12 @@
             "projectType": "application",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist",
+                        "outputPath": {
+                          "base": "dist"
+                        },
                         "index": "src/index.html",
-                        "main": "src/main.ts",
                         "tsConfig": "tsconfig.app.json",
                         "polyfills": ["src/polyfills.ts", "zone.js"],
                         "preserveSymlinks": true,
@@ -34,12 +35,11 @@
                             "node_modules/tinygradient/browser.js",
                             "node_modules/marked/marked.min.js"
                         ],
-                        "vendorChunk": true,
                         "extractLicenses": false,
-                        "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "browser": "src/main.ts"
                     },
                     "configurations": {
                         "production": {
@@ -54,8 +54,6 @@
                             "sourceMap": false,
                             "namedChunks": false,
                             "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true,
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",

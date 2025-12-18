@@ -4,6 +4,7 @@
       "outDir": "./dist/out-tsc",
       "sourceMap": true,
       "declaration": false,
+      "esModuleInterop": true,
       "moduleResolution": "node",
       "experimentalDecorators": true,
       "target": "ES2022",
@@ -17,7 +18,6 @@
       "module": "es2020",
       "baseUrl": "./",
       "resolveJsonModule": true,
-      "allowSyntheticDefaultImports": true,
       "useDefineForClassFields": false
     }
 }

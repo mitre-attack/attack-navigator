@@ -7,6 +7,7 @@ import { ViewModel } from '../../classes';
     templateUrl: './tactic-cell.component.html',
     styleUrls: ['./tactic-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class TacticCellComponent implements OnInit {
     @Input() tactic: Tactic;

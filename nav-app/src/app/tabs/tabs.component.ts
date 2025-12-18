@@ -21,6 +21,7 @@ import { isSafari } from '../utils/utils';
     styleUrls: ['./tabs.component.scss'],
     providers: [ViewModelsService],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;

@@ -6,6 +6,7 @@ import { Link, Metadata, ViewModel } from '../classes';
     templateUrl: './list-input.component.html',
     styleUrls: ['./list-input.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ListInputComponent implements OnInit {
     @Input() config: ListInputConfig;
