@@ -1,16 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ConfigService } from './config.service';
 import * as MockData from '../../tests/utils/mock-data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ConfigService', () => {
     let service: ConfigService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [ConfigService],
-        });
+    imports: [],
+    providers: [ConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         service = TestBed.inject(ConfigService);
     });
 

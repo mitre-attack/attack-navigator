@@ -18,7 +18,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { DndModule } from 'ngx-drag-drop';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { DataTableComponent } from './datatable/data-table.component';
@@ -50,8 +50,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { ListInputComponent } from './list-input/list-input.component';
 import { ConfigService } from './services/config.service';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         DataTableComponent,
         TabsComponent,
@@ -74,9 +73,8 @@ import { ConfigService } from './services/config.service';
         ListInputComponent,
         LayerSettingsComponent,
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
+    exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
+    bootstrap: [AppComponent], imports: [BrowserModule,
         BrowserAnimationsModule,
         MatSelectModule,
         FormsModule,
@@ -99,10 +97,7 @@ import { ConfigService } from './services/config.service';
         MatStepperModule,
         MatPaginatorModule,
         MarkdownModule.forRoot(),
-        MatTabsModule,
-    ],
-    exports: [MatSelectModule, MatInputModule, MatButtonModule, MatIconModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatTabsModule],
-    providers: [
+        MatTabsModule], providers: [
         Title,
         ConfigService,
         {
@@ -113,7 +108,6 @@ import { ConfigService } from './services/config.service';
             deps: [ConfigService],
             multi: true,
         },
-    ],
-    bootstrap: [AppComponent],
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}

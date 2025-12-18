@@ -3,7 +3,7 @@ import { ChangelogComponent } from "./changelog.component"
 import { MarkdownModule, MarkdownService } from "ngx-markdown";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe('ChangelogComponent', () => {
 	let component: ChangelogComponent;
@@ -12,19 +12,17 @@ describe('ChangelogComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ChangelogComponent],
-			imports: [
-				MatDialogModule,
-				MarkdownModule.forRoot({ loader: HttpClient }),
-				HttpClientModule
-			],
-			providers: [
-				{provide: MAT_DIALOG_DATA, useValue: {someData: 'test data'}},
-				{provide: MatDialogRef, useValue: {}},
-				MarkdownService
-			],
-			schemas: [NO_ERRORS_SCHEMA]
-		}).compileComponents();
+    declarations: [ChangelogComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule,
+        MarkdownModule.forRoot({ loader: HttpClient })],
+    providers: [
+        { provide: MAT_DIALOG_DATA, useValue: { someData: 'test data' } },
+        { provide: MatDialogRef, useValue: {} },
+        MarkdownService,
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(ChangelogComponent);
 		component = fixture.componentInstance;

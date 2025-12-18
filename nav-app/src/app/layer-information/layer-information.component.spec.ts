@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LayerInformationComponent } from './layer-information.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import * as globals from '../utils/globals';
 
 describe('LayerInformationComponent', () => {
@@ -11,13 +11,11 @@ describe('LayerInformationComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-			declarations: [LayerInformationComponent],
-            imports: [
-				HttpClientModule,
-				MatDialogModule,
-				MarkdownModule.forRoot({ loader: HttpClient })],
-            providers: [MarkdownService]
-        }).compileComponents();
+    declarations: [LayerInformationComponent],
+    imports: [MatDialogModule,
+        MarkdownModule.forRoot({ loader: HttpClient })],
+    providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(LayerInformationComponent);
 		component = fixture.componentInstance;

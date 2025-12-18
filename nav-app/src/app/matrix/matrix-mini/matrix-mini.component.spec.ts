@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatrixMiniComponent } from './matrix-mini.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('MatrixMiniComponent', () => {
     let component: MatrixMiniComponent;
@@ -8,9 +9,10 @@ describe('MatrixMiniComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [MatrixMiniComponent],
-        }).compileComponents();
+    declarations: [MatrixMiniComponent],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
     }));
 
     beforeEach(() => {

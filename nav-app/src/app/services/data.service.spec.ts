@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Domain, Version, VersionChangelog } from '../classes';
 import { Asset, Campaign, DataComponent, Group, Matrix, Mitigation, Note, Software, Tactic, Technique } from '../classes/stix';
 import { of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { Collection } from '../utils/taxii2lib';
 import * as MockData from '../../tests/utils/mock-data';
 import { DataService } from './data.service';
@@ -17,9 +17,9 @@ describe('DataService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [DataService],
-        });
+    imports: [],
+    providers: [DataService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         configService = TestBed.inject(ConfigService);
         configService.versions = MockData.configData;
         dataService = TestBed.inject(DataService);

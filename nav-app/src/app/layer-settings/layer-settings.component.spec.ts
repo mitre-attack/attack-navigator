@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MarkdownModule, MarkdownService } from 'ngx-markdown';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ViewModel } from '../classes';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // Import CUSTOM_ELEMENTS_SCHEMA
 import { LayerSettingsComponent } from './layer-settings.component';
@@ -15,15 +15,12 @@ describe('LayerSettingsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-		declarations: [LayerSettingsComponent],
-    imports: [
-				HttpClientModule,
-        FormsModule,
-				MarkdownModule.forRoot({ loader: HttpClient })
-      ],
-    providers: [MarkdownService],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    })
+    declarations: [LayerSettingsComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule,
+        MarkdownModule.forRoot({ loader: HttpClient })],
+    providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
+})
     .compileComponents();
     configService = TestBed.inject(ConfigService);
     configService.versions = MockData.configData;

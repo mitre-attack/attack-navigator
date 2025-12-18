@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
 import { TabsComponent } from './tabs/tabs.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfigService } from './services/config.service';
 import { MatTabsModule } from '@angular/material/tabs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AppComponent', () => {
     let fixture: ComponentFixture<AppComponent>;
@@ -14,9 +15,10 @@ describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule, MatSnackBarModule, MatTabsModule],
-            declarations: [AppComponent, TabsComponent],
-        }).compileComponents();
+    declarations: [AppComponent, TabsComponent],
+    imports: [MatDialogModule, MatSnackBarModule, MatTabsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         // set up config service
         let configService = TestBed.inject(ConfigService);

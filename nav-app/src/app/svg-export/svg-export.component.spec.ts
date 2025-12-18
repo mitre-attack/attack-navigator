@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { SvgExportComponent } from './svg-export.component';
 import { TechniqueVM, ViewModel } from '../classes';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
 import { Matrix, Tactic, Technique } from '../classes/stix';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SvgExportComponent', () => {
     let component: SvgExportComponent;
@@ -12,22 +13,24 @@ describe('SvgExportComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
-            declarations: [SvgExportComponent],
-            providers: [
-                {
-                    provide: MatDialogRef,
-                    useValue: {},
-                },
-                {
-                    provide: MAT_DIALOG_DATA,
-                    useValue: {
-                        vm: new ViewModel('layer', '33', 'enterprise-attack-13', null),
-                    },
-                },
-                SvgExportComponent,
-            ],
-        }).compileComponents();
+    declarations: [SvgExportComponent],
+    imports: [MatDialogModule],
+    providers: [
+        {
+            provide: MatDialogRef,
+            useValue: {},
+        },
+        {
+            provide: MAT_DIALOG_DATA,
+            useValue: {
+                vm: new ViewModel('layer', '33', 'enterprise-attack-13', null),
+            },
+        },
+        SvgExportComponent,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
     });
 
     beforeEach(() => {

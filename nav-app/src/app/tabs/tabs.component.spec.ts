@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from "@angu
 import { TabsComponent } from "./tabs.component";
 import { ViewModelsService } from "../services/viewmodels.service";
 import { DataService } from "../services/data.service";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { FormsModule } from "@angular/forms";
@@ -35,21 +35,19 @@ describe('TabsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [TabsComponent],
-			imports: [
-				HttpClientModule,
-				MatDialogModule,
-				MatSnackBarModule,
-				MatTabsModule,
-				FormsModule,
-			],
-			providers: [
-				ViewModelsService,
-				DataService,
-				ConfigService,
-				{provide: MatSnackBar, useValue: {}}
-			]
-		}).compileComponents();
+    declarations: [TabsComponent],
+    imports: [MatDialogModule,
+        MatSnackBarModule,
+        MatTabsModule,
+        FormsModule],
+    providers: [
+        ViewModelsService,
+        DataService,
+        ConfigService,
+        { provide: MatSnackBar, useValue: {} },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
 
 		configService = TestBed.inject(ConfigService);
 		configService.defaultLayers = MockData.defaultLayersDisabled;

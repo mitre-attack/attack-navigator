@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ViewModelsService } from './viewmodels.service';
 import { TechniqueVM, LayoutOptions, Metadata, ViewModel, Link, VersionChangelog } from '../classes';
@@ -7,15 +7,16 @@ import { Technique, Tactic, Matrix } from '../classes/stix';
 import tinygradient from 'tinygradient';
 import * as MockData from '../../tests/utils/mock-data';
 import { ConfigService } from './config.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ViewmodelsService', () => {
     let viewModelsService: ViewModelsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, MatDialogModule],
-            providers: [ViewModelsService],
-        });
+    imports: [MatDialogModule],
+    providers: [ViewModelsService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
         // set up config service
         let configService = TestBed.inject(ConfigService);
         configService.versions = MockData.configData;

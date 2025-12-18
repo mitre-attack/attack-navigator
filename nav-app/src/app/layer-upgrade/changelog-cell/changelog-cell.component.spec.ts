@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangelogCellComponent } from './changelog-cell.component';
 import { Link, Metadata, TechniqueVM, ViewModel } from '../../classes';
 import { Note, Tactic, Technique } from '../../classes/stix';
@@ -7,6 +7,7 @@ import tinycolor from 'tinycolor2';
 import { deleteCookie, hasCookie } from '../../utils/cookies';
 import { ConfigService } from '../../services/config.service';
 import * as MockData from '../../../tests/utils/mock-data';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ChangelogCellComponent', () => {
     let component: ChangelogCellComponent;
@@ -65,9 +66,10 @@ describe('ChangelogCellComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            declarations: [ChangelogCellComponent],
-        }).compileComponents();
+    declarations: [ChangelogCellComponent],
+    imports: [],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
 
         // set up config service
         configService = TestBed.inject(ConfigService);

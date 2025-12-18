@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { LayerInformationComponent } from "../layer-information/layer-information.component";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MarkdownModule, MarkdownService } from "ngx-markdown";
-import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 
 describe('HelpComponent', () => {
 	let component: HelpComponent;
@@ -15,20 +15,18 @@ describe('HelpComponent', () => {
 
 	beforeEach(async() => {
 		await TestBed.configureTestingModule({
-			declarations: [HelpComponent, LayerInformationComponent],
-			imports: [
-				MatDialogModule,
-				MarkdownModule.forRoot({ loader: HttpClient }),
-				HttpClientModule
-			],
-			providers: [
-				Renderer2,
-				{provide: MAT_DIALOG_DATA, useValue: {theme: 'dark'}},
-				{provide: MatDialogRef, useValue: {}},
-				MarkdownService
-			],
-			schemas: [NO_ERRORS_SCHEMA]
-		}).compileComponents();
+    declarations: [HelpComponent, LayerInformationComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatDialogModule,
+        MarkdownModule.forRoot({ loader: HttpClient })],
+    providers: [
+        Renderer2,
+        { provide: MAT_DIALOG_DATA, useValue: { theme: 'dark' } },
+        { provide: MatDialogRef, useValue: {} },
+        MarkdownService,
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(HelpComponent);
 		component = fixture.componentInstance;
