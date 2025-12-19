@@ -16,7 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerDirective } from 'ngx-color-picker';
 import { DndModule } from 'ngx-drag-drop';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
@@ -89,7 +89,7 @@ import { ConfigService } from './services/config.service';
         MatExpansionModule,
         MatDialogModule,
         MatSnackBarModule,
-        ColorPickerModule,
+        ColorPickerDirective,
         DndModule,
         MatSidenavModule,
         MatCardModule,

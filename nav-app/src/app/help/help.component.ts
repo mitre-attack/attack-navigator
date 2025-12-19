@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation, ViewChild, Renderer2 } fr
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
+import { Parser } from 'marked';
 
 @Component({
     selector: 'help',
@@ -30,7 +31,8 @@ export class HelpComponent implements OnInit {
         }, 175);
 
         let self = this;
-        this.markdownService.renderer.heading = (text: string, level: number) => {
+        this.markdownService.renderer.heading = ({tokens, depth}) => {
+            let text = Parser.parseInline(tokens);
             let img = text.match(/(<img src(.*?)>)/g) ? text.match(/(<img src(.*?)>)/g)[0].replace(/(nav-app\/src\/)/g, '') : '';
             text = text.replace(/(<img src(.*?)>)/g, '');
             const escapedText = text
@@ -38,16 +40,16 @@ export class HelpComponent implements OnInit {
                 .trim()
                 .replace(/[^\w]+/g, '-');
             self.headingAnchors.push({
-                level: level,
+                level: depth,
                 anchor: escapedText,
                 label: text.replace('&amp;', '&'),
             });
-            return `<h${level} class="${escapedText}">${img}${text}</h${level}>`;
+            return `<h${depth} class="${escapedText}">${img}${text}</h${depth}>`;
         };
 
-        this.markdownService.renderer.html = (html: string) => {
-            if (!html.match(/(nav-app\/src\/)/g)) return html;
-            return html.replace(/(nav-app\/src\/)/g, '');
+        this.markdownService.renderer.html = ({text}) => {
+            if (!text.match(/(nav-app\/src\/)/g)) return text;
+            return text.replace(/(nav-app\/src\/)/g, '');
         };
     }
 

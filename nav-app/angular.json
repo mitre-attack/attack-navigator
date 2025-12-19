@@ -31,7 +31,7 @@
                             "node_modules/mathjs/lib/browser/math.js",
                             "node_modules/tinycolor2/tinycolor.js",
                             "node_modules/d3/dist/d3.js",
-                            "node_modules/d3-svg-legend/d3-legend.js",
+                            "node_modules/d3-svg-legend/d3-legend.min.js",
                             "node_modules/tinygradient/browser.js",
                             "node_modules/marked/marked.min.js"
                         ],

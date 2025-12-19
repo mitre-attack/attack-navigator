@@ -38,7 +38,9 @@
     "file-saver": "^2.0.5",
     "load-json-file": "^7.0.1",
     "mathjs": "^12.4.2",
-    "ngx-color-picker": "^18.0.0",
+    "ngx-color-picker": "^19.0.0",
+    "ngx-drag-drop": "^19.0.0",
+    "ngx-markdown": "^19.1.1",
     "rxjs": "^7.8.1",
     "rxjs-compat": "^6.6.7",
     "tinycolor2": "^1.6.0",
@@ -47,6 +49,7 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^19.0.1",
     "@angular-devkit/build-angular": "^19.2.19",
     "@angular/cli": "^19.2.19",
     "@angular/compiler-cli": "^19.2.17",
@@ -65,7 +68,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "marked": "^12.0.2",
+    "marked": "^15.0.12",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",

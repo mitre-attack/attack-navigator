@@ -1,5 +1,5 @@
 import tinycolor from 'tinycolor2';
-import * as tinygradient from 'tinygradient';
+import tinygradient from 'tinygradient';
 
 export class Gradient {
     // gradient class used by ViewModels
