@@ -9,6 +9,11 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# Staged on Develop
+
+## Improvements
+- Updated Angular from v17 to v19.
+
 # 5.2.0 - 28 October 2025
 
 ## Improvements
