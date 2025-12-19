@@ -15,8 +15,7 @@ describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [AppComponent],
-    imports: [MatDialogModule, MatSnackBarModule, MatTabsModule, TabsComponent],
+    imports: [MatDialogModule, MatSnackBarModule, MatTabsModule, TabsComponent, AppComponent],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
 

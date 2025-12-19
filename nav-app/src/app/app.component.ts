@@ -5,12 +5,13 @@ import { ConfigService } from './services/config.service';
 import * as globals from './utils/globals';
 import { IconsService } from './services/icons.service';
 import { deleteCookie, getCookie, hasCookie, setCookie } from './utils/cookies';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    standalone: false
+    imports: [NgClass, TabsComponent]
 })
 export class AppComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;
