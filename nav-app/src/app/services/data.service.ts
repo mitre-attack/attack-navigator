@@ -236,10 +236,8 @@ export class DataService {
             const technique = domain.getTechniqueById(techniqueRef);
             if (!technique) continue; // no technique found, skip
             for (let analytic_ref of det.analyticRefs) {
-                let analytic = analytics.find(an => an.id === analytic_ref);
-                let dataComponentRefs = analytic?.x_mitre_log_source_references?.map(
-                    logSource => logSource.x_mitre_data_component_ref
-                ) ?? []; // handle optional field
+                let analytic = analytics.find((an) => an.id === analytic_ref);
+                let dataComponentRefs = analytic?.x_mitre_log_source_references?.map((logSource) => logSource.x_mitre_data_component_ref) ?? []; // handle optional field
                 this.addTechniqueToDataComponents(domain, dataComponentRefs, technique);
             }
         }
@@ -251,7 +249,7 @@ export class DataService {
                 domain.dataComponentsToTechniques.set(dataComponentRef, []);
             }
             const techniqueList = domain.dataComponentsToTechniques.get(dataComponentRef);
-            if (techniqueList.some(t => t.id === technique.id)) continue; // technique already added
+            if (techniqueList.some((t) => t.id === technique.id)) continue; // technique already added
             techniqueList.push(technique);
         }
     }

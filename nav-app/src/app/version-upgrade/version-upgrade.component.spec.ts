@@ -9,24 +9,24 @@ describe('VersionUpgradeComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatDialogModule, VersionUpgradeComponent],
-    providers: [
-        {
-            provide: MatDialogRef,
-            useValue: {
-                close() {
-                    return {};
+            imports: [MatDialogModule, VersionUpgradeComponent],
+            providers: [
+                {
+                    provide: MatDialogRef,
+                    useValue: {
+                        close() {
+                            return {};
+                        },
+                    },
                 },
-            },
-        },
-        {
-            provide: MAT_DIALOG_DATA,
-            useValue: {},
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {},
+                },
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

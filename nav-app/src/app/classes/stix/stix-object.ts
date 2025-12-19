@@ -17,7 +17,7 @@ export abstract class StixObject {
         // Properties
         this.id = stixSDO.id;
         this.name = stixSDO.name;
-        this.description = stixSDO?.description ?? "";
+        this.description = stixSDO?.description ?? '';
         this.created = stixSDO.created;
         this.modified = stixSDO.modified;
         this.revoked = stixSDO.revoked ? stixSDO.revoked : false;

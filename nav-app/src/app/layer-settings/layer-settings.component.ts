@@ -14,14 +14,12 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './layer-settings.component.html',
     styleUrls: ['./layer-settings.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [MatCard, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, FormsModule, MatDivider, ListInputComponent, MatButton]
+    imports: [MatCard, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, FormsModule, MatDivider, ListInputComponent, MatButton],
 })
 export class LayerSettingsComponent {
-  @Input() viewModel: ViewModel;
+    @Input() viewModel: ViewModel;
 
-  constructor(
-      public dataService: DataService,
-  ) {
-      // intentionally left blank
-  }
+    constructor(public dataService: DataService) {
+        // intentionally left blank
+    }
 }

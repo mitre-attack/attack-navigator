@@ -12,7 +12,7 @@ import { NgIf, NgFor } from '@angular/common';
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [MatDialogTitle, MatButton, CdkScrollable, MatDialogContent, NgIf, NgFor, MarkdownComponent, MatDialogActions, MatDialogClose]
+    imports: [MatDialogTitle, MatButton, CdkScrollable, MatDialogContent, NgIf, NgFor, MarkdownComponent, MatDialogActions, MatDialogClose],
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;
@@ -34,7 +34,7 @@ export class HelpComponent implements OnInit {
         }, 175);
 
         let self = this;
-        this.markdownService.renderer.heading = ({tokens, depth}) => {
+        this.markdownService.renderer.heading = ({ tokens, depth }) => {
             let text = Parser.parseInline(tokens);
             let img = text.match(/(<img src(.*?)>)/g) ? text.match(/(<img src(.*?)>)/g)[0].replace(/(nav-app\/src\/)/g, '') : '';
             text = text.replace(/(<img src(.*?)>)/g, '');
@@ -50,7 +50,7 @@ export class HelpComponent implements OnInit {
             return `<h${depth} class="${escapedText}">${img}${text}</h${depth}>`;
         };
 
-        this.markdownService.renderer.html = ({text}) => {
+        this.markdownService.renderer.html = ({ text }) => {
             if (!text.match(/(nav-app\/src\/)/g)) return text;
             return text.replace(/(nav-app\/src\/)/g, '');
         };

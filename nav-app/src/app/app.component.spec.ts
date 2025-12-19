@@ -15,9 +15,9 @@ describe('AppComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatDialogModule, MatSnackBarModule, MatTabsModule, TabsComponent, AppComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [MatDialogModule, MatSnackBarModule, MatTabsModule, TabsComponent, AppComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         // set up config service
         let configService = TestBed.inject(ConfigService);

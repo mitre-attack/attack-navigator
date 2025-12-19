@@ -58,16 +58,19 @@
         height: 2px;
     }
     &.divider-option {
-        .line, .icon {
+        .line,
+        .icon {
             @include adaptive-color('background-color', color(panel-dark), color(dark-4));
         }
     }
     &.divider {
-        .line, .icon {
+        .line,
+        .icon {
             @include adaptive-color('background-color', darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
         }
     }
-    &:hover .line, &:hover .icon {
+    &:hover .line,
+    &:hover .icon {
         @include adaptive-color('background-color', color(button-dark), color(dark-link));
     }
 }

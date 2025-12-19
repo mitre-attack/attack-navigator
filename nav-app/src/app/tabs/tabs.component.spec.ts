@@ -1,30 +1,30 @@
-import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from "@angular/core/testing";
-import { TabsComponent } from "./tabs.component";
-import { ViewModelsService } from "../services/viewmodels.service";
-import { DataService } from "../services/data.service";
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { FormsModule } from "@angular/forms";
-import { Domain, Tab, TechniqueVM, Version, ViewModel } from "../classes";
-import { MatTabsModule } from "@angular/material/tabs";
-import { ConfigService } from "../services/config.service";
+import { ComponentFixture, TestBed, fakeAsync, flush, waitForAsync } from '@angular/core/testing';
+import { TabsComponent } from './tabs.component';
+import { ViewModelsService } from '../services/viewmodels.service';
+import { DataService } from '../services/data.service';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { FormsModule } from '@angular/forms';
+import { Domain, Tab, TechniqueVM, Version, ViewModel } from '../classes';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ConfigService } from '../services/config.service';
 import * as MockData from '../../tests/utils/mock-data';
 import * as MockLayers from '../../tests/utils/mock-layers';
-import { of } from "rxjs";
-import { ChangelogComponent } from "../changelog/changelog.component";
-import { HelpComponent } from "../help/help.component";
-import { LayerInformationComponent } from "../layer-information/layer-information.component";
-import { SvgExportComponent } from "../svg-export/svg-export.component";
-import { Technique } from "../classes/stix";
+import { of } from 'rxjs';
+import { ChangelogComponent } from '../changelog/changelog.component';
+import { HelpComponent } from '../help/help.component';
+import { LayerInformationComponent } from '../layer-information/layer-information.component';
+import { SvgExportComponent } from '../svg-export/svg-export.component';
+import { Technique } from '../classes/stix';
 
 describe('TabsComponent', () => {
-	let component: TabsComponent;
-	let fixture: ComponentFixture<TabsComponent>;
-	let dataService: DataService;
-	let configService: ConfigService;
-	let dialog: MatDialog;
-	let http: HttpClient;
+    let component: TabsComponent;
+    let fixture: ComponentFixture<TabsComponent>;
+    let dataService: DataService;
+    let configService: ConfigService;
+    let dialog: MatDialog;
+    let http: HttpClient;
 
     let testTab = new Tab('test tab', true, false, 'enterprise-attack', true);
     let loadData = {
@@ -33,34 +33,31 @@ describe('TabsComponent', () => {
         identifier: 'enterprise-attack',
     };
 
-	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-    imports: [MatDialogModule,
-        MatSnackBarModule,
-        MatTabsModule,
-        FormsModule, TabsComponent],
-    providers: [
-        ViewModelsService,
-        DataService,
-        ConfigService,
-        { provide: MatSnackBar, useValue: {} },
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-}).compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [MatDialogModule, MatSnackBarModule, MatTabsModule, FormsModule, TabsComponent],
+            providers: [
+                ViewModelsService,
+                DataService,
+                ConfigService,
+                { provide: MatSnackBar, useValue: {} },
+                provideHttpClient(withInterceptorsFromDi()),
+            ],
+        }).compileComponents();
 
-		configService = TestBed.inject(ConfigService);
-		configService.defaultLayers = MockData.defaultLayersDisabled;
-		fixture = TestBed.createComponent(TabsComponent);
-		component = fixture.componentInstance;
-		dataService = TestBed.inject(DataService);
-		dialog = TestBed.inject(MatDialog);
-		http = TestBed.inject(HttpClient);
+        configService = TestBed.inject(ConfigService);
+        configService.defaultLayers = MockData.defaultLayersDisabled;
+        fixture = TestBed.createComponent(TabsComponent);
+        component = fixture.componentInstance;
+        dataService = TestBed.inject(DataService);
+        dialog = TestBed.inject(MatDialog);
+        http = TestBed.inject(HttpClient);
 
         dataService.latestVersion = {
-            name: "ATT&CK v18",
-            number: "18",
+            name: 'ATT&CK v18',
+            number: '18',
         } as Version;
-	});
+    });
 
     describe('constructor', () => {
         beforeEach(() => {
@@ -309,7 +306,7 @@ describe('TabsComponent', () => {
         }));
 
         it('should validate if the domainVersionID is unique', waitForAsync(() => {
-			let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
+            let layer = JSON.parse(JSON.stringify(MockLayers.invalidLayerFile1));
             let alertSpy = spyOn(window, 'alert');
             let consoleSpy = spyOn(console, 'error');
             component.validateInput(layer, 'enterprise-attack-13');
@@ -343,7 +340,7 @@ describe('TabsComponent', () => {
             expect(component.layerLinkURLs.length).toEqual(1);
             component.getLayerLink();
             component.removeLayerLink(0);
-            let url_string = "https://mitre-attack.github.io/attack-navigator/#disable_techniques=false&sticky_toolbar=false"
+            let url_string = 'https://mitre-attack.github.io/attack-navigator/#disable_techniques=false&sticky_toolbar=false';
             expect(url_string).toContain('disable_techniques=false&sticky_toolbar=false');
         });
 
@@ -446,7 +443,7 @@ describe('TabsComponent', () => {
         });
 
         it('should open the selected dialog', () => {
-            const settings = { maxWidth: '75ch', panelClass: component.userTheme, autoFocus: false, data: {theme: undefined} };
+            const settings = { maxWidth: '75ch', panelClass: component.userTheme, autoFocus: false, data: { theme: undefined } };
             const openDialogSpy = spyOn(component.dialog, 'open');
 
             // layer dialog

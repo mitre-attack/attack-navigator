@@ -835,7 +835,9 @@ export class ViewModel {
             }
             // filter by platform
             let platforms = new Set(technique.platforms);
-            if (platforms.size == 0) { platforms.add('None'); }
+            if (platforms.size == 0) {
+                platforms.add('None');
+            }
             for (let platform of this.filters.platforms.selection) {
                 if (platforms.has(platform)) {
                     techniqueVM.setIsVisible(true);

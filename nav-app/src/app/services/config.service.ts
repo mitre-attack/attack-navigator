@@ -23,7 +23,7 @@ export class ConfigService {
     public metadataColor = 'purple';
     public banner: string;
     public featureList: any[] = [];
-    public customizefeatureList: any[] = []
+    public customizefeatureList: any[] = [];
 
     private features = new Map<string, boolean>();
     private featureGroups = new Map<string, string[]>();
@@ -218,7 +218,7 @@ export class ConfigService {
 
                     // parse feature preferences
                     this.featureList = config['features'];
-                    this.customizefeatureList = config['customize_features']
+                    this.customizefeatureList = config['customize_features'];
                     config['features'].forEach((feature) => {
                         this.setFeature_object(feature);
                     });

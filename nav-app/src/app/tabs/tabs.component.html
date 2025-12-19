@@ -459,8 +459,9 @@
                     </div>
 
                     <!-- create -->
-                    <div style="margin-top: 16px;">
-                        <button mat-flat-button
+                    <div style="margin-top: 16px">
+                        <button
+                            mat-flat-button
                             [disabled]="getScoreExpressionError() || !opSettings.domain"
                             (click)="layerByOperation(); showScoreVariables = false">
                             Create layer
@@ -485,9 +486,14 @@
                                 <ul class="layer-links">
                                     <li *ngFor="let layerLinkURL of layerLinkURLs; let i = index; trackBy: trackByFunction">
                                         <mat-form-field>
-                                            <mat-label>default layer {{i+1}}</mat-label>
+                                            <mat-label>default layer {{ i + 1 }}</mat-label>
                                             <input type="text" matInput [(ngModel)]="layerLinkURLs[i]" />
-                                            <button class="icon-button-scale-down" matSuffix mat-icon-button aria-label="remove" (click)="removeLayerLink(i)">
+                                            <button
+                                                class="icon-button-scale-down"
+                                                matSuffix
+                                                mat-icon-button
+                                                aria-label="remove"
+                                                (click)="removeLayerLink(i)">
                                                 <mat-icon>close</mat-icon>
                                             </button>
                                         </mat-form-field>
@@ -529,14 +535,14 @@
                 <div style="text-align: center">
                     <mat-form-field id="layerlinkfield">
                         <mat-label>custom navigator url</mat-label>
-                        <input
-                            id="layerLink"
-                            type="text"
-                            matInput
-                            (click)="selectLayerLink()"
-                            [value]="getLayerLink()"
-                            readonly />
-                        <button class="icon-button-scale-down" (click)="copyLayerLink()" matSuffix mat-icon-button aria-label="copy" matTooltip="copy">
+                        <input id="layerLink" type="text" matInput (click)="selectLayerLink()" [value]="getLayerLink()" readonly />
+                        <button
+                            class="icon-button-scale-down"
+                            (click)="copyLayerLink()"
+                            matSuffix
+                            mat-icon-button
+                            aria-label="copy"
+                            matTooltip="copy">
                             <mat-icon>content_copy</mat-icon>
                         </button>
                         <mat-hint *ngIf="copiedRecently">copied</mat-hint>

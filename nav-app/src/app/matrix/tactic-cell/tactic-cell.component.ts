@@ -9,7 +9,7 @@ import { NgIf } from '@angular/common';
     templateUrl: './tactic-cell.component.html',
     styleUrls: ['./tactic-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [MatTooltip, NgIf]
+    imports: [MatTooltip, NgIf],
 })
 export class TacticCellComponent implements OnInit {
     @Input() tactic: Tactic;

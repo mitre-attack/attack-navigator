@@ -11,7 +11,7 @@ import { NgClass, NgIf, NgFor } from '@angular/common';
     templateUrl: './contextmenu.component.html',
     styleUrls: ['./contextmenu.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgClass, NgIf, NgFor]
+    imports: [NgClass, NgIf, NgFor],
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

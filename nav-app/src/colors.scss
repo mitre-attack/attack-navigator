@@ -22,20 +22,17 @@ $colors: (
         on-color: white,
     ),
     //used for header and some nav elements
-    secondary:
-        (
+    secondary: (
             color: map-get($attack-colors, attack-blue),
             on-color: white,
         ),
     //used for footer and some buttons
-    body:
-        (
+    body: (
             color: white,
             on-color: #39434c,
         ),
     //primary page body
-    light:
-        (
+    light: (
             color: white,
             on-color: #39434c,
         ),
@@ -44,8 +41,7 @@ $colors: (
         on-color: white,
     ),
     // dark theme colors variations 0-3 (from darkest to lightest)
-    dark-1:
-        (
+    dark-1: (
             color: #1a1a23,
             on-color: white,
         ),
@@ -54,8 +50,7 @@ $colors: (
         on-color: #fa6341,
     ),
     // accent dark color scheme (used for :hover selectors)
-    dark-3:
-        (
+    dark-3: (
             color: #3f3f56,
             on-color: white,
         ),
@@ -76,14 +71,12 @@ $colors: (
         color: #4f7cac,
     ),
     // hyperlinks
-    matrix-header:
-        (
+    matrix-header: (
             color: gray,
             on-color: white,
         ),
     // color of matrix headers
-    cell-highlight-color:
-        (
+    cell-highlight-color: (
             color: rgb(96, 197, 255),
         ),
     cell-highlight-dark-color: (
@@ -105,8 +98,7 @@ $colors: (
         color: #b8b8b8,
     ),
     //bootstrap colors
-    bootstrap-primary:
-        (
+    bootstrap-primary: (
             color: #428bca,
             on-color: white,
         ),

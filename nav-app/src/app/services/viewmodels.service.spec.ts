@@ -14,9 +14,9 @@ describe('ViewmodelsService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MatDialogModule],
-    providers: [ViewModelsService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [MatDialogModule],
+            providers: [ViewModelsService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         // set up config service
         let configService = TestBed.inject(ConfigService);
         configService.versions = MockData.configData;

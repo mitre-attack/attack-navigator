@@ -10,7 +10,7 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './layer-information.component.html',
     styleUrls: ['./layer-information.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [CdkScrollable, MatDialogContent, MarkdownComponent, MatDialogActions, MatButton, MatDialogClose]
+    imports: [CdkScrollable, MatDialogContent, MarkdownComponent, MatDialogActions, MatButton, MatDialogClose],
 })
 export class LayerInformationComponent {
     public get layerFormatLink(): string {

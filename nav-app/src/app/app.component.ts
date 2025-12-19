@@ -11,7 +11,7 @@ import { NgClass } from '@angular/common';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [NgClass, TabsComponent]
+    imports: [NgClass, TabsComponent],
 })
 export class AppComponent implements OnInit {
     @ViewChild(TabsComponent) tabsComponent;

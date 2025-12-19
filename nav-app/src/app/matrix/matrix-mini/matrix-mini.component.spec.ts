@@ -9,9 +9,9 @@ describe('MatrixMiniComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatrixMiniComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [MatrixMiniComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

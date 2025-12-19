@@ -10,7 +10,7 @@ import { NgStyle, NgClass } from '@angular/common';
     templateUrl: './changelog-cell.component.html',
     styleUrls: ['./changelog-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgStyle, NgClass]
+    imports: [NgStyle, NgClass],
 })
 export class ChangelogCellComponent extends Cell {
     @Input() isCurrentVersion?: boolean = true;

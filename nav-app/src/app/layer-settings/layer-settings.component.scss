@@ -1,19 +1,19 @@
 @import '../../colors.scss';
 .layer-settings {
-	.sidebar-content {
+    .sidebar-content {
         margin: 1rem 0;
     }
-	.info-card {
-		display: flex;
-		justify-content: space-between;
-	}
-	.info-field {
-		margin: 1em 0;
-		.mat-mdc-form-field {
-			width: 100%;
-		}
-	}
-	.settings .title {
+    .info-card {
+        display: flex;
+        justify-content: space-between;
+    }
+    .info-field {
+        margin: 1em 0;
+        .mat-mdc-form-field {
+            width: 100%;
+        }
+    }
+    .settings .title {
         font-size: 14px;
         margin: 0;
     }
@@ -23,12 +23,12 @@
             @include adaptive-color-dark-only('border-top-color', color(dark-4));
         }
     }
-	.sub-section {
-		padding-top: 1.5em;
-	}
-	.padding-top {
-		padding-top: 1em;
-	}
+    .sub-section {
+        padding-top: 1.5em;
+    }
+    .padding-top {
+        padding-top: 1em;
+    }
     .data-input {
         overflow-y: auto;
         max-height: 30vh;
@@ -37,37 +37,38 @@
         display: flex;
         justify-content: flex-end;
     }
-    .mat-mdc-form-field, .mat-mdc-form-field:hover {
+    .mat-mdc-form-field,
+    .mat-mdc-form-field:hover {
         &:not(.mat-form-field-disabled) {
             .mat-mdc-floating-label,
             .mat-mdc-input-element {
                 @include adaptive-color-dark-only('color', on-color(dark));
             }
-			.mdc-line-ripple::before {
-				@include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
-			}
+            .mdc-line-ripple::before {
+                @include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
+            }
         }
 
         &.mat-form-field-disabled {
             .mat-mdc-floating-label,
-			.mdc-text-field__input {
+            .mdc-text-field__input {
                 @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
             }
-			.mdc-line-ripple::before {
-				@include adaptive-color-dark-only('border-bottom-color', darken(on-color(dark-1), 25%));
-			}
+            .mdc-line-ripple::before {
+                @include adaptive-color-dark-only('border-bottom-color', darken(on-color(dark-1), 25%));
+            }
         }
         .mat-mdc-form-field-hint {
             @include adaptive-color-dark-only('color', on-color(dark));
         }
     }
-	.mat-mdc-card {
-		width: 100%;
-	}
-	.mat-mdc-card-title {
-		padding: 16px 16px 0 16px;
-	}
-	.mat-mdc-card + .mat-mdc-card {
-		margin-left: 1em;
-	}
+    .mat-mdc-card {
+        width: 100%;
+    }
+    .mat-mdc-card-title {
+        padding: 16px 16px 0 16px;
+    }
+    .mat-mdc-card + .mat-mdc-card {
+        margin-left: 1em;
+    }
 }

@@ -10,9 +10,9 @@ describe('MatrixSideComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatDialogModule, MatrixSideComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [MatDialogModule, MatrixSideComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
     templateUrl: './list-input.component.html',
     styleUrls: ['./list-input.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgFor, NgIf, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule]
+    imports: [NgFor, NgIf, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule],
 })
 export class ListInputComponent implements OnInit {
     @Input() config: ListInputConfig;

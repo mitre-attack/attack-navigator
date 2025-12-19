@@ -55,7 +55,7 @@ h4 {
 }
 
 .mat-mdc-paginator .mat-mdc-paginator-icon {
-    @include adaptive-color-dark-only('fill', on-color(dark))
+    @include adaptive-color-dark-only('fill', on-color(dark));
 }
 
 .mat-stepper-vertical,

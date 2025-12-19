@@ -13,23 +13,23 @@ describe('SvgExportComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatDialogModule, SvgExportComponent],
-    providers: [
-        {
-            provide: MatDialogRef,
-            useValue: {},
-        },
-        {
-            provide: MAT_DIALOG_DATA,
-            useValue: {
-                vm: new ViewModel('layer', '33', 'enterprise-attack-13', null),
-            },
-        },
-        SvgExportComponent,
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+            imports: [MatDialogModule, SvgExportComponent],
+            providers: [
+                {
+                    provide: MatDialogRef,
+                    useValue: {},
+                },
+                {
+                    provide: MAT_DIALOG_DATA,
+                    useValue: {
+                        vm: new ViewModel('layer', '33', 'enterprise-attack-13', null),
+                    },
+                },
+                SvgExportComponent,
+                provideHttpClient(withInterceptorsFromDi()),
+                provideHttpClientTesting(),
+            ],
+        }).compileComponents();
     });
 
     beforeEach(() => {

@@ -17,9 +17,9 @@ describe('DataService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [DataService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [DataService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         configService = TestBed.inject(ConfigService);
         configService.versions = MockData.configData;
         dataService = TestBed.inject(DataService);

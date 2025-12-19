@@ -10,7 +10,7 @@ import { TechniqueCellComponent } from '../technique-cell/technique-cell.compone
     selector: 'matrix-mini',
     templateUrl: './matrix-mini.component.html',
     styleUrls: ['./matrix-mini.component.scss'],
-    imports: [NgFor, TacticCellComponent, NgIf, TechniqueCellComponent]
+    imports: [NgFor, TacticCellComponent, NgIf, TechniqueCellComponent],
 })
 export class MatrixMiniComponent extends MatrixCommon implements OnInit {
     constructor(configService: ConfigService, viewModelsService: ViewModelsService) {

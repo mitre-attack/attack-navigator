@@ -20,7 +20,22 @@ declare var d3: any; //d3js
     templateUrl: './svg-export.component.html',
     styleUrls: ['./svg-export.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatTooltip, MatFormField, MatLabel, MatSelect, FormsModule, MatOption, MatInput, MatSuffix, NgClass, ColorPickerDirective, MatDialogActions, MatButton, MatDialogClose]
+    imports: [
+        NgIf,
+        MatTooltip,
+        MatFormField,
+        MatLabel,
+        MatSelect,
+        FormsModule,
+        MatOption,
+        MatInput,
+        MatSuffix,
+        NgClass,
+        ColorPickerDirective,
+        MatDialogActions,
+        MatButton,
+        MatDialogClose,
+    ],
 })
 export class SvgExportComponent implements OnInit {
     // vm to render

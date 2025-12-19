@@ -21,7 +21,13 @@ import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatLabel, MatSelect, MatOption, MatFormField, MatHint, MatSuffix } from '@angular/material/select';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import {
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatExpansionPanelDescription,
+} from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { MatInput } from '@angular/material/input';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -33,7 +39,37 @@ import { DataTableComponent } from '../datatable/data-table.component';
     styleUrls: ['./tabs.component.scss'],
     providers: [ViewModelsService],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatTooltip, NgClass, MatTabNav, NgFor, MatTabLink, MatIconButton, MatIcon, MatTabNavPanel, MatButton, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogClose, MatLabel, MatSelect, MatOption, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription, MatFormField, FormsModule, MatInput, MatHint, MatSuffix, MatCheckbox, DataTableComponent]
+    imports: [
+        NgIf,
+        MatTooltip,
+        NgClass,
+        MatTabNav,
+        NgFor,
+        MatTabLink,
+        MatIconButton,
+        MatIcon,
+        MatTabNavPanel,
+        MatButton,
+        MatDialogTitle,
+        CdkScrollable,
+        MatDialogContent,
+        MatDialogClose,
+        MatLabel,
+        MatSelect,
+        MatOption,
+        MatAccordion,
+        MatExpansionPanel,
+        MatExpansionPanelHeader,
+        MatExpansionPanelTitle,
+        MatExpansionPanelDescription,
+        MatFormField,
+        FormsModule,
+        MatInput,
+        MatHint,
+        MatSuffix,
+        MatCheckbox,
+        DataTableComponent,
+    ],
 })
 export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;
@@ -241,8 +277,10 @@ export class TabsComponent implements AfterViewInit {
         // check if the tab we're closing is the active tab
         let i = this.layerTabs.findIndex((t) => t === tab);
         if (tab == this.activeTab) {
-            if (i == 0 && this.layerTabs.length > 1) action = 1; // closing first tab, first tab is active, and more tabs exist
-            else if (i > 0) action = 2; // not closing first tab, implicitly more tabs exist
+            if (i == 0 && this.layerTabs.length > 1)
+                action = 1; // closing first tab, first tab is active, and more tabs exist
+            else if (i > 0)
+                action = 2; // not closing first tab, implicitly more tabs exist
             else action = 3; // closing first tab and no other tabs exist
         }
 
@@ -319,7 +357,7 @@ export class TabsComponent implements AfterViewInit {
      * @param {string} dialogName {"changelog"|"help"} the dialog to open
      */
     public openDialog(dialogName: string) {
-        const settings = { maxWidth: '75ch', panelClass: this.userTheme, autoFocus: false, data: {theme: this.userTheme} };
+        const settings = { maxWidth: '75ch', panelClass: this.userTheme, autoFocus: false, data: { theme: this.userTheme } };
         if (dialogName == 'changelog') {
             this.dialog.open(ChangelogComponent, settings);
         } else if (dialogName == 'help') {
@@ -744,7 +782,7 @@ export class TabsComponent implements AfterViewInit {
             let self = this;
 
             reader.onload = async (e) => {
-                let loadObjAsLayer = async function(layerObj) {
+                let loadObjAsLayer = async function (layerObj) {
                     let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
@@ -762,10 +800,7 @@ export class TabsComponent implements AfterViewInit {
                             // load as custom data
                             viewModel.deserialize(layerObj);
                             let url = layerObj['customDataURL'];
-                            self.newLayerFromURL(
-                                {url: url, version: viewModel.version, identifier: viewModel.domain},
-                                layerObj
-                            );
+                            self.newLayerFromURL({ url: url, version: viewModel.version, identifier: viewModel.domain }, layerObj);
                         }
                     } catch (err) {
                         console.error(err);
@@ -773,7 +808,7 @@ export class TabsComponent implements AfterViewInit {
                         self.viewModelsService.destroyViewModel(viewModel);
                         resolve(null); // continue
                     }
-                }
+                };
 
                 let result = String(reader.result);
                 let layerFile = typeof result == 'string' ? JSON.parse(result) : result;
@@ -844,7 +879,7 @@ export class TabsComponent implements AfterViewInit {
             let self = this;
             subscription = self.http.get(loadURL).subscribe({
                 next: async (res) => {
-                    let loadLayerAsync = async function(layerObj) {
+                    let loadLayerAsync = async function (layerObj) {
                         let viewModel = self.viewModelsService.newViewModel('loading layer...', undefined);
                         try {
                             let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);

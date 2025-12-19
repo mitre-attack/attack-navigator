@@ -10,7 +10,7 @@ import { LayerSettingsComponent } from '../layer-settings/layer-settings.compone
     selector: 'sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
-    imports: [NgIf, SearchAndMultiselectComponent, LayerUpgradeComponent, LayerSettingsComponent]
+    imports: [NgIf, SearchAndMultiselectComponent, LayerUpgradeComponent, LayerSettingsComponent],
 })
 export class SidebarComponent implements OnChanges {
     @Input() viewModel: ViewModel;

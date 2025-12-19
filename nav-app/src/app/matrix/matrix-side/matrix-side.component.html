@@ -55,7 +55,7 @@
                                 disabled: applyControls(technique.subtechniques, tactic).length == 0,
                                 expanded:
                                     viewModel.getTechniqueVM(technique, tactic).showSubtechniques &&
-                                    applyControls(technique.subtechniques, tactic).length > 0
+                                    applyControls(technique.subtechniques, tactic).length > 0,
                             }"
                             class="sidebar sidebar--{{ tactic.id }}--{{ technique.id }}"
                             (click)="onToggleSubtechniquesVisible(technique, tactic)">

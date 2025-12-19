@@ -12,7 +12,7 @@ import { MatButton } from '@angular/material/button';
     templateUrl: './version-upgrade.component.html',
     styleUrls: ['./version-upgrade.component.scss'],
     providers: [ViewModelsService],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatDialogActions, MatButton]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatDialogActions, MatButton],
 })
 export class VersionUpgradeComponent implements OnInit {
     navVersion = globals.navVersion;

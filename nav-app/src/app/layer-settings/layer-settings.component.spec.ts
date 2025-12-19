@@ -9,27 +9,25 @@ import { ConfigService } from '../services/config.service';
 import * as MockData from '../../tests/utils/mock-data';
 
 describe('LayerSettingsComponent', () => {
-  let component: LayerSettingsComponent;
-  let fixture: ComponentFixture<LayerSettingsComponent>;
-  let configService: ConfigService;
+    let component: LayerSettingsComponent;
+    let fixture: ComponentFixture<LayerSettingsComponent>;
+    let configService: ConfigService;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [FormsModule,
-        MarkdownModule.forRoot({ loader: HttpClient }), LayerSettingsComponent],
-    providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
-})
-    .compileComponents();
-    configService = TestBed.inject(ConfigService);
-    configService.versions = MockData.configData;
-    fixture = TestBed.createComponent(LayerSettingsComponent);
-    component = fixture.componentInstance;
-    component.viewModel = new ViewModel('layer', '35', 'enterprise-attack-13', null);
-    fixture.detectChanges();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            imports: [FormsModule, MarkdownModule.forRoot({ loader: HttpClient }), LayerSettingsComponent],
+            providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())],
+        }).compileComponents();
+        configService = TestBed.inject(ConfigService);
+        configService.versions = MockData.configData;
+        fixture = TestBed.createComponent(LayerSettingsComponent);
+        component = fixture.componentInstance;
+        component.viewModel = new ViewModel('layer', '35', 'enterprise-attack-13', null);
+        fixture.detectChanges();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

@@ -11,22 +11,21 @@ describe('LayerInformationComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [MatDialogModule,
-        MarkdownModule.forRoot({ loader: HttpClient }), LayerInformationComponent],
-    providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
-}).compileComponents();
+            imports: [MatDialogModule, MarkdownModule.forRoot({ loader: HttpClient }), LayerInformationComponent],
+            providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())],
+        }).compileComponents();
 
-		fixture = TestBed.createComponent(LayerInformationComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
+        fixture = TestBed.createComponent(LayerInformationComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
 
-	it('should return correct layerFormatLink based on global layer version', () => {
-		let filePath = `./layers/spec/v${globals.layerVersion}/layerformat.md`;
-		expect(component.layerFormatLink).toBe(filePath);
-	});
+    it('should return correct layerFormatLink based on global layer version', () => {
+        let filePath = `./layers/spec/v${globals.layerVersion}/layerformat.md`;
+        expect(component.layerFormatLink).toBe(filePath);
+    });
 });

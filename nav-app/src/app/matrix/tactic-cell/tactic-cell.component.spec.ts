@@ -11,8 +11,8 @@ describe('TacticCellComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatTooltipModule, TacticCellComponent],
-}).compileComponents();
+            imports: [MatTooltipModule, TacticCellComponent],
+        }).compileComponents();
     }));
 
     beforeEach(() => {

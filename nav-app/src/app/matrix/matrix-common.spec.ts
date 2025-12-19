@@ -17,9 +17,9 @@ describe('MatrixCommon', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [MatrixCommon, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [MatrixCommon, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         matrixCommon = TestBed.inject(MatrixCommon);
         matrixCommon.viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
         idToTacticSDO.set('tactic-0', MockData.TA0000);

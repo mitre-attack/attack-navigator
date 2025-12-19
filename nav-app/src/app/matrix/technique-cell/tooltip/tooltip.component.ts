@@ -13,7 +13,7 @@ import { MatIcon } from '@angular/material/icon';
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgClass, NgIf, MatTooltip, MatIcon, NgFor]
+    imports: [NgClass, NgIf, MatTooltip, MatIcon, NgFor],
 })
 export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

@@ -98,6 +98,6 @@ export class Domain {
     }
 
     public getTechniqueById(stixId: string): Technique {
-        return this.techniques.find(t => t.id === stixId) ?? null;
+        return this.techniques.find((t) => t.id === stixId) ?? null;
     }
 }

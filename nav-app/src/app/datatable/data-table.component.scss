@@ -205,79 +205,79 @@ $cellSize: 15px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  
+
     height: 30px;
-  }
-  
-  .control-section-tabs {
+}
+
+.control-section-tabs {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-  
+
     .section-label {
-      cursor: pointer;
-    
-      padding: 6px 24px;
-    
-      @include adaptive-color("color", black, white);
-    
-      @include adaptive-color("border-color", black, white);
-      border-style: solid;
-      border-width: 1px;
-    
-      &.active {
-        @include adaptive-color("background-color", white, #364370);
-        @include adaptive-color("border-color", #464DFF, #464DFF);
-      }
-    }
-  
-    .control-bar-help {
-      .control-help-button {
-        text-align: center;
-        width: 4ex;
-        height: 3ex;
-        padding: 5px;
-  
-        svg {
-          @include adaptive-color-dark-only("fill", on-color(dark));
-        }
-        &:hover svg {
-          @include adaptive-color-dark-only("fill", on-color(dark));
-          fill: #505050;
-        }
-      }
-  
-      .dropdown-container {
-        @include adaptive-color-dark-only("background", color(dark-3));
-        @include adaptive-color-dark-only("border-color", color(dark-3));
-        @include adaptive-color-dark-only("box-shadow", 2px 1px 1px color(dark-2));
-        @include adaptive-color-dark-only("color", color(dark-link));
-        position: absolute;
-        right: 16px;
-        display: flex;
-        justify-content: center;
-        flex-flow: column;
-        background: white;
+        cursor: pointer;
+
+        padding: 6px 24px;
+
+        @include adaptive-color('color', black, white);
+
+        @include adaptive-color('border-color', black, white);
         border-style: solid;
-        border-color: #ddd;
-        border-width: 1px 0 1px 1px;
-        box-shadow: 2px 1px 1px #ddd;
-        border-radius: 0 0 5px 5px;
-        padding: 10px;
-        top: 40px;
-        z-index: 9;
-        button {
-            @include adaptive-color-dark-only("color", on-color(dark));
-            border: none;
-            background-color: transparent;
-            text-align: right;
-            padding-bottom: 5px;
-            &:hover {
-                text-decoration: underline;
-                cursor: pointer;
+        border-width: 1px;
+
+        &.active {
+            @include adaptive-color('background-color', white, #364370);
+            @include adaptive-color('border-color', #464dff, #464dff);
+        }
+    }
+
+    .control-bar-help {
+        .control-help-button {
+            text-align: center;
+            width: 4ex;
+            height: 3ex;
+            padding: 5px;
+
+            svg {
+                @include adaptive-color-dark-only('fill', on-color(dark));
+            }
+            &:hover svg {
+                @include adaptive-color-dark-only('fill', on-color(dark));
+                fill: #505050;
             }
         }
-      }
+
+        .dropdown-container {
+            @include adaptive-color-dark-only('background', color(dark-3));
+            @include adaptive-color-dark-only('border-color', color(dark-3));
+            @include adaptive-color-dark-only('box-shadow', 2px 1px 1px color(dark-2));
+            @include adaptive-color-dark-only('color', color(dark-link));
+            position: absolute;
+            right: 16px;
+            display: flex;
+            justify-content: center;
+            flex-flow: column;
+            background: white;
+            border-style: solid;
+            border-color: #ddd;
+            border-width: 1px 0 1px 1px;
+            box-shadow: 2px 1px 1px #ddd;
+            border-radius: 0 0 5px 5px;
+            padding: 10px;
+            top: 40px;
+            z-index: 9;
+            button {
+                @include adaptive-color-dark-only('color', on-color(dark));
+                border: none;
+                background-color: transparent;
+                text-align: right;
+                padding-bottom: 5px;
+                &:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 }
 

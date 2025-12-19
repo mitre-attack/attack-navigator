@@ -11,7 +11,7 @@ import { TechniqueCellComponent } from '../technique-cell/technique-cell.compone
     templateUrl: './matrix-flat.component.html',
     styleUrls: ['./matrix-flat.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgFor, NgStyle, TacticCellComponent, NgIf, TechniqueCellComponent, NgClass]
+    imports: [NgFor, NgStyle, TacticCellComponent, NgIf, TechniqueCellComponent, NgClass],
 })
 export class MatrixFlatComponent extends MatrixCommon implements OnInit {
     constructor(configService: ConfigService, viewModelsService: ViewModelsService) {

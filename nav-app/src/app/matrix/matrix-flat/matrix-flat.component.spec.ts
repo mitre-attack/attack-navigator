@@ -9,9 +9,9 @@ describe('MatrixFlatComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [MatrixFlatComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [MatrixFlatComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
 
         fixture = TestBed.createComponent(MatrixFlatComponent);
         component = fixture.componentInstance;

@@ -45,8 +45,7 @@ export class DataComponent extends StixObject {
         if (dataSources.has(this.dataSource)) {
             const source = dataSources.get(this.dataSource);
             let url = '';
-            if (source.external_references?.[0]?.url)
-                url = source.external_references[0].url;
+            if (source.external_references?.[0]?.url) url = source.external_references[0].url;
             return { name: source.name, url: url };
         } else return { name: '', url: '' };
     }

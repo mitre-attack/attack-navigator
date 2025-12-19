@@ -55,16 +55,16 @@ describe('TooltipComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    imports: [TooltipComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [TooltipComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
     }));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [TooltipComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [TooltipComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
         fixture = TestBed.createComponent(TooltipComponent);
         component = fixture.debugElement.componentInstance;
         let versions = [

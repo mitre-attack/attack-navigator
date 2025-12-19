@@ -13,7 +13,7 @@ import { ContextmenuComponent } from './contextmenu/contextmenu.component';
     templateUrl: './technique-cell.component.html',
     styleUrls: ['./technique-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgStyle, NgClass, NgIf, TooltipComponent, ContextmenuComponent]
+    imports: [NgStyle, NgClass, NgIf, TooltipComponent, ContextmenuComponent],
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;

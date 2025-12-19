@@ -1,7 +1,6 @@
 import { enableProdMode, APP_INITIALIZER, importProvidersFrom } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-
 import { environment } from './environments/environment';
 import { Title, BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { ConfigService } from './app/services/config.service';
@@ -36,7 +35,31 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(BrowserModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatCheckboxModule, MatTooltipModule, MatMenuModule, MatExpansionModule, MatDialogModule, MatSnackBarModule, ColorPickerDirective, DndModule, MatSidenavModule, MatCardModule, MatDividerModule, MatStepperModule, MatPaginatorModule, MarkdownModule.forRoot(), MatTabsModule),
+        importProvidersFrom(
+            BrowserModule,
+            MatSelectModule,
+            FormsModule,
+            ReactiveFormsModule,
+            MatInputModule,
+            MatButtonModule,
+            MatIconModule,
+            MatProgressSpinnerModule,
+            MatCheckboxModule,
+            MatTooltipModule,
+            MatMenuModule,
+            MatExpansionModule,
+            MatDialogModule,
+            MatSnackBarModule,
+            ColorPickerDirective,
+            DndModule,
+            MatSidenavModule,
+            MatCardModule,
+            MatDividerModule,
+            MatStepperModule,
+            MatPaginatorModule,
+            MarkdownModule.forRoot(),
+            MatTabsModule
+        ),
         Title,
         ConfigService,
         {
@@ -48,7 +71,6 @@ bootstrapApplication(AppComponent, {
             multi: true,
         },
         provideHttpClient(withInterceptorsFromDi()),
-        provideAnimations()
-    ]
-})
-    .catch((err) => console.log(err));
+        provideAnimations(),
+    ],
+}).catch((err) => console.log(err));

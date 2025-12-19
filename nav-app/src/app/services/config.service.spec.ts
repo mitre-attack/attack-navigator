@@ -9,9 +9,9 @@ describe('ConfigService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [],
-    providers: [ConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-});
+            imports: [],
+            providers: [ConfigService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        });
         service = TestBed.inject(ConfigService);
     });
 

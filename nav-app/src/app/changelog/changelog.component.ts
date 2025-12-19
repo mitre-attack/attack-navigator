@@ -7,7 +7,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
     selector: 'app-changelog',
     templateUrl: './changelog.component.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MarkdownComponent, MatDialogActions, MatButton, MatDialogClose]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MarkdownComponent, MatDialogActions, MatButton, MatDialogClose],
 })
 export class ChangelogComponent {
     @ViewChild('markdownElement', { static: false }) public markdownElement: any;

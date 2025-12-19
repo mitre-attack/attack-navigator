@@ -1,5 +1,5 @@
 <div class="list-container">
-    <div *ngFor="let item of list; let i = index;">
+    <div *ngFor="let item of list; let i = index">
         <!-- remove divider -->
         <div class="divider-button-container" *ngIf="item.divider">
             <button class="divider-button divider" (click)="removeDivider(i)" matTooltipPosition="below" matTooltip="remove divider">
@@ -20,22 +20,15 @@
         <!-- list item -->
         <div *ngIf="!item.divider" class="item-container hide-subscript">
             <mat-form-field>
-                <mat-label>{{config.nameField}}</mat-label>
-                <input
-                    matInput
-                    matTextareaAutosize
-                    [(ngModel)]="item[config.nameField]"
-                    (input)="updateList()"/>
+                <mat-label>{{ config.nameField }}</mat-label>
+                <input matInput matTextareaAutosize [(ngModel)]="item[config.nameField]" (input)="updateList()" />
             </mat-form-field>
             <mat-form-field>
-                <mat-label>{{config.valueField}}</mat-label>
-                <input
-                    matInput
-                    matTextareaAutosize
-                    [(ngModel)]="item[config.valueField]"
-                    (input)="updateList()"/>
+                <mat-label>{{ config.valueField }}</mat-label>
+                <input matInput matTextareaAutosize [(ngModel)]="item[config.valueField]" (input)="updateList()" />
             </mat-form-field>
-            <a  *ngIf="includeLinks && item.valid()"
+            <a
+                *ngIf="includeLinks && item.valid()"
                 class="assigned-link"
                 href="{{ item[config.valueField] }}"
                 target="_blank"

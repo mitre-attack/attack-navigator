@@ -9,9 +9,9 @@ describe('SidebarComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [SidebarComponent],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+            imports: [SidebarComponent],
+            providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+        }).compileComponents();
     });
 
     beforeEach(() => {

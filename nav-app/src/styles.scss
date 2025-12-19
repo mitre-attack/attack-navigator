@@ -63,7 +63,8 @@ body {
     @include adaptive-color-dark-only('background-color', white);
 }
 
-.mdc-button, .mat-mdc-button-base {
+.mdc-button,
+.mat-mdc-button-base {
     letter-spacing: normal !important;
 }
 
@@ -165,8 +166,8 @@ body {
         padding: 0;
     }
 
-    .label{
-        .control-row-item + .control-row-item{
+    .label {
+        .control-row-item + .control-row-item {
             margin-right: 6px;
         }
     }
@@ -222,7 +223,7 @@ body {
                     font-size: 5pt;
                     content: '▼';
                 }
-                span{
+                span {
                     vertical-align: middle;
                 }
                 .control-label {
@@ -371,7 +372,8 @@ body {
     a:active {
         @include adaptive-color-dark-only('color', color(dark-link-active));
     }
-    .mat-mdc-form-field, .mat-mdc-form-field:hover {
+    .mat-mdc-form-field,
+    .mat-mdc-form-field:hover {
         .mdc-notched-outline__leading,
         .mdc-notched-outline__notch,
         .mdc-notched-outline__trailing {
@@ -419,7 +421,8 @@ body {
 
 // form field styling
 .mat-mdc-form-field {
-    .mdc-text-field--filled, .mdc-text-field--filled:hover {
+    .mdc-text-field--filled,
+    .mdc-text-field--filled:hover {
         background-color: transparent !important;
     }
 }
@@ -428,7 +431,8 @@ body {
         display: none !important;
     }
 }
-.mat-mdc-floating-label, .mat-mdc-form-field-hint {
+.mat-mdc-floating-label,
+.mat-mdc-form-field-hint {
     letter-spacing: normal !important;
 }
 
