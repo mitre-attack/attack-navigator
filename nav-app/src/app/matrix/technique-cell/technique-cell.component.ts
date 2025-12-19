@@ -4,13 +4,16 @@ import { Technique, Tactic, Matrix } from '../../classes/stix';
 import { ConfigService } from '../../services/config.service';
 import { Cell } from '../cell';
 import { ViewModelsService } from '../../services/viewmodels.service';
+import { NgStyle, NgClass, NgIf } from '@angular/common';
+import { TooltipComponent } from './tooltip/tooltip.component';
+import { ContextmenuComponent } from './contextmenu/contextmenu.component';
 
 @Component({
     selector: 'technique-cell',
     templateUrl: './technique-cell.component.html',
     styleUrls: ['./technique-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgStyle, NgClass, NgIf, TooltipComponent, ContextmenuComponent]
 })
 export class TechniqueCellComponent extends Cell implements OnInit {
     @Input() matrix: Matrix;

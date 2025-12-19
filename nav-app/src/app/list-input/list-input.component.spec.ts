@@ -24,12 +24,12 @@ describe('ListInputComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ListInputComponent],
-			providers: [
-				{provide: Link, useClass: MockLink},
-				{provide: Metadata, useClass: MockMetadata}
-			]
-		}).compileComponents();
+    imports: [ListInputComponent],
+    providers: [
+        { provide: Link, useClass: MockLink },
+        { provide: Metadata, useClass: MockMetadata }
+    ]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(ListInputComponent);
 		component = fixture.componentInstance;

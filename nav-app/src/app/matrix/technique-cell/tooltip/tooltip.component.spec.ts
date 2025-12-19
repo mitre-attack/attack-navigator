@@ -55,16 +55,14 @@ describe('TooltipComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [TooltipComponent],
-    imports: [],
+    imports: [TooltipComponent],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
     }));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    declarations: [TooltipComponent],
-    imports: [],
+    imports: [TooltipComponent],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
         fixture = TestBed.createComponent(TooltipComponent);

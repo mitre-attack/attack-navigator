@@ -1,15 +1,18 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ViewChild, Renderer2 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { MarkdownComponent, MarkdownService } from 'ngx-markdown';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import { Parser } from 'marked';
+import { MatButton } from '@angular/material/button';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
     selector: 'help',
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [MatDialogTitle, MatButton, CdkScrollable, MatDialogContent, NgIf, NgFor, MarkdownComponent, MatDialogActions, MatDialogClose]
 })
 export class HelpComponent implements OnInit {
     private listenObj: any;

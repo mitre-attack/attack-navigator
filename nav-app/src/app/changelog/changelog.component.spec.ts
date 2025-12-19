@@ -12,10 +12,9 @@ describe('ChangelogComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-    declarations: [ChangelogComponent],
     schemas: [NO_ERRORS_SCHEMA],
     imports: [MatDialogModule,
-        MarkdownModule.forRoot({ loader: HttpClient })],
+        MarkdownModule.forRoot({ loader: HttpClient }), ChangelogComponent],
     providers: [
         { provide: MAT_DIALOG_DATA, useValue: { someData: 'test data' } },
         { provide: MatDialogRef, useValue: {} },

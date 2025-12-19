@@ -9,8 +9,7 @@ describe('VersionUpgradeComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [VersionUpgradeComponent],
-    imports: [MatDialogModule],
+    imports: [MatDialogModule, VersionUpgradeComponent],
     providers: [
         {
             provide: MatDialogRef,

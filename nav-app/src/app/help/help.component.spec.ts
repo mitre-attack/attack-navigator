@@ -15,10 +15,9 @@ describe('HelpComponent', () => {
 
 	beforeEach(async() => {
 		await TestBed.configureTestingModule({
-    declarations: [HelpComponent, LayerInformationComponent],
     schemas: [NO_ERRORS_SCHEMA],
     imports: [MatDialogModule,
-        MarkdownModule.forRoot({ loader: HttpClient })],
+        MarkdownModule.forRoot({ loader: HttpClient }), HelpComponent, LayerInformationComponent],
     providers: [
         Renderer2,
         { provide: MAT_DIALOG_DATA, useValue: { theme: 'dark' } },

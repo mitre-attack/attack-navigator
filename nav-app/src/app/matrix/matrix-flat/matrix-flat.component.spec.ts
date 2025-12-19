@@ -9,8 +9,7 @@ describe('MatrixFlatComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-    declarations: [MatrixFlatComponent],
-    imports: [],
+    imports: [MatrixFlatComponent],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
 

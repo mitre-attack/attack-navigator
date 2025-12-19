@@ -11,9 +11,8 @@ describe('LayerInformationComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    declarations: [LayerInformationComponent],
     imports: [MatDialogModule,
-        MarkdownModule.forRoot({ loader: HttpClient })],
+        MarkdownModule.forRoot({ loader: HttpClient }), LayerInformationComponent],
     providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
 }).compileComponents();
 

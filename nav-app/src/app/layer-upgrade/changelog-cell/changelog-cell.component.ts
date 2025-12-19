@@ -3,13 +3,14 @@ import { ViewModelsService } from '../../services/viewmodels.service';
 import { ConfigService } from '../../services/config.service';
 import { DataService } from '../../services/data.service';
 import { Cell } from '../../matrix/cell';
+import { NgStyle, NgClass } from '@angular/common';
 
 @Component({
     selector: 'changelog-cell',
     templateUrl: './changelog-cell.component.html',
     styleUrls: ['./changelog-cell.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgStyle, NgClass]
 })
 export class ChangelogCellComponent extends Cell {
     @Input() isCurrentVersion?: boolean = true;

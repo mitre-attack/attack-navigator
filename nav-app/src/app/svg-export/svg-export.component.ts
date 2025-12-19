@@ -1,11 +1,18 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { DataService } from '../services/data.service';
 import { RenderableMatrix, RenderableTactic, RenderableTechnique } from './renderable-objects';
 import tinycolor from 'tinycolor2';
 import { isIE } from '../utils/utils';
+import { NgIf, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatFormField, MatLabel, MatSelect, MatOption, MatSuffix } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatButton } from '@angular/material/button';
 declare var d3: any; //d3js
 
 @Component({
@@ -13,7 +20,7 @@ declare var d3: any; //d3js
     templateUrl: './svg-export.component.html',
     styleUrls: ['./svg-export.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgIf, MatTooltip, MatFormField, MatLabel, MatSelect, FormsModule, MatOption, MatInput, MatSuffix, NgClass, ColorPickerDirective, MatDialogActions, MatButton, MatDialogClose]
 })
 export class SvgExportComponent implements OnInit {
     // vm to render

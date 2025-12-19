@@ -4,13 +4,14 @@ import { Technique, Tactic } from '../../../classes/stix';
 import { ViewModelsService } from '../../../services/viewmodels.service';
 import { ConfigService } from '../../../services/config.service';
 import { CellPopover } from '../cell-popover';
+import { NgClass, NgIf, NgFor } from '@angular/common';
 
 @Component({
     selector: 'app-contextmenu',
     templateUrl: './contextmenu.component.html',
     styleUrls: ['./contextmenu.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgClass, NgIf, NgFor]
 })
 export class ContextmenuComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

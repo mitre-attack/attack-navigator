@@ -35,11 +35,10 @@ describe('TabsComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-    declarations: [TabsComponent],
     imports: [MatDialogModule,
         MatSnackBarModule,
         MatTabsModule,
-        FormsModule],
+        FormsModule, TabsComponent],
     providers: [
         ViewModelsService,
         DataService,

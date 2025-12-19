@@ -13,8 +13,7 @@ describe('SvgExportComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    declarations: [SvgExportComponent],
-    imports: [MatDialogModule],
+    imports: [MatDialogModule, SvgExportComponent],
     providers: [
         {
             provide: MatDialogRef,

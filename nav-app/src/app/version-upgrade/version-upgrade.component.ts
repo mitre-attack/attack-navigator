@@ -1,15 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ViewModelsService } from '../services/viewmodels.service';
 import { DataService } from '../services/data.service';
 import * as globals from '../utils/globals';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'app-version-upgrade',
     templateUrl: './version-upgrade.component.html',
     styleUrls: ['./version-upgrade.component.scss'],
     providers: [ViewModelsService],
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatDialogActions, MatButton]
 })
 export class VersionUpgradeComponent implements OnInit {
     navVersion = globals.navVersion;

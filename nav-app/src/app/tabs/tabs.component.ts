@@ -6,7 +6,7 @@ import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.comp
 import { HelpComponent } from '../help/help.component';
 import { SvgExportComponent } from '../svg-export/svg-export.component';
 import { ViewModelsService } from '../services/viewmodels.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogTitle, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { ChangelogComponent } from '../changelog/changelog.component';
@@ -14,6 +14,18 @@ import { Subscription, forkJoin } from 'rxjs';
 import * as globals from '../utils/globals';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
 import { isSafari } from '../utils/utils';
+import { NgIf, NgClass, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatTabNav, MatTabLink, MatTabNavPanel } from '@angular/material/tabs';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatLabel, MatSelect, MatOption, MatFormField, MatHint, MatSuffix } from '@angular/material/select';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import { FormsModule } from '@angular/forms';
+import { MatInput } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { DataTableComponent } from '../datatable/data-table.component';
 
 @Component({
     selector: 'tabs',
@@ -21,7 +33,7 @@ import { isSafari } from '../utils/utils';
     styleUrls: ['./tabs.component.scss'],
     providers: [ViewModelsService],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgIf, MatTooltip, NgClass, MatTabNav, NgFor, MatTabLink, MatIconButton, MatIcon, MatTabNavPanel, MatButton, MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogClose, MatLabel, MatSelect, MatOption, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription, MatFormField, FormsModule, MatInput, MatHint, MatSuffix, MatCheckbox, DataTableComponent]
 })
 export class TabsComponent implements AfterViewInit {
     @Input() userTheme: string;

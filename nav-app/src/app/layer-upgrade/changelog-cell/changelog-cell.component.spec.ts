@@ -66,8 +66,7 @@ describe('ChangelogCellComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    declarations: [ChangelogCellComponent],
-    imports: [],
+    imports: [ChangelogCellComponent],
     providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 }).compileComponents();
 

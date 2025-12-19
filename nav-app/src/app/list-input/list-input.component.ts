@@ -1,12 +1,18 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Link, Metadata, ViewModel } from '../classes';
+import { NgFor, NgIf } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-list-input',
     templateUrl: './list-input.component.html',
     styleUrls: ['./list-input.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgFor, NgIf, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule]
 })
 export class ListInputComponent implements OnInit {
     @Input() config: ListInputConfig;

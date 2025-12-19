@@ -34,13 +34,13 @@ describe('ContextmenuComponent', () => {
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [ContextmenuComponent],
-			providers: [
-				{provide: ConfigService, useValue: {}},
-				{provide: ViewModelsService, useClass: MockViewModelsService},
-				{provide: ElementRef, useValue: {nativeElement: {}}}
-			]
-		}).compileComponents();
+    imports: [ContextmenuComponent],
+    providers: [
+        { provide: ConfigService, useValue: {} },
+        { provide: ViewModelsService, useClass: MockViewModelsService },
+        { provide: ElementRef, useValue: { nativeElement: {} } }
+    ]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(ContextmenuComponent);
 		component = fixture.componentInstance;

@@ -15,10 +15,9 @@ describe('LayerSettingsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [LayerSettingsComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [FormsModule,
-        MarkdownModule.forRoot({ loader: HttpClient })],
+        MarkdownModule.forRoot({ loader: HttpClient }), LayerSettingsComponent],
     providers: [MarkdownService, provideHttpClient(withInterceptorsFromDi())]
 })
     .compileComponents();

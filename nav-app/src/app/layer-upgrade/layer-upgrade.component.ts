@@ -2,17 +2,26 @@ import { Component, Input, OnInit, QueryList, ViewChild, ViewChildren, ViewEncap
 import { DataService } from '../services/data.service';
 import { Tactic, Technique } from '../classes/stix';
 import { VersionChangelog, ViewModel } from '../classes';
-import { DndDropEvent } from 'ngx-drag-drop';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { DndDropEvent, DndDraggableDirective, DndDropzoneDirective } from 'ngx-drag-drop';
+import { MatExpansionPanel, MatAccordion, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelContent } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStepper, MatStep, MatStepLabel, MatStepperPrevious, MatStepperNext } from '@angular/material/stepper';
+import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { NgFor, NgIf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ChangelogCellComponent } from './changelog-cell/changelog-cell.component';
+import { MatButton } from '@angular/material/button';
 
 @Component({
     selector: 'layer-upgrade',
     templateUrl: './layer-upgrade.component.html',
     styleUrls: ['./layer-upgrade.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [MatCard, MatCardContent, MatIcon, MatDivider, MatStepper, NgFor, MatStep, MatStepLabel, NgIf, FormsModule, MatTooltip, MatProgressSpinner, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelContent, DndDraggableDirective, ChangelogCellComponent, DndDropzoneDirective, MatPaginator, MatButton, MatStepperPrevious, MatStepperNext]
 })
 export class LayerUpgradeComponent implements OnInit {
     @Input() viewModel: ViewModel; // view model of new version

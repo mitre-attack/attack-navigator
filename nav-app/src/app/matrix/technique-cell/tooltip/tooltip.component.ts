@@ -4,13 +4,16 @@ import { Technique, Tactic, Note } from '../../../classes/stix';
 import { ViewModel, TechniqueVM } from '../../../classes';
 import { ViewModelsService } from '../../../services/viewmodels.service';
 import { CellPopover } from '../cell-popover';
+import { NgClass, NgIf, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-tooltip',
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgClass, NgIf, MatTooltip, MatIcon, NgFor]
 })
 export class TooltipComponent extends CellPopover implements OnInit {
     @Input() technique: Technique;

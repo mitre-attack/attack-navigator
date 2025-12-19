@@ -16,8 +16,7 @@ describe('TechniqueCellComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    declarations: [TechniqueCellComponent],
-    imports: [],
+    imports: [TechniqueCellComponent],
     providers: [ViewModelsService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
 });
         let configService = TestBed.inject(ConfigService);

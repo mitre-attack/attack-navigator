@@ -9,13 +9,28 @@ import { Subscription } from 'rxjs';
 import * as Excel from 'exceljs/dist/exceljs.min.js';
 import tinycolor from 'tinycolor2';
 import { isIE } from '../utils/utils';
+import { NgIf, NgClass, NgFor, NgSwitch, NgSwitchCase, TitleCasePipe } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { ColorPickerDirective } from 'ngx-color-picker';
+import { MatFormField, MatLabel, MatHint, MatSuffix } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { ListInputComponent } from '../list-input/list-input.component';
+import { MatDrawerContainer, MatDrawerContent, MatDrawer } from '@angular/material/sidenav';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatrixSideComponent } from '../matrix/matrix-side/matrix-side.component';
+import { MatrixFlatComponent } from '../matrix/matrix-flat/matrix-flat.component';
+import { MatrixMiniComponent } from '../matrix/matrix-mini/matrix-mini.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
     selector: 'DataTable',
     templateUrl: './data-table.component.html',
     styleUrls: ['./data-table.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [NgIf, MatTooltip, NgClass, FormsModule, NgFor, NgSwitch, NgSwitchCase, MatIcon, ColorPickerDirective, MatFormField, MatLabel, MatInput, MatHint, ListInputComponent, MatDrawerContainer, MatDrawerContent, MatProgressSpinner, MatrixSideComponent, MatrixFlatComponent, MatrixMiniComponent, MatDrawer, SidebarComponent, MatIconButton, MatSuffix, TitleCasePipe]
 })
 export class DataTableComponent implements AfterViewInit, OnDestroy {
     @ViewChild('scrollRef') private scrollRef: ElementRef;
