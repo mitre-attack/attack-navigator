@@ -41,7 +41,7 @@
     "mathjs": "^12.4.2",
     "ngx-color-picker": "^19.0.0",
     "ngx-drag-drop": "^19.0.0",
-    "ngx-markdown": "^19.1.1",
+    "ngx-markdown": "^21.0.1",
     "rxjs": "^7.8.1",
     "rxjs-compat": "^6.6.7",
     "tinycolor2": "^1.6.0",
