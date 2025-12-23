@@ -97,7 +97,7 @@
                             "node_modules/file-saver/dist/FileSaver.js",
                             "node_modules/mathjs/lib/browser/math.js",
                             "node_modules/tinycolor2/tinycolor.js",
-                            "node_modules/d3/dist/d3.js",
+                            "node_modules/d3/dist/d3.js"
                         ],
                         "styles": ["src/styles.scss"],
                         "assets": ["src/assets", "src/favicon.ico"],
