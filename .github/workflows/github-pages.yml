@@ -14,17 +14,14 @@ jobs:
     defaults:
       run:
         working-directory: ./nav-app/
-    strategy:
-      matrix:
-        node-version: [18.x]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js from .nvmrc
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: 'nav-app/.nvmrc'
           cache: 'npm'
           cache-dependency-path: nav-app/package-lock.json
 

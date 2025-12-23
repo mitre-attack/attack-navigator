@@ -26,7 +26,7 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 
 ## Requirements
 
-* [Node.js v18](https://nodejs.org)
+* [Node.js v22](https://nodejs.org)
 * [AngularCLI v19](https://cli.angular.io)
 
 ## Supported Browsers
