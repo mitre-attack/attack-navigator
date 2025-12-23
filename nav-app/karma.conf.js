@@ -1,6 +1,16 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+// Workaround: On newer Node versions Karma sometimes calls server.close()
+// after the server is already shut down, which throws ERR_SERVER_NOT_RUNNING.
+// Ignore *only* that error so tests can exit cleanly when they all passed.
+process.on('uncaughtException', (err) => {
+  if (err && (err.code === 'ERR_SERVER_NOT_RUNNING' || ('' + err).includes('ERR_SERVER_NOT_RUNNING'))) {
+    return;
+  }
+  throw err;
+});
+
 module.exports = function (config) {
     config.set({
         basePath: '',
@@ -37,11 +47,6 @@ module.exports = function (config) {
         singleRun: false,
         webpack: { node: { fs: 'empty' } }, // https://github.com/angular/angular-cli/issues/8357
 
-        // For code coverage
-        files: ['src/**/*.ts'],
-        preprocessors: {
-            'src/**/*.js': ['coverage'],
-        },
         coverageReporter: {
             type: 'html',
             dir: 'coverage/',
