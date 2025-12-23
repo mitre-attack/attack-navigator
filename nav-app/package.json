@@ -57,7 +57,7 @@
     "@angular/language-service": "^19.2.17",
     "@types/jasmine": "^5.1.9",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^18.15.12",
+    "@types/node": "^22.19.3",
     "codelyzer": "^6.0.0",
     "exceljs": "^4.3.0",
     "jasmine-core": "^5.1.0",
