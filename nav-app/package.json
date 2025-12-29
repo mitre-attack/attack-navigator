@@ -39,7 +39,7 @@
     "file-saver": "^2.0.5",
     "load-json-file": "^7.0.1",
     "mathjs": "^12.4.2",
-    "ngx-color-picker": "^19.0.0",
+    "ngx-color-picker": "^20.1.1",
     "ngx-drag-drop": "^19.0.0",
     "ngx-markdown": "^19.1.1",
     "rxjs": "^7.8.1",
