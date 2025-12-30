@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../../colors.scss';
 .layer-settings {
     .sidebar-content {
@@ -52,10 +54,10 @@
         &.mat-form-field-disabled {
             .mat-mdc-floating-label,
             .mdc-text-field__input {
-                @include adaptive-color-dark-only('color', darken(on-color(dark-1), 25%));
+                @include adaptive-color-dark-only('color', color.scale(on-color(dark-1), $lightness: -25%));
             }
             .mdc-line-ripple::before {
-                @include adaptive-color-dark-only('border-bottom-color', darken(on-color(dark-1), 25%));
+                @include adaptive-color-dark-only('border-bottom-color', color.scale(on-color(dark-1), $lightness: -25%));
             }
         }
         .mat-mdc-form-field-hint {

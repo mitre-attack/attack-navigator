@@ -1,7 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:color';
+
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
-@import '@fontsource/roboto';
-@import '@fontsource/roboto-mono';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto-mono/400.css';
 @import 'colors.scss';
 
 @media print {
@@ -110,12 +111,12 @@ body {
         }
 
         code {
-            @include adaptive-color-dark-only('background-color', color(dark-1));
-            @include adaptive-color-dark-only('border-color', color(panel-dark) !important);
-            @include adaptive-color-dark-only('color', on-color(dark) !important);
             color: black;
             padding: 1px 2px;
             word-break: break-word;
+            @include adaptive-color-dark-only('background-color', color(dark-1));
+            @include adaptive-color-dark-only('border-color', color(panel-dark) !important);
+            @include adaptive-color-dark-only('color', on-color(dark) !important);
         }
     }
 
@@ -153,10 +154,9 @@ body {
 
 // panel with controls
 .controlsContainer {
-    @include adaptive-color('background-color', color(panel-dark), color(dark-2));
-
     text-align: right;
     display: block;
+    @include adaptive-color('background-color', color(panel-dark), color(dark-2));
     @media print {
         display: none;
     }
@@ -176,14 +176,12 @@ body {
         list-style: none;
         display: inline-block;
         // &:not(:last-child){
-        border-left: 1px solid darken(color(panel-dark), 8%);
+        border-left: 1px solid color.scale(color(panel-dark), $lightness: -8%);
         padding: 0 5px 0 5px;
         position: relative;
 
         // label for a section of controls, e.g layer controls or technique controls
         .section-label {
-            @include adaptive-color('background-color', color(panel-dark), color(dark-2));
-            @include adaptive-color('color', color(tab-text-color), on-color(dark));
             font-size: 8pt;
             top: -12px;
             position: absolute;
@@ -194,6 +192,8 @@ body {
             user-select: none;
             white-space: nowrap;
             z-index: 1;
+            @include adaptive-color('background-color', color(panel-dark), color(dark-2));
+            @include adaptive-color('color', color(tab-text-color), on-color(dark));
         }
 
         .control-row-item {
@@ -216,7 +216,7 @@ body {
                 cursor: pointer;
 
                 &:hover {
-                    @include adaptive-color('background-color', darken(color(panel-dark), 5%), color(dark-4));
+                    @include adaptive-color('background-color', color.scale(color(panel-dark), $lightness: -5%), color(dark-4));
                 }
 
                 &.dropdown::after {
@@ -233,6 +233,10 @@ body {
 
             // dropdown controls container
             .dropdown-container {
+                position: absolute;
+                z-index: 100; //draw on top of other controls
+                width: max-content;
+
                 @include adaptive-color('background-color', white, color(dark-2));
                 @include adaptive-color('border', 1px solid black, 1px solid color(dark-4));
                 @include adaptive-color('box-shadow', 0px 10px 5px rgba(0, 0, 0, 0.5), 0px 10px 5px color(dark-2));
@@ -241,9 +245,6 @@ body {
                     right: 0;
                 }
 
-                position: absolute;
-                z-index: 100; //draw on top of other controls
-                width: max-content;
 
                 &.inputfield {
                     width: 150px;
@@ -319,8 +320,8 @@ body {
     position: relative;
 
     &.disabled {
-        @include adaptive-color('color', rgba(0, 0, 0, 0.46), color(dark-disabled));
         cursor: default;
+        @include adaptive-color('color', rgba(0, 0, 0, 0.46), color(dark-disabled));
     }
 }
 
@@ -343,11 +344,11 @@ body {
 }
 
 .checkbox-custom:checked:disabled + .checkbox-custom-label:before {
-    @include adaptive-color('background', desaturate(color(cell-highlight-color), 100%), desaturate(color(cell-highlight-dark-color), 100%));
+    @include adaptive-color('background', color.scale(color(cell-highlight-color), $saturation: -100%), color.scale(color(cell-highlight-dark-color), $saturation: -100%));
     @include adaptive-color(
         'box-shadow',
-        inset 0px 0px 0px 1px desaturate(color(cell-highlight-color), 100%),
-        inset 0px 0px 0px 1px desaturate(color(cell-highlight-dark-color), 100%)
+        inset 0px 0px 0px 1px color.scale(color(cell-highlight-color), $saturation: -100%),
+        inset 0px 0px 0px 1px color.scale(color(cell-highlight-dark-color), $saturation: -100%)
     );
 }
 

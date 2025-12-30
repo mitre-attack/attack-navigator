@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../../colors.scss';
 
 .list-container,
@@ -66,7 +68,7 @@
     &.divider {
         .line,
         .icon {
-            @include adaptive-color('background-color', darken(color(panel-dark), 40%), lighten(color(dark-4), 40%));
+            @include adaptive-color('background-color', color.scale(color(panel-dark), $lightness: -40%), color.scale(color(dark-4), $lightness: 40%));
         }
     }
     &:hover .line,

@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../../colors.scss';
 
 .title {
@@ -30,7 +32,7 @@ h4 {
     cursor: pointer;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.5);
     &:hover {
-        background-color: darken(color(panel-dark), 5%);
+        background-color: color.scale(color(panel-dark), $lightness: -5%);
     }
 }
 
@@ -97,7 +99,7 @@ tr td {
         font-size: 16px;
     }
     &:disabled {
-        @include adaptive-color('background-color', lighten(color(panel-dark), 5%), color(dark-2));
+        @include adaptive-color('background-color', color.scale(color(panel-dark), $lightness: 5%), color(dark-2));
         cursor: unset;
     }
 }

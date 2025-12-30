@@ -1,5 +1,7 @@
+@use 'sass:color';
+
 $column-hover-color: rgb(235, 235, 235);
-$disabled-color: darken($column-hover-color, 20%);
+$disabled-color: color.scale($column-hover-color, $lightness: -20%);
 
 // ATT&CK Brand colors
 $attack-colors: (
@@ -89,7 +91,7 @@ $colors: (
         color: #ddd,
     ),
     panel-light: (
-        color: lighten(#ddd, 8%),
+        color: color.scale(#ddd, $lightness: 8%),
     ),
     tab-text-color: (
         color: #555,

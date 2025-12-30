@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../cell-popover.scss';
 @import '../../../../colors.scss';
 .contextmenu {
@@ -33,7 +35,7 @@
             .contextMenu-button {
                 cursor: pointer;
                 &:hover {
-                    @include adaptive-color('background', color(cell-highlight-color), darken(color(cell-highlight-dark-color), 10%));
+                    @include adaptive-color('background', color(cell-highlight-color), color.scale(color(cell-highlight-dark-color), $lightness: -10%));
                 }
             }
         }

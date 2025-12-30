@@ -1,12 +1,14 @@
+@use 'sass:color';
+
 @import '../colors.scss';
 
 .app-container {
-    @include adaptive-color('background-color', color(body), color(dark-1));
     height: 100vh;
+    @include adaptive-color('background-color', color(body), color(dark-1));
 }
 
 .nav-app {
-    @include adaptive-color('background-color', color(light), darken(color(dark), 8%));
+    @include adaptive-color('background-color', color(light), color.scale(color(dark), $lightness: -8%));
 
     tabs {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -14,7 +16,6 @@
     }
 
     .version-footer {
-        @include adaptive-color('color', on-color(light), on-color(dark-2));
         font-size: 7pt;
         border: none;
         background-color: transparent;
@@ -24,6 +25,7 @@
         display: block;
         position: fixed;
         bottom: 16px;
+        @include adaptive-color('color', on-color(light), on-color(dark-2));
         &:hover {
             text-decoration: underline;
             cursor: pointer;

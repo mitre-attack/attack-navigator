@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../matrix-common.scss';
 .matrix.flat {
     .tactic {
@@ -20,7 +22,7 @@
             position: sticky;
             top: 0.05px;
             z-index: 9999;
-            @include adaptive-color-dark-only('background-color', lighten(color(dark-1), 3%));
+            @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
             @include adaptive-color-light-only('background-color', white);
         }
 
@@ -35,7 +37,7 @@
             position: sticky;
             top: 32px;
             z-index: 9999;
-            @include adaptive-color-dark-only('background-color', lighten(color(dark-1), 3%));
+            @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
             @include adaptive-color-light-only('background-color', white);
         }
 

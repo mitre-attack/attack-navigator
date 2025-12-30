@@ -13,9 +13,6 @@
     .tactic.body {
         padding-top: 5px;
         vertical-align: top;
-        // display: flex;
-        // flex-wrap: wrap;
-        // justify-content: space-between;
 
         .cell-container {
             margin-right: math.div($sizeunit, 6);
@@ -23,15 +20,8 @@
             &:not(.supertechnique-group) {
                 display: inline-block;
             }
-            // margin: 0 2px 0 2px;
             &.supertechnique-group {
-                // background: color(panel-light);
-                // border-top: 1px solid darken(color(panel-light), 5%);
-                // border-bottom: 1px solid darken(color(panel-light), 5%);
-                // padding-top: 3px;
-                // transform: translateX(-3px);
                 box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
-                // padding: 3px 0 0 3px;
                 padding-top: 1px + math.div($sizeunit, 2);
                 padding-left: 1px + math.div($sizeunit, 2);
                 padding-bottom: math.div($sizeunit, 3);

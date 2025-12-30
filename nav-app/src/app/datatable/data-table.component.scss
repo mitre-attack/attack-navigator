@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @import '../../colors.scss';
 @import '../../styles.scss';
 
@@ -15,7 +17,7 @@ $cellSize: 15px;
 
 // content of each tab
 .matrices {
-    @include adaptive-color-dark-only('background-color', lighten(color(dark-1), 3%));
+    @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
     @include adaptive-color-dark-only('color', on-color(dark));
     @include adaptive-color-dark-only('border', none);
     overflow-x: scroll;
@@ -81,7 +83,7 @@ $cellSize: 15px;
             display: block;
             height: $cellSize;
             font-size: 10pt;
-            color: darken(white, 50%);
+            color: color.scale(white, $lightness: -50%);
         }
     }
 }
