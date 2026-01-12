@@ -13,6 +13,7 @@ updates:
           - "rxjs"
           - "typescript"
           - "ngx-markdown"
+          - "marked" # peer of ngx-markdown, must update together
           - "ngx-drag-drop"
           - "ngx-color-picker"
         update-types:
@@ -28,4 +29,6 @@ updates:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
       - dependency-name: "ngx-*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "marked"
         update-types: ["version-update:semver-major"]
