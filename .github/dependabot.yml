@@ -3,5 +3,30 @@ updates:
   - package-ecosystem: "npm"
     directory: "nav-app"
     schedule:
-      interval: "weekly"
+      interval: "quarterly"
     target-branch: "develop"
+
+    groups:
+      angular-ecosystem:
+        applies-to: "do I need to put something here"
+        patterns:
+          - "@angular*"
+          - "rxjs"
+          - "typescript"
+          - "ngx-markdown"
+          - "ngx-drag-drop"
+          - "ngx-color-picker"
+        update-types:
+          - "minor"
+          - "patch"
+
+    ignore:
+      - dependency-name: "@angular*"
+        update-types: ["version-update:semver-major"]
+      # libraries constrained by angular version
+      - dependency-name: "rxjs"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "ngx-*"
+        update-types: ["version-update:semver-major"]
