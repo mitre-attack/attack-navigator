@@ -8,7 +8,6 @@ updates:
 
     groups:
       angular-ecosystem:
-        applies-to: "do I need to put something here"
         patterns:
           - "@angular*"
           - "rxjs"
