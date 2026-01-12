@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@use '../../colors.scss';
 
 .layer-dialog {
     .content {
@@ -32,7 +32,7 @@
 
         td {
             vertical-align: middle;
-            border-top: 1px solid color(panel-dark);
+            border-top: 1px solid colors.color(panel-dark);
         }
 
         td:not(td:last-child) {

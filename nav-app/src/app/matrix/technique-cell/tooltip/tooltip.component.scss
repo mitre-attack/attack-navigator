@@ -1,14 +1,14 @@
-@import '../cell-popover.scss';
-@import '../../../../colors';
+@use '../cell-popover.scss';
+@use '../../../../colors.scss';
 
 .tooltip {
-    @include cell-popover(0.75);
-    @include adaptive-color('background', rgba(80, 80, 80, 0.75), rgba(#464dff, 0.75));
     max-height: 45vh;
     overflow: scroll;
     padding-bottom: 1em;
     z-index: 1000;
     cursor: default;
+    @include cell-popover.cell-popover(0.75);
+    @include colors.adaptive-color('background', rgba(80, 80, 80, 0.75), rgba(#464dff, 0.75));
     table {
         width: 100%;
         border-collapse: collapse;
@@ -39,11 +39,11 @@
             vertical-align: middle;
         }
         .pin {
-            @include adaptive-color('background-color', rgba(160, 160, 160, 0.75), rgba(#8f92fe, 0.75));
             border-radius: 4px;
             float: right;
             cursor: pointer;
-
+            @include colors.adaptive-color('background-color', rgba(160, 160, 160, 0.75), rgba(#8f92fe, 0.75));
+            
             .mat-icon {
                 font-size: 16px;
                 height: 20px;

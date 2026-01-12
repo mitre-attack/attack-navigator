@@ -1,17 +1,17 @@
-@import '../../../colors.scss';
-@import '../matrix-common.scss';
+@use '../../../colors.scss';
+@use '../matrix-common.scss';
 .tactic-cell {
     padding-top: 3px;
     box-sizing: border-box;
+    min-height: matrix-common.$sizeunit;
     &:not(.mini) {
-        min-width: $sizeunit * 3;
+        min-width: matrix-common.$sizeunit * 3;
     }
     &.mini {
-        @include adaptive-color('background', black, white);
-        width: $sizeunit;
+        width: matrix-common.$sizeunit;
+        @include colors.adaptive-color('background', black, white);
     }
-    min-height: $sizeunit;
     &.bordered {
-        @include adaptive-color('border', 1px solid border-color(body), 1px solid white);
+        @include colors.adaptive-color('border', 1px solid colors.border-color(body), 1px solid white);
     }
 }

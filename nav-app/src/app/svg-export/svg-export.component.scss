@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@use '../../colors.scss';
 
 .svgcontainer {
     overflow-x: auto;
@@ -10,7 +10,7 @@
     padding: 25px;
 
     &.dark-mode {
-        background-color: color(dark-1) !important;
+        background-color: colors.color(dark-1) !important;
     }
 }
 

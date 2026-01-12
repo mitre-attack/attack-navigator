@@ -1,7 +1,7 @@
 @use 'sass:color';
 
-@import '../../colors.scss';
-@import '../../styles.scss';
+@use '../../colors.scss';
+@use '../../styles.scss';
 
 $cellSize: 15px;
 
@@ -17,13 +17,13 @@ $cellSize: 15px;
 
 // content of each tab
 .matrices {
-    @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
-    @include adaptive-color-dark-only('color', on-color(dark));
-    @include adaptive-color-dark-only('border', none);
     overflow-x: scroll;
     min-height: 50vh;
-    border: 1px solid color(panel-dark);
+    border: 1px solid colors.color(panel-dark);
     transition: height ease-in-out 0.2s;
+    @include colors.adaptive-color-dark-only('background-color', color.scale(colors.color(dark-1), $lightness: 3%));
+    @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
+    @include colors.adaptive-color-dark-only('border', none);
 
     .spinner {
         display: flex;
@@ -32,7 +32,7 @@ $cellSize: 15px;
         height: 50vh;
 
         mat-progress-spinner circle {
-            stroke: on-color-deemphasis(body);
+            stroke: colors.on-color-deemphasis(body);
         }
     }
 
@@ -52,11 +52,11 @@ $cellSize: 15px;
                 padding-bottom: 5px;
                 margin-bottom: 5px;
                 font-size: 16px;
-                border-bottom: 1px solid color(panel-dark);
+                border-bottom: 1px solid colors.color(panel-dark);
             }
 
             & + .matrix-column {
-                border-left: 1px solid color(panel-dark);
+                border-left: 1px solid colors.color(panel-dark);
             }
         }
     }
@@ -68,9 +68,9 @@ $cellSize: 15px;
     text-align: center;
 
     .color-block {
-        @include adaptive-color('border', 1px solid black, 1px solid color(dark-disabled));
         cursor: pointer;
         margin: 2.5px;
+        @include colors.adaptive-color('border', 1px solid black, 1px solid colors.color(dark-disabled));
 
         &.square {
             display: inline-block;
@@ -79,11 +79,11 @@ $cellSize: 15px;
         }
 
         &.wide {
-            @include adaptive-color-dark-only('color', color(dark-disabled));
             display: block;
             height: $cellSize;
             font-size: 10pt;
             color: color.scale(white, $lightness: -50%);
+            @include colors.adaptive-color-dark-only('color', colors.color(dark-disabled));
         }
     }
 }
@@ -103,22 +103,22 @@ $cellSize: 15px;
     }
 
     .gradient-section-content {
-        @include adaptive-color('border-color', black, white);
         border-style: solid;
         border-width: 1px 0;
         text-align: left;
+        @include colors.adaptive-color('border-color', black, white);
     }
 
     .display-buttons {
         text-align: center;
 
         .squarebutton {
-            @include adaptive-color('border', 1px solid color(panel-dark), 1px solid color(dark-disabled));
             padding: 4px 0;
             cursor: pointer;
+            @include colors.adaptive-color('border', 1px solid colors.color(panel-dark), 1px solid colors.color(dark-disabled));
 
             &:hover {
-                @include adaptive-color('background', color(panel-light), color(cell-highlight-dark-color));
+                @include colors.adaptive-color('background', colors.color(panel-light), colors.color(cell-highlight-dark-color));
             }
 
             &.gradient:hover {
@@ -140,18 +140,18 @@ $cellSize: 15px;
 
             td {
                 button {
-                    @include adaptive-color-dark-only('background-color', color(dark-1));
-                    @include adaptive-color-dark-only('border', 1px solid color(dark-disabled));
-                    @include adaptive-color-dark-only('color', white);
+                    @include colors.adaptive-color-dark-only('background-color', colors.color(dark-1));
+                    @include colors.adaptive-color-dark-only('border', 1px solid colors.color(dark-disabled));
+                    @include colors.adaptive-color-dark-only('color', white);
 
                     &:hover {
-                        @include adaptive-color-dark-only('background-color', black);
+                        @include colors.adaptive-color-dark-only('background-color', black);
                     }
                 }
 
                 input {
-                    @include adaptive-color-dark-only('background-color', black);
-                    @include adaptive-color-dark-only('color', white);
+                    @include colors.adaptive-color-dark-only('background-color', black);
+                    @include colors.adaptive-color-dark-only('color', white);
                 }
 
                 &.buttons > div {
@@ -187,8 +187,8 @@ $cellSize: 15px;
             }
 
             .minmax {
-                @include adaptive-color('background-color', color(panel-light), color(dark-4));
                 text-align: center;
+                @include colors.adaptive-color('background-color', colors.color(panel-light), colors.color(dark-4));
             }
         }
 
@@ -218,18 +218,15 @@ $cellSize: 15px;
 
     .section-label {
         cursor: pointer;
-
         padding: 6px 24px;
-
-        @include adaptive-color('color', black, white);
-
-        @include adaptive-color('border-color', black, white);
         border-style: solid;
         border-width: 1px;
+        @include colors.adaptive-color('color', black, white);
+        @include colors.adaptive-color('border-color', black, white);
 
         &.active {
-            @include adaptive-color('background-color', white, #364370);
-            @include adaptive-color('border-color', #464dff, #464dff);
+            @include colors.adaptive-color('background-color', white, #364370);
+            @include colors.adaptive-color('border-color', #464dff, #464dff);
         }
     }
 
@@ -241,19 +238,15 @@ $cellSize: 15px;
             padding: 5px;
 
             svg {
-                @include adaptive-color-dark-only('fill', on-color(dark));
+                @include colors.adaptive-color-dark-only('fill', colors.on-color(dark));
             }
             &:hover svg {
-                @include adaptive-color-dark-only('fill', on-color(dark));
                 fill: #505050;
+                @include colors.adaptive-color-dark-only('fill', colors.on-color(dark));
             }
         }
 
         .dropdown-container {
-            @include adaptive-color-dark-only('background', color(dark-3));
-            @include adaptive-color-dark-only('border-color', color(dark-3));
-            @include adaptive-color-dark-only('box-shadow', 2px 1px 1px color(dark-2));
-            @include adaptive-color-dark-only('color', color(dark-link));
             position: absolute;
             right: 16px;
             display: flex;
@@ -268,12 +261,16 @@ $cellSize: 15px;
             padding: 10px;
             top: 40px;
             z-index: 9;
+            @include colors.adaptive-color-dark-only('background', colors.color(dark-3));
+            @include colors.adaptive-color-dark-only('border-color', colors.color(dark-3));
+            @include colors.adaptive-color-dark-only('box-shadow', 2px 1px 1px colors.color(dark-2));
+            @include colors.adaptive-color-dark-only('color', colors.color(dark-link));
             button {
-                @include adaptive-color-dark-only('color', on-color(dark));
                 border: none;
                 background-color: transparent;
                 text-align: right;
                 padding-bottom: 5px;
+                @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
                 &:hover {
                     text-decoration: underline;
                     cursor: pointer;
@@ -301,14 +298,14 @@ $cellSize: 15px;
 
         .filter-option {
             &:hover {
-                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+                @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
             }
         }
     }
 }
 
 .warning {
-    @include adaptive-color('color', #b30000, #ffab0f);
+    @include colors.adaptive-color('color', #b30000, #ffab0f);
 }
 
 .warning-label {
@@ -337,7 +334,7 @@ $cellSize: 15px;
 
             .multiselect-list-item {
                 &:hover {
-                    @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+                    @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
                 }
 
                 .multiselect-list-item-label {
@@ -345,7 +342,7 @@ $cellSize: 15px;
                 }
 
                 &.selected:not(:hover) {
-                    background: color(panel-dark);
+                    background: colors.color(panel-dark);
                 }
             }
         }
@@ -370,7 +367,7 @@ $cellSize: 15px;
 
         .search-list-item {
             &:hover {
-                @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+                @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
             }
 
             .search-list-item-label {
@@ -378,7 +375,7 @@ $cellSize: 15px;
             }
 
             &.selected:not(:hover) {
-                background: color(panel-dark);
+                background: colors.color(panel-dark);
             }
         }
     }
@@ -386,13 +383,11 @@ $cellSize: 15px;
 
 .search-button {
     &:hover {
-        @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+        @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
     }
 }
 
 .button {
-    @include adaptive-color('background-color', color(panel-dark), color(dark-4));
-    @include adaptive-color-dark-only('color', on-color(dark));
     border: none;
     padding: 4px 10px;
     text-align: center;
@@ -401,9 +396,11 @@ $cellSize: 15px;
     display: inline-block;
     text-decoration: none;
     cursor: pointer;
+    @include colors.adaptive-color('background-color', colors.color(panel-dark), colors.color(dark-4));
+    @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
 
     &:hover {
-        @include adaptive-color('background-color', color(button-dark), color(dark-link));
+        @include colors.adaptive-color('background-color', colors.color(button-dark), colors.color(dark-link));
     }
 }
 
@@ -416,26 +413,26 @@ $cellSize: 15px;
 }
 
 .legend {
-    @include adaptive-color('background-color', white, color(dark-3));
-    @include adaptive-color-light-only('border-left', 1px solid color(panel-dark));
     z-index: 999;
     position: fixed;
     bottom: 0;
     right: 0;
     width: 300px;
     height: fit-content;
+    @include colors.adaptive-color('background-color', white, colors.color(dark-3));
+    @include colors.adaptive-color-light-only('border-left', 1px solid colors.color(panel-dark));
     @media print {
         display: none;
     }
 
     .itemArea {
-        @include adaptive-color-dark-only('color', on-color(dark));
         position: static;
         overflow-y: scroll;
         margin: 30px 8px 8px;
         height: 270px;
         width: 100%;
         overflow-x: hidden;
+        @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
 
         .item + .item {
             margin-top: 6px;
@@ -453,8 +450,6 @@ $cellSize: 15px;
 }
 
 .legendBar {
-    @include adaptive-color('background-color', color(panel-dark), color(dark-3));
-    @include adaptive-color-dark-only('color', on-color(dark));
     z-index: 999;
     position: fixed;
     bottom: 0;
@@ -463,10 +458,12 @@ $cellSize: 15px;
     height: 30px;
     transition: 0.3s;
     display: flex;
+    align-items: center;
+    @include colors.adaptive-color('background-color', colors.color(panel-dark), colors.color(dark-3));
+    @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
     @media print {
         display: none;
     }
-    align-items: center;
 
     .title {
         flex: 1;
@@ -475,8 +472,8 @@ $cellSize: 15px;
     }
 
     &:hover {
-        @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
         cursor: pointer;
+        @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
     }
 }
 
@@ -492,7 +489,7 @@ $cellSize: 15px;
         padding: 10px;
 
         & + .section {
-            border-top: 1px solid color(panel-light);
+            border-top: 1px solid colors.color(panel-light);
         }
     }
 

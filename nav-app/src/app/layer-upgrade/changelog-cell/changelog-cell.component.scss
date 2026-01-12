@@ -1,4 +1,5 @@
-@import '../../matrix/technique-cell/technique-cell.component.scss';
+@use '../../matrix/technique-cell/technique-cell.component.scss';
+@use "../../../colors";
 
 .nopointer {
     cursor: unset;
@@ -7,7 +8,7 @@
     margin: 4px 0;
 }
 .section + .section {
-    border-top: 1px solid rgba(border-color(body), 0.5);
+    border-top: 1px solid rgba(colors.border-color(body), 0.5);
 }
 .technique-cell {
     margin: auto;
@@ -16,5 +17,5 @@
     max-width: 50%;
 }
 .mat-drawer-inner-container .technique-cell {
-    @include adaptive-color-dark-only('background-color', color(dark-4));
+    @include colors.adaptive-color-dark-only('background-color', colors.color(dark-4));
 }

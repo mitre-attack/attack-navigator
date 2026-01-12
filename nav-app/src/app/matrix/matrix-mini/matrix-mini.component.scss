@@ -1,5 +1,6 @@
 @use 'sass:math' as math;
-@import '../matrix-common.scss';
+@use '../../../colors.scss';
+@use '../matrix-common.scss';
 .matrix.mini {
     .header {
         text-align: left;
@@ -15,20 +16,20 @@
         vertical-align: top;
 
         .cell-container {
-            margin-right: math.div($sizeunit, 6);
-            margin-bottom: math.div($sizeunit, 6);
+            margin-right: math.div(matrix-common.$sizeunit, 6);
+            margin-bottom: math.div(matrix-common.$sizeunit, 6);
             &:not(.supertechnique-group) {
                 display: inline-block;
             }
             &.supertechnique-group {
-                box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
-                padding-top: 1px + math.div($sizeunit, 2);
-                padding-left: 1px + math.div($sizeunit, 2);
-                padding-bottom: math.div($sizeunit, 3);
-                padding-right: math.div($sizeunit, 3);
+                box-shadow: 0 0 0 1px colors.on-color-deemphasis(body) inset;
+                padding-top: 1px + math.div(matrix-common.$sizeunit, 2);
+                padding-left: 1px + math.div(matrix-common.$sizeunit, 2);
+                padding-bottom: math.div(matrix-common.$sizeunit, 3);
+                padding-right: math.div(matrix-common.$sizeunit, 3);
             }
             &.supertechnique {
-                box-shadow: 0 0 0 1px on-color-deemphasis(body);
+                box-shadow: 0 0 0 1px colors.on-color-deemphasis(body);
             }
         }
     }

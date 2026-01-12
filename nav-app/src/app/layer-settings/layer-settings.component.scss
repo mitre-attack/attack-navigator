@@ -1,6 +1,6 @@
 @use 'sass:color';
 
-@import '../../colors.scss';
+@use '../../colors.scss';
 .layer-settings {
     .sidebar-content {
         margin: 1rem 0;
@@ -22,7 +22,7 @@
     .layer-data {
         .mat-divider.layer-div {
             margin-bottom: 10px;
-            @include adaptive-color-dark-only('border-top-color', color(dark-4));
+            @include colors.adaptive-color-dark-only('border-top-color', colors.color(dark-4));
         }
     }
     .sub-section {
@@ -44,24 +44,24 @@
         &:not(.mat-form-field-disabled) {
             .mat-mdc-floating-label,
             .mat-mdc-input-element {
-                @include adaptive-color-dark-only('color', on-color(dark));
+                @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
             }
             .mdc-line-ripple::before {
-                @include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
+                @include colors.adaptive-color-dark-only('border-bottom-color', colors.on-color(dark-3));
             }
         }
 
         &.mat-form-field-disabled {
             .mat-mdc-floating-label,
             .mdc-text-field__input {
-                @include adaptive-color-dark-only('color', color.scale(on-color(dark-1), $lightness: -25%));
+                @include colors.adaptive-color-dark-only('color', color.scale(colors.on-color(dark-1), $lightness: -25%));
             }
             .mdc-line-ripple::before {
-                @include adaptive-color-dark-only('border-bottom-color', color.scale(on-color(dark-1), $lightness: -25%));
+                @include colors.adaptive-color-dark-only('border-bottom-color', color.scale(colors.on-color(dark-1), $lightness: -25%));
             }
         }
         .mat-mdc-form-field-hint {
-            @include adaptive-color-dark-only('color', on-color(dark));
+            @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
         }
     }
     .mat-mdc-card {

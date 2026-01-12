@@ -1,3 +1,4 @@
+@use "sass:map";
 @use 'sass:color';
 
 $column-hover-color: rgb(235, 235, 235);
@@ -20,12 +21,12 @@ $attack-colors: (
  */
 $colors: (
     primary: (
-        color: map-get($attack-colors, attack-orange),
+        color: map.get($attack-colors, attack-orange),
         on-color: white,
     ),
     //used for header and some nav elements
     secondary: (
-            color: map-get($attack-colors, attack-blue),
+            color: map.get($attack-colors, attack-blue),
             on-color: white,
         ),
     //used for footer and some buttons
@@ -124,7 +125,7 @@ $colors: (
 
 // accessor helper for $colors. Gets the color of the named pair
 @function color($name) {
-    @return map-get(map-get($colors, $name), 'color');
+    @return map.get(map.get($colors, $name), 'color');
 }
 
 // given a color name, get an alternate version of the color, for patterning
@@ -132,29 +133,28 @@ $colors: (
 // if the base color is light, the alternate will be slightly darker.
 // contrast, an optional argument, multiplies to create a more distant or similar color. >1 is more distant, <1 is more similar.
 @function color-alternate($name, $contrast: 1) {
-    @return mix(invert(color($name)), color($name), $weight: $contrast * 5%);
+    @return color.mix(color.invert(color($name)), color($name), $weight: $contrast * 5%);
 }
 
 // accessor helper for $colors. Gets the on-color of the named pair
 @function on-color($name) {
-    @return map-get(map-get($colors, $name), 'on-color');
+    @return map.get(map.get($colors, $name), 'on-color');
 }
 
 // given a color-name, get an emphasized version of the on-color.
 // The emphasized on-color is less like the background color.
 @function on-color-emphasis($name) {
-    @return mix(invert(color($name)), on-color($name));
+    @return color.mix(color.invert(color($name)), on-color($name));
 }
 // given a color-name, get an deemphasized version of the on-color.
 // The deemphasized on-color is more like the background color.
 @function on-color-deemphasis($name) {
-    @return mix(color($name), on-color($name), 25%);
+    @return color.mix(color($name), on-color($name), 25%);
 }
 
 // given a color name, compute a border color for the color
 @function border-color($name) {
-    @return mix(invert(color($name)), color($name), 12.5%);
-    // @return rgba(invert(color($name)), 0.125);
+    @return color.mix(color.invert(color($name)), color($name), 12.5%);
 }
 
 // IMPORTANT USAGE NOTE:

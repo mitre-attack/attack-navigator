@@ -1,6 +1,6 @@
 @use 'sass:color';
-
-@import '../matrix-common.scss';
+@use '../../../colors.scss';
+@use '../matrix-common.scss';
 .matrix.flat {
     .tactic {
         margin-right: 5px;
@@ -10,35 +10,35 @@
         &.name,
         &.count {
             text-align: center;
-            font-size: $sizeunit + 2px;
+            font-size: matrix-common.$sizeunit + 2px;
         }
         &.name {
             cursor: pointer;
             vertical-align: bottom;
             font-weight: bold;
-            @media print {
-                font-size: $sizeunit_print - 4px;
-            }
             position: sticky;
             top: 0.05px;
             z-index: 9999;
-            @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
-            @include adaptive-color-light-only('background-color', white);
+            @media print {
+                font-size: matrix-common.$sizeunit_print - 4px;
+            }
+            @include colors.adaptive-color-dark-only('background-color', color.scale(colors.color(dark-1), $lightness: 3%));
+            @include colors.adaptive-color-light-only('background-color', white);
         }
 
         &.count {
-            @include adaptive-color('border-bottom', 1px solid black, 1px solid white);
-            font-size: $sizeunit - 1px;
+            font-size: matrix-common.$sizeunit - 1px;
             padding-bottom: 5px;
             margin-bottom: 5px;
-            @media print {
-                font-size: $sizeunit_print - 4px;
-            }
             position: sticky;
             top: 32px;
             z-index: 9999;
-            @include adaptive-color-dark-only('background-color', color.scale(color(dark-1), $lightness: 3%));
-            @include adaptive-color-light-only('background-color', white);
+            @media print {
+                font-size: matrix-common.$sizeunit_print - 4px;
+            }
+            @include colors.adaptive-color('border-bottom', 1px solid black, 1px solid white);
+            @include colors.adaptive-color-dark-only('background-color', color.scale(colors.color(dark-1), $lightness: 3%));
+            @include colors.adaptive-color-light-only('background-color', white);
         }
 
         .subtechniques-row.hidden {
@@ -56,14 +56,14 @@
                     min-width: 8px;
                     width: 12px;
                     padding: 0;
-                    background: on-color-deemphasis(body);
+                    background: colors.on-color-deemphasis(body);
                     cursor: pointer;
                     vertical-align: middle;
                     .handle {
                         text-align: center;
                         vertical-align: middle;
                         transform: rotate(-90deg);
-                        color: color-alternate(body);
+                        color: colors.color-alternate(body);
                         width: 12px;
                         height: 12px;
                         font-size: 16px;
@@ -78,17 +78,17 @@
                 }
                 &.sidebar.subtechniques {
                     svg {
-                        fill: on-color-deemphasis(body);
+                        fill: colors.on-color-deemphasis(body);
                     }
                 }
                 &.sidebar {
-                    border-right: 2px solid on-color-deemphasis(body);
+                    border-right: 2px solid colors.on-color-deemphasis(body);
                     @media print {
                         display: none;
                     }
                 }
                 &.technique {
-                    box-shadow: 0 0 0 1px on-color-deemphasis(body) inset;
+                    box-shadow: 0 0 0 1px colors.on-color-deemphasis(body) inset;
                 }
             }
         }

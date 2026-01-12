@@ -1,26 +1,27 @@
 @use 'sass:math' as math;
-@import '../matrix-common.scss';
+@use '../../../colors.scss';
+@use '../matrix-common.scss';
 .technique-cell {
-    @include adaptive-color('background-color', white, color(dark-2));
-    @include adaptive-color('color', black, on-color(dark-3));
     cursor: pointer;
     height: 100%;
     display: flex;
     align-items: center;
-
+    
     position: relative;
-
-    font-size: $sizeunit - 1px;
-    line-height: $sizeunit;
-
-    min-width: $sizeunit;
-    min-height: $sizeunit;
+    
+    font-size: matrix-common.$sizeunit - 1px;
+    line-height: matrix-common.$sizeunit;
+    
+    min-width: matrix-common.$sizeunit;
+    min-height: matrix-common.$sizeunit;
+    @include colors.adaptive-color('background-color', white, colors.color(dark-2));
+    @include colors.adaptive-color('color', black, colors.on-color(dark-3));
     @media print {
-        font-size: $sizeunit_print - 5px;
+        font-size: matrix-common.$sizeunit_print - 5px;
     }
 
     > div {
-        padding: math.div($sizeunit, 2) 3px;
+        padding: math.div(matrix-common.$sizeunit, 2) 3px;
         box-sizing: border-box;
         display: block;
         width: 100%;
@@ -33,22 +34,22 @@
 
     .id-name-break {
         outline-offset: -0.5px;
-        outline: 1px solid rgba(border-color(body), 0.5);
+        outline: 1px solid rgba(colors.border-color(body), 0.5);
     }
 
     &:not(.editing):not(.colored):not(.supertechniquecell) {
-        @include adaptive-color('box-shadow', 0 0 0 1px border-color(body) inset, 0 0 0 1px border-color(dark-2) inset);
+        @include colors.adaptive-color('box-shadow', 0 0 0 1px colors.border-color(body) inset, 0 0 0 1px colors.border-color(dark-2) inset);
     }
 
     &.editing {
-        @include adaptive-color('box-shadow', 0 0 0 1px black inset, 0 0 0 1px color(cell-highlight-dark-color) inset);
+        @include colors.adaptive-color('box-shadow', 0 0 0 1px black inset, 0 0 0 1px colors.color(cell-highlight-dark-color) inset);
     }
 
     &.underlined {
         &.mini div:before {
             position: absolute;
             content: 'i';
-            font-size: $sizeunit - 1px;
+            font-size: matrix-common.$sizeunit - 1px;
             text-align: center;
             width: 100%;
             top: 0;
@@ -62,7 +63,7 @@
     &.mini.disabled div:before {
         position: absolute;
         content: '\2715';
-        font-size: $sizeunit -1px;
+        font-size: matrix-common.$sizeunit -1px;
         text-align: center;
         width: 100%;
         top: 0;
@@ -70,7 +71,7 @@
     }
 
     &.highlight {
-        @include adaptive-color('background', color(cell-highlight-color), color(cell-highlight-dark-color));
+        @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(cell-highlight-dark-color));
         .id-name-break {
             outline: 1px solid rgba(black, 0.5);
         }

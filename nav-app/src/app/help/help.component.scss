@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@use '../../colors.scss';
 
 .help-dialog {
     .table-of-contents {
@@ -21,7 +21,7 @@
     }
     .content {
         code {
-            border: 1px solid color(panel-dark);
+            border: 1px solid colors.color(panel-dark);
         }
     }
 }

@@ -1,6 +1,6 @@
 @use 'sass:color';
 
-@import '../../colors.scss';
+@use '../../colors.scss';
 
 .header-wrapper {
     transition:
@@ -21,13 +21,13 @@
     }
     .tabs .tab-title.active {
         opacity: 1 !important;
-        @include adaptive-color('color', black, on-color(dark));
-        @include adaptive-color('border-color', color(panel-dark), color(dark-1));
-        @include adaptive-color('background-color', color(panel-dark), color(dark-2));
-        @include adaptive-color-dark-only('border', none);
+        @include colors.adaptive-color('color', black, colors.on-color(dark));
+        @include colors.adaptive-color('border-color', colors.color(panel-dark), colors.color(dark-1));
+        @include colors.adaptive-color('background-color', colors.color(panel-dark), colors.color(dark-2));
+        @include colors.adaptive-color-dark-only('border', none);
     }
     .tabs .tab-title:not(.active) {
-        @include adaptive-color('border-color', color(panel-dark), color(dark-4));
+        @include colors.adaptive-color('border-color', colors.color(panel-dark), colors.color(dark-4));
     }
 }
 
@@ -43,18 +43,18 @@
         text-decoration: none;
         display: flex;
         justify-content: space-around;
-        @include adaptive-color('color', black, white);
+        @include colors.adaptive-color('color', black, white);
 
         &:hover,
         &:focus {
             // when the mouse is over a non-selected tab
             &:not(.active) {
                 text-decoration: none;
-                @include adaptive-color('color', black, color(dark-link));
-                @include adaptive-color('opacity', 0.6, 0.8);
-                @include adaptive-color('background-color', color(panel-light), color(dark-2));
+                @include colors.adaptive-color('color', black, colors.color(dark-link));
+                @include colors.adaptive-color('opacity', 0.6, 0.8);
+                @include colors.adaptive-color('background-color', colors.color(panel-light), colors.color(dark-2));
                 &:not(.add-tab) {
-                    border-color: color(panel-dark);
+                    border-color: colors.color(panel-dark);
                 }
             }
         }
@@ -67,13 +67,13 @@
             padding: 2px 4px;
             background: rgb(255, 255, 0);
             border-radius: 5px;
-            @include adaptive-color-dark-only('color', color(dark-1));
+            @include colors.adaptive-color-dark-only('color', colors.color(dark-1));
         }
 
         &.active {
             cursor: default;
-            @include adaptive-color('background-color', color(panel-dark), color.scale(color(dark), $lightness: 1%));
-            @include adaptive-color('color', color(tab-text-color), color(panel-dark));
+            @include colors.adaptive-color('background-color', colors.color(panel-dark), color.scale(colors.color(dark), $lightness: 1%));
+            @include colors.adaptive-color('color', colors.color(tab-text-color), colors.color(panel-dark));
         }
     }
 
@@ -84,10 +84,10 @@
         }
         &:hover {
             border-color: #ddd #ddd #f1f1f1 #ddd;
-            @include adaptive-color('background-color', #f1f1f1, color(dark-2));
+            @include colors.adaptive-color('background-color', #f1f1f1, colors.color(dark-2));
             .mat-icon {
                 // override mat icon color on hover
-                @include adaptive-color('color', black, white);
+                @include colors.adaptive-color('color', black, white);
             }
         }
     }
@@ -111,9 +111,9 @@
     box-sizing: border-box;
     position: absolute;
     padding: 5% 20%;
-    @include adaptive-color('background-color', color(light), color(dark-1));
-    @include adaptive-color('color', on-color(light), on-color(dark));
-    @include adaptive-color('border-color', color(panel-dark), color(dark-1));
+    @include colors.adaptive-color('background-color', colors.color(light), colors.color(dark-1));
+    @include colors.adaptive-color('color', colors.on-color(light), colors.on-color(dark));
+    @include colors.adaptive-color('border-color', colors.color(panel-dark), colors.color(dark-1));
 
     .description {
         display: flex;
@@ -141,7 +141,7 @@
     padding: 2px 4px;
     background: rgb(255, 255, 0);
     border-radius: 5px;
-    @include adaptive-color-dark-only('color', color(dark-1));
+    @include colors.adaptive-color-dark-only('color', colors.color(dark-1));
 }
 
 .hide-select .mat-mdc-select-value {
@@ -155,37 +155,37 @@
 }
 
 .mat-expansion-panel {
-    @include adaptive-color('background-color', color(light), color(dark-2));
-    @include adaptive-color-dark-only('color', on-color(dark-3));
+    @include colors.adaptive-color('background-color', colors.color(light), colors.color(dark-2));
+    @include colors.adaptive-color-dark-only('color', colors.on-color(dark-3));
 
     .mat-expansion-indicator::after {
-        @include adaptive-color-dark-only('color', on-color(dark-3));
+        @include colors.adaptive-color-dark-only('color', colors.on-color(dark-3));
     }
 
     .mat-expansion-panel-header,
     button.mat-mdc-raised-button {
         // nested items inside parent expansion panel
-        @include adaptive-color-dark-only('background-color', color(dark-2));
-        @include adaptive-color-dark-only('color', on-color(dark-3));
+        @include colors.adaptive-color-dark-only('background-color', colors.color(dark-2));
+        @include colors.adaptive-color-dark-only('color', colors.on-color(dark-3));
     }
 
     .mat-expansion-panel-content {
         .mat-expansion-panel-header,
         .mat-mdc-raised-button:not([class*='mat-elevation-z']) {
-            @include adaptive-color-dark-only('border-top', 1px solid #ffffff21);
+            @include colors.adaptive-color-dark-only('border-top', 1px solid #ffffff21);
         }
     }
 
     .mat-expansion-panel-header:hover:not([aria-disabled='true']):not(.mat-expanded) {
-        @include adaptive-color-dark-only('background-color', color(dark-link));
+        @include colors.adaptive-color-dark-only('background-color', colors.color(dark-link));
     }
 
     .mat-expansion-panel-body {
-        @include adaptive-color-dark-only('color', on-color(dark-3));
+        @include colors.adaptive-color-dark-only('color', colors.on-color(dark-3));
     }
 
     .mat-expansion-panel-body button:not(:disabled):hover {
-        @include adaptive-color('background', color(cell-highlight-color), color(dark-link));
+        @include colors.adaptive-color('background', colors.color(cell-highlight-color), colors.color(dark-link));
     }
 
     .mat-mdc-form-field,
@@ -196,7 +196,7 @@
             .mat-mdc-select-value-text,
             .mat-mdc-input-element,
             .mat-mdc-form-field-icon-suffix .mat-mdc-button-base {
-                @include adaptive-color-dark-only('color', on-color(dark));
+                @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
             }
         }
 
@@ -204,63 +204,63 @@
         .layerOpTable td.disabled {
             .mat-mdc-floating-label,
             .mat-mdc-select-arrow {
-                @include adaptive-color-dark-only('color', color.scale(on-color(dark-1), $lightness: -25%));
+                @include colors.adaptive-color-dark-only('color', color.scale(colors.on-color(dark-1), $lightness: -25%));
             }
         }
         &.mat-form-field-disabled .mdc-line-ripple::before {
-            @include adaptive-color-dark-only('border-bottom-color', color.scale(on-color(dark-1), $lightness: -25%));
+            @include colors.adaptive-color-dark-only('border-bottom-color', color.scale(colors.on-color(dark-1), $lightness: -25%));
         }
         &:not(.mat-form-field-disabled) .mdc-line-ripple::before {
-            @include adaptive-color-dark-only('border-bottom-color', on-color(dark-3));
+            @include colors.adaptive-color-dark-only('border-bottom-color', colors.on-color(dark-3));
         }
 
         .mat-mdc-form-field-hint {
-            @include adaptive-color-dark-only('color', on-color(dark));
+            @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
         }
     }
 
     .mat-mdc-unelevated-button {
         &:not(:disabled) {
-            @include adaptive-color-dark-only('background-color', color(dark-2));
-            @include adaptive-color-dark-only('color', on-color(dark-2));
+            @include colors.adaptive-color-dark-only('background-color', colors.color(dark-2));
+            @include colors.adaptive-color-dark-only('color', colors.on-color(dark-2));
         }
         &:disabled {
-            @include adaptive-color-dark-only('background-color', color(dark-1));
-            @include adaptive-color-dark-only('border', color(dark-2) 2px solid);
-            @include adaptive-color-dark-only('color', color.scale(on-color(dark-1), $lightness: -50%));
+            @include colors.adaptive-color-dark-only('background-color', colors.color(dark-1));
+            @include colors.adaptive-color-dark-only('border', colors.color(dark-2) 2px solid);
+            @include colors.adaptive-color-dark-only('color', color.scale(colors.on-color(dark-1), $lightness: -50%));
         }
     }
 
     a {
-        @include adaptive-color-dark-only('color', color(dark-link));
+        @include colors.adaptive-color-dark-only('color', colors.color(dark-link));
     }
 
     a:visited,
     a:active {
-        @include adaptive-color-dark-only('color', color(dark-link-active));
+        @include colors.adaptive-color-dark-only('color', colors.color(dark-link-active));
     }
 }
 
 .headers-align .mat-expansion-panel-header-title,
 .headers-align .mat-expansion-panel-header-description {
     flex-basis: 0;
-    @include adaptive-color('color', on-color(light), color.scale(on-color(dark), $lightness: -10%));
+    @include colors.adaptive-color('color', colors.on-color(light), color.scale(colors.on-color(dark), $lightness: -10%));
 }
 
 .headers-align .mat-expansion-panel-header-description {
     justify-content: space-between;
     align-items: center;
-    @include adaptive-color-dark-only('color', color.scale(on-color(dark), $lightness: -15%));
+    @include colors.adaptive-color-dark-only('color', color.scale(colors.on-color(dark), $lightness: -15%));
 }
 
 input[type='file'] {
     padding: 5px;
     margin: 5px;
     width: 300px;
-    background-color: color(panel-light);
+    background-color: colors.color(panel-light);
     border-radius: 0px;
     &:hover {
-        background-color: color(panel-dark);
+        background-color: colors.color(panel-dark);
     }
 }
 
@@ -273,8 +273,8 @@ input[type='file'] {
     gap: 10px;
 
     button.mdc-button {
-        @include adaptive-color-dark-only('background-color', color(dark-1));
-        @include adaptive-color-dark-only('color', on-color(dark-3));
+        @include colors.adaptive-color-dark-only('background-color', colors.color(dark-1));
+        @include colors.adaptive-color-dark-only('color', colors.on-color(dark-3));
     }
 }
 
@@ -312,30 +312,30 @@ input[type='file'] {
         z-index: 10;
 
         svg {
-            @include adaptive-color-dark-only('fill', on-color(dark));
+            @include colors.adaptive-color-dark-only('fill', colors.on-color(dark));
         }
 
         &:hover svg {
             fill: #505050;
-            @include adaptive-color-dark-only('fill', on-color(dark));
+            @include colors.adaptive-color-dark-only('fill', colors.on-color(dark));
         }
     }
 
     .help-dropdown-open {
         border-radius: 50% 50% 0 0;
-        border: solid color(panel-dark) 1px;
+        border: solid colors.color(panel-dark) 1px;
         border-bottom: solid 1px white;
         background: white;
-        @include adaptive-color-dark-only('background', color(dark-3));
-        @include adaptive-color-dark-only('border', solid color(dark-2) 1px);
-        @include adaptive-color-dark-only('box-shadow', 1px 2px color(dark-2));
-        @include adaptive-color-dark-only('z-index', 1);
-        @include adaptive-color-dark-only('border-bottom', color(dark-3));
-        @include adaptive-color-dark-only('color', color(dark-link));
+        @include colors.adaptive-color-dark-only('background', colors.color(dark-3));
+        @include colors.adaptive-color-dark-only('border', solid colors.color(dark-2) 1px);
+        @include colors.adaptive-color-dark-only('box-shadow', 1px 2px colors.color(dark-2));
+        @include colors.adaptive-color-dark-only('z-index', 1);
+        @include colors.adaptive-color-dark-only('border-bottom', colors.color(dark-3));
+        @include colors.adaptive-color-dark-only('color', colors.color(dark-link));
 
         svg {
             fill: #505050;
-            @include adaptive-color-dark-only('fill', on-color(dark));
+            @include colors.adaptive-color-dark-only('fill', colors.on-color(dark));
         }
     }
 
@@ -354,17 +354,17 @@ input[type='file'] {
         padding: 10px;
         top: 40px;
         z-index: 9;
-        @include adaptive-color-dark-only('background', color(dark-3));
-        @include adaptive-color-dark-only('border-color', color(dark-3));
-        @include adaptive-color-dark-only('box-shadow', 2px 1px 1px color(dark-2));
-        @include adaptive-color-dark-only('color', color(dark-link));
+        @include colors.adaptive-color-dark-only('background', colors.color(dark-3));
+        @include colors.adaptive-color-dark-only('border-color', colors.color(dark-3));
+        @include colors.adaptive-color-dark-only('box-shadow', 2px 1px 1px colors.color(dark-2));
+        @include colors.adaptive-color-dark-only('color', colors.color(dark-link));
 
         button {
             border: none;
             background-color: transparent;
             text-align: right;
             padding-bottom: 5px;
-            @include adaptive-color-dark-only('color', on-color(dark));
+            @include colors.adaptive-color-dark-only('color', colors.on-color(dark));
             &:hover {
                 text-decoration: underline;
                 cursor: pointer;
@@ -373,14 +373,14 @@ input[type='file'] {
     }
 
     .banner {
-        background-color: color(primary);
+        background-color: colors.color(primary);
         margin-bottom: 1em;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 15px;
         text-align: left;
-        color: on-color(primary);
+        color: colors.on-color(primary);
         font-size: 14px;
         font-family: Roboto, 'Helvetica Neue', sans-serif;
         cursor: initial;
@@ -396,12 +396,12 @@ input[type='file'] {
         }
         a {
             display: inline;
-            color: on-color(primary);
-            text-decoration-color: on-color(primary);
+            color: colors.on-color(primary);
+            text-decoration-color: colors.on-color(primary);
         }
         a:hover,
         .helpIcon:hover {
-            color: color(panel-dark);
+            color: colors.color(panel-dark);
             opacity: 0.8;
         }
     }
@@ -465,19 +465,19 @@ input[type='file'] {
 .feature-row {
     margin-bottom: 4px;
     &:hover {
-        @include adaptive-color('background-color', color.scale(white, $lightness: -5%), color(dark-3));
+        @include colors.adaptive-color('background-color', color.scale(white, $lightness: -5%), colors.color(dark-3));
     }
     .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background {
-        background-color: color(primary) !important;
-        border-color: color(primary) !important;
+        background-color: colors.color(primary) !important;
+        border-color: colors.color(primary) !important;
     }
     .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:not(:checked) ~ .mdc-checkbox__background {
         .theme-override-dark & {
-            border-color: color(body) !important;
+            border-color: colors.color(body) !important;
         }
     }
     .mat-mdc-checkbox.adaptive-checkbox .mdc-form-field {
-        @include adaptive-color('color', color(dark-1), color(body));
+        @include colors.adaptive-color('color', colors.color(dark-1), colors.color(body));
     }
 }
 .feature-row + .feature-row {
@@ -513,8 +513,8 @@ input[type='file'] {
         background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0, rgba(0, 0, 0, 0.42) 33%, transparent 0);
         background-size: 4px 1px;
         background-repeat: repeat-x;
-        @include adaptive-color-dark-only('background', none);
-        @include adaptive-color-dark-only('border-bottom', white dotted 2px);
+        @include colors.adaptive-color-dark-only('background', none);
+        @include colors.adaptive-color-dark-only('border-bottom', white dotted 2px);
     }
 }
 

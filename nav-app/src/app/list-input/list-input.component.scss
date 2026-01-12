@@ -1,6 +1,6 @@
 @use 'sass:color';
 
-@import '../../colors.scss';
+@use '../../colors.scss';
 
 .list-container,
 .add-more {
@@ -8,7 +8,7 @@
 }
 .item-container {
     padding: 10px;
-    border: 1px solid color(panel-dark);
+    border: 1px solid colors.color(panel-dark);
     margin: 4px 0;
 
     &.hide-subscript {
@@ -27,11 +27,11 @@
 }
 .assigned-link {
     float: left;
-    @include adaptive-color-dark-only('color', color(dark-link) !important);
+    @include colors.adaptive-color-dark-only('color', colors.color(dark-link) !important);
 }
 .assigned-link:active,
 .assigned-link:visited {
-    @include adaptive-color-dark-only('color', color(dark-link-active));
+    @include colors.adaptive-color-dark-only('color', colors.color(dark-link-active));
 }
 
 .divider-button-container {
@@ -62,17 +62,17 @@
     &.divider-option {
         .line,
         .icon {
-            @include adaptive-color('background-color', color(panel-dark), color(dark-4));
+            @include colors.adaptive-color('background-color', colors.color(panel-dark), colors.color(dark-4));
         }
     }
     &.divider {
         .line,
         .icon {
-            @include adaptive-color('background-color', color.scale(color(panel-dark), $lightness: -40%), color.scale(color(dark-4), $lightness: 40%));
+            @include colors.adaptive-color('background-color', color.scale(colors.color(panel-dark), $lightness: -40%), color.scale(colors.color(dark-4), $lightness: 40%));
         }
     }
     &:hover .line,
     &:hover .icon {
-        @include adaptive-color('background-color', color(button-dark), color(dark-link));
+        @include colors.adaptive-color('background-color', colors.color(button-dark), colors.color(dark-link));
     }
 }
