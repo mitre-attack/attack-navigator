@@ -26,8 +26,8 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 
 ## Requirements
 
-* [Node.js v18](https://nodejs.org)
-* [AngularCLI v17](https://cli.angular.io)
+* [Node.js v22](https://nodejs.org)
+* [AngularCLI v19](https://cli.angular.io)
 
 ## Supported Browsers
 
@@ -44,30 +44,73 @@ Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/
 
 ## Install and Run
 
-### First time
+### Initial Setup
 
-1. Navigate to the **nav-app** directory
-2. Run `npm install`
+1. Navigate to the **nav-app** directory:
 
-### Serve application on local machine
+```bash
+cd nav-app/
+```
 
-1. Run `ng serve` within the **nav-app** directory
-2. Navigate to `localhost:4200` in browser
+2. Install dependencies:
 
-### Compile for use elsewhere
+```bash
+npm install
+```
 
-1. Run `ng build` within the **nav-app** directory
-2. Copy files from `nav-app/dist/` directory
+### Development
 
-_Note: `ng build --configuration production` does not currently work for ATT&CK Navigator without additional flags. To build the production environment instead use `ng build --configuration production --aot=false --build-optimizer=false`._
+#### Local
 
-### Running the Navigator offline
+Start the Angular development server:
 
-1. Install the Navigator as per instructions above.
-2. Follow instructions under [loading content from local files](#Loading-content-from-local-files) to configure the Navigator to populate the matrix without an internet connection. The latest MITRE ATT&CK data files can be found here:
-	- [Enterprise ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/enterprise-attack/enterprise-attack.json).
-	- [Mobile ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/mobile-attack/mobile-attack.json).
-	- [ICS ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/ics-attack/ics-attack.json).
+```bash
+ng serve
+```
+
+Open <http://localhost:4200> in your browser.
+
+#### Using Docker
+
+Build and run the development Docker container:
+
+```bash
+docker build -f Dockerfile.dev -t nav-app-dev .
+docker run -p 4200:4200 nav-app-dev
+```
+
+Open <http://localhost:4200> in your browser.
+
+### Deployment
+
+#### Building for Deployment
+
+Compile the application:
+
+```bash
+ng build --configuration production
+```
+
+The output files will be located in `nav-app/dist/browser/`.
+
+#### Serve Using Docker
+
+Build and run a Docker container:
+
+```bash
+docker build -t nav-app-prod .
+docker run -p 8080:80 nav-app-prod
+```
+
+Open <http://localhost:8080> in your browser.
+
+### Running Offline
+
+Install or build the Navigator using one of the options above. Then, configure it to load content from local files (see [Loading Content from Local Files](#loading-content-from-local-files)). The latest MITRE ATT&CK data files can be found here:
+
+* [Enterprise ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/enterprise-attack/enterprise-attack.json)
+* [Mobile ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/mobile-attack/mobile-attack.json)
+* [ICS ATT&CK](https://github.com/mitre-attack/attack-stix-data/raw/master/ics-attack/ics-attack.json)
 
 ## Documentation
 
@@ -217,13 +260,6 @@ Navigator can be populated using files that consist of bundles of STIX objects, 
     ]
 },
 ```
-
-## Running the Docker File
-
-1. Navigate to the directory where you checked out the git repository
-2. Run `docker build -t yourcustomname .`
-3. Run `docker run -p 4200:4200 yourcustomname`
-4. Navigate to `localhost:4200` in browser
 
 ## Loading Default Layers Upon Initialization
 

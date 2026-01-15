@@ -9,6 +9,15 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 5.3.0 - 15 January 2026
+
+## Improvements
+- Updated Docker setup to use `Dockerfile` for production and `Dockerfile.dev` for development. See pull request [#722](https://github.com/mitre-attack/attack-navigator/pull/722).
+- Updated Angular from v17 to v19.
+
+## Fixes
+- Fixed `gradientRGB` out-of-bounds exception. See pull request [#687](https://github.com/mitre-attack/attack-navigator/pull/687).
+
 # 5.2.0 - 28 October 2025
 
 ## Improvements
