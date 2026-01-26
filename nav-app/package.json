@@ -70,7 +70,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "marked": "^15.0.12",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.1",
     "tslint": "~6.1.0",
     "typescript": "^5.8.3"
