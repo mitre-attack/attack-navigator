@@ -20,7 +20,7 @@
     "@angular/animations": "^19.2.18",
     "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.18",
-    "@angular/compiler": "^19.2.18",
+    "@angular/compiler": "^19.2.20",
     "@angular/core": "^19.2.18",
     "@angular/forms": "^19.2.18",
     "@angular/material": "^19.2.19",
