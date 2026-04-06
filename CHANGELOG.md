@@ -9,6 +9,12 @@
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 
+# 5.3.1 - 6 April 2026
+
+## Fixes
+- Fixed an issue where layers created from a custom STIX bundle would fail to load when re-opened via "Open Existing Layer". See [#775](https://github.com/mitre-attack/attack-navigator/issues/775).
+
+
 # 5.3.0 - 15 January 2026
 
 ## Improvements
