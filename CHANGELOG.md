@@ -8,6 +8,11 @@
     This will patch the version number appropriately and create the correct tag on the current commit.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
+# 5.3.2 - 21 April 2026
+
+## Fixes
+- Fixed an issue preventing the matrix from building if a detection mapping had no technique references.
+
 
 # 5.3.1 - 6 April 2026
 
