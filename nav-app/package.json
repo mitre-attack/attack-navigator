@@ -60,7 +60,7 @@
     "@types/node": "^22.19.17",
     "codelyzer": "^6.0.0",
     "exceljs": "^4.3.0",
-    "jasmine-core": "^5.1.0",
+    "jasmine-core": "^6.2.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.1",
     "karma-chrome-launcher": "^3.2.0",
