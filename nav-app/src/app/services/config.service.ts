@@ -208,7 +208,9 @@ export class ConfigService {
                     console.debug('loaded app configuration settings');
 
                     config['custom_context_menu_items'].forEach((item) => {
-                        this.contextMenuItems.push(new ContextMenuItem(item.label, item.url, item.subtechnique_url));
+                        this.contextMenuItems.push(
+                            new ContextMenuItem(item.label, item.url, item.subtechnique_url, item.limit_techniques)
+                        );
                     });
                     this.defaultLayers = config['default_layers'];
                     this.commentColor = config['comment_color'];
