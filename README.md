@@ -169,6 +169,23 @@ Example custom context menu objects:
 }
 ```
 
+By default a custom context menu option is shown for every technique. To restrict an option to specific techniques, add a `limit_techniques` array to the object. Each entry can be either:
+
+* a bare ATT&CK ID string, e.g. `"T1059"`, which applies the option to that technique under any tactic it appears in, or
+* an object of the form `{ "id": "T1059", "tactic": "execution" }`, which applies the option to that technique only when viewed under the given tactic (tactic in shortname/phase-name format, same convention used by the optional `tactic` field on technique objects in the [layer format](layers/README.md)). This is useful for multi-tactic techniques where the option should only make sense under one of their tactics.
+
+If `limit_techniques` is omitted (or empty), the option applies to every technique, matching the previous default behavior.
+
+Example restricted to one technique under all of its tactics, and one technique under a single tactic:
+
+```json
+{
+    "label": "example restricted option",
+    "url": "https://test.com",
+    "limit_techniques": ["T1098", { "id": "T1059", "tactic": "execution" }]
+}
+```
+
 ## Methods for loading content
 
 ### Loading content from a Collection Index
