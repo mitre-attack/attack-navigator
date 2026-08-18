@@ -554,11 +554,27 @@ The following is an example ATT&CK Navigator URL with the ability to download th
 disabled:  
 <code><https://mitre-attack.github.io/attack-navigator/enterprise/><b>#download_layer=false&comments=false</b></code>
 
-# ![Rendering Layers as SVG](nav-app/src/assets/icons/ic_camera_alt_black_24px.svg)Rendering Layers as SVG
+# ![Rendering Layers as Images](nav-app/src/assets/icons/ic_camera_alt_black_24px.svg)Rendering Layers as Images
 
-Clicking the "render layer to SVG" button will open a pop-up window allowing the current layer to be rendered to an SVG
-image. Clicking the <i>download svg</i> button (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">)
-will download the image, as displayed, in SVG format.
+Clicking the "render layer as image" button will open a pop-up window allowing the current layer to be rendered as an
+image. The download menu (<img src="nav-app/src/assets/icons/ic_file_download_black_24px.svg">) offers SVG, PNG, and
+PDF output. All three formats are generated locally in the browser; exporting does not send the layer to a server.
+SVG and PDF retain vector rendering. PNG is exported at the dimensions shown in the image-size controls.
+
+PDF files use bundled and embedded Roboto Condensed Regular and Bold fonts so their typography does not depend on fonts
+installed on the computer opening the PDF.
+
+The rendered matrix preserves the technique ordering configured by the layer and repeats techniques that occur in more
+than one tactic. Technique labels wrap into variable-height cells, while tactic headers show the tactic name and visible
+parent-technique count. A blue three-line marker identifies a parent whose sub-techniques are available but collapsed.
+Expanded sub-techniques are rendered according to the sub-technique display setting, and each technique or sub-technique
+retains its layer, aggregate-score, or score color independently.
+
+Wrapped technique labels are exported as independent, explicitly positioned SVG text elements inside a clipped cell
+viewport. The exported image therefore does not depend on CSS or renderer-specific automatic text wrapping.
+
+By default, a copyright line below the matrix identifies the active Navigator ATT&CK version and current year. It is
+included in SVG, PNG, and PDF output.
 
 <b>Note:</b> this feature has minor compatibility warnings with the Internet Explorer browser. For best results, please
 use Firefox, Chrome or Edge.
@@ -577,6 +593,12 @@ The image size controls allow you to specify the width and height of the image, 
 one is present. The measurements are in units specified by the <a href="#measurement-units">
 measurement units</a> control.
 
+The default <b>Fit matrix</b> size uses 220 pixel tactic columns, 30 pixels for each wrapped line in a cell, and 24 pixel
+outer margins. Canvas width follows the number of visible tactics, while canvas height follows the tallest rendered
+tactic. Expanding sub-techniques therefore increases the canvas height instead of shrinking every cell. Enterprise with
+collapsed sub-techniques is approximately 3348 by 1808 pixels with the default 56-pixel copyright footer. Hiding the
+copyright line removes that footer space.
+
 The header height contributes to the total image height: if you have specified the image height to be 8.5 inches and the
 header height to be 1 inch, the technique table will be 7.5 inches and the header 1 inch for a total height of 8.5
 inches. If the header is disabled this control will not be editable.
@@ -584,10 +606,11 @@ inches. If the header is disabled this control will not be editable.
 ## ![Configuring Text](nav-app/src/assets/icons/ic_format_size_black_24px.svg)Configuring Text
 
 The text configuration dropdown allows for the configuration of the font
-(serif, sans-serif, and monospace) of the exported render.
+(narrow sans-serif, serif, sans-serif, and monospace) of the exported render.
 
 Unlike in previous versions of the Navigator, in more recent versions of the ATT&CK Navigator text size is automatically
-calculated to optimize readability.
+calculated to optimize readability when auto-fit is enabled. The default is 18 pixels with auto-fit disabled, matching
+the standalone ATT&CK matrix generator; auto-fit remains available in the text configuration dropdown.
 
 ## ![Customizing the Legend](nav-app/src/assets/icons/ic_view_list_black_24px.svg)Customizing the Legend
 
@@ -604,6 +627,7 @@ table cell borders can also be edited.
 
 - <b>Show header</b> controls whether the header is shown at all. If the legend is undocked from the header it will
   still be shown.
+- <b>Show copyright</b> controls whether the versioned MITRE copyright line and its reserved footer space are shown.
 - <b>Show about</b> controls whether the about (layer name and description) section of the header is visible. If the
   layer has no name nor description, the control will be disabled and the section automatically hidden.
 - <b>Show domain</b> controls whether the domain (layer domain and version) section is visible in the header. This

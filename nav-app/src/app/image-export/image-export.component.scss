@@ -24,6 +24,21 @@
             text-align: left;
         }
     }
+
+    &.export {
+        min-width: 100px;
+
+        button {
+            justify-content: flex-start;
+            width: 100%;
+        }
+    }
+}
+
+.export-error {
+    align-items: center;
+    display: flex;
+    margin: 0 25px 8px;
 }
 
 .iewarning {

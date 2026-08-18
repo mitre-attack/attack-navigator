@@ -16,9 +16,9 @@ import { MatButton } from '@angular/material/button';
 declare var d3: any; //d3js
 
 @Component({
-    selector: 'app-svg-export',
-    templateUrl: './svg-export.component.html',
-    styleUrls: ['./svg-export.component.scss'],
+    selector: 'app-image-export',
+    templateUrl: './image-export.component.html',
+    styleUrls: ['./image-export.component.scss'],
     encapsulation: ViewEncapsulation.None,
     imports: [
         NgIf,
@@ -37,27 +37,32 @@ declare var d3: any; //d3js
         MatDialogClose,
     ],
 })
-export class SvgExportComponent implements OnInit {
+export class ImageExportComponent implements OnInit {
     // vm to render
     public viewModel: ViewModel;
 
     // SVG configuration
     public config: any = {};
     public svgConfigDefaults: any = {
-        width: 11,
-        height: 8.5,
-        headerHeight: 1,
+        // Match the standalone generator's base Enterprise matrix canvas and
+        // 84 px header at Navigator's 96 px/in. Fit mode adds optional footer space.
+        width: 34.875,
+        height: 18.2083333333,
+        headerHeight: 0.875,
         unit: 'in',
         orientation: 'landscape',
-        size: 'letter',
-        fontSize: 4,
-        autofitText: true,
+        size: 'matrix',
+        fontSize: 18,
+        autofitText: false,
         maxTextSize: Infinity,
         theme: 'light',
         showSubtechniques: 'expanded',
-        font: 'sans-serif',
+        spanAdjacentTechniques: false,
+        showSubtechniqueMarker: true,
+        font: 'Arial Narrow, Aptos Narrow, Roboto Condensed, Liberation Sans Narrow, sans-serif',
         tableBorderColor: '#6B7279',
         showHeader: true,
+        showCopyright: true,
         legendDocked: true,
         legendX: 0,
         legendY: 0,
@@ -76,6 +81,16 @@ export class SvgExportComponent implements OnInit {
     public hasScores: boolean;
     private svgElementID: string = 'svgInsert_tmp';
     private buildSVGDebounce: boolean = false;
+    private readonly matrixColumnWidth: number = 220;
+    private readonly matrixCellHeight: number = 30;
+    private readonly matrixMargin: number = 24;
+    private readonly copyrightFooterHeight: number = 56;
+    private readonly pdfFontFamily: string = 'Roboto Condensed';
+    private readonly pdfFontPath: string = 'assets/fonts/roboto-condensed';
+    private pdfBrowserFontsReady: Promise<void> = null;
+
+    public exportInProgress: boolean = false;
+    public exportError: string = '';
 
     // counter for unit change ui element
     public unitEnum: number = 0;
@@ -125,14 +140,14 @@ export class SvgExportComponent implements OnInit {
         return this.config.showLegend && this.hasLegendItems;
     }
     public get showLegendContainer(): boolean {
-        return this.showLegend || this.showGradient;
+        return this.showLegend || this.showGradient || this.config.showSubtechniqueMarker;
     }
     public get showLegendInHeader(): boolean {
         return this.config.legendDocked;
     }
 
     constructor(
-        private dialogRef: MatDialogRef<SvgExportComponent>, // needed for mat-dialog-close
+        private dialogRef: MatDialogRef<ImageExportComponent>, // needed for mat-dialog-close
         private configService: ConfigService,
         private dataService: DataService,
         @Inject(MAT_DIALOG_DATA) public data
@@ -159,6 +174,7 @@ export class SvgExportComponent implements OnInit {
         let legendSectionCount = 0;
         if (self.hasScores) legendSectionCount++;
         if (self.hasLegendItems) legendSectionCount++;
+        if (self.config.showSubtechniqueMarker) legendSectionCount++;
         self.config.legendHeight = 0.5 * legendSectionCount;
 
         //initial legend position for undocked legend
@@ -197,13 +213,56 @@ export class SvgExportComponent implements OnInit {
         // set svg size
         this.setSize(self, self.config.size, self.config.orientation);
 
+        // Build the render model before sizing the SVG so "Fit matrix" can
+        // preserve the default column and cell dimensions for every domain
+        // and sub-technique expansion state.
+        let domain = self.dataService.getDomain(self.viewModel.domainVersionID);
+        let tacticCount = domain.matrices.reduce((count, matrix) => count + self.viewModel.filterTactics(matrix.tactics, matrix).length, 0);
+        const sizingMargin = self.config.size === 'matrix' ? self.matrixMargin : 5;
+        const configuredWidth = self.toPx(self.config.width, self.config.unit);
+        const configuredContentWidth = Math.max(configuredWidth - 2 * sizingMargin, 10);
+        const columnWidth = self.config.size === 'matrix' ? self.matrixColumnWidth : configuredContentWidth / Math.max(tacticCount, 1);
+        const measureContext = document.createElement('canvas').getContext('2d');
+        const renderConfig = {
+            ...self.config,
+            columnWidth,
+            measureText: function (text: string, fontSize: number): number {
+                measureContext.font = `${fontSize}px ${self.config.font}`;
+                return measureContext.measureText(text).width;
+            },
+        };
+        let matrices: RenderableMatrix[] = domain.matrices.map((m) => new RenderableMatrix(m, self.viewModel, renderConfig));
+        let tactics: RenderableTactic[] = [];
+        for (let matrix of matrices) tactics = tactics.concat(matrix.tactics);
+        let maxTacticHeight =
+            d3.max(tactics, function (tactic: RenderableTactic) {
+                return tactic.height;
+            }) || 1;
+        const copyrightFooterHeight = self.config.showCopyright ? self.copyrightFooterHeight : 0;
+
+        if (self.config.size === 'matrix') {
+            const hasHeaderContent =
+                self.config.showHeader &&
+                (self.showName ||
+                    self.showDescription ||
+                    self.showDomain ||
+                    self.showFilters ||
+                    self.showAggregate ||
+                    (self.showLegendContainer && self.showLegendInHeader));
+            const fittedHeaderHeight = hasHeaderContent ? Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1) : 0;
+            const fittedSize = self.matrixCanvasSize(tacticCount, maxTacticHeight, fittedHeaderHeight, copyrightFooterHeight);
+            self.config.width = self.fromPx(fittedSize.width, self.config.unit);
+            self.config.height = self.fromPx(fittedSize.height, self.config.unit);
+        }
+
         // calculate svg height and width
-        let margin = { top: 5, right: 5, bottom: 5, left: 5 };
+        let margin = { top: sizingMargin, right: sizingMargin, bottom: sizingMargin, left: sizingMargin };
         let width = Math.max(self.toPx(self.config.width, self.config.unit) - (margin.right + margin.left), 10);
         let svgWidth = width + margin.left + margin.right;
         let height = Math.max(self.toPx(self.config.height, self.config.unit) - (margin.top + margin.bottom), 10);
         let svgHeight = height + margin.top + margin.bottom;
         let headerHeight = Math.max(self.toPx(self.config.headerHeight, self.config.unit), 1);
+        const matrixHeight = Math.max(height - copyrightFooterHeight, 1);
 
         // remove previous graphic
         let svgElement: HTMLElement = document.getElementById(self.svgElementID);
@@ -237,6 +296,10 @@ export class SvgExportComponent implements OnInit {
             legendSection.contents.push({ label: 'legend', data: self.buildLegend() });
         }
 
+        if (self.config.showSubtechniqueMarker) {
+            legendSection.contents.push({ label: 'subtechniques', data: self.buildSubtechniqueLegend() });
+        }
+
         // -----------------------------------------------------------------------------
         // HEADER
         // -----------------------------------------------------------------------------
@@ -255,7 +318,6 @@ export class SvgExportComponent implements OnInit {
             // domain section
             let domainSection = { title: 'domain', contents: [] };
             if (self.showDomain) {
-                let domain = this.dataService.getDomain(this.viewModel.domainVersionID);
                 domainSection.contents.push({ label: 'domain', data: `${domain.name} v${domain.version.number}` });
             }
 
@@ -322,15 +384,7 @@ export class SvgExportComponent implements OnInit {
         // -----------------------------------------------------------------------------
 
         // build data model
-        let datatable = svg.append('g').attr('transform', 'translate(0,' + (headerHeight + 1) + ')');
-        let domain = self.dataService.getDomain(self.viewModel.domainVersionID);
-        let matrices: RenderableMatrix[] = domain.matrices.map((m) => new RenderableMatrix(m, self.viewModel, self.config));
-
-        // get flattened list of tactics
-        let tactics: RenderableTactic[] = [];
-        for (let matrix of matrices) {
-            tactics = tactics.concat(matrix.tactics);
-        }
+        let datatable = svg.append('g').attr('transform', 'translate(0,' + headerHeight + ')');
 
         // build tactic columns
         let xRange = d3
@@ -340,25 +394,12 @@ export class SvgExportComponent implements OnInit {
 
         let yRange = d3
             .scaleLinear()
-            .domain([
-                d3.max(tactics, function (tactic: RenderableTactic) {
-                    return tactic.height;
-                }),
-                0,
-            ])
-            .range([height - headerHeight, 0]);
+            .domain([maxTacticHeight, 0])
+            .range([Math.max(matrixHeight - headerHeight, 1), 0]);
 
-        // tactic row background
-        let subtechniqueIndent = Math.min(2 * yRange(1), 15);
-        if (self.viewModel.showTacticRowBackground) {
-            datatable
-                .append('rect')
-                .attr('class', 'tactic-header-background')
-                .attr('width', width)
-                .attr('height', yRange(1))
-                .attr('fill', self.viewModel.tacticRowBackground)
-                .attr('stroke', self.config.tableBorderColor);
-        }
+        const baseCellHeight = yRange(1);
+        const tacticHeaderHeight = yRange(2);
+        let subtechniqueIndent = Math.min(2 * baseCellHeight, 15);
 
         // tactic names
         let tacticGroups = datatable
@@ -374,6 +415,18 @@ export class SvgExportComponent implements OnInit {
                 return `translate(${xRange(tactic.tactic.id)}, 0)`;
             });
 
+        tacticGroups
+            .append('rect')
+            .attr('class', 'tactic-header-background')
+            .attr('width', xRange.bandwidth())
+            .attr('height', tacticHeaderHeight)
+            .attr('fill', function () {
+                if (self.viewModel.showTacticRowBackground) return self.viewModel.tacticRowBackground;
+                return self.config.theme === 'light' ? '#263746' : '#1d2935';
+            })
+            .attr('stroke', self.config.tableBorderColor)
+            .attr('shape-rendering', 'crispEdges');
+
         // add technique groups to tactic column
         let techniqueGroups = tacticGroups
             .append('g')
@@ -385,11 +438,24 @@ export class SvgExportComponent implements OnInit {
             .enter()
             .append('g')
             .attr('class', function (technique: RenderableTechnique) {
-                return 'technique ' + technique.technique.attackID;
+                return `technique ${technique.technique.attackID} ${technique.spanFollower ? 'span-follower' : 'span-leader'}`;
+            })
+            .attr('data-attack-id', function (technique: RenderableTechnique) {
+                return technique.technique.attackID;
+            })
+            .attr('data-column-span', function (technique: RenderableTechnique) {
+                return technique.columnSpan;
             })
             .attr('transform', function (technique: RenderableTechnique) {
                 return `translate(0, ${yRange(technique.yPosition)})`;
             });
+
+        // A joined cell is owned by its leftmost tactic. Followers retain a
+        // group only so expanded sub-technique sidebars can still be drawn in
+        // their own columns.
+        const visibleTechniqueGroups = techniqueGroups.filter(function (technique: RenderableTechnique) {
+            return !technique.spanFollower;
+        });
 
         // add sub-technique groups to tactic column
         let subtechniqueGroups = tacticGroups
@@ -404,16 +470,30 @@ export class SvgExportComponent implements OnInit {
             .attr('class', function (subtechnique: RenderableTechnique) {
                 return 'subtechnique ' + subtechnique.technique.attackID;
             })
+            .attr('data-attack-id', function (subtechnique: RenderableTechnique) {
+                return subtechnique.technique.attackID;
+            })
             .attr('transform', function (subtechnique: RenderableTechnique) {
                 return `translate(${subtechniqueIndent}, ${yRange(subtechnique.yPosition)})`;
             });
 
+        visibleTechniqueGroups.append('title').text(function (technique: RenderableTechnique) {
+            return `${technique.technique.attackID}: ${technique.technique.name}`;
+        });
+        subtechniqueGroups.append('title').text(function (subtechnique: RenderableTechnique) {
+            return `${subtechnique.technique.attackID}: ${subtechnique.technique.name}`;
+        });
+
         // add cell style to techniques
-        techniqueGroups
+        visibleTechniqueGroups
             .append('rect')
             .attr('class', 'cell')
-            .attr('height', yRange(1))
-            .attr('width', xRange.bandwidth())
+            .attr('height', function (technique: RenderableTechnique) {
+                return yRange(technique.height);
+            })
+            .attr('width', function (technique: RenderableTechnique) {
+                return xRange.bandwidth() * technique.columnSpan;
+            })
             .attr('fill', function (technique: RenderableTechnique) {
                 if (technique.fill !== null) {
                     return technique.fill;
@@ -425,13 +505,16 @@ export class SvgExportComponent implements OnInit {
                     }
                 }
             })
-            .attr('stroke', self.config.tableBorderColor);
+            .attr('stroke', self.config.tableBorderColor)
+            .attr('shape-rendering', 'crispEdges');
 
         // add cell style to sub-techniques
         subtechniqueGroups
             .append('rect')
             .attr('class', 'cell')
-            .attr('height', yRange(1))
+            .attr('height', function (subtechnique: RenderableTechnique) {
+                return yRange(subtechnique.height);
+            })
             .attr('width', xRange.bandwidth() - subtechniqueIndent)
             .attr('fill', function (subtechnique: RenderableTechnique) {
                 if (subtechnique.fill !== null) {
@@ -444,14 +527,17 @@ export class SvgExportComponent implements OnInit {
                     }
                 }
             })
-            .attr('stroke', self.config.tableBorderColor);
+            .attr('stroke', self.config.tableBorderColor)
+            .attr('shape-rendering', 'crispEdges');
 
         // add styling for sub-technique sidebar
         let sidebarWidth: number = 3;
         subtechniqueGroups
             .append('rect')
             .attr('class', 'cell')
-            .attr('height', yRange(1))
+            .attr('height', function (subtechnique: RenderableTechnique) {
+                return yRange(subtechnique.height);
+            })
             .attr('width', sidebarWidth)
             .attr('transform', `translate(${-sidebarWidth}, 0)`)
             .attr('fill', self.config.tableBorderColor)
@@ -459,7 +545,9 @@ export class SvgExportComponent implements OnInit {
         techniqueGroups
             .append('polygon')
             .attr('class', 'sidebar')
-            .attr('transform', `translate(0, ${yRange(1)})`)
+            .attr('transform', function (technique: RenderableTechnique) {
+                return `translate(0, ${yRange(technique.height)})`;
+            })
             .attr('points', function (technique: RenderableTechnique) {
                 return [
                     '0,0',
@@ -475,104 +563,190 @@ export class SvgExportComponent implements OnInit {
                 return technique.technique.subtechniques.length > 0 && technique.showSubtechniques ? 'visible' : 'hidden';
             });
 
+        // Mark collapsed parents without expanding their sub-techniques. Three
+        // short lines remain legible at small export sizes and do not imply an
+        // interactive control in the static SVG.
+        visibleTechniqueGroups
+            .filter(function (technique: RenderableTechnique) {
+                return self.shouldRenderSubtechniqueMarker(technique);
+            })
+            .append('path')
+            .attr('class', 'subtechnique-marker')
+            .attr('data-subtechnique-marker', 'true')
+            .attr('d', function (technique: RenderableTechnique) {
+                const horizontalMargin = Math.max(1, Math.min(6, baseCellHeight * 0.25));
+                const markerWidth = Math.max(3, Math.min(12, baseCellHeight * 0.6));
+                const lineGap = Math.max(0.8, Math.min(4, baseCellHeight * 0.2));
+                const right = xRange.bandwidth() * technique.columnSpan - horizontalMargin;
+                const left = Math.max(right - markerWidth, horizontalMargin);
+                const center = yRange(technique.height) / 2;
+                return [`M${left},${center - lineGap}H${right}`, `M${left},${center}H${right}`, `M${left},${center + lineGap}H${right}`].join(' ');
+            })
+            .attr('fill', 'none')
+            .attr('stroke', function (technique: RenderableTechnique) {
+                return technique.highlighted ? '#ffffff' : '#66c7ec';
+            })
+            .attr('stroke-width', Math.max(0.6, Math.min(2.4, baseCellHeight * 0.12)))
+            .attr('stroke-linecap', 'round')
+            .attr('pointer-events', 'none');
+
         // -----------------------------------------------------------------------------
         // CELL TEXT
         // -----------------------------------------------------------------------------
 
-        // track smallest optimal font size
+        // Determine one shared technique font size without relying on SVG text
+        // wrapping. The stored line arrays are the complete text layout.
         let minFontSize = Infinity;
+        const configuredFontSize = Number(self.config.fontSize) || 10;
+        const measureCellText = function (text: string, fontSize: number): number {
+            measureContext.font = `${fontSize}px ${self.config.font}`;
+            return measureContext.measureText(text).width;
+        };
 
-        // set technique font size
-        techniqueGroups
-            .append('text')
-            .text(function (technique: RenderableTechnique) {
-                return technique.text;
-            })
-            .attr('font-size', function (technique: RenderableTechnique) {
-                const fontSize = self.optimalFontSize(this, technique.text, xRange.bandwidth(), yRange(1), false);
-                if (fontSize < minFontSize) minFontSize = fontSize;
-                return fontSize;
-            })
-            .attr('fill', function (technique: RenderableTechnique) {
-                if (technique.textColor !== null) {
-                    return technique.textColor;
-                } else {
-                    if (self.config.theme === 'light') {
-                        return '#000000';
-                    } else {
-                        return '#ffffff';
-                    }
-                }
-            })
-            .each(function () {
-                self.verticalAlignCenter(this);
-            });
+        visibleTechniqueGroups.each(function (technique: RenderableTechnique) {
+            const textWidth = xRange.bandwidth() * technique.columnSpan - (self.shouldRenderSubtechniqueMarker(technique) ? 20 : 0);
+            minFontSize = Math.min(
+                minFontSize,
+                self.cellFontSize(technique.lines, textWidth, yRange(technique.height), configuredFontSize, measureCellText)
+            );
+        });
+        subtechniqueGroups.each(function (subtechnique: RenderableTechnique) {
+            minFontSize = Math.min(
+                minFontSize,
+                self.cellFontSize(
+                    subtechnique.lines,
+                    xRange.bandwidth() - subtechniqueIndent,
+                    yRange(subtechnique.height),
+                    configuredFontSize,
+                    measureCellText
+                )
+            );
+        });
 
-        // set sub-technique font size
-        subtechniqueGroups
-            .append('text')
-            .text(function (subtechnique: RenderableTechnique) {
-                return subtechnique.text;
-            })
-            .attr('font-size', function (subtechnique: RenderableTechnique) {
-                const fontSize = self.optimalFontSize(this, subtechnique.text, xRange.bandwidth() - subtechniqueIndent, yRange(1), false);
-                if (fontSize < minFontSize) minFontSize = fontSize;
-                return fontSize;
-            })
-            .attr('fill', function (subtechnique: RenderableTechnique) {
-                if (subtechnique.textColor !== null) {
-                    return subtechnique.textColor;
-                } else {
-                    if (self.config.theme === 'light') {
-                        return '#000000';
-                    } else {
-                        return '#ffffff';
-                    }
-                }
-            })
-            .each(function () {
-                self.verticalAlignCenter(this);
-            });
-
-        // set technique and sub-technique groups to the same font size
+        if (!Number.isFinite(minFontSize)) minFontSize = configuredFontSize;
         this.config.maxTextSize = minFontSize;
-        if (this.config.autofitText) {
-            this.config.fontSize = minFontSize.toFixed(2);
-        }
-        if (this.config.autofitText) {
-            techniqueGroups.select('text').attr('font-size', minFontSize);
-            subtechniqueGroups.select('text').attr('font-size', minFontSize);
-        } else {
-            techniqueGroups.select('text').attr('font-size', this.config.fontSize);
-            subtechniqueGroups.select('text').attr('font-size', this.config.fontSize);
-        }
+        const renderedFontSize = this.config.autofitText ? minFontSize : configuredFontSize;
 
-        // track the smallest optimal font size for tactics
-        let minTacticFontSize = Infinity;
+        const appendExplicitCellText = function (
+            groups: any,
+            widthFor: (technique: RenderableTechnique) => number,
+            reserveSubtechniqueMarker: boolean = false
+        ): void {
+            groups
+                .append('svg')
+                .attr('class', 'cell-text-viewport')
+                .attr('width', widthFor)
+                .attr('height', function (technique: RenderableTechnique) {
+                    return yRange(technique.height);
+                })
+                .attr('overflow', 'hidden')
+                .style('overflow', 'hidden')
+                .attr('pointer-events', 'none')
+                .each(function (technique: RenderableTechnique) {
+                    const viewport = d3.select(this);
+                    const viewportWidth = widthFor(technique);
+                    const markerWidth = reserveSubtechniqueMarker && self.shouldRenderSubtechniqueMarker(technique) ? 20 : 0;
+                    const availableWidth = Math.max(viewportWidth - 8 - markerWidth, 1);
+                    const linePositions = self.cellTextLinePositions(yRange(technique.height), technique.lines.length, renderedFontSize);
+                    const textColor = technique.textColor !== null ? technique.textColor : self.config.theme === 'light' ? '#000000' : '#ffffff';
 
-        // set tactic font size
+                    viewport
+                        .selectAll('text')
+                        .data(technique.lines.map((line, index) => ({ line, index })))
+                        .enter()
+                        .append('text')
+                        .attr('class', 'cell-text-line')
+                        .attr('data-line-index', function (line) {
+                            return line.index;
+                        })
+                        .attr('x', technique.columnSpan > 1 ? viewportWidth / 2 : 4)
+                        .attr('y', function (line) {
+                            return linePositions[line.index];
+                        })
+                        .attr('font-size', renderedFontSize)
+                        .attr('fill', textColor)
+                        .attr('dominant-baseline', 'middle')
+                        .attr('text-anchor', technique.columnSpan > 1 ? 'middle' : 'start')
+                        .attr('lengthAdjust', 'spacingAndGlyphs')
+                        .attr('textLength', function (line) {
+                            const measuredWidth = measureCellText(line.line, renderedFontSize);
+                            return measuredWidth > 0 ? Math.min(measuredWidth, availableWidth) : null;
+                        })
+                        .text(function (line) {
+                            return line.line;
+                        });
+                });
+        };
+
+        appendExplicitCellText(
+            visibleTechniqueGroups,
+            function (technique: RenderableTechnique) {
+                return xRange.bandwidth() * technique.columnSpan;
+            },
+            true
+        );
+        appendExplicitCellText(subtechniqueGroups, function () {
+            return xRange.bandwidth() - subtechniqueIndent;
+        });
+
+        // Render every tactic name on one line at the generator's default
+        // height. Arial Narrow is used first, then compressed horizontally
+        // only as much as needed to fit inside the header margins.
+        const tacticNameFontSize = (Number(self.config.fontSize) || 18) + 1;
+        const tacticHeaderLayout = self.tacticHeaderTextLayout(tacticHeaderHeight, tacticNameFontSize, 1);
         let tacticLabels = tacticGroups.append('g').attr('class', 'tactic-label');
         tacticLabels
             .append('text')
+            .attr('class', 'tactic-name')
+            .attr('font-family', self.config.font)
+            .attr('font-stretch', 'condensed')
             .text(function (tactic: RenderableTactic) {
-                return tactic.tactic.name;
+                return tactic.tactic.name.toUpperCase();
             })
-            .attr('font-size', function (tactic: RenderableTactic) {
-                const fontSize = self.optimalFontSize(this, tactic.tactic.name, xRange.bandwidth(), yRange(1), true);
-                if (fontSize < minTacticFontSize) minTacticFontSize = fontSize;
-                return fontSize;
-            })
-            .attr('fill', function (tactic: RenderableTactic) {
-                if (self.viewModel.showTacticRowBackground) return tinycolor.mostReadable(self.viewModel.tacticRowBackground, ['white', 'black']);
-                else return self.config.theme === 'light' ? 'black' : 'white';
+            .attr('x', xRange.bandwidth() / 2)
+            .attr('y', tacticHeaderLayout.firstNameY)
+            .attr('font-size', tacticNameFontSize)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .attr('fill', function () {
+                const background = self.viewModel.showTacticRowBackground
+                    ? self.viewModel.tacticRowBackground
+                    : self.config.theme === 'light'
+                      ? '#263746'
+                      : '#1d2935';
+                return tinycolor.mostReadable(background, ['white', 'black']).toString();
             })
             .attr('font-weight', 'bold')
-            .each(function () {
-                self.verticalAlignCenter(this);
+            .attr('transform', function (tactic: RenderableTactic) {
+                measureContext.font = `700 ${tacticNameFontSize}px ${self.config.font}`;
+                const horizontalScale = self.tacticNameHorizontalScale(
+                    measureContext.measureText(tactic.tactic.name.toUpperCase()).width,
+                    xRange.bandwidth() - 20
+                );
+                const center = xRange.bandwidth() / 2;
+                d3.select(this).attr('data-horizontal-scale', horizontalScale);
+                return `translate(${center} 0) scale(${horizontalScale} 1) translate(${-center} 0)`;
             });
 
-        // set tactic labels to same font size
-        tacticLabels.select('text').attr('font-size', minTacticFontSize);
+        tacticLabels
+            .append('text')
+            .attr('class', 'tactic-technique-count')
+            .text(function (tactic: RenderableTactic) {
+                return `${tactic.techniqueCount} techniques`;
+            })
+            .attr('x', xRange.bandwidth() / 2)
+            .attr('y', tacticHeaderLayout.countY)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .attr('font-size', tacticHeaderLayout.countFontSize)
+            .attr('fill', function () {
+                const background = self.viewModel.showTacticRowBackground
+                    ? self.viewModel.tacticRowBackground
+                    : self.config.theme === 'light'
+                      ? '#263746'
+                      : '#1d2935';
+                return tinycolor.mostReadable(background, ['white', 'black']).toString();
+            });
 
         // -----------------------------------------------------------------------------
         // UNDOCKED LEGEND
@@ -587,6 +761,20 @@ export class SvgExportComponent implements OnInit {
 
             let legendGroup = datatable.append('g').attr('transform', `translate(${legendX}, ${legendY})`);
             self.buildHeaderSection(this, legendGroup, legendSection, legendWidth, legendHeight);
+        }
+
+        if (self.config.showCopyright) {
+            svg.append('text')
+                .attr('class', 'copyright-line')
+                .attr('data-copyright', 'true')
+                .attr('x', width / 2)
+                .attr('y', matrixHeight + copyrightFooterHeight)
+                .attr('fill', self.config.theme === 'light' ? '#4b5863' : '#ffffff')
+                .attr('font-size', Math.max((Number(self.config.fontSize) || 10) - 1, 8))
+                .attr('font-weight', 400)
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .text(self.copyrightLine(domain.version.number));
         }
     }
 
@@ -727,6 +915,29 @@ export class SvgExportComponent implements OnInit {
         };
     }
 
+    /** Add the collapsed-parent marker and its meaning to the export legend. */
+    private buildSubtechniqueLegend(): Function {
+        return function (_self, group) {
+            const legendGroup = group.append('g').attr('class', 'subtechnique-marker-legend').attr('transform', 'translate(2, 5)');
+
+            legendGroup
+                .append('path')
+                .attr('d', 'M0,2H12 M0,6H12 M0,10H12')
+                .attr('fill', 'none')
+                .attr('stroke', '#66c7ec')
+                .attr('stroke-width', 2)
+                .attr('stroke-linecap', 'round');
+
+            legendGroup
+                .append('text')
+                .text('has sub-techniques')
+                .attr('x', 18)
+                .attr('y', 6)
+                .attr('font-size', 12)
+                .attr('dominant-baseline', 'middle');
+        };
+    }
+
     /** Callback function to build the gradient section */
     private buildGradient(): Function {
         return function (self, group, width) {
@@ -778,11 +989,83 @@ export class SvgExportComponent implements OnInit {
             large: { portrait: [24, 36], landscape: [36, 24] },
         };
 
-        if (size !== 'custom') {
+        if (size !== 'custom' && size !== 'matrix') {
             const [w, h] = ratioMap[size][orientation];
             self.config.width = w;
             self.config.height = h;
         }
+    }
+
+    /** Size a matrix so every tactic is 220 px wide and every line unit is 30 px high. */
+    private matrixCanvasSize(tacticCount: number, maxTacticHeight: number, headerHeight: number, footerHeight: number = 0) {
+        return {
+            width: 2 * this.matrixMargin + Math.max(tacticCount, 1) * this.matrixColumnWidth,
+            height: 2 * this.matrixMargin + headerHeight + Math.max(maxTacticHeight, 1) * this.matrixCellHeight + Math.max(footerHeight, 0),
+        };
+    }
+
+    /** Match the matrix generator's copyright wording using Navigator's active ATT&CK version. */
+    private copyrightLine(attackVersion: string, currentDate: Date = new Date()): string {
+        const year = currentDate.getFullYear();
+        const versionLabel = String(attackVersion).replace(/^v/i, '');
+        return `© ${year} MITRE - MITRE ATT&CK Framework version v${versionLabel}`;
+    }
+
+    /** Convert pixels back into the measurement unit selected by the user. */
+    private fromPx(quantity: number, unit: string): number {
+        return quantity / this.toPx(1, unit);
+    }
+
+    /** Match the standalone generator's tactic-name and count baselines. */
+    private tacticHeaderTextLayout(headerHeight: number, nameFontSize: number, lineCount: number) {
+        const lineHeight = nameFontSize + 4;
+        const blockHeight = lineCount * lineHeight + 16;
+        const firstNameY = (headerHeight - blockHeight) / 2 + lineHeight / 2;
+        return {
+            lineHeight,
+            firstNameY,
+            countY: firstNameY + lineCount * lineHeight + 2,
+            countFontSize: Math.max(nameFontSize - 2, 3),
+        };
+    }
+
+    /** Keep tactic names on one line without changing their font height. */
+    private tacticNameHorizontalScale(textWidth: number, availableWidth: number): number {
+        if (textWidth <= 0) return 0.94;
+        return Math.min(0.94, Math.max(availableWidth, 1) / textWidth);
+    }
+
+    /** Whether a collapsed parent should reserve space for and render its marker. */
+    private shouldRenderSubtechniqueMarker(technique: RenderableTechnique): boolean {
+        return this.config.showSubtechniqueMarker && technique.showSubtechniqueMarker;
+    }
+
+    /** Calculate a font size for an explicit set of cell-text lines. */
+    private cellFontSize(
+        lines: string[],
+        width: number,
+        height: number,
+        maxFontSize: number,
+        measureText: (text: string, fontSize: number) => number
+    ): number {
+        const padding = this.config.autofitText ? 4 : 1;
+        const availableWidth = Math.max(width - 2 * padding, 1);
+        const lineCount = Math.max(lines.length, 1);
+        let fontSize = Math.min(maxFontSize, Math.max(height / lineCount - 8, 1));
+
+        for (let line of lines) {
+            const measuredWidth = measureText(line, maxFontSize);
+            if (measuredWidth > availableWidth) fontSize = Math.min(fontSize, (maxFontSize * availableWidth) / measuredWidth);
+        }
+        return fontSize;
+    }
+
+    /** Return explicit vertical centers for independently rendered text lines. */
+    private cellTextLinePositions(height: number, lineCount: number, fontSize: number): number[] {
+        const count = Math.max(lineCount, 1);
+        const lineHeight = Math.min(fontSize + 4, height / count);
+        const firstLineY = (height - count * lineHeight) / 2 + lineHeight / 2;
+        return Array.from({ length: count }, (_, index) => firstLineY + index * lineHeight);
     }
 
     /**
@@ -975,33 +1258,219 @@ export class SvgExportComponent implements OnInit {
         return quantity * factor;
     }
 
-    /** Download the SVG */
+    /** Download the SVG. */
     public downloadSVG(): void {
-        // get SVG element
-        let svgElement = document.getElementById('svg' + this.viewModel.uid);
-        svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        const svgElement = this.getSvgElement();
+        const svgBlob = new Blob([this.serializeSvg(svgElement, true)], { type: 'image/svg+xml;charset=utf-8' });
+        this.downloadBlob(svgBlob, this.exportFilename('svg'));
+        this.currentDropdown = null;
+    }
 
-        // generate filename
-        let filename = this.viewModel.name.split(' ').join('_');
-        // remove all non alphanumeric characters
-        filename = filename.replace(/\W/g, '') + '.svg';
+    /** Rasterize the current SVG in the browser and download it as a PNG. */
+    public async downloadPNG(scale: number = 1): Promise<void> {
+        await this.runExport(async () => {
+            const svgElement = this.getSvgElement();
+            const { width, height } = this.getSvgDimensions(svgElement);
+            const outputScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.ceil(width * outputScale);
+            canvas.height = Math.ceil(height * outputScale);
 
-        // build SVG blob
-        const preface = '<?xml version="1.0" standalone="no"?>\r\n';
-        const svgData = new XMLSerializer().serializeToString(svgElement);
-        const svgBlob = new Blob([preface, svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const context = canvas.getContext('2d');
+            if (!context) throw new Error('This browser does not support canvas image export.');
 
-        // download
+            const svgBlob = new Blob([this.serializeSvg(svgElement)], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+            try {
+                const image = await this.loadImage(svgUrl);
+                context.setTransform(outputScale, 0, 0, outputScale, 0, 0);
+                context.drawImage(image, 0, 0, width, height);
+                const pngBlob = await this.canvasToBlob(canvas, 'image/png');
+                this.downloadBlob(pngBlob, this.exportFilename('png'));
+            } finally {
+                URL.revokeObjectURL(svgUrl);
+            }
+        });
+    }
+
+    /** Convert the current SVG directly to a vector PDF in the browser. */
+    public async downloadPDF(): Promise<void> {
+        await this.runExport(async () => {
+            // Keep the PDF dependencies out of Navigator's initial bundle.
+            const { jsPDF } = await import('jspdf');
+            await import('svg2pdf.js');
+
+            const svgElement = this.getSvgElement();
+            const { width, height } = this.getSvgDimensions(svgElement);
+            const pdf = new jsPDF({
+                orientation: width >= height ? 'landscape' : 'portrait',
+                unit: 'px',
+                format: [width, height],
+                hotfixes: ['px_scaling'],
+                putOnlyUsedFonts: true,
+                compress: true,
+            });
+
+            await this.registerPdfFonts(pdf);
+            const pdfSvg = this.svgWithPdfFont(svgElement);
+            await pdf.svg(pdfSvg, { x: 0, y: 0, width, height });
+            this.downloadBlob(pdf.output('blob'), this.exportFilename('pdf'));
+        });
+    }
+
+    private getSvgElement(): SVGSVGElement {
+        const svgElement = document.getElementById('svg' + this.viewModel.uid);
+        if (!(svgElement instanceof SVGSVGElement)) throw new Error('The rendered matrix SVG is not available.');
+        return svgElement;
+    }
+
+    private getSvgDimensions(svgElement: SVGSVGElement): { width: number; height: number } {
+        const viewBox = svgElement.viewBox.baseVal;
+        const width = viewBox && viewBox.width > 0 ? viewBox.width : svgElement.width.baseVal.value || Number(svgElement.getAttribute('width'));
+        const height = viewBox && viewBox.height > 0 ? viewBox.height : svgElement.height.baseVal.value || Number(svgElement.getAttribute('height'));
+        if (!(width > 0 && height > 0)) throw new Error('The rendered matrix has invalid dimensions.');
+        return { width, height };
+    }
+
+    private serializeSvg(svgElement: SVGSVGElement, includeXmlDeclaration: boolean = false): string {
+        const clone = svgElement.cloneNode(true) as SVGSVGElement;
+        const { width, height } = this.getSvgDimensions(svgElement);
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+        clone.setAttribute('width', String(width));
+        clone.setAttribute('height', String(height));
+        if (!clone.hasAttribute('viewBox')) clone.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        const serialized = new XMLSerializer().serializeToString(clone);
+        return includeXmlDeclaration ? `<?xml version="1.0" standalone="no"?>\r\n${serialized}` : serialized;
+    }
+
+    private svgWithPdfFont(svgElement: SVGSVGElement): SVGSVGElement {
+        const clone = svgElement.cloneNode(true) as SVGSVGElement;
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.querySelectorAll<SVGTextElement>('text, tspan').forEach((textElement) => {
+            textElement.setAttribute('font-family', this.pdfFontFamily);
+            textElement.style.fontFamily = this.pdfFontFamily;
+
+            // svg2pdf.js reads alignment-baseline but not dominant-baseline.
+            // Copy the value so text that is centered in an SVG cell remains
+            // vertically centered in the vector PDF.
+            const dominantBaseline = textElement.getAttribute('dominant-baseline');
+            if (dominantBaseline && !textElement.hasAttribute('alignment-baseline')) {
+                textElement.setAttribute('alignment-baseline', dominantBaseline);
+            }
+        });
+
+        // svg2pdf.js composes a compound transform differently from browsers,
+        // which shifts horizontally compressed tactic names off center. Use a
+        // single scale and compensate the x coordinate so the transformed text
+        // anchor remains at the cell center. This preserves true glyph scaling
+        // and is applied only to the PDF clone, leaving SVG and PNG unchanged.
+        clone.querySelectorAll<SVGTextElement>('text.tactic-name').forEach((textElement) => {
+            const center = Number(textElement.getAttribute('x'));
+            const horizontalScale = Number(textElement.getAttribute('data-horizontal-scale'));
+            if (!Number.isFinite(center) || !Number.isFinite(horizontalScale) || horizontalScale <= 0) return;
+
+            textElement.setAttribute('x', String(center / horizontalScale));
+            textElement.setAttribute('transform', `scale(${horizontalScale} 1)`);
+        });
+        return clone;
+    }
+
+    private async registerPdfFonts(pdf: any): Promise<void> {
+        const regularFilename = 'RobotoCondensed-Regular.ttf';
+        const boldFilename = 'RobotoCondensed-Bold.ttf';
+        const baseUrl = new URL(`${this.pdfFontPath}/`, document.baseURI);
+        const [regular, bold] = await Promise.all([
+            this.fetchFont(new URL(regularFilename, baseUrl)),
+            this.fetchFont(new URL(boldFilename, baseUrl)),
+        ]);
+
+        pdf.addFileToVFS(regularFilename, this.arrayBufferToBase64(regular));
+        pdf.addFont(regularFilename, this.pdfFontFamily, 'normal', 400);
+        pdf.addFileToVFS(boldFilename, this.arrayBufferToBase64(bold));
+        pdf.addFont(boldFilename, this.pdfFontFamily, 'normal', 700);
+        await this.registerPdfBrowserFonts(regular, bold);
+    }
+
+    /** Use the embedded PDF fonts for svg2pdf's browser-side text measurement. */
+    private async registerPdfBrowserFonts(regular: ArrayBuffer, bold: ArrayBuffer): Promise<void> {
+        if (!this.pdfBrowserFontsReady) {
+            const fontFaces = [
+                new FontFace(this.pdfFontFamily, regular.slice(0), { weight: '400' }),
+                new FontFace(this.pdfFontFamily, bold.slice(0), { weight: '700' }),
+            ];
+            this.pdfBrowserFontsReady = Promise.all(fontFaces.map((fontFace) => fontFace.load())).then((loadedFonts) => {
+                loadedFonts.forEach((fontFace) => (document.fonts as any).add(fontFace));
+            });
+        }
+        await this.pdfBrowserFontsReady;
+    }
+
+    private async fetchFont(url: URL): Promise<ArrayBuffer> {
+        const response = await fetch(url.toString());
+        if (!response.ok) throw new Error(`Unable to load the bundled PDF font (${response.status}).`);
+        return response.arrayBuffer();
+    }
+
+    private arrayBufferToBase64(buffer: ArrayBuffer): string {
+        const bytes = new Uint8Array(buffer);
+        const chunkSize = 0x8000;
+        let binary = '';
+        for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+            binary += String.fromCharCode(...bytes.subarray(offset, Math.min(offset + chunkSize, bytes.length)));
+        }
+        return btoa(binary);
+    }
+
+    private loadImage(url: string): Promise<HTMLImageElement> {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => resolve(image);
+            image.onerror = () => reject(new Error('The browser could not rasterize the rendered matrix.'));
+            image.src = url;
+        });
+    }
+
+    private canvasToBlob(canvas: HTMLCanvasElement, type: string): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('The browser could not encode the image.'))), type);
+        });
+    }
+
+    private exportFilename(extension: 'svg' | 'png' | 'pdf'): string {
+        const basename = this.viewModel.name.split(' ').join('_').replace(/\W/g, '') || 'attack_navigator_layer';
+        return `${basename}.${extension}`;
+    }
+
+    private downloadBlob(blob: Blob, filename: string): void {
         if (this.isIE) {
             const nav = window.navigator as any;
-            nav.msSaveOrOpenBlob(svgBlob, filename);
-        } else {
-            const downloadLink = document.createElement('a');
-            downloadLink.download = filename;
-            downloadLink.href = URL.createObjectURL(svgBlob);
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+            nav.msSaveOrOpenBlob(blob, filename);
+            return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.download = filename;
+        downloadLink.href = url;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
+
+    private async runExport(operation: () => Promise<void>): Promise<void> {
+        if (this.exportInProgress) return;
+        this.exportInProgress = true;
+        this.exportError = '';
+        try {
+            await operation();
+            this.currentDropdown = null;
+        } catch (error) {
+            console.error('Image export failed', error);
+            this.exportError = error instanceof Error ? error.message : 'Image export failed.';
+        } finally {
+            this.exportInProgress = false;
         }
     }
 }

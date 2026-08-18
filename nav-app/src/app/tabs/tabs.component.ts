@@ -4,7 +4,7 @@ import { Tab, Domain, Version, ViewModel } from '../classes';
 import { ConfigService } from '../services/config.service';
 import { VersionUpgradeComponent } from '../version-upgrade/version-upgrade.component';
 import { HelpComponent } from '../help/help.component';
-import { SvgExportComponent } from '../svg-export/svg-export.component';
+import { ImageExportComponent } from '../image-export/image-export.component';
 import { ViewModelsService } from '../services/viewmodels.service';
 import { MatDialog, MatDialogTitle, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -368,11 +368,11 @@ export class TabsComponent implements AfterViewInit {
     }
 
     /**
-     * Open the SVG exporter dialog
+     * Open the image exporter dialog
      * @param {ViewModel} viewModel the viewModel to render
      */
-    public openSVGDialog(viewModel: ViewModel) {
-        this.dialog.open(SvgExportComponent, {
+    public openImageExportDialog(viewModel: ViewModel) {
+        this.dialog.open(ImageExportComponent, {
             data: { vm: viewModel },
             panelClass: ['dialog-custom', this.userTheme],
             autoFocus: false,

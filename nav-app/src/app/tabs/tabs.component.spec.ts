@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 import { ChangelogComponent } from '../changelog/changelog.component';
 import { HelpComponent } from '../help/help.component';
 import { LayerInformationComponent } from '../layer-information/layer-information.component';
-import { SvgExportComponent } from '../svg-export/svg-export.component';
+import { ImageExportComponent } from '../image-export/image-export.component';
 import { Technique } from '../classes/stix';
 
 describe('TabsComponent', () => {
@@ -459,17 +459,17 @@ describe('TabsComponent', () => {
             expect(openDialogSpy).toHaveBeenCalledWith(ChangelogComponent, settings);
         });
 
-        it('should open the SVG exporter dialog', () => {
+        it('should open the image exporter dialog', () => {
             const openDialogSpy = spyOn(component.dialog, 'open');
             let viewModel = new ViewModel('layer', '1', 'enterprise-attack-13', null);
 
-            component.openSVGDialog(viewModel);
+            component.openImageExportDialog(viewModel);
             const settings = {
                 data: { vm: viewModel },
                 panelClass: ['dialog-custom', component.userTheme],
                 autoFocus: false,
             };
-            expect(openDialogSpy).toHaveBeenCalledWith(SvgExportComponent, settings);
+            expect(openDialogSpy).toHaveBeenCalledWith(ImageExportComponent, settings);
         });
 
         it('should create new layer from url', waitForAsync(() => {

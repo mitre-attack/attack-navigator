@@ -722,7 +722,7 @@ export class DataTableComponent implements AfterViewInit, OnDestroy {
      * Open an export layer render tab for the current layer
      */
     public exportRender(): void {
-        this.tabs.openSVGDialog(this.viewModel);
+        this.tabs.openImageExportDialog(this.viewModel);
     }
 
     /**

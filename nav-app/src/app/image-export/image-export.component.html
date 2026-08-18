@@ -57,6 +57,7 @@
                                 <mat-form-field>
                                     <mat-label>size</mat-label>
                                     <mat-select matSelect [(ngModel)]="config.size" (selectionChange)="buildSVG()">
+                                        <mat-option value="matrix">Fit matrix</mat-option>
                                         <mat-option value="custom">Custom</mat-option>
                                         <mat-option value="letter">US Letter: 8.5x11</mat-option>
                                         <mat-option value="legal">US Legal: 8.5x14</mat-option>
@@ -126,6 +127,9 @@
                                 <mat-form-field>
                                     <mat-label>font</mat-label>
                                     <mat-select [(ngModel)]="config.font" (selectionChange)="buildSVG()">
+                                        <mat-option value="Arial Narrow, Aptos Narrow, Roboto Condensed, Liberation Sans Narrow, sans-serif">
+                                            narrow sans-serif
+                                        </mat-option>
                                         <mat-option value="serif">serif</mat-option>
                                         <mat-option value="sans-serif">sans-serif</mat-option>
                                         <mat-option value="monospace">monospace</mat-option>
@@ -261,6 +265,15 @@
                             </li>
                             <li>
                                 <input
+                                    [id]="uid + 'checkboxCopyright'"
+                                    type="checkbox"
+                                    class="checkbox-custom"
+                                    [(ngModel)]="config.showCopyright"
+                                    (change)="buildSVG()" />
+                                <label [for]="uid + 'checkboxCopyright'" class="checkbox-custom-label noselect">show copyright</label>
+                            </li>
+                            <li>
+                                <input
                                     [id]="uid + 'checkboxAbout'"
                                     type="checkbox"
                                     [disabled]="(!hasName && !hasDescription) || !config.showHeader"
@@ -325,6 +338,28 @@
                                     show gradient score
                                 </label>
                             </li>
+                            <li>
+                                <input
+                                    [id]="uid + 'checkboxSpanAdjacentTechniques'"
+                                    type="checkbox"
+                                    class="checkbox-custom"
+                                    [(ngModel)]="config.spanAdjacentTechniques"
+                                    (change)="buildSVG()" />
+                                <label [for]="uid + 'checkboxSpanAdjacentTechniques'" class="checkbox-custom-label noselect">
+                                    join identical techniques across tactics
+                                </label>
+                            </li>
+                            <li *ngIf="configService.getFeature('subtechniques')">
+                                <input
+                                    [id]="uid + 'checkboxSubtechniqueMarker'"
+                                    type="checkbox"
+                                    class="checkbox-custom"
+                                    [(ngModel)]="config.showSubtechniqueMarker"
+                                    (change)="buildSVG()" />
+                                <label [for]="uid + 'checkboxSubtechniqueMarker'" class="checkbox-custom-label noselect">
+                                    show has sub-techniques icon
+                                </label>
+                            </li>
                             <li *ngIf="configService.getFeature('subtechniques')" style="padding: 0 5px">
                                 <mat-form-field>
                                     <mat-label>sub-techniques</mat-label>
@@ -357,16 +392,28 @@
             <li>
                 <div class="control-row-item">
                     <div
-                        class="control-row-button noselect"
+                        class="control-row-button dropdown noselect"
                         [id]="'download-button' + viewModel.uid"
-                        (click)="downloadSVG()"
+                        (click)="currentDropdown = currentDropdown !== 'export' ? 'export' : null"
                         matTooltipPosition="below"
-                        matTooltip="download SVG">
+                        matTooltip="download image">
                         <span class="material-icons" alt="save layer">file_download</span>
+                    </div>
+                    <div class="dropdown-container export left" *ngIf="currentDropdown === 'export'">
+                        <ul>
+                            <li><button mat-button [disabled]="exportInProgress" (click)="downloadSVG()">SVG</button></li>
+                            <li><button mat-button [disabled]="exportInProgress" (click)="downloadPNG()">PNG</button></li>
+                            <li><button mat-button [disabled]="exportInProgress" (click)="downloadPDF()">PDF</button></li>
+                        </ul>
                     </div>
                 </div>
             </li>
         </ul>
+    </div>
+
+    <div class="warning export-error" *ngIf="exportError">
+        <span class="material-icons" alt="warning">warning</span>
+        <label class="warning-label">{{ exportError }}</label>
     </div>
 
     <div [ngClass]="[config.theme === 'light' ? 'svgcontainer' : 'svgcontainer dark-mode']" [id]="'svgInsert' + viewModel.uid">loading...</div>
