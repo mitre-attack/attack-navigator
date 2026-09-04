@@ -29,7 +29,7 @@
     "@angular/router": "^19.2.20",
     "@babel/runtime": "^7.29.2",
     "@fontsource/roboto": "^5.2.8",
-    "@fontsource/roboto-mono": "^5.2.8",
+    "@fontsource/roboto-mono": "^5.3.0",
     "@types/file-saver": "^2.0.1",
     "classlist.js": "^1.1.20150312",
     "core-js": "^3.48.0",
