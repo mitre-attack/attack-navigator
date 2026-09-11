@@ -47,7 +47,7 @@
     "tinycolor2": "^1.6.0",
     "tinygradient": "^2.0.1",
     "tslib": "^2.5.0",
-    "zone.js": "~0.15.1"
+    "zone.js": "~0.16.2"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^19.0.1",
