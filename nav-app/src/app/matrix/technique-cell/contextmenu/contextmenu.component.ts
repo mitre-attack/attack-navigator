@@ -28,6 +28,15 @@ export class ContextmenuComponent extends CellPopover implements OnInit {
         return this.techniqueVM.links;
     }
 
+    /**
+     * Custom context menu items configured in assets/config.json, filtered down to
+     * the ones applicable to the technique/tactic this menu was opened on (see
+     * ContextMenuItem#appliesTo and the optional limit_techniques config field).
+     */
+    public get applicableContextMenuItems(): ContextMenuItem[] {
+        return this.configService.contextMenuItems.filter((item) => item.appliesTo(this.technique, this.tactic));
+    }
+
     constructor(
         private element: ElementRef,
         public configService: ConfigService,
