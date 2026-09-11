@@ -5,7 +5,9 @@
          npm version major
          npm version minor
          npm version patch
+
     This will patch the version number appropriately and create the correct tag on the current commit.
+    Pushing a stable vX.Y.Z tag triggers the GitHub Release, GitHub Pages deployment, and Docker image publish workflows.
     The creation of the tag can be disabled with the --no-git-tag-version if desired.
 -->
 # 5.3.2 - 21 April 2026

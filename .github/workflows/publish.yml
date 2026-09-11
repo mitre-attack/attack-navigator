@@ -2,9 +2,6 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    branches:
-      - 'master'
-      - 'develop'
     tags:
       - 'v*.*.*'
 
@@ -12,6 +9,10 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate release tag
+        run: |
+          [[ "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set Docker Image and Tags
@@ -21,10 +22,8 @@ jobs:
           images: |
             ghcr.io/mitre-attack/attack-navigator
           tags: |
-            # set latest tag for master branch
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
-            # set develop tag for develop branch
-            type=ref,event=branch,enable=${{ github.ref == format('refs/heads/{0}', 'develop') }}
+            # set latest tag on release tag event
+            type=raw,value=latest
             # set semver tag (vX.Y.Z) on git tag event
             type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
             # set git short commit as Docker tag (e.g., sha-ad132f5)
