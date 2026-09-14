@@ -34,8 +34,6 @@ the result. See `layer.spec.ts` for an example.
 
 ## Docker
 
-Previously validated on Linux amd64 with `--shm-size=1g`.
-
 Run from the repository root:
 
 ```sh

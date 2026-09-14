@@ -1,6 +1,7 @@
 FROM node:22.22.2-bookworm
 
 WORKDIR /app/nav-app
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 COPY nav-app/package.json nav-app/package-lock.json ./
 RUN npm ci --ignore-scripts
 RUN --mount=type=secret,id=extra_ca \
@@ -13,5 +14,8 @@ COPY nav-app/e2e ./e2e
 COPY layers /app/layers
 COPY *.md /app/
 RUN npm run build -- --configuration production --aot=false
+
+RUN mkdir -p tmp && chown node:node tmp
+USER node
 
 CMD ["npm", "run", "test:e2e"]
