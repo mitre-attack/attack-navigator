@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import config from '../src/assets/config.json';
 import { configData, matrixSDO, TA0000, T0001, T0003 } from '../src/tests/utils/mock-data';
 
-test('create, score, rename, and export an Enterprise layer', async ({ page }, testInfo) => {
+test('create, score, rename, and export an Enterprise layer', { tag: '@smoke' }, async ({ page }, testInfo) => {
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
 
@@ -18,6 +18,7 @@ test('create, score, rename, and export an Enterprise layer', async ({ page }, t
             objects: [matrixSDO, TA0000, { ...T0001, name: 'Smoke technique' }, { ...T0003, name: 'Untouched technique' }],
         },
     }));
+    // Avoid an external font dependency; assertions use text and attributes, not icon appearance.
     await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ body: '', contentType: 'text/css' }));
 
     await page.goto('/');

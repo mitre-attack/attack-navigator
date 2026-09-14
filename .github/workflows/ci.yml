@@ -36,15 +36,15 @@ jobs:
     - name: Install Chromium
       run: ./node_modules/.bin/playwright install --with-deps chromium --only-shell
 
-    - name: Run smoke test
-      run: npm run test:smoke
+    - name: Run E2E tests
+      run: npm run test:e2e
 
-    - name: Upload smoke test results
+    - name: Upload E2E test results
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: smoke-test-results
-        path: nav-app/test-results/
+        name: e2e-test-results
+        path: nav-app/tmp/playwright/test-results/
         retention-days: 7
 
     - name: Archive code coverage results

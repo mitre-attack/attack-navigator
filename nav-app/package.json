@@ -12,7 +12,7 @@
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
-    "test:smoke": "playwright test",
+    "test:e2e": "playwright test",
     "lint": "ng lint",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write"
