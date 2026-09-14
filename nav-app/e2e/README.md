@@ -23,10 +23,8 @@ build on PRs targeting `develop` or `master`, and on pushes to `develop`. Failed
 
 Tag smoke tests with `{ tag: '@smoke' }`; run only those with `npm run test:e2e -- --grep @smoke`.
 
-Add Playwright tests as `*.spec.ts` files in this directory. The existing
-Protractor `*.e2e-spec.ts` files are excluded from Playwright runs (removal planned
-soon). Keep scenario details in test names and comments; this README covers the
-shared setup.
+Add Playwright tests as `*.spec.ts` files in this directory.
+Protractor `*.e2e-spec.ts` files are excluded from Playwright runs.
 
 For tests that do not check font rendering, stub remote font stylesheet requests
 with an empty CSS response so external font-service availability cannot affect
@@ -61,4 +59,4 @@ docker build --secret "id=extra_ca,src=$CA_BUNDLE" -f nav-app/e2e/Dockerfile -t 
 ```
 
 The optional build secret sets `NODE_EXTRA_CA_CERTS` only for browser installation.
-The bundle is not stored in the image, and TLS verification remains enabled.
+The bundle is not stored in the image, and TLS verification is enabled.
