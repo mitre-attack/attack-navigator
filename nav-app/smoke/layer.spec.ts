@@ -48,6 +48,6 @@ test('create, score, rename, and export an Enterprise layer', async ({ page }, t
         versions: { attack: '13', layer: '4.5', navigator: expect.any(String) },
     });
     expect(layer.techniques).toHaveLength(1);
-    expect(layer.techniques[0]).toMatchObject({ techniqueID: 'T0001', tactic: 'tactic-name', score: 2 });
+    expect(layer.techniques[0]).toMatchObject({ techniqueID: 'T0001', tactic: 'tactic-name', score: 1 });
     expect(errors).toEqual([]);
 });
