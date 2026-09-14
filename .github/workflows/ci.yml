@@ -34,7 +34,7 @@ jobs:
       run: npm run build -- --configuration production --aot=false
 
     - name: Install Chromium
-      run: npx playwright install --with-deps chromium --only-shell
+      run: ./node_modules/.bin/playwright install --with-deps chromium --only-shell
 
     - name: Run smoke test
       run: npm run test:smoke
