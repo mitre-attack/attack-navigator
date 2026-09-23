@@ -1,0 +1,14 @@
+**
+!*.md
+!layers/
+!layers/**
+!nav-app/
+!nav-app/package.json
+!nav-app/package-lock.json
+!nav-app/angular.json
+!nav-app/tsconfig*.json
+!nav-app/src/
+!nav-app/src/**
+!nav-app/playwright.config.ts
+!nav-app/e2e/
+!nav-app/e2e/**
