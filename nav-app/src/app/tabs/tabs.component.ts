@@ -787,8 +787,7 @@ export class TabsComponent implements AfterViewInit {
                     try {
                         let layerVersionStr = viewModel.deserializeDomainVersionID(layerObj);
                         await self.versionMismatchWarning(layerVersionStr);
-                        self.versionMismatchWarning(layerVersionStr);
-                        
+
                         let isCustom = 'customDataURL' in layerObj;
                         if (!isCustom) {
                             if (!self.dataService.getDomain(viewModel.domainVersionID)) {

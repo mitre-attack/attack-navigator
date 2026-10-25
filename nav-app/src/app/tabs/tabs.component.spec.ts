@@ -500,6 +500,19 @@ describe('TabsComponent', () => {
             });
         }));
 
+        it('should show the layer version warning once per uploaded layer', (done) => {
+            component.dataService.setUpDomains(MockData.configData.entries);
+            component.dataService.latestVersion = new Version('enterprise-attack-13', '13');
+            const warningSpy = spyOn(component, 'versionMismatchWarning').and.returnValue(Promise.resolve(true));
+            spyOn(component, 'upgradeLayer').and.callFake(() => {
+                expect(warningSpy).toHaveBeenCalledTimes(1);
+                done();
+                return Promise.resolve(null);
+            });
+            let blob = new Blob([JSON.stringify(MockLayers.layerFile1)], { type: 'text/json' });
+            component.readJSONFile(new File([blob], 'layer-1.json'));
+        });
+
         it('should retrieve the minimum supported version', () => {
             const result = component.minimumSupportedVersion;
             expect(result).toBeDefined();
