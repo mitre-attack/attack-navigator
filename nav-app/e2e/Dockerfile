@@ -13,9 +13,9 @@ COPY nav-app/src ./src
 COPY nav-app/e2e ./e2e
 COPY layers /app/layers
 COPY *.md /app/
-RUN npm run build -- --configuration production --aot=false
-
-RUN mkdir -p tmp && chown node:node tmp
+RUN npm run build -- --configuration production --aot=false \
+    && mkdir -p tmp \
+    && chown node:node tmp
 USER node
 
 CMD ["npm", "run", "test:e2e"]

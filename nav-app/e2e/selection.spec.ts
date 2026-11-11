@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import config from '../src/assets/config.json';
-import { configData, matrixSDO, TA0000, T0001, T0003, T0004 } from '../src/tests/utils/mock-data';
+import { matrixSDO, TA0000, T0001, T0003, T0004 } from '../src/tests/utils/mock-data';
+import { mockAttackData } from './mock-attack-data';
 
 const tactics = [
     { ...TA0000, id: 'tactic-privilege-escalation', name: 'Privilege Escalation', x_mitre_shortname: 'privilege-escalation' },
@@ -33,18 +33,7 @@ test('find, select, and clear techniques', { tag: '@smoke' }, async ({ page }) =
     page.on('pageerror', error => errors.push(error.message));
 
     await test.step('load deterministic ATT&CK data', async () => {
-        await page.route('**/assets/config.json', route => route.fulfill({
-            json: { ...config, collection_index_url: '', versions: configData },
-        }));
-        await page.route(configData.entries[0].domains[0].data[0], route => route.fulfill({
-            json: {
-                type: 'bundle',
-                id: 'bundle-selection',
-                objects: [{ ...matrixSDO, tactic_refs: tactics.map(tactic => tactic.id) }, ...tactics, ...techniques],
-            },
-        }));
-        // Font loading is irrelevant here; stub the stylesheet so an unavailable font service cannot fail the test.
-        await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ body: '', contentType: 'text/css' }));
+        await mockAttackData(page, [{ ...matrixSDO, tactic_refs: tactics.map(tactic => tactic.id) }, ...tactics, ...techniques]);
 
         await page.goto('/');
         await page.getByText('Create New Layer', { exact: true }).click();

@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
-import config from '../src/assets/config.json';
-import { configData, G0000, matrixSDO, TA0000, T0001, T0003, T0004 } from '../src/tests/utils/mock-data';
+import { G0000, matrixSDO, TA0000, T0001, T0003, T0004 } from '../src/tests/utils/mock-data';
+import { mockAttackData } from './mock-attack-data';
 
 // Start with the smallest useful overlap: one technique unique to each group
 // and one shared by both. This gives the layer sum three distinct outcomes
@@ -65,18 +65,7 @@ test('compare APT3 and APT29 technique scores', { tag: '@smoke' }, async ({ page
     page.on('pageerror', error => errors.push(error.message));
 
     await test.step('load deterministic ATT&CK data', async () => {
-        await page.route('**/assets/config.json', route => route.fulfill({
-            json: { ...config, collection_index_url: '', versions: configData },
-        }));
-        await page.route(configData.entries[0].domains[0].data[0], route => route.fulfill({
-            json: {
-                type: 'bundle',
-                id: 'bundle-layer-comparison',
-                objects: [matrixSDO, TA0000, ...techniques, ...groups, ...relationships],
-            },
-        }));
-        // Font loading is irrelevant here; stub the stylesheet so an unavailable font service cannot fail the test.
-        await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ body: '', contentType: 'text/css' }));
+        await mockAttackData(page, [matrixSDO, TA0000, ...techniques, ...groups, ...relationships]);
         await page.goto('/');
     });
 
