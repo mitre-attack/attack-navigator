@@ -28,7 +28,8 @@ Protractor `*.e2e-spec.ts` files are excluded from Playwright runs.
 
 For tests that do not check font rendering, stub remote font stylesheet requests
 with an empty CSS response so external font-service availability cannot affect
-the result. See `layer.spec.ts` for an example.
+the result. `mock-attack-data.ts` provides shared configuration, synthetic data,
+and font request stubs; keep scenario-specific objects in each spec.
 
 ## Docker
 
