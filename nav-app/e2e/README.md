@@ -16,7 +16,7 @@ production build in `dist/browser`; rebuild after application changes.
 
 Downloaded JSON and failure traces are saved under `tmp/playwright/test-results`.
 There are no retries. The CI quality gate runs the suite after the production
-build on PRs targeting `develop` or `master`, and on pushes to `develop`. Failed runs upload
+build on PRs targeting `master` and on pushes to `master`. Failed runs upload
 `tmp/playwright/test-results` as an artifact retained for seven days.
 
 ## Adding tests
