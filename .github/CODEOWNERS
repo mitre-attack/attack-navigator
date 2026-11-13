@@ -1,0 +1,6 @@
+# Core Team owns all files unless overridden below.
+* @mitre-attack/core-team
+
+# Dependency-only changes are exempt from code-owner review.
+/nav-app/package.json
+/nav-app/package-lock.json
