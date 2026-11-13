@@ -3,7 +3,7 @@ name: Create Release
 on:
   push:
     tags:
-      - '*'
+      - 'v*.*.*'
 
 jobs:
   create_github_release:
@@ -11,6 +11,10 @@ jobs:
     permissions:
       contents: write
     steps:
+    - name: Validate release tag
+      run: |
+        [[ "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+
     - uses: actions/checkout@v4
     - uses: ncipollo/release-action@v1
       with:

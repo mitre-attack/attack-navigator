@@ -1,14 +1,14 @@
-name: Jasmine Tests
+name: CI
 
 on:
   push:
     branches: ["develop"]
   pull_request:
     branches: ["master", "develop"]
-    types: [synchronize]
 
 jobs:
-  run-tests:
+  quality-gate:
+    name: Quality gate
     runs-on: ubuntu-latest
     defaults:
        run:
@@ -25,10 +25,27 @@ jobs:
         cache-dependency-path: nav-app/package-lock.json
     
     - name: Install
-      run: npm ci
+      run: npm ci --ignore-scripts
 
     - name: Run Jasmine tests
       run: npm run test -- --code-coverage --no-watch --browsers ChromeHeadlessCI
+
+    - name: Verify production build
+      run: npm run build -- --configuration production --aot=false
+
+    - name: Install Chromium
+      run: ./node_modules/.bin/playwright install --with-deps chromium --only-shell
+
+    - name: Run E2E tests
+      run: npm run test:e2e
+
+    - name: Upload E2E test results
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: e2e-test-results
+        path: nav-app/tmp/playwright/test-results/
+        retention-days: 7
 
     - name: Archive code coverage results
       uses: actions/upload-artifact@v4
