@@ -28,7 +28,7 @@
     "@angular/platform-browser": "^19.2.25",
     "@angular/platform-browser-dynamic": "^19.2.25",
     "@angular/router": "^19.2.25",
-    "@babel/runtime": "^7.29.2",
+    "@babel/runtime": "^8.1.0",
     "@fontsource/roboto": "^5.2.8",
     "@fontsource/roboto-mono": "^5.3.0",
     "@types/file-saver": "^2.0.1",
