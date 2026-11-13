@@ -4,7 +4,7 @@ updates:
     directory: "nav-app"
     schedule:
       interval: "quarterly"
-    target-branch: "develop"
+    target-branch: "master"
 
     groups:
       angular-ecosystem:
