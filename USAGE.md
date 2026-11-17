@@ -537,7 +537,7 @@ a layer link you've already added to remove it.
 The following is an example ATT&CK Navigator URL with the default layer specified to be the *Bear APTs layer
 from <a href="https://github.com/mitre-attack/attack-navigator">our github
 repo</a>:  
-<code><https://mitre-attack.github.io/attack-navigator/enterprise/><b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json</b></code>
+<code><https://mitre-attack.github.io/attack-navigator/enterprise/><b>#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmain%2Flayers%2Fsamples%2FBear_APT.json</b></code>
 
 Users will not be prompted to upgrade default layers to the current version of ATT&CK if they are outdated.
 

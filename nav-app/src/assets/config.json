@@ -24,7 +24,7 @@
 
     "default_layers": {
         "enabled": false,
-        "urls": ["assets/example.json", "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json"]
+        "urls": []
     },
 
     "comment_color": "yellow",
