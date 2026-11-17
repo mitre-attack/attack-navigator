@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 
+const externalURL = process.env.E2E_BASE_URL;
+
 export default defineConfig({
     testDir: './e2e',
     testMatch: '**/*.spec.ts',
@@ -8,10 +10,10 @@ export default defineConfig({
     retries: 0,
     use: {
         browserName: 'chromium',
-        baseURL: 'http://127.0.0.1:4173',
+        baseURL: externalURL || 'http://127.0.0.1:4173',
         trace: 'retain-on-failure',
     },
-    webServer: {
+    webServer: externalURL ? undefined : {
         command: 'python3 -m http.server 4173 --bind 127.0.0.1 --directory dist/browser',
         url: 'http://127.0.0.1:4173',
     },
