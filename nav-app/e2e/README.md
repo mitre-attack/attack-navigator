@@ -14,6 +14,18 @@ npm run test:e2e
 Playwright starts and stops a local static server on port 4173. The suite uses the
 production build in `dist/browser`; rebuild after application changes.
 
+To test an already-running Navigator, set `E2E_BASE_URL`:
+
+```sh
+E2E_BASE_URL=https://navigator.example.org npm run test:e2e
+```
+
+With `E2E_BASE_URL` set, Playwright skips the local server and tests the supplied
+URL. No local application build is needed. The target must be reachable and
+accessible without an interactive sign-in. The suite still mocks runtime
+configuration and ATT&CK data, so it tests the deployed application behavior
+rather than the target's configured data sources.
+
 Downloaded JSON and failure traces are saved under `tmp/playwright/test-results`.
 There are no retries. The CI quality gate runs the suite after the production
 build on PRs targeting `main` and on pushes to `main`. Failed runs upload
@@ -44,6 +56,20 @@ The image installs dependencies and Chromium, builds Navigator, and runs the sam
 suite. Source files are copied into the image; no host directories
 are mounted. The local build and `node_modules` are not used. Test artifacts are
 inside the container and are discarded by `--rm`.
+
+To build only the test runner, select the `runner` target. This installs the
+same dependencies and Chromium and copies the test inputs without building
+Navigator:
+
+```sh
+docker build -f nav-app/e2e/Dockerfile --target runner -t attack-navigator-e2e:runner .
+docker run --rm --init \
+  -e E2E_BASE_URL=https://navigator.example.org \
+  attack-navigator-e2e:runner
+```
+
+The URL must be reachable from inside the container. Without `--target runner`,
+the default `standalone` target continues to build and test Navigator locally.
 
 Optional troubleshooting flags:
 
