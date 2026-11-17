@@ -22,7 +22,7 @@ Please see [Install and Run](#Install-and-Run) for information on how to get the
 
 Use our [GitHub Issue Tracker](https://github.com/mitre-attack/attack-navigator/issues) to let us know of any bugs or others issues that you encounter. We also encourage pull requests if you've extended the Navigator in a cool way and want to share back to the community!
 
-*See [CONTRIBUTING.md](https://github.com/mitre-attack/attack-navigator/blob/master/CONTRIBUTING.md) for more information on making contributions to the ATT&CK Navigator.*
+*See [CONTRIBUTING.md](https://github.com/mitre-attack/attack-navigator/blob/main/CONTRIBUTING.md) for more information on making contributions to the ATT&CK Navigator.*
 
 ## Requirements
 
@@ -274,7 +274,7 @@ Local files to load should be placed in the `nav-app/src/assets/` directory.
         "enabled": true,
         "urls": [
             "assets/example.json", 
-            "https://raw.githubusercontent.com/mitre-attack/attack-navigator/master/layers/samples/Bear_APT.json"
+            "https://raw.githubusercontent.com/mitre-attack/attack-navigator/main/layers/samples/Bear_APT.json"
         ]
     }
    ```
@@ -315,7 +315,7 @@ If you want to embed a version of the Navigator with specific features removed (
 The following is an example iframe which embeds our [*Bear APTs](layers/samples/Bear_APT.json) layer with tabs and the ability to add annotations removed:
 
 ```HTML
-<iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
+<iframe src="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmain%2Flayers%2Fsamples%2FBear_APT.json&tabs=false&selecting_techniques=false" width="1000" height="500"></iframe>
 ```
 
 ## Related MITRE Work

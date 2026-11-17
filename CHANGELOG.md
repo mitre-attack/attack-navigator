@@ -1,7 +1,7 @@
 <!-- 
      Reminder: update the version number in package.json when adding a new version!
 
-     If on the master branch and ready to release, you can use one of the following commands:
+     If on the main branch and ready to release, you can use one of the following commands:
          npm version major
          npm version minor
          npm version patch
